@@ -12,4 +12,7 @@ enum class MeasurementType {
 
     /** The weight is measured in milliliters. */
     Milliliter,
+
+    /** The weight is measured in ounces. */
+    Ounce,
 }

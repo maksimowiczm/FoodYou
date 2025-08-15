@@ -21,6 +21,7 @@ val DiaryFood.possibleMeasurementTypes: List<MeasurementType>
             types.add(MeasurementType.Milliliter)
         } else {
             types.add(MeasurementType.Gram)
+            types.add(MeasurementType.Ounce)
         }
 
         return types
@@ -32,6 +33,7 @@ val DiaryFood.suggestions: List<Measurement>
             when (it) {
                 MeasurementType.Gram -> Measurement.Gram(100.0)
                 MeasurementType.Package -> Measurement.Package(1.0)
+                MeasurementType.Ounce -> Measurement.Ounce(3.0)
                 MeasurementType.Serving -> Measurement.Serving(1.0)
                 MeasurementType.Milliliter -> Measurement.Milliliter(100.0)
             }

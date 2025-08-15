@@ -16,8 +16,7 @@ fun Measurement.stringResourceWithWeight(
 ): String? {
     val weight =
         when (this) {
-            is Measurement.Gram,
-            is Measurement.Milliliter -> null
+            is Measurement.ImmutableMeasurement -> null
 
             is Measurement.Package ->
                 if (totalWeight == null) {

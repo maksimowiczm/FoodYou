@@ -74,6 +74,7 @@
         <item quantity="one">milliliter</item>
         <item quantity="other">milliliters</item>
     </plurals>
+    <string name="unit_ounce_short">oz</string>
 
     <string name="product_package_weight">Package weight</string>
     <string name="product_package">Package</string>

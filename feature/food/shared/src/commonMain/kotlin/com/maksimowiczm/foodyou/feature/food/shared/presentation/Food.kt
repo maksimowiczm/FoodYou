@@ -9,6 +9,7 @@ val Food.possibleMeasurementTypes: List<MeasurementType>
         MeasurementType.entries.filter { type ->
             when (type) {
                 MeasurementType.Gram -> !isLiquid
+                MeasurementType.Ounce -> !isLiquid
                 MeasurementType.Milliliter -> isLiquid
                 MeasurementType.Package -> totalWeight != null
                 MeasurementType.Serving -> servingWeight != null

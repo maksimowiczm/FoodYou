@@ -24,7 +24,7 @@ internal fun MealFoodListItem(
     color: Color,
     contentColor: Color,
     shape: Shape,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val g = stringResource(Res.string.unit_gram_short)
 
@@ -52,9 +52,9 @@ internal fun MealFoodListItem(
         )
     } else if (
         proteinsString == null ||
-        carbohydratesString == null ||
-        fatsString == null ||
-        caloriesString == null
+            carbohydratesString == null ||
+            fatsString == null ||
+            caloriesString == null
     ) {
         FoodErrorListItem(
             headline = entry.name,

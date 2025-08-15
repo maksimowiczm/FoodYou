@@ -6,10 +6,12 @@ interface Weighted {
     val totalWeight: Double?
     val servingWeight: Double?
 
+    /**
+     * Calculates the weight of the food in grams or milliliters based on the provided measurement.
+     */
     fun weight(measurement: Measurement): Double? =
         when (measurement) {
-            is Measurement.Gram -> measurement.value
-            is Measurement.Milliliter -> measurement.value
+            is Measurement.ImmutableMeasurement -> measurement.metric
             is Measurement.Package -> totalWeight?.times(measurement.quantity)
             is Measurement.Serving -> servingWeight?.times(measurement.quantity)
         }

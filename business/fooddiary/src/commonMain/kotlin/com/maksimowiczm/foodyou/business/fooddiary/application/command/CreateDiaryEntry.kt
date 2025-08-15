@@ -46,7 +46,8 @@ internal class CreateDiaryEntryCommandHandler(
     ): Result<Long, CreateDiaryEntryError> {
 
         when (command.measurement) {
-            is Measurement.Gram ->
+            is Measurement.Gram,
+            is Measurement.Ounce ->
                 if (command.food.isLiquid) {
                     return ErrorLoggingUtils.logAndReturnFailure(
                         tag = TAG,

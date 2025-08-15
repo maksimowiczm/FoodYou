@@ -11,6 +11,7 @@ internal class MeasurementTypeConverter {
             MeasurementType.Milliliter -> MeasurementTypeSQLConstants.MILLILITER
             MeasurementType.Package -> MeasurementTypeSQLConstants.PACKAGE
             MeasurementType.Serving -> MeasurementTypeSQLConstants.SERVING
+            MeasurementType.Ounce -> MeasurementTypeSQLConstants.OUNCE
         }
 
     @TypeConverter
@@ -20,6 +21,7 @@ internal class MeasurementTypeConverter {
             MeasurementTypeSQLConstants.MILLILITER -> MeasurementType.Milliliter
             MeasurementTypeSQLConstants.PACKAGE -> MeasurementType.Package
             MeasurementTypeSQLConstants.SERVING -> MeasurementType.Serving
+            MeasurementTypeSQLConstants.OUNCE -> MeasurementType.Ounce
             else -> error("WeightMeasurementType not found")
         }
 }
@@ -29,4 +31,5 @@ internal object MeasurementTypeSQLConstants {
     const val PACKAGE = 1
     const val SERVING = 2
     const val MILLILITER = 3
+    const val OUNCE = 4
 }

@@ -30,8 +30,7 @@ internal class CreateProductViewModel(private val commandBus: CommandBus) : View
 
         val multiplier =
             when (form.measurement) {
-                is Measurement.Gram -> 1f
-                is Measurement.Milliliter -> 1f
+                is Measurement.ImmutableMeasurement -> 1f
                 is Measurement.Package -> form.packageWeight.value?.let { 1 / it * 100 }
                 is Measurement.Serving -> form.servingWeight.value?.let { 1 / it * 100 }
             }

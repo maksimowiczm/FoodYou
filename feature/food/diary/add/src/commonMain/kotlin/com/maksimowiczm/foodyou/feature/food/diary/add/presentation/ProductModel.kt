@@ -3,10 +3,8 @@ package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 import androidx.compose.runtime.Immutable
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.business.shared.domain.food.Weighted
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 
 @Immutable
 internal data class ProductModel(
@@ -18,7 +16,7 @@ internal data class ProductModel(
     val source: FoodSource,
     override val totalWeight: Double?,
     override val servingWeight: Double?,
-) : FoodModel, Weighted {
+) : FoodModel {
     constructor(
         product: Product
     ) : this(
@@ -31,6 +29,4 @@ internal data class ProductModel(
         totalWeight = product.totalWeight,
         servingWeight = product.servingWeight,
     )
-
-    override fun weight(measurement: Measurement): Double? = super<Weighted>.weight(measurement)
 }

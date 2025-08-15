@@ -31,6 +31,10 @@ fun Measurement.stringResource() =
         is Measurement.Milliliter -> {
             value.formatClipZeros() + " " + stringResource(Res.string.unit_milliliter_short)
         }
+
+        is Measurement.Ounce -> {
+            value.formatClipZeros() + " " + stringResource(Res.string.unit_ounce_short)
+        }
     }
 
 @Composable
@@ -40,46 +44,8 @@ fun MeasurementType.stringResource(): String =
         MeasurementType.Milliliter -> stringResource(Res.string.unit_milliliter_short)
         MeasurementType.Package -> stringResource(Res.string.product_package)
         MeasurementType.Serving -> stringResource(Res.string.product_serving)
+        MeasurementType.Ounce -> stringResource(Res.string.unit_ounce_short)
     }
-
-val Measurement.Companion.NullableSaver: Saver<Measurement?, ArrayList<Any>>
-    get() =
-        Saver(
-            save = {
-                val id =
-                    when (it) {
-                        null -> -1
-                        is Measurement.Gram -> 0
-                        is Measurement.Serving -> 2
-                        is Measurement.Package -> 1
-                        is Measurement.Milliliter -> 3
-                    }
-
-                val value =
-                    when (it) {
-                        null -> 0f
-                        is Measurement.Gram -> it.value
-                        is Measurement.Serving -> it.quantity
-                        is Measurement.Package -> it.quantity
-                        is Measurement.Milliliter -> it.value
-                    }
-
-                arrayListOf(id, value)
-            },
-            restore = {
-                val id = it[0] as Int
-                val value = it[1] as Double
-
-                when (id) {
-                    -1 -> null
-                    0 -> Measurement.Gram(value)
-                    1 -> Measurement.Package(value)
-                    2 -> Measurement.Serving(value)
-                    3 -> Measurement.Milliliter(value)
-                    else -> error("Invalid measurement id: $id")
-                }
-            },
-        )
 
 val Measurement.Companion.Saver: Saver<Measurement, ArrayList<Any>>
     get() =
@@ -91,6 +57,7 @@ val Measurement.Companion.Saver: Saver<Measurement, ArrayList<Any>>
                         is Measurement.Serving -> 2
                         is Measurement.Package -> 1
                         is Measurement.Milliliter -> 3
+                        is Measurement.Ounce -> 4
                     }
 
                 val value =
@@ -99,6 +66,7 @@ val Measurement.Companion.Saver: Saver<Measurement, ArrayList<Any>>
                         is Measurement.Serving -> it.quantity
                         is Measurement.Package -> it.quantity
                         is Measurement.Milliliter -> it.value
+                        is Measurement.Ounce -> it.value
                     }
 
                 arrayListOf(id, value)

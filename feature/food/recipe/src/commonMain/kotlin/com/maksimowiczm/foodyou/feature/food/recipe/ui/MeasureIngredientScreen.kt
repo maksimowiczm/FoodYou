@@ -36,12 +36,11 @@ import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPicker
 import com.maksimowiczm.foodyou.feature.food.shared.ui.NutrientList
 import com.maksimowiczm.foodyou.feature.food.shared.ui.rememberMeasurementPickerState
+import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.shared.ui.ext.add
-import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.shared.ui.res.stringResource
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -146,33 +145,15 @@ internal fun MeasureIngredientScreen(
                     }
                 }
 
-                val weight =
-                    food.weight(measurement)
-                        ?: error("Invalid measurement: $measurement for food: ${food.headline}")
-
-                val text = buildString {
-                    append(measurement.stringResource())
-
-                    when (measurement) {
-                        is Measurement.Gram,
-                        is Measurement.Milliliter -> Unit
-
-                        is Measurement.Package,
-                        is Measurement.Serving -> {
-                            val suffix =
-                                if (food.isLiquid) {
-                                    stringResource(Res.string.unit_milliliter_short)
-                                } else {
-                                    stringResource(Res.string.unit_gram_short)
-                                }
-
-                            append(" (${weight.formatClipZeros()} $suffix)")
-                        }
-                    }
-                }
+                val measurementString =
+                    measurement.stringResourceWithWeight(
+                        totalWeight = food.totalWeight,
+                        servingWeight = food.servingWeight,
+                        isLiquid = food.isLiquid,
+                    ) ?: error("Invalid measurement: $measurement for food ${food.id}")
 
                 Text(
-                    text = text,
+                    text = measurementString,
                     modifier = Modifier.padding(horizontal = 8.dp).padding(bottom = 8.dp),
                     style = MaterialTheme.typography.labelLarge,
                 )
