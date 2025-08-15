@@ -171,11 +171,28 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
                 )
             },
             addOnBack = { navController.popBackStack<FoodDiaryAddEntryDestination>(true) },
+            addOnAdded = { date, mealId ->
+                while (true) {
+                    if (!navController.popBackStack<FoodDiaryAddEntryDestination>(true)) {
+                        break
+                    }
+                }
+            },
             addOnEditFood = {
                 when (it) {
                     is FoodId.Product -> UpdateProductDestination(it)
                     is FoodId.Recipe -> UpdateRecipeDestination(it)
                 }.let(navController::navigateSingleTop)
+            },
+            addOnIngredient = { foodId, measurement, date, mealId ->
+                navController.navigate(
+                    FoodDiaryAddEntryDestination(
+                        foodId = foodId,
+                        mealId = mealId,
+                        date = date,
+                        measurement = measurement,
+                    )
+                )
             },
             createProductOnBack = {
                 navController.popBackStack<FoodDiaryCreateProductDestination>(true)

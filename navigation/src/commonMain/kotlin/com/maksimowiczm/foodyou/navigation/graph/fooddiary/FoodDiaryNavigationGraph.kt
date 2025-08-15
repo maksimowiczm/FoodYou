@@ -23,7 +23,9 @@ internal fun NavGraphBuilder.foodDiaryNavigationGraph(
     searchOnCreateProduct: (LocalDate, mealId: Long) -> Unit,
     searchOnMeasure: (FoodId, Measurement, LocalDate, mealId: Long) -> Unit,
     addOnBack: () -> Unit,
+    addOnAdded: (LocalDate, mealId: Long) -> Unit,
     addOnEditFood: (FoodId) -> Unit,
+    addOnIngredient: (FoodId, Measurement, LocalDate, mealId: Long) -> Unit,
     createProductOnBack: () -> Unit,
     createProductOnCreate: (FoodId, LocalDate, mealId: Long) -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
@@ -55,8 +57,11 @@ internal fun NavGraphBuilder.foodDiaryNavigationGraph(
         AddEntryScreen(
             onBack = addOnBack,
             onEditFood = addOnEditFood,
-            onEntryAdded = addOnBack,
+            onEntryAdded = { addOnAdded(route.date, route.mealId) },
             onFoodDeleted = addOnBack,
+            onIngredient = { id, measurement ->
+                addOnIngredient(id, measurement, route.date, route.mealId)
+            },
             foodId = route.foodId,
             mealId = route.mealId,
             date = route.date,

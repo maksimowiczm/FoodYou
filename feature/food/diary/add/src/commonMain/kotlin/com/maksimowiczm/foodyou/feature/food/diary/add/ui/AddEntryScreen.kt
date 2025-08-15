@@ -73,6 +73,7 @@ fun AddEntryScreen(
     onEditFood: (FoodId) -> Unit,
     onEntryAdded: () -> Unit,
     onFoodDeleted: () -> Unit,
+    onIngredient: (FoodId, Measurement) -> Unit,
     foodId: FoodId,
     mealId: Long,
     date: LocalDate,
@@ -160,6 +161,7 @@ fun AddEntryScreen(
             },
             onEditFood = onEditFood,
             onDelete = viewModel::deleteFood,
+            onIngredient = onIngredient,
             food = food,
             events = events,
             state = state,
@@ -177,6 +179,7 @@ private fun AddEntryScreen(
     onUnpack: () -> Unit,
     onEditFood: (FoodId) -> Unit,
     onDelete: () -> Unit,
+    onIngredient: (FoodId, Measurement) -> Unit,
     food: FoodModel,
     events: List<FoodEvent>,
     state: FoodMeasurementFormState,
@@ -282,7 +285,11 @@ private fun AddEntryScreen(
                     val ingredients = food.unpack(food.weight(measurement))
 
                     HorizontalDivider()
-                    Ingredients(ingredients = ingredients, modifier = Modifier.padding(8.dp))
+                    Ingredients(
+                        ingredients = ingredients,
+                        onIngredient = onIngredient,
+                        modifier = Modifier.padding(8.dp),
+                    )
                 }
             }
 

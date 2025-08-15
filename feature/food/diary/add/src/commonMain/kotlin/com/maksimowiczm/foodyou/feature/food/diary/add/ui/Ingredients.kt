@@ -11,18 +11,19 @@ import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.IngredientMo
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.shared.ui.res.stringResource
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.error_food_is_missing_required_fields
-import foodyou.app.generated.resources.headline_ingredients
-import foodyou.app.generated.resources.unit_gram_short
-import foodyou.app.generated.resources.unit_kcal
+import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun Ingredients(ingredients: List<IngredientModel>, modifier: Modifier = Modifier) {
+internal fun Ingredients(
+    ingredients: List<IngredientModel>,
+    onIngredient: (FoodId, Measurement) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val g = stringResource(Res.string.unit_gram_short)
     val kcal = stringResource(Res.string.unit_kcal)
 
@@ -81,6 +82,7 @@ internal fun Ingredients(ingredients: List<IngredientModel>, modifier: Modifier 
                     measurement = { Text(measurementString) },
                     contentPadding = contentPadding,
                     isRecipe = ingredient.isRecipe,
+                    onClick = { onIngredient(ingredient.foodId, ingredient.measurement) },
                 )
             }
         }
