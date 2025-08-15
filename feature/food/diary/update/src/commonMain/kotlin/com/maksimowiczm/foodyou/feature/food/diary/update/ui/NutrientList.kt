@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFood
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
-import com.maksimowiczm.foodyou.business.fooddiary.domain.weight
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.isComplete
 import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.allIngredients
 import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator
@@ -38,7 +37,7 @@ internal fun NutrientList(
     measurement: Measurement,
     modifier: Modifier = Modifier,
 ) {
-    val weight = remember(food, measurement) { measurement.weight(food) }
+    val weight = remember(food, measurement) { food.weight(measurement) }
     val facts = remember(food, weight) { food.nutritionFacts * (weight / 100) }
 
     Column(modifier) {

@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
+import com.maksimowiczm.foodyou.business.shared.domain.food.Weighted
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 
@@ -13,11 +14,11 @@ import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
  * @param isLiquid Indicates whether the food item is a liquid (e.g., soup, juice) or solid (e.g.,
  *   bread, meat).
  */
-sealed interface Food {
+sealed interface Food : Weighted {
     val id: FoodId
     val headline: String
-    val totalWeight: Double?
-    val servingWeight: Double?
+    override val totalWeight: Double?
+    override val servingWeight: Double?
     val nutritionFacts: NutritionFacts
     val isLiquid: Boolean
 }

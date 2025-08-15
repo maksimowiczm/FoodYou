@@ -1,28 +1,24 @@
 package com.maksimowiczm.foodyou.feature.food.shared.ui.search
 
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
-import com.maksimowiczm.foodyou.business.food.domain.weight
-import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.weight
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
+import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.shared.ui.res.stringResource
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.mapNotNull
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun FoodSearchListItem(
     food: FoodSearch.Product,
@@ -30,7 +26,7 @@ internal fun FoodSearchListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val weight = measurement.weight(food)
+    val weight = food.weight(measurement)
     val factor = weight?.div(100)
 
     if (factor == null) {
@@ -47,8 +43,20 @@ internal fun FoodSearchListItem(
     val carbohydrates = measurementFacts.carbohydrates.value
     val fats = measurementFacts.fats.value
     val energy = measurementFacts.energy.value
+    val measurementString =
+        measurement.stringResourceWithWeight(
+            totalWeight = food.totalWeight,
+            servingWeight = food.servingWeight,
+            isLiquid = food.isLiquid,
+        )
 
-    if (proteins == null || carbohydrates == null || fats == null || energy == null) {
+    if (
+        proteins == null ||
+            carbohydrates == null ||
+            fats == null ||
+            energy == null ||
+            measurementString == null
+    ) {
         return FoodErrorListItem(
             headline = food.headline,
             modifier = modifier,
@@ -57,56 +65,16 @@ internal fun FoodSearchListItem(
         )
     }
 
-    val g = stringResource(Res.string.unit_gram_short)
-
-    FoodListItem(
-        name = { Text(text = food.headline) },
-        proteins = {
-            val text = proteins.formatClipZeros()
-            Text("$text $g")
-        },
-        carbohydrates = {
-            val text = carbohydrates.formatClipZeros()
-            Text("$text $g")
-        },
-        fats = {
-            val text = fats.formatClipZeros()
-            Text("$text $g")
-        },
-        calories = {
-            val kcal = stringResource(Res.string.unit_kcal)
-            val text = energy.formatClipZeros("%.0f")
-            Text("$text $kcal")
-        },
-        measurement = {
-            val weight =
-                when (measurement) {
-                    is Measurement.Gram,
-                    is Measurement.Milliliter -> null
-
-                    is Measurement.Package -> weight
-                    is Measurement.Serving -> weight
-                }
-
-            val text = buildString {
-                append(measurement.stringResource())
-                if (weight != null) {
-                    val suffix =
-                        if (food.isLiquid) {
-                            stringResource(Res.string.unit_milliliter_short)
-                        } else {
-                            g
-                        }
-
-                    append(" (${weight.formatClipZeros()} $suffix)")
-                }
-            }
-
-            Text(text)
-        },
+    FoodSearchListItem(
+        headline = food.headline,
+        proteins = proteins,
+        carbohydrates = carbohydrates,
+        fats = fats,
+        energy = energy,
+        measurement = { Text(measurementString) },
         isRecipe = false,
-        modifier = modifier,
         onClick = onClick,
+        modifier = modifier,
     )
 }
 
@@ -132,14 +100,27 @@ internal fun FoodSearchListItem(
         return FoodListItemSkeleton(shimmer)
     }
 
-    val factor = measurement.weight(recipe) / 100
+    val factor = recipe.weight(measurement) / 100
     val measurementFacts = recipe.nutritionFacts * factor
     val proteins = measurementFacts.proteins.value
     val carbohydrates = measurementFacts.carbohydrates.value
     val fats = measurementFacts.fats.value
     val energy = measurementFacts.energy.value
 
-    if (proteins == null || carbohydrates == null || fats == null || energy == null) {
+    val measurementString =
+        measurement.stringResourceWithWeight(
+            totalWeight = recipe.totalWeight,
+            servingWeight = recipe.servingWeight,
+            isLiquid = recipe.isLiquid,
+        )
+
+    if (
+        proteins == null ||
+            carbohydrates == null ||
+            fats == null ||
+            energy == null ||
+            measurementString == null
+    ) {
         return FoodErrorListItem(
             headline = food.headline,
             modifier = modifier,
@@ -148,10 +129,35 @@ internal fun FoodSearchListItem(
         )
     }
 
+    FoodSearchListItem(
+        headline = food.headline,
+        proteins = proteins,
+        carbohydrates = carbohydrates,
+        fats = fats,
+        energy = energy,
+        measurement = { Text(measurementString) },
+        isRecipe = true,
+        onClick = onClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun FoodSearchListItem(
+    headline: String,
+    proteins: Double,
+    carbohydrates: Double,
+    fats: Double,
+    energy: Double,
+    measurement: @Composable () -> Unit,
+    isRecipe: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val g = stringResource(Res.string.unit_gram_short)
 
     FoodListItem(
-        name = { Text(text = food.headline) },
+        name = { Text(text = headline) },
         proteins = {
             val text = proteins.formatClipZeros()
             Text("$text $g")
@@ -169,33 +175,8 @@ internal fun FoodSearchListItem(
             val text = energy.formatClipZeros("%.0f")
             Text("$text $kcal")
         },
-        measurement = {
-            val weight =
-                when (measurement) {
-                    is Measurement.Gram,
-                    is Measurement.Milliliter -> null
-
-                    is Measurement.Package -> recipe.totalWeight.let(measurement::weight)
-                    is Measurement.Serving -> recipe.servingWeight.let(measurement::weight)
-                }
-
-            val text = buildString {
-                append(measurement.stringResource())
-                if (weight != null) {
-                    val suffix =
-                        if (food.isLiquid) {
-                            stringResource(Res.string.unit_milliliter_short)
-                        } else {
-                            g
-                        }
-
-                    append(" (${weight.formatClipZeros()} $suffix)")
-                }
-            }
-
-            Text(text)
-        },
-        isRecipe = true,
+        measurement = measurement,
+        isRecipe = isRecipe,
         modifier = modifier,
         onClick = onClick,
     )

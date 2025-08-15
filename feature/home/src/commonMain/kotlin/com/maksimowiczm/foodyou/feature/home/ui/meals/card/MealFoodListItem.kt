@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.home.presentation.meals.card.MealEntryModel
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -34,8 +34,15 @@ internal fun MealFoodListItem(
 
     val fatsString = entry.fats?.let { it.formatClipZeros("%.1f") + " $g" }
 
-    val caloriesString = entry.caloriesString
-    val measurementString = entry.measurementString
+    val caloriesString =
+        entry.energy?.let { it.toString() + " " + stringResource(Res.string.unit_kcal) }
+
+    val measurementString =
+        entry.measurement.stringResourceWithWeight(
+            totalWeight = entry.totalWeight,
+            servingWeight = entry.servingWeight,
+            isLiquid = entry.isLiquid,
+        )
 
     if (measurementString == null) {
         FoodErrorListItem(
@@ -75,54 +82,6 @@ internal fun MealFoodListItem(
         )
     }
 }
-
-private val MealEntryModel.measurementStringShort: String
-    @Composable
-    get() =
-        with(measurement) {
-            when (this) {
-                is Measurement.Package ->
-                    stringResource(
-                        Res.string.x_times_y,
-                        quantity.formatClipZeros(),
-                        stringResource(Res.string.product_package),
-                    )
-
-                is Measurement.Serving ->
-                    stringResource(
-                        Res.string.x_times_y,
-                        quantity.formatClipZeros(),
-                        stringResource(Res.string.product_serving),
-                    )
-
-                is Measurement.Gram ->
-                    "${value.formatClipZeros()} " + stringResource(Res.string.unit_gram_short)
-
-                is Measurement.Milliliter ->
-                    "${value.formatClipZeros()} " + stringResource(Res.string.unit_milliliter_short)
-            }
-        }
-
-private val MealEntryModel.measurementString: String?
-    @Composable
-    get() {
-        val short = measurementStringShort
-        val weight = weight?.formatClipZeros() ?: return null
-        val suffix =
-            if (isLiquid) {
-                stringResource(Res.string.unit_milliliter_short)
-            } else {
-                stringResource(Res.string.unit_gram_short)
-            }
-
-        return when (measurement) {
-            is Measurement.Gram,
-            is Measurement.Milliliter -> short
-
-            is Measurement.Package,
-            is Measurement.Serving -> "$short ($weight $suffix)"
-        }
-    }
 
 private val MealEntryModel.caloriesString: String?
     @Composable

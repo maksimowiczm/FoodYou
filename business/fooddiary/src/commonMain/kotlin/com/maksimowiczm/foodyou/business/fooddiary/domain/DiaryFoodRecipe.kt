@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.business.fooddiary.domain
 
+import com.maksimowiczm.foodyou.business.shared.domain.food.WeightedStrict
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
@@ -18,7 +19,7 @@ data class DiaryFoodRecipe(
     val ingredients: List<DiaryFoodRecipeIngredient>,
     override val isLiquid: Boolean,
     override val note: String?,
-) : DiaryFood {
+) : DiaryFood, WeightedStrict {
 
     /** The nutrition facts of the food item per 100g or 100ml. */
     override val nutritionFacts: NutritionFacts by lazy {
@@ -31,6 +32,8 @@ data class DiaryFoodRecipe(
     override val totalWeight: Double
         get() = ingredients.sumOf { it.weight }
 
+    override fun weight(measurement: Measurement) = super<WeightedStrict>.weight(measurement)
+
     /**
      * Unpacks the recipe into a list of ingredients with their weights adjusted according to the
      * specified measurement.
@@ -39,9 +42,8 @@ data class DiaryFoodRecipe(
      * @return A list of [DiaryFoodRecipeIngredient] with weights adjusted according to the
      *   specified measurement.
      */
-    fun unpack(measurement: Measurement): List<DiaryFoodRecipeIngredient> {
-        return unpack(measurement.weight(this))
-    }
+    fun unpack(measurement: Measurement): List<DiaryFoodRecipeIngredient> =
+        unpack(weight(measurement))
 
     /**
      * Unpacks the recipe into a list of ingredients with their weights adjusted according to the

@@ -12,6 +12,9 @@ internal data class IngredientModel(
     val nutritionFacts: NutritionFacts?,
     val measurement: Measurement,
     val isRecipe: Boolean,
+    val totalWeight: Double?,
+    val servingWeight: Double?,
+    val isLiquid: Boolean,
 ) {
     constructor(
         ingredient: RecipeIngredient
@@ -20,5 +23,8 @@ internal data class IngredientModel(
         nutritionFacts = ingredient.nutritionFacts,
         measurement = ingredient.measurement,
         isRecipe = ingredient.food is Recipe,
+        totalWeight = ingredient.food.totalWeight,
+        servingWeight = ingredient.food.servingWeight,
+        isLiquid = ingredient.food.isLiquid,
     )
 }

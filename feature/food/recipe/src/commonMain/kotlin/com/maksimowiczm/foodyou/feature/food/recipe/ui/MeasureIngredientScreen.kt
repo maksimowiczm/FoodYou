@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
-import com.maksimowiczm.foodyou.business.food.domain.weight
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.isComplete
 import com.maksimowiczm.foodyou.feature.food.recipe.presentation.MeasureIngredientViewModel
 import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator
@@ -114,7 +113,7 @@ internal fun MeasureIngredientScreen(
                 val facts =
                     remember(food, measurement) {
                         val weight =
-                            measurement.weight(food)
+                            food.weight(measurement)
                                 ?: error(
                                     "Invalid measurement: $measurement for food: ${food.headline}"
                                 )
@@ -148,7 +147,7 @@ internal fun MeasureIngredientScreen(
                 }
 
                 val weight =
-                    measurement.weight(food)
+                    food.weight(measurement)
                         ?: error("Invalid measurement: $measurement for food: ${food.headline}")
 
                 val text = buildString {

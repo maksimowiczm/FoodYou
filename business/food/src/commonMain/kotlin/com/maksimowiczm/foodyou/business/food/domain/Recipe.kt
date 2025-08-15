@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
+import com.maksimowiczm.foodyou.business.shared.domain.food.WeightedStrict
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
@@ -22,7 +23,7 @@ data class Recipe(
     val ingredients: List<RecipeIngredient>,
     val note: String?,
     override val isLiquid: Boolean,
-) : Food {
+) : Food, WeightedStrict {
     override val headline: String = name
 
     override val totalWeight = ingredients.mapNotNull { it.weight }.sum()

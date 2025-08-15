@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.IngredientModel
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
+import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.res.stringResource
 import foodyou.app.generated.resources.Res
@@ -21,10 +22,7 @@ import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun Ingredients(
-    ingredients: List<IngredientModel>,
-    modifier: Modifier = Modifier.Companion,
-) {
+internal fun Ingredients(ingredients: List<IngredientModel>, modifier: Modifier = Modifier) {
     val g = stringResource(Res.string.unit_gram_short)
     val kcal = stringResource(Res.string.unit_kcal)
 
@@ -42,8 +40,20 @@ internal fun Ingredients(
             val carbs = facts?.carbohydrates?.value
             val fats = facts?.fats?.value
             val energy = facts?.energy?.value
+            val measurementString =
+                ingredient.measurement.stringResourceWithWeight(
+                    totalWeight = ingredient.totalWeight,
+                    servingWeight = ingredient.servingWeight,
+                    isLiquid = ingredient.isLiquid,
+                )
 
-            if (proteins == null || carbs == null || fats == null || energy == null) {
+            if (
+                proteins == null ||
+                    carbs == null ||
+                    fats == null ||
+                    energy == null ||
+                    measurementString == null
+            ) {
                 FoodErrorListItem(
                     headline = ingredient.name,
                     errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
@@ -68,7 +78,7 @@ internal fun Ingredients(
                         val text = energy.roundToInt().toString() + " $kcal"
                         Text(text)
                     },
-                    measurement = { Text(ingredient.measurement.stringResource()) },
+                    measurement = { Text(measurementString) },
                     contentPadding = contentPadding,
                     isRecipe = ingredient.isRecipe,
                 )
