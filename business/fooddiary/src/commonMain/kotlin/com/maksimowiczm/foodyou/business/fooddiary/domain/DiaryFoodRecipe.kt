@@ -74,20 +74,7 @@ data class DiaryFoodRecipe(
         val fraction = weight / totalWeight
 
         return ingredients.map { ingredient ->
-            val measurement = ingredient.measurement
-            val newMeasurement =
-                when (measurement) {
-                    is Measurement.Gram -> Measurement.Gram(measurement.value * fraction)
-
-                    is Measurement.Milliliter ->
-                        Measurement.Milliliter(measurement.value * fraction)
-
-                    is Measurement.Package -> Measurement.Package(measurement.quantity * fraction)
-
-                    is Measurement.Serving -> Measurement.Serving(measurement.quantity * fraction)
-                }
-
-            ingredient.copy(measurement = newMeasurement)
+            ingredient.copy(measurement = ingredient.measurement * fraction)
         }
     }
 }

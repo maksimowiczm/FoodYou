@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.food.Weighted
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 
 @Immutable
 internal data class ProductModel(
@@ -31,6 +30,4 @@ internal data class ProductModel(
         totalWeight = product.totalWeight,
         servingWeight = product.servingWeight,
     )
-
-    override fun weight(measurement: Measurement): Double? = super<Weighted>.weight(measurement)
 }

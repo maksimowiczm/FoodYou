@@ -39,17 +39,19 @@ private fun List<Measurement>.fillMissingMeasurements(food: Food): Flow<List<Mea
     val mutable = toMutableList()
 
     if (food.servingWeight != null) {
-        mutable.add(Measurement.Serving(1.0))
+        mutable.add(Measurement.Serving(Measurement.Serving.DEFAULT))
     }
 
     if (food.totalWeight != null) {
-        mutable.add(Measurement.Package(1.0))
+        mutable.add(Measurement.Package(Measurement.Package.DEFAULT))
     }
 
     if (food.isLiquid) {
-        mutable.add(Measurement.Milliliter(100.0))
+        mutable.add(Measurement.Milliliter(Measurement.Milliliter.DEFAULT))
+        mutable.add(Measurement.FluidOunce(Measurement.FluidOunce.DEFAULT))
     } else {
-        mutable.add(Measurement.Gram(100.0))
+        mutable.add(Measurement.Gram(Measurement.Gram.DEFAULT))
+        mutable.add(Measurement.Ounce(Measurement.Ounce.DEFAULT))
     }
 
     return food.possibleMeasurementTypes.map { possible ->

@@ -4,7 +4,6 @@ import com.maksimowiczm.foodyou.business.shared.domain.food.WeightedStrict
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 
 /**
  * Represents a recipe in the food domain.
@@ -66,19 +65,7 @@ data class Recipe(
         val fraction = weight / totalWeight
 
         return ingredients.map { (food, measurement) ->
-            val newMeasurement =
-                when (measurement) {
-                    is Measurement.Gram -> Measurement.Gram(measurement.value * fraction)
-
-                    is Measurement.Milliliter ->
-                        Measurement.Milliliter(measurement.value * fraction)
-
-                    is Measurement.Package -> Measurement.Package(measurement.quantity * fraction)
-
-                    is Measurement.Serving -> Measurement.Serving(measurement.quantity * fraction)
-                }
-
-            RecipeIngredient(food = food, measurement = newMeasurement)
+            RecipeIngredient(food = food, measurement = measurement * fraction)
         }
     }
 }
