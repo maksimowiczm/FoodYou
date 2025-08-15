@@ -39,6 +39,7 @@ val DiaryFood.possibleMeasurementTypes: Flow<List<MeasurementType>>
                     MeasurementType.Gram -> !isLiquid
                     MeasurementType.Ounce -> !isLiquid
                     MeasurementType.Milliliter -> isLiquid
+                    MeasurementType.FluidOunce -> isLiquid
                     MeasurementType.Package -> totalWeight != null
                     MeasurementType.Serving -> servingWeight != null
                 }
@@ -54,5 +55,6 @@ val DiaryFood.suggestions: Flow<List<Measurement>>
                 MeasurementType.Package -> Measurement.Package(1.0)
                 MeasurementType.Serving -> Measurement.Serving(1.0)
                 MeasurementType.Milliliter -> Measurement.Milliliter(100.0)
+                MeasurementType.FluidOunce -> Measurement.FluidOunce(3.0)
             }
         }

@@ -45,6 +45,7 @@ private fun List<Measurement>.fillMissingMeasurements(food: Food): List<Measurem
 
     if (food.isLiquid) {
         mutable.add(Measurement.Milliliter(100.0))
+        mutable.add(Measurement.FluidOunce(3.0))
     } else {
         mutable.add(Measurement.Gram(100.0))
         mutable.add(Measurement.Ounce(3.0))

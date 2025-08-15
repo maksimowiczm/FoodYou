@@ -38,6 +38,7 @@ val Food.possibleMeasurementTypes: Flow<List<MeasurementType>>
                     MeasurementType.Gram -> !isLiquid
                     MeasurementType.Ounce -> !isLiquid
                     MeasurementType.Milliliter -> isLiquid
+                    MeasurementType.FluidOunce -> isLiquid
                     MeasurementType.Package -> totalWeight != null
                     MeasurementType.Serving -> servingWeight != null
                 }

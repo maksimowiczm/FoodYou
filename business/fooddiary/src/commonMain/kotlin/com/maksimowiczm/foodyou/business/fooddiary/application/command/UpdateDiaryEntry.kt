@@ -63,7 +63,8 @@ internal class UpdateDiaryEntryCommandHandler(
                         )
                     }
 
-                is Measurement.Milliliter ->
+                is Measurement.Milliliter,
+                is Measurement.FluidOunce ->
                     if (!entry.food.isLiquid) {
                         return@withTransaction ErrorLoggingUtils.logAndReturnFailure(
                             tag = TAG,

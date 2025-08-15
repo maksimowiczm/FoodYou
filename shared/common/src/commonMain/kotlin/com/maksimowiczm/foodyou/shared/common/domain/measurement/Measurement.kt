@@ -8,31 +8,46 @@ sealed interface Measurement {
 
     sealed interface ImmutableMeasurement : Measurement {
 
+        /**
+         * The value of the measurement in its native unit.
+         */
+        val value: Double
+
         /** The metric value of the measurement in grams or milliliters. */
         val metric: Double
     }
 
-    data class Gram(val value: Double) : ImmutableMeasurement {
+    data class Gram(override val value: Double) : ImmutableMeasurement {
         override val metric: Double
             get() = value
 
         override fun times(other: Double): ImmutableMeasurement = Gram(value * other)
     }
 
-    data class Milliliter(val value: Double) : ImmutableMeasurement {
+    data class Milliliter(override val value: Double) : ImmutableMeasurement {
         override val metric: Double
             get() = value
 
         override fun times(other: Double): ImmutableMeasurement = Milliliter(value * other)
     }
 
-    data class Ounce(val value: Double) : ImmutableMeasurement {
+    data class Ounce(override val value: Double) : ImmutableMeasurement {
         override val metric: Double = value / OUNCES_IN_GRAM
 
         override fun times(other: Double): ImmutableMeasurement = Ounce(value * other)
 
         companion object {
             const val OUNCES_IN_GRAM = 0.03527396
+        }
+    }
+
+    data class FluidOunce(override val value: Double) : ImmutableMeasurement {
+        override val metric: Double = value / FLUID_OUNCES_IN_MILLILITER
+
+        override fun times(other: Double): ImmutableMeasurement = FluidOunce(value * other)
+
+        companion object {
+            const val FLUID_OUNCES_IN_MILLILITER = 0.0338140227
         }
     }
 

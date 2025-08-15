@@ -57,7 +57,8 @@ internal class CreateDiaryEntryCommandHandler(
                     )
                 }
 
-            is Measurement.Milliliter ->
+            is Measurement.Milliliter,
+            is Measurement.FluidOunce ->
                 if (!command.food.isLiquid) {
                     return ErrorLoggingUtils.logAndReturnFailure(
                         tag = TAG,

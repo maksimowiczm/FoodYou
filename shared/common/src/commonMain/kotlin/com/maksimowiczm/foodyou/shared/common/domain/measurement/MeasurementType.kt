@@ -15,4 +15,7 @@ enum class MeasurementType {
 
     /** The weight is measured in ounces. */
     Ounce,
+
+    /** The weight is measured in fluid ounces. */
+    FluidOunce,
 }
