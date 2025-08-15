@@ -15,6 +15,9 @@ internal data class FoodSearchUiState(
 ) {
     val currentSourceState: FoodSourceUiState?
         get() = sources[filter.source]
+
+    val currentSourceCount: Int?
+        get() = currentSourceState?.count
 }
 
 internal enum class RemoteStatus {
