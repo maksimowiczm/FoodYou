@@ -237,7 +237,8 @@ internal class FoodSearchViewModel(
                     }
 
                 val now = Clock.System.now().toEpochMilliseconds()
-                switchFlow.takeWhile { Clock.System.now().toEpochMilliseconds() - now < 100L }
+                val deadline = now + 100L
+                switchFlow.takeWhile { Clock.System.now().toEpochMilliseconds() < deadline }
             }
             .launchIn(viewModelScope)
     }
