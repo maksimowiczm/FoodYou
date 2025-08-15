@@ -204,7 +204,7 @@ private fun FoodSearchData.toModel(): FoodSearch =
                 id = foodId as FoodId.Recipe,
                 headline = headline,
                 isLiquid = isLiquid,
-                defaultMeasurement = Measurement.Serving(1.0),
+                defaultMeasurement = defaultMeasurement,
             )
     }
 
