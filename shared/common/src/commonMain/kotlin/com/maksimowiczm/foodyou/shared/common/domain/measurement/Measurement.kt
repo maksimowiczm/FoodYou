@@ -8,9 +8,7 @@ sealed interface Measurement {
 
     sealed interface ImmutableMeasurement : Measurement {
 
-        /**
-         * The value of the measurement in its native unit.
-         */
+        /** The value of the measurement in its native unit. */
         val value: Double
 
         /** The metric value of the measurement in grams or milliliters. */
@@ -22,6 +20,10 @@ sealed interface Measurement {
             get() = value
 
         override fun times(other: Double): ImmutableMeasurement = Gram(value * other)
+
+        companion object {
+            const val DEFAULT = 100.0
+        }
     }
 
     data class Milliliter(override val value: Double) : ImmutableMeasurement {
@@ -29,6 +31,10 @@ sealed interface Measurement {
             get() = value
 
         override fun times(other: Double): ImmutableMeasurement = Milliliter(value * other)
+
+        companion object {
+            const val DEFAULT = 100.0
+        }
     }
 
     data class Ounce(override val value: Double) : ImmutableMeasurement {
@@ -38,6 +44,7 @@ sealed interface Measurement {
 
         companion object {
             const val OUNCES_IN_GRAM = 0.03527396
+            const val DEFAULT = 1.0
         }
     }
 
@@ -48,6 +55,7 @@ sealed interface Measurement {
 
         companion object {
             const val FLUID_OUNCES_IN_MILLILITER = 0.0338140227
+            const val DEFAULT = 8.0
         }
     }
 
@@ -58,6 +66,10 @@ sealed interface Measurement {
         fun weight(packageWeight: Double): Double = packageWeight * quantity
 
         override fun times(other: Double): Measurement = Package(quantity * other)
+
+        companion object {
+            const val DEFAULT = 1.0
+        }
     }
 
     @JvmInline
@@ -67,6 +79,10 @@ sealed interface Measurement {
         fun weight(servingWeight: Double): Double = servingWeight * quantity
 
         override fun times(other: Double): Measurement = Serving(quantity * other)
+
+        companion object {
+            const val DEFAULT = 1.0
+        }
     }
 
     companion object
