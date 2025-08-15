@@ -7,10 +7,10 @@ import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodEvent
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveMeasurementSuggestionsQuery
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
+import com.maksimowiczm.foodyou.business.food.domain.defaultMeasurement
+import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateDiaryEntryCommand
 import com.maksimowiczm.foodyou.feature.food.diary.shared.usecase.ObserveMealsUseCase
-import com.maksimowiczm.foodyou.feature.food.shared.presentation.defaultMeasurement
-import com.maksimowiczm.foodyou.feature.food.shared.presentation.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapIfNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class AddEntryViewModel(
     queryBus: QueryBus,
     private val commandBus: CommandBus,
@@ -100,7 +101,7 @@ internal class AddEntryViewModel(
     val possibleMeasurementTypes =
         domainFood
             .filterNotNull()
-            .map { it.possibleMeasurementTypes }
+            .flatMapLatest { it.possibleMeasurementTypes }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -116,13 +117,12 @@ internal class AddEntryViewModel(
                 initialValue = null,
             )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     val suggestedMeasurement: StateFlow<Measurement?> =
         domainFood
             .filterNotNull()
             .flatMapLatest { food ->
-                suggestions.filterNotNull().map { list ->
-                    list.firstOrNull() ?: food.defaultMeasurement
+                suggestions.filterNotNull().flatMapLatest { list ->
+                    list.firstOrNull()?.let(::flowOf) ?: food.defaultMeasurement
                 }
             }
             .stateIn(

@@ -2,6 +2,10 @@ package com.maksimowiczm.foodyou.business.fooddiary.domain
 
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.MeasurementType
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.mapValues
 
 /**
  * Represents a food item in the food diary.
@@ -22,3 +26,31 @@ sealed interface DiaryFood {
 
     fun weight(measurement: Measurement): Double
 }
+
+// These extensions will probably be moved into business when user would be able to choose between
+// metric and imperial measurements. This is why they are wrapped in Flow, so they can be
+// easily converted to the appropriate measurement system later.
+
+val DiaryFood.possibleMeasurementTypes: Flow<List<MeasurementType>>
+    get() =
+        flowOf(
+            MeasurementType.entries.filter { type ->
+                when (type) {
+                    MeasurementType.Gram -> !isLiquid
+                    MeasurementType.Milliliter -> isLiquid
+                    MeasurementType.Package -> totalWeight != null
+                    MeasurementType.Serving -> servingWeight != null
+                }
+            }
+        )
+
+val DiaryFood.suggestions: Flow<List<Measurement>>
+    get() =
+        possibleMeasurementTypes.mapValues {
+            when (it) {
+                MeasurementType.Gram -> Measurement.Gram(100.0)
+                MeasurementType.Package -> Measurement.Package(1.0)
+                MeasurementType.Serving -> Measurement.Serving(1.0)
+                MeasurementType.Milliliter -> Measurement.Milliliter(100.0)
+            }
+        }
