@@ -1,7 +1,9 @@
 package com.maksimowiczm.foodyou.business.food.application.command
 
+import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.csv.CsvParser
@@ -11,6 +13,7 @@ import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +36,8 @@ data class ImportCsvProductsCommand(
 internal class ImportCsvProductsCommandHandler(
     private val transactionProvider: DatabaseTransactionProvider,
     private val localProduct: LocalProductDataSource,
+    private val localFoodEvent: LocalFoodEventDataSource,
+    private val dateProvider: DateProvider,
     private val csvParser: CsvParser,
 ) : CommandHandler<ImportCsvProductsCommand, Flow<Int>, Unit> {
     override suspend fun handle(command: ImportCsvProductsCommand): Result<Flow<Int>, Unit> =
@@ -142,6 +147,12 @@ internal class ImportCsvProductsCommandHandler(
                     ),
             )
 
-        localProduct.insertUniqueProduct(product)
+        val id = localProduct.insertUniqueProduct(product)
+        if (id != null) {
+            localFoodEvent.insert(
+                foodId = id,
+                event = FoodEvent.Imported(date = dateProvider.now()),
+            )
+        }
     }
 }
