@@ -106,11 +106,13 @@ internal class USDARemoteMediator<K : Any, T : Any>(
             .getOrNull()
 
     private suspend fun Product.insert(now: LocalDateTime = dateProvider.now()) {
-        val id = localProduct.insertProduct(this)
-        localFoodEvent.insert(
-            foodId = id,
-            event = FoodEvent.Downloaded(date = now, url = this.source.url),
-        )
+        val id = localProduct.insertUniqueProduct(this)
+        if (id != null) {
+            localFoodEvent.insert(
+                foodId = id,
+                event = FoodEvent.Downloaded(date = now, url = this.source.url),
+            )
+        }
     }
 
     private companion object {
