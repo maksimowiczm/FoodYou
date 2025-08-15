@@ -16,7 +16,7 @@ data class RecipeIngredient(val food: Food, val measurement: Measurement) {
      * applying the measurement to the food item.
      */
     val weight: Double?
-        get() = measurement.weight(food)
+        get() = food.weight(measurement)
 
     /** Returns the nutrition facts for this ingredient based on its measurement. */
     val nutritionFacts: NutritionFacts?

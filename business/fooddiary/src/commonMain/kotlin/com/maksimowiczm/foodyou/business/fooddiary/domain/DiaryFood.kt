@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.business.fooddiary.domain
 
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 
 /**
  * Represents a food item in the food diary.
@@ -18,4 +19,6 @@ sealed interface DiaryFood {
     val totalWeight: Double?
     val isLiquid: Boolean
     val note: String?
+
+    fun weight(measurement: Measurement): Double
 }

@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipeIngredient
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
+import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.res.stringResource
 import foodyou.app.generated.resources.Res
@@ -43,8 +44,20 @@ internal fun Ingredients(
             val carbs = facts.carbohydrates.value
             val fats = facts.fats.value
             val energy = facts.energy.value
+            val measurementString =
+                ingredient.measurement.stringResourceWithWeight(
+                    totalWeight = ingredient.food.totalWeight,
+                    servingWeight = ingredient.food.servingWeight,
+                    isLiquid = ingredient.food.isLiquid,
+                )
 
-            if (proteins == null || carbs == null || fats == null || energy == null) {
+            if (
+                proteins == null ||
+                    carbs == null ||
+                    fats == null ||
+                    energy == null ||
+                    measurementString == null
+            ) {
                 FoodErrorListItem(
                     headline = ingredient.food.name,
                     errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
@@ -69,7 +82,7 @@ internal fun Ingredients(
                         val text = energy.roundToInt().toString() + " $kcal"
                         Text(text)
                     },
-                    measurement = { Text(ingredient.measurement.stringResource()) },
+                    measurement = { Text(measurementString) },
                     contentPadding = contentPadding,
                     isRecipe = ingredient.food is DiaryFoodRecipe,
                 )

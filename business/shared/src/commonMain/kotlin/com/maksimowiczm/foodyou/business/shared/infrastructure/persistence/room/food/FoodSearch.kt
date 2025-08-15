@@ -14,8 +14,8 @@ data class FoodSearch(
     @Embedded val nutrients: Nutrients?,
     @Embedded val vitamins: Vitamins?,
     @Embedded val minerals: Minerals?,
-    val totalWeight: Float?,
-    val servingWeight: Float?,
+    val totalWeight: Double?,
+    val servingWeight: Double?,
     val measurementType: MeasurementType?,
     val measurementValue: Float?,
 )

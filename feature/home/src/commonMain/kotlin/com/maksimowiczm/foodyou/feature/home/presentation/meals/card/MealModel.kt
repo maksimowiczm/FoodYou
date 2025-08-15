@@ -30,4 +30,6 @@ internal data class MealEntryModel(
     val weight: Double?,
     val isLiquid: Boolean,
     val isRecipe: Boolean,
+    val totalWeight: Double?,
+    val servingWeight: Double?,
 )

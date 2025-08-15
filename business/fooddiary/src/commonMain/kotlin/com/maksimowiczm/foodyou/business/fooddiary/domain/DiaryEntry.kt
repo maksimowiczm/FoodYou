@@ -15,7 +15,7 @@ data class DiaryEntry(
     val updatedAt: LocalDateTime,
 ) {
     val weight: Double
-        get() = measurement.weight(food)
+        get() = food.weight(measurement)
 
     /**
      * Total nutrition facts for the entry based on the food's nutrition facts and the weight of the

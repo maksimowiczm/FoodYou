@@ -19,5 +19,5 @@ data class DiaryFoodRecipeIngredient(val food: DiaryFood, val measurement: Measu
 
     /** The weight of the ingredient based on the measurement provided. */
     val weight: Double
-        get() = measurement.weight(food)
+        get() = food.weight(measurement)
 }

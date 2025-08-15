@@ -7,7 +7,6 @@ import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodEvent
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveMeasurementSuggestionsQuery
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
-import com.maksimowiczm.foodyou.business.food.domain.weight
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateDiaryEntryCommand
 import com.maksimowiczm.foodyou.feature.food.diary.shared.usecase.ObserveMealsUseCase
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.defaultMeasurement
@@ -57,7 +56,7 @@ internal class AddEntryViewModel(
                 replay = 1,
             )
 
-    val food =
+    val food: StateFlow<FoodModel?> =
         domainFood
             .mapIfNotNull {
                 when (it) {
@@ -185,7 +184,7 @@ internal class AddEntryViewModel(
                 return@launch
             }
 
-            val weight = measurement.weight(food)
+            val weight = food.weight(measurement)
             food.unpack(weight).map { (food, measurement) ->
                 val diaryFood = food.toDiaryFood()
 

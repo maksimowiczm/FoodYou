@@ -37,18 +37,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.food.domain.weight
 import com.maksimowiczm.foodyou.feature.food.recipe.presentation.MinimalIngredient
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
+import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.shared.ui.res.stringResource
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
@@ -210,7 +208,7 @@ private fun IngredientListItem(
         return FoodListItemSkeleton(shimmer, modifier)
     }
 
-    val factor = ingredient.measurement.weight(food)?.div(100)
+    val factor = food.weight(ingredient.measurement)?.div(100)
     if (factor == null) {
         return FoodErrorListItem(
             headline = food.headline,
@@ -225,8 +223,20 @@ private fun IngredientListItem(
     val carbohydrates = measurementFacts.carbohydrates.value
     val fats = measurementFacts.fats.value
     val energy = measurementFacts.energy.value
+    val measurementString =
+        ingredient.measurement.stringResourceWithWeight(
+            totalWeight = food.totalWeight,
+            servingWeight = food.servingWeight,
+            isLiquid = food.isLiquid,
+        )
 
-    if (proteins == null || carbohydrates == null || fats == null || energy == null) {
+    if (
+        proteins == null ||
+            carbohydrates == null ||
+            fats == null ||
+            energy == null ||
+            measurementString == null
+    ) {
         return FoodErrorListItem(
             headline = food.headline,
             modifier = modifier,
@@ -256,26 +266,7 @@ private fun IngredientListItem(
             val text = energy.formatClipZeros("%.0f")
             Text("$text $kcal")
         },
-        measurement = {
-            val weight =
-                when (ingredient.measurement) {
-                    is Measurement.Gram,
-                    is Measurement.Milliliter -> null
-
-                    is Measurement.Package -> food.totalWeight?.let(ingredient.measurement::weight)
-                    is Measurement.Serving ->
-                        food.servingWeight?.let(ingredient.measurement::weight)
-                }
-
-            val text = buildString {
-                append(ingredient.measurement.stringResource())
-                if (weight != null) {
-                    append(" (${weight.formatClipZeros()} $g)")
-                }
-            }
-
-            Text(text)
-        },
+        measurement = { Text(measurementString) },
         modifier = modifier,
         contentPadding = contentPadding,
         trailingContent = {

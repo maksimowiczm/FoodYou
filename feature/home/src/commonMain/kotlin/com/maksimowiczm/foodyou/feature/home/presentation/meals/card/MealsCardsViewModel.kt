@@ -3,13 +3,11 @@ package com.maksimowiczm.foodyou.feature.home.presentation.meals.card
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteDiaryEntryCommand
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteDiaryEntryError
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQuery
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsPreferencesQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
@@ -43,8 +41,7 @@ internal class MealsCardsViewModel(queryBus: QueryBus, private val commandBus: C
                 initialValue = null,
             )
 
-    private val _layout =
-        queryBus.dispatch<MealsPreferences>(ObserveMealsPreferencesQuery).map { it.layout }
+    private val _layout = queryBus.dispatch(ObserveMealsPreferencesQuery).map { it.layout }
     val layout =
         _layout.stateIn(
             scope = viewModelScope,
@@ -59,7 +56,7 @@ internal class MealsCardsViewModel(queryBus: QueryBus, private val commandBus: C
     fun onDeleteEntry(measurementId: Long) {
         viewModelScope.launch {
             commandBus
-                .dispatch<Unit, DeleteDiaryEntryError>(DeleteDiaryEntryCommand(measurementId))
+                .dispatch(DeleteDiaryEntryCommand(measurementId))
                 .consume(
                     onFailure = {
                         FoodYouLogger.e(TAG) {
@@ -101,4 +98,6 @@ private fun DiaryEntry.toMealEntryModel(): MealEntryModel =
         weight = weight,
         isLiquid = food.isLiquid,
         isRecipe = food is DiaryFoodRecipe,
+        totalWeight = food.totalWeight,
+        servingWeight = food.servingWeight,
     )

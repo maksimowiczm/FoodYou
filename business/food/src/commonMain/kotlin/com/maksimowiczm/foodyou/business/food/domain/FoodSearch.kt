@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
+import com.maksimowiczm.foodyou.business.shared.domain.food.Weighted
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
@@ -15,10 +16,10 @@ sealed interface FoodSearch {
         override val headline: String,
         override val isLiquid: Boolean,
         val nutritionFacts: NutritionFacts,
-        val totalWeight: Float?,
-        val servingWeight: Float?,
+        override val totalWeight: Double?,
+        override val servingWeight: Double?,
         override val defaultMeasurement: Measurement,
-    ) : FoodSearch
+    ) : FoodSearch, Weighted
 
     data class Recipe(
         override val id: FoodId.Recipe,
