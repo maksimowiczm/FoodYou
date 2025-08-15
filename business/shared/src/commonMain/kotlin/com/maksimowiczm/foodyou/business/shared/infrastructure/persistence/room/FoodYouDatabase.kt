@@ -34,6 +34,7 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.LegacyMigrations
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.deleteUsedFoodEvent
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.foodYou3Migration
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.unlinkDiaryMigration
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsDao
@@ -143,7 +144,7 @@ abstract class FoodYouDatabase : RoomDatabase(), DatabaseTransactionProvider, Da
     }
 
     companion object {
-        const val VERSION = 26
+        const val VERSION = 27
 
         private val migrations: List<Migration> =
             listOf(
@@ -157,6 +158,7 @@ abstract class FoodYouDatabase : RoomDatabase(), DatabaseTransactionProvider, Da
                 LegacyMigrations.MIGRATION_21_22,
                 foodYou3Migration,
                 unlinkDiaryMigration,
+                deleteUsedFoodEvent,
             )
 
         fun Builder<FoodYouDatabase>.buildDatabase(
