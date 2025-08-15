@@ -35,6 +35,23 @@ data class DiaryFoodRecipe(
     override fun weight(measurement: Measurement) = super<WeightedStrict>.weight(measurement)
 
     /**
+     * Returns a list of all ingredients in the recipe, including those from nested recipes. If an
+     * ingredient is a recipe, it recursively includes its ingredients. Each food is included only
+     * once in the final list.
+     */
+    fun flatIngredients(): List<DiaryFood> =
+        ingredients
+            .flatMap { ingredient ->
+                val food = ingredient.food
+                if (food is DiaryFoodRecipe) {
+                    listOf(food) + food.flatIngredients()
+                } else {
+                    listOf(food)
+                }
+            }
+            .distinct()
+
+    /**
      * Unpacks the recipe into a list of ingredients with their weights adjusted according to the
      * specified measurement.
      *

@@ -24,9 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -42,20 +40,13 @@ import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.Source
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.rememberFoodMeasurementFormState
 import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.UpdateEntryEvent
 import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.UpdateEntryViewModel
-import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.canUnpack
-import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.possibleMeasurementTypes
-import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.suggestions
 import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPicker
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import com.maksimowiczm.foodyou.shared.ui.ext.minus
 import com.maksimowiczm.foodyou.shared.ui.ext.plus
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_save
-import foodyou.app.generated.resources.action_unpack
-import foodyou.app.generated.resources.headline_note
-import foodyou.app.generated.resources.headline_source
+import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.days
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -79,9 +70,11 @@ fun UpdateEntryScreen(
 
     val meals by viewModel.meals.collectAsStateWithLifecycle()
     val entry = viewModel.entry.collectAsStateWithLifecycle().value
+    val possibleTypes = viewModel.possibleMeasurementTypes.collectAsStateWithLifecycle().value
+    val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
     val today by viewModel.today.collectAsStateWithLifecycle()
 
-    if (entry == null) {
+    if (entry == null || suggestions == null || possibleTypes == null) {
         // TODO loading state
     } else {
 
@@ -96,11 +89,8 @@ fun UpdateEntryScreen(
                 meals = remember(meals) { meals.map { it.name } },
                 selectedMeal =
                     remember(meals, entry) { meals.firstOrNull { it.id == entry.mealId }?.name },
-                suggestions =
-                    remember(entry) {
-                        (listOf(entry.measurement) + entry.food.suggestions).distinct()
-                    },
-                possibleTypes = remember(entry) { entry.food.possibleMeasurementTypes },
+                suggestions = suggestions,
+                possibleTypes = possibleTypes,
                 selectedMeasurement = entry.measurement,
             )
 
@@ -173,7 +163,7 @@ private fun UpdateEntryScreen(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                if (entry.food.canUnpack) {
+                if (entry.food is DiaryFoodRecipe) {
                     ExtendedFloatingActionButton(
                         onClick = {
                             if (state.isValid) {
@@ -217,7 +207,7 @@ private fun UpdateEntryScreen(
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding =
                 paddingValues.add(vertical = 8.dp).let {
-                    if (entry.food.canUnpack) {
+                    if (entry.food is DiaryFoodRecipe) {
                         it.add(bottom = 8.dp + 56.dp + 8.dp + 80.dp + 24.dp) // Double FAB
                     } else {
                         it.add(bottom = 80.dp + 24.dp) // FAB

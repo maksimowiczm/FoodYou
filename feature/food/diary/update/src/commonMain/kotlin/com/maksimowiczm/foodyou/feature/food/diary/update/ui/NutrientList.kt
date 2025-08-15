@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFood
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.isComplete
-import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.allIngredients
 import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.feature.food.shared.ui.NutrientList
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
@@ -79,7 +78,10 @@ internal fun NutrientList(
         if (food is DiaryFoodRecipe && !food.nutritionFacts.isComplete) {
             val foods =
                 remember(food) {
-                    food.allIngredients().filterNot { it.nutritionFacts.isComplete }.map { it.name }
+                    food
+                        .flatIngredients()
+                        .filterNot { it.nutritionFacts.isComplete }
+                        .map { it.name }
                 }
 
             IncompleteFoodsList(foods = foods, modifier = Modifier.padding(8.dp))

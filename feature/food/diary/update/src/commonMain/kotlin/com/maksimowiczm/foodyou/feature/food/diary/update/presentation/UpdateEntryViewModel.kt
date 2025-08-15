@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UnpackDiaryEntryCommand
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateDiaryEntryCommand
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryEntryQuery
+import com.maksimowiczm.foodyou.business.fooddiary.domain.possibleMeasurementTypes
+import com.maksimowiczm.foodyou.business.fooddiary.domain.suggestions
 import com.maksimowiczm.foodyou.feature.food.diary.shared.usecase.ObserveMealsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
@@ -12,13 +14,19 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryB
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.ui.ext.now
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class UpdateEntryViewModel(
     private val entryId: Long,
     queryBus: QueryBus,
@@ -39,6 +47,28 @@ internal class UpdateEntryViewModel(
     val entry =
         queryBus
             .dispatch(ObserveDiaryEntryQuery(entryId))
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
+
+    val possibleMeasurementTypes =
+        entry
+            .filterNotNull()
+            .flatMapLatest { entry -> entry.food.possibleMeasurementTypes }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
+
+    val suggestions: StateFlow<List<Measurement>?> =
+        entry
+            .filterNotNull()
+            .flatMapLatest { entry ->
+                entry.food.suggestions.map { (listOf(entry.measurement) + it).distinct() }
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
