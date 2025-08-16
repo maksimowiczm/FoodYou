@@ -14,7 +14,7 @@ internal class Changelog(private val appConfig: AppConfig) {
     val versions: List<Version>
         get() =
             listOf(
-                v_3_0_0_beta_4,
+                v_3_0_0_rc_1,
                 v_3_0_0_beta_3,
                 v_3_0_0_beta_2,
                 v_3_0_0_beta_1,
@@ -37,13 +37,13 @@ internal class Changelog(private val appConfig: AppConfig) {
                 v2_0_0,
             )
 
-    val v_3_0_0_beta_4 =
+    val v_3_0_0_rc_1 =
         Version(
-            version = "3.0.0-beta.4",
+            version = "3.0.0-rc.1",
             date = LocalDate(2025, 8, 16),
             newFeatures =
                 listOf(
-                    "Added support for importing food products from CSV files.",
+                    "Added CSV import and export support for food products.",
                     "Added support for US ounces as a measurement unit.",
                     "Added energy unit settings, kilojoules are now supported.",
                     "You can now navigate directly to an ingredient from the add entry screen.",
