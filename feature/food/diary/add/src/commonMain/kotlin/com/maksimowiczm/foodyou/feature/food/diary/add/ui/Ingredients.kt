@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.diary.add.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +14,9 @@ import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.ui.ext.add
+import com.maksimowiczm.foodyou.shared.ui.ext.horizontal
+import com.maksimowiczm.foodyou.shared.ui.ext.vertical
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.*
@@ -23,16 +27,18 @@ import org.jetbrains.compose.resources.stringResource
 internal fun Ingredients(
     ingredients: List<IngredientModel>,
     onIngredient: (FoodId, Measurement) -> Unit,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     val g = stringResource(Res.string.unit_gram_short)
-    val kcal = stringResource(Res.string.unit_kcal)
 
-    val contentPadding = PaddingValues(horizontal = 0.dp, vertical = 8.dp)
+    val verticalPadding = contentPadding.vertical()
+    val horizontal = contentPadding.horizontal()
 
-    Column(modifier) {
+    Column(modifier.padding(verticalPadding)) {
         Text(
             text = stringResource(Res.string.headline_ingredients),
+            modifier = Modifier.padding(horizontal),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
         )
@@ -59,7 +65,7 @@ internal fun Ingredients(
                 FoodErrorListItem(
                     headline = ingredient.name,
                     errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
-                    contentPadding = contentPadding,
+                    contentPadding = horizontal.add(vertical = 8.dp),
                 )
             } else {
                 FoodListItem(
@@ -80,7 +86,7 @@ internal fun Ingredients(
                         Text(LocalEnergyFormatter.current.formatEnergy(energy.roundToInt()))
                     },
                     measurement = { Text(measurementString) },
-                    contentPadding = contentPadding,
+                    contentPadding = horizontal.add(vertical = 8.dp),
                     isRecipe = ingredient.isRecipe,
                     onClick = { onIngredient(ingredient.foodId, ingredient.measurement) },
                 )

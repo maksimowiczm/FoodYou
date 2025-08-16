@@ -53,3 +53,14 @@ fun PaddingValues.add(horizontal: Dp = 0.dp, vertical: Dp = 0.dp): PaddingValues
 
     return add(paddingValues)
 }
+
+@Composable
+fun PaddingValues.horizontal(): PaddingValues =
+    PaddingValues(
+        start = calculateStartPadding(LocalLayoutDirection.current),
+        end = calculateEndPadding(LocalLayoutDirection.current),
+    )
+
+@Composable
+fun PaddingValues.vertical(): PaddingValues =
+    PaddingValues(top = calculateTopPadding(), bottom = calculateBottomPadding())

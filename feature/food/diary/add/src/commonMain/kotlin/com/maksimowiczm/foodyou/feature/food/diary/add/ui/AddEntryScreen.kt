@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -249,7 +250,6 @@ private fun AddEntryScreen(
             modifier =
                 Modifier.fillMaxSize()
                     .imePadding()
-                    .padding(horizontal = 8.dp)
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding =
                 paddingValues.add(vertical = 8.dp).let {
@@ -260,23 +260,14 @@ private fun AddEntryScreen(
                     }
                 },
         ) {
-            item { HorizontalDivider() }
+            item { HorizontalDivider(Modifier.padding(horizontal = 8.dp)) }
 
             item {
-                ChipsDatePicker(
-                    state = state.dateState,
-                    modifier = Modifier.padding(vertical = 8.dp),
-                )
-                HorizontalDivider()
-                ChipsMealPicker(
-                    state = state.mealsState,
-                    modifier = Modifier.padding(vertical = 8.dp),
-                )
-                HorizontalDivider()
-                MeasurementPicker(
-                    state = state.measurementState,
-                    modifier = Modifier.padding(vertical = 8.dp),
-                )
+                ChipsDatePicker(state = state.dateState, modifier = Modifier.padding(8.dp))
+                HorizontalDivider(Modifier.padding(horizontal = 8.dp))
+                ChipsMealPicker(state = state.mealsState, modifier = Modifier.padding(8.dp))
+                HorizontalDivider(Modifier.padding(horizontal = 8.dp))
+                MeasurementPicker(state = state.measurementState, modifier = Modifier.padding(8.dp))
             }
 
             if (food is RecipeModel) {
@@ -284,29 +275,30 @@ private fun AddEntryScreen(
                     val measurement = state.measurementState.measurement
                     val ingredients = food.unpack(food.weight(measurement))
 
-                    HorizontalDivider()
+                    HorizontalDivider(Modifier.padding(horizontal = 8.dp))
                     Ingredients(
                         ingredients = ingredients,
                         onIngredient = onIngredient,
-                        modifier = Modifier.padding(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                     )
                 }
             }
 
             item {
-                HorizontalDivider()
+                HorizontalDivider(Modifier.padding(horizontal = 8.dp))
                 NutrientList(
                     food = food,
                     measurement = state.measurementState.measurement,
                     onEditFood = onEditFood,
+                    modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }
 
             val note = food.note
             if (note != null) {
                 item {
-                    HorizontalDivider()
-                    Column(Modifier.padding(vertical = 16.dp, horizontal = 8.dp)) {
+                    HorizontalDivider(Modifier.padding(horizontal = 8.dp))
+                    Column(Modifier.padding(16.dp)) {
                         Text(
                             text = stringResource(Res.string.headline_note),
                             style = MaterialTheme.typography.labelLarge,
@@ -320,8 +312,8 @@ private fun AddEntryScreen(
 
             if (food is ProductModel) {
                 item {
-                    HorizontalDivider()
-                    Column(Modifier.padding(vertical = 16.dp, horizontal = 8.dp)) {
+                    HorizontalDivider(Modifier.padding(horizontal = 8.dp))
+                    Column(Modifier.padding(16.dp)) {
                         Text(
                             text = stringResource(Res.string.headline_source),
                             style = MaterialTheme.typography.labelLarge,
@@ -335,11 +327,8 @@ private fun AddEntryScreen(
 
             if (events.isNotEmpty()) {
                 item {
-                    HorizontalDivider()
-                    FoodEvents(
-                        events = events,
-                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp),
-                    )
+                    HorizontalDivider(Modifier.padding(horizontal = 8.dp))
+                    FoodEvents(events = events, modifier = Modifier.padding(16.dp))
                 }
             }
         }
