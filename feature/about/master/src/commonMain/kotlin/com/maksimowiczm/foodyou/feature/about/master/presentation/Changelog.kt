@@ -13,7 +13,8 @@ internal class Changelog(private val appConfig: AppConfig) {
 
     val versions: List<Version>
         get() =
-            listOfNotNull(
+            listOf(
+                v_3_0_0_beta_4,
                 v_3_0_0_beta_3,
                 v_3_0_0_beta_2,
                 v_3_0_0_beta_1,
@@ -35,6 +36,31 @@ internal class Changelog(private val appConfig: AppConfig) {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_0_0_beta_4 =
+        Version(
+            version = "3.0.0-beta.4",
+            date = LocalDate(2025, 8, 16),
+            newFeatures =
+                listOf(
+                    "Added support for importing food products from CSV files.",
+                    "Added support for US ounces as a measurement unit.",
+                    "Added energy unit settings, kilojoules are now supported.",
+                    "You can now navigate directly to an ingredient from the add entry screen.",
+                    "Automatic switching between food sources during search.",
+                ),
+            bugFixes =
+                listOf(
+                    "Don't insert duplicate entries when searching Open Food Facts or FoodData Central (USDA).",
+                    "Fixed incorrect measurements in recent recipes.",
+                    "Invalid measurements are no longer shown for foods.",
+                    "Food search queries are now case-insensitive.",
+                    "Fixed crashes when updating from beta.1 or beta.2 to beta.3.",
+                ),
+            notes =
+                "This is a preview version. Please don't report missing features, as this is still a work-in-progress.",
+            isPreview = true,
+        )
 
     val v_3_0_0_beta_3 =
         Version(
