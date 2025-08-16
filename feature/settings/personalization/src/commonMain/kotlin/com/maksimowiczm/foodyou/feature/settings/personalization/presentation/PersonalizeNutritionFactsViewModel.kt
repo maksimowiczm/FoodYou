@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.settings.personalization.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.application.command.SetNutrientsOrderCommand
+import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
@@ -29,11 +29,15 @@ internal class PersonalizeNutritionFactsViewModel(
 
     fun resetOrder() {
         viewModelScope.launch {
-            commandBus.dispatch(SetNutrientsOrderCommand(NutrientsOrder.defaultOrder))
+            commandBus.dispatch(
+                PartialSettingsUpdateCommand(nutrientsOrder = NutrientsOrder.defaultOrder)
+            )
         }
     }
 
     fun updateOrder(order: List<NutrientsOrder>) {
-        viewModelScope.launch { commandBus.dispatch(SetNutrientsOrderCommand(order)) }
+        viewModelScope.launch {
+            commandBus.dispatch(PartialSettingsUpdateCommand(nutrientsOrder = order))
+        }
     }
 }

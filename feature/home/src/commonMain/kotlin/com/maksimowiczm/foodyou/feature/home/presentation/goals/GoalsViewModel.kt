@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDailyGoalsQuery
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQuery
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DailyGoal
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
-import com.maksimowiczm.foodyou.business.settings.application.command.SetExpandGoalCardCommand
+import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
@@ -48,7 +46,9 @@ internal class GoalsViewModel(
         )
 
     fun setExpandGoalsCard(expand: Boolean) {
-        viewModelScope.launch { commandBus.dispatch(SetExpandGoalCardCommand(expand)) }
+        viewModelScope.launch {
+            commandBus.dispatch(PartialSettingsUpdateCommand(expandGoalCard = expand))
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -57,8 +57,8 @@ internal class GoalsViewModel(
             .filterNotNull()
             .flatMapLatest { date ->
                 combine(
-                    queryBus.dispatch<List<DiaryMeal>>(ObserveDiaryMealsQuery(date)),
-                    queryBus.dispatch<DailyGoal>(ObserveDailyGoalsQuery(date)),
+                    queryBus.dispatch(ObserveDiaryMealsQuery(date)),
+                    queryBus.dispatch(ObserveDailyGoalsQuery(date)),
                 ) { meals, goal ->
                     val facts = meals.map { it.nutritionFacts }.sum()
 

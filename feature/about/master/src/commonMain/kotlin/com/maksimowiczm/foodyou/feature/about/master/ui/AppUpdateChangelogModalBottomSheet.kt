@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.about.master.ui
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.settings.application.command.SetLastRememberedVersionCommand
+import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.config.AppConfig
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
@@ -25,7 +25,9 @@ fun AppUpdateChangelogModalBottomSheet(modifier: Modifier = Modifier) {
         ChangelogModalBottomSheet(
             onDismissRequest = {
                 coroutineScope.launch {
-                    commandBus.dispatch(SetLastRememberedVersionCommand(currentVersion))
+                    commandBus.dispatch(
+                        PartialSettingsUpdateCommand(lastRememberedVersion = currentVersion)
+                    )
                 }
             },
             modifier = modifier,

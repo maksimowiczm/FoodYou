@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.application.command.SetOnboardingFinishedCommand
+import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.business.settings.application.query.ObserveSettingsQuery
 import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
@@ -48,7 +48,9 @@ internal class AppViewModel(queryBus: QueryBus, private val commandBus: CommandB
             )
 
     fun finishOnboarding() {
-        viewModelScope.launch { commandBus.dispatch(SetOnboardingFinishedCommand(true)) }
+        viewModelScope.launch {
+            commandBus.dispatch(PartialSettingsUpdateCommand(onboardingFinished = true))
+        }
     }
 }
 
