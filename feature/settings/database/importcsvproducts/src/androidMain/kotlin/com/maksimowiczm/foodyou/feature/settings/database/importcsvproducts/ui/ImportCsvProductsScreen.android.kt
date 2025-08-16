@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.settings.database.importcsvproducts.presentation.ImportCsvProductsViewModel
 import com.maksimowiczm.foodyou.feature.settings.database.importcsvproducts.presentation.UiState
+import com.maksimowiczm.foodyou.feature.shared.ui.SomethingWentWrongScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

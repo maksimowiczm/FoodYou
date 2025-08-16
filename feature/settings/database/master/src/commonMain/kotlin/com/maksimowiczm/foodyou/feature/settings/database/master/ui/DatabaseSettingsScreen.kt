@@ -12,7 +12,7 @@ import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
@@ -27,6 +27,7 @@ fun DatabaseSettingsScreen(
     onBack: () -> Unit,
     onExternalDatabases: () -> Unit,
     onImportCsvProducts: () -> Unit,
+    onExportCsvProducts: () -> Unit,
     onDatabaseDump: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -48,6 +49,7 @@ fun DatabaseSettingsScreen(
         ) {
             item { ExternalDatabasesSettingsListItem(onExternalDatabases) }
             item { ImportCsvProductsSettingsListItem(onImportCsvProducts) }
+            item { ExportCsvProductsSettingsListItem(onExportCsvProducts) }
             item { DatabaseDumpSettingsListItem(onDatabaseDump) }
         }
     }
@@ -82,6 +84,19 @@ private fun ImportCsvProductsSettingsListItem(onClick: () -> Unit, modifier: Mod
         label = { Text(stringResource(Res.string.action_import_csv_food_products)) },
         supportingContent = {
             Text(stringResource(Res.string.description_import_csv_food_products))
+        },
+        onClick = onClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun ExportCsvProductsSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    SettingsListItem(
+        icon = { Icon(painterResource(Res.drawable.ic_file_export), null) },
+        label = { Text(stringResource(Res.string.action_export_csv_food_products)) },
+        supportingContent = {
+            Text(stringResource(Res.string.description_export_csv_food_products))
         },
         onClick = onClick,
         modifier = modifier,

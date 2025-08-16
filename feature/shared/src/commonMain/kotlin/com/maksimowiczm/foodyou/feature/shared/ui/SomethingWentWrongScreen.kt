@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.database.importcsvproducts.ui
+package com.maksimowiczm.foodyou.feature.shared.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,11 +23,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SomethingWentWrongScreen(
-    onBack: () -> Unit,
-    message: String?,
-    modifier: Modifier = Modifier,
-) {
+fun SomethingWentWrongScreen(onBack: () -> Unit, message: String?, modifier: Modifier = Modifier) {
     Scaffold(
         modifier = modifier,
         topBar = {

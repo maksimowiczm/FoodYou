@@ -20,6 +20,15 @@ abstract class ProductDao {
     )
     abstract fun observeProduct(id: Long): Flow<ProductEntity?>
 
+    @Query(
+        """
+        SELECT *
+        FROM Product
+        LIMIT :limit OFFSET :offset
+        """
+    )
+    abstract fun observeProducts(limit: Int, offset: Int): Flow<List<ProductEntity>>
+
     @Insert abstract suspend fun insertProduct(product: ProductEntity): Long
 
     @Update abstract suspend fun updateProduct(product: ProductEntity)

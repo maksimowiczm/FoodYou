@@ -49,6 +49,7 @@ kotlin {
             implementation(projects.feature.settings.database.databasedump)
             implementation(projects.feature.settings.database.swissfoodcompositiondatabase)
             implementation(projects.feature.settings.database.importcsvproducts)
+            implementation(projects.feature.settings.database.exportcsvproducts)
 
             implementation(projects.feature.food.diary.search)
             implementation(projects.feature.food.diary.add)

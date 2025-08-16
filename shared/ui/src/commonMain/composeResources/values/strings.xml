@@ -268,6 +268,7 @@
     <string name="description_show_macronutrients_goals">Show macronutrients goals</string>
     <string name="description_recipe_missing_ingredients">You might not see every recipe here. Some recipes are hidden to prevent circular references.</string>
     <string name="description_please_wait_while_importing_products">Please wait while importing products</string>
+    <string name="description_please_wait_while_exporting_products">Please wait while exporting products</string>
     <string name="description_suggest_external_database">Suggest a publicly available database to be included</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
@@ -467,6 +468,9 @@
     <string name="description_import_csv_food_products_hint">We just need to know what’s what. Tell us which column in your file is the product name, brand, etc.</string>
     <string name="description_import_csv_food_products_hint_2">All nutrient values must be given in grams or kcal per 100 g</string>
 
+    <string name="action_export_csv_food_products">Export CSV food products</string>
+    <string name="description_export_csv_food_products">Export food products to CSV file</string>
+
     <string name="neutral_no_column">No column</string>
 
     <plurals name="neutral_imported_x_food_products">
@@ -476,5 +480,10 @@
 
     <string name="headline_energy_unit">Energy unit</string>
     <string name="description_energy_unit">Select preferred energy unit</string>
+
+    <plurals name="neutral_exported_x_food_products">
+        <item quantity="one">Exported %1$d food product</item>
+        <item quantity="other">Exported %1$d food products</item>
+    </plurals>
 
 </resources>

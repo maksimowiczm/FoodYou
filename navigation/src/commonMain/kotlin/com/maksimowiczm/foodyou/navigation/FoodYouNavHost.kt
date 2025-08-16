@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
 import com.maksimowiczm.foodyou.navigation.domain.DumpDatabaseDestination
+import com.maksimowiczm.foodyou.navigation.domain.ExportCsvProductsDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddEntryDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateRecipeDestination
@@ -128,6 +129,9 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnImportCsvProducts = {
                 navController.navigateSingleTop(ImportCsvProductsDestination)
             },
+            masterOnExportCsvProducts = {
+                navController.navigateSingleTop(ExportCsvProductsDestination)
+            },
             masterOnDatabaseDump = { navController.navigateSingleTop(DumpDatabaseDestination) },
             externalDatabasesOnBack = {
                 navController.popBackStack<SettingsExternalDatabasesDestination>(true)
@@ -147,6 +151,12 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             },
             importCsvProductsOnFinish = {
                 navController.popBackStack<ImportCsvProductsDestination>(true)
+            },
+            exportCsvProductsOnBack = {
+                navController.popBackStack<ExportCsvProductsDestination>(true)
+            },
+            exportCsvProductsOnFinish = {
+                navController.popBackStack<ExportCsvProductsDestination>(true)
             },
         )
         goalsNavigationGraph(

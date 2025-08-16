@@ -103,3 +103,5 @@ include(":feature:food:diary:add")
 include(":feature:food:diary:update")
 
 include(":feature:onboarding")
+
+include(":feature:settings:database:exportcsvproducts")

@@ -16,3 +16,5 @@ internal data object SettingsSwissFoodCompositionDatabaseDestination : Navigatio
 @Serializable internal data object DumpDatabaseDestination : NavigationDestination
 
 @Serializable internal data object ImportCsvProductsDestination : NavigationDestination
+
+@Serializable internal data object ExportCsvProductsDestination : NavigationDestination

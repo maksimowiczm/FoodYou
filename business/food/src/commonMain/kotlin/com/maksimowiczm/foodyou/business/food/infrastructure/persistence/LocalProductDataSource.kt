@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface LocalProductDataSource {
 
+    fun observeProducts(limit: Int, offset: Int): Flow<List<Product>>
+
     fun observeProduct(id: FoodId.Product): Flow<Product?>
 
     suspend fun deleteProduct(product: Product)

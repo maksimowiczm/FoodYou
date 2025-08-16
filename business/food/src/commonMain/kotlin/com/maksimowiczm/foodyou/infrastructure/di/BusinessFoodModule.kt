@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.business.food.application.command.CreateProductC
 import com.maksimowiczm.foodyou.business.food.application.command.CreateRecipeCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.command.DeleteFoodCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductCommandHandler
+import com.maksimowiczm.foodyou.business.food.application.command.ExportCsvProductsCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.command.ImportCsvProductsCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateProductCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateRecipeCommandHandler
@@ -59,6 +60,7 @@ val businessFoodModule = module {
     commandHandlerOf(::UpdateUseOpenFoodFactsCommandHandler)
     commandHandlerOf(::UpdateUseUsdaCommandHandler)
     commandHandlerOf(::ImportCsvProductsCommandHandler)
+    commandHandlerOf(::ExportCsvProductsCommandHandler)
 
     queryHandlerOf(::ObserveFoodQueryHandler)
     queryHandlerOf(::SearchFoodQueryHandler)

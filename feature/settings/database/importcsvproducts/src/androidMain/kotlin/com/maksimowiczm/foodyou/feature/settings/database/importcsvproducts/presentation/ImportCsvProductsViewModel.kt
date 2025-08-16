@@ -19,7 +19,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.stream.consumeAsFlow
 
@@ -135,16 +136,11 @@ internal class ImportCsvProductsViewModel(private val commandBus: CommandBus) : 
     }
 
     private suspend fun handleImportSuccess(flow: Flow<Int>) {
-        var count = 0
-
         flow
             .catch { throw it }
-            .collectLatest {
-                count = it
-                _uiState.value = UiState.Importing(count)
-            }
-
-        _uiState.value = UiState.ImportSuccess(count)
+            .onEach { _uiState.value = UiState.Importing(it) }
+            .last()
+            .let { _uiState.value = UiState.ImportSuccess(it) }
     }
 
     private companion object {

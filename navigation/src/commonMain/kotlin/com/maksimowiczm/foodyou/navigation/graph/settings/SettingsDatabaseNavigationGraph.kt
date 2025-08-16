@@ -4,12 +4,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.dialog
 import androidx.navigation.navigation
 import com.maksimowiczm.foodyou.feature.settings.database.databasedump.ui.DatabaseDumpScreen
+import com.maksimowiczm.foodyou.feature.settings.database.exportcsvproducts.ui.ExportCsvProductsScreen
 import com.maksimowiczm.foodyou.feature.settings.database.externaldatabases.ui.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.feature.settings.database.externaldatabases.ui.UpdateUsdaApiKeyDialog
 import com.maksimowiczm.foodyou.feature.settings.database.importcsvproducts.ui.ImportCsvProductsScreen
 import com.maksimowiczm.foodyou.feature.settings.database.master.ui.DatabaseSettingsScreen
 import com.maksimowiczm.foodyou.feature.settings.database.swissfoodcompositiondatabase.ui.SwissFoodCompositionDatabaseScreen
 import com.maksimowiczm.foodyou.navigation.domain.DumpDatabaseDestination
+import com.maksimowiczm.foodyou.navigation.domain.ExportCsvProductsDestination
 import com.maksimowiczm.foodyou.navigation.domain.ImportCsvProductsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDatabaseMasterDestination
@@ -22,6 +24,7 @@ internal fun NavGraphBuilder.settingsDatabaseNavigationGraph(
     masterOnBack: () -> Unit,
     masterOnExternalDatabases: () -> Unit,
     masterOnImportCsvProducts: () -> Unit,
+    masterOnExportCsvProducts: () -> Unit,
     masterOnDatabaseDump: () -> Unit,
     externalDatabasesOnBack: () -> Unit,
     externalDatabasesOnSwissFoodCompositionDatabase: () -> Unit,
@@ -32,6 +35,8 @@ internal fun NavGraphBuilder.settingsDatabaseNavigationGraph(
     swissFoodCompositionDatabaseOnBack: () -> Unit,
     importCsvProductsOnBack: () -> Unit,
     importCsvProductsOnFinish: () -> Unit,
+    exportCsvProductsOnBack: () -> Unit,
+    exportCsvProductsOnFinish: () -> Unit,
 ) {
     navigation<SettingsDatabaseDestination>(startDestination = SettingsDatabaseMasterDestination) {
         forwardBackwardComposable<SettingsDatabaseMasterDestination> {
@@ -39,6 +44,7 @@ internal fun NavGraphBuilder.settingsDatabaseNavigationGraph(
                 onBack = masterOnBack,
                 onExternalDatabases = masterOnExternalDatabases,
                 onImportCsvProducts = masterOnImportCsvProducts,
+                onExportCsvProducts = masterOnExportCsvProducts,
                 onDatabaseDump = masterOnDatabaseDump,
             )
         }
@@ -64,6 +70,12 @@ internal fun NavGraphBuilder.settingsDatabaseNavigationGraph(
             ImportCsvProductsScreen(
                 onBack = importCsvProductsOnBack,
                 onFinish = importCsvProductsOnFinish,
+            )
+        }
+        forwardBackwardComposable<ExportCsvProductsDestination> {
+            ExportCsvProductsScreen(
+                onBack = exportCsvProductsOnBack,
+                onFinish = exportCsvProductsOnFinish,
             )
         }
     }

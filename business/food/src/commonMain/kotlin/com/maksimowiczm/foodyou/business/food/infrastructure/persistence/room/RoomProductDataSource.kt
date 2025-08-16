@@ -13,8 +13,12 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapValues
 
 internal class RoomProductDataSource(private val productDao: ProductDao) : LocalProductDataSource {
+    override fun observeProducts(limit: Int, offset: Int): Flow<List<Product>> =
+        productDao.observeProducts(limit, offset).mapValues(ProductEntity::toModel)
+
     override fun observeProduct(id: FoodId.Product): Flow<Product?> =
         productDao.observeProduct(id.id).map { it?.toModel() }
 
