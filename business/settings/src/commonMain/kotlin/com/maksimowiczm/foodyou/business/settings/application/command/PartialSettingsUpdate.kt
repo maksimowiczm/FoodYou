@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.business.settings.application.command
 
+import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.settings.infrastructure.preferences.LocalSettingsDataSource
@@ -21,6 +22,7 @@ data class PartialSettingsUpdateCommand(
     val homeCardOrder: List<HomeCard>? = null,
     val expandGoalCard: Boolean? = null,
     val onboardingFinished: Boolean? = null,
+    val energyFormat: EnergyFormat? = null,
 ) : Command<Unit, Unit>
 
 internal class PartialSettingsUpdateCommandHandler(
@@ -35,6 +37,7 @@ internal class PartialSettingsUpdateCommandHandler(
         command.homeCardOrder?.let { localSettings.updateHomeCardOrder(it) }
         command.expandGoalCard?.let { localSettings.updateExpandGoalCard(it) }
         command.onboardingFinished?.let { localSettings.updateOnboardingFinished(it) }
+        command.energyFormat?.let { localSettings.updateEnergyFormat(it) }
         return Ok(Unit)
     }
 }

@@ -13,7 +13,7 @@ import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.shared.ui.res.stringResource
+import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.error_food_is_missing_required_fields
 import foodyou.app.generated.resources.headline_ingredients
@@ -79,8 +79,7 @@ internal fun Ingredients(
                         Text(text)
                     },
                     calories = {
-                        val text = energy.roundToInt().toString() + " $kcal"
-                        Text(text)
+                        Text(LocalEnergyFormatter.current.formatEnergy(energy.roundToInt()))
                     },
                     measurement = { Text(measurementString) },
                     contentPadding = contentPadding,

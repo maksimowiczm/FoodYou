@@ -61,7 +61,7 @@
     <string name="unit_calories">Calories</string>
     <string name="unit_energy" description="Energy as calories">Energy</string>
     <string name="unit_kcal">kcal</string>
-    <string name="unit_kilojules">kJ</string>
+    <string name="unit_kilojoules">kJ</string>
     <string name="unit_gram_short" translatable="false">g</string>
     <string name="unit_milliliter_short" translatable="false">ml</string>
     <string name="unit_milligram_short" translatable="false">mg</string>
@@ -203,6 +203,10 @@
         <item quantity="one">%1$d calorie left</item>
         <item quantity="other">%1$d calories left</item>
     </plurals>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">%1$d kilojoule left</item>
+        <item quantity="other">%1$d kilojoules left</item>
+    </plurals>
     <string name="neutral_set_your_daily_goals">Set your daily nutrition goals</string>
     <string name="neutral_set_your_meal_schedule">Set your meal schedule</string>
     <string name="neutral_permanently_delete_meal">Permanently delete meal?</string>
@@ -239,6 +243,10 @@
     <plurals name="negative_exceeded_by_calories">
         <item quantity="one">Exceeded by %1$d calorie</item>
         <item quantity="other">Exceeded by %1$d calories</item>
+    </plurals>
+    <plurals name="negative_exceeded_by_kilojoules">
+        <item quantity="one">Exceeded by %1$d kilojoule</item>
+        <item quantity="other">Exceeded by %1$d kilojoules</item>
     </plurals>
 
     <string name="description_calories_goal">Set your daily calorie intake goal. This will help you to track your progress and stay on track.</string>
@@ -465,5 +473,8 @@
         <item quantity="one">Imported %1$d food product</item>
         <item quantity="other">Imported %1$d food products</item>
     </plurals>
+
+    <string name="headline_energy_unit">Energy unit</string>
+    <string name="description_energy_unit">Select preferred energy unit</string>
 
 </resources>

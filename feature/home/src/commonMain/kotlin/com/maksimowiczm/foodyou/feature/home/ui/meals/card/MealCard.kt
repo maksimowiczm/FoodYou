@@ -52,6 +52,7 @@ import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -69,6 +70,7 @@ internal fun MealCard(
     val nutrientsPalette = LocalNutrientsPalette.current
     val nutrientsOrder = LocalNutrientsOrder.current
     val dateFormatter = LocalDateFormatter.current
+    val energyFormatter = LocalEnergyFormatter.current
     val enDash = stringResource(Res.string.en_dash)
     val allDayString = stringResource(Res.string.headline_all_day)
 
@@ -130,8 +132,8 @@ internal fun MealCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 ValueColumn(
-                    label = stringResource(Res.string.unit_kcal),
-                    value = meal.energy.toString(),
+                    label = energyFormatter.suffix(),
+                    value = energyFormatter.formatEnergy(meal.energy, withSuffix = false),
                     suffix = null,
                     color = MaterialTheme.colorScheme.onSurface,
                 )

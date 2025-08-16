@@ -9,4 +9,5 @@ data class Settings(
     val homeCardOrder: List<HomeCard>,
     val expandGoalCard: Boolean,
     val onboardingFinished: Boolean,
+    val energyFormat: EnergyFormat,
 )

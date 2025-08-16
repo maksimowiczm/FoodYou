@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.feature.shared.ui.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
 import com.maksimowiczm.foodyou.presentation.AppViewModel
 import com.maksimowiczm.foodyou.shared.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.shared.ui.utils.EnergyFormatterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -18,19 +19,22 @@ fun FoodYouApp() {
     val viewModel: AppViewModel = koinViewModel()
     val nutrientsOrder by viewModel.nutrientsOrder.collectAsStateWithLifecycle()
     val onboardingFinished by viewModel.onboardingFinished.collectAsStateWithLifecycle()
+    val energyFormatter by viewModel.energyFormatter.collectAsStateWithLifecycle()
 
     NutrientsOrderProvider(nutrientsOrder) {
-        FoodYouTheme {
-            PreviewReleaseDialog()
-            TranslationWarningStartupDialog()
+        EnergyFormatterProvider(energyFormatter) {
+            FoodYouTheme {
+                PreviewReleaseDialog()
+                TranslationWarningStartupDialog()
 
-            if (onboardingFinished) {
-                Surface {
-                    FoodYouNavHost()
-                    AppUpdateChangelogModalBottomSheet()
+                if (onboardingFinished) {
+                    Surface {
+                        FoodYouNavHost()
+                        AppUpdateChangelogModalBottomSheet()
+                    }
+                } else {
+                    Onboarding(onFinish = viewModel::finishOnboarding)
                 }
-            } else {
-                Onboarding(onFinish = viewModel::finishOnboarding)
             }
         }
     }

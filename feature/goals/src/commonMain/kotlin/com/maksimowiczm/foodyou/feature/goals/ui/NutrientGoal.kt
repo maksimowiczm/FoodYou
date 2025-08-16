@@ -26,9 +26,8 @@ import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
 import com.maksimowiczm.foodyou.feature.goals.presentation.stringResource
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.unit_gram_short
-import foodyou.app.generated.resources.unit_kcal
+import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
+import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -135,13 +134,26 @@ internal object NutrientGoalDefaults {
         value: NutrientValue,
         target: Double,
         color: Color = MaterialTheme.colorScheme.primary,
-    ): AnnotatedString =
-        simpleTargetString(
-            value = value,
-            target = target,
-            color = color,
-            suffix = stringResource(Res.string.unit_kcal),
-        )
+    ): AnnotatedString {
+        val energyFormatter = LocalEnergyFormatter.current
+
+        val value = value.value ?: 0.0
+        val isExceeded = value > target
+        val colorScheme = MaterialTheme.colorScheme
+        val localStyle = LocalTextStyle.current
+
+        return buildAnnotatedString {
+            withStyle(
+                localStyle.copy(color = if (isExceeded) colorScheme.error else color).toSpanStyle()
+            ) {
+                append(energyFormatter.formatEnergy(value, withSuffix = false))
+            }
+            withStyle(localStyle.copy(color = colorScheme.outline).toSpanStyle()) {
+                append(" / ")
+                append(energyFormatter.formatEnergy(target, withSuffix = true))
+            }
+        }
+    }
 
     @Composable
     fun simpleTargetString(

@@ -4,7 +4,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
@@ -30,6 +32,7 @@ internal class DataStoreSettingsDataSource(private val dataStore: DataStore<Pref
                 expandGoalCard = preferences[SettingsPreferencesKeys.expandGoalCard] ?: true,
                 onboardingFinished =
                     preferences[SettingsPreferencesKeys.onboardingFinished] ?: false,
+                energyFormat = preferences.getEnergyFormat(SettingsPreferencesKeys.energyFormat),
             )
         }
 
@@ -65,6 +68,10 @@ internal class DataStoreSettingsDataSource(private val dataStore: DataStore<Pref
         updateData { set(SettingsPreferencesKeys.hidePreviewDialog, hidePreviewDialog) }
     }
 
+    override suspend fun updateEnergyFormat(energyFormat: EnergyFormat) {
+        updateData { setEnergyFormat(SettingsPreferencesKeys.energyFormat, energyFormat) }
+    }
+
     private suspend fun updateData(transform: suspend MutablePreferences.() -> Unit) {
         dataStore.updateData { it.toMutablePreferences().apply { transform() } }
     }
@@ -96,6 +103,13 @@ private fun Preferences.getHomeCardOrder(key: Preferences.Key<String>): List<Hom
     runCatching { this[key]?.split(",")?.map { HomeCard.entries[it.toInt()] } }.getOrNull()
         ?: HomeCard.defaultOrder
 
+private fun MutablePreferences.setEnergyFormat(key: Preferences.Key<Int>, value: EnergyFormat) =
+    setWithNull(key, value.ordinal)
+
+private fun Preferences.getEnergyFormat(key: Preferences.Key<Int>): EnergyFormat =
+    runCatching { EnergyFormat.entries[this[key] ?: EnergyFormat.DEFAULT.ordinal] }
+        .getOrElse { EnergyFormat.DEFAULT }
+
 private object SettingsPreferencesKeys {
     val lastRememberedVersion = stringPreferencesKey("settings:lastRememberedVersion")
     val hidePreviewDialog = booleanPreferencesKey("settings:hidePreviewDialog")
@@ -105,4 +119,5 @@ private object SettingsPreferencesKeys {
     val homeCardOrder = stringPreferencesKey("settings:homeCardOrder")
     val expandGoalCard = booleanPreferencesKey("settings:expandGoalCard")
     val onboardingFinished = booleanPreferencesKey("settings:onboardingFinished")
+    val energyFormat = intPreferencesKey("settings:energyFormat")
 }
