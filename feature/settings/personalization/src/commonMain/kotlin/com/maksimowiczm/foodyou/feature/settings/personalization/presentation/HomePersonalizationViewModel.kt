@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.settings.personalization.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.application.command.SetHomeCardOrderCommand
+import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
@@ -27,6 +27,8 @@ internal class HomePersonalizationViewModel(
         )
 
     fun updateOrder(order: List<HomeCard>) {
-        viewModelScope.launch { commandBus.dispatch(SetHomeCardOrderCommand(order)) }
+        viewModelScope.launch {
+            commandBus.dispatch(PartialSettingsUpdateCommand(homeCardOrder = order))
+        }
     }
 }

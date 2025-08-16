@@ -4,7 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.application.command.SetTranslationWarningCommand
+import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.feature.settings.language.presentation.LanguageViewModel
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
@@ -36,7 +36,9 @@ fun TranslationWarningStartupDialog(modifier: Modifier = Modifier) {
             onConfirm = {
                 // Okay, that is a bit awkward
                 viewModel.viewModelScope.launch {
-                    commandBus.dispatch(SetTranslationWarningCommand(false))
+                    commandBus.dispatch(
+                        PartialSettingsUpdateCommand(showTranslationWarning = false)
+                    )
                 }
             },
             modifier = modifier,

@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.about.master.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.application.command.SetHidePreviewDialog
+import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.business.settings.application.query.ObserveSettingsQuery
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
@@ -31,7 +31,7 @@ internal class PreviewReleaseDialogViewModel(
             .map { it.lastRememberedVersion }
             .onEach {
                 if (it != changelog.currentVersion?.version) {
-                    commandBus.dispatch(SetHidePreviewDialog(false))
+                    commandBus.dispatch(PartialSettingsUpdateCommand(hidePreviewDialog = false))
                 }
             }
             .launchIn(viewModelScope)
@@ -66,6 +66,8 @@ internal class PreviewReleaseDialogViewModel(
     fun dontShowAgain() {
         savedStateHandle["hide"] = true
 
-        viewModelScope.launch { commandBus.dispatch(SetHidePreviewDialog(true)) }
+        viewModelScope.launch {
+            commandBus.dispatch(PartialSettingsUpdateCommand(hidePreviewDialog = true))
+        }
     }
 }

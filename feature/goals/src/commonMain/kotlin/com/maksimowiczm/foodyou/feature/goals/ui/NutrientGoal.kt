@@ -91,7 +91,9 @@ internal fun NutrientGoal(
             animationSpec = MaterialTheme.motionScheme.slowSpatialSpec(),
         )
     val progressBarColor by
-        animateColorAsState(if (state.progress > 1) MaterialTheme.colorScheme.error else progressColor)
+        animateColorAsState(
+            if (state.progress > 1) MaterialTheme.colorScheme.error else progressColor
+        )
     val trackColor by
         animateColorAsState(
             if (state.progress > 1) progressColor.copy(alpha = .75f)
