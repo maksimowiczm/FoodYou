@@ -47,10 +47,12 @@ import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
+import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -261,11 +263,7 @@ private fun IngredientListItem(
             val text = fats.formatClipZeros()
             Text("$text $g")
         },
-        calories = {
-            val kcal = stringResource(Res.string.unit_kcal)
-            val text = energy.formatClipZeros("%.0f")
-            Text("$text $kcal")
-        },
+        calories = { Text(LocalEnergyFormatter.current.formatEnergy(energy.roundToInt())) },
         measurement = { Text(measurementString) },
         modifier = modifier,
         contentPadding = contentPadding,

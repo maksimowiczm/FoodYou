@@ -38,10 +38,10 @@ import com.maksimowiczm.foodyou.feature.home.ui.shared.HomeState
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.ext.toDp
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
-import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -167,35 +167,33 @@ private fun GoalsCardContent(
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
     val nutrientsOrder = LocalNutrientsOrder.current
+    val energyFormatter = LocalEnergyFormatter.current
 
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
-    val kcal = stringResource(Res.string.unit_kcal)
     val outlineColor = MaterialTheme.colorScheme.outline
 
-    val caloriesString =
-        remember(energy, energyGoal, kcal, typography, colorScheme) {
-            buildAnnotatedString {
-                withStyle(
-                    typography.headlineLargeEmphasized
-                        .merge(
-                            color =
-                                when {
-                                    energy < energyGoal -> colorScheme.onSurface
-                                    energy == energyGoal -> colorScheme.onSurface
-                                    else -> colorScheme.error
-                                }
-                        )
-                        .toSpanStyle()
-                ) {
-                    append(energy.toString())
-                    append(" ")
-                }
-                withStyle(typography.bodyMedium.merge(outlineColor).toSpanStyle()) {
-                    append("/ $energyGoal $kcal")
-                }
-            }
+    val caloriesString = buildAnnotatedString {
+        withStyle(
+            typography.headlineLargeEmphasized
+                .merge(
+                    color =
+                        when {
+                            energy < energyGoal -> colorScheme.onSurface
+                            energy == energyGoal -> colorScheme.onSurface
+                            else -> colorScheme.error
+                        }
+                )
+                .toSpanStyle()
+        ) {
+            append(energyFormatter.formatEnergy(energy, withSuffix = false))
+            append(" ")
         }
+        withStyle(typography.bodyMedium.merge(outlineColor).toSpanStyle()) {
+            val energyGoal = energyFormatter.formatEnergy(energyGoal)
+            append("/ $energyGoal")
+        }
+    }
 
     val left = remember(energy, energyGoal) { energyGoal - energy }
 
@@ -210,12 +208,7 @@ private fun GoalsCardContent(
             when {
                 left > 0 ->
                     Text(
-                        text =
-                            pluralStringResource(
-                                Res.plurals.neutral_remaining_calories,
-                                left,
-                                left,
-                            ),
+                        text = energyFormatter.energyLeft(left),
                         color = MaterialTheme.colorScheme.outline,
                         style = MaterialTheme.typography.bodyMediumEmphasized,
                     )
@@ -229,12 +222,7 @@ private fun GoalsCardContent(
 
                 else ->
                     Text(
-                        text =
-                            pluralStringResource(
-                                Res.plurals.negative_exceeded_by_calories,
-                                -left,
-                                -left,
-                            ),
+                        text = energyFormatter.energyExceeded(-left),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyMediumEmphasized,
                     )

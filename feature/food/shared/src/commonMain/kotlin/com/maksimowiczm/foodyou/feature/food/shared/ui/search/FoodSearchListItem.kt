@@ -13,8 +13,10 @@ import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
+import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.mapNotNull
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -170,11 +172,7 @@ private fun FoodSearchListItem(
             val text = fats.formatClipZeros()
             Text("$text $g")
         },
-        calories = {
-            val kcal = stringResource(Res.string.unit_kcal)
-            val text = energy.formatClipZeros("%.0f")
-            Text("$text $kcal")
-        },
+        calories = { Text(LocalEnergyFormatter.current.formatEnergy(energy.roundToInt())) },
         measurement = measurement,
         isRecipe = isRecipe,
         modifier = modifier,

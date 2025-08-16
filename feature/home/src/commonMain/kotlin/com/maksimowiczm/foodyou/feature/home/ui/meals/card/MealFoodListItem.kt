@@ -14,6 +14,7 @@ import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -34,8 +35,7 @@ internal fun MealFoodListItem(
 
     val fatsString = entry.fats?.let { it.formatClipZeros("%.1f") + " $g" }
 
-    val caloriesString =
-        entry.energy?.let { it.toString() + " " + stringResource(Res.string.unit_kcal) }
+    val caloriesString = entry.energy?.let { LocalEnergyFormatter.current.formatEnergy(it) }
 
     val measurementString =
         entry.measurement.stringResourceWithWeight(
@@ -82,10 +82,3 @@ internal fun MealFoodListItem(
         )
     }
 }
-
-private val MealEntryModel.caloriesString: String?
-    @Composable
-    get() {
-        val value = energy ?: return null
-        return "$value " + stringResource(Res.string.unit_kcal)
-    }

@@ -21,13 +21,12 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientsHelper
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.*
-import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -62,30 +61,14 @@ private fun Energy(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(8.dp),
 ) {
+    val energyFormatter = LocalEnergyFormatter.current
+
     Nutrient(
         label = { Text(stringResource(Res.string.unit_energy)) },
         value = {
             when (val nut = facts.energy) {
-                is NutrientValue.Complete -> {
-                    val value = nut.value
-                    val kcal = stringResource(Res.string.unit_kcal)
-                    val kj = stringResource(Res.string.unit_kilojules)
-                    val str = buildString {
-                        append(value.roundToInt())
-                        append(" ")
-                        append(kcal)
-                        append(" (")
-                        append(NutrientsHelper.caloriesToKilojoules(value).roundToInt())
-                        append(" ")
-                        append(kj)
-                        append(")")
-                    }
-                    Text(str)
-                }
-
-                is NutrientValue.Incomplete -> {
-                    incompleteValue(nut)()
-                }
+                is NutrientValue.Complete -> Text(energyFormatter.formatEnergy(nut.value))
+                is NutrientValue.Incomplete -> incompleteValue(nut)()
             }
         },
         modifier = modifier,

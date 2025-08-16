@@ -14,6 +14,7 @@ import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
@@ -76,8 +77,7 @@ internal fun Ingredients(
                         Text(text)
                     },
                     calories = {
-                        val text = energy.roundToInt().toString() + " $kcal"
-                        Text(text)
+                        Text(LocalEnergyFormatter.current.formatEnergy(energy.roundToInt()))
                     },
                     measurement = { Text(measurementString) },
                     contentPadding = contentPadding,
