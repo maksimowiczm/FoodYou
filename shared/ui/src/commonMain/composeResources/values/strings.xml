@@ -474,4 +474,7 @@
         <item quantity="other">Imported %1$d food products</item>
     </plurals>
 
+    <string name="headline_energy_unit">Energy unit</string>
+    <string name="description_energy_unit">Select preferred energy unit</string>
+
 </resources>
