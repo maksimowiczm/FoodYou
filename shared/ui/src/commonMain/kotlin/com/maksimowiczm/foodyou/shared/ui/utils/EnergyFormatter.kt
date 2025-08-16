@@ -55,12 +55,7 @@ interface EnergyFormatter {
 }
 
 private class KilocaloriesFormatter : EnergyFormatter {
-    /**
-     * Formats the given energy value in kilocalories (kcal) to a user-friendly string.
-     *
-     * @param energy The energy value in kilocalories to format.
-     * @return A string representation of the energy value, formatted for display.
-     */
+
     @Composable
     override fun formatEnergy(energy: Double, format: String, withSuffix: Boolean): String =
         buildString {
@@ -92,12 +87,7 @@ private class KilocaloriesFormatter : EnergyFormatter {
 }
 
 private class KilojoulesFormatter : EnergyFormatter {
-    /**
-     * Formats the given energy value in kilocalories (kcal) to a user-friendly string.
-     *
-     * @param energy The energy value in kilocalories to format.
-     * @return A string representation of the energy value, formatted for display.
-     */
+
     @Composable
     override fun formatEnergy(energy: Double, format: String, withSuffix: Boolean): String =
         buildString {
@@ -119,7 +109,7 @@ private class KilojoulesFormatter : EnergyFormatter {
         }
     }
 
-    @Composable override fun suffix(): String = stringResource(Res.string.unit_kilojules)
+    @Composable override fun suffix(): String = stringResource(Res.string.unit_kilojoules)
 
     @Composable
     override fun energyLeft(left: Int): String =
