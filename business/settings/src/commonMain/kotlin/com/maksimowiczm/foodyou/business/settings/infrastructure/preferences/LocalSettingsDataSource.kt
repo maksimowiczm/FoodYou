@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.business.settings.infrastructure.preferences
 
+import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
@@ -23,4 +24,6 @@ internal interface LocalSettingsDataSource {
     suspend fun updateOnboardingFinished(onboardingFinished: Boolean)
 
     suspend fun updateHidePreviewDialog(hidePreviewDialog: Boolean)
+
+    suspend fun updateEnergyFormat(energyFormat: EnergyFormat)
 }
