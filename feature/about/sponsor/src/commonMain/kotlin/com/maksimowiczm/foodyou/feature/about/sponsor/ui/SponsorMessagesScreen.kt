@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,7 +63,6 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.FlowPreview
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -228,27 +226,19 @@ private fun SponsorMessagesScreen(
                         nextSponsorship == null || sponsorship.dateTime != nextSponsorship.dateTime
                     val previousSameDate = previousSponsorship?.dateTime == sponsorship.dateTime
 
-                    val iconResource = sponsorship.iconResource
-                    val icon =
-                        if (iconResource != null) {
-                            @Composable {
-                                Image(
-                                    painter = painterResource(iconResource),
-                                    contentDescription = null,
-                                    modifier =
-                                        Modifier.sizeIn(
-                                            maxWidth = ChatBubbleDefaults.iconSize,
-                                            maxHeight = ChatBubbleDefaults.iconSize,
-                                        ),
-                                )
-                            }
-                        } else {
-                            null
-                        }
-
                     Sent {
                         ChatBubble(
-                            icon = icon,
+                            icon =
+                                sponsorship.icon()?.let { icon ->
+                                    {
+                                        icon(
+                                            Modifier.sizeIn(
+                                                maxWidth = ChatBubbleDefaults.iconSize,
+                                                maxHeight = ChatBubbleDefaults.iconSize,
+                                            )
+                                        )
+                                    }
+                                },
                             author =
                                 sponsorship.sponsorName
                                     ?: stringResource(Res.string.headline_anonymous),
