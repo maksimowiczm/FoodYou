@@ -41,9 +41,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.business.sponsorship.domain.AvailableSponsorMethod
 import com.maksimowiczm.foodyou.business.sponsorship.domain.CryptoSponsorMethod
 import com.maksimowiczm.foodyou.business.sponsorship.domain.LinkSponsorMethod
-import com.maksimowiczm.foodyou.business.sponsorship.domain.SponsorMethod
 import com.maksimowiczm.foodyou.shared.common.domain.config.AppConfig
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.add
@@ -118,14 +118,16 @@ private fun SponsorScreen(
                     )
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        SponsorMethod.fiat.forEach {
+                        AvailableSponsorMethod.fiat.forEach {
                             it.SponsorCard(onClick = { onOpenUrl(it.url) })
                         }
                     }
                 }
             }
 
-            items(items = SponsorMethod.crypto) { it.SponsorCard(onClick = { onCopy(it.address) }) }
+            items(items = AvailableSponsorMethod.crypto) {
+                it.SponsorCard(onClick = { onCopy(it.address) })
+            }
 
             item { ContactCard(onContact = onContact) }
         }

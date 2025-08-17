@@ -259,6 +259,7 @@
     <string name="notification_exporting_products">Exporting products</string>
 
     <string name="notification_importing_products">Importing products</string>
+    <string name="notification_importing_products_success">Finished importing products</string>
 
     <string name="headline_food_data_central_usda" translatable="false">FoodData Central (USDA)</string>
     <string name="description_food_data_central_usda">FoodData Central is USDA's comprehensive source of food composition data with multiple distinct data types</string>

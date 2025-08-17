@@ -1,14 +1,22 @@
 package com.maksimowiczm.foodyou.feature.about.sponsor.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import com.maksimowiczm.foodyou.business.sponsorship.domain.Avalanche
 import com.maksimowiczm.foodyou.business.sponsorship.domain.Bitcoin
+import com.maksimowiczm.foodyou.business.sponsorship.domain.Dash
+import com.maksimowiczm.foodyou.business.sponsorship.domain.Ethereum
 import com.maksimowiczm.foodyou.business.sponsorship.domain.Ko_Fi
-import com.maksimowiczm.foodyou.business.sponsorship.domain.Liberapay
+import com.maksimowiczm.foodyou.business.sponsorship.domain.Litecoin
 import com.maksimowiczm.foodyou.business.sponsorship.domain.Monero
+import com.maksimowiczm.foodyou.business.sponsorship.domain.PayPal
+import com.maksimowiczm.foodyou.business.sponsorship.domain.Solana
 import com.maksimowiczm.foodyou.business.sponsorship.domain.SponsorMethod
 import com.maksimowiczm.foodyou.business.sponsorship.domain.Sponsorship
+import com.maksimowiczm.foodyou.business.sponsorship.domain.Zcash
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 
@@ -36,23 +44,77 @@ internal fun SponsorMethod.Icon(modifier: Modifier = Modifier) {
                 modifier = modifier,
             )
 
-        Liberapay ->
+        Avalanche ->
             Image(
-                painter = painterResource(Res.drawable.liberapay_logo),
+                painter = painterResource(Res.drawable.avalanche_token),
+                contentDescription = null,
+                modifier = modifier,
+            )
+
+        Dash ->
+            Image(
+                painter = painterResource(Res.drawable.dash_coin),
+                contentDescription = null,
+                modifier = modifier,
+            )
+
+        Ethereum ->
+            Image(
+                painter = painterResource(Res.drawable.eth_diamond_purple_purple),
+                contentDescription = null,
+                modifier = modifier.clip(CircleShape),
+            )
+
+        Litecoin ->
+            Image(
+                painter = painterResource(Res.drawable.litecoin_ltc_logo),
+                contentDescription = null,
+                modifier = modifier,
+            )
+
+        Solana ->
+            Image(
+                painter = painterResource(Res.drawable.solana_logomark),
+                contentDescription = null,
+                modifier = modifier,
+            )
+
+        Zcash ->
+            Image(
+                painter = painterResource(Res.drawable.zcash_icon),
+                contentDescription = null,
+                modifier = modifier,
+            )
+
+        PayPal ->
+            Image(
+                painter = painterResource(Res.drawable.paypal_logo),
                 contentDescription = null,
                 modifier = modifier,
             )
     }
 }
 
-val Sponsorship.iconResource
-    @Composable
-    get() =
-        when (this.method) {
-            "Ko-fi" -> Res.drawable.kofi_logo
-            "Liberapay" -> Res.drawable.liberapay_logo
-            "Crypto" if (currency == "BTC") -> Res.drawable.bitcoin_logo
-            "Crypto" if (currency == "XMR") -> Res.drawable.monero_logo
-            "PayPal" -> Res.drawable.paypal_logo
-            else -> null
+fun Sponsorship.icon(): (@Composable (Modifier) -> Unit)? {
+    val method =
+        when (method) {
+            "Ko-fi" -> Ko_Fi
+            "Crypto" ->
+                when (currency) {
+                    "BTC" -> Bitcoin
+                    "XMR" -> Monero
+                    "ETH" -> Ethereum
+                    "SOL" -> Solana
+                    "LTC" -> Litecoin
+                    "AVAX" -> Avalanche
+                    "DASH" -> Dash
+                    "ZEC" -> Zcash
+                    else -> return null
+                }
+
+            "PayPal" -> PayPal
+            else -> return null
         }
+
+    return { modifier -> method.Icon(modifier) }
+}
