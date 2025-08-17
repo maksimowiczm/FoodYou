@@ -40,7 +40,7 @@ internal class Changelog(private val appConfig: AppConfig) {
     val v_3_0_0_rc_1 =
         Version(
             version = "3.0.0-rc.1",
-            date = LocalDate(2025, 8, 16),
+            date = LocalDate(2025, 8, 17),
             newFeatures =
                 listOf(
                     "Added CSV import and export support for food products.",
@@ -48,6 +48,7 @@ internal class Changelog(private val appConfig: AppConfig) {
                     "Added energy unit settings, kilojoules are now supported.",
                     "You can now navigate directly to an ingredient from the add entry screen.",
                     "Automatic switching between food sources during search.",
+                    "Added new sponsorship methods."
                 ),
             bugFixes =
                 listOf(
