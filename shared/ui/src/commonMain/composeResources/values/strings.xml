@@ -7,7 +7,6 @@
 
     <string name="headline_create_product">Create product</string>
     <string name="headline_settings">Settings</string>
-    <string name="headline_calories_goal">Calorie goal</string>
     <string name="headline_daily_goals">Daily goals</string>
     <string name="headline_general">General</string>
     <string name="headline_macronutrients">Macronutrients</string>
@@ -27,7 +26,6 @@
     <string name="headline_product">Product</string>
     <string name="headline_recipe">Recipe</string>
     <string name="headline_create_recipe">Create recipe</string>
-    <string name="headline_update_recipe">Update recipe</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ingredients</string>
     <string name="headline_summary">Summary</string>
     <string name="headline_whats_new">What's new</string>
@@ -45,20 +43,14 @@
     <string name="headline_vitamins">Vitamins</string>
     <string name="headline_minerals">Minerals</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">Supported URLs</string>
-    <string name="headline_import_and_export">Import and export</string>
-    <string name="headline_experimental" description="Experimental feature">Experimental</string>
-    <string name="headline_experimental_feature">Experimental feature</string>
-    <string name="headline_copy" description="A noun, thing that is a copy">Copy</string>
     <string name="headline_something_went_wrong">Oops! Something went wrong</string>
     <string name="headline_daily_goals_settings">Daily goals settings</string>
     <string name="headline_api_key">API key</string>
     <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Source</string>
     <string name="headline_features">Features</string>
 
-    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">In %1$s</string>
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
     <string name="weight">Weight</string>
-    <string name="unit_calories">Calories</string>
     <string name="unit_energy" description="Energy as calories">Energy</string>
     <string name="unit_kcal">kcal</string>
     <string name="unit_kilojoules">kJ</string>
@@ -154,7 +146,6 @@
     <string name="action_insert_suggested_search">Insert suggested search</string>
     <string name="action_edit_entry">Edit entry</string>
     <string name="action_delete_entry">Delete entry</string>
-    <string name="action_undo">Undo</string>
     <string name="action_close">Close</string>
     <string name="action_discard">Discard</string>
     <string name="action_translate">Translate</string>
@@ -171,23 +162,15 @@
     <string name="action_use_time_based_ordering">Use time-based ordering</string>
     <string name="action_ignore_all_day_meals">Ignore all-day meals</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Add ingredient</string>
-    <string name="action_edit_ingredient_measurement">Edit ingredient measurement</string>
     <string name="action_delete_ingredient">Delete ingredient</string>
     <string name="action_download">Download</string>
     <string name="action_paste_url">Paste URL</string>
     <string name="action_browse_open_food_facts">Browse Open Food Facts</string>
     <string name="action_copy">Copy</string>
     <string name="action_choose_other_date">Choose other date</string>
-    <string name="action_choose_other_measurement">Choose other measurement</string>
-    <string name="action_edit_your_home_page">Edit your home page</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Show more</string>
     <string name="action_download_product">Download product</string>
     <string name="action_suggest_external_database">Suggest external database</string>
-    <string name="action_import_food_products">Import food products</string>
-    <string name="action_export_food_products">Export food products</string>
-    <string name="action_export_food_products_to_csv">Export food products to CSV file</string>
-    <string name="action_share">Share</string>
-    <string name="action_copy_header" description="Copy CSV file header">Copy header</string>
     <string name="action_copy_and_open_bug_report">Copy and open bug report</string>
     <string name="action_show_details">Show details</string>
     <string name="action_browse_usda">Browse FoodData Central (USDA)</string>
@@ -215,19 +198,14 @@
     <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_copied">Info copied to clipboard</string>
     <string name="neutral_product_created">Product created</string>
-    <string name="neutral_export_started">Export started</string>
-    <string name="neutral_import_started">Import started</string>
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>
     <string name="question_discard_recipe">Discard recipe?</string>
 
-    <string name="error_this_field_is_required">This field is required</string>
     <string name="error_invalid_number">Invalid number</string>
     <string name="error_value_cannot_be_negative">Value cannot be negative</string>
-    <string name="error_value_must_be_less_than">Value must be less than %1$s</string>
     <string name="error_value_must_be_integer">Value must be an integer</string>
-    <string name="error_sum_of_percentages_must_be_100">Sum of percentages must be 100</string>
     <string name="error_value_must_be_positive">Value must be positive</string>
     <string name="error_url_not_found">URL not found</string>
     <string name="error_url_is_not_supported">URL is not supported</string>
@@ -249,7 +227,6 @@
         <item quantity="other">Exceeded by %1$d kilojoules</item>
     </plurals>
 
-    <string name="description_calories_goal">Set your daily calorie intake goal. This will help you to track your progress and stay on track.</string>
     <string name="description_delete_food">Food will be deleted permanently</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">This entry will be deleted from your diary. You can add it again anytime.</string>
     <string name="description_about_setting">Learn more about the app</string>
@@ -261,15 +238,9 @@
     <string name="description_home_settings">Customize your home page</string>
     <string name="description_download_product">Paste a link to a food product, and automatically fetch nutrition facts and product details.</string>
     <string name="description_download_product_hint">You can paste any text. First URL will be used.</string>
-    <string name="description_import_and_export">Save and load your data</string>
-    <string name="description_import_and_export_hint">All data synchronization operations run in the background. You will be notified when they are complete.</string>
-    <string name="description_experimental_feature">This is an experimental feature. It may change or be removed in future versions.</string>
-    <string name="description_notifications_permission_required_data_sync">Notification permission is required to display data synchronization progress. Please enable it in the app settings.</string>
     <string name="description_show_macronutrients_goals">Show macronutrients goals</string>
-    <string name="description_recipe_missing_ingredients">You might not see every recipe here. Some recipes are hidden to prevent circular references.</string>
     <string name="description_please_wait_while_importing_products">Please wait while importing products</string>
     <string name="description_please_wait_while_exporting_products">Please wait while exporting products</string>
-    <string name="description_suggest_external_database">Suggest a publicly available database to be included</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
@@ -277,8 +248,6 @@
     <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="description_open_food_facts">A collaborative, free and open database of food products from around the world</string>
     <string name="link_open_food_facts" translatable="false">https://world.openfoodfacts.org</string>
-
-    <string name="link_translate" translatable="false">https://crowdin.com/project/food-you</string>
 
     <!-- Don't translate changelog strings -->
     <string name="changelog_new_features" translatable="false">New features</string>
@@ -288,26 +257,18 @@
     <string name="changelog_notes" translatable="false">Notes</string>
 
     <string name="notification_exporting_products">Exporting products</string>
-    <string name="notification_exporting_products_success">Finished exporting products</string>
-    <string name="notification_exporting_products_failure">Product export failed</string>
 
     <string name="notification_importing_products">Importing products</string>
     <string name="notification_importing_products_success">Finished importing products</string>
-    <string name="notification_importing_products_failure">Product import failed</string>
-
-    <string name="notification_data_sync_channel_name">Data synchronization</string>
-    <string name="notification_data_sync_progress_channel_name">Data synchronization progress</string>
 
     <string name="headline_food_data_central_usda" translatable="false">FoodData Central (USDA)</string>
     <string name="description_food_data_central_usda">FoodData Central is USDA's comprehensive source of food composition data with multiple distinct data types</string>
     <string name="link_usda" translatable="false">https://fdc.nal.usda.gov</string>
     <string name="link_usda_obtain_key" translatable="false">https://fdc.nal.usda.gov/api-key-signup</string>
     <string name="error_usda_rate_limit">FoodData Central (USDA) API rate limit exceeded</string>
-    <string name="error_usda_rate_limit_description">You have exceeded the allowed number of requests. Please wait before retrying, or sign up to obtain a key.</string>
     <string name="error_usda_not_verified">The API key supplied has not been verified yet. Please check your e-mail to verify the API key.</string>
 
     <string name="headline_swiss_food_composition_database" translatable="false">Swiss Food Composition Database</string>
-    <string name="link_swiss_food_composition_database" translatable="false">https://www.naehrwertdaten.ch</string>
     <string name="description_swiss_food_composition_database_short">Swiss Food Composition Database includes nutritional information for over 1,100 general food products</string>
     <string name="description2_swiss_food_composition_database">Swiss Food Composition Database includes nutritional information for over 1,100 general food products. It is available in four languages. To import these products into your food diary, please select your preferred languages.</string>
 
@@ -342,8 +303,6 @@
     <string name="description_personalization">Customize your experience</string>
 
     <string name="headline_nutrition_facts">Nutrition facts</string>
-    <string name="description_personalize_nutrition_facts">Which nutrition details are you interested in? You can also choose the order they appear.</string>
-    <string name="description_personalize_nutrition_facts_help">Tap to enable/disable, drag to reorder</string>
     <string name="description_personalize_nutrition_facts_short">Rearrange the nutritional information</string>
     <string name="action_reset_ordering">Reset ordering</string>
 
@@ -351,15 +310,9 @@
     <string name="action_reset" description="Confirm resetting">Reset</string>
 
     <string name="description_reset_nutrition_facts">Reset nutrition facts personalization to default</string>
-    <string name="description_warning_nutrition_facts_1">Disabling energy, proteins, carbohydrates or fats is not recommended. These are key nutrients for tracking overall nutritional balance.</string>
-    <string name="description_warning_nutrition_facts_2">You can still disable it if you prefer — just be aware this may limit the usefulness of your food diary.</string>
-
-    <string name="headline_enabled" description="Label indicating that something is currently enabled">Enabled</string>
-    <string name="headline_disabled" description="Label indicating that something is currently disabled">Disabled</string>
 
     <string name="headline_note">Note</string>
     <string name="description_add_note">Optional notes (e.g., ingredients, vegan status, allergens, additives) or any other non-nutrient details</string>
-    <string name="headline_extra" description="Something that is not a part of the main thing, additional information">Extra</string>
 
     <string name="headline_now" description="Current time, now">Now</string>
     <string name="action_try_again">Try again</string>
@@ -368,14 +321,7 @@
     <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
 
     <string name="neutral_an_error_occurred">An error occurred</string>
-    <string name="neutral_x_products_found">%1$d product(s) found</string>
-    <string name="neutral_loading">Loading</string>
-    <string name="neutral_action_required">Action required</string>
     <string name="action_retry">Retry</string>
-    <string name="action_agree">Agree</string>
-    <string name="description_open_food_facts_privacy_dialog_text">Enhance your food search with the Open Food Facts database. To proceed, please agree to the {Terms of Use:https://world.openfoodfacts.org/terms-of-use} and {Privacy Policy:https://world.openfoodfacts.org/privacy}</string>
-    <string name="headline_browse_open_food_facts">Browse Open Food Facts</string>
-    <string name="description_import_open_food_facts_product">You need to import this product first to use it in your diary</string>
     <string name="action_import">Import</string>
     <string name="headline_today" description="Today, date">Today, %1$s</string>
     <string name="headline_yesterday" description="Yesterday, date">Yesterday, %1$s</string>
@@ -388,12 +334,9 @@
 
     <string name="error_food_is_missing_required_fields">Food is missing required fields</string>
 
-    <string name="description_you_are_browsing_open_food_facts">You’re browsing the Open Food Facts database. You will see only Open Food Facts products.</string>
-
     <string name="headline_preview_release">Preview release</string>
     <string name="description_preview_release">You are currently using a preview version. It may be incomplete, unstable, or subject to change.</string>
 
-    <string name="description_usda_privacy_dialog_text">Enhance your food search with the FoodData Central database. To proceed, please agree to {Privacy Policy:https://www.usda.gov/privacy-policy}</string>
     <string name="headline_your_food">Your food</string>
 
     <string name="headline_filters">Filters</string>
@@ -407,7 +350,6 @@
 
     <string name="headline_before_you_start">Before you start</string>
     <string name="description_before_you_start">To provide you with a free and open-source food diary, we prioritize your privacy above all else. This app does not collect, store, or share any personal information. Your entries are saved locally on your device and remain fully under your control.</string>
-    <string name="action_view_privacy_policy">View privacy policy</string>
     <string name="action_agree_and_continue">Agree &amp; Continue</string>
 
     <string name="headline_food_database">Food database</string>
@@ -432,8 +374,6 @@
     <string name="description_sponsors_external_server">To view the latest sponsors, we need to fetch updated data from our external server</string>
 
     <string name="headline_anonymous">Anonymous</string>
-
-    <string name="action_filter_foods" description="Filter foods in the list">Filter foods</string>
 
     <string name="headline_recent">Recent</string>
 
