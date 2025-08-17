@@ -48,7 +48,7 @@ internal class Changelog(private val appConfig: AppConfig) {
                     "Added energy unit settings, kilojoules are now supported.",
                     "You can now navigate directly to an ingredient from the add entry screen.",
                     "Automatic switching between food sources during search.",
-                    "Added new sponsorship methods."
+                    "Added new sponsorship methods.",
                 ),
             bugFixes =
                 listOf(

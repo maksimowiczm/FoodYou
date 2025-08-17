@@ -142,10 +142,10 @@ internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao
 }
 
 private fun FoodSearchData.toModel(): FoodSearch =
-    when (foodId) {
+    when (val foodId = foodId) {
         is FoodId.Product ->
             FoodSearch.Product(
-                id = foodId as FoodId.Product,
+                id = foodId,
                 headline = headline,
                 isLiquid = isLiquid,
                 nutritionFacts =
@@ -201,7 +201,7 @@ private fun FoodSearchData.toModel(): FoodSearch =
 
         is FoodId.Recipe ->
             FoodSearch.Recipe(
-                id = foodId as FoodId.Recipe,
+                id = foodId,
                 headline = headline,
                 isLiquid = isLiquid,
                 defaultMeasurement = defaultMeasurement,
@@ -220,7 +220,7 @@ private val FoodSearchData.defaultMeasurement
             measurementType != null && measurementValue != null ->
                 Measurement.from(measurementType!!, measurementValue!!.toDouble())
 
-            servingWeight != null -> Measurement.Serving(1.0)
+            recipeId != null || servingWeight != null -> Measurement.Serving(1.0)
             totalWeight != null -> Measurement.Package(1.0)
             isLiquid -> Measurement.Milliliter(100.0)
             else -> Measurement.Gram(100.0)
