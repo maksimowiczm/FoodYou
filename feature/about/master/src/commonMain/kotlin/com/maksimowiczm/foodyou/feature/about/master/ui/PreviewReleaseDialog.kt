@@ -27,7 +27,7 @@ fun PreviewReleaseDialog(modifier: Modifier = Modifier) {
             onDismissRequest = {},
             confirmButton = {
                 Row {
-                    TextButton(onClick = viewModel::dontShowAgain) { Text("Don't show again") }
+                    TextButton(onClick = viewModel::dontShowAgain) { Text(stringResource(Res.string.action_dont_show_again)) }
                     TextButton(onClick = viewModel::dismissDialog) {
                         Text(stringResource(Res.string.positive_ok))
                     }
