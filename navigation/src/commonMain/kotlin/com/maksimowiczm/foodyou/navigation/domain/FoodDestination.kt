@@ -18,3 +18,6 @@ internal data class UpdateRecipeDestination(val recipeId: Long) : NavigationDest
     val foodId: FoodId.Recipe
         get() = FoodId.Recipe(recipeId)
 }
+
+@Serializable
+internal data class CreateProductDestination(val url: String?) : NavigationDestination
