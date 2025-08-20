@@ -77,7 +77,7 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
                 navController.popBackStack<GoalsCardSettingsDestination>(true)
             },
             goalsCardSettingsOnGoalsSettings = {
-                navController.navigateSingleTop(GoalsCardSettingsDestination)
+                navController.navigateSingleTop(SettingsGoalsDestination)
             },
         )
         aboutNavigationGraph(
