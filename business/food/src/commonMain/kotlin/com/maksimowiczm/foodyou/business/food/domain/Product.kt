@@ -36,7 +36,7 @@ data class Product(
     override val headline = run {
         val brandSuffix =
             if (!brand.isNullOrEmpty()) {
-                " $brand"
+                " ($brand)"
             } else {
                 ""
             }
