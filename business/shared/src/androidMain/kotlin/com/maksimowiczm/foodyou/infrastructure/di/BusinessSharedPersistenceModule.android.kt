@@ -22,8 +22,8 @@ internal actual fun Scope.database(): FoodYouDatabase =
         )
         .apply {
             // https://developer.android.com/reference/android/database/sqlite/package-summary
-            // Require SQLite version >= 3.28
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            // Require SQLite version >= 3.35
+            if (Build.VERSION.SDK_INT < 34) {
                 openHelperFactory(RequerySQLiteOpenHelperFactory())
             }
         }
