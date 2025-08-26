@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
+import com.maksimowiczm.foodyou.navigation.domain.CreateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.DumpDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.ExportCsvProductsDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddEntryDestination
@@ -258,9 +259,12 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
                 }.let(navController::navigateSingleTop)
             },
             onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKeyDestination) },
+            createProductOnBack = { navController.popBackStack<CreateProductDestination>(true) },
+            createProductOnCreate = { navController.popBackStack<CreateProductDestination>(true) },
+            createOnUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKeyDestination) },
         )
     }
 }
 
-private fun <T : Any> NavController.navigateSingleTop(route: T) =
+internal fun <T : Any> NavController.navigateSingleTop(route: T) =
     navigate(route) { launchSingleTop = true }

@@ -7,13 +7,12 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.ui.DownloadProductApp
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString as getStringRes
 
@@ -72,11 +71,7 @@ private fun ShareProductApp(text: String?, onBack: () -> Unit, onCreate: () -> U
             if (text == null) {
                 Spacer(Modifier.fillMaxSize())
             } else {
-                //                CreateProductScreen(
-                //                    url = text,
-                //                    onBack = onBack,
-                //                    onCreate = { onCreate() }
-                //                )
+                DownloadProductApp(onBack = onBack, onCreate = onCreate, url = text)
             }
         }
     }
