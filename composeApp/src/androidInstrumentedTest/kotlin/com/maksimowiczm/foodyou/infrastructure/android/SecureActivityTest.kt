@@ -3,9 +3,8 @@ package com.maksimowiczm.foodyou.infrastructure.android
 import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import androidx.lifecycle.lifecycleScope
 import androidx.test.core.app.launchActivity
-import com.maksimowiczm.foodyou.business.settings.application.command.SetSecureScreenCommand
+import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import org.junit.Test
@@ -20,14 +19,14 @@ class SecureActivityTest {
 
                     // Run on same thread as the activity
                     lifecycleScope.launch {
-                        commandBus.dispatchIgnoreResult(SetSecureScreenCommand(true))
+                        commandBus.dispatch(PartialSettingsUpdateCommand(secureScreen = true))
 
                         // Yield just to be safe
                         yield()
 
                         assert((window.attributes.flags and FLAG_SECURE) == FLAG_SECURE)
 
-                        commandBus.dispatchIgnoreResult(SetSecureScreenCommand(false))
+                        commandBus.dispatch(PartialSettingsUpdateCommand(secureScreen = false))
 
                         // Yield just to be safe
                         yield()
