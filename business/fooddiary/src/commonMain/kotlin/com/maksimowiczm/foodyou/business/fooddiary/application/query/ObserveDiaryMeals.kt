@@ -5,9 +5,9 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.LocalMealsPreferencesDataSource
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.query.Query
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

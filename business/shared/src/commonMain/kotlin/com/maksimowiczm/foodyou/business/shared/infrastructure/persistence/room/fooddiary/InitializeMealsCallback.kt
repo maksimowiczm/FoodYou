@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room
 import androidx.room.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
-import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 
 fun interface MealsProvider {
     fun getMeals(): List<MealEntity>

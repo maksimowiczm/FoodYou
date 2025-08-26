@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductCommand
 import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductError
 import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull

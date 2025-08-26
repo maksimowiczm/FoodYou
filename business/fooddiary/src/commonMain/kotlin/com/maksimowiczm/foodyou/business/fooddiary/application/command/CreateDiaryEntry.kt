@@ -4,17 +4,17 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFood
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
-import com.maksimowiczm.foodyou.business.shared.application.event.FoodDiaryEntryCreatedEvent
-import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
-import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.command.Command
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
+import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.domain.fooddiary.FoodDiaryEntryCreatedDomainEvent
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.event.EventBus
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
-import com.maksimowiczm.foodyou.shared.common.domain.result.Result
+import com.maksimowiczm.foodyou.shared.common.result.Ok
+import com.maksimowiczm.foodyou.shared.common.result.Result
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -105,7 +105,7 @@ internal class CreateDiaryEntryCommandHandler(
         val entry = command.toDiaryEntry(now)
         val id = transactionProvider.withTransaction { diaryEntryDataSource.insert(entry) }
         eventBus.publish(
-            FoodDiaryEntryCreatedEvent(
+            FoodDiaryEntryCreatedDomainEvent(
                 foodId = command.foodId,
                 entryId = id,
                 date = now,

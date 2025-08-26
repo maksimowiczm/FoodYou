@@ -9,10 +9,10 @@ import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodCountQ
 import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodQuery
 import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodCount
 import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodQuery
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.RemoteStatus.Companion.toRemoteStatus
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.time.Clock

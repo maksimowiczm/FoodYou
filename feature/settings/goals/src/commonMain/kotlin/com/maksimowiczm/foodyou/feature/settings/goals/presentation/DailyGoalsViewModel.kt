@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateWeeklyGoalsCommand
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveWeeklyGoalsQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.WeeklyGoals
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow

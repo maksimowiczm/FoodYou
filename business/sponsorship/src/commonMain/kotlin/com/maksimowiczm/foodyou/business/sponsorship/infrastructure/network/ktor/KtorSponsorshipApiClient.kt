@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.ktor
 
-import com.maksimowiczm.foodyou.business.shared.domain.network.NetworkConfig
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.network.NetworkConfig
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.PagedSponsorshipsResponse
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.RemoteSponsorshipDataSource
 import io.ktor.client.HttpClient

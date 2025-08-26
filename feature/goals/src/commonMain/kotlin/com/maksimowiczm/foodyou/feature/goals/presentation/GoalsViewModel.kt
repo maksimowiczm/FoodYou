@@ -6,8 +6,8 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDail
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.isComplete
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine

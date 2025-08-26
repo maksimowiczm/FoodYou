@@ -4,9 +4,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.config.AppConfig
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
-import com.maksimowiczm.foodyou.shared.common.domain.config.AppConfig
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 

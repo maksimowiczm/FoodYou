@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.shared.usecase
 
 import com.maksimowiczm.foodyou.business.settings.application.query.ObserveSettingsQuery
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import kotlinx.coroutines.flow.Flow
 
 fun interface ObserveSettingsUseCase {

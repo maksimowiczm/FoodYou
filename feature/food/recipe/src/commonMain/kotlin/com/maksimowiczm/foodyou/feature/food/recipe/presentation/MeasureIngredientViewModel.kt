@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveMeasurementSuggestionsQuery
 import com.maksimowiczm.foodyou.business.food.domain.Food
 import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.MeasurementType
 import kotlinx.coroutines.ExperimentalCoroutinesApi

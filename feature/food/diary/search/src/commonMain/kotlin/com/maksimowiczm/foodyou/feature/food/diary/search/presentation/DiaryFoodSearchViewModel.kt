@@ -3,10 +3,10 @@ package com.maksimowiczm.foodyou.feature.food.diary.search.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealQuery
-import com.maksimowiczm.foodyou.business.shared.application.event.FoodDiaryEntryCreatedEvent
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.event.EventBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.event.subscribe
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
+import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
+import com.maksimowiczm.foodyou.business.shared.application.event.subscribe
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.shared.domain.fooddiary.FoodDiaryEntryCreatedDomainEvent
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -34,6 +34,8 @@ internal class DiaryFoodSearchViewModel(mealId: Long, queryBus: QueryBus, eventB
     val newEntryEvents = eventChannel.receiveAsFlow()
 
     init {
-        eventBus.subscribe<FoodDiaryEntryCreatedEvent>(viewModelScope) { eventChannel.send(Unit) }
+        eventBus.subscribe<FoodDiaryEntryCreatedDomainEvent>(viewModelScope) {
+            eventChannel.send(Unit)
+        }
     }
 }

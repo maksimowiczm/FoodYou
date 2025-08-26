@@ -6,11 +6,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.config.AppConfig
 import com.maksimowiczm.foodyou.feature.settings.database.exportcsvproducts.presentation.ExportProductsViewModel
 import com.maksimowiczm.foodyou.feature.settings.database.exportcsvproducts.presentation.UiState
 import com.maksimowiczm.foodyou.feature.shared.ui.SomethingWentWrongScreen
-import com.maksimowiczm.foodyou.shared.common.domain.config.AppConfig
-import com.maksimowiczm.foodyou.shared.ui.ext.now
 import java.time.LocalDateTime
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel

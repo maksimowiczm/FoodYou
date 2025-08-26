@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda
 
 import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
-import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 
 internal class USDAFacade(
     private val dataSource: USDARemoteDataSource,

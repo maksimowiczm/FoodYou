@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.business.settings.application.query.ObserveSettingsQuery
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
-import com.maksimowiczm.foodyou.shared.common.infrastructure.system.AndroidSystemDetails
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.shared.infrastructure.system.AndroidSystemDetails
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidClipboardManager
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utils.ClipboardManagerProvider

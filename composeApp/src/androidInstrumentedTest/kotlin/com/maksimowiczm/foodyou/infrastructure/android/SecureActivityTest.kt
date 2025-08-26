@@ -4,7 +4,7 @@ import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import androidx.lifecycle.lifecycleScope
 import androidx.test.core.app.launchActivity
 import com.maksimowiczm.foodyou.business.settings.application.command.SetSecureScreenCommand
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield

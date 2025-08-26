@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.OpenFoodPag
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.v1.OpenFoodFactsPageResponseV1
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.v2.OpenFoodFactsProductResponseV2
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.v2.OpenFoodFactsProductV2
-import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout

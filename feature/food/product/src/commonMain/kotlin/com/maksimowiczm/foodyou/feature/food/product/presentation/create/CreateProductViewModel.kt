@@ -5,13 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.command.CreateProductCommand
 import com.maksimowiczm.foodyou.business.food.application.command.CreateProductError
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.nutritionFacts
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.ui.ext.now
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

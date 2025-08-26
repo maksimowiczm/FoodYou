@@ -6,8 +6,8 @@ import com.maksimowiczm.foodyou.business.settings.application.command.SetTransla
 import com.maksimowiczm.foodyou.business.settings.application.query.ObserveCurrentTranslationQuery
 import com.maksimowiczm.foodyou.business.settings.application.query.ObserveTranslationsQuery
 import com.maksimowiczm.foodyou.business.settings.domain.Translation
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn

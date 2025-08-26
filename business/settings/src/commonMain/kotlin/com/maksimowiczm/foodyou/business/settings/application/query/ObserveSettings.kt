@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.business.settings.application.query
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.business.settings.infrastructure.preferences.LocalSettingsDataSource
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
+import com.maksimowiczm.foodyou.business.shared.application.query.Query
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

@@ -4,11 +4,11 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateRecipeCommand
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateRecipeError
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.RecipeFormState
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.mapNotNull

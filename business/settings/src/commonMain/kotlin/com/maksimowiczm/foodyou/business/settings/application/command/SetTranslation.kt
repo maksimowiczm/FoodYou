@@ -2,12 +2,12 @@ package com.maksimowiczm.foodyou.business.settings.application.command
 
 import com.maksimowiczm.foodyou.business.settings.domain.languages
 import com.maksimowiczm.foodyou.business.settings.infrastructure.preferences.LocalSettingsDataSource
-import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.system.SystemDetails
-import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
-import com.maksimowiczm.foodyou.shared.common.domain.result.Result
+import com.maksimowiczm.foodyou.business.shared.application.command.Command
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.system.SystemDetails
+import com.maksimowiczm.foodyou.shared.common.result.Ok
+import com.maksimowiczm.foodyou.shared.common.result.Result
 
 data class SetTranslationCommand(val tag: String?) : Command<Unit, SetTranslationError>
 

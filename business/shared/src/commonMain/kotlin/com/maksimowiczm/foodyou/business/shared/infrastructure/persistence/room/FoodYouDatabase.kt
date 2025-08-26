@@ -8,9 +8,9 @@ import androidx.room.execSQL
 import androidx.room.immediateTransaction
 import androidx.room.migration.Migration
 import androidx.room.useWriterConnection
-import com.maksimowiczm.foodyou.business.shared.application.DatabaseDumpService
-import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.TransactionScope as DomainTransactionScope
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseDumpService
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.TransactionScope as DomainTransactionScope
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventTypeConverter

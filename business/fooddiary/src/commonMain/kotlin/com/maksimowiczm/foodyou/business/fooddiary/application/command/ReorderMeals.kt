@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.business.fooddiary.application.command
 
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
-import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
-import com.maksimowiczm.foodyou.shared.common.domain.result.Result
+import com.maksimowiczm.foodyou.business.shared.application.command.Command
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
+import com.maksimowiczm.foodyou.shared.common.result.Ok
+import com.maksimowiczm.foodyou.shared.common.result.Result
 
 data class ReorderMealsCommand(val order: List<Long>) : Command<Unit, Unit>
 

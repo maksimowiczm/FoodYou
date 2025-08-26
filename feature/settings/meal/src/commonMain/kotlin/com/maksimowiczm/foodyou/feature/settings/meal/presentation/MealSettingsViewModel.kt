@@ -8,8 +8,8 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.command.ReorderMe
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMealCommand
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged

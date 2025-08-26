@@ -2,12 +2,12 @@ package com.maksimowiczm.foodyou.business.food.application.command
 
 import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductRequestFactory
-import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.command.Command
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
-import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
-import com.maksimowiczm.foodyou.shared.common.domain.result.Result
+import com.maksimowiczm.foodyou.shared.common.result.Ok
+import com.maksimowiczm.foodyou.shared.common.result.Result
 
 data class DownloadProductCommand(val url: String) : Command<RemoteProduct, DownloadProductError>
 

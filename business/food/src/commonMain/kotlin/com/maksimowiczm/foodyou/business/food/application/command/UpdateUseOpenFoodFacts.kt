@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.business.food.application.command
 
 import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
-import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
-import com.maksimowiczm.foodyou.shared.common.domain.result.Result
+import com.maksimowiczm.foodyou.business.shared.application.command.Command
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
+import com.maksimowiczm.foodyou.shared.common.result.Ok
+import com.maksimowiczm.foodyou.shared.common.result.Result
 
 data class UpdateUseOpenFoodFactsCommand(val useOpenFoodFacts: Boolean) : Command<Unit, Unit>
 

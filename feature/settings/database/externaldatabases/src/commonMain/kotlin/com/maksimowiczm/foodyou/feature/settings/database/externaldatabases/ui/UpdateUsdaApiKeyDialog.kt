@@ -15,8 +15,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateUsdaApiKeyCommand
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQuery
 import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_cancel
 import foodyou.app.generated.resources.action_save

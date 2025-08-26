@@ -23,8 +23,8 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.settings.domain.Translation
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.config.AppConfig
 import com.maksimowiczm.foodyou.feature.settings.language.presentation.LanguageViewModel
-import com.maksimowiczm.foodyou.shared.common.domain.config.AppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject

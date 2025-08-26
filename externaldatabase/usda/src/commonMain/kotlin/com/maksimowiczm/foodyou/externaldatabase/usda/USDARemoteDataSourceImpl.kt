@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.externaldatabase.usda
 import com.maksimowiczm.foodyou.externaldatabase.usda.model.DetailedFood
 import com.maksimowiczm.foodyou.externaldatabase.usda.model.UsdaFoodPageResponseImpl
 import com.maksimowiczm.foodyou.feature.usda.BuildConfig
-import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

@@ -7,63 +7,59 @@ import org.koin.dsl.KoinAppDeclaration
 /**
  * Initializes Koin with the provided configuration and modules.
  *
- * @param coroutineScope CoroutineScope with whole application lifecycle.
+ * @param applicationCoroutineScope CoroutineScope with whole application lifecycle.
  * @param config Optional KoinAppDeclaration to configure Koin.
  */
-fun initKoin(coroutineScope: CoroutineScope, config: KoinAppDeclaration? = null) = startKoin {
-    config?.invoke(this)
+fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclaration? = null) =
+    startKoin {
+        config?.invoke(this)
 
-    // Shared modules
-    modules(
-        appModule,
-        businessSharedPersistenceModule,
-        featureSharedModule,
-        sharedCommonModule(coroutineScope),
-    )
+        // Shared modules
+        modules(appModule, businessSharedModule(applicationCoroutineScope), featureSharedModule)
 
-    // Business modules
-    modules(
-        businessFoodModule,
-        businessFoodDiaryModule,
-        businessSettingsModule,
-        businessSponsorshipModule,
-    )
+        // Business modules
+        modules(
+            businessFoodModule,
+            businessFoodDiaryModule,
+            businessSettingsModule,
+            businessSponsorshipModule,
+        )
 
-    // About
-    modules(featureAboutMasterModule, featureAboutSponsorModule)
+        // About
+        modules(featureAboutMasterModule, featureAboutSponsorModule)
 
-    // Settings
-    modules(
-        featureSettingsDatabaseDatabaseDumpModule,
-        FeatureSettingsDatabaseExportCsvProductsModule,
-        featureSettingsDatabaseExternalDatabasesModule,
-        featureSettingsDatabaseImportCsvProductsModule,
-        featureSettingsDatabaseSwissFoodCompositionDatabaseModule,
-        featureSettingsGoalsModule,
-        featureSettingsLanguageModule,
-        featureSettingsMealModule,
-        featureSettingsPersonalizationModule,
-    )
+        // Settings
+        modules(
+            featureSettingsDatabaseDatabaseDumpModule,
+            FeatureSettingsDatabaseExportCsvProductsModule,
+            featureSettingsDatabaseExternalDatabasesModule,
+            featureSettingsDatabaseImportCsvProductsModule,
+            featureSettingsDatabaseSwissFoodCompositionDatabaseModule,
+            featureSettingsGoalsModule,
+            featureSettingsLanguageModule,
+            featureSettingsMealModule,
+            featureSettingsPersonalizationModule,
+        )
 
-    // Home
-    modules(featureHomeModule)
+        // Home
+        modules(featureHomeModule)
 
-    // Goals
-    modules(featureGoalsModule)
+        // Goals
+        modules(featureGoalsModule)
 
-    // Food
-    modules(featureFoodProductModule, featureFoodRecipeModule, featureFoodSharedModule)
+        // Food
+        modules(featureFoodProductModule, featureFoodRecipeModule, featureFoodSharedModule)
 
-    // Food Diary
-    modules(
-        featureFoodDiaryAddModule,
-        featureFoodDiarySearchModule,
-        featureFoodDiarySharedModule,
-        featureFoodDiaryUpdateModule,
-    )
+        // Food Diary
+        modules(
+            featureFoodDiaryAddModule,
+            featureFoodDiarySearchModule,
+            featureFoodDiarySharedModule,
+            featureFoodDiaryUpdateModule,
+        )
 
-    // Onboarding
-    modules(featureOnboardingModule)
+        // Onboarding
+        modules(featureOnboardingModule)
 
-    modules(openFoodFactsModule, usdaModule)
-}
+        modules(openFoodFactsModule, usdaModule)
+    }

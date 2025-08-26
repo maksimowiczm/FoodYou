@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseOpenFoodFactsCommand
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseUsda
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQuery
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn

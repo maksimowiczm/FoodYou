@@ -7,12 +7,12 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateDia
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryEntryQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.business.fooddiary.domain.suggestions
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import com.maksimowiczm.foodyou.feature.food.diary.shared.usecase.ObserveMealsUseCase
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.ui.ext.now
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel

@@ -4,9 +4,9 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.business.food.application.event.FoodSearchEvent
 import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchDomainEvent
 import com.maksimowiczm.foodyou.business.food.domain.QueryType
 import com.maksimowiczm.foodyou.business.food.domain.queryType
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
@@ -20,16 +20,16 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalOp
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
+import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.network.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.query.Query
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryHandler
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.network.RemoteMediatorFactory
-import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.event.EventBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -64,7 +64,9 @@ internal class SearchFoodQueryHandler(
         val queryType = queryType(query)
 
         if (queryType is QueryType.NotBlank.Text) {
-            eventBus.publish(FoodSearchEvent(queryType = queryType, date = dateProvider.now()))
+            eventBus.publish(
+                FoodSearchDomainEvent(queryType = queryType, date = dateProvider.now())
+            )
         }
 
         return localFoodPreferences.observe().flatMapLatest { prefs ->

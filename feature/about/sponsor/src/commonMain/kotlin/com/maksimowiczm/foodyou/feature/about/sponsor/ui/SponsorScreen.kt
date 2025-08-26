@@ -41,10 +41,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.config.AppConfig
 import com.maksimowiczm.foodyou.business.sponsorship.domain.AvailableSponsorMethod
 import com.maksimowiczm.foodyou.business.sponsorship.domain.CryptoSponsorMethod
 import com.maksimowiczm.foodyou.business.sponsorship.domain.LinkSponsorMethod
-import com.maksimowiczm.foodyou.shared.common.domain.config.AppConfig
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalClipboardManager

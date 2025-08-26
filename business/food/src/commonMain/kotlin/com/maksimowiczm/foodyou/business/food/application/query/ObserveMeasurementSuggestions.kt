@@ -3,10 +3,10 @@ package com.maksimowiczm.foodyou.business.food.application.query
 import com.maksimowiczm.foodyou.business.food.domain.Food
 import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalMeasurementSuggestionDataSource
+import com.maksimowiczm.foodyou.business.shared.application.query.Query
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.shared.application.query.QueryHandler
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.type
 import kotlinx.coroutines.ExperimentalCoroutinesApi

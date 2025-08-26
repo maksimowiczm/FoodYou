@@ -6,12 +6,12 @@ import com.maksimowiczm.foodyou.business.food.application.command.ImportCsvProdu
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseOpenFoodFactsCommand
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseUsda
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
+import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.externaldatabase.swissfoodcompositiondatabase.Language
 import com.maksimowiczm.foodyou.feature.onboarding.ui.OnboardingState
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.result.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow

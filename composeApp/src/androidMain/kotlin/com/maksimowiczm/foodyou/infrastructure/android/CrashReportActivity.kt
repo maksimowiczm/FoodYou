@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.os.Bundle
-import com.maksimowiczm.foodyou.shared.common.domain.config.AppConfig
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.config.AppConfig
 import com.maksimowiczm.foodyou.shared.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.CrashReportScreen
 import org.koin.android.ext.android.get
