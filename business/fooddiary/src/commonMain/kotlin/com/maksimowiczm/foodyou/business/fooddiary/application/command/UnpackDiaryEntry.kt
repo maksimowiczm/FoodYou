@@ -7,8 +7,9 @@ import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.Lo
 import com.maksimowiczm.foodyou.business.shared.application.command.Command
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.result.Ok
 import com.maksimowiczm.foodyou.shared.common.result.Result
@@ -43,7 +44,7 @@ internal class UnpackDiaryEntryCommandHandler(
         transactionProvider.withTransaction {
             val entry = localEntry.observeEntry(command.id).first()
             if (entry == null) {
-                return@withTransaction ErrorLoggingUtils.logAndReturnFailure(
+                return@withTransaction FoodYouLogger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
                     error = UnpackDiaryEntryError.EntryNotFound,
@@ -53,7 +54,7 @@ internal class UnpackDiaryEntryCommandHandler(
 
             val food = entry.food
             if (food !is DiaryFoodRecipe) {
-                return@withTransaction ErrorLoggingUtils.logAndReturnFailure(
+                return@withTransaction FoodYouLogger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
                     error = UnpackDiaryEntryError.EntryCannotBeUnpacked,
@@ -63,7 +64,7 @@ internal class UnpackDiaryEntryCommandHandler(
 
             val meal = mealDataSource.observeMealById(command.mealId).firstOrNull()
             if (meal == null) {
-                return@withTransaction ErrorLoggingUtils.logAndReturnFailure(
+                return@withTransaction FoodYouLogger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
                     error = UnpackDiaryEntryError.MealNotFound,

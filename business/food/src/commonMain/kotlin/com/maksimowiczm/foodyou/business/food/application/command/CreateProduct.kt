@@ -6,10 +6,11 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFo
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.shared.application.command.Command
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.result.Ok
 import com.maksimowiczm.foodyou.shared.common.result.Result
@@ -60,7 +61,7 @@ internal class CreateProductCommandHandler(
         command: CreateProductCommand
     ): Result<FoodId.Product, CreateProductError> {
         if (command.name.isBlank()) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = CreateProductError.NameEmpty,

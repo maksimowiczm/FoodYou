@@ -6,10 +6,11 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalPr
 import com.maksimowiczm.foodyou.business.shared.application.command.Command
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.result.Ok
 import com.maksimowiczm.foodyou.shared.common.result.Result
@@ -43,7 +44,7 @@ internal class UpdateProductCommandHandler(
 
     override suspend fun handle(command: UpdateProductCommand): Result<Unit, UpdateProductError> {
         if (command.name.isBlank()) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = UpdateProductError.NameEmpty,
@@ -54,7 +55,7 @@ internal class UpdateProductCommandHandler(
         val product = productDataSource.observeProduct(command.id).firstOrNull()
 
         if (product == null) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = UpdateProductError.ProductNotFound(command.id),

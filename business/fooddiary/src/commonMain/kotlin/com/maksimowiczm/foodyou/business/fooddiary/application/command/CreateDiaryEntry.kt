@@ -8,9 +8,10 @@ import com.maksimowiczm.foodyou.business.shared.application.command.Command
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
 import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.fooddiary.FoodDiaryEntryCreatedDomainEvent
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.result.Ok
@@ -49,7 +50,7 @@ internal class CreateDiaryEntryCommandHandler(
             is Measurement.Gram,
             is Measurement.Ounce ->
                 if (command.food.isLiquid) {
-                    return ErrorLoggingUtils.logAndReturnFailure(
+                    return FoodYouLogger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
                         error = CreateDiaryEntryError.InvalidMeasurement,
@@ -60,7 +61,7 @@ internal class CreateDiaryEntryCommandHandler(
             is Measurement.Milliliter,
             is Measurement.FluidOunce ->
                 if (!command.food.isLiquid) {
-                    return ErrorLoggingUtils.logAndReturnFailure(
+                    return FoodYouLogger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
                         error = CreateDiaryEntryError.InvalidMeasurement,
@@ -70,7 +71,7 @@ internal class CreateDiaryEntryCommandHandler(
 
             is Measurement.Package ->
                 if (command.food.totalWeight == null) {
-                    return ErrorLoggingUtils.logAndReturnFailure(
+                    return FoodYouLogger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
                         error = CreateDiaryEntryError.InvalidMeasurement,
@@ -80,7 +81,7 @@ internal class CreateDiaryEntryCommandHandler(
 
             is Measurement.Serving ->
                 if (command.food.servingWeight == null) {
-                    return ErrorLoggingUtils.logAndReturnFailure(
+                    return FoodYouLogger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
                         error = CreateDiaryEntryError.InvalidMeasurement,
@@ -93,7 +94,7 @@ internal class CreateDiaryEntryCommandHandler(
         val meal = mealDataSource.observeMealById(mealId).firstOrNull()
 
         if (meal == null) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = CreateDiaryEntryError.MealNotFound,

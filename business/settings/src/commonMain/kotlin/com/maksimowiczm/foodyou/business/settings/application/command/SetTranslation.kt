@@ -4,8 +4,9 @@ import com.maksimowiczm.foodyou.business.settings.domain.languages
 import com.maksimowiczm.foodyou.business.settings.infrastructure.preferences.LocalSettingsDataSource
 import com.maksimowiczm.foodyou.business.shared.application.command.Command
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.system.SystemDetails
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.result.Ok
 import com.maksimowiczm.foodyou.shared.common.result.Result
 
@@ -30,7 +31,7 @@ internal class SetTranslationCommandHandler(
         val translation = languages.firstOrNull { it.languageTag == command.tag }
 
         if (translation == null) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = SetTranslationError.TranslationNotFound,

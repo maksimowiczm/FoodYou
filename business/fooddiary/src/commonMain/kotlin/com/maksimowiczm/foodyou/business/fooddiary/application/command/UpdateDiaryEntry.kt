@@ -5,8 +5,9 @@ import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.Lo
 import com.maksimowiczm.foodyou.business.shared.application.command.Command
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.result.Ok
 import com.maksimowiczm.foodyou.shared.common.result.Result
@@ -43,7 +44,7 @@ internal class UpdateDiaryEntryCommandHandler(
             val entry = localEntry.observeEntry(command.id).first()
 
             if (entry == null) {
-                return@withTransaction ErrorLoggingUtils.logAndReturnFailure(
+                return@withTransaction FoodYouLogger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
                     error = UpdateDiaryEntryError.EntryNotFound,
@@ -55,7 +56,7 @@ internal class UpdateDiaryEntryCommandHandler(
                 is Measurement.Gram,
                 is Measurement.Ounce ->
                     if (entry.food.isLiquid) {
-                        return@withTransaction ErrorLoggingUtils.logAndReturnFailure(
+                        return@withTransaction FoodYouLogger.logAndReturnFailure(
                             tag = TAG,
                             throwable = null,
                             error = UpdateDiaryEntryError.InvalidMeasurement,
@@ -66,7 +67,7 @@ internal class UpdateDiaryEntryCommandHandler(
                 is Measurement.Milliliter,
                 is Measurement.FluidOunce ->
                     if (!entry.food.isLiquid) {
-                        return@withTransaction ErrorLoggingUtils.logAndReturnFailure(
+                        return@withTransaction FoodYouLogger.logAndReturnFailure(
                             tag = TAG,
                             throwable = null,
                             error = UpdateDiaryEntryError.InvalidMeasurement,
@@ -76,7 +77,7 @@ internal class UpdateDiaryEntryCommandHandler(
 
                 is Measurement.Package ->
                     if (entry.food.totalWeight == null) {
-                        return@withTransaction ErrorLoggingUtils.logAndReturnFailure(
+                        return@withTransaction FoodYouLogger.logAndReturnFailure(
                             tag = TAG,
                             throwable = null,
                             error = UpdateDiaryEntryError.InvalidMeasurement,
@@ -86,7 +87,7 @@ internal class UpdateDiaryEntryCommandHandler(
 
                 is Measurement.Serving ->
                     if (entry.food.servingWeight == null) {
-                        return@withTransaction ErrorLoggingUtils.logAndReturnFailure(
+                        return@withTransaction FoodYouLogger.logAndReturnFailure(
                             tag = TAG,
                             throwable = null,
                             error = UpdateDiaryEntryError.InvalidMeasurement,
@@ -99,7 +100,7 @@ internal class UpdateDiaryEntryCommandHandler(
             val meal = mealDataSource.observeMealById(mealId).firstOrNull()
 
             if (meal == null) {
-                return@withTransaction ErrorLoggingUtils.logAndReturnFailure(
+                return@withTransaction FoodYouLogger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
                     error = UpdateDiaryEntryError.MealNotFound,

@@ -8,8 +8,9 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRe
 import com.maksimowiczm.foodyou.business.shared.application.command.Command
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.result.Ok
@@ -49,7 +50,7 @@ internal class UpdateRecipeCommandHandler(
 
     override suspend fun handle(command: UpdateRecipeCommand): Result<Unit, UpdateRecipeError> {
         if (command.name.isBlank()) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = UpdateRecipeError.EmptyName,
@@ -58,7 +59,7 @@ internal class UpdateRecipeCommandHandler(
         }
 
         if (command.servings <= 0) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = UpdateRecipeError.NonPositiveServings,
@@ -67,7 +68,7 @@ internal class UpdateRecipeCommandHandler(
         }
 
         if (command.ingredients.isEmpty()) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = UpdateRecipeError.EmptyIngredients,
@@ -78,7 +79,7 @@ internal class UpdateRecipeCommandHandler(
         val recipe = recipeDataSource.observeRecipe(command.id).firstOrNull()
 
         if (recipe == null) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = UpdateRecipeError.RecipeNotFound(command.id),
@@ -95,7 +96,7 @@ internal class UpdateRecipeCommandHandler(
                     }
 
                 if (food == null) {
-                    return ErrorLoggingUtils.logAndReturnFailure(
+                    return FoodYouLogger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
                         error = UpdateRecipeError.IngredientNotFound(foodId),
@@ -119,7 +120,7 @@ internal class UpdateRecipeCommandHandler(
         val flatIngredients = recipe.flatIngredients()
         val ingredientIds = flatIngredients.map { it.id }.toSet()
         if (flatIngredients.size != ingredientIds.size) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = UpdateRecipeError.CircularIngredient,

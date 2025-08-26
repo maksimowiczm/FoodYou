@@ -4,8 +4,9 @@ import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.business.shared.application.command.Command
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.result.Ok
 import com.maksimowiczm.foodyou.shared.common.result.Result
 
@@ -44,7 +45,7 @@ internal class DownloadProductCommandHandler(
         val link = linkRegex.find(url)?.value
 
         if (link == null) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = DownloadProductError.Generic.UrlNotFound,
@@ -55,7 +56,7 @@ internal class DownloadProductCommandHandler(
         val request = remoteRequestFactory.createFromUrl(link)
 
         if (request == null) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = DownloadProductError.Generic.UrlNotSupported,
@@ -68,7 +69,7 @@ internal class DownloadProductCommandHandler(
             .fold(
                 onSuccess = { product ->
                     if (product == null) {
-                        ErrorLoggingUtils.logAndReturnFailure(
+                        FoodYouLogger.logAndReturnFailure(
                             tag = TAG,
                             throwable = null,
                             error = DownloadProductError.Generic.ProductNotFound,
@@ -87,7 +88,7 @@ internal class DownloadProductCommandHandler(
                                 is USDAException.ApiKeyIsMissingException,
                                 is USDAException.ApiKeyUnauthorizedException,
                                 is USDAException.ProductNotFoundException ->
-                                    ErrorLoggingUtils.logAndReturnFailure(
+                                    FoodYouLogger.logAndReturnFailure(
                                         tag = "DownloadProductCommandHandler",
                                         throwable = error,
                                         error = DownloadProductError.Usda.ApiKeyInvalid,
@@ -95,7 +96,7 @@ internal class DownloadProductCommandHandler(
                                     )
 
                                 is USDAException.ApiKeyUnverifiedException ->
-                                    ErrorLoggingUtils.logAndReturnFailure(
+                                    FoodYouLogger.logAndReturnFailure(
                                         tag = "DownloadProductCommandHandler",
                                         throwable = error,
                                         error = DownloadProductError.Usda.ApiKeyUnverified,
@@ -103,7 +104,7 @@ internal class DownloadProductCommandHandler(
                                     )
 
                                 is USDAException.RateLimitException ->
-                                    ErrorLoggingUtils.logAndReturnFailure(
+                                    FoodYouLogger.logAndReturnFailure(
                                         tag = "DownloadProductCommandHandler",
                                         throwable = error,
                                         error = DownloadProductError.Usda.RateLimit,
@@ -112,7 +113,7 @@ internal class DownloadProductCommandHandler(
                             }
 
                         else ->
-                            ErrorLoggingUtils.logAndReturnFailure(
+                            FoodYouLogger.logAndReturnFailure(
                                 tag = TAG,
                                 throwable = error,
                                 error = DownloadProductError.Generic.Custom(error.message),

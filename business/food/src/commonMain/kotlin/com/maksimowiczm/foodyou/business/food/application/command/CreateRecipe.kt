@@ -8,8 +8,9 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalPr
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRecipeDataSource
 import com.maksimowiczm.foodyou.business.shared.application.command.Command
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.result.Ok
@@ -48,7 +49,7 @@ internal class CreateRecipeCommandHandler(
         command: CreateRecipeCommand
     ): Result<FoodId.Recipe, CreateRecipeError> {
         if (command.name.isBlank()) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = CreateRecipeError.EmptyName,
@@ -57,7 +58,7 @@ internal class CreateRecipeCommandHandler(
         }
 
         if (command.servings <= 0) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = CreateRecipeError.NonPositiveServings,
@@ -66,7 +67,7 @@ internal class CreateRecipeCommandHandler(
         }
 
         if (command.ingredients.isEmpty()) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = CreateRecipeError.EmptyIngredients,
@@ -83,7 +84,7 @@ internal class CreateRecipeCommandHandler(
                     }
 
                 if (food == null) {
-                    return ErrorLoggingUtils.logAndReturnFailure(
+                    return FoodYouLogger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
                         error = CreateRecipeError.IngredientNotFound(foodId),
@@ -108,7 +109,7 @@ internal class CreateRecipeCommandHandler(
         val flatIngredients = recipe.flatIngredients()
         val ingredientIds = flatIngredients.map { it.id }.toSet()
         if (flatIngredients.size != ingredientIds.size) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = CreateRecipeError.CircularIngredient,

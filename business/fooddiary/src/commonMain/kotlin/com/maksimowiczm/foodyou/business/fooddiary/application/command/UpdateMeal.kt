@@ -3,8 +3,9 @@ package com.maksimowiczm.foodyou.business.fooddiary.application.command
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
 import com.maksimowiczm.foodyou.business.shared.application.command.Command
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.result.Ok
 import com.maksimowiczm.foodyou.shared.common.result.Result
 import kotlinx.coroutines.flow.firstOrNull
@@ -32,7 +33,7 @@ internal class UpdateMealCommandHandler(
 
     override suspend fun handle(command: UpdateMealCommand): Result<Unit, UpdateMealError> {
         if (command.name.isBlank()) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = UpdateMealError.InvalidName,
@@ -41,7 +42,7 @@ internal class UpdateMealCommandHandler(
         }
 
         if (command.from > command.to) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = UpdateMealError.InvalidTimeRange,
@@ -52,7 +53,7 @@ internal class UpdateMealCommandHandler(
         val meal = mealDataSource.observeMealById(command.id).firstOrNull()
 
         if (meal == null) {
-            return ErrorLoggingUtils.logAndReturnFailure(
+            return FoodYouLogger.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
                 error = UpdateMealError.MealNotFound,
