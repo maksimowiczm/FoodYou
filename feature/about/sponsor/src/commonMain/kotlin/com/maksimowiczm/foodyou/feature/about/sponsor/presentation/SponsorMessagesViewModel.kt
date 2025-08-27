@@ -4,11 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
-import com.maksimowiczm.foodyou.business.sponsorship.application.command.AllowRemoteSponsorshipsCommand
-import com.maksimowiczm.foodyou.business.sponsorship.application.query.ObserveSponsorshipPreferencesQuery
-import com.maksimowiczm.foodyou.business.sponsorship.application.query.ObserveSponsorshipsQuery
+import com.maksimowiczm.foodyou.business.sponsorship.domain.SponsorRepository
 import com.maksimowiczm.foodyou.business.sponsorship.domain.Sponsorship
 import com.maksimowiczm.foodyou.business.sponsorship.domain.SponsorshipPreferences
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,17 +20,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-internal class SponsorMessagesViewModel(
-    private val queryBus: QueryBus,
-    private val commandBus: CommandBus,
-) : ViewModel() {
+internal class SponsorMessagesViewModel(private val sponsorRepository: SponsorRepository) :
+    ViewModel() {
 
     private val remoteAllowedOnce = MutableStateFlow(false)
 
     private val preferenceRemoteAllowedOnce =
-        queryBus.dispatch<SponsorshipPreferences>(ObserveSponsorshipPreferencesQuery).map {
-            it.remoteAllowed
-        }
+        sponsorRepository.observeSponsorshipPreferences().map { it.remoteAllowed }
 
     private val _sponsorsAllowed =
         combine(preferenceRemoteAllowedOnce, remoteAllowedOnce.filterNotNull()) { always, oneTime ->
@@ -53,16 +45,16 @@ internal class SponsorMessagesViewModel(
     }
 
     fun allowAlways() {
-        viewModelScope.launch { commandBus.dispatch<Unit, Unit>(AllowRemoteSponsorshipsCommand) }
+        viewModelScope.launch {
+            sponsorRepository.setSponsorshipPreferences(
+                SponsorshipPreferences(remoteAllowed = true)
+            )
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val sponsorshipPages: Flow<PagingData<Sponsorship>> =
         sponsorsAllowed
-            .flatMapLatest { allowed ->
-                queryBus.dispatch<PagingData<Sponsorship>>(
-                    ObserveSponsorshipsQuery(allowRemote = allowed)
-                )
-            }
+            .flatMapLatest(sponsorRepository::observeSponsorships)
             .cachedIn(viewModelScope)
 }

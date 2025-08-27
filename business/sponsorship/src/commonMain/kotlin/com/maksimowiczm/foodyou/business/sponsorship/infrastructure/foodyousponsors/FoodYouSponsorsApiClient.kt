@@ -1,8 +1,6 @@
-package com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.ktor
+package com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors
 
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.network.NetworkConfig
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.PagedSponsorshipsResponse
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.RemoteSponsorshipDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout
@@ -12,17 +10,18 @@ import io.ktor.http.userAgent
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
+// https://github.com/maksimowiczm/FoodYou-sponsors API client
 @OptIn(ExperimentalTime::class)
-internal class KtorSponsorshipApiClient(
+internal class FoodYouSponsorsApiClient(
     private val client: HttpClient,
-    private val networkConfig: NetworkConfig,
-) : RemoteSponsorshipDataSource {
-    override suspend fun getSponsorships(
-        before: Instant?,
-        after: Instant?,
-        size: Int,
+    private val config: NetworkConfig,
+) {
+    suspend fun getSponsorships(
+        before: Instant? = null,
+        after: Instant? = null,
+        size: Int = 20,
     ): PagedSponsorshipsResponse {
-        val url = "${networkConfig.sponsorshipApiUrl}/sponsorships"
+        val url = "${config.sponsorshipApiUrl}/sponsorships"
 
         val response =
             client.get(url) {
@@ -32,7 +31,7 @@ internal class KtorSponsorshipApiClient(
                     socketTimeoutMillis = TIMEOUT
                 }
 
-                userAgent(networkConfig.userAgent)
+                userAgent(config.userAgent)
 
                 if (before != null) {
                     parameter("before", before)

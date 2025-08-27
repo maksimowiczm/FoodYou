@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network
+package com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors
 
 import kotlinx.serialization.Serializable
 

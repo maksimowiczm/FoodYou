@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.sponsorship.infrastructure.persistence.room
+package com.maksimowiczm.foodyou.business.sponsorship.infrastructure.room
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
@@ -9,7 +9,6 @@ import com.maksimowiczm.foodyou.business.shared.application.infrastructure.netwo
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.sponsorship.SponsorshipDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.sponsorship.SponsorshipEntity
 import com.maksimowiczm.foodyou.business.sponsorship.domain.Sponsorship
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.persistence.LocalSponsorshipDataSource
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
@@ -18,20 +17,19 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
-internal class RoomSponsorshipDataSource(private val sponsorshipDao: SponsorshipDao) :
-    LocalSponsorshipDataSource {
-    override suspend fun getLatestSponsorship(): Sponsorship? =
+internal class RoomSponsorshipDataSource(private val sponsorshipDao: SponsorshipDao) {
+    suspend fun getLatestSponsorship(): Sponsorship? =
         sponsorshipDao.getLatestSponsorship()?.toModel()
 
-    override suspend fun getOldestSponsorship(): Sponsorship? =
+    suspend fun getOldestSponsorship(): Sponsorship? =
         sponsorshipDao.getOldestSponsorship()?.toModel()
 
-    override suspend fun upsertSponsorships(sponsorships: List<Sponsorship>) {
+    suspend fun upsertSponsorships(sponsorships: List<Sponsorship>) {
         sponsorshipDao.upsert(sponsorships.map { it.toEntity() })
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun observeSponsorships(
+    fun observeSponsorships(
         config: PagingConfig,
         remoteMediatorFactory: RemoteMediatorFactory?,
     ): Flow<PagingData<Sponsorship>> =

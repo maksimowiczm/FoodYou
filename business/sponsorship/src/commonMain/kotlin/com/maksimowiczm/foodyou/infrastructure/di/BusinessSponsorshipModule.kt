@@ -1,14 +1,11 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.business.sponsorship.application.command.AllowRemoteSponsorshipsCommandHandler
-import com.maksimowiczm.foodyou.business.sponsorship.application.query.ObserveSponsorshipPreferencesQueryHandler
-import com.maksimowiczm.foodyou.business.sponsorship.application.query.ObserveSponsorshipsQueryHandler
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.RemoteSponsorshipDataSource
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.ktor.KtorSponsorshipApiClient
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.persistence.LocalSponsorshipDataSource
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.persistence.room.RoomSponsorshipDataSource
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.preferences.SponsorshipPreferencesDataSource
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.preferences.datastore.DataStoreSponsorshipPreferencesDataSource
+import com.maksimowiczm.foodyou.business.sponsorship.domain.SponsorRepository
+import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.SponsorRepositoryImpl
+import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.datastore.DataStoreSponsorshipPreferencesDataSource
+import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
+import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.room.RoomSponsorshipDataSource
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -28,18 +25,22 @@ val businessSponsorshipModule = module {
             }
         }
         .onClose { it?.close() }
+
     factory {
-            KtorSponsorshipApiClient(
-                client = get(named("ktorSponsorshipHttpClient")),
-                networkConfig = get(),
+        FoodYouSponsorsApiClient(client = get(named("ktorSponsorshipHttpClient")), config = get())
+    }
+
+    factoryOf(::RoomSponsorshipDataSource)
+
+    factoryOf(::DataStoreSponsorshipPreferencesDataSource)
+
+    factory {
+            SponsorRepositoryImpl(
+                localDataSource = get(),
+                networkDataSource = get(),
+                preferencesDataSource = get(),
+                logger = FoodYouLogger, // Use the shared logger implementation
             )
         }
-        .bind<RemoteSponsorshipDataSource>()
-    factoryOf(::RoomSponsorshipDataSource).bind<LocalSponsorshipDataSource>()
-
-    factoryOf(::DataStoreSponsorshipPreferencesDataSource).bind<SponsorshipPreferencesDataSource>()
-
-    commandHandlerOf(::AllowRemoteSponsorshipsCommandHandler)
-    queryHandlerOf(::ObserveSponsorshipsQueryHandler)
-    queryHandlerOf(::ObserveSponsorshipPreferencesQueryHandler)
+        .bind<SponsorRepository>()
 }
