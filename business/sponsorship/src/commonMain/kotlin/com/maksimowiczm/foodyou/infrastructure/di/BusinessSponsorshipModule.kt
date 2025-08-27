@@ -34,13 +34,5 @@ val businessSponsorshipModule = module {
 
     factoryOf(::DataStoreSponsorshipPreferencesDataSource)
 
-    factory {
-            SponsorRepositoryImpl(
-                localDataSource = get(),
-                networkDataSource = get(),
-                preferencesDataSource = get(),
-                logger = FoodYouLogger, // Use the shared logger implementation
-            )
-        }
-        .bind<SponsorRepository>()
+    factoryOf(::SponsorRepositoryImpl).bind<SponsorRepository>()
 }
