@@ -3,13 +3,11 @@ package com.maksimowiczm.foodyou.feature.food.shared.presentation.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQuery
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveSearchHistoryQuery
-import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodCountQuery
-import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodQuery
-import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodCount
-import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodQuery
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.food.application.FoodSearchUseCase
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
+import com.maksimowiczm.foodyou.business.food.domain.SearchHistoryRepository
+import com.maksimowiczm.foodyou.business.food.domain.queryType
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.RemoteStatus.Companion.toRemoteStatus
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
@@ -35,8 +33,11 @@ import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 internal class FoodSearchViewModel(
-    private val queryBus: QueryBus,
     private val excludedRecipeId: FoodId.Recipe?,
+    private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
+    searchHistoryRepository: SearchHistoryRepository,
+    private val foodSearchRepository: FoodSearchRepository,
+    private val foodSearchUseCase: FoodSearchUseCase,
 ) : ViewModel() {
 
     // Use shared flow to allow emitting same value multiple times
@@ -54,24 +55,28 @@ internal class FoodSearchViewModel(
     }
 
     private val foodPreferences =
-        queryBus
-            .dispatch(ObserveFoodPreferencesQuery)
+        foodSearchPreferencesRepository
+            .observe()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
-                initialValue =
-                    runBlocking { queryBus.dispatch(ObserveFoodPreferencesQuery).first() },
+                initialValue = runBlocking { foodSearchPreferencesRepository.observe().first() },
             )
 
     private val recentFoodPages =
         searchQuery.flatMapLatest { query ->
-            queryBus
-                .dispatch(SearchRecentFoodQuery(query = query, excludedRecipeId = excludedRecipeId))
+            foodSearchRepository
+                .searchRecentFood(queryType(query), excludedRecipeId)
                 .cachedIn(viewModelScope)
         }
     private val recentFoodState =
         searchQuery
-            .flatMapLatest { query -> queryBus.dispatch(SearchRecentFoodCount(query, null)) }
+            .flatMapLatest { query ->
+                foodSearchRepository.observeRecentFoodCount(
+                    query = queryType(query),
+                    excludedRecipeId = excludedRecipeId,
+                )
+            }
             .map { count ->
                 FoodSourceUiState(
                     remoteEnabled = RemoteStatus.LocalOnly,
@@ -126,25 +131,21 @@ internal class FoodSearchViewModel(
 
     private fun observeFoodCount(source: FoodSource.Type) =
         searchQuery.flatMapLatest { query ->
-            queryBus.dispatch(
-                SearchFoodCountQuery(
-                    query = query,
-                    source = source,
-                    excludedRecipeId = excludedRecipeId,
-                )
+            foodSearchRepository.observeSearchFoodCount(
+                query = queryType(query),
+                source = source,
+                excludedRecipeId = excludedRecipeId,
             )
         }
 
     private fun observeFoodPages(source: FoodSource.Type) =
         searchQuery.flatMapLatest { query ->
-            queryBus.dispatch(
-                SearchFoodQuery(query = query, source = source, excludedRecipeId = excludedRecipeId)
-            )
+            foodSearchUseCase.search(query, source, excludedRecipeId)
         }
 
     private val searchHistory =
-        queryBus
-            .dispatch(ObserveSearchHistoryQuery)
+        searchHistoryRepository
+            .observeSearchHistory()
             .map { list -> list.map { it.query } }
             .stateIn(
                 scope = viewModelScope,

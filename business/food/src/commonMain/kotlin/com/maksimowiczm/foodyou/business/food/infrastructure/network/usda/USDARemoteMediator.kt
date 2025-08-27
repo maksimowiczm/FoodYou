@@ -5,12 +5,10 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
+import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
 import com.maksimowiczm.foodyou.business.food.domain.Product
-import com.maksimowiczm.foodyou.business.food.domain.USDAPagingKey
+import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
@@ -23,8 +21,8 @@ internal class USDARemoteMediator<K : Any, T : Any>(
     private val query: String,
     private val apiKey: String?,
     private val transactionProvider: DatabaseTransactionProvider,
-    private val localProduct: LocalProductDataSource,
-    private val localFoodEvent: LocalFoodEventDataSource,
+    private val productRepository: ProductRepository,
+    private val foodEventRepository: FoodEventRepository,
     private val remoteDataSource: USDARemoteDataSource,
     private val usdaHelper: LocalUsdaPagingHelper,
     private val productMapper: USDAProductMapper,
@@ -106,9 +104,21 @@ internal class USDARemoteMediator<K : Any, T : Any>(
             .getOrNull()
 
     private suspend fun Product.insert(now: LocalDateTime = dateProvider.now()) {
-        val id = localProduct.insertUniqueProduct(this)
+        val id =
+            productRepository.insertUniqueProduct(
+                name = this.name,
+                brand = this.brand,
+                barcode = this.barcode,
+                note = this.note,
+                isLiquid = this.isLiquid,
+                packageWeight = this.packageWeight,
+                servingWeight = this.servingWeight,
+                source = this.source,
+                nutritionFacts = this.nutritionFacts,
+            )
+
         if (id != null) {
-            localFoodEvent.insert(
+            foodEventRepository.insert(
                 foodId = id,
                 event = FoodEvent.Downloaded(date = now, url = this.source.url),
             )

@@ -4,9 +4,8 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.command.ImportCsvProductsCommand
+import com.maksimowiczm.foodyou.business.food.application.ImportCsvProductUseCase
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import java.io.BufferedReader
@@ -15,7 +14,6 @@ import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.getValue
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -24,7 +22,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.stream.consumeAsFlow
 
-internal class ImportCsvProductsViewModel(private val commandBus: CommandBus) : ViewModel() {
+internal class ImportCsvProductsViewModel(
+    private val importCsvProductUseCase: ImportCsvProductUseCase
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState>(UiState.WaitingForFile)
     val uiState = _uiState.asStateFlow()
@@ -122,21 +122,9 @@ internal class ImportCsvProductsViewModel(private val commandBus: CommandBus) : 
         mapper: List<ProductField?>,
     ) {
         val lines = bufferedReader.lines().consumeAsFlow()
-        val command = ImportCsvProductsCommand(mapper, lines, FoodSource.Type.User)
 
-        commandBus
-            .dispatch(command)
-            .fold(
-                onSuccess = ::handleImportSuccess,
-                onFailure = {
-                    FoodYouLogger.e(TAG) { "Error importing products from CSV." }
-                    _uiState.value = UiState.FailedToImport(it.toString())
-                },
-            )
-    }
-
-    private suspend fun handleImportSuccess(flow: Flow<Int>) {
-        flow
+        importCsvProductUseCase
+            .import(mapper, lines, FoodSource.Type.User)
             .catch { throw it }
             .onEach { _uiState.value = UiState.Importing(it) }
             .last()

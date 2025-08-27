@@ -2,22 +2,19 @@ package com.maksimowiczm.foodyou.feature.settings.database.externaldatabases.pre
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseOpenFoodFactsCommand
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseUsda
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQuery
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-internal class ExternalDatabasesViewModel(queryBus: QueryBus, private val commandBus: CommandBus) :
-    ViewModel() {
+internal class ExternalDatabasesViewModel(
+    private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository
+) : ViewModel() {
 
     val foodPreferences =
-        queryBus
-            .dispatch(ObserveFoodPreferencesQuery)
+        foodSearchPreferencesRepository
+            .observe()
             .map(::FoodPreferencesModel)
             .stateIn(
                 scope = viewModelScope,
@@ -26,10 +23,16 @@ internal class ExternalDatabasesViewModel(queryBus: QueryBus, private val comman
             )
 
     fun toggleOpenFoodFacts(newState: Boolean) {
-        viewModelScope.launch { commandBus.dispatch(UpdateUseOpenFoodFactsCommand(newState)) }
+        viewModelScope.launch {
+            foodSearchPreferencesRepository.update {
+                copy(openFoodFacts = openFoodFacts.copy(enabled = newState))
+            }
+        }
     }
 
     fun toggleUsda(newState: Boolean) {
-        viewModelScope.launch { commandBus.dispatch(UpdateUseUsda(newState)) }
+        viewModelScope.launch {
+            foodSearchPreferencesRepository.update { copy(usda = usda.copy(enabled = newState)) }
+        }
     }
 }

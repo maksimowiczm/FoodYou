@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts
 
 import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
-import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductRequest
+import com.maksimowiczm.foodyou.business.food.domain.RemoteProductRequest
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
 

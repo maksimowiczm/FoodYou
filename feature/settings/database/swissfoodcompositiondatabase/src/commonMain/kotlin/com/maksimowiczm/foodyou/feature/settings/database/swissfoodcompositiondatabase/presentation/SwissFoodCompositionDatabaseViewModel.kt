@@ -2,12 +2,10 @@ package com.maksimowiczm.foodyou.feature.settings.database.swissfoodcompositiond
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.command.ImportCsvProductsCommand
+import com.maksimowiczm.foodyou.business.food.application.ImportCsvProductUseCase
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.externaldatabase.swissfoodcompositiondatabase.Language
-import com.maksimowiczm.foodyou.shared.common.result.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -20,8 +18,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-internal class SwissFoodCompositionDatabaseViewModel(private val commandBus: CommandBus) :
-    ViewModel() {
+internal class SwissFoodCompositionDatabaseViewModel(
+    private val importCsvProductUseCase: ImportCsvProductUseCase
+) : ViewModel() {
 
     private val _uiState =
         MutableStateFlow<SwissFoodCompositionDatabaseUiState>(
@@ -60,16 +59,11 @@ internal class SwissFoodCompositionDatabaseViewModel(private val commandBus: Com
         val lines =
             language.readBytes().decodeToString().split("\n").drop(1).filterNot { it.isBlank() }
 
-        val result =
-            commandBus.dispatch(
-                ImportCsvProductsCommand(
-                    mapper = order,
-                    lines = lines.asFlow(),
-                    source = FoodSource.Type.SwissFoodCompositionDatabase,
-                )
-            ) as Result.Success
-
-        return result.data
+        return importCsvProductUseCase.import(
+            mapper = order,
+            lines = lines.asFlow(),
+            source = FoodSource.Type.SwissFoodCompositionDatabase,
+        )
     }
 }
 

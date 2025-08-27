@@ -4,9 +4,8 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.command.ExportCsvProductsCommand
+import com.maksimowiczm.foodyou.business.food.application.ExportCsvProductsUseCase
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import java.io.BufferedWriter
 import kotlinx.coroutines.CancellationException
@@ -19,7 +18,9 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-internal class ExportProductsViewModel(private val commandBus: CommandBus) : ViewModel() {
+internal class ExportProductsViewModel(
+    private val exportCsvProductsUseCase: ExportCsvProductsUseCase
+) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState>(UiState.WaitingForFile)
     val uiState = _uiState.asStateFlow()
 
@@ -49,29 +50,20 @@ internal class ExportProductsViewModel(private val commandBus: CommandBus) : Vie
     }
 
     private suspend fun handleWriter(writer: BufferedWriter) {
-        commandBus
-            .dispatch(ExportCsvProductsCommand(ProductField.entries))
-            .consume(
-                onSuccess = { lines ->
-                    flow {
-                            var count = 0
-                            lines.collect { line ->
-                                writer.appendLine(line)
-                                emit(count++)
-                            }
-                            writer.flush()
-                        }
-                        .catch { throw it }
-                        .conflate()
-                        .onEach { _uiState.value = UiState.Exporting(it) }
-                        .last()
-                        .let { _uiState.value = UiState.Exported(it) }
-                },
-                onFailure = {
-                    FoodYouLogger.e(TAG) { "Error exporting products to CSV." }
-                    _uiState.value = UiState.Error(null)
-                },
-            )
+        flow {
+                val lines = exportCsvProductsUseCase.export(ProductField.entries)
+                var count = 0
+                lines.collect { line ->
+                    writer.appendLine(line)
+                    emit(count++)
+                }
+                writer.flush()
+            }
+            .catch { throw it }
+            .conflate()
+            .onEach { _uiState.value = UiState.Exporting(it) }
+            .last()
+            .let { _uiState.value = UiState.Exported(it) }
     }
 
     private companion object {

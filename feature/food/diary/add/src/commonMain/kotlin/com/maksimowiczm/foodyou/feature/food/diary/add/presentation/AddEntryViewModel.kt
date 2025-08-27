@@ -2,24 +2,21 @@ package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.command.DeleteFoodCommand
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodEventsQuery
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveMeasurementSuggestionsQuery
+import com.maksimowiczm.foodyou.business.food.application.DeleteFoodUseCase
+import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.business.food.application.ObserveMeasurementSuggestionsUseCase
+import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.defaultMeasurement
 import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.business.fooddiary.application.CreateDiaryEntryUseCase
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
-import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ext.now
-import kotlin.collections.emptyList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,10 +34,11 @@ import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class AddEntryViewModel(
-    queryBus: QueryBus,
-    private val commandBus: CommandBus,
     private val createDiaryEntryUseCase: CreateDiaryEntryUseCase,
     observeFoodUseCase: ObserveFoodUseCase,
+    foodEventRepository: FoodEventRepository,
+    private val deleteFoodUseCase: DeleteFoodUseCase,
+    observeMeasurementSuggestionsUseCase: ObserveMeasurementSuggestionsUseCase,
     mealRepository: MealRepository,
     dateProvider: DateProvider,
     private val foodId: FoodId,
@@ -73,8 +71,8 @@ internal class AddEntryViewModel(
             )
 
     val foodEvents =
-        queryBus
-            .dispatch(ObserveFoodEventsQuery(foodId))
+        foodEventRepository
+            .observeFoodEvents(foodId)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -110,8 +108,8 @@ internal class AddEntryViewModel(
             )
 
     val suggestions: StateFlow<List<Measurement>?> =
-        queryBus
-            .dispatch(ObserveMeasurementSuggestionsQuery(foodId))
+        observeMeasurementSuggestionsUseCase
+            .observe(foodId)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -134,8 +132,8 @@ internal class AddEntryViewModel(
 
     fun deleteFood() {
         viewModelScope.launch {
-            commandBus
-                .dispatch(DeleteFoodCommand(foodId))
+            deleteFoodUseCase
+                .deleteFood(foodId)
                 .fold(
                     onSuccess = {
                         FoodYouLogger.d(TAG) { "Food with ID $foodId deleted successfully." }

@@ -2,18 +2,19 @@ package com.maksimowiczm.foodyou.feature.food.product.presentation.download
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductCommand
-import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductError
+import com.maksimowiczm.foodyou.business.food.application.DownloadProductError
+import com.maksimowiczm.foodyou.business.food.application.DownloadProductUseCase
 import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
-internal class DownloadProductViewModel(text: String?, private val commandBus: CommandBus) :
-    ViewModel() {
+internal class DownloadProductViewModel(
+    text: String?,
+    private val downloadProductUseCase: DownloadProductUseCase,
+) : ViewModel() {
     private val _isMutating = MutableStateFlow(false)
     val isMutating = _isMutating.asStateFlow()
 
@@ -33,8 +34,8 @@ internal class DownloadProductViewModel(text: String?, private val commandBus: C
         viewModelScope.launch {
             _isMutating.emit(true)
 
-            commandBus
-                .dispatch<RemoteProduct, DownloadProductError>(DownloadProductCommand(text))
+            downloadProductUseCase
+                .download(text)
                 .fold(
                     onSuccess = {
                         _productEvent.emit(

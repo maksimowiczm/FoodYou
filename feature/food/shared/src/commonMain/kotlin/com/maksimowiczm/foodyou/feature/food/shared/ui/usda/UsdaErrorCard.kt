@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductError
+import com.maksimowiczm.foodyou.business.food.application.DownloadProductError
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

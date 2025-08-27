@@ -1,13 +1,13 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda
 
-import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 
 internal class USDAFacade(
     private val dataSource: USDARemoteDataSource,
     private val mapper: USDAProductMapper,
-    private val preferencesSource: LocalFoodPreferencesDataSource,
+    private val preferencesRepository: FoodSearchPreferencesRepository,
 ) {
     /** Extracts the ID from a given USDA product URL. */
     fun extractId(url: String): String? =
@@ -19,7 +19,8 @@ internal class USDAFacade(
         }
 
     /** Creates a request to fetch product details from USDA using the provided ID. */
-    fun createRequest(id: String) = USDAProductRequest(dataSource, id, mapper, preferencesSource)
+    fun createRequest(id: String) =
+        USDAProductRequest(dataSource, id, mapper, preferencesRepository)
 
     /** Checks if the given URL matches the USDA product URL pattern. */
     fun matches(url: String): Boolean = regex.containsMatchIn(url)

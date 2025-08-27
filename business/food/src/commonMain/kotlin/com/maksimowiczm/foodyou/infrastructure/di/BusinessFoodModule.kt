@@ -1,86 +1,70 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.business.food.application.command.CreateProductCommandHandler
-import com.maksimowiczm.foodyou.business.food.application.command.CreateRecipeCommandHandler
-import com.maksimowiczm.foodyou.business.food.application.command.DeleteFoodCommandHandler
-import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductCommandHandler
-import com.maksimowiczm.foodyou.business.food.application.command.ExportCsvProductsCommandHandler
-import com.maksimowiczm.foodyou.business.food.application.command.ImportCsvProductsCommandHandler
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateProductCommandHandler
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateRecipeCommandHandler
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateUsdaApiKeyCommandHandler
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseOpenFoodFactsCommandHandler
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseUsdaCommandHandler
+import com.maksimowiczm.foodyou.business.food.application.CreateProductUseCase
+import com.maksimowiczm.foodyou.business.food.application.CreateProductUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.CreateRecipeUseCase
+import com.maksimowiczm.foodyou.business.food.application.CreateRecipeUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.DeleteFoodUseCase
+import com.maksimowiczm.foodyou.business.food.application.DeleteFoodUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.DownloadProductUseCase
+import com.maksimowiczm.foodyou.business.food.application.DownloadProductUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.ExportCsvProductsUseCase
+import com.maksimowiczm.foodyou.business.food.application.ExportCsvProductsUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.FoodSearchUseCase
+import com.maksimowiczm.foodyou.business.food.application.FoodSearchUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.ImportCsvProductUseCase
+import com.maksimowiczm.foodyou.business.food.application.ImportCsvProductUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.ObserveMeasurementSuggestionsUseCase
+import com.maksimowiczm.foodyou.business.food.application.ObserveMeasurementSuggestionsUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.UpdateProductUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.UpdateRecipeUseCase
+import com.maksimowiczm.foodyou.business.food.application.UpdateRecipeUseCaseImpl
 import com.maksimowiczm.foodyou.business.food.application.event.FoodDiaryEntryCreatedEventHandler
 import com.maksimowiczm.foodyou.business.food.application.event.FoodSearchEventHandler
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodEventsQueryHandler
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQueryHandler
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodQueryHandler
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveMeasurementSuggestionsQueryHandler
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveSearchHistoryQueryHandler
-import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodCountQueryHandler
-import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodQueryHandler
-import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodCountQueryHandler
-import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodQueryHandler
+import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
+import com.maksimowiczm.foodyou.business.food.domain.MeasurementSuggestionRepository
+import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
+import com.maksimowiczm.foodyou.business.food.domain.RecipeRepository
+import com.maksimowiczm.foodyou.business.food.domain.RemoteProductRequestFactory
+import com.maksimowiczm.foodyou.business.food.domain.SearchHistoryRepository
+import com.maksimowiczm.foodyou.business.food.infrastructure.FoodSearchRepositoryImpl
+import com.maksimowiczm.foodyou.business.food.infrastructure.LocalFoodSearchDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.datastore.DataStoreFoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
-import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductRequestFactoryImpl
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.LocalOpenFoodFactsPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsFacade
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsProductMapper
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAFacade
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAProductMapper
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodSearchDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalMeasurementSuggestionDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalOpenFoodFactsPagingHelper
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRecipeDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalUsdaPagingHelper
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomFoodEventDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomFoodSearchDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomMeasurementSuggestionDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomOpenFoodFactsPagingHelper
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomProductDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomRecipeDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomUsdaPagingHelper
-import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.datastore.DataStoreFoodPreferencesDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomFoodEventRepository
+import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomFoodSearchDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomMeasurementSuggestionRepository
+import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomOpenFoodFactsPagingHelper
+import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomProductRepository
+import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomRecipeRepository
+import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomSearchHistoryRepository
+import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomUsdaPagingHelper
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val businessFoodModule = module {
-    commandHandlerOf(::CreateProductCommandHandler)
-    commandHandlerOf(::DeleteFoodCommandHandler)
-    commandHandlerOf(::CreateRecipeCommandHandler)
-    commandHandlerOf(::DownloadProductCommandHandler)
-    commandHandlerOf(::UpdateProductCommandHandler)
-    commandHandlerOf(::UpdateRecipeCommandHandler)
-    commandHandlerOf(::UpdateUsdaApiKeyCommandHandler)
-    commandHandlerOf(::UpdateUseOpenFoodFactsCommandHandler)
-    commandHandlerOf(::UpdateUseUsdaCommandHandler)
-    commandHandlerOf(::ImportCsvProductsCommandHandler)
-    commandHandlerOf(::ExportCsvProductsCommandHandler)
-
-    queryHandlerOf(::ObserveFoodQueryHandler)
-    queryHandlerOf(::SearchFoodQueryHandler)
-    queryHandlerOf(::SearchFoodCountQueryHandler)
-    queryHandlerOf(::ObserveFoodPreferencesQueryHandler)
-    queryHandlerOf(::ObserveSearchHistoryQueryHandler)
-    queryHandlerOf(::SearchRecentFoodQueryHandler)
-    queryHandlerOf(::SearchRecentFoodCountQueryHandler)
-    queryHandlerOf(::ObserveFoodEventsQueryHandler)
-    queryHandlerOf(::ObserveMeasurementSuggestionsQueryHandler)
-
-    factoryOf(::DataStoreFoodPreferencesDataSource).bind<LocalFoodPreferencesDataSource>()
-
-    factoryOf(::RoomProductDataSource).bind<LocalProductDataSource>()
-    factoryOf(::RoomRecipeDataSource).bind<LocalRecipeDataSource>()
+    factoryOf(::RoomProductRepository).bind<ProductRepository>()
+    factoryOf(::RoomRecipeRepository).bind<RecipeRepository>()
     factoryOf(::RoomFoodSearchDataSource).bind<LocalFoodSearchDataSource>()
     factoryOf(::RoomOpenFoodFactsPagingHelper).bind<LocalOpenFoodFactsPagingHelper>()
     factoryOf(::RoomUsdaPagingHelper).bind<LocalUsdaPagingHelper>()
-    factoryOf(::RoomFoodEventDataSource).bind<LocalFoodEventDataSource>()
-    factoryOf(::RoomMeasurementSuggestionDataSource).bind<LocalMeasurementSuggestionDataSource>()
+    factoryOf(::RoomFoodEventRepository).bind<FoodEventRepository>()
+    factoryOf(::RoomMeasurementSuggestionRepository).bind<MeasurementSuggestionRepository>()
+    factoryOf(::FoodSearchRepositoryImpl).bind<FoodSearchRepository>()
+    factoryOf(::DataStoreFoodSearchPreferencesRepository).bind<FoodSearchPreferencesRepository>()
+    factoryOf(::RoomSearchHistoryRepository).bind<SearchHistoryRepository>()
 
     factoryOf(::RemoteProductMapper)
     factoryOf(::OpenFoodFactsProductMapper)
@@ -93,4 +77,17 @@ val businessFoodModule = module {
 
     eventHandlerOf(::FoodDiaryEntryCreatedEventHandler)
     eventHandlerOf(::FoodSearchEventHandler)
+
+    factoryOf(::CreateProductUseCaseImpl).bind<CreateProductUseCase>()
+    factoryOf(::CreateRecipeUseCaseImpl).bind<CreateRecipeUseCase>()
+    factoryOf(::DeleteFoodUseCaseImpl).bind<DeleteFoodUseCase>()
+    factoryOf(::ObserveFoodUseCaseImpl).bind<ObserveFoodUseCase>()
+    factoryOf(::UpdateProductUseCaseImpl).bind<UpdateProductUseCaseImpl>()
+    factoryOf(::UpdateRecipeUseCaseImpl).bind<UpdateRecipeUseCase>()
+    factoryOf(::ExportCsvProductsUseCaseImpl).bind<ExportCsvProductsUseCase>()
+    factoryOf(::ImportCsvProductUseCaseImpl).bind<ImportCsvProductUseCase>()
+    factoryOf(::ObserveMeasurementSuggestionsUseCaseImpl)
+        .bind<ObserveMeasurementSuggestionsUseCase>()
+    factoryOf(::FoodSearchUseCaseImpl).bind<FoodSearchUseCase>()
+    factoryOf(::DownloadProductUseCaseImpl).bind<DownloadProductUseCase>()
 }

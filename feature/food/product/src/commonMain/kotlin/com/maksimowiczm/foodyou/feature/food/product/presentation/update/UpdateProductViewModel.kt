@@ -2,14 +2,12 @@ package com.maksimowiczm.foodyou.feature.food.product.presentation.update
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateProductCommand
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateProductError
+import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.business.food.application.UpdateProductUseCase
 import com.maksimowiczm.foodyou.business.food.domain.Product
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.nutritionFacts
-import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
@@ -22,7 +20,7 @@ import kotlinx.coroutines.launch
 
 internal class UpdateProductViewModel(
     observeFoodUseCase: ObserveFoodUseCase,
-    private val commandBus: CommandBus,
+    private val updateProductUseCase: UpdateProductUseCase,
     private val productId: FoodId.Product,
 ) : ViewModel() {
 
@@ -54,27 +52,23 @@ internal class UpdateProductViewModel(
         }
 
         viewModelScope.launch {
-            runCatching {
-                commandBus
-                    .dispatch<Unit, UpdateProductError>(
-                        UpdateProductCommand(
-                            id = productId,
-                            name = form.name.value,
-                            brand = form.brand.value,
-                            barcode = form.barcode.value,
-                            nutritionFacts = form.nutritionFacts(multiplier),
-                            packageWeight = form.packageWeight.value?.toDouble(),
-                            servingWeight = form.servingWeight.value?.toDouble(),
-                            note = form.note.value,
-                            source = FoodSource(type = form.sourceType, url = form.sourceUrl.value),
-                            isLiquid = form.isLiquid,
-                        )
-                    )
-                    .consume(
-                        onSuccess = { eventBus.send(UpdateProductEvent.Updated) },
-                        onFailure = { FoodYouLogger.e(TAG) { "Failed to update product" } },
-                    )
-            }
+            updateProductUseCase
+                .update(
+                    id = productId,
+                    name = form.name.value,
+                    brand = form.brand.value,
+                    barcode = form.barcode.value,
+                    nutritionFacts = form.nutritionFacts(multiplier),
+                    packageWeight = form.packageWeight.value?.toDouble(),
+                    servingWeight = form.servingWeight.value?.toDouble(),
+                    note = form.note.value,
+                    source = FoodSource(type = form.sourceType, url = form.sourceUrl.value),
+                    isLiquid = form.isLiquid,
+                )
+                .consume(
+                    onSuccess = { eventBus.send(UpdateProductEvent.Updated) },
+                    onFailure = { FoodYouLogger.e(TAG) { "Failed to update product" } },
+                )
         }
     }
 

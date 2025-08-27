@@ -5,12 +5,10 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
-import com.maksimowiczm.foodyou.business.food.domain.OpenFoodFactsPagingKey
+import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
 import com.maksimowiczm.foodyou.business.food.domain.Product
+import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalOpenFoodFactsPagingHelper
-import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
@@ -25,8 +23,8 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
     private val country: String?,
     private val isBarcode: Boolean,
     private val transactionProvider: DatabaseTransactionProvider,
-    private val localProduct: LocalProductDataSource,
-    private val localFoodEvent: LocalFoodEventDataSource,
+    private val productRepository: ProductRepository,
+    private val foodEventRepository: FoodEventRepository,
     private val remoteDataSource: OpenFoodFactsRemoteDataSource,
     private val openFoodFactsPagingHelper: LocalOpenFoodFactsPagingHelper,
     private val offMapper: OpenFoodFactsProductMapper,
@@ -115,7 +113,6 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                 )
             )
 
-            val now = dateProvider.now()
             val products =
                 response.products.map { remoteProduct ->
                     remoteProduct.toDomainProduct().also {
@@ -127,8 +124,9 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                     }
                 }
 
+            val now = dateProvider.now()
             transactionProvider.withTransaction {
-                products.filterNotNull().forEach { product -> product.insert() }
+                products.filterNotNull().forEach { product -> product.insert(now) }
             }
 
             val skipped = products.count { it == null }
@@ -151,10 +149,21 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
         runCatching { this.let(offMapper::toRemoteProduct)?.let(remoteMapper::toModel) }.getOrNull()
 
     private suspend fun Product.insert(now: LocalDateTime = dateProvider.now()) {
-        val id = localProduct.insertUniqueProduct(this)
+        val id =
+            productRepository.insertUniqueProduct(
+                name = this.name,
+                brand = this.brand,
+                barcode = this.barcode,
+                note = this.note,
+                isLiquid = this.isLiquid,
+                packageWeight = this.packageWeight,
+                servingWeight = this.servingWeight,
+                source = this.source,
+                nutritionFacts = this.nutritionFacts,
+            )
 
         if (id != null) {
-            localFoodEvent.insert(
+            foodEventRepository.insert(
                 foodId = id,
                 event = FoodEvent.Downloaded(date = now, url = this.source.url),
             )

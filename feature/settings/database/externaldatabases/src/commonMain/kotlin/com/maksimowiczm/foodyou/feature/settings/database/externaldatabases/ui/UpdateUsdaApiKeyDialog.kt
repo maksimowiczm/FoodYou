@@ -12,11 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateUsdaApiKeyCommand
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQuery
-import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_cancel
 import foodyou.app.generated.resources.action_save
@@ -33,20 +29,16 @@ fun UpdateUsdaApiKeyDialog(
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val queryBus: QueryBus = koinInject()
-    val commandBus: CommandBus = koinInject()
-    val foodPreferences =
-        queryBus
-            .dispatch<FoodPreferences>(ObserveFoodPreferencesQuery)
-            .collectAsStateWithLifecycle(null)
-            .value
+    val foodSearchPreferencesRepository: FoodSearchPreferencesRepository = koinInject()
+    val foodSearchPreferences =
+        foodSearchPreferencesRepository.observe().collectAsStateWithLifecycle(null).value
 
-    if (foodPreferences?.usda == null) {
+    if (foodSearchPreferences?.usda == null) {
         return
     }
 
     val focusRequester = remember { FocusRequester() }
-    val textFieldState = rememberTextFieldState(foodPreferences.usda.apiKey ?: "")
+    val textFieldState = rememberTextFieldState(foodSearchPreferences.usda.apiKey ?: "")
 
     LaunchedEffect(Unit) {
         delay(200)
@@ -60,7 +52,9 @@ fun UpdateUsdaApiKeyDialog(
                 onClick = {
                     runBlocking {
                         val key = textFieldState.text.toString().takeIf { it.isNotBlank() }
-                        commandBus.dispatch<Unit, Unit>(UpdateUsdaApiKeyCommand(key))
+                        foodSearchPreferencesRepository.update {
+                            copy(usda = usda.copy(apiKey = key))
+                        }
                         onSave()
                     }
                 }

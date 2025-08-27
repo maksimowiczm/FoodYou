@@ -46,7 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.error
 import androidx.paging.compose.itemKey
-import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductError
+import com.maksimowiczm.foodyou.business.food.application.DownloadProductError
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodFilter

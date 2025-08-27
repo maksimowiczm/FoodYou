@@ -2,17 +2,13 @@ package com.maksimowiczm.foodyou.feature.onboarding.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.command.ImportCsvProductsCommand
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseOpenFoodFactsCommand
-import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseUsda
+import com.maksimowiczm.foodyou.business.food.application.ImportCsvProductUseCase
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.externaldatabase.swissfoodcompositiondatabase.Language
 import com.maksimowiczm.foodyou.feature.onboarding.ui.OnboardingState
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
-import com.maksimowiczm.foodyou.shared.common.result.Result
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -21,7 +17,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-internal class OnboardingViewModel(private val commandBus: CommandBus) : ViewModel() {
+internal class OnboardingViewModel(
+    private val importCsvProductUseCase: ImportCsvProductUseCase,
+    private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
+) : ViewModel() {
     private val eventBus = MutableStateFlow<OnboardingEvent?>(null)
     val events = eventBus.filterNotNull()
 
@@ -39,8 +38,12 @@ internal class OnboardingViewModel(private val commandBus: CommandBus) : ViewMod
 
         viewModelScope.launch {
             mutex.withLock {
-                commandBus.dispatch(UpdateUseOpenFoodFactsCommand(useOpenFoodFacts))
-                commandBus.dispatch(UpdateUseUsda(useUsda))
+                foodSearchPreferencesRepository.update {
+                    copy(
+                        usda = usda.copy(enabled = useUsda),
+                        openFoodFacts = openFoodFacts.copy(enabled = useOpenFoodFacts),
+                    )
+                }
 
                 languages.forEach { importLanguage(it) }
 
@@ -53,23 +56,13 @@ internal class OnboardingViewModel(private val commandBus: CommandBus) : ViewMod
         val lines =
             language.readBytes().decodeToString().split("\n").drop(1).filterNot { it.isBlank() }
 
-        val result =
-            commandBus.dispatch(
-                ImportCsvProductsCommand(
-                    mapper = swissOrder,
-                    lines = lines.asFlow(),
-                    source = FoodSource.Type.SwissFoodCompositionDatabase,
-                )
+        importCsvProductUseCase
+            .import(
+                mapper = swissOrder,
+                lines = lines.asFlow(),
+                source = FoodSource.Type.SwissFoodCompositionDatabase,
             )
-
-        when (result) {
-            is Result.Failure<*, *> ->
-                FoodYouLogger.e(TAG) {
-                    "Failed to import products for language ${language.name}: ${result.error}"
-                }
-
-            is Result.Success<Flow<Int>, *> -> result.data.last()
-        }
+            .last()
 
         FoodYouLogger.d(TAG) { "Imported products for language $language" }
     }
