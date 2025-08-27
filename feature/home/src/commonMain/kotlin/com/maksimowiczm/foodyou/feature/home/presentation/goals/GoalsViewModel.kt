@@ -2,11 +2,10 @@ package com.maksimowiczm.foodyou.feature.home.presentation.goals
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDailyGoalsQuery
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQuery
+import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
 import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
@@ -27,8 +26,9 @@ import kotlinx.datetime.LocalDate
 
 internal class GoalsViewModel(
     observeSettingsUseCase: ObserveSettingsUseCase,
+    private val observeDiaryMealsUseCase: ObserveDiaryMealsUseCase,
+    private val goalsRepository: GoalsRepository,
     private val commandBus: CommandBus,
-    private val queryBus: QueryBus,
 ) : ViewModel() {
 
     private val dateState = MutableStateFlow<LocalDate?>(null)
@@ -57,8 +57,8 @@ internal class GoalsViewModel(
             .filterNotNull()
             .flatMapLatest { date ->
                 combine(
-                    queryBus.dispatch(ObserveDiaryMealsQuery(date)),
-                    queryBus.dispatch(ObserveDailyGoalsQuery(date)),
+                    observeDiaryMealsUseCase.observe(date),
+                    goalsRepository.observeDailyGoals(date),
                 ) { meals, goal ->
                     val facts = meals.map { it.nutritionFacts }.sum()
 

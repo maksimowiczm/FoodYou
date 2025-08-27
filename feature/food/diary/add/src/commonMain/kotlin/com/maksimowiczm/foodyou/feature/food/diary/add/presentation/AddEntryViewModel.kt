@@ -9,11 +9,11 @@ import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.defaultMeasurement
 import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateDiaryEntryCommand
+import com.maksimowiczm.foodyou.business.fooddiary.application.CreateDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
-import com.maksimowiczm.foodyou.feature.food.diary.shared.usecase.ObserveMealsUseCase
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
@@ -39,8 +39,9 @@ import kotlinx.datetime.LocalDate
 internal class AddEntryViewModel(
     queryBus: QueryBus,
     private val commandBus: CommandBus,
+    private val createDiaryEntryUseCase: CreateDiaryEntryUseCase,
     observeFoodUseCase: ObserveFoodUseCase,
-    observeMealsUseCase: ObserveMealsUseCase,
+    mealRepository: MealRepository,
     dateProvider: DateProvider,
     private val foodId: FoodId,
 ) : ViewModel() {
@@ -81,8 +82,8 @@ internal class AddEntryViewModel(
             )
 
     val meals =
-        observeMealsUseCase
-            .observe()
+        mealRepository
+            .observeMeals()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -156,15 +157,13 @@ internal class AddEntryViewModel(
             }
             val diaryFood = food.toDiaryFood()
 
-            commandBus
-                .dispatch(
-                    CreateDiaryEntryCommand(
-                        foodId = food.id,
-                        measurement = measurement,
-                        mealId = mealId,
-                        date = date,
-                        food = diaryFood,
-                    )
+            createDiaryEntryUseCase
+                .createDiaryEntry(
+                    foodId = food.id,
+                    measurement = measurement,
+                    mealId = mealId,
+                    date = date,
+                    food = diaryFood,
                 )
                 .fold(
                     onSuccess = {
@@ -188,15 +187,13 @@ internal class AddEntryViewModel(
             food.unpack(weight).map { (food, measurement) ->
                 val diaryFood = food.toDiaryFood()
 
-                commandBus
-                    .dispatch(
-                        CreateDiaryEntryCommand(
-                            foodId = food.id,
-                            measurement = measurement,
-                            mealId = mealId,
-                            date = date,
-                            food = diaryFood,
-                        )
+                createDiaryEntryUseCase
+                    .createDiaryEntry(
+                        foodId = food.id,
+                        measurement = measurement,
+                        mealId = mealId,
+                        date = date,
+                        food = diaryFood,
                     )
                     .fold(
                         onSuccess = {

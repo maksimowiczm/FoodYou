@@ -33,7 +33,13 @@ abstract class MeasurementDao {
 
     @Update abstract suspend fun updateMeasurement(measurement: MeasurementEntity)
 
-    @Delete abstract suspend fun deleteMeasurement(measurement: MeasurementEntity)
+    @Delete protected abstract suspend fun deleteMeasurement(measurement: MeasurementEntity)
+
+    @Transaction
+    open suspend fun deleteMeasurement(id: Long) {
+        val measurement = observeMeasurementById(id).first() ?: return
+        deleteMeasurement(measurement)
+    }
 
     @Query(
         """
@@ -91,7 +97,19 @@ abstract class MeasurementDao {
     )
     abstract fun observeDiaryRecipeIngredients(id: Long): Flow<List<DiaryRecipeIngredientEntity>>
 
-    @Delete abstract suspend fun deleteDiaryProduct(diaryProduct: DiaryProductEntity)
+    @Delete protected abstract suspend fun deleteDiaryProduct(diaryProduct: DiaryProductEntity)
 
-    @Delete abstract suspend fun deleteDiaryRecipe(diaryRecipe: DiaryRecipeEntity)
+    @Transaction
+    open suspend fun deleteDiaryProduct(id: Long) {
+        val diaryProduct = observeDiaryProduct(id).first() ?: return
+        deleteDiaryProduct(diaryProduct)
+    }
+
+    @Delete protected abstract suspend fun deleteDiaryRecipe(diaryRecipe: DiaryRecipeEntity)
+
+    @Transaction
+    open suspend fun deleteDiaryRecipe(id: Long) {
+        val diaryRecipe = observeDiaryRecipe(id).first() ?: return
+        deleteDiaryRecipe(diaryRecipe)
+    }
 }

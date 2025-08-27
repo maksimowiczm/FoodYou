@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.datastore
+package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -6,14 +6,12 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsCardsLayout
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.LocalMealsPreferencesDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-internal class DataStoreMealsPreferencesDataStore(private val dataStore: DataStore<Preferences>) :
-    LocalMealsPreferencesDataSource {
-    override fun observe(): Flow<MealsPreferences> {
-        return dataStore.data.map { preferences ->
+internal class DataStoreMealsPreferencesDataStore(private val dataStore: DataStore<Preferences>) {
+    fun observe(): Flow<MealsPreferences> =
+        dataStore.data.map { preferences ->
             MealsPreferences(
                 layout = preferences.getLayout(),
                 useTimeBasedSorting =
@@ -22,17 +20,24 @@ internal class DataStoreMealsPreferencesDataStore(private val dataStore: DataSto
                     preferences[MealsPreferencesDataStoreKeys.ignoreAllDayMeals] ?: false,
             )
         }
-    }
 
-    override suspend fun update(preferences: MealsPreferences) {
-        dataStore.updateData { currentPreferences ->
-            currentPreferences.toMutablePreferences().apply {
-                set(MealsPreferencesDataStoreKeys.layout, preferences.layout.ordinal)
-                set(
-                    MealsPreferencesDataStoreKeys.useTimeBasedSorting,
-                    preferences.useTimeBasedSorting,
+    suspend fun update(transform: MealsPreferences.() -> MealsPreferences) {
+        dataStore.updateData { preferences ->
+            val current =
+                MealsPreferences(
+                    layout = preferences.getLayout(),
+                    useTimeBasedSorting =
+                        preferences[MealsPreferencesDataStoreKeys.useTimeBasedSorting] ?: false,
+                    ignoreAllDayMeals =
+                        preferences[MealsPreferencesDataStoreKeys.ignoreAllDayMeals] ?: false,
                 )
-                set(MealsPreferencesDataStoreKeys.ignoreAllDayMeals, preferences.ignoreAllDayMeals)
+
+            val updated = current.transform()
+
+            preferences.toMutablePreferences().apply {
+                set(MealsPreferencesDataStoreKeys.layout, updated.layout.ordinal)
+                set(MealsPreferencesDataStoreKeys.useTimeBasedSorting, updated.useTimeBasedSorting)
+                set(MealsPreferencesDataStoreKeys.ignoreAllDayMeals, updated.ignoreAllDayMeals)
             }
         }
     }

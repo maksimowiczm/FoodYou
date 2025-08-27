@@ -1,13 +1,10 @@
-package com.maksimowiczm.foodyou.business.fooddiary.application.query
+package com.maksimowiczm.foodyou.business.fooddiary.application
 
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.LocalMealsPreferencesDataSource
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.query.Query
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -15,20 +12,20 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
-data class ObserveDiaryMealsQuery(val date: LocalDate) : Query<List<DiaryMeal>>
+fun interface ObserveDiaryMealsUseCase {
+    fun observe(date: LocalDate): Flow<List<DiaryMeal>>
+}
 
-internal class ObserveDiaryMealsQueryHandler(
-    private val localMeals: LocalMealDataSource,
-    private val localDiaryEntry: LocalDiaryEntryDataSource,
-    private val localMealsPreferences: LocalMealsPreferencesDataSource,
+@OptIn(ExperimentalCoroutinesApi::class)
+internal class ObserveDiaryMealsUseCaseImpl(
+    private val mealRepository: MealRepository,
+    private val diaryEntryRepository: DiaryEntryRepository,
     private val dateProvider: DateProvider,
-) : QueryHandler<ObserveDiaryMealsQuery, List<DiaryMeal>> {
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun handle(query: ObserveDiaryMealsQuery): Flow<List<DiaryMeal>> =
-        combine(
-                localMeals.observeAllMeals(),
-                localMealsPreferences.observe(),
+) : ObserveDiaryMealsUseCase {
+    override fun observe(date: LocalDate): Flow<List<DiaryMeal>> {
+        return combine(
+                mealRepository.observeMeals(),
+                mealRepository.observeMealsPreferences(),
                 dateProvider.observeTime(),
             ) { meals, prefs, time ->
                 val timeBased = prefs.useTimeBasedSorting
@@ -49,7 +46,7 @@ internal class ObserveDiaryMealsQueryHandler(
             .flatMapLatest { meals ->
                 val diaryEntries =
                     meals.map { meal ->
-                        localDiaryEntry.observeEntries(mealId = meal.id, date = query.date)
+                        diaryEntryRepository.observeEntries(mealId = meal.id, date = date)
                     }
 
                 combine(diaryEntries) { entries ->
@@ -58,6 +55,7 @@ internal class ObserveDiaryMealsQueryHandler(
                     }
                 }
             }
+    }
 }
 
 private fun shouldShowMeal(meal: Meal, time: LocalTime, ignoreAllDayMeals: Boolean): Boolean =

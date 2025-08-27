@@ -1,56 +1,43 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateDiaryEntryCommandHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateMealWithLastRankCommandHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteDiaryEntryCommandHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteMealCommandHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.ReorderMealsCommandHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.UnpackDiaryEntryCommandHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateDiaryEntryCommandHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMealCommandHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMealsPreferencesCommandHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateWeeklyGoalsCommandHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDailyGoalsQueryHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryEntryQueryHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQueryHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealQueryHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsPreferencesQueryHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsQueryHandler
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveWeeklyGoalsQueryHandler
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.room.RoomDiaryEntryDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.room.RoomMealDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.LocalGoalsDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.LocalMealsPreferencesDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.datastore.DataStoreGoalsDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.datastore.DataStoreMealsPreferencesDataStore
+import com.maksimowiczm.foodyou.business.fooddiary.application.CreateDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.application.CreateDiaryEntryUseCaseImpl
+import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCaseImpl
+import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackDiaryEntryUseCaseImpl
+import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateDiaryEntryUseCaseImpl
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.DiaryEntryRepositoryImpl
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.GoalsRepositoryImpl
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.MealRepositoryImpl
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore.DataStoreGoalsDataSource
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore.DataStoreMealsPreferencesDataStore
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room.RoomDiaryEntryDataSource
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room.RoomMealDataSource
+import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val businessFoodDiaryModule = module {
-    commandHandlerOf(::CreateDiaryEntryCommandHandler)
-    commandHandlerOf(::CreateMealWithLastRankCommandHandler)
-    commandHandlerOf(::DeleteDiaryEntryCommandHandler)
-    commandHandlerOf(::DeleteMealCommandHandler)
-    commandHandlerOf(::UpdateMealCommandHandler)
-    commandHandlerOf(::ReorderMealsCommandHandler)
-    commandHandlerOf(::UpdateWeeklyGoalsCommandHandler)
-    commandHandlerOf(::UpdateMealsPreferencesCommandHandler)
-    commandHandlerOf(::UpdateDiaryEntryCommandHandler)
-    commandHandlerOf(::UnpackDiaryEntryCommandHandler)
+    factoryOf(::RoomDiaryEntryDataSource)
+    factoryOf(::RoomMealDataSource)
+    factoryOf(::DataStoreGoalsDataSource)
+    factoryOf(::DataStoreMealsPreferencesDataStore)
 
-    queryHandlerOf(::ObserveMealsQueryHandler)
-    queryHandlerOf(::ObserveWeeklyGoalsQueryHandler)
-    queryHandlerOf(::ObserveDiaryMealsQueryHandler)
-    queryHandlerOf(::ObserveMealsPreferencesQueryHandler)
-    queryHandlerOf(::ObserveDailyGoalsQueryHandler)
-    queryHandlerOf(::ObserveMealQueryHandler)
-    queryHandlerOf(::ObserveDiaryEntryQueryHandler)
+    factory { MealRepositoryImpl(get(), get(), FoodYouLogger) }.bind<MealRepository>()
+    factory { DiaryEntryRepositoryImpl(get()) }.bind<DiaryEntryRepository>()
+    factory { GoalsRepositoryImpl(get()) }.bind<GoalsRepository>()
 
-    factoryOf(::RoomDiaryEntryDataSource).bind<LocalDiaryEntryDataSource>()
-    factoryOf(::RoomMealDataSource).bind<LocalMealDataSource>()
-    factoryOf(::DataStoreGoalsDataSource).bind<LocalGoalsDataSource>()
-    factoryOf(::DataStoreMealsPreferencesDataStore).bind<LocalMealsPreferencesDataSource>()
+    factory { CreateDiaryEntryUseCaseImpl(get(), get(), get(), get(), get(), FoodYouLogger) }
+        .bind<CreateDiaryEntryUseCase>()
+    factory { ObserveDiaryMealsUseCaseImpl(get(), get(), get()) }.bind<ObserveDiaryMealsUseCase>()
+    factory { UnpackDiaryEntryUseCaseImpl(get(), get(), get(), get(), FoodYouLogger) }
+        .bind<UnpackDiaryEntryUseCase>()
+    factory { UpdateDiaryEntryUseCaseImpl(get(), get(), get(), get(), FoodYouLogger) }
+        .bind<UpdateDiaryEntryUseCase>()
 }

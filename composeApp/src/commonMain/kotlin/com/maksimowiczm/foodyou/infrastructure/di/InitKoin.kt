@@ -54,7 +54,6 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
         modules(
             featureFoodDiaryAddModule,
             featureFoodDiarySearchModule,
-            featureFoodDiarySharedModule,
             featureFoodDiaryUpdateModule,
         )
 

@@ -2,15 +2,13 @@ package com.maksimowiczm.foodyou.feature.food.diary.update.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.UnpackDiaryEntryCommand
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateDiaryEntryCommand
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryEntryQuery
+import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.business.fooddiary.domain.suggestions
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
-import com.maksimowiczm.foodyou.feature.food.diary.shared.usecase.ObserveMealsUseCase
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ext.now
@@ -29,15 +27,16 @@ import kotlinx.datetime.LocalDate
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class UpdateEntryViewModel(
     private val entryId: Long,
-    queryBus: QueryBus,
-    private val commandBus: CommandBus,
-    observeMealsUseCase: ObserveMealsUseCase,
+    private val updateDiaryEntryUseCase: UpdateDiaryEntryUseCase,
+    private val unpackDiaryEntryError: UnpackDiaryEntryUseCase,
+    diaryEntryRepository: DiaryEntryRepository,
+    mealRepository: MealRepository,
     dateProvider: DateProvider,
 ) : ViewModel() {
 
     val meals =
-        observeMealsUseCase
-            .observe()
+        mealRepository
+            .observeMeals()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -45,8 +44,8 @@ internal class UpdateEntryViewModel(
             )
 
     val entry =
-        queryBus
-            .dispatch(ObserveDiaryEntryQuery(entryId))
+        diaryEntryRepository
+            .observeEntry(entryId)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -89,15 +88,8 @@ internal class UpdateEntryViewModel(
 
     fun save(measurement: Measurement, mealId: Long, date: LocalDate) {
         viewModelScope.launch {
-            commandBus
-                .dispatch(
-                    UpdateDiaryEntryCommand(
-                        id = entryId,
-                        measurement = measurement,
-                        mealId = mealId,
-                        date = date,
-                    )
-                )
+            updateDiaryEntryUseCase
+                .update(id = entryId, measurement = measurement, mealId = mealId, date = date)
                 .fold(
                     onSuccess = { _uiEvents.send(UpdateEntryEvent.Saved) },
                     onFailure = {
@@ -113,15 +105,8 @@ internal class UpdateEntryViewModel(
 
     fun unpack(measurement: Measurement, mealId: Long, date: LocalDate) {
         viewModelScope.launch {
-            commandBus
-                .dispatch(
-                    UnpackDiaryEntryCommand(
-                        id = entryId,
-                        measurement = measurement,
-                        mealId = mealId,
-                        date = date,
-                    )
-                )
+            unpackDiaryEntryError
+                .unpack(id = entryId, measurement = measurement, mealId = mealId, date = date)
                 .fold(
                     onSuccess = { _uiEvents.send(UpdateEntryEvent.Saved) },
                     onFailure = {

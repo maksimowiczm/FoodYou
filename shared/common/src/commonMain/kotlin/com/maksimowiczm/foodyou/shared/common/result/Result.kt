@@ -17,6 +17,22 @@ sealed interface Result<out R, out E> {
             is Success -> onSuccess(data)
             is Failure -> onFailure(error)
         }
+
+    suspend fun onSuccess(action: suspend (R) -> Unit): Result<R, E> {
+        if (this is Success) {
+            action(data)
+        }
+
+        return this
+    }
+
+    suspend fun onFailure(action: suspend (E) -> Unit): Result<R, E> {
+        if (this is Failure) {
+            action(error)
+        }
+
+        return this
+    }
 }
 
 @Suppress("FunctionName") fun <R, E> Ok(data: R): Result<R, E> = Result.Success(data)

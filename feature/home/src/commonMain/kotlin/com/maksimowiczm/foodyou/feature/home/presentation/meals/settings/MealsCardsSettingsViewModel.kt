@@ -2,21 +2,18 @@ package com.maksimowiczm.foodyou.feature.home.presentation.meals.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMealsPreferencesCommand
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsPreferencesQuery
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-internal class MealsCardsSettingsViewModel(queryBus: QueryBus, private val commandBus: CommandBus) :
+internal class MealsCardsSettingsViewModel(private val mealRepository: MealRepository) :
     ViewModel() {
 
-    private val _preferences = queryBus.dispatch<MealsPreferences>(ObserveMealsPreferencesQuery)
+    private val _preferences = mealRepository.observeMealsPreferences()
     val preferences =
         _preferences.stateIn(
             scope = viewModelScope,
@@ -25,6 +22,6 @@ internal class MealsCardsSettingsViewModel(queryBus: QueryBus, private val comma
         )
 
     fun updatePreferences(preferences: MealsPreferences) {
-        viewModelScope.launch { commandBus.dispatch(UpdateMealsPreferencesCommand(preferences)) }
+        viewModelScope.launch { mealRepository.updateMealsPreferences { preferences } }
     }
 }

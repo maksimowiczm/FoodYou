@@ -2,11 +2,8 @@ package com.maksimowiczm.foodyou.feature.goals.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDailyGoalsQuery
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQuery
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DailyGoal
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.isComplete
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +12,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.LocalDate
 
-internal class GoalsViewModel(private val queryBus: QueryBus) : ViewModel() {
+internal class GoalsViewModel(
+    private val goalsRepository: GoalsRepository,
+    private val observeDiaryMealsUseCase: ObserveDiaryMealsUseCase,
+) : ViewModel() {
     private val mealsFlows = mutableMapOf<LocalDate, StateFlow<GoalsScreenUiState?>>()
 
     fun observeUiStateByDate(date: LocalDate): StateFlow<GoalsScreenUiState?> {
@@ -24,7 +24,7 @@ internal class GoalsViewModel(private val queryBus: QueryBus) : ViewModel() {
         }
 
         val meals =
-            queryBus.dispatch<List<DiaryMeal>>(ObserveDiaryMealsQuery(date)).map { list ->
+            observeDiaryMealsUseCase.observe(date).map { list ->
                 list.map {
                     MealModel(
                         id = it.meal.id,
@@ -38,7 +38,7 @@ internal class GoalsViewModel(private val queryBus: QueryBus) : ViewModel() {
                     )
                 }
             }
-        val goal = queryBus.dispatch<DailyGoal>(ObserveDailyGoalsQuery(date))
+        val goal = goalsRepository.observeDailyGoals(date)
 
         val flow =
             combine(meals, goal, ::GoalsScreenUiState)

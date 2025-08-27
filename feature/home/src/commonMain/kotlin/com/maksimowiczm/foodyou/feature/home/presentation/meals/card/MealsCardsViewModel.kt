@@ -2,15 +2,12 @@ package com.maksimowiczm.foodyou.feature.home.presentation.meals.card
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteDiaryEntryCommand
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQuery
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsPreferencesQuery
+import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCase
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,15 +22,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDate
 
-internal class MealsCardsViewModel(queryBus: QueryBus, private val commandBus: CommandBus) :
-    ViewModel() {
+internal class MealsCardsViewModel(
+    private val observeDiaryMealsUseCase: ObserveDiaryMealsUseCase,
+    private val diaryEntryRepository: DiaryEntryRepository,
+    mealRepository: MealRepository,
+) : ViewModel() {
     private val dateState = MutableStateFlow<LocalDate?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val diaryMeals: StateFlow<List<MealModel>?> =
         dateState
             .filterNotNull()
-            .flatMapLatest { date -> queryBus.dispatch(ObserveDiaryMealsQuery(date)) }
+            .flatMapLatest { date -> observeDiaryMealsUseCase.observe(date) }
             .map { list -> list.map { it.toMealModel() } }
             .stateIn(
                 scope = viewModelScope,
@@ -41,7 +41,7 @@ internal class MealsCardsViewModel(queryBus: QueryBus, private val commandBus: C
                 initialValue = null,
             )
 
-    private val _layout = queryBus.dispatch(ObserveMealsPreferencesQuery).map { it.layout }
+    private val _layout = mealRepository.observeMealsPreferences().map { it.layout }
     val layout =
         _layout.stateIn(
             scope = viewModelScope,
@@ -54,21 +54,7 @@ internal class MealsCardsViewModel(queryBus: QueryBus, private val commandBus: C
     }
 
     fun onDeleteEntry(measurementId: Long) {
-        viewModelScope.launch {
-            commandBus
-                .dispatch(DeleteDiaryEntryCommand(measurementId))
-                .consume(
-                    onFailure = {
-                        FoodYouLogger.e(TAG) {
-                            "Failed to delete diary entry with ID $measurementId"
-                        }
-                    }
-                )
-        }
-    }
-
-    private companion object {
-        private const val TAG = "MealsCardsViewModel"
+        viewModelScope.launch { diaryEntryRepository.deleteDiaryEntry(measurementId) }
     }
 }
 

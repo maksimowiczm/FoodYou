@@ -2,14 +2,7 @@ package com.maksimowiczm.foodyou.feature.settings.meal.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateMealWithLastRankCommand
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteMealCommand
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.ReorderMealsCommand
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMealCommand
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsQuery
-import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -17,12 +10,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-internal class MealSettingsViewModel(queryBus: QueryBus, private val commandBus: CommandBus) :
-    ViewModel() {
+internal class MealSettingsViewModel(private val mealRepository: MealRepository) : ViewModel() {
 
     val meals: StateFlow<List<MealModel>?> =
-        queryBus
-            .dispatch<List<Meal>>(ObserveMealsQuery)
+        mealRepository
+            .observeMeals()
             .distinctUntilChanged()
             .map { meals ->
                 meals
@@ -44,37 +36,31 @@ internal class MealSettingsViewModel(queryBus: QueryBus, private val commandBus:
             )
 
     fun deleteMeal(mealModel: MealModel) {
-        viewModelScope.launch { commandBus.dispatch(DeleteMealCommand(mealModel.id)) }
+        viewModelScope.launch { mealRepository.deleteMeal(mealModel.id) }
     }
 
     fun updateMeal(mealModel: MealModel) {
         viewModelScope.launch {
-            UpdateMealCommand(
-                    id = mealModel.id,
-                    name = mealModel.name,
-                    from = mealModel.from,
-                    to = mealModel.to,
-                )
-                .let { command -> commandBus.dispatch(command) }
+            mealRepository.updateMeal(
+                id = mealModel.id,
+                name = mealModel.name,
+                from = mealModel.from,
+                to = mealModel.to,
+            )
         }
     }
 
     fun createMeal(mealModel: MealModel) {
         viewModelScope.launch {
-            CreateMealWithLastRankCommand(
-                    name = mealModel.name,
-                    from = mealModel.from,
-                    to = mealModel.to,
-                )
-                .let { command -> commandBus.dispatch(command) }
+            mealRepository.createMealWithLastRank(
+                name = mealModel.name,
+                from = mealModel.from,
+                to = mealModel.to,
+            )
         }
     }
 
     fun updateMealOrder(mealModels: List<MealModel>) {
-        viewModelScope.launch {
-            ReorderMealsCommand(mealModels.map { it.id }).let { command ->
-                commandBus.dispatch(command)
-            }
-        }
+        viewModelScope.launch { mealRepository.reorderMeals(mealModels.map { it.id }) }
     }
 }

@@ -18,6 +18,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.androidx.paging.common)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.androidx.room.runtime)
         }
     }
 }

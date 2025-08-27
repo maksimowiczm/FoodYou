@@ -2,10 +2,9 @@ package com.maksimowiczm.foodyou.feature.food.diary.search.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealQuery
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
 import com.maksimowiczm.foodyou.business.shared.application.event.subscribe
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
 import com.maksimowiczm.foodyou.business.shared.domain.fooddiary.FoodDiaryEntryCreatedDomainEvent
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,11 +15,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
-internal class DiaryFoodSearchViewModel(mealId: Long, queryBus: QueryBus, eventBus: EventBus) :
-    ViewModel() {
+internal class DiaryFoodSearchViewModel(
+    mealId: Long,
+    eventBus: EventBus,
+    mealRepository: MealRepository,
+) : ViewModel() {
     val meal =
-        queryBus
-            .dispatch(ObserveMealQuery(mealId))
+        mealRepository
+            .observeMeal(mealId)
             .mapIfNotNull(::MealModel)
             .stateIn(
                 scope = viewModelScope,

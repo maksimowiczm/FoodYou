@@ -1,28 +1,19 @@
-package com.maksimowiczm.foodyou.business.fooddiary.application.command
+package com.maksimowiczm.foodyou.business.fooddiary.application
 
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
-import com.maksimowiczm.foodyou.business.shared.application.command.Command
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandHandler
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.result.Ok
 import com.maksimowiczm.foodyou.shared.common.result.Result
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDate
-
-data class UnpackDiaryEntryCommand(
-    val id: Long,
-    val measurement: Measurement,
-    val mealId: Long,
-    val date: LocalDate,
-) : Command<Unit, UnpackDiaryEntryError>
 
 sealed interface UnpackDiaryEntryError {
     data object EntryNotFound : UnpackDiaryEntryError
@@ -32,71 +23,89 @@ sealed interface UnpackDiaryEntryError {
     data object EntryCannotBeUnpacked : UnpackDiaryEntryError
 }
 
-internal class UnpackDiaryEntryCommandHandler(
-    private val localEntry: LocalDiaryEntryDataSource,
-    private val mealDataSource: LocalMealDataSource,
+fun interface UnpackDiaryEntryUseCase {
+    suspend fun unpack(
+        id: Long,
+        measurement: Measurement,
+        mealId: Long,
+        date: LocalDate,
+    ): Result<Unit, UnpackDiaryEntryError>
+}
+
+internal class UnpackDiaryEntryUseCaseImpl(
+    private val diaryEntryRepository: DiaryEntryRepository,
+    private val mealRepository: MealRepository,
     private val transactionProvider: DatabaseTransactionProvider,
     private val dateProvider: DateProvider,
-) : CommandHandler<UnpackDiaryEntryCommand, Unit, UnpackDiaryEntryError> {
-    override suspend fun handle(
-        command: UnpackDiaryEntryCommand
+    private val logger: Logger,
+) : UnpackDiaryEntryUseCase {
+    override suspend fun unpack(
+        id: Long,
+        measurement: Measurement,
+        mealId: Long,
+        date: LocalDate,
     ): Result<Unit, UnpackDiaryEntryError> =
         transactionProvider.withTransaction {
-            val entry = localEntry.observeEntry(command.id).first()
+            val entry = diaryEntryRepository.observeEntry(id).first()
             if (entry == null) {
-                return@withTransaction FoodYouLogger.logAndReturnFailure(
+                return@withTransaction logger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
                     error = UnpackDiaryEntryError.EntryNotFound,
-                    message = { "Diary entry with id ${command.id} not found" },
+                    message = { "Diary entry with id $id not found" },
                 )
             }
 
             val food = entry.food
             if (food !is DiaryFoodRecipe) {
-                return@withTransaction FoodYouLogger.logAndReturnFailure(
+                return@withTransaction logger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
                     error = UnpackDiaryEntryError.EntryCannotBeUnpacked,
-                    message = { "Diary entry with id ${command.id} cannot be unpacked" },
+                    message = { "Diary entry with id $id cannot be unpacked" },
                 )
             }
 
-            val meal = mealDataSource.observeMealById(command.mealId).firstOrNull()
+            val meal = mealRepository.observeMeal(mealId).firstOrNull()
             if (meal == null) {
-                return@withTransaction FoodYouLogger.logAndReturnFailure(
+                return@withTransaction logger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
                     error = UnpackDiaryEntryError.MealNotFound,
-                    message = { "Meal with id ${command.mealId} not found" },
+                    message = { "Meal with id $mealId not found" },
                 )
             }
 
             // Replace the entry with unpacked entries
-
-            localEntry.delete(entry)
+            diaryEntryRepository.deleteDiaryEntry(entry.id)
 
             val now = dateProvider.observeDateTime().first()
-            val unpacked = food.unpack(command.measurement)
+            val unpacked = food.unpack(measurement)
             unpacked.forEach {
                 val entry =
                     DiaryEntry(
                         id = 0,
-                        mealId = command.mealId,
-                        date = command.date,
+                        mealId = mealId,
+                        date = date,
                         measurement = it.measurement,
                         food = it.food,
                         createdAt = entry.createdAt,
                         updatedAt = now,
                     )
 
-                localEntry.insert(entry)
+                diaryEntryRepository.createDiaryEntry(
+                    mealId = entry.mealId,
+                    date = entry.date,
+                    measurement = entry.measurement,
+                    food = entry.food,
+                    createdAt = entry.createdAt,
+                )
             }
 
-            return@withTransaction Ok(Unit)
+            Ok(Unit)
         }
 
     private companion object {
-        const val TAG = "UnpackDiaryEntryCommandHandler"
+        const val TAG = "UnpackDiaryEntryUseCaseImpl"
     }
 }

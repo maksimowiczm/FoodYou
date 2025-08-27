@@ -1,12 +1,14 @@
-package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.room
+package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room
 
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFood
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodProduct
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipeIngredient
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.DiaryProductEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.DiaryRecipeEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.DiaryRecipeIngredientEntity
@@ -26,7 +28,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -37,10 +38,10 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
-internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementDao) :
-    LocalDiaryEntryDataSource {
+internal class RoomDiaryEntryDataSource(private val database: FoodYouDatabase) {
+    private val measurementDao: MeasurementDao = database.measurementDao
 
-    override fun observeEntries(mealId: Long, date: LocalDate): Flow<List<DiaryEntry>> =
+    fun observeEntries(mealId: Long, date: LocalDate): Flow<List<DiaryEntry>> =
         measurementDao
             .observeMeasurements(mealId = mealId, epochDay = date.toEpochDays())
             .flatMapLatest { entities ->
@@ -73,9 +74,8 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                     .combine()
             }
 
-    override fun observeEntry(entryId: Long): Flow<DiaryEntry?> {
-        return measurementDao.observeMeasurementById(entryId).filterNotNull().flatMapLatest { entity
-            ->
+    fun observeEntry(entryId: Long): Flow<DiaryEntry?> =
+        measurementDao.observeMeasurementById(entryId).filterNotNull().flatMapLatest { entity ->
             observeFood(entity).map { food ->
                 val createdAt =
                     Instant.fromEpochSeconds(entity.createdAt)
@@ -95,111 +95,111 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                 )
             }
         }
+
+    suspend fun insert(diaryEntry: DiaryEntry): Long =
+        database.useWriterConnection {
+            it.immediateTransaction {
+                val recipeId = run {
+                    if (diaryEntry.food is DiaryFoodRecipe) {
+                        insertRecipe(diaryEntry.food)
+                    } else {
+                        null
+                    }
+                }
+
+                val productId = run {
+                    if (diaryEntry.food is DiaryFoodProduct) {
+                        insertProduct(diaryEntry.food)
+                    } else {
+                        null
+                    }
+                }
+
+                if (recipeId == null && productId == null) {
+                    error("Diary entry must have either a product or a recipe")
+                }
+
+                val entity =
+                    MeasurementEntity(
+                        mealId = diaryEntry.mealId,
+                        epochDay = diaryEntry.date.toEpochDays(),
+                        productId = productId,
+                        recipeId = recipeId,
+                        measurement = diaryEntry.measurement.type,
+                        quantity = diaryEntry.measurement.rawValue,
+                        createdAt =
+                            diaryEntry.createdAt
+                                .toInstant(TimeZone.currentSystemDefault())
+                                .epochSeconds,
+                        updatedAt =
+                            diaryEntry.updatedAt
+                                .toInstant(TimeZone.currentSystemDefault())
+                                .epochSeconds,
+                    )
+
+                measurementDao.insertMeasurement(entity)
+            }
+        }
+
+    suspend fun update(diaryEntry: DiaryEntry) {
+        database.useWriterConnection {
+            it.immediateTransaction {
+                val entity = measurementDao.observeMeasurementById(diaryEntry.id).firstOrNull()
+
+                if (entity == null) {
+                    error("Measurement with id ${diaryEntry.id} not found")
+                }
+
+                // Delete the existing product or recipe if it exists
+                val productId = entity.productId
+                val recipeId = entity.recipeId
+                if (productId != null) {
+                    deleteProduct(productId)
+                } else if (recipeId != null) {
+                    deleteRecipe(recipeId)
+                }
+
+                // Insert the new product or recipe
+                val newProductId = run {
+                    if (diaryEntry.food is DiaryFoodProduct) {
+                        insertProduct(diaryEntry.food)
+                    } else {
+                        null
+                    }
+                }
+                val newRecipeId = run {
+                    if (diaryEntry.food is DiaryFoodRecipe) {
+                        insertRecipe(diaryEntry.food)
+                    } else {
+                        null
+                    }
+                }
+
+                if (newProductId == null && newRecipeId == null) {
+                    error("Diary entry must have either a product or a recipe")
+                }
+
+                val updatedEntity =
+                    entity.copy(
+                        mealId = diaryEntry.mealId,
+                        epochDay = diaryEntry.date.toEpochDays(),
+                        productId = newProductId,
+                        recipeId = newRecipeId,
+                        measurement = diaryEntry.measurement.type,
+                        quantity = diaryEntry.measurement.rawValue,
+                        updatedAt =
+                            diaryEntry.updatedAt
+                                .toInstant(TimeZone.currentSystemDefault())
+                                .epochSeconds,
+                    )
+
+                measurementDao.updateMeasurement(updatedEntity)
+            }
+        }
     }
 
-    override suspend fun insert(diaryEntry: DiaryEntry): Long {
-
-        // The issue here is that it doesn't run in a transaction, so if one of the inserts fails,
-        // the other one will still be committed. It's not a big issue because the measurement is
-        // inserted only after food is inserted, so if the food insertion fails, it will just dangle
-        // in the database without a measurement.
-
-        val recipeId = run {
-            if (diaryEntry.food is DiaryFoodRecipe) {
-                insertRecipe(diaryEntry.food)
-            } else {
-                null
-            }
-        }
-
-        val productId = run {
-            if (diaryEntry.food is DiaryFoodProduct) {
-                insertProduct(diaryEntry.food)
-            } else {
-                null
-            }
-        }
-
-        if (recipeId == null && productId == null) {
-            error("Diary entry must have either a product or a recipe")
-        }
-
-        val entity =
-            MeasurementEntity(
-                mealId = diaryEntry.mealId,
-                epochDay = diaryEntry.date.toEpochDays(),
-                productId = productId,
-                recipeId = recipeId,
-                measurement = diaryEntry.measurement.type,
-                quantity = diaryEntry.measurement.rawValue,
-                createdAt =
-                    diaryEntry.createdAt.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
-                updatedAt =
-                    diaryEntry.updatedAt.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
-            )
-
-        return measurementDao.insertMeasurement(entity)
-    }
-
-    override suspend fun update(diaryEntry: DiaryEntry) {
-        val entity = measurementDao.observeMeasurementById(diaryEntry.id).firstOrNull()
-
-        if (entity == null) {
-            error("Measurement with id ${diaryEntry.id} not found")
-        }
-
-        // Delete the existing product or recipe if it exists
-        val productId = entity.productId
-        val recipeId = entity.recipeId
-        if (productId != null) {
-            deleteProduct(productId)
-        } else if (recipeId != null) {
-            deleteRecipe(recipeId)
-        }
-
-        // Insert the new product or recipe
-        val newProductId = run {
-            if (diaryEntry.food is DiaryFoodProduct) {
-                insertProduct(diaryEntry.food)
-            } else {
-                null
-            }
-        }
-        val newRecipeId = run {
-            if (diaryEntry.food is DiaryFoodRecipe) {
-                insertRecipe(diaryEntry.food)
-            } else {
-                null
-            }
-        }
-
-        if (newProductId == null && newRecipeId == null) {
-            error("Diary entry must have either a product or a recipe")
-        }
-
-        val updatedEntity =
-            entity.copy(
-                mealId = diaryEntry.mealId,
-                epochDay = diaryEntry.date.toEpochDays(),
-                productId = newProductId,
-                recipeId = newRecipeId,
-                measurement = diaryEntry.measurement.type,
-                quantity = diaryEntry.measurement.rawValue,
-                updatedAt =
-                    diaryEntry.updatedAt.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
-            )
-
-        measurementDao.updateMeasurement(updatedEntity)
-    }
-
-    override suspend fun delete(diaryEntry: DiaryEntry) {
-        val measurement = measurementDao.observeMeasurementById(diaryEntry.id).firstOrNull()
-
-        if (measurement == null) {
-            error("Measurement with id ${diaryEntry.id} not found")
-        }
-
-        measurementDao.deleteMeasurement(measurement)
+    suspend fun delete(id: Long) {
+        measurementDao.deleteMeasurement(id)
     }
 
     private suspend fun insertProduct(diaryFoodProduct: DiaryFoodProduct): Long {
@@ -314,19 +314,11 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
             .flatMapLatest { it }
 
     private suspend fun deleteProduct(productId: Long) {
-        val product = measurementDao.observeDiaryProduct(productId).first()
-        if (product == null) {
-            error("Diary product with id $productId not found")
-        }
-        measurementDao.deleteDiaryProduct(product)
+        measurementDao.deleteDiaryProduct(productId)
     }
 
     private suspend fun deleteRecipe(recipeId: Long) {
-        val recipe = measurementDao.observeDiaryRecipe(recipeId).first()
-        if (recipe == null) {
-            error("Diary recipe with id $recipeId not found")
-        }
-        measurementDao.deleteDiaryRecipe(recipe)
+        measurementDao.deleteDiaryRecipe(recipeId)
     }
 }
 
