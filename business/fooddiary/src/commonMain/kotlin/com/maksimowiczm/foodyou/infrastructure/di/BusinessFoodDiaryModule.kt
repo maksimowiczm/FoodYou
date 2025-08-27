@@ -11,33 +11,23 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateDiaryEntryU
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.DiaryEntryRepositoryImpl
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.GoalsRepositoryImpl
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.MealRepositoryImpl
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore.DataStoreGoalsDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore.DataStoreMealsPreferencesDataStore
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room.RoomDiaryEntryDataSource
-import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room.RoomMealDataSource
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore.DataStoreGoalsRepository
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore.DataStoreMealsPreferencesRepository
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room.RoomDiaryEntryRepository
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room.RoomMealRepository
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val businessFoodDiaryModule = module {
-    factoryOf(::RoomDiaryEntryDataSource)
-    factoryOf(::RoomMealDataSource)
-    factoryOf(::DataStoreGoalsDataSource)
-    factoryOf(::DataStoreMealsPreferencesDataStore)
+    factoryOf(::RoomMealRepository).bind<MealRepository>()
+    factoryOf(::RoomDiaryEntryRepository).bind<DiaryEntryRepository>()
+    factoryOf(::DataStoreGoalsRepository).bind<GoalsRepository>()
+    factoryOf(::DataStoreMealsPreferencesRepository).bind<MealsPreferencesRepository>()
 
-    factory { MealRepositoryImpl(get(), get(), FoodYouLogger) }.bind<MealRepository>()
-    factory { DiaryEntryRepositoryImpl(get()) }.bind<DiaryEntryRepository>()
-    factory { GoalsRepositoryImpl(get()) }.bind<GoalsRepository>()
-
-    factory { CreateDiaryEntryUseCaseImpl(get(), get(), get(), get(), get(), FoodYouLogger) }
-        .bind<CreateDiaryEntryUseCase>()
-    factory { ObserveDiaryMealsUseCaseImpl(get(), get(), get()) }.bind<ObserveDiaryMealsUseCase>()
-    factory { UnpackDiaryEntryUseCaseImpl(get(), get(), get(), get(), FoodYouLogger) }
-        .bind<UnpackDiaryEntryUseCase>()
-    factory { UpdateDiaryEntryUseCaseImpl(get(), get(), get(), get(), FoodYouLogger) }
-        .bind<UpdateDiaryEntryUseCase>()
+    factoryOf(::CreateDiaryEntryUseCaseImpl).bind<CreateDiaryEntryUseCase>()
+    factoryOf(::ObserveDiaryMealsUseCaseImpl).bind<ObserveDiaryMealsUseCase>()
+    factoryOf(::UnpackDiaryEntryUseCaseImpl).bind<UnpackDiaryEntryUseCase>()
+    factoryOf(::UpdateDiaryEntryUseCaseImpl).bind<UpdateDiaryEntryUseCase>()
 }

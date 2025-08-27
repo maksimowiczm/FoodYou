@@ -10,7 +10,7 @@ interface DiaryEntryRepository {
 
     fun observeEntries(mealId: Long, date: LocalDate): Flow<List<DiaryEntry>>
 
-    suspend fun createDiaryEntry(
+    suspend fun insertDiaryEntry(
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,

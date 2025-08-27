@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -19,13 +20,14 @@ fun interface ObserveDiaryMealsUseCase {
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ObserveDiaryMealsUseCaseImpl(
     private val mealRepository: MealRepository,
+    private val mealsPreferencesRepository: MealsPreferencesRepository,
     private val diaryEntryRepository: DiaryEntryRepository,
     private val dateProvider: DateProvider,
 ) : ObserveDiaryMealsUseCase {
     override fun observe(date: LocalDate): Flow<List<DiaryMeal>> {
         return combine(
                 mealRepository.observeMeals(),
-                mealRepository.observeMealsPreferences(),
+                mealsPreferencesRepository.observe(),
                 dateProvider.observeTime(),
             ) { meals, prefs, time ->
                 val timeBased = prefs.useTimeBasedSorting

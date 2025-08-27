@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room
 import androidx.room.immediateTransaction
 import androidx.room.useWriterConnection
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFood
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodProduct
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
@@ -33,15 +34,17 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
-internal class RoomDiaryEntryDataSource(private val database: FoodYouDatabase) {
+internal class RoomDiaryEntryRepository(private val database: FoodYouDatabase) :
+    DiaryEntryRepository {
     private val measurementDao: MeasurementDao = database.measurementDao
 
-    fun observeEntries(mealId: Long, date: LocalDate): Flow<List<DiaryEntry>> =
+    override fun observeEntries(mealId: Long, date: LocalDate): Flow<List<DiaryEntry>> =
         measurementDao
             .observeMeasurements(mealId = mealId, epochDay = date.toEpochDays())
             .flatMapLatest { entities ->
@@ -74,8 +77,8 @@ internal class RoomDiaryEntryDataSource(private val database: FoodYouDatabase) {
                     .combine()
             }
 
-    fun observeEntry(entryId: Long): Flow<DiaryEntry?> =
-        measurementDao.observeMeasurementById(entryId).filterNotNull().flatMapLatest { entity ->
+    override fun observeEntry(id: Long): Flow<DiaryEntry?> =
+        measurementDao.observeMeasurementById(id).filterNotNull().flatMapLatest { entity ->
             observeFood(entity).map { food ->
                 val createdAt =
                     Instant.fromEpochSeconds(entity.createdAt)
@@ -96,8 +99,25 @@ internal class RoomDiaryEntryDataSource(private val database: FoodYouDatabase) {
             }
         }
 
-    suspend fun insert(diaryEntry: DiaryEntry): Long =
+    override suspend fun insertDiaryEntry(
+        measurement: Measurement,
+        mealId: Long,
+        date: LocalDate,
+        food: DiaryFood,
+        createdAt: LocalDateTime,
+    ): Long =
         database.useWriterConnection {
+            val diaryEntry =
+                DiaryEntry(
+                    id = 0,
+                    mealId = mealId,
+                    date = date,
+                    measurement = measurement,
+                    food = food,
+                    createdAt = createdAt,
+                    updatedAt = createdAt,
+                )
+
             it.immediateTransaction {
                 val recipeId = run {
                     if (diaryEntry.food is DiaryFoodRecipe) {
@@ -141,13 +161,13 @@ internal class RoomDiaryEntryDataSource(private val database: FoodYouDatabase) {
             }
         }
 
-    suspend fun update(diaryEntry: DiaryEntry) {
+    override suspend fun updateDiaryEntry(entry: DiaryEntry) {
         database.useWriterConnection {
             it.immediateTransaction {
-                val entity = measurementDao.observeMeasurementById(diaryEntry.id).firstOrNull()
+                val entity = measurementDao.observeMeasurementById(entry.id).firstOrNull()
 
                 if (entity == null) {
-                    error("Measurement with id ${diaryEntry.id} not found")
+                    error("Measurement with id ${entry.id} not found")
                 }
 
                 // Delete the existing product or recipe if it exists
@@ -161,15 +181,15 @@ internal class RoomDiaryEntryDataSource(private val database: FoodYouDatabase) {
 
                 // Insert the new product or recipe
                 val newProductId = run {
-                    if (diaryEntry.food is DiaryFoodProduct) {
-                        insertProduct(diaryEntry.food)
+                    if (entry.food is DiaryFoodProduct) {
+                        insertProduct(entry.food)
                     } else {
                         null
                     }
                 }
                 val newRecipeId = run {
-                    if (diaryEntry.food is DiaryFoodRecipe) {
-                        insertRecipe(diaryEntry.food)
+                    if (entry.food is DiaryFoodRecipe) {
+                        insertRecipe(entry.food)
                     } else {
                         null
                     }
@@ -181,16 +201,14 @@ internal class RoomDiaryEntryDataSource(private val database: FoodYouDatabase) {
 
                 val updatedEntity =
                     entity.copy(
-                        mealId = diaryEntry.mealId,
-                        epochDay = diaryEntry.date.toEpochDays(),
+                        mealId = entry.mealId,
+                        epochDay = entry.date.toEpochDays(),
                         productId = newProductId,
                         recipeId = newRecipeId,
-                        measurement = diaryEntry.measurement.type,
-                        quantity = diaryEntry.measurement.rawValue,
+                        measurement = entry.measurement.type,
+                        quantity = entry.measurement.rawValue,
                         updatedAt =
-                            diaryEntry.updatedAt
-                                .toInstant(TimeZone.currentSystemDefault())
-                                .epochSeconds,
+                            entry.updatedAt.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
                     )
 
                 measurementDao.updateMeasurement(updatedEntity)
@@ -198,7 +216,7 @@ internal class RoomDiaryEntryDataSource(private val database: FoodYouDatabase) {
         }
     }
 
-    suspend fun delete(id: Long) {
+    override suspend fun deleteDiaryEntry(id: Long) {
         measurementDao.deleteMeasurement(id)
     }
 

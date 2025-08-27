@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,7 @@ import kotlinx.datetime.LocalDate
 internal class MealsCardsViewModel(
     private val observeDiaryMealsUseCase: ObserveDiaryMealsUseCase,
     private val diaryEntryRepository: DiaryEntryRepository,
-    mealRepository: MealRepository,
+    mealsPreferencesRepository: MealsPreferencesRepository,
 ) : ViewModel() {
     private val dateState = MutableStateFlow<LocalDate?>(null)
 
@@ -41,7 +41,7 @@ internal class MealsCardsViewModel(
                 initialValue = null,
             )
 
-    private val _layout = mealRepository.observeMealsPreferences().map { it.layout }
+    private val _layout = mealsPreferencesRepository.observe().map { it.layout }
     val layout =
         _layout.stateIn(
             scope = viewModelScope,

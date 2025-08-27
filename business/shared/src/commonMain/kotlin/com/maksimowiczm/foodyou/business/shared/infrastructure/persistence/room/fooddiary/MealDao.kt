@@ -18,7 +18,13 @@ abstract class MealDao {
     @Query("SELECT * FROM meal ORDER BY rank ASC")
     abstract fun observeMeals(): Flow<List<MealEntity>>
 
-    @Delete abstract suspend fun deleteMeal(meal: MealEntity)
+    @Delete protected abstract suspend fun deleteMeal(meal: MealEntity)
+
+    @Transaction
+    open suspend fun delete(mealId: Long) {
+        val meal = observeMealById(mealId).first() ?: return
+        deleteMeal(meal)
+    }
 
     @Update abstract suspend fun updateMeal(meal: MealEntity)
 

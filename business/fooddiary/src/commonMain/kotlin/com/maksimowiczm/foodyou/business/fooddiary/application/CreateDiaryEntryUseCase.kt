@@ -106,7 +106,7 @@ internal class CreateDiaryEntryUseCaseImpl(
                 }
 
                 val entryId =
-                    diaryEntryRepository.createDiaryEntry(
+                    diaryEntryRepository.insertDiaryEntry(
                         measurement = measurement,
                         mealId = mealId,
                         date = date,

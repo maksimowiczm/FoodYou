@@ -4,22 +4,18 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DailyGoal
+import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.WeeklyGoals
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-internal class DataStoreGoalsDataSource(private val dataStore: DataStore<Preferences>) {
-    fun observeWeeklyGoals(): Flow<WeeklyGoals> =
-        dataStore.data.map { preferences ->
-            preferences[GoalsDataStoreKeys.weeklyGoals]?.let { serialized ->
-                Json.decodeFromString<DataStoreWeeklyGoals>(serialized).toWeeklyGoals()
-            } ?: WeeklyGoals.defaultGoals
-        }
-
-    suspend fun updateWeeklyGoals(weeklyGoals: WeeklyGoals) {
+internal class DataStoreGoalsRepository(private val dataStore: DataStore<Preferences>) :
+    GoalsRepository {
+    override suspend fun updateWeeklyGoals(weeklyGoals: WeeklyGoals) {
         dataStore.updateData {
             it.toMutablePreferences().apply {
                 val serialized = Json.encodeToString(DataStoreWeeklyGoals(weeklyGoals))
@@ -27,6 +23,26 @@ internal class DataStoreGoalsDataSource(private val dataStore: DataStore<Prefere
             }
         }
     }
+
+    override fun observeWeeklyGoals(): Flow<WeeklyGoals> =
+        dataStore.data.map { preferences ->
+            preferences[GoalsDataStoreKeys.weeklyGoals]?.let { serialized ->
+                Json.decodeFromString<DataStoreWeeklyGoals>(serialized).toWeeklyGoals()
+            } ?: WeeklyGoals.defaultGoals
+        }
+
+    override fun observeDailyGoals(date: LocalDate): Flow<DailyGoal> =
+        observeWeeklyGoals().map {
+            when (date.dayOfWeek) {
+                kotlinx.datetime.DayOfWeek.MONDAY -> it.monday
+                kotlinx.datetime.DayOfWeek.TUESDAY -> it.tuesday
+                kotlinx.datetime.DayOfWeek.WEDNESDAY -> it.wednesday
+                kotlinx.datetime.DayOfWeek.THURSDAY -> it.thursday
+                kotlinx.datetime.DayOfWeek.FRIDAY -> it.friday
+                kotlinx.datetime.DayOfWeek.SATURDAY -> it.saturday
+                kotlinx.datetime.DayOfWeek.SUNDAY -> it.sunday
+            }
+        }
 }
 
 private object GoalsDataStoreKeys {

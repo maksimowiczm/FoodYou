@@ -93,7 +93,7 @@ internal class UnpackDiaryEntryUseCaseImpl(
                         updatedAt = now,
                     )
 
-                diaryEntryRepository.createDiaryEntry(
+                diaryEntryRepository.insertDiaryEntry(
                     mealId = entry.mealId,
                     date = entry.date,
                     measurement = entry.measurement,

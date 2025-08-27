@@ -52,7 +52,7 @@ internal class MealSettingsViewModel(private val mealRepository: MealRepository)
 
     fun createMeal(mealModel: MealModel) {
         viewModelScope.launch {
-            mealRepository.createMealWithLastRank(
+            mealRepository.insertMealWithLastRank(
                 name = mealModel.name,
                 from = mealModel.from,
                 to = mealModel.to,

@@ -1,33 +1,35 @@
 package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room
 
 import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MealDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MealEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime
 
-internal class RoomMealDataSource(private val mealDao: MealDao) {
-
-    fun observeAllMeals(): Flow<List<Meal>> =
-        mealDao.observeMeals().map { meals -> meals.map { it.toModel() } }
-
-    fun observeMealById(mealId: Long): Flow<Meal?> =
+internal class RoomMealRepository(private val mealDao: MealDao) : MealRepository {
+    override fun observeMeal(mealId: Long): Flow<Meal?> =
         mealDao.observeMealById(mealId).map { it?.toModel() }
 
-    suspend fun insertWithLastRank(meal: Meal) {
+    override fun observeMeals(): Flow<List<Meal>> =
+        mealDao.observeMeals().map { meals -> meals.map { it.toModel() } }
+
+    override suspend fun insertMealWithLastRank(name: String, from: LocalTime, to: LocalTime) {
+        val meal = Meal(id = 0, name = name, from = from, to = to, rank = 0)
         mealDao.insertWithLastRank(meal.toEntity())
     }
 
-    suspend fun update(meal: Meal) {
+    override suspend fun updateMeal(id: Long, name: String, from: LocalTime, to: LocalTime) {
+        val meal = Meal(id = id, name = name, from = from, to = to, rank = 0)
         mealDao.updateMeal(meal.toEntity())
     }
 
-    suspend fun delete(meal: Meal) {
-        mealDao.deleteMeal(meal.toEntity())
+    override suspend fun deleteMeal(mealId: Long) {
+        mealDao.delete(mealId)
     }
 
-    suspend fun reorder(order: List<Long>) {
+    override suspend fun reorderMeals(order: List<Long>) {
         val rankMap = order.withIndex().associate { (index, id) -> id to index }
         mealDao.updateMealsRanks(rankMap)
     }
