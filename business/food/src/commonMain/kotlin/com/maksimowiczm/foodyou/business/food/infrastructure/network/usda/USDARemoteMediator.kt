@@ -9,8 +9,8 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.model.Food
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger

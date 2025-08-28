@@ -6,7 +6,7 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.system.SystemDetails
+import com.maksimowiczm.foodyou.business.shared.application.system.SystemDetails
 import com.maksimowiczm.foodyou.shared.common.infrastructure.system.defaultLocale
 import java.util.Locale
 import kotlinx.coroutines.flow.Flow

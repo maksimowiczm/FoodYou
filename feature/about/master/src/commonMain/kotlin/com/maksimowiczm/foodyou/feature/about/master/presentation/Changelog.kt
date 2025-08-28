@@ -3,7 +3,7 @@
 package com.maksimowiczm.foodyou.feature.about.master.presentation
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.config.AppConfig
+import com.maksimowiczm.foodyou.business.shared.application.config.AppConfig
 import kotlinx.datetime.LocalDate
 
 @Immutable

@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.QueryType
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.network.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.shared.application.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import kotlinx.coroutines.flow.Flow
 

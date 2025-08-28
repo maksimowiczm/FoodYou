@@ -8,13 +8,13 @@ import androidx.paging.map
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.QueryType
 import com.maksimowiczm.foodyou.business.food.infrastructure.LocalFoodSearchDataSource
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.network.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.shared.application.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearch as FoodSearchData
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearchDao
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodSearch as FoodSearchData
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodSearchDao
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntity
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.from

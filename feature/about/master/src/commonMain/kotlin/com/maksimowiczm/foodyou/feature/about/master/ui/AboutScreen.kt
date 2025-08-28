@@ -49,7 +49,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.config.AppConfig
+import com.maksimowiczm.foodyou.business.shared.application.config.AppConfig
 import com.maksimowiczm.foodyou.shared.ui.InteractiveLogo
 import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
 import foodyou.app.generated.resources.*

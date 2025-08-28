@@ -5,9 +5,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.system.SystemDetails
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase.Companion.buildDatabase
+import com.maksimowiczm.foodyou.business.shared.application.system.SystemDetails
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.FoodYouDatabase
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.FoodYouDatabase.Companion.buildDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.system.AndroidSystemDetails
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import java.io.File

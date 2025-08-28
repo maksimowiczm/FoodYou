@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.room
 
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.LocalOpenFoodFactsPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsPagingKey
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsDao
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsPagingKeyEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.openfoodfacts.OpenFoodFactsDao
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.openfoodfacts.OpenFoodFactsPagingKeyEntity
 
 internal class RoomOpenFoodFactsPagingHelper(private val dao: OpenFoodFactsDao) :
     LocalOpenFoodFactsPagingHelper {

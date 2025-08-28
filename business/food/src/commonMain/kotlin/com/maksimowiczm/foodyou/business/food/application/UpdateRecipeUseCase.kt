@@ -5,9 +5,9 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.domain.RecipeIngredient
 import com.maksimowiczm.foodyou.business.food.domain.RecipeRepository
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement

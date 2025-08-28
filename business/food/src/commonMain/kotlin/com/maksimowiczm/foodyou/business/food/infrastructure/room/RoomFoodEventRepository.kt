@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.room
 
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventDao
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventEntity
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventType
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventDao
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventType
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant

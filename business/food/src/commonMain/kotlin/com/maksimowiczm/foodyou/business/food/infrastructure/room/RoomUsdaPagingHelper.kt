@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.room
 
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAPagingKey
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.usda.USDAPagingKeyDao
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.usda.USDAPagingKeyEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.usda.USDAPagingKeyDao
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.usda.USDAPagingKeyEntity
 
 internal class RoomUsdaPagingHelper(private val usdaPagingKeyDao: USDAPagingKeyDao) :
     LocalUsdaPagingHelper {

@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.business.food.application
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.error.logAndReturnFailure
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.shared.common.application.log.Logger

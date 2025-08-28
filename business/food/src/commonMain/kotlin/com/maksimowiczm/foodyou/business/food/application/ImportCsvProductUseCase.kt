@@ -5,9 +5,9 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.csv.CsvParser
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.csv.CsvParser
+import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts

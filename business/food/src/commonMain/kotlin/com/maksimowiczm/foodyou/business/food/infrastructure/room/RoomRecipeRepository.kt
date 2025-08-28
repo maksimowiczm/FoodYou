@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.room
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.RecipeIngredient
 import com.maksimowiczm.foodyou.business.food.domain.RecipeRepository
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeDao
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeEntity
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeIngredientEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.RecipeDao
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.RecipeEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.from

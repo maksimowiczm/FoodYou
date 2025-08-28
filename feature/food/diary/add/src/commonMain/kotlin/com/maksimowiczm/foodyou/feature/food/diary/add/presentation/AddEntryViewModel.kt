@@ -12,7 +12,7 @@ import com.maksimowiczm.foodyou.business.food.domain.defaultMeasurement
 import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.business.fooddiary.application.CreateDiaryEntryUseCase
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement

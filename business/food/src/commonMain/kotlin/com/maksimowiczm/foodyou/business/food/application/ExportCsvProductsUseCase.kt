@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.business.food.application
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.first

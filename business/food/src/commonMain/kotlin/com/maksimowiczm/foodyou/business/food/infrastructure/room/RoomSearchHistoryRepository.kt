@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.room
 
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistory
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistoryRepository
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearchDao
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.SearchEntry
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodSearchDao
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.SearchEntry
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow

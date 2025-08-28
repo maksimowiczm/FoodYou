@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors
 
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.network.NetworkConfig
+import com.maksimowiczm.foodyou.business.shared.application.network.NetworkConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout

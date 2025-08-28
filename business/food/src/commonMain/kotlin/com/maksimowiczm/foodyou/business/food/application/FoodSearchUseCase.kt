@@ -6,8 +6,8 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodSearchDomainEvent
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
 import com.maksimowiczm.foodyou.business.food.domain.QueryType
 import com.maksimowiczm.foodyou.business.food.domain.queryType
+import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
-import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlinx.coroutines.flow.Flow
