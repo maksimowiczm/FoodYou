@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
 import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.csv.CsvParser
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.date.DateProvider
@@ -10,15 +9,12 @@ import com.maksimowiczm.foodyou.business.shared.application.infrastructure.netwo
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseDumpService
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.application.infrastructure.system.SystemDetails
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
-import com.maksimowiczm.foodyou.business.shared.infrastructure.command.KoinCommandBus
 import com.maksimowiczm.foodyou.business.shared.infrastructure.csv.VibeCsvParser
 import com.maksimowiczm.foodyou.business.shared.infrastructure.date.DateProviderImpl
 import com.maksimowiczm.foodyou.business.shared.infrastructure.event.SharedFlowEventBus
 import com.maksimowiczm.foodyou.business.shared.infrastructure.network.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.InitializeMealsCallback
-import com.maksimowiczm.foodyou.business.shared.infrastructure.query.KoinQueryBus
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
@@ -77,8 +73,6 @@ fun businessSharedModule(applicationCoroutineScope: CoroutineScope) = module {
     factoryOf(::FoodYouNetworkConfig).bind<NetworkConfig>()
     factoryOf(::VibeCsvParser).bind<CsvParser>()
 
-    singleOf(::KoinCommandBus).bind<CommandBus>()
-    singleOf(::KoinQueryBus).bind<QueryBus>()
     singleOf(::SharedFlowEventBus).bind<EventBus>()
 
     singleOf(::DateProviderImpl).bind<DateProvider>()
