@@ -18,6 +18,7 @@ import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCaseImpl
 import com.maksimowiczm.foodyou.business.food.application.ObserveMeasurementSuggestionsUseCase
 import com.maksimowiczm.foodyou.business.food.application.ObserveMeasurementSuggestionsUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.UpdateProductUseCase
 import com.maksimowiczm.foodyou.business.food.application.UpdateProductUseCaseImpl
 import com.maksimowiczm.foodyou.business.food.application.UpdateRecipeUseCase
 import com.maksimowiczm.foodyou.business.food.application.UpdateRecipeUseCaseImpl
@@ -82,7 +83,7 @@ val businessFoodModule = module {
     factoryOf(::CreateRecipeUseCaseImpl).bind<CreateRecipeUseCase>()
     factoryOf(::DeleteFoodUseCaseImpl).bind<DeleteFoodUseCase>()
     factoryOf(::ObserveFoodUseCaseImpl).bind<ObserveFoodUseCase>()
-    factoryOf(::UpdateProductUseCaseImpl).bind<UpdateProductUseCaseImpl>()
+    factoryOf(::UpdateProductUseCaseImpl).bind<UpdateProductUseCase>()
     factoryOf(::UpdateRecipeUseCaseImpl).bind<UpdateRecipeUseCase>()
     factoryOf(::ExportCsvProductsUseCaseImpl).bind<ExportCsvProductsUseCase>()
     factoryOf(::ImportCsvProductUseCaseImpl).bind<ImportCsvProductUseCase>()
