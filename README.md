@@ -65,11 +65,16 @@ Want to help make Food You even better? Here are some great ways to contribute:
 This app is free, open-source, and ad-free. You directly support full-time development of the
 project.
 
-- [Support on Liberapay](https://liberapay.com/maksimowiczm)
 - [Support on Ko-fi](https://ko-fi.com/maksimowiczm)
 - **BTC**: `bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2`
 - **Monero**:
   `41tP8QxdL5hduxcntGwJD92GJDdCTKDyyGSKofbgdgaLG2uJuqgK7daYymBQuJ1iA48LuiLdfoduFMLk1kdkTRKSC4mHkMY`
+
+---
+
+### ✉️ Contact
+
+- **Email**: [maksimowicz.dev@gmail.com](mailto:maksimowicz.dev@gmail.com?subject=Food%20You)
 
 ---
 
@@ -89,9 +94,3 @@ Looking for alternatives or similar tools?
 - [ReadYou](https://github.com/Ashinch/ReadYou) — I shamelessly borrowed inspiration from this
   project 🙃
 - [Icons8](https://icons8.com) — sushi icon 🍣
-
----
-
-### ✉️ Contact
-
-- **Email**: [maksimowicz.dev@gmail.com](mailto:maksimowicz.dev@gmail.com?subject=Food%20You)
