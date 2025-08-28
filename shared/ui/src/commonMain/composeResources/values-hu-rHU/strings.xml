@@ -3,12 +3,10 @@
     <string name="not_available_short">N/A</string>
     <string name="headline_create_product">Termék létrehozása</string>
     <string name="headline_settings">Beállítások</string>
-    <string name="headline_calories_goal">Kalória cél</string>
     <string name="headline_daily_goals">Napi célok</string>
     <string name="headline_general">Általános</string>
     <string name="headline_macronutrients">Tápanyagok</string>
     <string name="headline_meals">Étkezések</string>
-    <string name="headline_delete_product">Termék törlése</string>
     <string name="headline_edit_product">Termék szerkesztése</string>
     <string name="headline_permission_required">Engedély szükséges</string>
     <string name="headline_language">Nyelv</string>
@@ -23,7 +21,6 @@
     <string name="headline_product">Termékek</string>
     <string name="headline_recipe">Recept</string>
     <string name="headline_create_recipe">Recept létrehozása</string>
-    <string name="headline_update_recipe">Recept frissítése</string>
     <string name="headline_ingredients" description="Recipe ingredients">Összetevők</string>
     <string name="headline_summary">Összegzés</string>
     <string name="headline_whats_new">Újdonságok</string>
@@ -42,7 +39,6 @@
     <string name="headline_minerals">Ásványok</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">Támogatott linkek</string>
     <string name="weight">Tömeg</string>
-    <string name="unit_calories">Kalória</string>
     <string name="unit_energy" description="Energy as calories">Energia</string>
     <string name="unit_kcal">kcal</string>
     <plurals name="unit_gram">
@@ -76,20 +72,8 @@
     <string name="nutriment_omega_3">Omega-3 zsírsavak</string>
     <string name="nutriment_omega_6">Omega-6 zsírsavak</string>
     <string name="nutriment_salt">Só</string>
-    <string name="nutriment_fiber">Rost</string>
     <string name="nutriment_cholesterol">Koleszterin</string>
     <string name="nutriment_caffeine">Koffein</string>
-    <string name="vitamin_a">A-vitamin</string>
-    <string name="vitamin_b1">B1-vitamin</string>
-    <string name="vitamin_b2">B2-vitamin</string>
-    <string name="vitamin_b3">B3-vitamin</string>
-    <string name="vitamin_b5">B5-vitamin</string>
-    <string name="vitamin_b6">B6-vitamin</string>
-    <string name="vitamin_b7">B7-vitamin</string>
-    <string name="vitamin_b9">B9-vitamin</string>
-    <string name="vitamin_b12">B12-vitamin</string>
-    <string name="vitamin_c">C-vitamin</string>
-    <string name="vitamin_d">D-vitamin</string>
     <string name="vitamin_e">E-vitamin</string>
     <string name="vitamin_k">K-vitamin</string>
     <string name="mineral_manganese">Mangán</string>
@@ -120,7 +104,6 @@
     <string name="action_insert_suggested_search">Javasolt keresés beszúrása</string>
     <string name="action_edit_entry">Bejegyzés szerkesztése</string>
     <string name="action_delete_entry">Bejegyzés törlése</string>
-    <string name="action_undo">Visszavonás</string>
     <string name="action_close">Bezár</string>
     <string name="action_discard">Elvetés</string>
     <string name="action_translate">Fordítás</string>
@@ -137,15 +120,12 @@
     <string name="action_use_time_based_ordering">Használja az időalapú rendezést</string>
     <string name="action_ignore_all_day_meals">Egész napos étkezés ignorálása</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Összetevő hozzáadása</string>
-    <string name="action_edit_ingredient_measurement">Összetevők mértékének szerkesztése</string>
     <string name="action_delete_ingredient">Összetevők törlése</string>
     <string name="action_download">Letöltés</string>
     <string name="action_paste_url">URL beillesztése</string>
     <string name="action_browse_open_food_facts">Open Food Facts böngészése</string>
     <string name="action_copy">Másolás</string>
     <string name="action_choose_other_date">Másik dátum választása</string>
-    <string name="action_choose_other_measurement">Másik mérték választása</string>
-    <string name="action_edit_your_home_page">Kezdőlapod szerkesztése</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Továbbiak megjelenítése</string>
     <string name="action_download_product">Termék letöltése</string>
     <string name="action_suggest_external_database">Javasolj egy külső adatbázist</string>
@@ -156,24 +136,19 @@
         <item quantity="one">%1$d kalória maradt</item>
         <item quantity="other">%1$d kalória maradt</item>
     </plurals>
-    <string name="neutral_set_your_daily_goals">Állítsd be a napi céljaid</string>
     <string name="neutral_set_your_meal_schedule">Állítsd be az étkezési időrendjeid</string>
     <string name="neutral_permanently_delete_meal">Véglegesen törlöd az étkezést?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Az étkezés véglegesen törlődik. Az ehhez tartozó összes adat el fog veszni.</string>
     <string name="neutral_required">Szükséges</string>
-    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">A rendszer automatikusan kiszámolja a kalóriát a tápanyag alapján</string>
     <string name="neutral_help_translating_the_app">Segíts lefordítani az applikációt</string>
     <string name="neutral_copied">Az információ a váglólapra lett másolva</string>
     <string name="neutral_product_created">Termék létrehozva</string>
     <string name="question_discard_product">Termék elvetése?</string>
     <string name="question_discard_changes">Változások elvetése?</string>
     <string name="question_discard_recipe">Recept elvetése?</string>
-    <string name="error_this_field_is_required">Ez a menző kötelező</string>
     <string name="error_invalid_number">Helytelen szám</string>
     <string name="error_value_cannot_be_negative">Az érték nem lehet negatív szám</string>
-    <string name="error_value_must_be_less_than">Az érték nem lehet több, mint %1$s</string>
     <string name="error_value_must_be_integer">Az értéknek egész számnak kell lennie</string>
-    <string name="error_sum_of_percentages_must_be_100">A százalékos összegnek 100-nak kell lennie</string>
     <string name="error_value_must_be_positive">Az értéknek pozitív számnak kell lennie</string>
     <string name="error_url_not_found">Az URL nem található</string>
     <string name="error_url_is_not_supported">Az URL nem támogatott</string>
@@ -186,8 +161,6 @@
         <item quantity="one">%1$d kalóriával túllépted a keretet</item>
         <item quantity="other">%1$d kalóriával túllépted a keretet</item>
     </plurals>
-    <string name="description_calories_goal">Állítsd be a napi kalóriabeviteled célját. Ez segít követni a haladásod és a céljaid betartását.</string>
-    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">A termék véglegesen törlésre kerül. Ez a művelet nem visszavonható. Minden, a termékhez kapcsolódó naplóbejegyzés is törlődni fog.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Ez a bejegyzés törlésre kerül a naplódból. Bármikor újra hozzáadhatod.</string>
     <string name="description_about_setting">Tudj meg többet az applikációról</string>
     <string name="description_time_based_meals_sorting">Ha be van kapcsolva, az éppen aktuális étkezések jelennek meg elsőként</string>

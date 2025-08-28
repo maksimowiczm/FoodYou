@@ -1,60 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="not_available_short">N/A</string>
-    <string name="headline_create_product">Ürün Oluştur</string>
+    <string name="not_available_short">Yok</string>
+    <string name="headline_create_product">Ürün oluştur</string>
     <string name="headline_settings">Ayarlar</string>
-    <string name="headline_calories_goal">Kalori Hedefi</string>
-    <string name="headline_daily_goals">Günlük Hedefler</string>
+    <string name="headline_daily_goals">Günlük hedefler</string>
     <string name="headline_general">Genel</string>
-    <string name="headline_macronutrients">Makro Besinler</string>
+    <string name="headline_macronutrients">Makro besinler</string>
     <string name="headline_meals">Öğünler</string>
-    <string name="headline_delete_product">Ürünü Sil</string>
-    <string name="headline_edit_product">Ürünü Düzenle</string>
-    <string name="headline_permission_required">İzin Gerekiyor</string>
+    <string name="headline_delete_food">Yiyeceği sil</string>
+    <string name="headline_edit_product">Ürünü düzenle</string>
+    <string name="headline_permission_required">İzin gerekli</string>
     <string name="headline_language">Dil</string>
     <string name="headline_system">Sistem</string>
-    <string name="headline_system_language_settings">Sistem Dil Ayarları</string>
-    <string name="headline_secure_screen">Güvenli Ekran</string>
+    <string name="headline_system_language_settings">Sistem dili ayarları</string>
+    <string name="headline_secure_screen">Güvenli ekran</string>
     <string name="headline_about">Hakkında</string>
     <string name="headline_version">Sürüm</string>
-    <string name="headline_all_day" description="All-day (meal)">Tüm Gün</string>
-    <string name="headline_time_based_ordering">Zaman Bazlı Sıralama</string>
-    <string name="headline_incomplete_products">Eksik Ürünler</string>
+    <string name="headline_all_day" description="All-day (meal)">Tüm gün</string>
+    <string name="headline_time_based_ordering">Zamana göre sıralama</string>
+    <string name="headline_incomplete_products">Eksik ürünler</string>
     <string name="headline_product">Ürün</string>
     <string name="headline_recipe">Tarif</string>
-    <string name="headline_create_recipe">Tarif Oluştur</string>
-    <string name="headline_update_recipe">Tarifi Güncelle</string>
+    <string name="headline_create_recipe">Tarif oluştur</string>
     <string name="headline_ingredients" description="Recipe ingredients">Malzemeler</string>
     <string name="headline_summary">Özet</string>
-    <string name="headline_whats_new">Neler Yeni</string>
-    <string name="headline_changelog">Değişiklik Günlüğü</string>
+    <string name="headline_whats_new">Yenilikler</string>
+    <string name="headline_changelog">Değişiklik günlüğü</string>
     <string name="headline_installed" description="Installed version of the app">Yüklü</string>
-    <string name="headline_home" description="Home screen">Ana Sayfa</string>
-    <string name="headline_home_settings" description="Home screen settings">Ana Sayfa Ayarları</string>
+    <string name="headline_home" description="Home screen">Ana sayfa</string>
+    <string name="headline_home_settings" description="Home screen settings">Ana sayfa ayarları</string>
     <string name="headline_calendar">Takvim</string>
-    <string name="headline_meals_settings">Öğün Ayarları</string>
-    <string name="headline_meals_cards_settings">Öğün Kartları Ayarları</string>
+    <string name="headline_meals_settings">Öğün ayarları</string>
+    <string name="headline_meals_cards_settings">Öğün kartı ayarları</string>
     <string name="headline_horizontal">Yatay</string>
     <string name="headline_vertical">Dikey</string>
-    <string name="headline_values_per">Değerler /</string>
+    <string name="headline_values_per">Değerler / porsiyon</string>
     <string name="headline_other">Diğer</string>
     <string name="headline_vitamins">Vitaminler</string>
     <string name="headline_minerals">Mineraller</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">Desteklenen URL'ler</string>
-    <string name="headline_import_and_export">İçe ve Dışa Aktarma</string>
-    <string name="headline_experimental" description="Experimental feature">Deneysel</string>
-    <string name="headline_experimental_feature">Deneysel Özellik</string>
-    <string name="headline_copy" description="A noun, thing that is a copy">Kopya</string>
-    <string name="headline_something_went_wrong">Bir Şeyler Ters Gitti</string>
-    <string name="headline_daily_goals_settings">Günlük Hedefler Ayarları</string>
-    <string name="headline_api_key">API Anahtarı</string>
+    <string name="headline_something_went_wrong">Eyvah! Bir şeyler ters gitti</string>
+    <string name="headline_daily_goals_settings">Günlük hedef ayarları</string>
+    <string name="headline_api_key">API anahtarı</string>
     <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Kaynak</string>
     <string name="headline_features">Özellikler</string>
-    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">%1$s içinde</string>
     <string name="weight">Ağırlık</string>
-    <string name="unit_calories">Kalori</string>
     <string name="unit_energy" description="Energy as calories">Enerji</string>
-    <string name="unit_kcal">kcal</string>
+    <string name="unit_kcal">kkal</string>
+    <string name="unit_kilojoules">kJ</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
         <item quantity="other">gram</item>
@@ -63,45 +56,51 @@
         <item quantity="one">mililitre</item>
         <item quantity="other">mililitre</item>
     </plurals>
-    <string name="product_package_weight">Paket Ağırlığı</string>
+    <string name="unit_ounce_short">oz</string>
+    <string name="unit_fluid_ounce_short">fl oz</string>
+    <string name="product_package_weight">Paket ağırlığı</string>
     <string name="product_package">Paket</string>
-    <string name="product_serving_weight">Porsiyon Ağırlığı</string>
+    <string name="product_serving_weight">Porsiyon ağırlığı</string>
     <string name="product_serving">Porsiyon</string>
     <string name="product_name">Ad</string>
     <string name="product_brand">Marka</string>
     <string name="product_barcode">Barkod</string>
-    <string name="product_link">Ürün Bağlantısı</string>
-    <string name="recipe_servings">Porsiyonlar</string>
-    <string name="description_recipe_servings">Bu tarif kaç porsiyon yapar</string>
-    <string name="nutriment_proteins">Protein</string>
+    <string name="product_link">Ürün bağlantısı</string>
+    <string name="recipe_servings">Porsiyon sayısı</string>
+    <string name="description_recipe_servings">Bu tarif kaç porsiyonluk</string>
+    <string name="nutriment_proteins">Proteinler</string>
     <string name="nutriment_proteins_short">P</string>
-    <string name="nutriment_carbohydrates">Karbonhidrat</string>
+    <string name="nutriment_carbohydrates">Karbonhidratlar</string>
     <string name="nutriment_carbohydrates_short">C</string>
     <string name="nutriment_sugars">Şekerler</string>
-    <string name="nutriment_fats">Yağ</string>
-    <string name="nutriment_fats_short">F</string>
-    <string name="nutriment_saturated_fats">Doymuş Yağlar</string>
-    <string name="nutriment_polyunsaturated_fats">Çoklu Doymamış Yağlar</string>
-    <string name="nutriment_monounsaturated_fats">Tekli Doymamış Yağlar</string>
-    <string name="nutriment_omega_3">Omega-3 Yağ Asitleri</string>
-    <string name="nutriment_omega_6">Omega-6 Yağ Asitleri</string>
+    <string name="nutriment_fats">Yağlar</string>
+    <string name="nutriment_fats_short">Y</string>
+    <string name="nutriment_saturated_fats">Doymuş yağlar</string>
+    <string name="nutriment_polyunsaturated_fats">Çoklu doymamış yağlar</string>
+    <string name="nutriment_monounsaturated_fats">Tekli doymamış yağlar</string>
+    <string name="nutriment_omega_3">Omega-3 yağ asitleri</string>
+    <string name="nutriment_omega_6">Omega-6 yağ asitleri</string>
     <string name="nutriment_salt">Tuz</string>
-    <string name="nutriment_fiber">Lif</string>
+    <string name="nutriment_fiber">Diyet lifi</string>
     <string name="nutriment_cholesterol">Kolesterol</string>
     <string name="nutriment_caffeine">Kafein</string>
-    <string name="vitamin_a">Vitamin A</string>
-    <string name="vitamin_b1">Vitamin B1</string>
-    <string name="vitamin_b2">Vitamin B2</string>
-    <string name="vitamin_b3">Vitamin B3</string>
-    <string name="vitamin_b5">Vitamin B5</string>
-    <string name="vitamin_b6">Vitamin B6</string>
-    <string name="vitamin_b7">Vitamin B7</string>
-    <string name="vitamin_b9">Vitamin B9</string>
-    <string name="vitamin_b12">Vitamin B12</string>
-    <string name="vitamin_c">Vitamin C</string>
-    <string name="vitamin_d">Vitamin D</string>
-    <string name="vitamin_e">Vitamin E</string>
-    <string name="vitamin_k">Vitamin K</string>
+    <string name="nutriment_trans_fats">Trans yağlar</string>
+    <string name="nutriment_added_sugars">Eklenmiş şekerler</string>
+    <string name="nutriment_soluble_fiber">Çözünür lif</string>
+    <string name="nutriment_insoluble_fiber">Çözünmez lif</string>
+    <string name="vitamin_a">A Vitamini (Retinol)</string>
+    <string name="vitamin_b1">B1 Vitamini (Tiamin)</string>
+    <string name="vitamin_b2">B2 Vitamini (Riboflavin)</string>
+    <string name="vitamin_b3">B3 Vitamini (Niasin)</string>
+    <string name="vitamin_b5">B5 Vitamini (Pantotenik asit)</string>
+    <string name="vitamin_b6">B6 Vitamini (Piridoksin)</string>
+    <string name="vitamin_b7">B7 Vitamini (Biyotin)</string>
+    <string name="vitamin_b9">B9 Vitamini (Folat)</string>
+    <string name="vitamin_b12">B12 Vitamini (Kobalaminler)</string>
+    <string name="vitamin_c">C Vitamini (Askorbik asit)</string>
+    <string name="vitamin_d">D Vitamini (Kalsiferoller)</string>
+    <string name="vitamin_e">E Vitamini</string>
+    <string name="vitamin_k">K Vitamini</string>
     <string name="mineral_manganese">Manganez</string>
     <string name="mineral_magnesium">Magnezyum</string>
     <string name="mineral_potassium">Potasyum</string>
@@ -115,92 +114,80 @@
     <string name="mineral_iodine">İyot</string>
     <string name="mineral_chromium">Krom</string>
     <string name="action_search">Ara</string>
-    <string name="action_scan_barcode">Barkod Tara</string>
+    <string name="action_scan_barcode">Barkod tara</string>
     <string name="action_add">Ekle</string>
-    <string name="action_go_back">Geri Dön</string>
-    <string name="action_tap_to_allow_access">Erişime İzin Ver</string>
+    <string name="action_go_back">Geri git</string>
+    <string name="action_tap_to_allow_access">Erişime izin vermek için dokun</string>
     <string name="action_create">Oluştur</string>
     <string name="action_clear">Temizle</string>
     <string name="action_cancel">İptal</string>
-    <string name="action_go_to_settings">Ayarlara Git</string>
+    <string name="action_go_to_settings">Ayarlara git</string>
     <string name="action_save">Kaydet</string>
     <string name="action_delete">Sil</string>
     <string name="action_confirm">Onayla</string>
-    <string name="action_add_meal">Öğün Ekle</string>
+    <string name="action_add_meal">Öğün ekle</string>
     <string name="action_edit">Düzenle</string>
-    <string name="action_insert_suggested_search">Önerilen Aramayı Ekle</string>
-    <string name="action_edit_entry">Girişi Düzenle</string>
-    <string name="action_delete_entry">Girişi Sil</string>
-    <string name="action_undo">Geri Al</string>
+    <string name="action_insert_suggested_search">Önerilen aramayı ekle</string>
+    <string name="action_edit_entry">Girdiyi düzenle</string>
+    <string name="action_delete_entry">Girdiyi sil</string>
     <string name="action_close">Kapat</string>
     <string name="action_discard">Vazgeç</string>
     <string name="action_translate">Çevir</string>
-    <string name="action_enable_camera_flash">Kamera Flaşını Etkinleştir</string>
-    <string name="action_disable_camera_flash">Kamera Flaşını Devre Dışı Bırak</string>
-    <string name="action_prevent_screen_capture">Ekran Görüntüsü Almayı Engelle</string>
-    <string name="action_go_to_today">Bugüne Git</string>
-    <string name="action_bug_report_on_github">GitHub'da Hata Raporu</string>
-    <string name="action_feature_request_on_github">GitHub'da Özellik Talebi</string>
-    <string name="action_show_calendar">Takvimi Göster</string>
-    <string name="action_reorder">Yeniden Sırala</string>
-    <string name="action_move_up" description="reorder list item up">Yukarı Taşı</string>
-    <string name="action_move_down" description="reorder list item down">Aşağı Taşı</string>
-    <string name="action_use_time_based_ordering">Zaman Bazlı Sıralama Kullan</string>
-    <string name="action_ignore_all_day_meals">Tüm Gün Öğünlerini Yoksay</string>
-    <string name="action_add_ingredient" description="Add ingredient to the recipe">Malzeme Ekle</string>
-    <string name="action_edit_ingredient_measurement">Malzeme Ölçüsünü Düzenle</string>
-    <string name="action_delete_ingredient">Malzemeyi Sil</string>
+    <string name="action_enable_camera_flash">Kamera flaşını aç</string>
+    <string name="action_disable_camera_flash">Kamera flaşını kapat</string>
+    <string name="action_prevent_screen_capture">Ekran görüntüsünü engelle</string>
+    <string name="action_go_to_today">Bugüne git</string>
+    <string name="action_bug_report_on_github">GitHub'da hata bildir</string>
+    <string name="action_feature_request_on_github">GitHub'da özellik iste</string>
+    <string name="action_show_calendar">Takvimi göster</string>
+    <string name="action_reorder">Yeniden sırala</string>
+    <string name="action_move_up" description="reorder list item up">Yukarı taşı</string>
+    <string name="action_move_down" description="reorder list item down">Aşağı taşı</string>
+    <string name="action_use_time_based_ordering">Zamana göre sırala</string>
+    <string name="action_ignore_all_day_meals">Tüm gün öğünlerini yoksay</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Malzeme ekle</string>
+    <string name="action_delete_ingredient">Malzemeyi sil</string>
     <string name="action_download">İndir</string>
-    <string name="action_paste_url">URL Yapıştır</string>
-    <string name="action_browse_open_food_facts">Open Food Facts'e Göz At</string>
+    <string name="action_paste_url">URL yapıştır</string>
+    <string name="action_browse_open_food_facts">Open Food Facts'e göz at</string>
     <string name="action_copy">Kopyala</string>
-    <string name="action_choose_other_date">Başka Tarih Seç</string>
-    <string name="action_choose_other_measurement">Başka Ölçü Seç</string>
-    <string name="action_edit_your_home_page">Ana Sayfanızı Düzenleyin</string>
-    <string name="action_show_more" description="Show more settings/options/advanced settings">Daha Fazla Göster</string>
-    <string name="action_download_product">Ürünü İndir</string>
-    <string name="action_suggest_external_database">Harici Veritabanı Öner</string>
-    <string name="action_import_food_products">Gıda Ürünlerini İçe Aktar</string>
-    <string name="action_import_food_products_from_csv">CSV Dosyasından Gıda Ürünlerini İçe Aktar</string>
-    <string name="action_export_food_products">Gıda Ürünlerini Dışa Aktar</string>
-    <string name="action_export_food_products_to_csv">Gıda Ürünlerini CSV Dosyasına Dışa Aktar</string>
-    <string name="action_share">Paylaş</string>
-    <string name="action_copy_header" description="Copy CSV file header">Başlığı Kopyala</string>
-    <string name="action_copy_and_open_bug_report">Kopyala ve Hata Raporu Aç</string>
-    <string name="action_show_details">Detayları Göster</string>
-    <string name="action_browse_usda">Food Data Central (USDA)'ye Göz At</string>
-    <string name="action_set_key">Anahtar Ayarla</string>
-    <string name="action_obtain_key">Anahtar Al</string>
-    <string name="action_dont_show_again">Tekrar Gösterme</string>
+    <string name="action_choose_other_date">Başka bir tarih seç</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Daha fazla göster</string>
+    <string name="action_download_product">Ürünü indir</string>
+    <string name="action_suggest_external_database">Harici veritabanı öner</string>
+    <string name="action_copy_and_open_bug_report">Kopyala ve hata raporunu aç</string>
+    <string name="action_show_details">Detayları göster</string>
+    <string name="action_browse_usda">FoodData Central'a (USDA) göz at</string>
+    <string name="action_set_key">Anahtarı ayarla</string>
+    <string name="action_obtain_key">Anahtar al</string>
+    <string name="action_dont_show_again">Tekrar gösterme</string>
     <string name="neutral_barcode_scanner_camera_request">Barkodları taramak için kameranıza erişime izin verin</string>
-    <string name="neutral_barcode_scanner_camera_request_rationale">Barkod taramak için erişime izin vermelisiniz</string>
-    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Barkod taramak için kamera izni gereklidir. Lütfen uygulama ayarlarında izin verin.</string>
-    <string name="neutral_no_food_found">Gıda bulunamadı</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Barkod tarayabilmek için erişime izin vermelisiniz</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Barkod taramak için kamera izni gereklidir. Lütfen uygulama ayarlarından izin verin.</string>
+    <string name="neutral_no_food_found">Yiyecek bulunamadı</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d kalori kaldı</item>
         <item quantity="other">%1$d kalori kaldı</item>
     </plurals>
-    <string name="neutral_set_your_daily_goals">Günlük hedeflerinizi belirleyin</string>
-    <string name="neutral_set_your_meal_schedule">Öğün programınızı ayarlayın</string>
-    <string name="neutral_permanently_delete_meal">Öğünü kalıcı olarak sil?</string>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">%1$d kilojul kaldı</item>
+        <item quantity="other">%1$d kilojul kaldı</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Günlük beslenme hedeflerinizi belirleyin</string>
+    <string name="neutral_set_your_meal_schedule">Öğün planınızı oluşturun</string>
+    <string name="neutral_permanently_delete_meal">Öğün kalıcı olarak silinsin mi?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Öğün kalıcı olarak silinecek. Bu öğünle ilgili tüm veriler kaybolacak.</string>
     <string name="neutral_required">Gerekli</string>
-    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kaloriler, makro besinlere (protein, karbonhidrat, yağ) göre otomatik olarak hesaplanır</string>
-    <string name="neutral_help_translating_the_app">Uygulamayı çevirmeye yardımcı ol</string>
+    <string name="neutral_help_translating_the_app">Uygulamayı çevirmeye yardım et</string>
     <string name="neutral_copied">Bilgi panoya kopyalandı</string>
     <string name="neutral_product_created">Ürün oluşturuldu</string>
-    <string name="neutral_export_started">Dışa aktarma başladı</string>
-    <string name="neutral_import_started">İçe aktarma başladı</string>
-    <string name="question_discard_product">Üründen vazgeç?</string>
-    <string name="question_discard_changes">Değişikliklerden vazgeç?</string>
-    <string name="question_discard_recipe">Tariften vazgeç?</string>
-    <string name="error_this_field_is_required">Bu alan gereklidir</string>
-    <string name="error_invalid_number">Geçersiz sayı</string>
+    <string name="question_discard_product">Üründen vazgeçilsin mi?</string>
+    <string name="question_discard_changes">Değişikliklerden vazgeçilsin mi?</string>
+    <string name="question_discard_recipe">Tariften vazgeçilsin mi?</string>
+    <string name="error_invalid_number">Geçersiz numara</string>
     <string name="error_value_cannot_be_negative">Değer negatif olamaz</string>
-    <string name="error_value_must_be_less_than">Değer %1$s'den küçük olmalı</string>
-    <string name="error_value_must_be_integer">Değer tam sayı olmalı</string>
-    <string name="error_sum_of_percentages_must_be_100">Yüzdelerin toplamı 100 olmalı</string>
-    <string name="error_value_must_be_positive">Değer pozitif olmalı</string>
+    <string name="error_value_must_be_integer">Değer bir tam sayı olmalıdır</string>
+    <string name="error_value_must_be_positive">Değer pozitif olmalıdır</string>
     <string name="error_url_not_found">URL bulunamadı</string>
     <string name="error_url_is_not_supported">URL desteklenmiyor</string>
     <string name="error_failed_to_download_product">Ürün indirilemedi</string>
@@ -214,77 +201,141 @@
         <item quantity="one">%1$d kalori aşıldı</item>
         <item quantity="other">%1$d kalori aşıldı</item>
     </plurals>
-    <string name="description_calories_goal">Günlük kalori alım hedefinizi belirleyin. Bu, ilerlemenizi takip etmenize ve yolda kalmanıza yardımcı olacaktır.</string>
-    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Ürün kalıcı olarak silinecek. Bu işlem geri alınamaz. Bu ürünle ilgili tüm günlük girişleri silinecektir.</string>
+    <plurals name="negative_exceeded_by_kilojoules">
+        <item quantity="one">%1$d kilojul aşıldı</item>
+        <item quantity="other">%1$d kilojul aşıldı</item>
+    </plurals>
+    <string name="description_delete_food">Yiyecek kalıcı olarak silinecek</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Bu giriş günlüğünüzden silinecek. İstediğiniz zaman tekrar ekleyebilirsiniz.</string>
     <string name="description_about_setting">Uygulama hakkında daha fazla bilgi edinin</string>
-    <string name="description_time_based_meals_sorting">Etkinleştirildiğinde, şu anda gerçekleşen öğünler önce gösterilecektir</string>
-    <string name="description_action_ignore_all_day_meals">Tüm gün öğünleri listenin sonunda gösterilecektir</string>
-    <string name="description_incomplete_nutrition_data">Kullanılan ürünlerden bazıları bu değere sahip değil; bu nedenle, gösterilen değer doğru olmayabilir</string>
-    <string name="description_translation_warning">Çeviriler gönüllüler tarafından oluşturulur. Mükemmel olmayabilir ve bazı çeviriler eksik olabilir. Herhangi bir hata fark ederseniz, bunları geliştirmeye yardımcı olmaktan çekinmeyin.</string>
-    <string name="description_changelog">Uygulamada nelerin yeni olduğunu görün</string>
+    <string name="description_time_based_meals_sorting">Etkinleştirildiğinde, o anki öğünler önce görüntülenir</string>
+    <string name="description_action_ignore_all_day_meals">Tüm gün öğünleri listenin sonunda görüntülenecek</string>
+    <string name="description_incomplete_nutrition_data">Kullanılan bazı ürünlerde bu değer eksik; bu nedenle görüntülenen değer doğru olmayabilir</string>
+    <string name="description_translation_warning">Çeviriler gönüllüler tarafından yapılmaktadır. Mükemmel olmayabilirler ve bazı çeviriler eksik olabilir. Herhangi bir hata fark ederseniz, onları geliştirmeye yardımcı olmaktan çekinmeyin.</string>
+    <string name="description_changelog">Uygulamadaki yenilikleri görün</string>
     <string name="description_home_settings">Ana sayfanızı özelleştirin</string>
-    <string name="description_download_product">Bir gıda ürününe bağlantı yapıştırın ve besin değerlerini ve ürün ayrıntılarını otomatik olarak getirin.</string>
+    <string name="description_download_product">Bir gıda ürününe bağlantı yapıştırın ve besin değerlerini ve ürün ayrıntılarını otomatik olarak alın.</string>
     <string name="description_download_product_hint">Herhangi bir metin yapıştırabilirsiniz. İlk URL kullanılacaktır.</string>
-    <string name="description_import_and_export">Verilerinizi kaydedin ve yükleyin</string>
-    <string name="description_import_and_export_hint">Tüm veri senkronizasyon işlemleri arka planda çalışır. Tamamlandığında size bildirilecektir.</string>
-    <string name="description_experimental_feature">Bu bir deneysel özelliktir. Gelecek sürümlerde değişebilir veya kaldırılabilir.</string>
-    <string name="description_notifications_permission_required_data_sync">Veri senkronizasyon ilerlemesini göstermek için bildirim izni gereklidir. Lütfen uygulama ayarlarında etkinleştirin.</string>
     <string name="description_show_macronutrients_goals">Makro besin hedeflerini göster</string>
-    <string name="description_recipe_missing_ingredients">Burada her tarifi göremeyebilirsiniz. Döngüsel referansları önlemek için bazı tarifler gizlenmiştir.</string>
     <string name="description_please_wait_while_importing_products">Ürünler içe aktarılırken lütfen bekleyin</string>
-    <string name="description_suggest_external_database">Dahil edilmek üzere halka açık bir veritabanı önerin</string>
-    <string name="headline_launcher_icon_by_icons8">Başlatıcı simgesi Icons8 tarafından</string>
-    <string name="description_open_food_facts">Dünya çapında gıda ürünlerinin işbirlikçi, ücretsiz ve açık bir veritabanı</string>
+    <string name="description_please_wait_while_exporting_products">Ürünler dışa aktarılırken lütfen bekleyin</string>
+    <string name="headline_launcher_icon_by_icons8">Başlatıcı simgesi Icons8 tarafından yapılmıştır</string>
+    <string name="description_open_food_facts">Dünyanın dört bir yanından gıda ürünlerinin ortak, ücretsiz ve açık bir veritabanı</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Ürünler dışa aktarılıyor</string>
-    <string name="notification_exporting_products_success">Ürünler dışa aktarıldı</string>
-    <string name="notification_exporting_products_failure">Ürün dışa aktarma başarısız</string>
     <string name="notification_importing_products">Ürünler içe aktarılıyor</string>
-    <string name="notification_importing_products_success">Ürünler içe aktarıldı</string>
-    <string name="notification_importing_products_failure">Ürün içe aktarma başarısız</string>
-    <string name="notification_data_sync_channel_name">Veri senkronizasyonu</string>
-    <string name="notification_data_sync_progress_channel_name">Veri senkronizasyon ilerlemesi</string>
+    <string name="notification_importing_products_success">Ürünlerin içe aktarımı tamamlandı</string>
     <string name="description_food_data_central_usda">FoodData Central, USDA'nın birden çok farklı veri türüne sahip kapsamlı gıda bileşimi veri kaynağıdır</string>
-    <string name="error_usda_rate_limit">Food Data Central (USDA) API oran limiti aşıldı</string>
-    <string name="error_usda_rate_limit_description">İzin verilen istek sayısını aştınız. Lütfen tekrar denemeden önce bekleyin veya bir anahtar almak için kaydolun.</string>
-    <string name="description_swiss_food_composition_database">Yemek listenizi, İngilizce, Almanca, Fransızca veya İtalyanca dillerinde 1.100'den fazla yiyeceği içeren İsviçre Gıda Kompozisyon Veritabanı'nı ekleyerek genişletebilirsiniz.</string>
-    <string name="description2_swiss_food_composition_database">İsviçre Gıda Bileşimi Veritabanı, 1.100'den fazla genel gıda ürünü için besin bilgilerini içerir. Dört dilde mevcuttur. Bu ürünleri gıda günlüğünüze aktarmak için lütfen tercih ettiğiniz dili seçin.</string>
-    <string name="description3_swiss_food_composition_database">Gıda veritabanınız, İsviçre Gıda Bileşimi Veritabanı'ndan 1.100 ürünle doldurulacaktır</string>
-    <string name="headline_external_databases">Harici Veritabanları</string>
-    <string name="description_external_databases">Desteklenen veritabanlarını görün</string>
-    <string name="feature_share_url_with_food_you">URL'yi Food You ile Paylaş</string>
-    <string name="feature_in_app_download">Uygulama İçi İndirme</string>
-    <string name="feature_manual_database_import">Manuel Veritabanı İçe Aktarma</string>
-    <string name="action_unpack" description="Unpack the recipe ingredients">Paketten çıkar</string>
-    <string name="headline_sponsor">Sponsor</string>
-    <string name="description_sponsor_short">Her türlü katkı memnuniyetle karşılanır</string>
-    <string name="description_sponsor_1">Her dokunuşun izlendiği ve her özelliğin ödeme duvarı ardına kilitlendiği bir dünyada, bu yemek takipçisi farklı. Reklam yok. Abonelik yok. Gözetleme yok.</string>
-    <string name="description_sponsor_2">Yararlı araçların ücretsiz, açık ve gizliliğinize saygılı olması gerektiği inancıyla geliştirilen bu uygulama, uygulama mağazalarına hâkim olan sömürücü modellere karşı sessiz bir duruş sergiliyor.</string>
-    <string name="description_sponsor_3">Eğer bu sizin için önemliyse, bağış yapmayı düşünebilirsiniz. Bağışlarınız, projenin tam zamanlı geliştirilmesini doğrudan destekler.</string>
+    <string name="error_usda_rate_limit">FoodData Central (USDA) API istek limiti aşıldı</string>
+    <string name="description_swiss_food_composition_database_short">İsviçre Gıda Bileşimi Veritabanı, 1.100'den fazla genel gıda ürünü için besin bilgileri içerir</string>
+    <string name="description2_swiss_food_composition_database">İsviçre Gıda Bileşimi Veritabanı, 1.100'den fazla genel gıda ürünü için besin bilgileri içerir. Dört dilde mevcuttur. Bu ürünleri yemek günlüğünüze aktarmak için lütfen tercih ettiğiniz dilleri seçin.</string>
+    <string name="headline_external_databases">Harici veritabanları</string>
+    <string name="description_external_databases">Desteklenen veritabanlarına göz atın</string>
+    <string name="feature_share_url_with_food_you">URL'yi Food You ile paylaş</string>
+    <string name="feature_in_app_download">Uygulama içi indirme</string>
+    <string name="feature_in_app_search">Uygulama içi arama</string>
+    <string name="feature_manual_database_import">Manuel veritabanı içe aktarma</string>
+    <string name="action_unpack" description="Unpack the recipe ingredients">Malzemelere ayır</string>
+    <string name="headline_sponsor">Sponsor ol</string>
+    <string name="description_sponsor_short">Her türlü katkıya açığız</string>
+    <string name="description_sponsor_short_2">Uygulamanın gelişimini destekleyin</string>
+    <string name="description_sponsor_1">Her dokunuşun izlendiği ve her özelliğin bir ödeme duvarının arkasına kilitlendiği bir dünyada, bu yemek takip uygulaması farklı. Reklam yok. Abonelik yok. Gözetim yok.</string>
+    <string name="description_sponsor_2">Yararlı araçların ücretsiz, açık ve gizliliğinize saygılı olması gerektiği inancıyla geliştirilen bu uygulama, uygulama mağazalarına hakim olan sömürücü modellere karşı sessiz bir duruş sergiliyor.</string>
+    <string name="description_sponsor_3">Bu sizin için önemliyse, destek olmayı düşünün. Projenin tam zamanlı gelişimini doğrudan desteklemiş olursunuz.</string>
     <string name="headline_source_code">Kaynak kodu</string>
-    <string name="description_source_code">Projenin kaynak kodunu GitHub'da görüntüle</string>
+    <string name="description_source_code">Projenin kaynak kodunu GitHub'da görüntüleyin</string>
     <string name="action_write_an_email">E-posta yaz</string>
     <string name="headline_contact">İletişim</string>
-    <string name="description_sponsor_contact">Bağışlarla ilgili herhangi bir talebiniz varsa, lütfen bana e-posta veya GitHub üzerinden ulaşmaktan çekinmeyin.</string>
+    <string name="description_sponsor_contact">Sponsorlukla ilgili herhangi bir talebiniz varsa, e-posta veya GitHub aracılığıyla benimle iletişime geçmekten çekinmeyin.</string>
     <string name="sponsor_bank_or_card">Banka hesabı veya kredi kartı</string>
-    <string name="action_treat_as_liquid">Sıvı olarak kabul et</string>
-    <string name="description_treat_as_liquid">Ölçüm yaparken mililitre kullanmayı tercih et</string>
+    <string name="action_treat_as_liquid">Sıvı olarak değerlendir</string>
+    <string name="description_treat_as_liquid">Ölçüm yaparken mililitreyi tercih et</string>
     <string name="headline_personalization">Kişiselleştirme</string>
     <string name="description_personalization">Deneyiminizi özelleştirin</string>
-    <string name="headline_nutrition_facts">Besin bilgileri</string>
-    <string name="description_personalize_nutrition_facts">Hangi besin detaylarıyla ilgileniyorsunuz? Ayrıca bunların görünme sırasını da seçebilirsiniz.</string>
-    <string name="description_personalize_nutrition_facts_help">Açmak/kapatmak için dokunun, yeniden sıralamak için sürükleyin</string>
-    <string name="description_personalize_nutrition_facts_short">Besin bilgilerini gizle, sıralamayı değiştir</string>
+    <string name="headline_nutrition_facts">Besin değerleri</string>
+    <string name="description_personalize_nutrition_facts_short">Besin bilgilerini yeniden düzenleyin</string>
     <string name="action_reset_ordering">Sıralamayı sıfırla</string>
     <string name="headline_reset_to_default">Varsayılana sıfırla</string>
     <string name="action_reset" description="Confirm resetting">Sıfırla</string>
-    <string name="description_reset_nutrition_facts">Besin bilgileri kişiselleştirmesini varsayılana sıfırla</string>
-    <string name="description_warning_nutrition_facts_1">Enerji, protein, karbonhidrat veya yağları devre dışı bırakmak önerilmez. Bunlar, genel beslenme dengesini takip etmek için temel besin maddeleridir.</string>
-    <string name="description_warning_nutrition_facts_2">İsterseniz yine de devre dışı bırakabilirsiniz — sadece bu, yemek günlüğünüzün faydasını sınırlayabilir, bunu bilin.</string>
-    <string name="headline_enabled" description="Label indicating that something is currently enabled">Etkin</string>
-    <string name="headline_disabled" description="Label indicating that something is currently disabled">Devre dışı</string>
+    <string name="description_reset_nutrition_facts">Besin değerleri kişiselleştirmesini varsayılana sıfırla</string>
     <string name="headline_note">Not</string>
-    <string name="description_add_note">Yemeğe eklemek istediğiniz ekstra bilgiler</string>
-    <string name="headline_extra" description="Something that is not a part of the main thing, additional information">Ekstra</string>
+    <string name="description_add_note">İsteğe bağlı notlar (ör. malzemeler, vegan durumu, alerjenler, katkı maddeleri) veya besin dışı diğer ayrıntılar</string>
+    <string name="headline_now" description="Current time, now">Şimdi</string>
+    <string name="action_try_again">Tekrar dene</string>
+    <string name="description_calories_are_calculated">Enerji, makro besinlerden otomatik olarak hesaplanır. İsterseniz bu özelliği devre dışı bırakıp değeri manuel olarak girebilirsiniz. Alkol hesaplamaya dahil edilmez.</string>
+    <string name="x_kcal_per_g">%1$s %2$d kkal/g</string>
+    <string name="neutral_an_error_occurred">Bir hata oluştu</string>
+    <string name="action_retry">Yeniden dene</string>
+    <string name="action_import">İçe aktar</string>
+    <string name="headline_today" description="Today, date">Bugün, %1$s</string>
+    <string name="headline_yesterday" description="Yesterday, date">Dün, %1$s</string>
+    <string name="headline_tomorrow" description="Tomorrow, date">Yarın, %1$s</string>
+    <string name="headline_user" description="User, person who uses the app">Kullanıcı</string>
+    <string name="description_food_source">Yiyecek verilerinin nereden geldiğini belirtin. Buraya bir bağlantı ekleyebilirsiniz</string>
+    <string name="thank_you_for_your_support">Desteğiniz için teşekkür ederiz!</string>
+    <string name="error_food_is_missing_required_fields">Yiyecekte gerekli alanlar eksik</string>
+    <string name="headline_preview_release">Önizleme sürümü</string>
+    <string name="description_preview_release">Şu anda bir önizleme sürümü kullanıyorsunuz. Eksik, kararsız veya değişikliğe tabi olabilir.</string>
+    <string name="headline_your_food">Yiyeceklerin</string>
+    <string name="headline_filters">Filtreler</string>
+    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">Malzeme seç</string>
+    <string name="headline_edit_recipe">Tarifi düzenle</string>
+    <string name="description_delete_ingredient">Malzeme tariften kaldırılacak</string>
+    <string name="neutral_remote_database_error">Uzak veritabanından ürün indirilemedi. Daha önce indirdiğiniz ürünleri yine de görüntüleyebilirsiniz.</string>
+    <string name="headline_before_you_start">Başlamadan önce</string>
+    <string name="description_before_you_start">Size ücretsiz ve açık kaynaklı bir yemek günlüğü sunmak için gizliliğinize her şeyden çok önem veriyoruz. Bu uygulama hiçbir kişisel bilgiyi toplamaz, saklamaz veya paylaşmaz. Girdileriniz yerel olarak cihazınıza kaydedilir ve tamamen sizin kontrolünüz altında kalır.</string>
+    <string name="action_agree_and_continue">Kabul Et ve Devam Et</string>
+    <string name="headline_food_database">Gıda veritabanı</string>
+    <string name="description_food_database">Kendi şartları ve gizlilik politikaları olabilecek bu isteğe bağlı harici hizmetleri kullanıp kullanmamayı seçebilirsiniz</string>
+    <string name="action_skip">Atla</string>
+    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Kullanım Koşulları:https://world.openfoodfacts.org/terms-of-use} ve {Gizlilik Politikası:https://world.openfoodfacts.org/privacy}</string>
+    <string name="usda_privacy_policy">{Gizlilik Politikası:https://www.usda.gov/privacy-policy}</string>
+    <string name="headline_almost_done">Neredeyse bitti!</string>
+    <string name="headline_preparing_your_food_diary">Yemek günlüğünüz hazırlanıyor</string>
+    <string name="headline_please_wait">Lütfen bekleyin</string>
+    <string name="headline_created">Oluşturuldu</string>
+    <string name="headline_imported">İçe aktarıldı</string>
+    <string name="headline_downloaded">İndirildi</string>
+    <string name="headline_edited">Düzenlendi</string>
+    <string name="headline_history">Geçmiş</string>
+    <string name="action_allow_only_once">Sadece bir kez</string>
+    <string name="action_allow_always">Her zaman izin ver</string>
+    <string name="description_sponsors_external_server">En son sponsorları görüntülemek için harici sunucumuzdan güncel verileri almamız gerekiyor</string>
+    <string name="headline_anonymous">Anonim</string>
+    <string name="headline_recent">Son kullanılanlar</string>
+    <string name="headline_database">Veritabanı</string>
+    <string name="description_manage_database">Veritabanınızı yönetin</string>
+    <string name="action_done">Bitti</string>
+    <string name="neutral_measurement_added">Anlaşıldı! Ölçümünüzü ekledik</string>
+    <string name="headline_imported_from_food_you_2">Food You 2'den içe aktarıldı</string>
+    <string name="action_set_goals">Hedefleri belirle</string>
+    <string name="action_fix_it">Düzelt</string>
+    <string name="error_total_energy_not_matching">Proteinlerinizden, karbonhidratlarınızdan ve yağlarınızdan gelen toplam enerji, günlük enerji hedefinizle uyuşmuyor</string>
+    <string name="neutral_set_energy_manually">Enerjiyi manuel olarak ayarlamak istiyorum</string>
+    <string name="description_energy_is_calculated_automatically">Enerji, makro besinlere göre otomatik olarak hesaplanır</string>
+    <string name="headline_pick_the_days">Günleri seçin</string>
+    <string name="action_set_separate_goals">Her gün için ayrı hedefler belirleyin</string>
+    <string name="headline_percentages">Yüzdeler</string>
+    <string name="headline_database_dump">Veritabanı dökümü</string>
+    <string name="description_database_dump">SQL veritabanınızı bir dosyaya aktarın</string>
+    <string name="neutral_generating_database_dump">Veritabanı dökümü oluşturuluyor</string>
+    <string name="neutral_database_dump_generated_successfully">Veritabanı dökümü başarıyla oluşturuldu</string>
+    <string name="error_failed_to_generate_database_dump">Veritabanı dökümü oluşturulamadı</string>
+    <string name="action_import_csv_food_products">CSV gıda ürünlerini içe aktar</string>
+    <string name="description_import_csv_food_products">CSV dosyasından gıda ürünlerini içe aktar</string>
+    <string name="description_import_csv_food_products_hint">Sadece neyin ne olduğunu bilmemiz gerekiyor. Dosyanızdaki hangi sütunun ürün adı, marka vb. olduğunu bize söyleyin.</string>
+    <string name="description_import_csv_food_products_hint_2">Tüm besin değerleri 100 g başına gram veya kkal olarak verilmelidir</string>
+    <string name="action_export_csv_food_products">CSV gıda ürünlerini dışa aktar</string>
+    <string name="description_export_csv_food_products">Gıda ürünlerini CSV dosyasına aktar</string>
+    <string name="neutral_no_column">Sütun yok</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="one">%1$d gıda ürünü içe aktarıldı</item>
+        <item quantity="other">%1$d gıda ürünü içe aktarıldı</item>
+    </plurals>
+    <string name="headline_energy_unit">Enerji birimi</string>
+    <string name="description_energy_unit">Tercih edilen enerji birimini seçin</string>
+    <plurals name="neutral_exported_x_food_products">
+        <item quantity="one">%1$d gıda ürünü dışa aktarıldı</item>
+        <item quantity="other">%1$d gıda ürünü dışa aktarıldı</item>
+    </plurals>
 </resources>

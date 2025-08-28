@@ -3,12 +3,10 @@
     <string name="not_available_short">N/A</string>
     <string name="headline_create_product">Créer un produit</string>
     <string name="headline_settings">Paramètres</string>
-    <string name="headline_calories_goal">Objectif calorique</string>
     <string name="headline_daily_goals">Objectifs quotidiens</string>
     <string name="headline_general">Général</string>
     <string name="headline_macronutrients">Macronutriments</string>
     <string name="headline_meals">Repas</string>
-    <string name="headline_delete_product">Supprimer un produit</string>
     <string name="headline_edit_product">Modifier le produit</string>
     <string name="headline_permission_required">Autorisation nécessaire</string>
     <string name="headline_language">Langues</string>
@@ -23,7 +21,6 @@
     <string name="headline_product">Produit</string>
     <string name="headline_recipe">Recette</string>
     <string name="headline_create_recipe">Créer une recette</string>
-    <string name="headline_update_recipe">Mise à jour de la recette</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ingrédients</string>
     <string name="headline_summary">Résumé</string>
     <string name="headline_whats_new">Nouveautés</string>
@@ -33,12 +30,13 @@
     <string name="headline_home_settings" description="Home screen settings">Paramètres d'accueil</string>
     <string name="headline_calendar">Calendrier</string>
     <string name="headline_meals_settings">Paramètres des repas</string>
+    <string name="headline_meals_cards_settings">Paramètres des repas</string>
+    <string name="headline_values_per">Valeurs par</string>
     <string name="headline_other">Autre</string>
     <string name="headline_vitamins">Vitamines</string>
     <string name="headline_minerals">Minéraux</string>
-    <string name="headline_copy" description="A noun, thing that is a copy">Copier</string>
+    <string name="headline_daily_goals_settings">Définition des objectifs quotidiens</string>
     <string name="weight">Poids</string>
-    <string name="unit_calories">Calories</string>
     <string name="unit_energy" description="Energy as calories">Énergie</string>
     <string name="unit_kcal">kcal</string>
     <plurals name="unit_gram">
@@ -72,20 +70,8 @@
     <string name="nutriment_omega_3">Acides gras oméga-3</string>
     <string name="nutriment_omega_6">Acides gras oméga-6</string>
     <string name="nutriment_salt">Sel</string>
-    <string name="nutriment_fiber">Fibre</string>
     <string name="nutriment_cholesterol">Cholestérol</string>
     <string name="nutriment_caffeine">Cafféine</string>
-    <string name="vitamin_a">Vitamine A</string>
-    <string name="vitamin_b1">Vitamine B1</string>
-    <string name="vitamin_b2">Vitamine B2</string>
-    <string name="vitamin_b3">Vitamine B3</string>
-    <string name="vitamin_b5">Vitamine B5</string>
-    <string name="vitamin_b6">Vitamine B6</string>
-    <string name="vitamin_b7">Vitamine B7</string>
-    <string name="vitamin_b9">Vitamine B9</string>
-    <string name="vitamin_b12">Vitamine B12</string>
-    <string name="vitamin_c">Vitamine C</string>
-    <string name="vitamin_d">Vitamine D</string>
     <string name="vitamin_e">Vitamine E</string>
     <string name="vitamin_k">Vitamine K</string>
     <string name="mineral_manganese">Manganèse</string>
@@ -116,7 +102,6 @@
     <string name="action_insert_suggested_search">Insérer la recherche suggérée</string>
     <string name="action_edit_entry">Modifier l'entrée</string>
     <string name="action_delete_entry">Supprimer l'entrée</string>
-    <string name="action_undo">Annuler</string>
     <string name="action_close">Fermer</string>
     <string name="action_discard">Rejeter</string>
     <string name="action_translate">Traduire</string>
@@ -133,13 +118,11 @@
     <string name="action_use_time_based_ordering">Classer en fonction de l'horaire</string>
     <string name="action_ignore_all_day_meals">Ignorer les repas de la journée</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Ajouter un ingrédient</string>
-    <string name="action_edit_ingredient_measurement">Modifier la quantité de l'ingrédient</string>
     <string name="action_delete_ingredient">Supprimer l'ingrédient</string>
     <string name="action_download">Télécharger</string>
     <string name="action_paste_url">Coller l'URL</string>
     <string name="action_browse_open_food_facts">Parcourir Open Food Facts</string>
     <string name="action_copy">Copier</string>
-    <string name="action_edit_your_home_page">Modifiez votre page d'accueil</string>
     <string name="action_download_product">Télécharger le produit</string>
     <string name="neutral_barcode_scanner_camera_request">Autoriser l'accès à l'appareil photo pour scanner les codes-barres</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Vous devez autoriser l'accès pour pouvoir scanner les codes-barres.</string>
@@ -148,37 +131,64 @@
         <item quantity="one">%1$d calorie restante</item>
         <item quantity="other">%1$d calories restantes</item>
     </plurals>
-    <string name="neutral_set_your_daily_goals">Définir vos objectifs journaliers</string>
     <string name="neutral_permanently_delete_meal">Supprimer définitivement le repas ?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Le repas sera supprimé définitivement. Toutes les données associées seront perdues.</string>
     <string name="neutral_required">Requis</string>
-    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Les calories sont calculées automatiquement à partir des macronutriments</string>
     <string name="neutral_help_translating_the_app">Contribuer à la traduction de l'app</string>
     <string name="neutral_copied">Info copiée dans le presse-papiers</string>
     <string name="question_discard_product">Abandonner le produit ?</string>
     <string name="question_discard_changes">Abandonner les modifications ?</string>
     <string name="question_discard_recipe">Abandonner la recette ?</string>
-    <string name="error_this_field_is_required">Champ obligatoire</string>
     <string name="error_invalid_number">Nombre invalide</string>
     <string name="error_value_cannot_be_negative">Impossible d'utiliser une valeur négative</string>
-    <string name="error_value_must_be_less_than">La valeur doit être inférieure à %1$s</string>
     <string name="error_value_must_be_integer">La valeur doit être un entier</string>
-    <string name="error_sum_of_percentages_must_be_100">La somme des pourcentages doit être égale à 100</string>
+    <string name="error_product_not_found">Produit introuvable</string>
+    <string name="error_unknown_error">Erreur inconnue</string>
+    <string name="error_measurement_error">Erreur de mesure, veuillez vérifier la portion et la masse sur l'emballage</string>
+    <string name="error_api_key_is_invalid">La clé API n'est pas valide</string>
     <string name="positive_goal_reached">Objectif atteint</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
         <item quantity="one">Dépassé de %1$d calorie</item>
         <item quantity="other">Dépassé de %1$d calories</item>
     </plurals>
-    <string name="description_calories_goal">Définissez votre objectif quotidien de calories. Cela vous aidera à suivre vos progrès et à rester sur la bonne voie.</string>
-    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Le produit sera supprimé définitivement. Cette action est irréversible. Toutes les entrées du journal liées à ce produit seront également supprimées.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Cette entrée sera supprimée de votre journal. Vous pourrez l'ajouter de nouveau à tout moment.</string>
     <string name="description_about_setting">En savoir plus sur l'application</string>
     <string name="description_time_based_meals_sorting">Les repas en cours seront affichés en haut lorsqu'elle est activée</string>
+    <string name="description_action_ignore_all_day_meals">Les repas de toute la journée seront affichés à la fin de la liste</string>
     <string name="description_incomplete_nutrition_data">Certains produits utilisés n'ont pas cette valeur ; la valeur affichée pourrait donc être inexacte</string>
     <string name="description_translation_warning">Les traductions sont réalisées par des bénévoles. Elles peuvent contenir des erreurs ou être incomplètes. Si vous remarquez des erreurs, n'hésitez pas à contribuer à leur amélioration.</string>
     <string name="description_changelog">Voir les nouveautés de l'application</string>
+    <string name="description_home_settings">Personnalisez votre page d'accueil</string>
+    <string name="description_download_product">Collez un lien vers un produit alimentaire et récupérez automatiquement les informations nutritionnelles et les détails du produit.</string>
+    <string name="description_download_product_hint">Vous pouvez coller n'importe quel texte. La première adresse sera utilisée.</string>
     <string name="headline_launcher_icon_by_icons8">Icône de démarrage fournie par Icons8</string>
     <!-- Don't translate changelog strings -->
-    <string name="notification_data_sync_progress_channel_name">Progression de la synchronisation des données</string>
+    <string name="notification_importing_products">Importation de produits</string>
+    <string name="description_food_data_central_usda">FoodData Central est la source complète de données sur la composition des aliments de l'USDA, qui regroupe plusieurs types de données distincts</string>
+    <string name="headline_external_databases">Bases de données externes</string>
+    <string name="feature_share_url_with_food_you">Partager l'adresse avec Food You</string>
+    <string name="feature_in_app_download">Téléchargement dans l'application</string>
+    <string name="feature_manual_database_import">Importation manuelle de la base de données</string>
+    <string name="headline_sponsor">Commanditaire</string>
+    <string name="description_sponsor_short">Les contributions sous toutes leurs formes sont les bienvenues</string>
+    <string name="description_sponsor_1">Dans un monde où chaque clic est suivi et chaque fonctionnalité verrouillée derrière un mur payant, ce suivi alimentaire est différent. Pas de publicité. Pas d'abonnement. Pas de surveillance.</string>
+    <string name="description_sponsor_2">Conçu selon le principe que les outils utiles doivent être gratuits, ouverts et respecter votre vie privée, il s'oppose discrètement aux modèles abusifs qui dominent les boutiques d'applications.</string>
+    <string name="description_sponsor_3">Si cela vous tient à cœur, pensez à apporter votre soutien. Vous contribuerez ainsi directement au développement à plein temps du projet.</string>
+    <string name="headline_source_code">Code source</string>
+    <string name="description_source_code">Consultez le code source du projet sur GitHub</string>
+    <string name="action_write_an_email">Écrire un e-mail</string>
+    <string name="headline_contact">Contact</string>
+    <string name="description_sponsor_contact">Si vous avez des demandes concernant le parrainage, n'hésitez pas à me contacter par e-mail ou via GitHub.</string>
+    <string name="sponsor_bank_or_card">Compte bancaire ou carte de crédit</string>
+    <string name="action_treat_as_liquid">Traiter comme un liquide</string>
+    <string name="description_treat_as_liquid">Préférez les millilitres pour mesurer</string>
+    <string name="headline_personalization">Personnalisation</string>
+    <string name="description_personalization">Personnalisez votre expérience</string>
+    <string name="headline_nutrition_facts">Informations nutritionnelles</string>
+    <string name="action_reset_ordering">Réinitialiser l'ordre</string>
+    <string name="headline_reset_to_default">Réinitialiser les paramètres par défaut</string>
+    <string name="action_reset" description="Confirm resetting">Réinitialiser</string>
+    <string name="description_reset_nutrition_facts">Réinitialiser les informations nutritionnelles personnalisées aux valeurs par défaut</string>
+    <string name="headline_note">Notes</string>
 </resources>

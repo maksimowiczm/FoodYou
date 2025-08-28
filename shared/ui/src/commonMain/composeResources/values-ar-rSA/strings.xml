@@ -3,12 +3,10 @@
     <string name="not_available_short">مجهول</string>
     <string name="headline_create_product">إنشاء منتج</string>
     <string name="headline_settings">الإعدادات</string>
-    <string name="headline_calories_goal">السعرات الحرارية الهدف</string>
     <string name="headline_daily_goals">الأهداف اليومية</string>
     <string name="headline_general">عام</string>
     <string name="headline_macronutrients">المغذيات الكبرى</string>
     <string name="headline_meals">الوجبات</string>
-    <string name="headline_delete_product">حذف منتج</string>
     <string name="headline_edit_product">تعديل منتج</string>
     <string name="headline_permission_required">الإذن مطلوب</string>
     <string name="headline_language">اللغة</string>
@@ -23,12 +21,9 @@
     <string name="headline_product">منتج</string>
     <string name="headline_recipe">وصفة</string>
     <string name="headline_create_recipe">إنشاء وصفة</string>
-    <string name="headline_update_recipe">تحديث وصفة</string>
     <string name="headline_ingredients" description="Recipe ingredients">المكونات</string>
     <string name="headline_summary">ملخص</string>
-    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">في %1$s</string>
     <string name="weight">الوزن</string>
-    <string name="unit_calories">السعرات الحرارية</string>
     <string name="unit_kcal">كيلو سعرة حرارية</string>
     <plurals name="unit_gram">
         <item quantity="zero">جرام</item>
@@ -64,7 +59,6 @@
     <string name="nutriment_fats_short">F</string>
     <string name="nutriment_saturated_fats">دهون مشبعة</string>
     <string name="nutriment_salt">أملاح</string>
-    <string name="nutriment_fiber">ألياف</string>
     <string name="action_search">بحث</string>
     <string name="action_scan_barcode">مسح الباركود</string>
     <string name="action_add">إضافة</string>
@@ -82,7 +76,6 @@
     <string name="action_insert_suggested_search">إدراج البحث المقترح</string>
     <string name="action_edit_entry">تعديل المدخل</string>
     <string name="action_delete_entry">حذف المدخل</string>
-    <string name="action_undo">تراجع</string>
     <string name="action_close">إغلاق</string>
     <string name="action_discard">تجاهل</string>
     <string name="action_translate">ترجم</string>
@@ -98,7 +91,6 @@
     <string name="action_move_down" description="reorder list item down">انقل للأسفل</string>
     <string name="action_use_time_based_ordering">استخدم ترتيب حسب الوقت</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">إضافة مكون</string>
-    <string name="action_edit_ingredient_measurement">تعديل وحدة قياس المكون</string>
     <string name="action_delete_ingredient">حذف مكون</string>
     <string name="neutral_barcode_scanner_camera_request">السماح بالوصول إلى كاميراتك لمسح الباركودات</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">يجب عليك السماح بالوصول حتى تتمكن من مسح الباركود</string>
@@ -111,22 +103,17 @@
         <item quantity="many">%1$d calories left</item>
         <item quantity="other">%1$d سعرة متبقية</item>
     </plurals>
-    <string name="neutral_set_your_daily_goals">حدد أهدافك اليومية</string>
     <string name="neutral_set_your_meal_schedule">حدد موعد وجبتك</string>
     <string name="neutral_permanently_delete_meal">حذف الوجبة نهائيًا؟</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">سُتحذف الوجبة نهائيًا. ستُفقد جميع البيانات المتعلقة بها.</string>
     <string name="neutral_required">مطلوب</string>
-    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">يتم حساب السعرات الحرارية تلقائيًا بناءً على المغذيات الكبرى</string>
     <string name="neutral_help_translating_the_app">المساعدة في ترجمة التطبيق</string>
     <string name="question_discard_product">تجاهل المنتج؟</string>
     <string name="question_discard_changes">تجاهل التغيرات؟</string>
     <string name="question_discard_recipe">تجاهل الوصفة؟</string>
-    <string name="error_this_field_is_required">هذا الحقل مطلوب</string>
     <string name="error_invalid_number">رقم غير صحيح</string>
     <string name="error_value_cannot_be_negative">لا يمكن أن تكون القيمة سالبة</string>
-    <string name="error_value_must_be_less_than">يجب أن تكون القيمة أقل من %1$s</string>
     <string name="error_value_must_be_integer">لابد أن تكون القيمة عددًا صحيحًا</string>
-    <string name="error_sum_of_percentages_must_be_100">يجب أن يكون مجموع النسب المئوية 100</string>
     <string name="positive_goal_reached">حُقق الهدف</string>
     <string name="positive_ok">حسنًا</string>
     <plurals name="negative_exceeded_by_calories">
@@ -137,8 +124,6 @@
         <item quantity="many">Exceeded by %1$d calories</item>
         <item quantity="other">تجاوز %1$d سعرة</item>
     </plurals>
-    <string name="description_calories_goal">حدد هدفك اليومي من السعرات الحرارية. سيساعدك هذا على تتبع تقدمك والالتزام به.</string>
-    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">سيُحذف المنتج نهائيًا. لا يمكن التراجع عن هذا الإجراء. ستُحذف كل السجلات اليومية المتعلقة بهذا المنتج.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database."> ستُحذف هذه المُدخلة من سجلك اليومي. يُمكنك إضافتها مُجددًا في أي وقت.</string>
     <string name="description_about_setting">اعرف المزيد حول التطبيق</string>
     <string name="description_time_based_meals_sorting">عند تفعيلها، ستُعرض الوجبات التي تتناولها حاليًا أولاً</string>

@@ -3,12 +3,10 @@
     <string name="not_available_short">N/A</string>
     <string name="headline_create_product">Criação de produto</string>
     <string name="headline_settings">Configurações</string>
-    <string name="headline_calories_goal">Meta de calorias</string>
     <string name="headline_daily_goals">Metas diárias</string>
     <string name="headline_general">Geral</string>
     <string name="headline_macronutrients">Macronutrientes</string>
     <string name="headline_meals">Refeições</string>
-    <string name="headline_delete_product">Excluir produto</string>
     <string name="headline_edit_product">Editar produto</string>
     <string name="headline_permission_required">Permissão necessária</string>
     <string name="headline_language">Idioma</string>
@@ -23,21 +21,14 @@
     <string name="headline_product">Produto</string>
     <string name="headline_recipe">Receita</string>
     <string name="headline_create_recipe">Criar receita</string>
-    <string name="headline_update_recipe">Atualizar receita</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ingredientes</string>
     <string name="headline_summary">Resumo</string>
     <string name="headline_whats_new">O que há de novo</string>
     <string name="headline_changelog">Changelog</string>
     <string name="headline_installed" description="Installed version of the app">Instalado</string>
-    <string name="headline_import_and_export">Importar e Exportar</string>
-    <string name="headline_experimental" description="Experimental feature">Experimental</string>
-    <string name="headline_experimental_feature">Recurso experimental</string>
-    <string name="headline_copy" description="A noun, thing that is a copy">Copiar</string>
     <string name="headline_something_went_wrong">Opa! Algo deu errado</string>
     <string name="headline_daily_goals_settings">Configurações de objetivos diários</string>
-    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">Em %1$s</string>
     <string name="weight">Peso</string>
-    <string name="unit_calories">Calorias</string>
     <string name="unit_kcal">kcal</string>
     <plurals name="unit_gram">
         <item quantity="one">grama</item>
@@ -66,7 +57,6 @@
     <string name="nutriment_fats_short">G</string>
     <string name="nutriment_saturated_fats">Gorduras saturadas</string>
     <string name="nutriment_salt">Sal</string>
-    <string name="nutriment_fiber">Fibra</string>
     <string name="action_search">Pesquisar</string>
     <string name="action_scan_barcode">Escanear código de barras</string>
     <string name="action_add">Adicionar</string>
@@ -84,7 +74,6 @@
     <string name="action_insert_suggested_search">Inserir pesquisa sugerida</string>
     <string name="action_edit_entry">Editar entrada</string>
     <string name="action_delete_entry">Excluir entrada</string>
-    <string name="action_undo">Desfazer</string>
     <string name="action_close">Fechar</string>
     <string name="action_discard">Descartar</string>
     <string name="action_translate">Traduzir</string>
@@ -100,18 +89,11 @@
     <string name="action_move_down" description="reorder list item down">Mover para baixo</string>
     <string name="action_use_time_based_ordering">Ordenar por tempo</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Adicionar ingredientes</string>
-    <string name="action_edit_ingredient_measurement">Alterar a quantidade do ingrediente</string>
     <string name="action_delete_ingredient">Excluir ingrediente</string>
     <string name="action_download">Download</string>
     <string name="action_paste_url">Colar URL</string>
     <string name="action_browse_open_food_facts">Navegue no Open Food Facts</string>
     <string name="action_copy">Copiar</string>
-    <string name="action_import_food_products">Importar produtos alimentícios</string>
-    <string name="action_import_food_products_from_csv">Importar produtos alimentícios de um arquivo CSV</string>
-    <string name="action_export_food_products">Exportar produtos alimentícios</string>
-    <string name="action_export_food_products_to_csv">Exportar produtos alimentícios para um arquivo CSV</string>
-    <string name="action_share">Compartilhar</string>
-    <string name="action_copy_header" description="Copy CSV file header">Copiar cabeçalho</string>
     <string name="action_copy_and_open_bug_report">Copiar e abrir relatório de erro</string>
     <string name="action_show_details">Mostrar detalhes</string>
     <string name="neutral_barcode_scanner_camera_request">Permitir acesso à sua câmera para escanear códigos de barras</string>
@@ -122,25 +104,18 @@
         <item quantity="one">%1$d caloria restante</item>
         <item quantity="other">%1$d calorias restantes</item>
     </plurals>
-    <string name="neutral_set_your_daily_goals">Defina suas metas diárias</string>
     <string name="neutral_set_your_meal_schedule">Defina sua programação de refeições</string>
     <string name="neutral_permanently_delete_meal">Excluir permanentemente a refeição?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">A refeição será excluída permanentemente. Todos os dados relacionados a essa refeição serão perdidos.</string>
     <string name="neutral_required">Obrigatório</string>
-    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">As calorias são calculadas automaticamente com base nos macronutrientes</string>
     <string name="neutral_help_translating_the_app">Ajude a traduzir o aplicativo</string>
     <string name="neutral_copied">Informações copiadas para a área de transferência</string>
-    <string name="neutral_export_started">Exportação iniciada</string>
-    <string name="neutral_import_started">Importação iniciada</string>
     <string name="question_discard_product">Descartar o produto?</string>
     <string name="question_discard_changes">Descartar alterações?</string>
     <string name="question_discard_recipe">Descartar receita?</string>
-    <string name="error_this_field_is_required">Este campo é obrigatório</string>
     <string name="error_invalid_number">Número inválido</string>
     <string name="error_value_cannot_be_negative">O valor não pode ser negativo</string>
-    <string name="error_value_must_be_less_than">O valor deve ser menor que %1$s</string>
     <string name="error_value_must_be_integer">O valor deve ser um número inteiro</string>
-    <string name="error_sum_of_percentages_must_be_100">A soma das porcentagens deve ser 100</string>
     <string name="error_measurement_error">Erro de medição, verifique a porção e o peso da embalagem</string>
     <string name="positive_goal_reached">Meta alcançada</string>
     <string name="positive_ok">OK</string>
@@ -148,28 +123,15 @@
         <item quantity="one">Excedido em %1$d caloria</item>
         <item quantity="other">Excedido em %1$d calorias</item>
     </plurals>
-    <string name="description_calories_goal">Defina sua meta de ingestão diária de calorias. Isso o ajudará a acompanhar seu progresso e a se manter no caminho certo.</string>
-    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">O produto será excluído permanentemente. Essa ação não pode ser desfeita. Todas as entradas do diário relacionadas a esse produto serão excluídas.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Essa entrada será excluída de seu diário. Você pode adicioná-la novamente a qualquer momento.</string>
     <string name="description_about_setting">Saiba mais sobre o aplicativo</string>
     <string name="description_time_based_meals_sorting">Quando ativado, as refeições que estão acontecendo no momento serão exibidas primeiro</string>
     <string name="description_incomplete_nutrition_data">Alguns dos produtos usados não têm esse valor; portanto, o valor exibido pode não ser exato</string>
     <string name="description_translation_warning">As traduções são feitas por voluntários. Elas podem não ser perfeitas e podem estar faltando algumas traduções. Se você notar algum erro, não hesite em ajudar a melhorá-las.</string>
     <string name="description_changelog">Veja o que há de novo no aplicativo</string>
-    <string name="description_import_and_export">Salve e carregue seus dados</string>
-    <string name="description_import_and_export_hint">Todas as operações de sincronização de dados são executadas em segundo plano. Você será notificado quando forem concluídas.</string>
-    <string name="description_experimental_feature">Isto é um recurso experimental. Poderá ser alterado ou removido em versões futuras.</string>
-    <string name="description_notifications_permission_required_data_sync">A permissão de notificação é necessária para exibir o progresso da sincronização de dados. Por favor, habilite-a nas configurações do aplicativo.</string>
     <string name="description_show_macronutrients_goals">Mostrar os objetivos de macronutrientes</string>
-    <string name="description_recipe_missing_ingredients">Talvez você não veja todas as receitas aqui. Algumas receitas estão ocultas para evitar referências circulares.</string>
     <string name="headline_launcher_icon_by_icons8">Ícone da aplicação por Icons8</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Exportando produtos</string>
-    <string name="notification_exporting_products_success">Exportação de produtos concluída</string>
-    <string name="notification_exporting_products_failure">Exportação de produtos falhou</string>
     <string name="notification_importing_products">Importando produtos</string>
-    <string name="notification_importing_products_success">Importação de produtos concluída</string>
-    <string name="notification_importing_products_failure">Importação de produtos falhou</string>
-    <string name="notification_data_sync_channel_name">Sincronização de dados</string>
-    <string name="notification_data_sync_progress_channel_name">Progresso da sincronização de dados</string>
 </resources>

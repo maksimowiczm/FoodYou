@@ -2,14 +2,14 @@
 
 <b>Merkmale:</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
-    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
-    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
-    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
+    <li><b>Material You Design:</b> Dynamisches Theme das sich für eine nahtlose visuelle Erfahrung an dein Gerät anpasst.</li>
+    <li><b>Umfassende Lebensmittel Datenbank:</b> Greife auf Ernährungsdaten von Open Food Facts, USDA Food Central und der Swiss Food Composition Datenbank zu.</li>
+    <li><b>Vollumfassendes Ernährungstracking:</b> Überwache Kalorien, Makronährstoffe, Vitamine, Mineralien und mehr.</li>
+    <li><b>Rezept Erstellung:</b> Kombiniere Lebensmittel in benutzerdefinierte Rezepte mit automatischer Nährwertberechnung.</li>
     <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
-    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
+    <li><b>Modularer Homescreen:</b> Personalisiere deinen Homescreen mit auf deine Bedürfnisse zugeschnittene Karten.</li>
 </ul>
 
-Start tracking your nutrition today with Food You — clean, complete, and fully yours.
+Beginne heute deine Ernährung mit Food You zu tracken - clean, vollständig und ganz deines.
 
 Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

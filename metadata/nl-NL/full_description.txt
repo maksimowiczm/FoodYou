@@ -1,15 +1,15 @@
-<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
+<b>Food You</b> is een krachtige, open-source voeding tracker, gebouwd met een modern Material You uiterlijk. Het helpt je om niet alleen calorieën bij te houden, maar jouw hele voedingsinname - met betrouwbare voedingsdata en een flexibel en modulair interface.
 
 <b>Functies:</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
-    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
-    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
-    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
-    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
-    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
+    <li><b>Material You ontwerp:</b> Dynamisch thema dat zich aanpast aan uw apparaat voor een naadloze visuele ervaring.</li>
+    <li><b>Uitgebreide voeding databases:</b> Krijg toegang tot voedingsgegevens van Open Food Facts, USDA FoodCentral en de Swiss Food Composition Database.</li>
+    <li><b>Volledige voedingsregistratie:</b> Houdt calorieën, macros, vitaminen, mineralen en meer bij.</li>
+    <li><b>Recepten maken:</b> Maak aangepaste recepten met automatische voedingsberekeningen.</li>
+    <li><b>Dagelijkse doelen: </b> Stel persoonlijke voedingsdoelen en volg deze. </li>
+    <li><b>Aanpasbaar Home scherm:</b> Pas jouw Home scherm aan met kaarten, volledig naar jouw behoeften.</li>
 </ul>
 
-Start tracking your nutrition today with Food You — clean, complete, and fully yours.
+Begin vandaag nog met het bijhouden van jouw voeding met Food You - netjes, compleet en helemaal van jou.
 
-Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Launcher icoon gemaakt door <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

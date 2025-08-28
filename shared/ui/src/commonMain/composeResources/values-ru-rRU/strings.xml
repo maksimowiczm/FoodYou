@@ -3,19 +3,18 @@
     <string name="not_available_short">Н/Д</string>
     <string name="headline_create_product">Создать продукт</string>
     <string name="headline_settings">Настройки</string>
-    <string name="headline_calories_goal">Цель по калорийности</string>
-    <string name="headline_daily_goals">Дневные цели</string>
-    <string name="headline_general">Общие</string>
+    <string name="headline_daily_goals">Ежедневные цели</string>
+    <string name="headline_general">Общее</string>
     <string name="headline_macronutrients">Макронутриенты</string>
     <string name="headline_meals">Приемы пищи</string>
-    <string name="headline_delete_product">Удалить продукт</string>
+    <string name="headline_delete_food">Удалить продукт питания</string>
     <string name="headline_edit_product">Изменить продукт</string>
     <string name="headline_permission_required">Требуется разрешение</string>
     <string name="headline_language">Язык</string>
     <string name="headline_system">Система</string>
     <string name="headline_system_language_settings">Системные настройки языка</string>
-    <string name="headline_secure_screen">Защищенный экран</string>
-    <string name="headline_about">Дополнительно</string>
+    <string name="headline_secure_screen">Защита экрана</string>
+    <string name="headline_about">О приложении</string>
     <string name="headline_version">Версия</string>
     <string name="headline_all_day" description="All-day (meal)">Весь день</string>
     <string name="headline_time_based_ordering">Сортировка по времени</string>
@@ -23,8 +22,7 @@
     <string name="headline_product">Продукт</string>
     <string name="headline_recipe">Рецепт</string>
     <string name="headline_create_recipe">Создать рецепт</string>
-    <string name="headline_update_recipe">Обновить рецепт</string>
-    <string name="headline_ingredients" description="Recipe ingredients">Ингридиенты</string>
+    <string name="headline_ingredients" description="Recipe ingredients">Ингредиенты</string>
     <string name="headline_summary">Итого</string>
     <string name="headline_whats_new">Что нового</string>
     <string name="headline_changelog">Журнал изменений</string>
@@ -41,32 +39,29 @@
     <string name="headline_vitamins">Витамины</string>
     <string name="headline_minerals">Минералы</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">Поддерживаемые URL-адреса</string>
-    <string name="headline_import_and_export">Импорт и экспорт</string>
-    <string name="headline_experimental" description="Experimental feature">Экспериментально</string>
-    <string name="headline_experimental_feature">Экспериментальная функция</string>
-    <string name="headline_copy" description="A noun, thing that is a copy">Скопировать</string>
     <string name="headline_something_went_wrong">Упс! Что-то пошло не так</string>
-    <string name="headline_daily_goals_settings">Настройки дневных целей</string>
+    <string name="headline_daily_goals_settings">Настройки ежедневных целей</string>
     <string name="headline_api_key">API ключ</string>
     <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Источник</string>
     <string name="headline_features">Возможности</string>
-    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">В %1$s</string>
     <string name="weight">Вес</string>
-    <string name="unit_calories">Калории</string>
-    <string name="unit_energy" description="Energy as calories">Калорийность</string>
+    <string name="unit_energy" description="Energy as calories">Энергетическая ценность</string>
     <string name="unit_kcal">ккал</string>
+    <string name="unit_kilojoules">кДж</string>
     <plurals name="unit_gram">
-        <item quantity="one">г</item>
-        <item quantity="few">г</item>
-        <item quantity="many">г</item>
-        <item quantity="other">г</item>
+        <item quantity="one">грамм</item>
+        <item quantity="few">грамма</item>
+        <item quantity="many">грамм</item>
+        <item quantity="other">грамма</item>
     </plurals>
     <plurals name="unit_milliliter">
-        <item quantity="one">мл</item>
-        <item quantity="few">мл</item>
-        <item quantity="many">мл</item>
-        <item quantity="other">мл</item>
+        <item quantity="one">миллилитр</item>
+        <item quantity="few">миллилитра</item>
+        <item quantity="many">миллилитров</item>
+        <item quantity="other">миллилитра</item>
     </plurals>
+    <string name="unit_ounce_short">oz</string>
+    <string name="unit_fluid_ounce_short">fl oz</string>
     <string name="product_package_weight">Вес упаковки</string>
     <string name="product_package">Упаковка</string>
     <string name="product_serving_weight">Вес порции</string>
@@ -90,20 +85,24 @@
     <string name="nutriment_omega_3">Омега-3 жирные кислоты</string>
     <string name="nutriment_omega_6">Омега-6 жирные кислоты</string>
     <string name="nutriment_salt">Соль</string>
-    <string name="nutriment_fiber">Клетчатка</string>
+    <string name="nutriment_fiber">Пищевые волокна</string>
     <string name="nutriment_cholesterol">Холестерин</string>
     <string name="nutriment_caffeine">Кофеин</string>
-    <string name="vitamin_a">Витамин A</string>
-    <string name="vitamin_b1">Витамин B1</string>
-    <string name="vitamin_b2">Витамин B2</string>
-    <string name="vitamin_b3">Витамин B3</string>
-    <string name="vitamin_b5">Витамин B5</string>
-    <string name="vitamin_b6">Витамин B6</string>
-    <string name="vitamin_b7">Витамин B7</string>
-    <string name="vitamin_b9">Витамин B9</string>
-    <string name="vitamin_b12">Витамин B12</string>
-    <string name="vitamin_c">Витамин C</string>
-    <string name="vitamin_d">Витамин D</string>
+    <string name="nutriment_trans_fats">Трансжиры</string>
+    <string name="nutriment_added_sugars">Добавленный сахар</string>
+    <string name="nutriment_soluble_fiber">Растворимая клетчатка</string>
+    <string name="nutriment_insoluble_fiber">Нерастворимая клетчатка</string>
+    <string name="vitamin_a">Витамин А (Ретинол)</string>
+    <string name="vitamin_b1">Витамин B1 (Тиамин)</string>
+    <string name="vitamin_b2">Витамин B2 (Рибофлавин)</string>
+    <string name="vitamin_b3">Витамин B3 (Ниацин)</string>
+    <string name="vitamin_b5">Витамин B5 (Пантотеновая кислота)</string>
+    <string name="vitamin_b6">Витамин B6 (Пиридоксин)</string>
+    <string name="vitamin_b7">Витамин B7 (Биотин)</string>
+    <string name="vitamin_b9">Витамин B9 (Фолат)</string>
+    <string name="vitamin_b12">Витамин B12 (Кобаламины)</string>
+    <string name="vitamin_c">Витамин С (Аскорбиновая кислота)</string>
+    <string name="vitamin_d">Витамин D (кальциферолы)</string>
     <string name="vitamin_e">Витамин E</string>
     <string name="vitamin_k">Витамин K</string>
     <string name="mineral_manganese">Марганец</string>
@@ -135,9 +134,8 @@
     <string name="action_insert_suggested_search">Вставить предложенный поиск</string>
     <string name="action_edit_entry">Изменить запись</string>
     <string name="action_delete_entry">Удалить запись</string>
-    <string name="action_undo">Отменить</string>
     <string name="action_close">Закрыть</string>
-    <string name="action_discard">Сбросить</string>
+    <string name="action_discard">Отклонить</string>
     <string name="action_translate">Перевести</string>
     <string name="action_enable_camera_flash">Включить вспышку</string>
     <string name="action_disable_camera_flash">Выключить вспышку</string>
@@ -152,67 +150,58 @@
     <string name="action_use_time_based_ordering">Использовать сортировку по времени</string>
     <string name="action_ignore_all_day_meals">Исключать приемы пищи за весь день</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Добавить ингредиент</string>
-    <string name="action_edit_ingredient_measurement">Изменить единицу измерения</string>
     <string name="action_delete_ingredient">Удалить ингредиент</string>
-    <string name="action_download">Скачать</string>
+    <string name="action_download">Загрузить</string>
     <string name="action_paste_url">Вставить URL</string>
     <string name="action_browse_open_food_facts">Найти в Open Food Facts</string>
     <string name="action_copy">Скопировать</string>
     <string name="action_choose_other_date">Выбрать другую дату</string>
-    <string name="action_choose_other_measurement">Выбрать другую единицу измерения</string>
-    <string name="action_edit_your_home_page">Настройте вашу главную страницу</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Показать больше</string>
-    <string name="action_download_product">Скачать продукт</string>
+    <string name="action_download_product">Загрузить продукт</string>
     <string name="action_suggest_external_database">Предложить другую базу данных</string>
-    <string name="action_import_food_products">Импорт продуктов</string>
-    <string name="action_import_food_products_from_csv">Импорт продуктов из CSV файла</string>
-    <string name="action_export_food_products">Экспорт продуктов</string>
-    <string name="action_export_food_products_to_csv">Экспорт продуктов в CSV файл</string>
-    <string name="action_share">Поделиться</string>
-    <string name="action_copy_header" description="Copy CSV file header">Скопировать заголовок</string>
     <string name="action_copy_and_open_bug_report">Скопировать и открыть отчет об ошибке</string>
-    <string name="action_show_details">Показывать подробности</string>
-    <string name="action_browse_usda">Найти в Food Data Central (USDA)</string>
-    <string name="action_set_key">Сохранить ключ</string>
+    <string name="action_show_details">Показать подробности</string>
+    <string name="action_browse_usda">Найти в FoodData Central (USDA)</string>
+    <string name="action_set_key">Задать ключ</string>
     <string name="action_obtain_key">Получить ключ</string>
     <string name="action_dont_show_again">Не показывать снова</string>
-    <string name="neutral_barcode_scanner_camera_request">Разрешите доступ к камере для сканирования штрих-кодов</string>
-    <string name="neutral_barcode_scanner_camera_request_rationale">Вы должны разрешить доступ для сканирования штрих-кодов</string>
-    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Для сканирования штрих-кодов требуется доступ к камере. Пожалуйста, разрешите его в настройках приложения.</string>
+    <string name="neutral_barcode_scanner_camera_request">Разрешите доступ к камере для сканирования штрихкодов</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Вы должны разрешить доступ для сканирования штрихкодов</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Для сканирования штрихкодов требуется доступ к камере. Пожалуйста, разрешите его в настройках приложения.</string>
     <string name="neutral_no_food_found">Продукты не найдены</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">Осталась %1$d калория</item>
         <item quantity="few">Осталось %1$d калории</item>
         <item quantity="many">Осталось %1$d калорий</item>
-        <item quantity="other">Осталось %1$d калорий</item>
+        <item quantity="other">Осталось %1$d калории</item>
     </plurals>
-    <string name="neutral_set_your_daily_goals">Установить дневные цели</string>
-    <string name="neutral_set_your_meal_schedule">Установите ваш распорядок питания</string>
-    <string name="neutral_permanently_delete_meal">Удалить продукт навсегда?</string>
-    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Продукт будет удален навсегда. Все данные, связанные с этим продуктом будут утеряны.</string>
-    <string name="neutral_required">Требуется</string>
-    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Калории рассчитываются автоматически на основе макронутриентов</string>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">Остался %1$d килоджоуль</item>
+        <item quantity="few">Осталось %1$d килоджоуля</item>
+        <item quantity="many">Осталось %1$d килоджоулей</item>
+        <item quantity="other">Осталось %1$d килоджоуля</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Задайте свои ежедневные цели по питанию</string>
+    <string name="neutral_set_your_meal_schedule">Установите ваш режим питания</string>
+    <string name="neutral_permanently_delete_meal">Удалить приём пищи навсегда?</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Приём пищи будет удален навсегда. Все данные, связанные с этим приёмом пищи будут утеряны.</string>
+    <string name="neutral_required">Обязательно</string>
     <string name="neutral_help_translating_the_app">Помогите перевести приложение</string>
     <string name="neutral_copied">Информация скопирована в буфер обмена</string>
     <string name="neutral_product_created">Продукт создан</string>
-    <string name="neutral_export_started">Экспорт начат</string>
-    <string name="neutral_import_started">Импорт начат</string>
-    <string name="question_discard_product">Отменить продукт?</string>
-    <string name="question_discard_changes">Отменить изменения?</string>
-    <string name="question_discard_recipe">Отменить рецепт?</string>
-    <string name="error_this_field_is_required">Это обязательное поле</string>
+    <string name="question_discard_product">Отклонить продукт?</string>
+    <string name="question_discard_changes">Отклонить изменения?</string>
+    <string name="question_discard_recipe">Отклонить рецепт?</string>
     <string name="error_invalid_number">Неверное число</string>
     <string name="error_value_cannot_be_negative">Значение не может быть отрицательным</string>
-    <string name="error_value_must_be_less_than">Значение должно быть меньше %1$s</string>
     <string name="error_value_must_be_integer">Значение должно быть целочисленным</string>
-    <string name="error_sum_of_percentages_must_be_100">Сумма процентов должна равняться 100</string>
     <string name="error_value_must_be_positive">Значение должно быть положительным</string>
     <string name="error_url_not_found">URL не найден</string>
     <string name="error_url_is_not_supported">URL не поддерживается</string>
-    <string name="error_failed_to_download_product">Не удалось скачать продукт</string>
+    <string name="error_failed_to_download_product">Не удалось загрузить продукт</string>
     <string name="error_product_not_found">Продукт не найден</string>
     <string name="error_unknown_error">Неизвестная ошибка</string>
-    <string name="error_measurement_error">Ошибка единицы измерения, пожалуйста, проверьте вес порции и вес упаковки</string>
+    <string name="error_measurement_error">Ошибка измерения, пожалуйста, проверьте вес порции и вес упаковки</string>
     <string name="error_api_key_is_invalid">API ключ недействителен</string>
     <string name="positive_goal_reached">Цель достигнута</string>
     <string name="positive_ok">Хорошо</string>
@@ -222,51 +211,147 @@
         <item quantity="many">Превышено на %1$d калорий</item>
         <item quantity="other">Превышено на %1$d калорий</item>
     </plurals>
-    <string name="description_calories_goal">Установите вашу цель по калориям на день. Так вам будет проще следить за прогрессом и не сбиваться с пути.</string>
-    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Продукт будет удален навсегда. Это действие необратимо. Будут удалены все записи в , связанные с этим продуктом.</string>
-    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Эта запись будет удалена из вашего дневника. Вы можете добавить ее снова в любой момент.</string>
+    <plurals name="negative_exceeded_by_kilojoules">
+        <item quantity="one">Превышено на %1$d килоджоуль</item>
+        <item quantity="few">Превышено на %1$d килоджоуля</item>
+        <item quantity="many">Превышено на %1$d килоджоулей</item>
+        <item quantity="other">Превышено на %1$d килоджоуля</item>
+    </plurals>
+    <string name="description_delete_food">Продукт будет удален безвозвратно</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Эта запись будет удалена из вашего дневника. Вы можете добавить её снова в любой момент.</string>
     <string name="description_about_setting">Узнать больше о приложении</string>
-    <string name="description_time_based_meals_sorting">Когда включено, последние приемы будут отображаться первыми</string>
-    <string name="description_action_ignore_all_day_meals">Когда включено, приемы за весь день будут отображаться в конце списка</string>
-    <string name="description_incomplete_nutrition_data">Некоторые использованные продукты не имеют этих значений; отображаемые данные могут быть некорректны</string>
+    <string name="description_time_based_meals_sorting">Если включено, текущие приёмы пищи будут отображаться первыми</string>
+    <string name="description_action_ignore_all_day_meals">Приёмы пищи за весь день будут отображаться в конце списка</string>
+    <string name="description_incomplete_nutrition_data">Некоторые из использованных продуктов не имеют этого значения; поэтому отображаемое значение может быть неточным</string>
     <string name="description_translation_warning">Переводы создаются добровольцами. Они могут быть неидеальными, а некоторые переводы могут отсутствовать. Если вы заметите какие-либо ошибки, не стесняйтесь помочь в их исправлении.</string>
     <string name="description_changelog">Посмотрите, что нового в приложении</string>
     <string name="description_home_settings">Настройте вашу главную страницу</string>
     <string name="description_download_product">Вставьте ссылку на продукт и автоматически получите информацию о питательных веществах и подробную информацию о продукте.</string>
     <string name="description_download_product_hint">Вы можете вставить любой текст. Будет использован первый URL-адрес.</string>
-    <string name="description_import_and_export">Сохранить и загрузить данные</string>
-    <string name="description_import_and_export_hint">Все операции синхронизации данных выполняются в фоновом режиме. Вы будете уведомлены, когда они будут завершены.</string>
-    <string name="description_experimental_feature">Это экспериментальная функция. Она может быть изменена или удалена в будущих версиях.</string>
-    <string name="description_notifications_permission_required_data_sync">Для отображения хода синхронизации данных требуется разрешение на уведомление. Пожалуйста, включите его в настройках приложения.</string>
-    <string name="description_show_macronutrients_goals">Показать цели по макронутриентам</string>
-    <string name="description_recipe_missing_ingredients">Возможно, вы увидите здесь не все рецепты. Некоторые рецепты скрыты, чтобы избежать циклических ссылок.</string>
-    <string name="description_please_wait_while_importing_products">Пожалуйста, подождите, идет импорт продуктов</string>
-    <string name="description_suggest_external_database">Предложить общедоступную базу данных</string>
+    <string name="description_show_macronutrients_goals">Показывать цели по макронутриентам</string>
+    <string name="description_please_wait_while_importing_products">Пожалуйста, подождите, продукты импортируются</string>
+    <string name="description_please_wait_while_exporting_products">Пожалуйста, подождите, продукты экспортируются</string>
     <string name="headline_launcher_icon_by_icons8">Иконка приложения от Icons8</string>
     <string name="description_open_food_facts">Совместная, бесплатная и открытая база данных продуктов питания со всего мира</string>
     <!-- Don't translate changelog strings -->
-    <string name="notification_exporting_products">Происходит экспорт продуктов</string>
-    <string name="notification_exporting_products_success">Экспорт продуктов завершен</string>
-    <string name="notification_exporting_products_failure">Экспорт продуктов завершился неудачно</string>
-    <string name="notification_importing_products">Происходит импорт продуктов</string>
+    <string name="notification_exporting_products">Продукты экспортируются</string>
+    <string name="notification_importing_products">Продукты импортируются</string>
     <string name="notification_importing_products_success">Импорт продуктов завершен</string>
-    <string name="notification_importing_products_failure">Импорт продуктов завершился неудачно</string>
-    <string name="notification_data_sync_channel_name">Синхронизация данных</string>
-    <string name="notification_data_sync_progress_channel_name">Ход синхронизации данных</string>
-    <string name="description_food_data_central_usda">FoodData Central — это комплексный источник данных Министерства сельского хозяйства США о составе пищевых продуктов с несколькими различными типами данных</string>
-    <string name="error_usda_rate_limit">Превышен предел скорости API Food Data Central (USDA)</string>
-    <string name="error_usda_rate_limit_description">Вы превысили допустимое количество запросов! Пожалуйста, подождите перед повторной попыткой или зарегистрируйтесь, чтобы получить ключ.</string>
-    <string name="description_swiss_food_composition_database">Вы можете расширить свой список продуктов, добавив Swiss Food Composition Database. Он включает более 1100 продуктов на английском, немецком, французском или итальянском языках.</string>
-    <string name="description2_swiss_food_composition_database">База данных Swiss Food Composition содержит информацию о пищевой ценности более 1100 обычных продуктов питания. Она доступна на четырех языках. Чтобы импортировать эти продукты в свой пищевой дневник, выберите предпочитаемый язык.</string>
-    <string name="description3_swiss_food_composition_database">Ваша база данных о продуктах питания будет заполнена 1100 продуктами из Swiss Food Composition Database</string>
+    <string name="description_food_data_central_usda">FoodData Central — это всеобъемлющий источник данных о составе продуктов питания Министерства сельского хозяйства США, содержащий несколько различных типов данных</string>
+    <string name="error_usda_rate_limit">Превышен лимит запросов к FoodData Central (USDA) API</string>
+    <string name="description_swiss_food_composition_database_short">Швейцарская база данных состава продуктов питания включает информацию о пищевой ценности более 1100 распространенных продуктов</string>
+    <string name="description2_swiss_food_composition_database">Швейцарская база данных состава продуктов питания включает информацию о пищевой ценности более 1100 распространенных продуктов. Она доступна на четырех языках. Чтобы импортировать эти продукты в свой дневник питания, пожалуйста, выберите предпочитаемые языки.</string>
     <string name="headline_external_databases">Внешние базы данных</string>
-    <string name="description_external_databases">Посмотреть поддерживаемые базы данных</string>
+    <string name="description_external_databases">Проверьте поддерживаемые базы данных</string>
     <string name="feature_share_url_with_food_you">Поделиться URL-адресом с Food You</string>
-    <string name="feature_in_app_download">Загрузить в приложение</string>
+    <string name="feature_in_app_download">Встроенная загрузка</string>
+    <string name="feature_in_app_search">Встроенный поиск</string>
     <string name="feature_manual_database_import">Ручной импорт базы данных</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Распаковать</string>
+    <string name="headline_sponsor">Спонсор</string>
+    <string name="description_sponsor_short">Вклад в любой форме приветствуются</string>
+    <string name="description_sponsor_short_2">Поддержите приложение в развитии</string>
+    <string name="description_sponsor_1">В мире, где каждое нажатие отслеживается, а каждая функция за пейволлом, этот трекер еды другой. Никакой рекламы. Никаких подписок. Никакого отслеживания.</string>
+    <string name="description_sponsor_2">Основанный на убеждении, что полезные инструменты должны быть бесплатными, открытыми и уважать вашу конфиденциальность, он предлагает тихий протест против эксплуататорских моделей, доминирующих в магазинах приложений.</string>
+    <string name="description_sponsor_3">Если для вас это важно, подумайте о том, чтобы поддержать проект. Вы напрямую профинансируете полноценную разработку проекта.</string>
     <string name="headline_source_code">Исходный код</string>
-    <string name="description_source_code">Исходный код проекта на GitHub</string>
-    <string name="action_write_an_email">Написать письмо</string>
-    <string name="headline_contact">Контакты</string>
+    <string name="description_source_code">Посмотреть исходный код проекта на GitHub</string>
+    <string name="action_write_an_email">Написать email</string>
+    <string name="headline_contact">Связаться</string>
+    <string name="description_sponsor_contact">Если у вас есть какие-либо запросы по поводу спонсорства, свяжитесь со мной по электронной почте или через GitHub.</string>
+    <string name="sponsor_bank_or_card">Банковский счет или кредитная карта</string>
+    <string name="action_treat_as_liquid">Считать за жидкость</string>
+    <string name="description_treat_as_liquid">При измерении предпочитать миллилитры</string>
+    <string name="headline_personalization">Персонализация</string>
+    <string name="description_personalization">Настройте ваш интерфейс</string>
+    <string name="headline_nutrition_facts">Пищевая ценность</string>
+    <string name="description_personalize_nutrition_facts_short">Измените порядок данных о пищевой ценности</string>
+    <string name="action_reset_ordering">Сбросить порядок</string>
+    <string name="headline_reset_to_default">Сбросить настройки</string>
+    <string name="action_reset" description="Confirm resetting">Сбросить</string>
+    <string name="description_reset_nutrition_facts">Сбросить персонализацию полей пищевой ценности</string>
+    <string name="headline_note">Примечание</string>
+    <string name="description_add_note">Дополнительные примечания (например, ингредиенты, подходит ли для веганов, аллергены, добавки) или любые другие детали, не связанные с питательными веществами</string>
+    <string name="headline_now" description="Current time, now">Сейчас</string>
+    <string name="action_try_again">Попробовать снова</string>
+    <string name="description_calories_are_calculated">Энергетическая ценность автоматически рассчитывается из макронутриентов. Вы можете отключить эту функцию и ввести значение вручную, если это необходимо. Алкоголь при расчете не учитывается.</string>
+    <string name="x_kcal_per_g">%1$s %2$d ккал/г</string>
+    <string name="neutral_an_error_occurred">Произошла ошибка</string>
+    <string name="action_retry">Повторить</string>
+    <string name="action_import">Импорт</string>
+    <string name="headline_today" description="Today, date">Сегодня, %1$s</string>
+    <string name="headline_yesterday" description="Yesterday, date">Вчера, %1$s</string>
+    <string name="headline_tomorrow" description="Tomorrow, date">Завтра, %1$s</string>
+    <string name="headline_user" description="User, person who uses the app">Пользователь</string>
+    <string name="description_food_source">Укажите источник данных о продукте питания. Здесь можно включить ссылку</string>
+    <string name="thank_you_for_your_support">Спасибо за вашу поддержку!</string>
+    <string name="error_food_is_missing_required_fields">В продукте питания отсутствуют обязательные поля</string>
+    <string name="headline_preview_release">Предварительный релиз</string>
+    <string name="description_preview_release">Вы используете предварительную версию. Она может быть незавершенной, нестабильной или подверженной изменениям.</string>
+    <string name="headline_your_food">Ваши продукты питания</string>
+    <string name="headline_filters">Фильтры</string>
+    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">Выбрать ингредиент</string>
+    <string name="headline_edit_recipe">Изменить рецепт</string>
+    <string name="description_delete_ingredient">Ингредиент будет удален из рецепта</string>
+    <string name="neutral_remote_database_error">Не удалось загрузить продукт из удаленной базы данных. Вы по-прежнему можете просматривать ранее загруженные продукты.</string>
+    <string name="headline_before_you_start">Перед тем как вы начнете</string>
+    <string name="description_before_you_start">Чтобы предоставить вам бесплатный дневник питания с открытым исходным кодом, мы ставим вашу конфиденциальность превыше всего. Это приложение не собирает, не хранит и не передает никакую личную информацию. Ваши записи сохраняются локально на вашем устройстве и остаются полностью под вашим контролем.</string>
+    <string name="action_agree_and_continue">Согласиться и продолжить</string>
+    <string name="headline_food_database">База продуктов питания</string>
+    <string name="description_food_database">Вы можете выбрать, использовать ли эти необязательные внешние сервисы, которые могут иметь свои собственные условия и политику конфиденциальности</string>
+    <string name="action_skip">Пропустить</string>
+    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Условия использования:https://world.openfoodfacts.org/terms-of-use} и {Политика конфиденциальности:https://world.openfoodfacts.org/privacy}</string>
+    <string name="usda_privacy_policy">{Политика конфиденциальности:https://www.usda.gov/privacy-policy}</string>
+    <string name="headline_almost_done">Почти готово!</string>
+    <string name="headline_preparing_your_food_diary">Подготовка вашего дневника питания</string>
+    <string name="headline_please_wait">Пожалуйста, подождите</string>
+    <string name="headline_created">Создано</string>
+    <string name="headline_imported">Импортировано</string>
+    <string name="headline_downloaded">Загружено</string>
+    <string name="headline_edited">Изменено</string>
+    <string name="headline_history">История</string>
+    <string name="action_allow_only_once">Один раз</string>
+    <string name="action_allow_always">Разрешать всегда</string>
+    <string name="description_sponsors_external_server">Чтобы увидеть последних спонсоров, нам необходимо получить обновленные данные с нашего внешнего сервера</string>
+    <string name="headline_anonymous">Аноним</string>
+    <string name="headline_recent">Последнее</string>
+    <string name="headline_database">База данных</string>
+    <string name="description_manage_database">Управляйте вашей базой данных</string>
+    <string name="action_done">Готово</string>
+    <string name="neutral_measurement_added">Принято! Мы добавили ваши измерения</string>
+    <string name="headline_imported_from_food_you_2">Импортировано из Food You 2</string>
+    <string name="action_set_goals">Задать цели</string>
+    <string name="action_fix_it">Исправить это</string>
+    <string name="error_total_energy_not_matching">Общая энергия, полученная из белков, углеводов и жиров, не соответствует вашей дневной цели по потреблению энергии</string>
+    <string name="neutral_set_energy_manually">Я хочу задавать энергетическую ценность вручную</string>
+    <string name="description_energy_is_calculated_automatically">Энергетическая ценность рассчитывается автоматически на основе макроэлементов</string>
+    <string name="headline_pick_the_days">Выбрать дни</string>
+    <string name="action_set_separate_goals">Установить отдельные цели на каждый день</string>
+    <string name="headline_percentages">Проценты</string>
+    <string name="headline_database_dump">Дамп базы данных</string>
+    <string name="description_database_dump">Экспортируйте базу данных SQL в файл</string>
+    <string name="neutral_generating_database_dump">Генерация дампа базы данных</string>
+    <string name="neutral_database_dump_generated_successfully">Дамп базы данных успешно сгенерирован</string>
+    <string name="error_failed_to_generate_database_dump">Ошибка при генерации дампа базы данных</string>
+    <string name="action_import_csv_food_products">Импорт CSV продуктов питания</string>
+    <string name="description_import_csv_food_products">Импорт продуктов питания из CSV-файла</string>
+    <string name="description_import_csv_food_products_hint">Нам просто нужно знать, что есть что. Укажите, какой столбец в вашем файле содержит название продукта, бренда и т. д.</string>
+    <string name="description_import_csv_food_products_hint_2">Все значения питательных веществ должны быть указаны в граммах или ккал на 100 г</string>
+    <string name="action_export_csv_food_products">Экспорт продуктов питания в формате CSV</string>
+    <string name="description_export_csv_food_products">Экспорт продуктов питания в CSV-файл</string>
+    <string name="neutral_no_column">Нет столбца</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="one">Импортирован %1$d продукт питания</item>
+        <item quantity="few">Импортировано %1$d продукта питания</item>
+        <item quantity="many">Импортировано %1$d продуктов питания</item>
+        <item quantity="other">Импортировано %1$d продукта питания</item>
+    </plurals>
+    <string name="headline_energy_unit">Единица энергетической ценности</string>
+    <string name="description_energy_unit">Выберите предпочтительную единицу измерения энергетической ценности</string>
+    <plurals name="neutral_exported_x_food_products">
+        <item quantity="one">Экспортирован %1$d продукт питания</item>
+        <item quantity="few">Экспортировано %1$d продукта питания</item>
+        <item quantity="many">Экспортировано %1$d продуктов питания</item>
+        <item quantity="other">Экспортировано %1$d продукта питания</item>
+    </plurals>
 </resources>

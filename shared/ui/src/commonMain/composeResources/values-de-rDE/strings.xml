@@ -3,12 +3,10 @@
     <string name="not_available_short">N/A</string>
     <string name="headline_create_product">Produkt erstellen</string>
     <string name="headline_settings">Einstellungen</string>
-    <string name="headline_calories_goal">Kalorienziel</string>
     <string name="headline_daily_goals">Tägliche Ziele</string>
     <string name="headline_general">Allgemein</string>
     <string name="headline_macronutrients">Makronährstoffe</string>
     <string name="headline_meals">Mahlzeiten</string>
-    <string name="headline_delete_product">Produkt löschen</string>
     <string name="headline_edit_product">Produkt bearbeiten</string>
     <string name="headline_permission_required">Berechtigung erforderlich</string>
     <string name="headline_language">Sprache</string>
@@ -23,7 +21,6 @@
     <string name="headline_product">Produkt</string>
     <string name="headline_recipe">Rezept</string>
     <string name="headline_create_recipe">Rezept erstellen</string>
-    <string name="headline_update_recipe">Rezept bearbeiten</string>
     <string name="headline_ingredients" description="Recipe ingredients">Zutaten</string>
     <string name="headline_summary">Zusammenfassung</string>
     <string name="headline_whats_new">Neuigkeiten</string>
@@ -41,9 +38,12 @@
     <string name="headline_vitamins">Vitamine</string>
     <string name="headline_minerals">Mineralstoffe</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">Unterstützte URLs</string>
-    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">In %1$s</string>
+    <string name="headline_something_went_wrong">Ups! Etwas ist schiefgelaufen</string>
+    <string name="headline_daily_goals_settings">Tagesziele Einstellungen</string>
+    <string name="headline_api_key">API Schlüssel</string>
+    <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Quelle</string>
+    <string name="headline_features">Funktionen</string>
     <string name="weight">Gewicht</string>
-    <string name="unit_calories">Kalorien</string>
     <string name="unit_energy" description="Energy as calories">Brennwert in Kalorien</string>
     <string name="unit_kcal">kcal</string>
     <plurals name="unit_gram">
@@ -77,20 +77,8 @@
     <string name="nutriment_omega_3">Omega-3-Fettsäuren</string>
     <string name="nutriment_omega_6">Omega-6-Fettsäuren</string>
     <string name="nutriment_salt">Salz</string>
-    <string name="nutriment_fiber">Ballaststoffe</string>
     <string name="nutriment_cholesterol">Cholesterin</string>
     <string name="nutriment_caffeine">Koffein</string>
-    <string name="vitamin_a">Vitamin A</string>
-    <string name="vitamin_b1">Vitamin B1</string>
-    <string name="vitamin_b2">Vitamin B2</string>
-    <string name="vitamin_b3">Vitamin B3</string>
-    <string name="vitamin_b5">Vitamin B5</string>
-    <string name="vitamin_b6">Vitamin B6</string>
-    <string name="vitamin_b7">Vitamin B7</string>
-    <string name="vitamin_b9">Vitamin B9</string>
-    <string name="vitamin_b12">Vitamin B12</string>
-    <string name="vitamin_c">Vitamin C</string>
-    <string name="vitamin_d">Vitamin D</string>
     <string name="vitamin_e">Vitamin E</string>
     <string name="vitamin_k">Vitamin K</string>
     <string name="mineral_manganese">Mangan</string>
@@ -104,6 +92,7 @@
     <string name="mineral_phosphorus">Phosphor</string>
     <string name="mineral_selenium">Selen</string>
     <string name="mineral_iodine">Iod</string>
+    <string name="mineral_chromium">Chrom</string>
     <string name="action_search">Suche</string>
     <string name="action_scan_barcode">Barcode scannen</string>
     <string name="action_add">Hinzufügen</string>
@@ -121,7 +110,6 @@
     <string name="action_insert_suggested_search">Vorgeschlagene Suche einfügen</string>
     <string name="action_edit_entry">Eintrag bearbeiten</string>
     <string name="action_delete_entry">Eintrag löschen</string>
-    <string name="action_undo">Rückgängig</string>
     <string name="action_close">Schließen</string>
     <string name="action_discard">Verwerfen</string>
     <string name="action_translate">Übersetzen</string>
@@ -138,57 +126,54 @@
     <string name="action_use_time_based_ordering">Zeitbasierte Sortierung</string>
     <string name="action_ignore_all_day_meals">Ganztägige Mahlzeiten ignorieren</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Zutat hinzufügen</string>
-    <string name="action_edit_ingredient_measurement">Menge der Zutat ändern</string>
     <string name="action_delete_ingredient">Zutat entfernen</string>
     <string name="action_download">Herunterladen</string>
     <string name="action_paste_url">URL einfügen</string>
     <string name="action_browse_open_food_facts">Open Food Facts durchsuchen</string>
     <string name="action_copy">Kopieren</string>
     <string name="action_choose_other_date">Anderes Datum auswählen</string>
-    <string name="action_choose_other_measurement">Andere Menge auswählen</string>
-    <string name="action_edit_your_home_page">Startseite bearbeiten</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mehr anzeigen</string>
     <string name="action_download_product">Produkt herunterladen</string>
     <string name="action_suggest_external_database">Externe Datenbank vorschlagen</string>
+    <string name="action_copy_and_open_bug_report">Kopiere und erstelle Bug-Report</string>
+    <string name="action_show_details">Details anzeigen</string>
+    <string name="action_set_key">Schlüssel setzen</string>
+    <string name="action_obtain_key">Schlüssel erhalten</string>
+    <string name="action_dont_show_again">Nicht erneut anzeigen</string>
     <string name="neutral_barcode_scanner_camera_request">Erlaube den Zugriff auf deine Kamera zum Scannen von Barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Um die Barcodes zu scannen, musst du den Zugriff erlauben</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Zum Scannen von Barcodes ist eine Kameraerlaubnis erforderlich. Bitte erlaube es in den App-Einstellungen.</string>
+    <string name="neutral_no_food_found">Lebensmittel nicht gefunden</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d verbleibende Kalorien</item>
         <item quantity="other">%1$d verbleibende Kalorien</item>
     </plurals>
-    <string name="neutral_set_your_daily_goals">Setze deine täglichen Ziele</string>
     <string name="neutral_set_your_meal_schedule">Lege deinen Essensplan fest</string>
     <string name="neutral_permanently_delete_meal">Mahlzeit dauerhaft löschen?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Mahlzeit wird dauerhaft gelöscht. Alle Daten zu dieser Mahlzeit gehen verloren.</string>
     <string name="neutral_required">Erforderlich</string>
-    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kalorien werden automatisch basierend auf Makronährstoffen berechnet</string>
     <string name="neutral_help_translating_the_app">Hilf mit, die App zu übersetzen</string>
     <string name="neutral_copied">Informationen in die Zwischenablage gespeichert</string>
     <string name="neutral_product_created">Produkt erstellt</string>
     <string name="question_discard_product">Produkt wegwerfen?</string>
     <string name="question_discard_changes">Änderungen verwerfen?</string>
     <string name="question_discard_recipe">Rezept löschen?</string>
-    <string name="error_this_field_is_required">Dieses Feld ist erforderlich</string>
     <string name="error_invalid_number">Ungültige Nummer</string>
     <string name="error_value_cannot_be_negative">Wert darf nicht negativ sein</string>
-    <string name="error_value_must_be_less_than">Der Wert muss kleiner als %1$s sein</string>
     <string name="error_value_must_be_integer">Wert muss eine ganze Zahl sein</string>
-    <string name="error_sum_of_percentages_must_be_100">Die Summe der Prozentsätze muss 100 sein</string>
     <string name="error_value_must_be_positive">Wert muss positiv sein</string>
     <string name="error_url_not_found">URL konnte nicht gefunden werden</string>
     <string name="error_url_is_not_supported">URL wird nicht unterstützt</string>
     <string name="error_failed_to_download_product">Konnte Produkt nicht herunterladen</string>
     <string name="error_product_not_found">Konnte Produkt nicht finden</string>
     <string name="error_unknown_error">Unbekannter Fehler</string>
+    <string name="error_api_key_is_invalid">API Schlüssel ist ungültig</string>
     <string name="positive_goal_reached">Ziel erreicht</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
         <item quantity="one">Um %1$d Kalorien überschritten</item>
         <item quantity="other">Um %1$d Kalorien überschritten</item>
     </plurals>
-    <string name="description_calories_goal">Setze dir ein Ziel für deine tägliche Kalorienzufuhr. So kannst du deine Fortschritte verfolgen und auf dem richtigen Weg bleiben.</string>
-    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Das Produkt wird dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden. Alle Tagebucheinträge zu diesem Produkt werden gelöscht.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Dieser Eintrag wird aus Deinem Tagebuch gelöscht. Du kannst ihn jederzeit wieder hinzufügen.</string>
     <string name="description_about_setting">Mehr über die App erfahren</string>
     <string name="description_time_based_meals_sorting">Wenn aktiviert, werden aktuell laufende Mahlzeiten zuerst angezeigt</string>
