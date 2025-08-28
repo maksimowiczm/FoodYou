@@ -14,6 +14,7 @@ internal class Changelog(private val appConfig: AppConfig) {
     val versions: List<Version>
         get() =
             listOf(
+                v_3_0_0_rc_2,
                 v_3_0_0_rc_1,
                 v_3_0_0_beta_3,
                 v_3_0_0_beta_2,
@@ -36,6 +37,26 @@ internal class Changelog(private val appConfig: AppConfig) {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_0_0_rc_2 =
+        Version(
+            version = "3.0.0-rc.2",
+            date = LocalDate(2025, 8, 28),
+            bugFixes =
+                listOf(
+                    "Resolved crashes when logging food for users upgrading from beta.1 or beta.2.",
+                    "Fixed database migration issues on devices running Android 13 or lower.",
+                    "Goals personalization: the daily goals settings button now correctly opens the goals settings screen.",
+                    "Sharing links to the app now works as expected.",
+                    "Editing meals now supports times past midnight.",
+                    "Separate the brand name from the food name on meal cards.",
+                    "Deleting food entries no longer breaks the recent food list.",
+                    "Fixed the default measurement for recipes in the food search list.",
+                ),
+            translations =
+                listOf("General translation updates and improvements. Thanks to all contributors!"),
+            isPreview = true,
+        )
 
     val v_3_0_0_rc_1 =
         Version(
