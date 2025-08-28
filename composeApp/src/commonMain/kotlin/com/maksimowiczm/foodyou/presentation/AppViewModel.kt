@@ -2,12 +2,9 @@ package com.maksimowiczm.foodyou.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
-import com.maksimowiczm.foodyou.business.settings.application.query.ObserveSettingsQuery
 import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
 import com.maksimowiczm.foodyou.shared.ui.utils.EnergyFormatter
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -16,9 +13,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-internal class AppViewModel(queryBus: QueryBus, private val commandBus: CommandBus) : ViewModel() {
+internal class AppViewModel(private val settingsRepository: SettingsRepository) : ViewModel() {
 
-    private val settings = queryBus.dispatch(ObserveSettingsQuery)
+    private val settings = settingsRepository.observe()
 
     val nutrientsOrder =
         settings
@@ -48,9 +45,7 @@ internal class AppViewModel(queryBus: QueryBus, private val commandBus: CommandB
             )
 
     fun finishOnboarding() {
-        viewModelScope.launch {
-            commandBus.dispatch(PartialSettingsUpdateCommand(onboardingFinished = true))
-        }
+        viewModelScope.launch { settingsRepository.update { copy(onboardingFinished = true) } }
     }
 }
 

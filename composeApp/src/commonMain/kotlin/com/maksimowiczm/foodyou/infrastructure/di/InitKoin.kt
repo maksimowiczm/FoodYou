@@ -15,7 +15,7 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
         config?.invoke(this)
 
         // Shared modules
-        modules(appModule, businessSharedModule(applicationCoroutineScope), featureSharedModule)
+        modules(appModule, businessSharedModule(applicationCoroutineScope))
 
         // Business modules
         modules(

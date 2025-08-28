@@ -3,10 +3,7 @@ package com.maksimowiczm.foodyou.feature.about.master.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
-import com.maksimowiczm.foodyou.business.settings.application.query.ObserveSettingsQuery
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,19 +16,18 @@ import kotlinx.coroutines.launch
 
 internal class PreviewReleaseDialogViewModel(
     changelog: Changelog,
-    queryBus: QueryBus,
-    private val commandBus: CommandBus,
+    private val settingsRepository: SettingsRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val settingsFlow = queryBus.dispatch(ObserveSettingsQuery)
+    private val settingsFlow = settingsRepository.observe()
 
     init {
         settingsFlow
             .map { it.lastRememberedVersion }
             .onEach {
                 if (it != changelog.currentVersion?.version) {
-                    commandBus.dispatch(PartialSettingsUpdateCommand(hidePreviewDialog = false))
+                    settingsRepository.update { copy(hidePreviewDialog = false) }
                 }
             }
             .launchIn(viewModelScope)
@@ -66,8 +62,6 @@ internal class PreviewReleaseDialogViewModel(
     fun dontShowAgain() {
         savedStateHandle["hide"] = true
 
-        viewModelScope.launch {
-            commandBus.dispatch(PartialSettingsUpdateCommand(hidePreviewDialog = true))
-        }
+        viewModelScope.launch { settingsRepository.update { copy(hidePreviewDialog = true) } }
     }
 }

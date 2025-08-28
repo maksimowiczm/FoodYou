@@ -4,14 +4,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.settings.application.query.ObserveCurrentTranslationQuery
-import com.maksimowiczm.foodyou.business.settings.domain.Translation
-import com.maksimowiczm.foodyou.business.shared.application.query.QueryBus
+import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
 import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -25,12 +23,8 @@ internal fun LanguageSettingsListItem(
     contentColor: Color,
     modifier: Modifier = Modifier,
 ) {
-    val queryBus: QueryBus = koinInject()
-    val language =
-        queryBus
-            .dispatch<Translation>(ObserveCurrentTranslationQuery)
-            .collectAsStateWithLifecycle(null)
-            .value
+    val translationRepository: TranslationRepository = koinInject()
+    val language = translationRepository.observeCurrent().collectAsStateWithLifecycle(null).value
 
     SettingsListItem(
         icon = { Icon(Icons.Outlined.Translate, null) },

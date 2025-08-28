@@ -2,10 +2,8 @@ package com.maksimowiczm.foodyou.feature.settings.personalization.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
+import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -13,12 +11,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-internal class HomePersonalizationViewModel(
-    observeSettingsUseCase: ObserveSettingsUseCase,
-    private val commandBus: CommandBus,
-) : ViewModel() {
+internal class HomePersonalizationViewModel(private val settingsRepository: SettingsRepository) :
+    ViewModel() {
 
-    private val _homeOrder = observeSettingsUseCase.observe().map { it.homeCardOrder }
+    private val _homeOrder = settingsRepository.observe().map { it.homeCardOrder }
     val homeOrder =
         _homeOrder.stateIn(
             scope = viewModelScope,
@@ -27,8 +23,6 @@ internal class HomePersonalizationViewModel(
         )
 
     fun updateOrder(order: List<HomeCard>) {
-        viewModelScope.launch {
-            commandBus.dispatch(PartialSettingsUpdateCommand(homeCardOrder = order))
-        }
+        viewModelScope.launch { settingsRepository.update { copy(homeCardOrder = order) } }
     }
 }

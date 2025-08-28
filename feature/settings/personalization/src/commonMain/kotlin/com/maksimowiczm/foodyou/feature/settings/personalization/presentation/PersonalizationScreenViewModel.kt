@@ -2,10 +2,8 @@ package com.maksimowiczm.foodyou.feature.settings.personalization.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.application.command.PartialSettingsUpdateCommand
 import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
-import com.maksimowiczm.foodyou.business.shared.application.command.CommandBus
-import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
+import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -13,14 +11,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-internal class PersonalizationScreenViewModel(
-    observeSettingsUseCase: ObserveSettingsUseCase,
-    private val commandBus: CommandBus,
-) : ViewModel() {
+internal class PersonalizationScreenViewModel(private val settingsRepository: SettingsRepository) :
+    ViewModel() {
 
-    private val settingsFlow = observeSettingsUseCase.observe()
-
-    private val _secureScreen = settingsFlow.map { it.secureScreen }
+    private val _secureScreen = settingsRepository.observe().map { it.secureScreen }
     val secureScreen =
         _secureScreen.stateIn(
             scope = viewModelScope,
@@ -29,12 +23,10 @@ internal class PersonalizationScreenViewModel(
         )
 
     fun toggleSecureScreen(newState: Boolean) {
-        viewModelScope.launch {
-            commandBus.dispatch(PartialSettingsUpdateCommand(secureScreen = newState))
-        }
+        viewModelScope.launch { settingsRepository.update { copy(secureScreen = newState) } }
     }
 
-    private val _energyUnit = settingsFlow.map { it.energyFormat }
+    private val _energyUnit = settingsRepository.observe().map { it.energyFormat }
     val energyUnit =
         _energyUnit.stateIn(
             scope = viewModelScope,
@@ -43,8 +35,6 @@ internal class PersonalizationScreenViewModel(
         )
 
     fun setEnergyFormat(format: EnergyFormat) {
-        viewModelScope.launch {
-            commandBus.dispatch(PartialSettingsUpdateCommand(energyFormat = format))
-        }
+        viewModelScope.launch { settingsRepository.update { copy(energyFormat = format) } }
     }
 }
