@@ -7,27 +7,28 @@ android-targetSdk = "36"
 
 accompanistPermissions = "0.37.3"
 activityCompose = "1.10.1"
-agp = "8.12.0"
+agp = "8.11.1"
 appcompatVersion = "1.7.1"
-composeMultiplatform = "1.9.0-beta01"
+composeMultiplatform = "1.9.0-beta03"
+composeMultiplatformMaterial3 = "1.9.0-alpha04"
 composeShimmer = "1.3.3"
 core = "1.7.0"
 datastorePreferences = "1.1.7"
 desugar_jdk_libs = "2.1.5"
 gmazzoBuildConfig = "5.6.7"
 junit = "1.3.0"
-kermit = "2.0.6"
+kermit = "2.0.8"
 koin = "4.1.0"
-kotlin = "2.2.0"
+kotlin = "2.2.10"
 kotlinxCoroutinesCore = "1.10.2"
 kotlinxDatetime = "0.7.1"
 kotlinxSerializationJson = "1.9.0"
-ksp = "2.2.0-2.0.2"
+ksp = "2.2.10-2.0.2"
 ktor = "3.2.3"
-navigationCompose = "2.9.0-beta04"
+navigationCompose = "2.9.0-beta05"
 paging3 = "3.3.6"
 reorderable = "2.5.1"
-room = "2.8.0-rc01"
+room = "2.8.0-rc02"
 runner = "1.7.0"
 sqliteAndroid = "3.49.0"
 sqliteBundled = "2.5.2"
@@ -50,7 +51,7 @@ androidx-test-core = { group = "androidx.test", name = "core", version.ref = "co
 androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "core" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
-jetbrains-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version = "1.9.0-alpha04" }
+jetbrains-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMultiplatformMaterial3" }
 gradle-android = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 gradle-compose= { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "composeMultiplatform" }
