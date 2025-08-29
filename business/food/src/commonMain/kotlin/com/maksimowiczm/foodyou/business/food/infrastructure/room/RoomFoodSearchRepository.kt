@@ -6,8 +6,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
 import com.maksimowiczm.foodyou.business.food.domain.QueryType
-import com.maksimowiczm.foodyou.business.food.infrastructure.LocalFoodSearchDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
@@ -18,20 +18,23 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEnt
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.from
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 
-@OptIn(ExperimentalPagingApi::class)
-internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao) :
-    LocalFoodSearchDataSource {
+@OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class, ExperimentalTime::class)
+internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao) :
+    FoodSearchRepository {
     override fun search(
         query: QueryType,
         source: FoodSource.Type,
         config: PagingConfig,
         remoteMediatorFactory: RemoteMediatorFactory?,
-        excludedRecipeId: Long?,
+        excludedRecipeId: FoodId.Recipe?,
     ): Flow<PagingData<FoodSearch>> =
         Pager(
                 config = config,
@@ -42,7 +45,7 @@ internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao
                             foodSearchDao.observeFoodByQuery(
                                 query = query.query,
                                 source = source.toEntity(),
-                                excludedRecipeId = excludedRecipeId,
+                                excludedRecipeId = excludedRecipeId?.id,
                             )
 
                         is QueryType.NotBlank.Barcode ->
@@ -57,40 +60,42 @@ internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao
             .flow
             .map { data -> data.map { it.toModel() } }
 
-    @OptIn(ExperimentalTime::class)
     override fun searchRecent(
         query: QueryType,
         config: PagingConfig,
-        excludedRecipeId: Long?,
-    ): Flow<PagingData<FoodSearch>> {
-        return Pager(
+        now: LocalDateTime,
+        excludedRecipeId: FoodId.Recipe?,
+    ): Flow<PagingData<FoodSearch>> =
+        Pager(
                 config = config,
                 pagingSourceFactory = {
+                    val nowEpochSeconds =
+                        now.toInstant(TimeZone.currentSystemDefault()).epochSeconds
+
                     when (query) {
                         QueryType.Blank,
                         is QueryType.NotBlank.Text ->
                             foodSearchDao.observeRecentFoodByQuery(
                                 query = query.query,
-                                nowEpochSeconds = Clock.System.now().epochSeconds,
-                                excludedRecipeId = excludedRecipeId,
+                                nowEpochSeconds = nowEpochSeconds,
+                                excludedRecipeId = excludedRecipeId?.id,
                             )
 
                         is QueryType.NotBlank.Barcode ->
                             foodSearchDao.observeRecentFoodByBarcode(
                                 barcode = query.query,
-                                nowEpochSeconds = Clock.System.now().epochSeconds,
+                                nowEpochSeconds = nowEpochSeconds,
                             )
                     }
                 },
             )
             .flow
             .map { data -> data.map { it.toModel() } }
-    }
 
-    override fun observeFoodCount(
+    override fun searchFoodCount(
         query: QueryType,
         source: FoodSource.Type,
-        excludedRecipeId: Long?,
+        excludedRecipeId: FoodId.Recipe?,
     ): Flow<Int> =
         when (query) {
             QueryType.Blank,
@@ -98,7 +103,7 @@ internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao
                 foodSearchDao.observeFoodCountByQuery(
                     query = query.query,
                     source = source.toEntity(),
-                    excludedRecipeId = excludedRecipeId,
+                    excludedRecipeId = excludedRecipeId?.id,
                 )
 
             is QueryType.NotBlank.Barcode ->
@@ -108,21 +113,24 @@ internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao
                 )
         }
 
-    @OptIn(ExperimentalTime::class)
-    override fun observeRecentFoodCount(query: QueryType, excludedRecipeId: Long?): Flow<Int> =
+    override fun searchRecentFoodCount(
+        query: QueryType,
+        now: LocalDateTime,
+        excludedRecipeId: FoodId.Recipe?,
+    ): Flow<Int> =
         when (query) {
             QueryType.Blank,
             is QueryType.NotBlank.Text ->
                 foodSearchDao.observeRecentFoodCountByQuery(
                     query = query.query,
-                    nowEpochSeconds = Clock.System.now().epochSeconds,
-                    excludedRecipeId = excludedRecipeId,
+                    nowEpochSeconds = now.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
+                    excludedRecipeId = excludedRecipeId?.id,
                 )
 
             is QueryType.NotBlank.Barcode ->
                 foodSearchDao.observeRecentFoodCountByBarcode(
                     barcode = query.query,
-                    nowEpochSeconds = Clock.System.now().epochSeconds,
+                    nowEpochSeconds = now.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
                 )
         }
 }

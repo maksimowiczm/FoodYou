@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesReposi
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistoryRepository
 import com.maksimowiczm.foodyou.business.food.domain.queryType
+import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.RemoteStatus.Companion.toRemoteStatus
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
@@ -38,6 +39,7 @@ internal class FoodSearchViewModel(
     searchHistoryRepository: SearchHistoryRepository,
     private val foodSearchRepository: FoodSearchRepository,
     private val foodSearchUseCase: FoodSearchUseCase,
+    private val dateProvider: DateProvider,
 ) : ViewModel() {
 
     // Use shared flow to allow emitting same value multiple times
@@ -65,15 +67,14 @@ internal class FoodSearchViewModel(
 
     private val recentFoodPages =
         searchQuery.flatMapLatest { query ->
-            foodSearchRepository
-                .searchRecentFood(queryType(query), excludedRecipeId)
-                .cachedIn(viewModelScope)
+            foodSearchUseCase.searchRecent(query, excludedRecipeId).cachedIn(viewModelScope)
         }
     private val recentFoodState =
         searchQuery
             .flatMapLatest { query ->
-                foodSearchRepository.observeRecentFoodCount(
+                foodSearchRepository.searchRecentFoodCount(
                     query = queryType(query),
+                    now = dateProvider.now(),
                     excludedRecipeId = excludedRecipeId,
                 )
             }
@@ -131,7 +132,7 @@ internal class FoodSearchViewModel(
 
     private fun observeFoodCount(source: FoodSource.Type) =
         searchQuery.flatMapLatest { query ->
-            foodSearchRepository.observeSearchFoodCount(
+            foodSearchRepository.searchFoodCount(
                 query = queryType(query),
                 source = source,
                 excludedRecipeId = excludedRecipeId,

@@ -31,9 +31,8 @@ import com.maksimowiczm.foodyou.business.food.domain.MeasurementSuggestionReposi
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.domain.RecipeRepository
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistoryRepository
+import com.maksimowiczm.foodyou.business.food.domain.remote.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProductRequestFactory
-import com.maksimowiczm.foodyou.business.food.infrastructure.FoodSearchRepositoryImpl
-import com.maksimowiczm.foodyou.business.food.infrastructure.LocalFoodSearchDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.datastore.DataStoreFoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductRequestFactoryImpl
@@ -41,12 +40,14 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfac
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsFacade
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAFacade
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDARemoteDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDARemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomFoodEventRepository
-import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomFoodSearchDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomFoodSearchRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomMeasurementSuggestionRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomOpenFoodFactsPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomProductRepository
@@ -59,7 +60,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.qualifier.qualifier
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.dsl.onClose
@@ -67,22 +68,15 @@ import org.koin.dsl.onClose
 val businessFoodModule = module {
     factoryOf(::RoomProductRepository).bind<ProductRepository>()
     factoryOf(::RoomRecipeRepository).bind<RecipeRepository>()
-    factoryOf(::RoomFoodSearchDataSource).bind<LocalFoodSearchDataSource>()
     factoryOf(::RoomOpenFoodFactsPagingHelper).bind<LocalOpenFoodFactsPagingHelper>()
     factoryOf(::RoomUsdaPagingHelper).bind<LocalUsdaPagingHelper>()
     factoryOf(::RoomFoodEventRepository).bind<FoodEventRepository>()
     factoryOf(::RoomMeasurementSuggestionRepository).bind<MeasurementSuggestionRepository>()
-    factoryOf(::FoodSearchRepositoryImpl).bind<FoodSearchRepository>()
+    factoryOf(::RoomFoodSearchRepository).bind<FoodSearchRepository>()
     factoryOf(::DataStoreFoodSearchPreferencesRepository).bind<FoodSearchPreferencesRepository>()
     factoryOf(::RoomSearchHistoryRepository).bind<SearchHistoryRepository>()
 
     factoryOf(::RemoteProductMapper)
-    factoryOf(::OpenFoodFactsProductMapper)
-    factoryOf(::USDAProductMapper)
-
-    factoryOf(::OpenFoodFactsFacade)
-    factoryOf(::USDAFacade)
-
     factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
 
     eventHandlerOf(::FoodDiaryEntryCreatedEventHandler)
@@ -98,10 +92,21 @@ val businessFoodModule = module {
     factoryOf(::ImportCsvProductUseCaseImpl).bind<ImportCsvProductUseCase>()
     factoryOf(::ObserveMeasurementSuggestionsUseCaseImpl)
         .bind<ObserveMeasurementSuggestionsUseCase>()
-    factoryOf(::FoodSearchUseCaseImpl).bind<FoodSearchUseCase>()
+    factory {
+            FoodSearchUseCaseImpl(
+                foodSearchRepository = get(),
+                foodSearchPreferencesRepository = get(),
+                openFoodFactsRemoteMediatorFactory =
+                    get(named(OpenFoodFactsRemoteDataSource::class.qualifiedName!!)),
+                usdaRemoteMediatorFactory = get(named(USDARemoteDataSource::class.qualifiedName!!)),
+                dateProvider = get(),
+                eventBus = get(),
+            )
+        }
+        .bind<FoodSearchUseCase>()
     factoryOf(::DownloadProductUseCaseImpl).bind<DownloadProductUseCase>()
 
-    single(qualifier("OpenFoodFactsClient")) {
+    single(named(OpenFoodFactsRemoteDataSource::class.qualifiedName!!)) {
             HttpClient {
                 install(HttpTimeout)
                 install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
@@ -109,15 +114,36 @@ val businessFoodModule = module {
         }
         .onClose { it?.close() }
     factory {
-        OpenFoodFactsRemoteDataSource(client = get(qualifier("OpenFoodFactsClient")), get(), get())
+        OpenFoodFactsRemoteDataSource(
+            client = get(named(OpenFoodFactsRemoteDataSource::class.qualifiedName!!)),
+            get(),
+            get(),
+        )
     }
+    factoryOf(::OpenFoodFactsFacade)
+    factoryOf(::OpenFoodFactsProductMapper)
+    factoryOf(::OpenFoodFactsRemoteMediatorFactory) {
+            qualifier = named(OpenFoodFactsRemoteDataSource::class.qualifiedName!!)
+        }
+        .bind<ProductRemoteMediatorFactory>()
 
-    single(qualifier("USDA")) {
+    single(named(USDARemoteDataSource::class.qualifiedName!!)) {
         HttpClient {
             install(HttpTimeout)
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
     }
-
-    factory { USDARemoteDataSource(client = get(qualifier("USDA")), get(), get()) }
+    factory {
+        USDARemoteDataSource(
+            client = get(named(USDARemoteDataSource::class.qualifiedName!!)),
+            get(),
+            get(),
+        )
+    }
+    factoryOf(::USDAFacade)
+    factoryOf(::USDAProductMapper)
+    factoryOf(::USDARemoteMediatorFactory) {
+            qualifier = named(USDARemoteDataSource::class.qualifiedName!!)
+        }
+        .bind<ProductRemoteMediatorFactory>()
 }

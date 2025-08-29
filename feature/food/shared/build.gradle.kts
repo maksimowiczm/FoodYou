@@ -22,5 +22,6 @@ kotlin {
 
         implementation(libs.compose.shimmer)
         implementation(libs.androidx.paging.common)
+        implementation(libs.kotlinx.datetime)
     }
 }
