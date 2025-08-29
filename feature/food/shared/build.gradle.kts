@@ -1,6 +1,8 @@
 plugins { alias(libs.plugins.feature) }
 
 kotlin {
+    sourceSets.all { languageSettings.enableLanguageFeature("WhenGuards") }
+
     androidLibrary { namespace = "com.maksimowiczm.foodyou.feature.food.shared" }
 
     val xcfName = "feature:food:sharedKit"

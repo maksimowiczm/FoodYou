@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.shared.ui.usda
+package com.maksimowiczm.foodyou.feature.food.shared.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,18 +14,18 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.business.food.application.DownloadProductError
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteFoodException
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun UsdaErrorCard(
-    error: DownloadProductError.Usda,
+fun DownloadProductUsdaErrorCard(
+    error: RemoteFoodException.USDA,
     onUpdateApiKey: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -34,13 +34,16 @@ fun UsdaErrorCard(
 
     val errorText =
         when (error) {
-            DownloadProductError.Usda.ApiKeyInvalid ->
+            is RemoteFoodException.USDA.ApiKeyDisabledException,
+            is RemoteFoodException.USDA.ApiKeyInvalidException,
+            is RemoteFoodException.USDA.ApiKeyIsMissingException,
+            is RemoteFoodException.USDA.ApiKeyUnauthorizedException ->
                 stringResource(Res.string.error_api_key_is_invalid)
 
-            DownloadProductError.Usda.ApiKeyUnverified ->
+            is RemoteFoodException.USDA.ApiKeyUnverifiedException ->
                 stringResource(Res.string.error_usda_not_verified)
-
-            DownloadProductError.Usda.RateLimit -> stringResource(Res.string.error_usda_rate_limit)
+            is RemoteFoodException.USDA.RateLimitException ->
+                stringResource(Res.string.error_usda_rate_limit)
         }
 
     Card(

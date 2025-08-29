@@ -22,20 +22,52 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteFoodException
+import com.maksimowiczm.foodyou.feature.food.shared.ui.DownloadProductUsdaErrorCard
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_retry
 import foodyou.app.generated.resources.action_show_details
+import foodyou.app.generated.resources.error_unknown_error
 import foodyou.app.generated.resources.neutral_an_error_occurred
 import foodyou.app.generated.resources.neutral_remote_database_error
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FoodSearchErrorCard(
-    message: String,
+    error: RemoteFoodException,
+    onRetry: () -> Unit,
+    onUsdaApiKey: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    when (error) {
+        is RemoteFoodException.Unknown,
+        is RemoteFoodException.OpenFoodFacts.Timeout ->
+            FoodSearchErrorCard(message = error.message, onRetry = onRetry, modifier = modifier)
+
+        is RemoteFoodException.ProductNotFoundException -> Unit
+
+        is RemoteFoodException.USDA.ApiKeyDisabledException,
+        is RemoteFoodException.USDA.ApiKeyInvalidException,
+        is RemoteFoodException.USDA.ApiKeyIsMissingException,
+        is RemoteFoodException.USDA.ApiKeyUnauthorizedException,
+        is RemoteFoodException.USDA.ApiKeyUnverifiedException,
+        is RemoteFoodException.USDA.RateLimitException ->
+            DownloadProductUsdaErrorCard(
+                error = error,
+                onUpdateApiKey = onUsdaApiKey,
+                modifier = modifier,
+            )
+    }
+}
+
+@Composable
+private fun FoodSearchErrorCard(
+    message: String?,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showDetails by rememberSaveable { mutableStateOf(false) }
+    val message = message ?: stringResource(Res.string.error_unknown_error)
 
     Surface(
         modifier = modifier,

@@ -17,7 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.food.application.DownloadProductError
-import com.maksimowiczm.foodyou.feature.food.shared.ui.usda.UsdaErrorCard
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteFoodException
+import com.maksimowiczm.foodyou.feature.food.shared.ui.DownloadProductUsdaErrorCard
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -28,31 +29,29 @@ internal fun DownloadErrorCard(
     modifier: Modifier = Modifier,
 ) {
     when (error) {
-        is DownloadProductError.Generic -> DownloadGenericErrorCard(error, modifier)
-        is DownloadProductError.Usda -> UsdaErrorCard(error, onUpdateUsdaApiKey, modifier)
+        DownloadProductError.UrlNotFound ->
+            DownloadErrorCard(
+                message = stringResource(Res.string.error_url_not_found),
+                modifier = modifier,
+            )
+
+        DownloadProductError.UrlNotSupported ->
+            DownloadErrorCard(
+                message = stringResource(Res.string.error_url_is_not_supported),
+                modifier = modifier,
+            )
+
+        is DownloadProductError.RemoteFoodError ->
+            DownloadErrorCard(
+                error = error.exception,
+                onUpdateUsdaApiKey = onUpdateUsdaApiKey,
+                modifier = modifier,
+            )
     }
 }
 
 @Composable
-private fun DownloadGenericErrorCard(
-    error: DownloadProductError.Generic,
-    modifier: Modifier = Modifier,
-) {
-    val errorText =
-        when (error) {
-            DownloadProductError.Generic.UrlNotFound ->
-                stringResource(Res.string.error_url_not_found)
-
-            DownloadProductError.Generic.UrlNotSupported ->
-                stringResource(Res.string.error_url_is_not_supported)
-
-            DownloadProductError.Generic.ProductNotFound ->
-                stringResource(Res.string.error_product_not_found)
-
-            is DownloadProductError.Generic.Custom if (error.message != null) -> error.message!!
-            is DownloadProductError.Generic.Custom -> stringResource(Res.string.error_unknown_error)
-        }
-
+private fun DownloadErrorCard(message: String, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         colors =
@@ -77,7 +76,33 @@ private fun DownloadGenericErrorCard(
                 )
             }
 
-            Text(text = errorText, style = MaterialTheme.typography.bodyMedium)
+            Text(text = message, style = MaterialTheme.typography.bodyMedium)
         }
     }
+}
+
+@Composable
+private fun DownloadErrorCard(
+    error: RemoteFoodException,
+    onUpdateUsdaApiKey: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val text =
+        when (error) {
+            is RemoteFoodException.OpenFoodFacts.Timeout -> error.message
+
+            is RemoteFoodException.ProductNotFoundException ->
+                stringResource(Res.string.error_product_not_found)
+
+            is RemoteFoodException.USDA ->
+                return DownloadProductUsdaErrorCard(
+                    error = error,
+                    onUpdateApiKey = onUpdateUsdaApiKey,
+                    modifier = modifier,
+                )
+
+            is RemoteFoodException.Unknown -> error.message
+        } ?: stringResource(Res.string.error_unknown_error)
+
+    DownloadErrorCard(message = text, modifier = modifier)
 }

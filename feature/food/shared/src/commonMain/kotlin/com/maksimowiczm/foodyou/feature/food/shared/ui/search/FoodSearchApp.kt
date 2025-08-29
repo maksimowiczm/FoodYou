@@ -46,13 +46,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.error
 import androidx.paging.compose.itemKey
-import com.maksimowiczm.foodyou.business.food.application.DownloadProductError
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteFoodException
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodFilter
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodSearchUiState
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodSearchViewModel
-import com.maksimowiczm.foodyou.feature.food.shared.ui.usda.UsdaErrorCard
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.shared.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
@@ -178,25 +176,15 @@ private fun FoodSearchApp(
                 )
             }
 
-            when (val ex = pages?.loadState?.error) {
+            val error = pages?.loadState?.error as? RemoteFoodException
+
+            when (val ex = error) {
                 null -> Unit
-
-                // This is really stupid but Paging 3 library exposes the exception from remote
-                // mediator and we can't know what it is if we don't check it. For now this is
-                // a "temporary" solution because fixing this would require rethinking how the
-                // remote food search works in business module.
-                is USDAException ->
-                    UsdaErrorCard(
-                        error = ex.toUsdaError(),
-                        onUpdateApiKey = onUpdateUsdaApiKey,
-                        modifier =
-                            Modifier.fillMaxWidth().padding(top = 8.dp).padding(horizontal = 16.dp),
-                    )
-
                 else ->
                     FoodSearchErrorCard(
-                        message = ex.message ?: stringResource(Res.string.error_unknown_error),
+                        error = ex,
                         onRetry = pages::retry,
+                        onUsdaApiKey = onUpdateUsdaApiKey,
                         modifier =
                             Modifier.fillMaxWidth().padding(top = 8.dp).padding(horizontal = 16.dp),
                     )
@@ -268,18 +256,6 @@ private fun FoodSearchApp(
         }
     }
 }
-
-private fun USDAException.toUsdaError(): DownloadProductError.Usda =
-    when (this) {
-        is USDAException.ApiKeyDisabledException,
-        is USDAException.ApiKeyInvalidException,
-        is USDAException.ApiKeyIsMissingException,
-        is USDAException.ApiKeyUnauthorizedException,
-        is USDAException.ProductNotFoundException -> DownloadProductError.Usda.ApiKeyInvalid
-
-        is USDAException.ApiKeyUnverifiedException -> DownloadProductError.Usda.ApiKeyUnverified
-        is USDAException.RateLimitException -> DownloadProductError.Usda.RateLimit
-    }
 
 object FoodSearchAppDefaults {
 
