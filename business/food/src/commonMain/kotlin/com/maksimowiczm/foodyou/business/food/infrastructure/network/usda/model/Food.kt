@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.externaldatabase.usda.model
+package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model
 
 interface Food {
     val fdcId: Int

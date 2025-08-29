@@ -22,7 +22,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.externaldatabase.usda)
             implementation(libs.androidx.paging.common)
 
             // Ktor

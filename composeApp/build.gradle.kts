@@ -98,7 +98,6 @@ kotlin {
             implementation(projects.feature.food.diary.shared)
             implementation(projects.feature.onboarding)
 
-            implementation(projects.externaldatabase.usda)
             implementation(projects.externaldatabase.swissfoodcompositiondatabase)
 
             implementation(compose.runtime)

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.externaldatabase.usda.model
+package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model
 
 enum class Nutrient(val number: String) {
     CALORIES("957"),

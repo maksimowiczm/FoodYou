@@ -20,8 +20,5 @@ kotlin {
 
         implementation(libs.compose.shimmer)
         implementation(libs.androidx.paging.common)
-
-        // Have to get rid of this
-        implementation(projects.externaldatabase.usda)
     }
 }

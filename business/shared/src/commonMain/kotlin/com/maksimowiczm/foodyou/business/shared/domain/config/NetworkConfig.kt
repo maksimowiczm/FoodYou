@@ -4,4 +4,5 @@ interface NetworkConfig {
     val userAgent: String
     val sponsorshipApiUrl: String
     val openFoodFactsApiUrl: String
+    val usdaApiUrl: String
 }

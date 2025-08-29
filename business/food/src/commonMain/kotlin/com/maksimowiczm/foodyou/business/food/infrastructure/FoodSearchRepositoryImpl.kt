@@ -144,6 +144,7 @@ internal class FoodSearchRepositoryImpl(
                     productMapper = usdaMapper,
                     remoteMapper = remoteMapper,
                     dateProvider = dateProvider,
+                    logger = logger,
                 )
         }
 

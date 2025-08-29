@@ -44,6 +44,7 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfac
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAFacade
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAProductMapper
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomFoodEventRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomFoodSearchDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomMeasurementSuggestionRepository
@@ -110,4 +111,13 @@ val businessFoodModule = module {
     factory {
         OpenFoodFactsRemoteDataSource(client = get(qualifier("OpenFoodFactsClient")), get(), get())
     }
+
+    single(qualifier("USDA")) {
+        HttpClient {
+            install(HttpTimeout)
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+    }
+
+    factory { USDARemoteDataSource(client = get(qualifier("USDA")), get(), get()) }
 }

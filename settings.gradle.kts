@@ -42,8 +42,6 @@ include(":shared:barcodescanner")
 
 include(":navigation")
 
-include(":externaldatabase:usda")
-
 include(":externaldatabase:swissfoodcompositiondatabase")
 
 include(":business:shared")

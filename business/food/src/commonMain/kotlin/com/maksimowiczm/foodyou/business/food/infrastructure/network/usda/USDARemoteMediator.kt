@@ -9,11 +9,10 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.Food
 import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
-import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
-import com.maksimowiczm.foodyou.externaldatabase.usda.model.Food
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)
@@ -28,6 +27,7 @@ internal class USDARemoteMediator<K : Any, T : Any>(
     private val productMapper: USDAProductMapper,
     private val remoteMapper: RemoteProductMapper,
     private val dateProvider: DateProvider,
+    private val logger: Logger,
 ) : RemoteMediator<K, T>() {
 
     override suspend fun initialize(): InitializeAction = InitializeAction.LAUNCH_INITIAL_REFRESH
@@ -43,7 +43,7 @@ internal class USDARemoteMediator<K : Any, T : Any>(
                     LoadType.APPEND -> {
                         val pagingKey = usdaHelper.getPagingKey(query)
                         if (pagingKey != null && pagingKey.totalCount <= pagingKey.fetchedCount) {
-                            FoodYouLogger.d(TAG) { "No more pages to load for query: $query" }
+                            logger.d(TAG) { "No more pages to load for query: $query" }
                             return MediatorResult.Success(endOfPaginationReached = true)
                         }
                         (pagingKey?.fetchedCount?.div(PAGE_SIZE) ?: 0) + 1
@@ -72,7 +72,7 @@ internal class USDARemoteMediator<K : Any, T : Any>(
                 response.foods.map { remoteProduct ->
                     remoteProduct.toDomainProduct().also {
                         if (it == null) {
-                            FoodYouLogger.d(TAG) {
+                            logger.d(TAG) {
                                 "Failed to convert product: (name=${remoteProduct.description}, code = ${remoteProduct.barcode})"
                             }
                         }
@@ -88,13 +88,13 @@ internal class USDARemoteMediator<K : Any, T : Any>(
 
             // Load until there is anything inserted
             return if (skipped == PAGE_SIZE) {
-                FoodYouLogger.d(TAG) { "All products skipped, trying to load next page" }
+                logger.d(TAG) { "All products skipped, trying to load next page" }
                 load(loadType, state)
             } else {
                 MediatorResult.Success(endOfPaginationReached)
             }
         } catch (e: Exception) {
-            FoodYouLogger.e(TAG, e) { "Error loading page" }
+            logger.e(TAG, e) { "Error loading page" }
             MediatorResult.Error(e)
         }
     }

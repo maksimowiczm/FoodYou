@@ -31,4 +31,12 @@ sealed class RemoteFoodException(message: String?) : Exception(message) {
                 "OpenFoodFacts request timed out. You either have a slow connection or exceeded the API rate limit."
             )
     }
+
+    companion object {
+        fun fromThrowable(throwable: Throwable): RemoteFoodException =
+            when (throwable) {
+                is RemoteFoodException -> throwable
+                else -> Unknown(throwable.message)
+            }
+    }
 }

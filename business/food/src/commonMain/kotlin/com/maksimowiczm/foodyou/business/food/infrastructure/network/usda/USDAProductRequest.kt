@@ -1,10 +1,12 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda
 
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteFoodException
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProductRequest
-import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
-import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
+import com.maksimowiczm.foodyou.shared.common.result.Err
+import com.maksimowiczm.foodyou.shared.common.result.Ok
+import com.maksimowiczm.foodyou.shared.common.result.Result
 import kotlinx.coroutines.flow.first
 
 internal class USDAProductRequest(
@@ -15,13 +17,9 @@ internal class USDAProductRequest(
 ) : RemoteProductRequest {
     private suspend fun apiKey() = preferencesRepository.observe().first().usda.apiKey
 
-    override suspend fun execute(): Result<RemoteProduct?> =
+    override suspend fun execute(): Result<RemoteProduct, RemoteFoodException> =
         dataSource
             .getProduct(id, apiKey())
-            .map { mapper.toRemoteProduct(it) }
-            .onFailure {
-                if (it is USDAException.ProductNotFoundException) {
-                    return Result.success(null)
-                }
-            }
+            .map(mapper::toRemoteProduct)
+            .fold(onSuccess = ::Ok, onFailure = { Err(RemoteFoodException.fromThrowable(it)) })
 }

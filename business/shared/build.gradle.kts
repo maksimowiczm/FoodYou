@@ -19,6 +19,9 @@ buildConfig {
     sourceSets.getByName("test") {
         buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.net\"")
     }
+
+    // -- USDA --
+    buildConfigField("String", "USDA_URL", "\"https://api.nal.usda.gov\"")
 }
 
 room { schemaDirectory("$projectDir/schemas") }
