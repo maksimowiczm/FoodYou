@@ -1,7 +1,4 @@
-plugins {
-    alias(libs.plugins.business)
-    alias(libs.plugins.kotlin.serialization)
-}
+plugins { alias(libs.plugins.business) }
 
 kotlin {
     androidLibrary { namespace = "com.maksimowiczm.foodyou.business.fooddiary" }
@@ -14,11 +11,9 @@ kotlin {
 
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.androidx.paging.common)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.androidx.room.runtime)
-        }
+    sourceSets.commonMain.dependencies {
+        implementation(libs.androidx.paging.common)
+        implementation(libs.kotlinx.serialization.json)
+        implementation(libs.androidx.room.runtime)
     }
 }

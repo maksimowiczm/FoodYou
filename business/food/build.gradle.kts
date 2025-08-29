@@ -5,13 +5,6 @@ kotlin {
 
     androidLibrary { namespace = "com.maksimowiczm.foodyou.business.food" }
 
-    // For iOS targets, this is also where you should
-    // configure native binary output. For more information, see:
-    // https://kotlinlang.org/docs/multiplatform-build-native-binaries.html#build-xcframeworks
-
-    // A step-by-step guide on how to include this library in an XCode
-    // project can be found here:
-    // https://developer.android.com/kotlin/multiplatform/migrate
     val xcfName = "business:foodKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }

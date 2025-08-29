@@ -102,5 +102,4 @@ feature-library-implementation = [
     "koin-compose",
     "koin-compose-viewmodel",
     "kotlinx-coroutines-core",
-    "kotlinx-serialization-json"
 ]
