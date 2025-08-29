@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfa
 
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteNutritionFacts
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.OpenFoodFactsProduct
 
 internal class OpenFoodFactsProductMapper {
-    fun toRemoteProduct(product: OpenFoodFactsProduct): RemoteProduct? {
+    fun toRemoteProduct(product: OpenFoodFactsProduct): RemoteProduct {
         val name = product.name?.takeIf { it.isNotBlank() }
         val brand = product.brand?.takeIf { it.isNotBlank() }
         val barcode = product.barcode?.takeIf { it.isNotBlank() }

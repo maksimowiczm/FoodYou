@@ -60,5 +60,5 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
         // Onboarding
         modules(featureOnboardingModule)
 
-        modules(openFoodFactsModule, usdaModule)
+        modules(usdaModule)
     }

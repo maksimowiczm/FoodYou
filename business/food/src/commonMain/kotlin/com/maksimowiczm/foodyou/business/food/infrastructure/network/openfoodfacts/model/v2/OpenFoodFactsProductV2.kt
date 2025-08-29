@@ -1,7 +1,7 @@
-package com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.v2
+package com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.model.v2
 
-import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.OpenFoodFactsNutrients
-import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.model.OpenFoodFactsNutrients
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.model.OpenFoodFactsProduct
 import kotlin.Float
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

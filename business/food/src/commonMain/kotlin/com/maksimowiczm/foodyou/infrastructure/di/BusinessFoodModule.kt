@@ -40,6 +40,7 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProdu
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.LocalOpenFoodFactsPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsFacade
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsProductMapper
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAFacade
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAProductMapper
@@ -51,9 +52,16 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomProductRep
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomRecipeRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomSearchHistoryRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomUsdaPagingHelper
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.qualifier.qualifier
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.koin.dsl.onClose
 
 val businessFoodModule = module {
     factoryOf(::RoomProductRepository).bind<ProductRepository>()
@@ -91,4 +99,15 @@ val businessFoodModule = module {
         .bind<ObserveMeasurementSuggestionsUseCase>()
     factoryOf(::FoodSearchUseCaseImpl).bind<FoodSearchUseCase>()
     factoryOf(::DownloadProductUseCaseImpl).bind<DownloadProductUseCase>()
+
+    single(qualifier("OpenFoodFactsClient")) {
+            HttpClient {
+                install(HttpTimeout)
+                install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+            }
+        }
+        .onClose { it?.close() }
+    factory {
+        OpenFoodFactsRemoteDataSource(client = get(qualifier("OpenFoodFactsClient")), get(), get())
+    }
 }

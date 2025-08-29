@@ -14,16 +14,17 @@ import com.maksimowiczm.foodyou.business.food.domain.QueryType
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.LocalOpenFoodFactsPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsProductMapper
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteMediator
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAProductMapper
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDARemoteMediator
 import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
-import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
+import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -44,6 +45,7 @@ internal class FoodSearchRepositoryImpl(
     private val usdaMapper: USDAProductMapper,
     private val usdaHelper: LocalUsdaPagingHelper,
     private val dateProvider: DateProvider,
+    private val logger: Logger,
 ) : FoodSearchRepository {
     override fun searchFood(
         query: QueryType,
@@ -121,6 +123,7 @@ internal class FoodSearchRepositoryImpl(
                     offMapper = offMapper,
                     remoteMapper = remoteMapper,
                     dateProvider = dateProvider,
+                    logger = logger,
                 )
         }
 

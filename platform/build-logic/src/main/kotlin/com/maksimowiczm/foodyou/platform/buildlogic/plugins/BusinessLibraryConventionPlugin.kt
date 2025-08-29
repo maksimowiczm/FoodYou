@@ -39,7 +39,6 @@ internal class BusinessLibraryConventionPlugin : Plugin<Project> {
             sourceSets.apply {
                 commonMain.dependencies {
                     implementation(libs.findBundle("business.library.implementation").get())
-                    implementation(libs.findLibrary("kotlinx.serialization.json").get())
                     implementation(project(":shared:common"))
                     implementation(project(":business:shared"))
                 }

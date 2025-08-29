@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.business.food.application
 
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteFoodException
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
-import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
 import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import com.maksimowiczm.foodyou.shared.common.result.Ok
 import com.maksimowiczm.foodyou.shared.common.result.Result
@@ -26,6 +26,10 @@ sealed interface DownloadProductError {
         data object ApiKeyInvalid : Usda
 
         data object ApiKeyUnverified : Usda
+    }
+
+    sealed interface OpenFoodFacts : DownloadProductError {
+        data object Timeout : OpenFoodFacts
     }
 }
 
@@ -63,57 +67,64 @@ internal class DownloadProductUseCaseImpl(
         return request
             .execute()
             .fold(
-                onSuccess = { product ->
-                    if (product == null) {
-                        logger.logAndReturnFailure(
-                            tag = TAG,
-                            throwable = null,
-                            error = DownloadProductError.Generic.ProductNotFound,
-                            message = { "No product found for URL: $link" },
-                        )
-                    } else {
-                        Ok(product)
-                    }
-                },
+                onSuccess = ::Ok,
                 onFailure = { error ->
                     when (error) {
-                        is USDAException ->
-                            when (error) {
-                                is USDAException.ApiKeyDisabledException,
-                                is USDAException.ApiKeyInvalidException,
-                                is USDAException.ApiKeyIsMissingException,
-                                is USDAException.ApiKeyUnauthorizedException,
-                                is USDAException.ProductNotFoundException ->
-                                    logger.logAndReturnFailure(
-                                        tag = "DownloadProductCommandHandler",
-                                        throwable = error,
-                                        error = DownloadProductError.Usda.ApiKeyInvalid,
-                                        message = { "USDA API key is invalid for URL: $link" },
-                                    )
+                        is RemoteFoodException.OpenFoodFacts.Timeout ->
+                            logger.logAndReturnFailure(
+                                tag = TAG,
+                                throwable = error,
+                                error = DownloadProductError.OpenFoodFacts.Timeout,
+                                message = { "Timeout when fetching product for URL: $link" },
+                            )
 
-                                is USDAException.ApiKeyUnverifiedException ->
-                                    logger.logAndReturnFailure(
-                                        tag = "DownloadProductCommandHandler",
-                                        throwable = error,
-                                        error = DownloadProductError.Usda.ApiKeyUnverified,
-                                        message = { "USDA API key is unverified for URL: $link" },
-                                    )
+                        is RemoteFoodException.ProductNotFoundException ->
+                            logger.logAndReturnFailure(
+                                tag = TAG,
+                                throwable = error,
+                                error = DownloadProductError.Generic.ProductNotFound,
+                                message = { "No product found for URL: $link" },
+                            )
 
-                                is USDAException.RateLimitException ->
-                                    logger.logAndReturnFailure(
-                                        tag = "DownloadProductCommandHandler",
-                                        throwable = error,
-                                        error = DownloadProductError.Usda.RateLimit,
-                                        message = { "USDA rate limit exceeded for URL: $link" },
-                                    )
-                            }
+                        is RemoteFoodException.USDA.ApiKeyDisabledException,
+                        is RemoteFoodException.USDA.ApiKeyInvalidException,
+                        is RemoteFoodException.USDA.ApiKeyIsMissingException,
+                        is RemoteFoodException.USDA.ApiKeyUnauthorizedException ->
+                            logger.logAndReturnFailure(
+                                tag = TAG,
+                                throwable = error,
+                                error = DownloadProductError.Usda.ApiKeyInvalid,
+                                message = {
+                                    "Invalid USDA API key when fetching product for URL: $link"
+                                },
+                            )
 
-                        else ->
+                        is RemoteFoodException.USDA.ApiKeyUnverifiedException ->
+                            logger.logAndReturnFailure(
+                                tag = TAG,
+                                throwable = error,
+                                error = DownloadProductError.Usda.ApiKeyUnverified,
+                                message = {
+                                    "USDA API key unverified when fetching product for URL: $link"
+                                },
+                            )
+
+                        is RemoteFoodException.USDA.RateLimitException ->
+                            logger.logAndReturnFailure(
+                                tag = TAG,
+                                throwable = error,
+                                error = DownloadProductError.Usda.RateLimit,
+                                message = {
+                                    "USDA rate limit exceeded when fetching product for URL: $link"
+                                },
+                            )
+
+                        is RemoteFoodException.Unknown ->
                             logger.logAndReturnFailure(
                                 tag = TAG,
                                 throwable = error,
                                 error = DownloadProductError.Generic.Custom(error.message),
-                                message = { "Failed to download product from URL: $link" },
+                                message = { "Unknown error when fetching product for URL: $link" },
                             )
                     }
                 },

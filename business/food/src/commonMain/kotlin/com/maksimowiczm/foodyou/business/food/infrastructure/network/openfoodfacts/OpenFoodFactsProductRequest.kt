@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfa
 
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProductRequest
-import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
 
 internal class OpenFoodFactsProductRequest(

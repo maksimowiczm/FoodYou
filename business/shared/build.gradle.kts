@@ -11,6 +11,14 @@ plugins {
 buildConfig {
     val sponsorApiUrl = "https://sponsors.foodyou.maksimowiczm.com"
     buildConfigField("String", "SPONSOR_API_URL", "\"$sponsorApiUrl\"")
+
+    // -- OPEN FOOD FACTS --
+    sourceSets.getByName("main") {
+        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org\"")
+    }
+    sourceSets.getByName("test") {
+        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.net\"")
+    }
 }
 
 room { schemaDirectory("$projectDir/schemas") }

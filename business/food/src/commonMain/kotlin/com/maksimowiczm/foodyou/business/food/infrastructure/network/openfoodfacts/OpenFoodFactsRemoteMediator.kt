@@ -8,13 +8,12 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteFoodException
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
+import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
-import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
-import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.ProductNotFoundException
-import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)
@@ -30,6 +29,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
     private val offMapper: OpenFoodFactsProductMapper,
     private val remoteMapper: RemoteProductMapper,
     private val dateProvider: DateProvider,
+    private val logger: Logger,
 ) : RemoteMediator<K, T>() {
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
@@ -54,7 +54,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                             remoteDataSource
                                 .getProduct(barcode = query, countries = country)
                                 .getOrElse {
-                                    return if (it is ProductNotFoundException) {
+                                    return if (it is RemoteFoodException.ProductNotFoundException) {
                                         MediatorResult.Success(endOfPaginationReached = true)
                                     } else {
                                         MediatorResult.Error(it)
@@ -66,7 +66,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                         if (product != null) {
                             transactionProvider.withTransaction { product.insert() }
                         } else {
-                            FoodYouLogger.d(TAG) {
+                            logger.d(TAG) {
                                 "Failed to convert product: (name=${response.name}, code=${response.barcode})"
                             }
                         }
@@ -79,7 +79,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                             openFoodFactsPagingHelper.getPagingKey(query = query, country = country)
 
                         if (pagingKey != null && pagingKey.totalCount == pagingKey.fetchedCount) {
-                            FoodYouLogger.d(TAG) {
+                            logger.d(TAG) {
                                 "No more pages to load for query: $query, country: $country"
                             }
                             return MediatorResult.Success(endOfPaginationReached = true)
@@ -91,7 +91,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                     }
                 }
 
-            FoodYouLogger.d(TAG) { "Loading page $page" }
+            logger.d(TAG) { "Loading page $page" }
 
             val response =
                 remoteDataSource.queryProducts(
@@ -117,7 +117,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                 response.products.map { remoteProduct ->
                     remoteProduct.toDomainProduct().also {
                         if (it == null) {
-                            FoodYouLogger.d(TAG) {
+                            logger.d(TAG) {
                                 "Failed to convert product: (name=${remoteProduct.name}, code=${remoteProduct.barcode})"
                             }
                         }
@@ -134,19 +134,19 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
 
             // Load until there is anything inserted
             return if (skipped == PAGE_SIZE) {
-                FoodYouLogger.d(TAG) { "All products skipped, trying to load next page" }
+                logger.d(TAG) { "All products skipped, trying to load next page" }
                 load(loadType, state)
             } else {
                 MediatorResult.Success(endOfPaginationReached)
             }
         } catch (e: Exception) {
-            FoodYouLogger.e(TAG, e) { "Error loading page" }
+            logger.e(TAG, e) { "Error loading page" }
             return MediatorResult.Error(e)
         }
     }
 
     private fun OpenFoodFactsProduct.toDomainProduct(): Product? =
-        runCatching { this.let(offMapper::toRemoteProduct)?.let(remoteMapper::toModel) }.getOrNull()
+        runCatching { this.let(offMapper::toRemoteProduct).let(remoteMapper::toModel) }.getOrNull()
 
     private suspend fun Product.insert(now: LocalDateTime = dateProvider.now()) {
         val id =

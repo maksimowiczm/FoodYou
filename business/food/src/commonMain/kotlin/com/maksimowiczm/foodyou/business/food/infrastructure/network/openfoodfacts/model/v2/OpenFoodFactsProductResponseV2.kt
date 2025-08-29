@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.v2
+package com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.model.v2
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

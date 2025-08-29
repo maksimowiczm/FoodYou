@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model
+package com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.model
 
 interface OpenFoodPageResponse {
     val count: Int
