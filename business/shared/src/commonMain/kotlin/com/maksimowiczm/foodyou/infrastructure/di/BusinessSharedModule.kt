@@ -4,11 +4,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.business.shared.application.csv.CsvParser
 import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseDumpService
-import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
-import com.maksimowiczm.foodyou.business.shared.application.network.NetworkConfig
-import com.maksimowiczm.foodyou.business.shared.application.system.SystemDetails
+import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
+import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.infrastructure.DateProviderImpl
 import com.maksimowiczm.foodyou.business.shared.infrastructure.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.business.shared.infrastructure.SharedFlowEventBus
@@ -36,7 +35,7 @@ private val Scope.database: FoodYouDatabase
 private val databaseDefinition: Module.() -> Unit = {
     factory { InitializeMealsCallback(get()) }
     single<FoodYouDatabase> { database() }
-        .binds(arrayOf(DatabaseTransactionProvider::class, DatabaseDumpService::class))
+        .binds(arrayOf(TransactionProvider::class, DatabaseDumpService::class))
     factory { database.productDao }
     factory { database.recipeDao }
     factory { database.foodSearchDao }
@@ -57,8 +56,6 @@ private val dataStoreDefinition: Module.() -> KoinDefinition<DataStore<Preferenc
     single { createDataStore() }
 }
 
-expect val systemDetails: Module.() -> KoinDefinition<out SystemDetails>
-
 private const val APPLICATION_COROUTINE_SCOPE = "APPLICATION_COROUTINE_SCOPE"
 
 fun Scope.applicationCoroutineScope(): CoroutineScope = get(named(APPLICATION_COROUTINE_SCOPE))
@@ -68,7 +65,6 @@ fun businessSharedModule(applicationCoroutineScope: CoroutineScope) = module {
 
     databaseDefinition()
     dataStoreDefinition()
-    systemDetails()
 
     factoryOf(::FoodYouNetworkConfig).bind<NetworkConfig>()
     factoryOf(::VibeCsvParser).bind<CsvParser>()

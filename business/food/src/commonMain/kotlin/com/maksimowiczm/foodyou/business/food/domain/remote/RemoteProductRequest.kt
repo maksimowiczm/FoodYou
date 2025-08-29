@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.food.domain
+package com.maksimowiczm.foodyou.business.food.domain.remote
 
 interface RemoteProductRequest {
     /**

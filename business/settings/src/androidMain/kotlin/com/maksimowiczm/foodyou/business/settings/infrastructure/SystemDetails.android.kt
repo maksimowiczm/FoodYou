@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.shared.infrastructure.system
+package com.maksimowiczm.foodyou.business.settings.infrastructure
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
@@ -6,27 +6,25 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import com.maksimowiczm.foodyou.business.shared.application.system.SystemDetails
 import com.maksimowiczm.foodyou.shared.common.infrastructure.system.defaultLocale
 import java.util.Locale
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class AndroidSystemDetails(private val context: Context) : SystemDetails, LifecycleEventObserver {
-
+actual class SystemDetails(private val context: Context) : LifecycleEventObserver {
     val defaultLocale: Locale
         get() = context.defaultLocale
 
     private val languageTagFlow = MutableStateFlow(defaultLocale.toLanguageTag())
 
-    override val languageTag: Flow<String> = languageTagFlow
+    actual val languageTag: Flow<String> = languageTagFlow
 
-    override fun setLanguage(tag: String) {
+    actual fun setLanguage(tag: String) {
         val locale = LocaleListCompat.forLanguageTags(tag)
         AppCompatDelegate.setApplicationLocales(locale)
     }
 
-    override fun setSystemLanguage() {
+    actual fun setSystemLanguage() {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
     }
 

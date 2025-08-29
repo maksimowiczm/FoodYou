@@ -9,7 +9,7 @@ import androidx.room.immediateTransaction
 import androidx.room.migration.Migration
 import androidx.room.useWriterConnection
 import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseDumpService
-import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.application.database.TransactionScope as DomainTransactionScope
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventEntity
@@ -116,7 +116,7 @@ import kotlinx.coroutines.flow.Flow
     MeasurementTypeConverter::class,
     FoodEventTypeConverter::class,
 )
-abstract class FoodYouDatabase : RoomDatabase(), DatabaseTransactionProvider, DatabaseDumpService {
+abstract class FoodYouDatabase : RoomDatabase(), TransactionProvider, DatabaseDumpService {
     abstract val productDao: ProductDao
     abstract val recipeDao: RecipeDao
     abstract val foodSearchDao: FoodSearchDao

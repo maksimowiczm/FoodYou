@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.business.food.application
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
-import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.first
@@ -20,7 +20,7 @@ fun interface ExportCsvProductsUseCase {
 
 internal class ExportCsvProductsUseCaseImpl(
     private val productRepository: ProductRepository,
-    private val transactionProvider: DatabaseTransactionProvider,
+    private val transactionProvider: TransactionProvider,
 ) : ExportCsvProductsUseCase {
     override suspend fun export(fields: List<ProductField>): Flow<String> = channelFlow {
         val csvWriter = CsvWriter()

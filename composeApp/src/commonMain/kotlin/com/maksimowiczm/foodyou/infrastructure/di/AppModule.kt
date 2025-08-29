@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.FoodYouConfig
-import com.maksimowiczm.foodyou.business.shared.application.config.AppConfig
+import com.maksimowiczm.foodyou.business.shared.domain.config.AppConfig
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.MealsProvider
 import com.maksimowiczm.foodyou.infrastructure.ComposeMealsProvider
 import com.maksimowiczm.foodyou.presentation.AppViewModel

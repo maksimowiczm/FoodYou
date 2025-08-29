@@ -9,8 +9,8 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
-import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
+import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.model.Food
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
@@ -20,7 +20,7 @@ import kotlinx.datetime.LocalDateTime
 internal class USDARemoteMediator<K : Any, T : Any>(
     private val query: String,
     private val apiKey: String?,
-    private val transactionProvider: DatabaseTransactionProvider,
+    private val transactionProvider: TransactionProvider,
     private val productRepository: ProductRepository,
     private val foodEventRepository: FoodEventRepository,
     private val remoteDataSource: USDARemoteDataSource,

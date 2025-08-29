@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.shared.application.network
+package com.maksimowiczm.foodyou.business.shared.domain
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.RemoteMediator

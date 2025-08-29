@@ -26,8 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.shared.application.config.AppConfig
 import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseDumpService
+import com.maksimowiczm.foodyou.business.shared.domain.config.AppConfig
 import com.maksimowiczm.foodyou.feature.settings.database.databasedump.presentation.DatabaseDumpViewModel
 import com.maksimowiczm.foodyou.shared.ui.BackHandler
 import com.maksimowiczm.foodyou.shared.ui.ext.now

@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda
 
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
-import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
-import com.maksimowiczm.foodyou.business.food.domain.RemoteProductRequest
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProductRequest
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import kotlinx.coroutines.flow.first

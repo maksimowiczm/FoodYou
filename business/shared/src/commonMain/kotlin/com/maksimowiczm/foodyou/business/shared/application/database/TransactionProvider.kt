@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.shared.application.database
 
-interface DatabaseTransactionProvider {
+interface TransactionProvider {
 
     /**
      * Executes the given block of code within a database transaction.

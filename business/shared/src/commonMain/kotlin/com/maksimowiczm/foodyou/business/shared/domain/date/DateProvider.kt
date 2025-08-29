@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.shared.application.date
+package com.maksimowiczm.foodyou.business.shared.domain.date
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate

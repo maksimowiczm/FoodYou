@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.business.fooddiary.application
 
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
-import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
+import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.result.Ok
@@ -34,7 +34,7 @@ internal class UpdateDiaryEntryUseCaseImpl(
     private val mealRepository: MealRepository,
     private val diaryEntryRepository: DiaryEntryRepository,
     private val dateProvider: DateProvider,
-    private val transactionProvider: DatabaseTransactionProvider,
+    private val transactionProvider: TransactionProvider,
     private val logger: Logger,
 ) : UpdateDiaryEntryUseCase {
     override suspend fun update(

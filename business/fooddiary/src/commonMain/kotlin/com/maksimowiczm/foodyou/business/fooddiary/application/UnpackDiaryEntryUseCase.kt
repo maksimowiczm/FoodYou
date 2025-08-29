@@ -4,9 +4,9 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
-import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
+import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.result.Ok
@@ -35,7 +35,7 @@ fun interface UnpackDiaryEntryUseCase {
 internal class UnpackDiaryEntryUseCaseImpl(
     private val diaryEntryRepository: DiaryEntryRepository,
     private val mealRepository: MealRepository,
-    private val transactionProvider: DatabaseTransactionProvider,
+    private val transactionProvider: TransactionProvider,
     private val dateProvider: DateProvider,
     private val logger: Logger,
 ) : UnpackDiaryEntryUseCase {

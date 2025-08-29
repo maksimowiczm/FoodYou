@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.shared.application.config
+package com.maksimowiczm.foodyou.business.shared.domain.config
 
 interface AppConfig {
     val contactEmail: String

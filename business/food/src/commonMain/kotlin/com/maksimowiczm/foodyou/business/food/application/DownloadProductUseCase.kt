@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.food.application
 
-import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
-import com.maksimowiczm.foodyou.business.food.domain.RemoteProductRequestFactory
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
 import com.maksimowiczm.foodyou.shared.common.application.log.Logger

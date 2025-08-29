@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.food.domain
+package com.maksimowiczm.foodyou.business.food.domain.remote
 
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import kotlinx.serialization.Serializable

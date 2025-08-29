@@ -4,7 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
-import com.maksimowiczm.foodyou.business.shared.application.config.AppConfig
+import com.maksimowiczm.foodyou.business.shared.domain.config.AppConfig
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 

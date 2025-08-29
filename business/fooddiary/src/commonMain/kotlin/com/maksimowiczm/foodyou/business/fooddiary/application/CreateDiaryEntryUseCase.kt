@@ -3,10 +3,10 @@ package com.maksimowiczm.foodyou.business.fooddiary.application
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFood
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
-import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
+import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.domain.fooddiary.FoodDiaryEntryCreatedDomainEvent
 import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
@@ -35,7 +35,7 @@ fun interface CreateDiaryEntryUseCase {
 internal class CreateDiaryEntryUseCaseImpl(
     private val mealRepository: MealRepository,
     private val diaryEntryRepository: DiaryEntryRepository,
-    private val transactionProvider: DatabaseTransactionProvider,
+    private val transactionProvider: TransactionProvider,
     private val dateProvider: DateProvider,
     private val eventBus: EventBus,
     private val logger: Logger,

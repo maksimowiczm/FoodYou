@@ -18,9 +18,9 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfac
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDARemoteMediator
-import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.business.shared.application.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.application.network.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
+import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 
 @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
 internal class FoodSearchRepositoryImpl(
-    private val transactionProvider: DatabaseTransactionProvider,
+    private val transactionProvider: TransactionProvider,
     private val productRepository: ProductRepository,
     private val foodEventRepository: FoodEventRepository,
     private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,

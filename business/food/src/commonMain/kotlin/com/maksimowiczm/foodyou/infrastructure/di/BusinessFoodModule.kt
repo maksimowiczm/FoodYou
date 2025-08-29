@@ -30,8 +30,8 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
 import com.maksimowiczm.foodyou.business.food.domain.MeasurementSuggestionRepository
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.domain.RecipeRepository
-import com.maksimowiczm.foodyou.business.food.domain.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistoryRepository
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.business.food.infrastructure.FoodSearchRepositoryImpl
 import com.maksimowiczm.foodyou.business.food.infrastructure.LocalFoodSearchDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.datastore.DataStoreFoodSearchPreferencesRepository

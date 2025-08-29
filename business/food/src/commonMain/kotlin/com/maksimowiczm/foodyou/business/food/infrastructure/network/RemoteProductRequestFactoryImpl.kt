@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network
 
-import com.maksimowiczm.foodyou.business.food.domain.RemoteProductRequestFactory
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsFacade
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAFacade
 

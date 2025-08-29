@@ -1,8 +1,8 @@
-package com.maksimowiczm.foodyou.business.shared.application.system
+package com.maksimowiczm.foodyou.business.settings.infrastructure
 
 import kotlinx.coroutines.flow.Flow
 
-interface SystemDetails {
+expect class SystemDetails {
 
     /**
      * This value is derived from the system configuration and represents the ISO 3166-1 alpha-2

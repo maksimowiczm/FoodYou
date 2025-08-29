@@ -8,7 +8,7 @@ import androidx.paging.map
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.QueryType
 import com.maksimowiczm.foodyou.business.food.infrastructure.LocalFoodSearchDataSource
-import com.maksimowiczm.foodyou.business.shared.application.network.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts

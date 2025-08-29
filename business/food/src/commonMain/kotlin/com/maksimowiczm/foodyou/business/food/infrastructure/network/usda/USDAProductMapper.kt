@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda
 
-import com.maksimowiczm.foodyou.business.food.domain.RemoteNutritionFacts
-import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteNutritionFacts
+import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.UnitType
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.multiplier
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource

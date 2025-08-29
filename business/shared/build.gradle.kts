@@ -16,8 +16,6 @@ buildConfig {
 room { schemaDirectory("$projectDir/schemas") }
 
 kotlin {
-    sourceSets.all { languageSettings.enableLanguageFeature("ExpectActualClasses") }
-
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.business.shared"
         compileSdk = libs.versions.android.compileSdk.get().toInt()

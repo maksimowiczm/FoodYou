@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou
 
-import com.maksimowiczm.foodyou.business.shared.application.config.AppConfig
+import com.maksimowiczm.foodyou.business.shared.domain.config.AppConfig
 
 internal class FoodYouConfig : AppConfig {
     override val contactEmail: String = BuildConfig.FEEDBACK_EMAIL

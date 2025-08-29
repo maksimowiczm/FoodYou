@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
-import com.maksimowiczm.foodyou.business.shared.infrastructure.system.AndroidSystemDetails
+import com.maksimowiczm.foodyou.business.settings.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidClipboardManager
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utils.ClipboardManagerProvider
@@ -20,7 +20,7 @@ import org.koin.android.ext.android.get
 
 abstract class FoodYouAbstractActivity : AppCompatActivity() {
 
-    private val systemDetails: AndroidSystemDetails
+    private val systemDetails: SystemDetails
         get() = get()
 
     private val settingsRepository: SettingsRepository

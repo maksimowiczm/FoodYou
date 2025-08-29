@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.RecipeRepository
-import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
 import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
@@ -23,7 +23,7 @@ fun interface DeleteFoodUseCase {
 internal class DeleteFoodUseCaseImpl(
     private val productRepository: ProductRepository,
     private val recipeRepository: RecipeRepository,
-    private val transactionProvider: DatabaseTransactionProvider,
+    private val transactionProvider: TransactionProvider,
     private val logger: Logger,
 ) : DeleteFoodUseCase {
     override suspend fun deleteFood(foodId: FoodId): Result<Unit, DeleteFoodError> =
