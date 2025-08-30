@@ -1,9 +1,16 @@
-plugins { alias(libs.plugins.business) }
+plugins {
+    alias(libs.plugins.business)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeMultiplatform)
+}
 
 kotlin {
     sourceSets.all { languageSettings.enableLanguageFeature("WhenGuards") }
 
-    androidLibrary { namespace = "com.maksimowiczm.foodyou.business.food" }
+    androidLibrary {
+        namespace = "com.maksimowiczm.foodyou.business.food"
+        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
+    }
 
     val xcfName = "business:foodKit"
 
@@ -21,6 +28,10 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.serialization.kotlinx.json)
+
+            // Compose runtime
+            implementation(compose.runtime)
+            implementation(compose.components.resources)
         }
         androidMain.dependencies { implementation(libs.ktor.client.okhttp) }
         iosMain.dependencies { implementation(libs.ktor.client.darwin) }

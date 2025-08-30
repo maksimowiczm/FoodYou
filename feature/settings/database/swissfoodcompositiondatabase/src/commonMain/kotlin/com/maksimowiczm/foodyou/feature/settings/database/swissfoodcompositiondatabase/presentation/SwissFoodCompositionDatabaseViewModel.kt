@@ -2,24 +2,19 @@ package com.maksimowiczm.foodyou.feature.settings.database.swissfoodcompositiond
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.ImportCsvProductUseCase
-import com.maksimowiczm.foodyou.business.food.domain.ProductField
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.externaldatabase.swissfoodcompositiondatabase.Language
+import com.maksimowiczm.foodyou.business.food.application.ImportSwissFoodCompositionDatabaseUseCase
+import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 internal class SwissFoodCompositionDatabaseViewModel(
-    private val importCsvProductUseCase: ImportCsvProductUseCase
+    private val importSwissUseCase: ImportSwissFoodCompositionDatabaseUseCase
 ) : ViewModel() {
 
     private val _uiState =
@@ -31,22 +26,19 @@ internal class SwissFoodCompositionDatabaseViewModel(
     private val mutex = Mutex()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun import(languages: Set<Language>) {
+    fun import(languages: Set<SwissFoodCompositionDatabaseRepository.Language>) {
         if (mutex.isLocked) {
             return
         }
 
+        val size = languages.sumOf { it.size }
         viewModelScope.launch {
             mutex.withLock {
                 _uiState.value = SwissFoodCompositionDatabaseUiState.Importing(0f)
 
-                val size = languages.sumOf { it.size }
-                var count = 0f
-
-                languages.asFlow().flatMapConcat(::importLanguage).collectLatest {
-                    count++
-
-                    _uiState.value = SwissFoodCompositionDatabaseUiState.Importing(count / size)
+                importSwissUseCase.import(languages).collectLatest { count ->
+                    val progress = count.toFloat() / size
+                    _uiState.value = SwissFoodCompositionDatabaseUiState.Importing(progress)
                 }
 
                 delay(200)
@@ -54,62 +46,4 @@ internal class SwissFoodCompositionDatabaseViewModel(
             }
         }
     }
-
-    private suspend fun importLanguage(language: Language): Flow<Int> {
-        val lines =
-            language.readBytes().decodeToString().split("\n").drop(1).filterNot { it.isBlank() }
-
-        return importCsvProductUseCase.import(
-            mapper = order,
-            lines = lines.asFlow(),
-            source = FoodSource.Type.SwissFoodCompositionDatabase,
-        )
-    }
 }
-
-private val order =
-    listOf(
-        ProductField.Name,
-        ProductField.Brand,
-        ProductField.Barcode,
-        ProductField.Proteins,
-        ProductField.Carbohydrates,
-        ProductField.Fats,
-        ProductField.Energy,
-        ProductField.SaturatedFats,
-        ProductField.MonounsaturatedFats,
-        ProductField.PolyunsaturatedFats,
-        ProductField.Omega3,
-        ProductField.Omega6,
-        ProductField.Sugars,
-        ProductField.Salt,
-        ProductField.DietaryFiber,
-        ProductField.Cholesterol,
-        ProductField.Caffeine,
-        ProductField.VitaminA,
-        ProductField.VitaminB1,
-        ProductField.VitaminB2,
-        ProductField.VitaminB3,
-        ProductField.VitaminB5,
-        ProductField.VitaminB6,
-        ProductField.VitaminB7,
-        ProductField.VitaminB9,
-        ProductField.VitaminB12,
-        ProductField.VitaminC,
-        ProductField.VitaminD,
-        ProductField.VitaminE,
-        ProductField.VitaminK,
-        ProductField.Manganese,
-        ProductField.Magnesium,
-        ProductField.Potassium,
-        ProductField.Calcium,
-        ProductField.Copper,
-        ProductField.Zinc,
-        ProductField.Sodium,
-        ProductField.Iron,
-        ProductField.Phosphorus,
-        ProductField.Selenium,
-        ProductField.Iodine,
-        ProductField.PackageWeight,
-        ProductField.ServingWeight,
-    )

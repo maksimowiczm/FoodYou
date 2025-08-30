@@ -15,7 +15,6 @@ kotlin {
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets.commonMain.dependencies {
-        implementation(projects.externaldatabase.swissfoodcompositiondatabase)
         implementation(projects.business.shared)
         implementation(projects.business.food)
     }

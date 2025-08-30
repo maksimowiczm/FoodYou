@@ -47,7 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.externaldatabase.swissfoodcompositiondatabase.Language
+import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository.Language
 import com.maksimowiczm.foodyou.feature.settings.database.swissfoodcompositiondatabase.presentation.SwissFoodCompositionDatabaseUiState
 import com.maksimowiczm.foodyou.feature.settings.database.swissfoodcompositiondatabase.presentation.SwissFoodCompositionDatabaseViewModel
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton

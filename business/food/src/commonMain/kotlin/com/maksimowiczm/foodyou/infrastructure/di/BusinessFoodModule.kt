@@ -14,6 +14,8 @@ import com.maksimowiczm.foodyou.business.food.application.FoodSearchUseCase
 import com.maksimowiczm.foodyou.business.food.application.FoodSearchUseCaseImpl
 import com.maksimowiczm.foodyou.business.food.application.ImportCsvProductUseCase
 import com.maksimowiczm.foodyou.business.food.application.ImportCsvProductUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.application.ImportSwissFoodCompositionDatabaseUseCase
+import com.maksimowiczm.foodyou.business.food.application.ImportSwissFoodCompositionDatabaseUseCaseImpl
 import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCaseImpl
 import com.maksimowiczm.foodyou.business.food.application.ObserveMeasurementSuggestionsUseCase
@@ -31,8 +33,10 @@ import com.maksimowiczm.foodyou.business.food.domain.MeasurementSuggestionReposi
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.domain.RecipeRepository
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistoryRepository
+import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository
 import com.maksimowiczm.foodyou.business.food.domain.remote.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProductRequestFactory
+import com.maksimowiczm.foodyou.business.food.infrastructure.compose.ComposeSwissFoodCompositionDatabaseRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.datastore.DataStoreFoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductRequestFactoryImpl
@@ -75,6 +79,8 @@ val businessFoodModule = module {
     factoryOf(::RoomFoodSearchRepository).bind<FoodSearchRepository>()
     factoryOf(::DataStoreFoodSearchPreferencesRepository).bind<FoodSearchPreferencesRepository>()
     factoryOf(::RoomSearchHistoryRepository).bind<SearchHistoryRepository>()
+    factoryOf(::ComposeSwissFoodCompositionDatabaseRepository)
+        .bind<SwissFoodCompositionDatabaseRepository>()
 
     factoryOf(::RemoteProductMapper)
     factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
@@ -105,6 +111,8 @@ val businessFoodModule = module {
         }
         .bind<FoodSearchUseCase>()
     factoryOf(::DownloadProductUseCaseImpl).bind<DownloadProductUseCase>()
+    factoryOf(::ImportSwissFoodCompositionDatabaseUseCaseImpl)
+        .bind<ImportSwissFoodCompositionDatabaseUseCase>()
 
     single(named(OpenFoodFactsRemoteDataSource::class.qualifiedName!!)) {
             HttpClient {

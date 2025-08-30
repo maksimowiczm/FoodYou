@@ -41,7 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.externaldatabase.swissfoodcompositiondatabase.Language
+import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository.Language
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import foodyou.app.generated.resources.*
