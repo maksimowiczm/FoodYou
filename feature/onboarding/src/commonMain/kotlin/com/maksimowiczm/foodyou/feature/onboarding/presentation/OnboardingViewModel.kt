@@ -41,7 +41,9 @@ internal class OnboardingViewModel(
                     )
                 }
 
-                importSwissUseCase.import(languages).last()
+                if (languages.isNotEmpty()) {
+                    importSwissUseCase.import(languages).last()
+                }
 
                 eventBus.emit(OnboardingEvent.Finished)
             }
