@@ -97,7 +97,6 @@ internal fun CreateProductApp(
                 val uriHandler = LocalUriHandler.current
                 val openFoodFactsUrl = stringResource(Res.string.link_open_food_facts)
                 val usdaUrl = stringResource(Res.string.link_usda)
-                val suggestDatabaseUrl = "TODO"
 
                 DownloadProductScreen(
                     isDownloading = isDownloading,
@@ -113,7 +112,6 @@ internal fun CreateProductApp(
                     },
                     onOpenFoodFacts = { uriHandler.openUri(openFoodFactsUrl) },
                     onUsda = { uriHandler.openUri(usdaUrl) },
-                    onSuggestDatabase = { uriHandler.openUri(suggestDatabaseUrl) },
                     onUpdateUsdaApiKey = onUpdateUsdaApiKey,
                 )
             }

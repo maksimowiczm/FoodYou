@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,7 +66,6 @@ internal fun DownloadProductScreen(
     onPaste: () -> Unit,
     onOpenFoodFacts: () -> Unit,
     onUsda: () -> Unit,
-    onSuggestDatabase: () -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -209,7 +207,6 @@ internal fun DownloadProductScreen(
                     onPaste = onPaste,
                     onOpenFoodFacts = onOpenFoodFacts,
                     onUsda = onUsda,
-                    onSuggestDatabase = onSuggestDatabase,
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
             }
@@ -242,7 +239,6 @@ private fun ActionChips(
     onPaste: () -> Unit,
     onOpenFoodFacts: () -> Unit,
     onUsda: () -> Unit,
-    onSuggestDatabase: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FlowRow(
@@ -283,17 +279,6 @@ private fun ActionChips(
                 )
             },
             label = { Text(stringResource(Res.string.action_browse_usda)) },
-        )
-        AssistChip(
-            onClick = onSuggestDatabase,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.Lightbulb,
-                    contentDescription = null,
-                    modifier = Modifier.size(AssistChipDefaults.IconSize),
-                )
-            },
-            label = { Text(stringResource(Res.string.action_suggest_external_database)) },
         )
     }
 }

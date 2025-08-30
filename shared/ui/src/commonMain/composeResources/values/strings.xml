@@ -170,7 +170,6 @@
     <string name="action_choose_other_date">Choose other date</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Show more</string>
     <string name="action_download_product">Download product</string>
-    <string name="action_suggest_external_database">Suggest external database</string>
     <string name="action_copy_and_open_bug_report">Copy and open bug report</string>
     <string name="action_show_details">Show details</string>
     <string name="action_browse_usda">Browse FoodData Central (USDA)</string>
