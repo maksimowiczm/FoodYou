@@ -118,20 +118,7 @@ fun InteractiveLogo(
     val interactionSource = remember { MutableInteractionSource() }
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        Box(
-            modifier =
-                Modifier.size(350.dp)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        onClick = {
-                            coroutineScope.launch {
-                                progress.increment(motionScheme.fastSpatialSpec())
-                            }
-                        },
-                    ),
-            contentAlignment = Alignment.Center,
-        ) {
+        Box(modifier = Modifier.size(350.dp), contentAlignment = Alignment.Center) {
             Box(
                 modifier =
                     Modifier.fillMaxSize()
