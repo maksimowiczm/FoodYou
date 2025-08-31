@@ -52,6 +52,7 @@ internal fun FoodSearchFilters(
                         iconColor = MaterialTheme.colorScheme.onErrorContainer,
                         selectedContainerColor = MaterialTheme.colorScheme.error,
                         selectedLabelColor = MaterialTheme.colorScheme.onError,
+                        selectedLeadingIconColor = MaterialTheme.colorScheme.onError,
                         selectedTrailingIconColor = MaterialTheme.colorScheme.onError,
                     )
                 } else {
