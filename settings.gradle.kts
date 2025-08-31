@@ -66,15 +66,15 @@ include(":feature:settings:language")
 
 include(":feature:settings:personalization")
 
-include(":feature:settings:database:master")
+include(":feature:database:master")
 
-include(":feature:settings:database:externaldatabases")
+include(":feature:database:externaldatabases")
 
-include(":feature:settings:database:databasedump")
+include(":feature:database:databasedump")
 
-include(":feature:settings:database:swissfoodcompositiondatabase")
+include(":feature:database:swissfoodcompositiondatabase")
 
-include(":feature:settings:database:importcsvproducts")
+include(":feature:database:importcsvproducts")
 
 include(":feature:home")
 
@@ -96,4 +96,4 @@ include(":feature:food:diary:update")
 
 include(":feature:onboarding")
 
-include(":feature:settings:database:exportcsvproducts")
+include(":feature:database:exportcsvproducts")
