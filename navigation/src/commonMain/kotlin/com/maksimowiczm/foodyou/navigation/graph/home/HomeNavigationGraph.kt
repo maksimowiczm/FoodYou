@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.navigation.graph.home
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
-import com.maksimowiczm.foodyou.feature.home.ui.HomeScreen
-import com.maksimowiczm.foodyou.feature.home.ui.goals.GoalsCardSettings
-import com.maksimowiczm.foodyou.feature.home.ui.meals.settings.MealsCardsSettingsScreen
+import com.maksimowiczm.foodyou.feature.home.goals.GoalsCardSettings
+import com.maksimowiczm.foodyou.feature.home.master.HomeScreen
+import com.maksimowiczm.foodyou.feature.home.meals.settings.MealsCardsSettingsScreen
 import com.maksimowiczm.foodyou.navigation.domain.GoalsCardSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.HomeDestination
 import com.maksimowiczm.foodyou.navigation.domain.HomeMasterDestination
