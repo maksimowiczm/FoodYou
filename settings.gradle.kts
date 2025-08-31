@@ -64,8 +64,6 @@ include(":feature:settings:meal")
 
 include(":feature:settings:language")
 
-include(":feature:settings:goals")
-
 include(":feature:settings:personalization")
 
 include(":feature:settings:database:master")

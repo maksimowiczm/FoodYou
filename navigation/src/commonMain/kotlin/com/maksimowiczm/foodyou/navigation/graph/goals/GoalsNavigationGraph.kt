@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.navigation.graph.goals
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.feature.goals.ui.GoalsScreen
+import com.maksimowiczm.foodyou.feature.goals.master.GoalsScreen
 import com.maksimowiczm.foodyou.navigation.domain.GoalsMasterDestination
 import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
 

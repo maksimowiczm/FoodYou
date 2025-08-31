@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.goals.ui
+package com.maksimowiczm.foodyou.feature.goals.setup
 
 internal enum class DailyGoalsFormFieldError {
     Required,

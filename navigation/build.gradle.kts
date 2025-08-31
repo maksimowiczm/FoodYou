@@ -42,7 +42,6 @@ kotlin {
             implementation(projects.feature.settings.master)
             implementation(projects.feature.settings.meal)
             implementation(projects.feature.settings.language)
-            implementation(projects.feature.settings.goals)
             implementation(projects.feature.settings.personalization)
             implementation(projects.feature.settings.database.master)
             implementation(projects.feature.settings.database.externaldatabases)

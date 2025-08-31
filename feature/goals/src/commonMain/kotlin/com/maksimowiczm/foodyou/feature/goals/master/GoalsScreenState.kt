@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui
+package com.maksimowiczm.foodyou.feature.goals.master
 
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState

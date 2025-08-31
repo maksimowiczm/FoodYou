@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui
+package com.maksimowiczm.foodyou.feature.goals.master
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -24,7 +24,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
-import com.maksimowiczm.foodyou.feature.goals.presentation.stringResource
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.*

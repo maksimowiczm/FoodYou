@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui
+package com.maksimowiczm.foodyou.feature.goals.master
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,10 +44,6 @@ import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.get
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
-import com.maksimowiczm.foodyou.feature.goals.presentation.GoalsScreenUiState
-import com.maksimowiczm.foodyou.feature.goals.presentation.GoalsViewModel
-import com.maksimowiczm.foodyou.feature.goals.presentation.MealModel
-import com.maksimowiczm.foodyou.feature.goals.presentation.incompleteFoods
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList

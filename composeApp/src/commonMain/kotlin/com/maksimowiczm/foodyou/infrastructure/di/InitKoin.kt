@@ -35,7 +35,6 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
             featureSettingsDatabaseExternalDatabasesModule,
             featureSettingsDatabaseImportCsvProductsModule,
             featureSettingsDatabaseSwissFoodCompositionDatabaseModule,
-            featureSettingsGoalsModule,
             featureSettingsLanguageModule,
             featureSettingsMealModule,
             featureSettingsPersonalizationModule,

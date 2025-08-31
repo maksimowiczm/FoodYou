@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.goals.ui
+package com.maksimowiczm.foodyou.feature.goals.setup
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable

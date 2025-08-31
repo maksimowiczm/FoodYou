@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.goals.ui
+package com.maksimowiczm.foodyou.feature.goals.setup
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -43,8 +43,6 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.settings.goals.presentation.DailyGoalsViewModel
-import com.maksimowiczm.foodyou.feature.settings.goals.presentation.DailyGoalsViewModelEvent
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.BackHandler
 import com.maksimowiczm.foodyou.shared.ui.DiscardDialog

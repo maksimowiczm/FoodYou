@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.presentation
+package com.maksimowiczm.foodyou.feature.goals.master
 
 import androidx.compose.runtime.Composable
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
