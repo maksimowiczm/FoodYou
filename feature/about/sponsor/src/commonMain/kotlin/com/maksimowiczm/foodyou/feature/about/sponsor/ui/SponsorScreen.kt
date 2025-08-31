@@ -208,7 +208,6 @@ private fun CryptoSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modif
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SponsorCard(
     label: String,
@@ -235,7 +234,7 @@ private fun SponsorCard(
             Text(
                 text = label,
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.bodyMediumEmphasized,
+                style = MaterialTheme.typography.bodyMedium,
             )
             trailingIcon()
         }

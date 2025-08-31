@@ -43,10 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withLink
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.business.shared.domain.config.AppConfig
@@ -188,10 +184,7 @@ private fun AboutScreen(
 @Composable
 private fun LogoLabel(currentVersion: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = stringResource(Res.string.app_name),
-            style = MaterialTheme.typography.headlineMedium,
-        )
+        Text(text = stringResource(Res.string.app_name), style = aboutTypography.brandName)
         Text(
             text =
                 buildString {
@@ -203,31 +196,7 @@ private fun LogoLabel(currentVersion: String, modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
-            text =
-                buildAnnotatedString {
-                    val str = stringResource(Res.string.headline_launcher_icon_by_icons8)
-                    val link = stringResource(Res.string.link_icons8)
-
-                    str.split(" ").forEachIndexed { index, word ->
-                        if (word == "Icons8") {
-                            withLink(LinkAnnotation.Url(link)) {
-                                withStyle(
-                                    MaterialTheme.typography.bodyMedium
-                                        .merge(MaterialTheme.colorScheme.primary)
-                                        .toSpanStyle()
-                                ) {
-                                    append(word)
-                                }
-                            }
-                        } else {
-                            append(word)
-                        }
-
-                        if (index < str.split(" ").lastIndex) {
-                            append(" ")
-                        }
-                    }
-                },
+            text = icons8stringResource(MaterialTheme.typography.bodyMedium),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
