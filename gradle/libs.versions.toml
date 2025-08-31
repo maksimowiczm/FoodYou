@@ -33,6 +33,7 @@ runner = "1.7.0"
 sqliteAndroid = "3.49.0"
 sqliteBundled = "2.5.2"
 zxingAndroidEmbedded = "4.3.0"
+kotlinStdlib = "2.2.10"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -73,6 +74,7 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 sqlite-android = { module = "com.github.requery:sqlite-android", version.ref = "sqliteAndroid" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

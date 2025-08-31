@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.navigation.graph.settings
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import com.maksimowiczm.foodyou.feature.food.diary.meal.MealSettingsScreen
 import com.maksimowiczm.foodyou.feature.goals.setup.DailyGoalsScreen
 import com.maksimowiczm.foodyou.feature.home.personalization.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageScreen
 import com.maksimowiczm.foodyou.feature.settings.master.ui.SettingsScreen
-import com.maksimowiczm.foodyou.feature.settings.meal.ui.MealSettingsScreen
 import com.maksimowiczm.foodyou.feature.settings.personalization.ui.PersonalizationScreen
 import com.maksimowiczm.foodyou.feature.settings.personalization.ui.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination

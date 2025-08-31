@@ -3,9 +3,9 @@ plugins { alias(libs.plugins.feature) }
 kotlin {
     sourceSets.all { languageSettings.enableLanguageFeature("ContextParameters") }
 
-    androidLibrary { namespace = "com.maksimowiczm.foodyou.feature.settings.meal" }
+    androidLibrary { namespace = "com.maksimowiczm.foodyou.feature.food.diary.meal" }
 
-    val xcfName = "feature:settings:mealKit"
+    val xcfName = "feature:food:diary:mealKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }
 

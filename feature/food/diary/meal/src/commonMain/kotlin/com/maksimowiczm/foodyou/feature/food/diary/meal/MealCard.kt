@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.meal.ui
+package com.maksimowiczm.foodyou.feature.food.diary.meal
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState

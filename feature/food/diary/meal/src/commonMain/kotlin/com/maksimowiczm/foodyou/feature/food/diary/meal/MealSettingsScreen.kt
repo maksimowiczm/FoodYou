@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.meal.ui
+package com.maksimowiczm.foodyou.feature.food.diary.meal
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -45,8 +45,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.settings.meal.presentation.MealModel
-import com.maksimowiczm.foodyou.feature.settings.meal.presentation.MealSettingsViewModel
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import foodyou.app.generated.resources.*

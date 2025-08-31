@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.meal.presentation
+package com.maksimowiczm.foodyou.feature.food.diary.meal
 
 import androidx.compose.runtime.Immutable
 import kotlinx.datetime.LocalTime

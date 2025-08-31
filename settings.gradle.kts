@@ -60,8 +60,6 @@ include(":feature:about:sponsor")
 
 include(":feature:settings:master")
 
-include(":feature:settings:meal")
-
 include(":feature:settings:language")
 
 include(":feature:settings:personalization")
@@ -93,6 +91,8 @@ include(":feature:food:diary:search")
 include(":feature:food:diary:add")
 
 include(":feature:food:diary:update")
+
+include(":feature:food:diary:meal")
 
 include(":feature:onboarding")
 

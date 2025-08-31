@@ -77,7 +77,6 @@ kotlin {
             implementation(projects.feature.about.master)
             implementation(projects.feature.about.sponsor)
             implementation(projects.feature.settings.master)
-            implementation(projects.feature.settings.meal)
             implementation(projects.feature.settings.language)
             implementation(projects.feature.settings.personalization)
             implementation(projects.feature.database.master)
@@ -95,6 +94,7 @@ kotlin {
             implementation(projects.feature.food.recipe)
             implementation(projects.feature.food.diary.update)
             implementation(projects.feature.food.diary.shared)
+            implementation(projects.feature.food.diary.meal)
             implementation(projects.feature.onboarding)
 
             implementation(compose.runtime)

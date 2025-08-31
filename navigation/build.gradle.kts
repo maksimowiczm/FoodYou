@@ -40,7 +40,6 @@ kotlin {
             implementation(projects.feature.about.sponsor)
 
             implementation(projects.feature.settings.master)
-            implementation(projects.feature.settings.meal)
             implementation(projects.feature.settings.language)
             implementation(projects.feature.settings.personalization)
             implementation(projects.feature.database.master)
@@ -53,6 +52,7 @@ kotlin {
             implementation(projects.feature.food.diary.search)
             implementation(projects.feature.food.diary.add)
             implementation(projects.feature.food.diary.update)
+            implementation(projects.feature.food.diary.meal)
 
             implementation(projects.feature.food.product)
             implementation(projects.feature.food.recipe)

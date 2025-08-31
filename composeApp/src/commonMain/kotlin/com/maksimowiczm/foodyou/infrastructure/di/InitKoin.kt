@@ -36,7 +36,6 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
             featureSettingsDatabaseImportCsvProductsModule,
             featureSettingsDatabaseSwissFoodCompositionDatabaseModule,
             featureSettingsLanguageModule,
-            featureSettingsMealModule,
             featureSettingsPersonalizationModule,
         )
 
@@ -54,6 +53,7 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
             featureFoodDiaryAddModule,
             featureFoodDiarySearchModule,
             featureFoodDiaryUpdateModule,
+            featureFoodDiaryMealModule,
         )
 
         // Onboarding
