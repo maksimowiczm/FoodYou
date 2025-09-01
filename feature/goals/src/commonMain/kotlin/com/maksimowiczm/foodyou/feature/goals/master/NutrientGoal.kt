@@ -35,7 +35,7 @@ internal fun NutrientGoal(
     value: NutrientValue,
     target: Double,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = MaterialTheme.colorScheme.secondary,
     suffix: String = stringResource(Res.string.unit_gram_short),
 ) {
     NutrientGoal(
@@ -68,7 +68,7 @@ internal fun NutrientGoal(
             Text(text = label, style = LocalTextStyle.current.copy(color = color))
         },
         value = { Text(target) },
-        progressColor = color,
+        progressColor = color.copy(alpha = .9f),
         state = state,
         modifier = modifier,
     )
@@ -161,18 +161,31 @@ internal object NutrientGoalDefaults {
         color: Color,
         suffix: String,
     ): AnnotatedString {
+        val isComplete = value.isComplete
         val value = value.value ?: 0.0
         val isExceeded = value > target
         val colorScheme = MaterialTheme.colorScheme
         val localStyle = LocalTextStyle.current
 
-        return remember(value, target, color, suffix, localStyle, colorScheme, isExceeded) {
+        return remember(
+            value,
+            target,
+            color,
+            suffix,
+            localStyle,
+            colorScheme,
+            isExceeded,
+            isComplete,
+        ) {
             buildAnnotatedString {
                 withStyle(
                     localStyle
                         .copy(color = if (isExceeded) colorScheme.error else color)
                         .toSpanStyle()
                 ) {
+                    if (!isComplete) {
+                        append("* ")
+                    }
                     append(value.formatClipZeros())
                 }
                 withStyle(localStyle.copy(color = colorScheme.outline).toSpanStyle()) {
