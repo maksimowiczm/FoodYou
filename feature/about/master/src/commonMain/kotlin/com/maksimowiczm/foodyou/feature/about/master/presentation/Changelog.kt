@@ -14,6 +14,7 @@ internal class Changelog(private val appConfig: AppConfig) {
     val versions: List<Version>
         get() =
             listOf(
+                v_3_0_0,
                 v_3_0_0_rc_2,
                 v_3_0_0_rc_1,
                 v_3_0_0_beta_3,
@@ -37,6 +38,34 @@ internal class Changelog(private val appConfig: AppConfig) {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_0_0 =
+        Version(
+            version = "3.0.0",
+            date = LocalDate(2025, 9, 1),
+            newFeatures =
+                listOf(
+                    "Added in-app search integration for OpenFoodFacts and FoodData Central (USDA).",
+                    "Added recent food list.",
+                    "Added food product source.",
+                    "Added food history, view when food was created or updated.",
+                    "Added kilojoules support.",
+                    "Added US ounces support.",
+                    "Added SQLite database export.",
+                    "Added onboarding.",
+                    "Added sponsors list, thanks to everyone supporting the app financially. ❤️",
+                    "Added recipe icon in food lists.",
+                    "Added new goals handling. You can set goal for each nutrient and each weekday.",
+                ),
+            changes =
+                listOf(
+                    "BREAKING CHANGE Unlinked food diary from the food database.",
+                    "Refreshed some UI components.",
+                    "Updated Swiss Food Composition Database to v7.0.",
+                    "Updated CSV import/export flow.",
+                ),
+            isPreview = false,
+        )
 
     val v_3_0_0_rc_2 =
         Version(

@@ -1,0 +1,14 @@
+New features
+- Added in-app search integration for OpenFoodFacts and FoodData Central (USDA)
+- Added recent food list
+- Added food product source
+- Added US ounces support
+- Added SQLite database export
+- Added sponsors list, thanks to everyone supporting the app financially ❤️
+- Added new goals handling You can set goal for each nutrient and each weekday
+
+Changes
+- BREAKING CHANGE Unlinked food diary from the food database
+- Updated CSV import/export flow
+
+See full changelog in the app.
