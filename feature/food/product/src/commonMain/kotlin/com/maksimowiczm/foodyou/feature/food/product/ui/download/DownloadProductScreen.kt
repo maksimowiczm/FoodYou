@@ -31,6 +31,7 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeExtendedFloatingActionButton
@@ -112,7 +113,11 @@ internal fun DownloadProductScreen(
                         }
                     },
                     icon = {
-                        Icon(imageVector = Icons.Default.Download, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Default.Download,
+                            contentDescription = null,
+                            modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
+                        )
                     },
                     text = { Text(stringResource(Res.string.action_download)) },
                 )
