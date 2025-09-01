@@ -14,8 +14,8 @@
 
 </div>
 
-**Food You** is a free and Open-source and privacy-focused food diary and nutrition tracker built
-with [Material Design](https://m3.material.io/) principles
+**Food You** is a free, open-source, and privacy-focused food diary and nutrition tracker built
+using [Material Design](https://m3.material.io/) principles.
 
 ## ✨ Features
 
