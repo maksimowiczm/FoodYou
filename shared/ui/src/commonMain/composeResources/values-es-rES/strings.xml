@@ -187,7 +187,7 @@
     <string name="description_download_product_hint">Puede pegar cualquier texto. Se utilizará el primer enlace.</string>
     <string name="description_show_macronutrients_goals">Mostrar objetivos de los macronutrientes</string>
     <string name="description_please_wait_while_importing_products">Por favor, espera mientras se importan los productos</string>
-    <string name="headline_launcher_icon_by_icons8">Icono hecho con Icon8</string>
+    <string name="headline_launcher_icon_by_icons8">Icono hecho con Icons8</string>
     <string name="description_open_food_facts">Una base de datos colaborativa, gratuita y abierta de productos alimentarios de todo el mundo</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Exportando productos</string>

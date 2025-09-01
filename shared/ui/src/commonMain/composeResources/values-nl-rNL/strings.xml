@@ -212,7 +212,7 @@
     <string name="description_action_ignore_all_day_meals">Maaltijden zonder begin- of eindtijd worden aan het einde van de lijst weergegeven</string>
     <string name="description_incomplete_nutrition_data">Sommige van de producten, die gebruikt worden, hebben deze waarde niet, het totaal kan dus afwijken van de werkelijkheid</string>
     <string name="description_translation_warning">Vertalingen worden gemaakt door vrijwilligers. Het kan voorkomen dat een vertaling niet klopt of ontbreekt. Wil je helpen met de vertaling van FoodYou? Dan stellen we dat zeer op prijs.</string>
-    <string name="description_changelog">Bekijk wat nieuw is</string>
+    <string name="description_changelog">Bekijk wat nieuw is in de app</string>
     <string name="description_home_settings">Pas je voorpagina aan</string>
     <string name="description_download_product">Vul een link naar een product in en haal automatisch voedingswaarde-informatie op.</string>
     <string name="description_download_product_hint">Alle tekst wordt geaccepteerd, de eerste URL zal worden gebruikt.</string>
