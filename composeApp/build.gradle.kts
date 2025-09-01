@@ -45,6 +45,11 @@ kotlin {
 
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
+
+        dependencies {
+            debugImplementation(libs.androidx.compose.ui.test.manifest)
+            androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+        }
     }
 
     listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
@@ -110,9 +115,10 @@ kotlin {
 
             implementation(libs.kotlinx.serialization.json)
         }
-
-        commonTest.dependencies { implementation(libs.kotlin.test) }
-
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            @OptIn(ExperimentalComposeLibrary::class) implementation(compose.uiTest)
+        }
         androidInstrumentedTest.dependencies {
             implementation(libs.androidx.testCore)
             implementation(libs.androidx.testCore.ktx)

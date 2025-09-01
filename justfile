@@ -30,3 +30,9 @@ preview:
       --ks-key-alias foodyou \
       --out ./preview-signed.apk \
       composeApp/build/outputs/apk/preview/aligned.apk
+
+screenshots output="screenshots/":
+    @adb shell rm -fr /sdcard/Pictures/com.maksimowiczm.foodyou
+    @./gradlew -Pandroid.testInstrumentationRunnerArguments.class=com.maksimowiczm.foodyou.screenshot.GenerateAppMetadataScreenshots composeApp:connectedAndroidTest
+    @mkdir -p {{ output }}
+    @adb shell find /sdcard/Pictures/com.maksimowiczm.foodyou -iname "*.png" | while read line; do adb pull "$line" {{ output }}; done
