@@ -51,9 +51,10 @@ kotlin {
         commonTest.dependencies { implementation(libs.kotlin.test) }
 
         getByName("androidDeviceTest").dependencies {
-            implementation(libs.androidx.runner)
-            implementation(libs.androidx.test.core)
-            implementation(libs.androidx.junit)
+            implementation(libs.androidx.testCore)
+            implementation(libs.androidx.testCore.ktx)
+            implementation(libs.androidx.testRunner)
+            implementation(libs.androidx.testExt.junit)
         }
     }
 }

@@ -1,3 +1,4 @@
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
@@ -59,7 +60,6 @@ kotlin {
             implementation(libs.androidx.appcompat)
             implementation(libs.koin.android)
         }
-
         commonMain.dependencies {
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
@@ -114,10 +114,10 @@ kotlin {
         commonTest.dependencies { implementation(libs.kotlin.test) }
 
         androidInstrumentedTest.dependencies {
-            implementation(libs.androidx.test.core.ktx)
-            implementation(libs.androidx.runner)
-            implementation(libs.androidx.test.core)
-            implementation(libs.androidx.junit)
+            implementation(libs.androidx.testCore)
+            implementation(libs.androidx.testCore.ktx)
+            implementation(libs.androidx.testRunner)
+            implementation(libs.androidx.testExt.junit)
         }
     }
 }

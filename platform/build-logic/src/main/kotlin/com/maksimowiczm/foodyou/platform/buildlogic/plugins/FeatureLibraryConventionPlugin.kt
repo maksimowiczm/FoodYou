@@ -65,9 +65,9 @@ internal class FeatureLibraryConventionPlugin : Plugin<Project> {
                 commonTest.dependencies { implementation(libs.findLibrary("kotlin.test").get()) }
 
                 getByName("androidDeviceTest").dependencies {
-                    implementation(libs.findLibrary("androidx.runner").get())
-                    implementation(libs.findLibrary("androidx.test.core").get())
-                    implementation(libs.findLibrary("androidx.junit").get())
+                    implementation(libs.findLibrary("androidx.testRunner").get())
+                    implementation(libs.findLibrary("androidx.testCore").get())
+                    implementation(libs.findLibrary("androidx.testExt.junit").get())
                 }
             }
         }
