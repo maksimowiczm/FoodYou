@@ -88,3 +88,11 @@ internal data class FoodDiaryCreateRecipeDestination(val mealId: Long, val epoch
 
     constructor(mealId: Long, date: LocalDate) : this(mealId, date.toEpochDays())
 }
+
+@Serializable
+internal data class FoodDiaryCreateQuickAdd(val mealId: Long, val epochDay: Long) {
+    val date: LocalDate
+        get() = LocalDate.fromEpochDays(epochDay)
+}
+
+@Serializable internal data class FoodDiaryUpdateQuickAdd(val entryId: Long)

@@ -13,8 +13,10 @@ import com.maksimowiczm.foodyou.navigation.domain.DumpDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.ExportCsvProductsDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddEntryDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateProductDestination
+import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateQuickAdd
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateRecipeDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiarySearchDestination
+import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryUpdateQuickAdd
 import com.maksimowiczm.foodyou.navigation.domain.GoalsCardSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.HomeDestination
@@ -61,7 +63,9 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnFoodDiarySearch = { epochDay, mealId ->
                 navController.navigateSingleTop(FoodDiarySearchDestination(epochDay, mealId))
             },
-            masterOnFoodDiaryQuickAdd = { epochDay, mealId -> TODO() },
+            masterOnFoodDiaryQuickAdd = { epochDay, mealId ->
+                navController.navigateSingleTop(FoodDiaryCreateQuickAdd(epochDay, mealId))
+            },
             masterOnGoalsCardSettings = {
                 navController.navigateSingleTop(GoalsCardSettingsDestination)
             },
@@ -71,7 +75,9 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
                     food != null ->
                         navController.navigateSingleTop(UpdateFoodDiaryEntryDestination(food))
 
-                    manual != null -> TODO()
+                    manual != null ->
+                        navController.navigateSingleTop(FoodDiaryUpdateQuickAdd(manual))
+
                     else -> error("Either food or manual must be non-null")
                 }
             },
@@ -259,6 +265,10 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             },
             updateOnBack = { navController.popBackStack<UpdateFoodDiaryEntryDestination>(true) },
             updateOnSave = { navController.popBackStack<UpdateFoodDiaryEntryDestination>(true) },
+            createQuickAddOnBack = { navController.popBackStack<FoodDiaryCreateQuickAdd>(true) },
+            createQuickAddOnSave = { navController.popBackStack<FoodDiaryCreateQuickAdd>(true) },
+            updateQuickAddOnBack = { navController.popBackStack<FoodDiaryUpdateQuickAdd>(true) },
+            updateQuickAddOnSave = { navController.popBackStack<FoodDiaryUpdateQuickAdd>(true) },
         )
         foodNavigationGraphBuilder(
             updateProductOnBack = { navController.popBackStack<UpdateProductDestination>(true) },

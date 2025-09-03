@@ -706,9 +706,9 @@ private fun EnergyTextField(
                             Text(
                                 text =
                                     if (autoCalculate) {
-                                        "Auto-calculate energy"
+                                        stringResource(Res.string.headline_auto_calculate_energy)
                                     } else {
-                                        "Manual energy input"
+                                        stringResource(Res.string.headline_manual_energy_input)
                                     },
                                 style = MaterialTheme.typography.bodySmall,
                             )

@@ -425,4 +425,10 @@
         <item quantity="other">Exported %1$d food products</item>
     </plurals>
 
+    <string name="headline_auto_calculate_energy">Auto-calculate energy</string>
+    <string name="headline_manual_energy_input">Manual energy input</string>
+
+    <string name="headline_quick_add">Quick add</string>
+    <string name="description_quick_add">Quick Add lets you log without searching for specific foods. It’s a fast way to record meals when you already know the calorie count or want a simple estimate.</string>
+
 </resources>

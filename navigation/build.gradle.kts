@@ -53,6 +53,7 @@ kotlin {
             implementation(projects.feature.food.diary.add)
             implementation(projects.feature.food.diary.update)
             implementation(projects.feature.food.diary.meal)
+            implementation(projects.feature.food.diary.quickadd)
 
             implementation(projects.feature.food.product)
             implementation(projects.feature.food.recipe)
