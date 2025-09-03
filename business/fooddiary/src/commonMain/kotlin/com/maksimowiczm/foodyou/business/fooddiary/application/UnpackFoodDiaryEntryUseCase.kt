@@ -16,43 +16,43 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDate
 
-sealed interface UnpackDiaryEntryError {
-    data object EntryNotFound : UnpackDiaryEntryError
+sealed interface UnpackFoodDiaryEntryError {
+    data object EntryNotFoundFood : UnpackFoodDiaryEntryError
 
-    data object MealNotFound : UnpackDiaryEntryError
+    data object MealNotFound : UnpackFoodDiaryEntryError
 
-    data object EntryCannotBeUnpacked : UnpackDiaryEntryError
+    data object EntryCannotBeUnpackedFood : UnpackFoodDiaryEntryError
 }
 
-fun interface UnpackDiaryEntryUseCase {
+fun interface UnpackFoodDiaryEntryUseCase {
     suspend fun unpack(
         id: FoodDiaryEntryId,
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
-    ): Result<Unit, UnpackDiaryEntryError>
+    ): Result<Unit, UnpackFoodDiaryEntryError>
 }
 
-internal class UnpackDiaryEntryUseCaseImpl(
+internal class UnpackFoodDiaryEntryUseCaseImpl(
     private val entryRepository: FoodDiaryEntryRepository,
     private val mealRepository: MealRepository,
     private val transactionProvider: TransactionProvider,
     private val dateProvider: DateProvider,
     private val logger: Logger,
-) : UnpackDiaryEntryUseCase {
+) : UnpackFoodDiaryEntryUseCase {
     override suspend fun unpack(
         id: FoodDiaryEntryId,
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
-    ): Result<Unit, UnpackDiaryEntryError> =
+    ): Result<Unit, UnpackFoodDiaryEntryError> =
         transactionProvider.withTransaction {
             val entry = entryRepository.observe(id).firstOrNull()
             if (entry == null) {
                 return@withTransaction logger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
-                    error = UnpackDiaryEntryError.EntryNotFound,
+                    error = UnpackFoodDiaryEntryError.EntryNotFoundFood,
                     message = { "Diary entry with id $id not found" },
                 )
             }
@@ -62,7 +62,7 @@ internal class UnpackDiaryEntryUseCaseImpl(
                 return@withTransaction logger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
-                    error = UnpackDiaryEntryError.EntryCannotBeUnpacked,
+                    error = UnpackFoodDiaryEntryError.EntryCannotBeUnpackedFood,
                     message = { "Diary entry with id $id cannot be unpacked" },
                 )
             }
@@ -72,7 +72,7 @@ internal class UnpackDiaryEntryUseCaseImpl(
                 return@withTransaction logger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
-                    error = UnpackDiaryEntryError.MealNotFound,
+                    error = UnpackFoodDiaryEntryError.MealNotFound,
                     message = { "Meal with id $mealId not found" },
                 )
             }
@@ -107,6 +107,6 @@ internal class UnpackDiaryEntryUseCaseImpl(
         }
 
     private companion object {
-        const val TAG = "UnpackDiaryEntryUseCaseImpl"
+        const val TAG = "UnpackFoodDiaryEntryUseCaseImpl"
     }
 }

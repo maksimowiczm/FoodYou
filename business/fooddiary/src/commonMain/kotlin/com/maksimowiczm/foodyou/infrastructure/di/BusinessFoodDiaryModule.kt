@@ -4,10 +4,10 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.CreateFoodDiaryEn
 import com.maksimowiczm.foodyou.business.fooddiary.application.CreateFoodDiaryEntryUseCaseImpl
 import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCase
 import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCaseImpl
-import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackDiaryEntryUseCase
-import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackDiaryEntryUseCaseImpl
-import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateDiaryEntryUseCase
-import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateDiaryEntryUseCaseImpl
+import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackFoodDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackFoodDiaryEntryUseCaseImpl
+import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateFoodDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateFoodDiaryEntryUseCaseImpl
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryRepository
@@ -31,6 +31,6 @@ val businessFoodDiaryModule = module {
 
     factoryOf(::CreateFoodDiaryEntryUseCaseImpl).bind<CreateFoodDiaryEntryUseCase>()
     factoryOf(::ObserveDiaryMealsUseCaseImpl).bind<ObserveDiaryMealsUseCase>()
-    factoryOf(::UnpackDiaryEntryUseCaseImpl).bind<UnpackDiaryEntryUseCase>()
-    factoryOf(::UpdateDiaryEntryUseCaseImpl).bind<UpdateDiaryEntryUseCase>()
+    factoryOf(::UnpackFoodDiaryEntryUseCaseImpl).bind<UnpackFoodDiaryEntryUseCase>()
+    factoryOf(::UpdateFoodDiaryEntryUseCaseImpl).bind<UpdateFoodDiaryEntryUseCase>()
 }
