@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -94,4 +95,6 @@ private fun DiaryEntry.toMealEntryModel(): MealEntryModel =
                 totalWeight = food.totalWeight,
                 servingWeight = food.servingWeight,
             )
+
+        is ManualDiaryEntry -> TODO()
     }
