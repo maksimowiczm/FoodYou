@@ -17,10 +17,30 @@ import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun MealFoodListItem(
     entry: MealEntryModel,
+    color: Color,
+    contentColor: Color,
+    shape: Shape,
+    modifier: Modifier = Modifier,
+) {
+    when (entry) {
+        is FoodMealEntryModel ->
+            MealFoodListItem(
+                entry = entry,
+                color = color,
+                contentColor = contentColor,
+                shape = shape,
+                modifier = modifier,
+            )
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+internal fun MealFoodListItem(
+    entry: FoodMealEntryModel,
     color: Color,
     contentColor: Color,
     shape: Shape,

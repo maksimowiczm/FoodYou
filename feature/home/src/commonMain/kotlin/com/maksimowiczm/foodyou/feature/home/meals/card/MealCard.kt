@@ -60,8 +60,8 @@ import org.jetbrains.compose.resources.stringResource
 internal fun MealCard(
     meal: MealModel,
     onAddFood: () -> Unit,
-    onEditMeasurement: (Long) -> Unit,
-    onDeleteEntry: (Long) -> Unit,
+    onEditEntry: (MealEntryModel) -> Unit,
+    onDeleteEntry: (MealEntryModel) -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -102,7 +102,7 @@ internal fun MealCard(
 
             FoodContainer(
                 foods = meal.foods,
-                onEditMeasurement = onEditMeasurement,
+                onEditEntry = onEditEntry,
                 onDeleteEntry = onDeleteEntry,
                 modifier =
                     Modifier.fillMaxWidth()
@@ -184,13 +184,13 @@ internal fun MealCard(
 @Composable
 private fun FoodContainer(
     foods: List<MealEntryModel>,
-    onEditMeasurement: (Long) -> Unit,
-    onDeleteEntry: (Long) -> Unit,
+    onEditEntry: (MealEntryModel) -> Unit,
+    onDeleteEntry: (MealEntryModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         foods.forEachIndexed { i, entry ->
-            key(entry.id) {
+            key(entry.hashCode()) {
                 val topStart = animateTopCornerRadius(i)
                 val topEnd = animateTopCornerRadius(i)
                 val bottomStart = foods.animateBottomCornerRadius(i)
@@ -199,7 +199,7 @@ private fun FoodContainer(
 
                 FoodContainerItem(
                     entry = entry,
-                    onEditMeasurement = onEditMeasurement,
+                    onEditEntry = onEditEntry,
                     onDeleteEntry = onDeleteEntry,
                     shape = shape,
                 )
@@ -240,8 +240,8 @@ private fun <T> List<T>.animateBottomCornerRadius(index: Int, defaultRadius: Dp 
 @Composable
 private fun FoodContainerItem(
     entry: MealEntryModel,
-    onEditMeasurement: (Long) -> Unit,
-    onDeleteEntry: (Long) -> Unit,
+    onEditEntry: (MealEntryModel) -> Unit,
+    onDeleteEntry: (MealEntryModel) -> Unit,
     shape: Shape,
     modifier: Modifier = Modifier,
 ) {
@@ -256,7 +256,7 @@ private fun FoodContainerItem(
                 entry = entry,
                 onEdit = {
                     coroutineScope.launch {
-                        onEditMeasurement(entry.id)
+                        onEditEntry(entry)
                         sheetState.hide()
                         showBottomSheet = false
                     }
@@ -264,7 +264,7 @@ private fun FoodContainerItem(
                 onDelete = {
                     coroutineScope.launch {
                         sheetState.hide()
-                        onDeleteEntry(entry.id)
+                        onDeleteEntry(entry)
                         showBottomSheet = false
                     }
                 },
@@ -274,10 +274,10 @@ private fun FoodContainerItem(
 
     MealFoodListItem(
         entry = entry,
-        modifier = modifier.clickable { showBottomSheet = true },
         color = MaterialTheme.colorScheme.surfaceVariant,
         contentColor = MaterialTheme.colorScheme.onSurface,
         shape = shape,
+        modifier = modifier.clickable { showBottomSheet = true },
     )
 }
 

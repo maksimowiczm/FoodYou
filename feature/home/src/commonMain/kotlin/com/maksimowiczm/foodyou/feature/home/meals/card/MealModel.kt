@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.home.meals.card
 
 import androidx.compose.runtime.Immutable
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import kotlinx.datetime.LocalTime
 
@@ -19,17 +20,26 @@ internal data class MealModel(
 )
 
 @Immutable
-internal data class MealEntryModel(
-    val id: Long,
-    val name: String,
-    val energy: Int?,
-    val proteins: Double?,
-    val carbohydrates: Double?,
-    val fats: Double?,
+internal sealed interface MealEntryModel {
+    val name: String
+    val energy: Int?
+    val proteins: Double?
+    val carbohydrates: Double?
+    val fats: Double?
+}
+
+@Immutable
+internal data class FoodMealEntryModel(
+    val id: FoodDiaryEntryId,
+    override val name: String,
+    override val energy: Int?,
+    override val proteins: Double?,
+    override val carbohydrates: Double?,
+    override val fats: Double?,
     val measurement: Measurement,
     val weight: Double?,
     val isLiquid: Boolean,
     val isRecipe: Boolean,
-    val totalWeight: Double?,
     val servingWeight: Double?,
-)
+    val totalWeight: Double?,
+) : MealEntryModel

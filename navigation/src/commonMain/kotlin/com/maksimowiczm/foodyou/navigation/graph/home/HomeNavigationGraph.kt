@@ -33,7 +33,11 @@ fun NavGraphBuilder.homeNavigationGraph(
                 onMealCardClick = masterOnFoodDiarySearch,
                 onGoalsCardLongClick = masterOnGoalsCardSettings,
                 onGoalsCardClick = masterOnGoals,
-                onEditMeasurementClick = masterOnEditDiaryEntry,
+                onEditDiaryEntryClick = { food, manual ->
+                    require(food != null)
+                    require(manual == null)
+                    masterOnEditDiaryEntry(food)
+                },
             )
         }
         forwardBackwardComposable<MealsCardsSettingsDestination> {

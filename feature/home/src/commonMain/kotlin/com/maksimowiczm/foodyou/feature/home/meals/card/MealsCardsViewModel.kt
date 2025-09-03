@@ -7,7 +7,6 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
 import kotlin.math.roundToInt
@@ -55,8 +54,12 @@ internal class MealsCardsViewModel(
         viewModelScope.launch { dateState.value = date }
     }
 
-    fun onDeleteEntry(measurementId: Long) {
-        viewModelScope.launch { entryRepository.delete(FoodDiaryEntryId(measurementId)) }
+    fun onDeleteEntry(model: MealEntryModel) {
+        viewModelScope.launch {
+            when (model) {
+                is FoodMealEntryModel -> entryRepository.delete(model.id)
+            }
+        }
     }
 }
 
@@ -77,8 +80,8 @@ private fun DiaryMeal.toMealModel(): MealModel =
 private fun DiaryEntry.toMealEntryModel(): MealEntryModel =
     when (this) {
         is FoodDiaryEntry ->
-            MealEntryModel(
-                id = id.value,
+            FoodMealEntryModel(
+                id = id,
                 name = food.name,
                 energy = nutritionFacts.energy.value?.roundToInt(),
                 proteins = nutritionFacts.proteins.value,

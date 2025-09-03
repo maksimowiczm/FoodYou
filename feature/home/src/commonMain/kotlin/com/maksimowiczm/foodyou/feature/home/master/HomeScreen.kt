@@ -40,7 +40,7 @@ fun HomeScreen(
     onMealCardClick: (epochDay: Long, mealId: Long) -> Unit,
     onGoalsCardLongClick: () -> Unit,
     onGoalsCardClick: (epochDay: Long) -> Unit,
-    onEditMeasurementClick: (id: Long) -> Unit,
+    onEditDiaryEntryClick: (foodEntryId: Long?, manualEntryId: Long?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: HomeViewModel = koinViewModel()
@@ -100,7 +100,7 @@ fun HomeScreen(
                         MealsCards(
                             homeState = homeState,
                             onAdd = onMealCardClick,
-                            onEditMeasurement = onEditMeasurementClick,
+                            onEditEntry = onEditDiaryEntryClick,
                             onLongClick = onMealCardLongClick,
                             contentPadding = PaddingValues(horizontal = 8.dp),
                         )

@@ -12,7 +12,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun MealsCards(
     homeState: HomeState,
     onAdd: (epochDay: Long, mealId: Long) -> Unit,
-    onEditMeasurement: (Long) -> Unit,
+    onEditEntry: (foodEntryId: Long?, manualEntryId: Long?) -> Unit,
     onLongClick: (mealId: Long) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
@@ -28,7 +28,10 @@ internal fun MealsCards(
             HorizontalMealsCards(
                 meals = diaryMeals,
                 onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
-                onEditMeasurement = onEditMeasurement,
+                onEditEntry = { model ->
+                    val foodEntry = model as? FoodMealEntryModel
+                    onEditEntry(foodEntry?.id?.value, null)
+                },
                 onDeleteEntry = viewModel::onDeleteEntry,
                 onLongClick = onLongClick,
                 shimmer = homeState.shimmer,
@@ -40,7 +43,10 @@ internal fun MealsCards(
             VerticalMealsCards(
                 meals = diaryMeals,
                 onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
-                onEditMeasurement = onEditMeasurement,
+                onEditEntry = { model ->
+                    val foodEntry = model as? FoodMealEntryModel
+                    onEditEntry(foodEntry?.id?.value, null)
+                },
                 onDeleteEntry = viewModel::onDeleteEntry,
                 onLongClick = onLongClick,
                 shimmer = homeState.shimmer,

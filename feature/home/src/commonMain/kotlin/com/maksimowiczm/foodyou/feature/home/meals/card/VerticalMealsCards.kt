@@ -13,8 +13,8 @@ import com.valentinilk.shimmer.Shimmer
 internal fun VerticalMealsCards(
     meals: List<MealModel>?,
     onAdd: (mealId: Long) -> Unit,
-    onEditMeasurement: (Long) -> Unit,
-    onDeleteEntry: (Long) -> Unit,
+    onEditEntry: (MealEntryModel) -> Unit,
+    onDeleteEntry: (MealEntryModel) -> Unit,
     onLongClick: (mealId: Long) -> Unit,
     shimmer: Shimmer,
     contentPadding: PaddingValues,
@@ -31,7 +31,7 @@ internal fun VerticalMealsCards(
                 MealCard(
                     meal = meal,
                     onAddFood = { onAdd(meal.id) },
-                    onEditMeasurement = onEditMeasurement,
+                    onEditEntry = onEditEntry,
                     onDeleteEntry = onDeleteEntry,
                     onLongClick = { onLongClick(meal.id) },
                 )
