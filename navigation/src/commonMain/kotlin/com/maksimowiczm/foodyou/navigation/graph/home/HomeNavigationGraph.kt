@@ -16,9 +16,10 @@ fun NavGraphBuilder.homeNavigationGraph(
     masterOnTitle: () -> Unit,
     masterOnMealCardsSettings: () -> Unit,
     masterOnFoodDiarySearch: (epochDay: Long, mealId: Long) -> Unit,
+    masterOnFoodDiaryQuickAdd: (epochDay: Long, mealId: Long) -> Unit,
     masterOnGoalsCardSettings: () -> Unit,
     masterOnGoals: (epochDay: Long) -> Unit,
-    masterOnEditDiaryEntry: (id: Long) -> Unit,
+    masterOnEditDiaryEntry: (foodDiaryEntryId: Long?, quickAddEntryId: Long?) -> Unit,
     mealsCardsSettingsOnBack: () -> Unit,
     mealsCardsSettingsOnMealSettings: () -> Unit,
     goalsCardSettingsOnBack: () -> Unit,
@@ -30,10 +31,11 @@ fun NavGraphBuilder.homeNavigationGraph(
                 onSettings = masterOnSettings,
                 onTitle = masterOnTitle,
                 onMealCardLongClick = { masterOnMealCardsSettings() },
-                onMealCardClick = masterOnFoodDiarySearch,
+                onMealCardAddClick = masterOnFoodDiarySearch,
+                onMealCardQuickAddClick = masterOnFoodDiaryQuickAdd,
                 onGoalsCardLongClick = masterOnGoalsCardSettings,
                 onGoalsCardClick = masterOnGoals,
-                onEditMeasurementClick = masterOnEditDiaryEntry,
+                onEditDiaryEntryClick = masterOnEditDiaryEntry,
             )
         }
         forwardBackwardComposable<MealsCardsSettingsDestination> {

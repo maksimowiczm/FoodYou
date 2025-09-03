@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.business.fooddiary.application
 
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
@@ -22,7 +23,8 @@ fun interface ObserveDiaryMealsUseCase {
 internal class ObserveDiaryMealsUseCaseImpl(
     private val mealRepository: MealRepository,
     private val mealsPreferencesRepository: MealsPreferencesRepository,
-    private val entryRepository: FoodDiaryEntryRepository,
+    private val foodEntryRepository: FoodDiaryEntryRepository,
+    private val manualEntryRepository: ManualDiaryEntryRepository,
     private val dateProvider: DateProvider,
 ) : ObserveDiaryMealsUseCase {
     override fun observe(date: LocalDate): Flow<List<DiaryMeal>> {
@@ -49,8 +51,11 @@ internal class ObserveDiaryMealsUseCaseImpl(
             .flatMapLatest { meals ->
                 val diaryEntries =
                     meals.map { meal ->
-                        entryRepository.observeAll(mealId = meal.id, date = date).map { list ->
-                            list.sortedBy { it.name }
+                        combine(
+                            manualEntryRepository.observeAll(mealId = meal.id, date = date),
+                            foodEntryRepository.observeAll(mealId = meal.id, date = date),
+                        ) { manualEntries, foodEntries ->
+                            (manualEntries + foodEntries).sortedBy { it.name }
                         }
                     }
 

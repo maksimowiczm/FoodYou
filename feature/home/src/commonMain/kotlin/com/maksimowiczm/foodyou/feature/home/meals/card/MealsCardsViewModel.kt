@@ -3,11 +3,13 @@ package com.maksimowiczm.foodyou.feature.home.meals.card
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntry
+import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,7 +27,8 @@ import kotlinx.datetime.LocalDate
 
 internal class MealsCardsViewModel(
     private val observeDiaryMealsUseCase: ObserveDiaryMealsUseCase,
-    private val entryRepository: FoodDiaryEntryRepository,
+    private val foodEntryRepository: FoodDiaryEntryRepository,
+    private val manualEntryRepository: ManualDiaryEntryRepository,
     mealsPreferencesRepository: MealsPreferencesRepository,
 ) : ViewModel() {
     private val dateState = MutableStateFlow<LocalDate?>(null)
@@ -54,8 +57,13 @@ internal class MealsCardsViewModel(
         viewModelScope.launch { dateState.value = date }
     }
 
-    fun onDeleteEntry(measurementId: Long) {
-        viewModelScope.launch { entryRepository.delete(FoodDiaryEntryId(measurementId)) }
+    fun onDeleteEntry(model: MealEntryModel) {
+        viewModelScope.launch {
+            when (model) {
+                is FoodMealEntryModel -> foodEntryRepository.delete(model.id)
+                is ManualMealEntryModel -> manualEntryRepository.delete(model.id)
+            }
+        }
     }
 }
 
@@ -73,18 +81,31 @@ private fun DiaryMeal.toMealModel(): MealModel =
         fats = nutritionFacts.fats.value ?: 0.0,
     )
 
-private fun FoodDiaryEntry.toMealEntryModel(): MealEntryModel =
-    MealEntryModel(
-        id = id.value,
-        name = food.name,
-        energy = nutritionFacts.energy.value?.roundToInt(),
-        proteins = nutritionFacts.proteins.value,
-        carbohydrates = nutritionFacts.carbohydrates.value,
-        fats = nutritionFacts.fats.value,
-        measurement = measurement,
-        weight = weight,
-        isLiquid = food.isLiquid,
-        isRecipe = food is DiaryFoodRecipe,
-        totalWeight = food.totalWeight,
-        servingWeight = food.servingWeight,
-    )
+private fun DiaryEntry.toMealEntryModel(): MealEntryModel =
+    when (this) {
+        is FoodDiaryEntry ->
+            FoodMealEntryModel(
+                id = id,
+                name = food.name,
+                energy = nutritionFacts.energy.value?.roundToInt(),
+                proteins = nutritionFacts.proteins.value,
+                carbohydrates = nutritionFacts.carbohydrates.value,
+                fats = nutritionFacts.fats.value,
+                measurement = measurement,
+                weight = weight,
+                isLiquid = food.isLiquid,
+                isRecipe = food is DiaryFoodRecipe,
+                totalWeight = food.totalWeight,
+                servingWeight = food.servingWeight,
+            )
+
+        is ManualDiaryEntry ->
+            ManualMealEntryModel(
+                id = id,
+                name = name,
+                energy = nutritionFacts.energy.value?.roundToInt(),
+                proteins = nutritionFacts.proteins.value,
+                carbohydrates = nutritionFacts.carbohydrates.value,
+                fats = nutritionFacts.fats.value,
+            )
+    }

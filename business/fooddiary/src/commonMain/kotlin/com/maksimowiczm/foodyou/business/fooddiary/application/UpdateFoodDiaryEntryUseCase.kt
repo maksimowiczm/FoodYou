@@ -13,36 +13,36 @@ import com.maksimowiczm.foodyou.shared.common.result.Result
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDate
 
-sealed interface UpdateDiaryEntryError {
-    data object EntryNotFound : UpdateDiaryEntryError
+sealed interface UpdateFoodDiaryEntryError {
+    data object EntryNotFoundFood : UpdateFoodDiaryEntryError
 
-    data object InvalidMeasurement : UpdateDiaryEntryError
+    data object InvalidMeasurement : UpdateFoodDiaryEntryError
 
-    data object MealNotFound : UpdateDiaryEntryError
+    data object MealNotFound : UpdateFoodDiaryEntryError
 }
 
-fun interface UpdateDiaryEntryUseCase {
+fun interface UpdateFoodDiaryEntryUseCase {
     suspend fun update(
         id: FoodDiaryEntryId,
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
-    ): Result<Unit, UpdateDiaryEntryError>
+    ): Result<Unit, UpdateFoodDiaryEntryError>
 }
 
-internal class UpdateDiaryEntryUseCaseImpl(
+internal class UpdateFoodDiaryEntryUseCaseImpl(
     private val mealRepository: MealRepository,
     private val entryRepository: FoodDiaryEntryRepository,
     private val dateProvider: DateProvider,
     private val transactionProvider: TransactionProvider,
     private val logger: Logger,
-) : UpdateDiaryEntryUseCase {
+) : UpdateFoodDiaryEntryUseCase {
     override suspend fun update(
         id: FoodDiaryEntryId,
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
-    ): Result<Unit, UpdateDiaryEntryError> =
+    ): Result<Unit, UpdateFoodDiaryEntryError> =
         transactionProvider.withTransaction {
             val entry = entryRepository.observe(id).firstOrNull()
 
@@ -50,7 +50,7 @@ internal class UpdateDiaryEntryUseCaseImpl(
                 return@withTransaction logger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
-                    error = UpdateDiaryEntryError.EntryNotFound,
+                    error = UpdateFoodDiaryEntryError.EntryNotFoundFood,
                     message = { "Diary entry with id $id not found" },
                 )
             }
@@ -62,7 +62,7 @@ internal class UpdateDiaryEntryUseCaseImpl(
                         return@withTransaction logger.logAndReturnFailure(
                             tag = TAG,
                             throwable = null,
-                            error = UpdateDiaryEntryError.InvalidMeasurement,
+                            error = UpdateFoodDiaryEntryError.InvalidMeasurement,
                             message = { "Food must not be liquid for gram measurement" },
                         )
                     }
@@ -73,7 +73,7 @@ internal class UpdateDiaryEntryUseCaseImpl(
                         return@withTransaction logger.logAndReturnFailure(
                             tag = TAG,
                             throwable = null,
-                            error = UpdateDiaryEntryError.InvalidMeasurement,
+                            error = UpdateFoodDiaryEntryError.InvalidMeasurement,
                             message = { "Food must be liquid for milliliter measurement" },
                         )
                     }
@@ -83,7 +83,7 @@ internal class UpdateDiaryEntryUseCaseImpl(
                         return@withTransaction logger.logAndReturnFailure(
                             tag = TAG,
                             throwable = null,
-                            error = UpdateDiaryEntryError.InvalidMeasurement,
+                            error = UpdateFoodDiaryEntryError.InvalidMeasurement,
                             message = { "Total weight must be provided for package measurement" },
                         )
                     }
@@ -93,7 +93,7 @@ internal class UpdateDiaryEntryUseCaseImpl(
                         return@withTransaction logger.logAndReturnFailure(
                             tag = TAG,
                             throwable = null,
-                            error = UpdateDiaryEntryError.InvalidMeasurement,
+                            error = UpdateFoodDiaryEntryError.InvalidMeasurement,
                             message = { "Total weight must be provided for serving measurement" },
                         )
                     }
@@ -105,7 +105,7 @@ internal class UpdateDiaryEntryUseCaseImpl(
                 return@withTransaction logger.logAndReturnFailure(
                     tag = TAG,
                     throwable = null,
-                    error = UpdateDiaryEntryError.MealNotFound,
+                    error = UpdateFoodDiaryEntryError.MealNotFound,
                     message = { "Meal with ID $mealId not found" },
                 )
             }
@@ -123,6 +123,6 @@ internal class UpdateDiaryEntryUseCaseImpl(
         }
 
     private companion object {
-        const val TAG = "UpdateDiaryEntryUseCaseImpl"
+        const val TAG = "UpdateFoodDiaryEntryUseCaseImpl"
     }
 }

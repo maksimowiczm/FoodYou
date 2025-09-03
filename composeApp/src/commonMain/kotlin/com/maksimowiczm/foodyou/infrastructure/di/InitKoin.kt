@@ -54,6 +54,7 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
             featureFoodDiarySearchModule,
             featureFoodDiaryUpdateModule,
             featureFoodDiaryMealModule,
+            featureFoodDiaryQuickAddModule,
         )
 
         // Onboarding

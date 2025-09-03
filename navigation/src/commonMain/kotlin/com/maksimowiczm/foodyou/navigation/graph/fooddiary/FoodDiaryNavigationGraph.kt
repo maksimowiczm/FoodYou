@@ -3,14 +3,18 @@ package com.maksimowiczm.foodyou.navigation.graph.fooddiary
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.food.diary.add.ui.AddEntryScreen
+import com.maksimowiczm.foodyou.feature.food.diary.quickadd.CreateQuickAddScreen
+import com.maksimowiczm.foodyou.feature.food.diary.quickadd.UpdateQuickAddScreen
 import com.maksimowiczm.foodyou.feature.food.diary.search.ui.DiaryFoodSearchScreen
 import com.maksimowiczm.foodyou.feature.food.diary.update.ui.UpdateEntryScreen
 import com.maksimowiczm.foodyou.feature.food.product.ui.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.CreateRecipeScreen
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddEntryDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateProductDestination
+import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateQuickAdd
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateRecipeDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiarySearchDestination
+import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryUpdateQuickAdd
 import com.maksimowiczm.foodyou.navigation.domain.UpdateFoodDiaryEntryDestination
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
@@ -34,6 +38,10 @@ internal fun NavGraphBuilder.foodDiaryNavigationGraph(
     createOnEditFood: (FoodId) -> Unit,
     updateOnBack: () -> Unit,
     updateOnSave: () -> Unit,
+    createQuickAddOnBack: () -> Unit,
+    createQuickAddOnSave: () -> Unit,
+    updateQuickAddOnBack: () -> Unit,
+    updateQuickAddOnSave: () -> Unit,
 ) {
     forwardBackwardComposable<FoodDiarySearchDestination> {
         val route = it.toRoute<FoodDiarySearchDestination>()
@@ -96,6 +104,25 @@ internal fun NavGraphBuilder.foodDiaryNavigationGraph(
             onBack = updateOnBack,
             onSave = updateOnSave,
             animatedVisibilityScope = this,
+        )
+    }
+    forwardBackwardComposable<FoodDiaryCreateQuickAdd> {
+        val route = it.toRoute<FoodDiaryCreateQuickAdd>()
+
+        CreateQuickAddScreen(
+            onBack = createQuickAddOnBack,
+            onSave = createQuickAddOnSave,
+            mealId = route.mealId,
+            date = route.date,
+        )
+    }
+    forwardBackwardComposable<FoodDiaryUpdateQuickAdd> {
+        val route = it.toRoute<FoodDiaryUpdateQuickAdd>()
+
+        UpdateQuickAddScreen(
+            onBack = updateQuickAddOnBack,
+            onSave = updateQuickAddOnSave,
+            id = route.entryId,
         )
     }
 }

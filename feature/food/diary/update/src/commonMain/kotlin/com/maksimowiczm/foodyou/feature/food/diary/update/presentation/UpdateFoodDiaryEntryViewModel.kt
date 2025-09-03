@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.food.diary.update.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackDiaryEntryUseCase
-import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackFoodDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateFoodDiaryEntryUseCase
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
@@ -28,8 +28,8 @@ import kotlinx.datetime.LocalDate
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class UpdateFoodDiaryEntryViewModel(
     private val entryId: FoodDiaryEntryId,
-    private val updateDiaryEntryUseCase: UpdateDiaryEntryUseCase,
-    private val unpackDiaryEntryError: UnpackDiaryEntryUseCase,
+    private val updateFoodDiaryEntryUseCase: UpdateFoodDiaryEntryUseCase,
+    private val unpackDiaryEntryError: UnpackFoodDiaryEntryUseCase,
     entryRepository: FoodDiaryEntryRepository,
     mealRepository: MealRepository,
     dateProvider: DateProvider,
@@ -89,7 +89,7 @@ internal class UpdateFoodDiaryEntryViewModel(
 
     fun save(measurement: Measurement, mealId: Long, date: LocalDate) {
         viewModelScope.launch {
-            updateDiaryEntryUseCase
+            updateFoodDiaryEntryUseCase
                 .update(id = entryId, measurement = measurement, mealId = mealId, date = date)
                 .fold(
                     onSuccess = { _uiEvents.send(UpdateEntryEvent.Saved) },

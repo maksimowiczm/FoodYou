@@ -21,21 +21,21 @@ import kotlinx.datetime.LocalDateTime
  */
 data class FoodDiaryEntry(
     val id: FoodDiaryEntryId,
-    val mealId: Long,
-    val date: LocalDate,
+    override val mealId: Long,
+    override val date: LocalDate,
     val measurement: Measurement,
     val food: DiaryFood,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime,
-) {
+    override val createdAt: LocalDateTime,
+    override val updatedAt: LocalDateTime,
+) : DiaryEntry {
+    override val name: String = food.name
+
     val weight: Double
         get() = food.weight(measurement)
-
-    val name: String = food.name
 
     /**
      * Total nutrition facts for the entry based on the food's nutrition facts and the weight of the
      * measurement.
      */
-    val nutritionFacts: NutritionFacts by lazy { weight.div(100).let { food.nutritionFacts * it } }
+    override val nutritionFacts: NutritionFacts by lazy { food.nutritionFacts * (weight / 100) }
 }

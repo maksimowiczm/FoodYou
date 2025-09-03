@@ -18,13 +18,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Bolt
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
@@ -60,8 +63,9 @@ import org.jetbrains.compose.resources.stringResource
 internal fun MealCard(
     meal: MealModel,
     onAddFood: () -> Unit,
-    onEditMeasurement: (Long) -> Unit,
-    onDeleteEntry: (Long) -> Unit,
+    onQuickAdd: () -> Unit,
+    onEditEntry: (MealEntryModel) -> Unit,
+    onDeleteEntry: (MealEntryModel) -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -102,7 +106,7 @@ internal fun MealCard(
 
             FoodContainer(
                 foods = meal.foods,
-                onEditMeasurement = onEditMeasurement,
+                onEditEntry = onEditEntry,
                 onDeleteEntry = onDeleteEntry,
                 modifier =
                     Modifier.fillMaxWidth()
@@ -126,51 +130,72 @@ internal fun MealCard(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                ValueColumn(
-                    label = energyFormatter.suffix(),
-                    value = energyFormatter.formatEnergy(meal.energy, withSuffix = false),
-                    suffix = null,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    ValueColumn(
+                        label = energyFormatter.suffix(),
+                        value = energyFormatter.formatEnergy(meal.energy, withSuffix = false),
+                        suffix = null,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
 
-                nutrientsOrder.forEach { field ->
-                    when (field) {
-                        NutrientsOrder.Proteins ->
-                            ValueColumn(
-                                label = stringResource(Res.string.nutriment_proteins_short),
-                                value = meal.proteins.formatClipZeros("%.1f"),
-                                suffix = stringResource(Res.string.unit_gram_short),
-                                color = nutrientsPalette.proteinsOnSurfaceContainer,
-                            )
+                    nutrientsOrder.forEach { field ->
+                        when (field) {
+                            NutrientsOrder.Proteins ->
+                                ValueColumn(
+                                    label = stringResource(Res.string.nutriment_proteins_short),
+                                    value = meal.proteins.formatClipZeros("%.1f"),
+                                    suffix = stringResource(Res.string.unit_gram_short),
+                                    color = nutrientsPalette.proteinsOnSurfaceContainer,
+                                )
 
-                        NutrientsOrder.Carbohydrates ->
-                            ValueColumn(
-                                label = stringResource(Res.string.nutriment_carbohydrates_short),
-                                value = meal.carbohydrates.formatClipZeros("%.1f"),
-                                suffix = stringResource(Res.string.unit_gram_short),
-                                color = nutrientsPalette.carbohydratesOnSurfaceContainer,
-                            )
+                            NutrientsOrder.Carbohydrates ->
+                                ValueColumn(
+                                    label =
+                                        stringResource(Res.string.nutriment_carbohydrates_short),
+                                    value = meal.carbohydrates.formatClipZeros("%.1f"),
+                                    suffix = stringResource(Res.string.unit_gram_short),
+                                    color = nutrientsPalette.carbohydratesOnSurfaceContainer,
+                                )
 
-                        NutrientsOrder.Fats ->
-                            ValueColumn(
-                                label = stringResource(Res.string.nutriment_fats_short),
-                                value = meal.fats.formatClipZeros("%.1f"),
-                                suffix = stringResource(Res.string.unit_gram_short),
-                                color = nutrientsPalette.fatsOnSurfaceContainer,
-                            )
+                            NutrientsOrder.Fats ->
+                                ValueColumn(
+                                    label = stringResource(Res.string.nutriment_fats_short),
+                                    value = meal.fats.formatClipZeros("%.1f"),
+                                    suffix = stringResource(Res.string.unit_gram_short),
+                                    color = nutrientsPalette.fatsOnSurfaceContainer,
+                                )
 
-                        NutrientsOrder.Other,
-                        NutrientsOrder.Vitamins,
-                        NutrientsOrder.Minerals -> Unit
+                            NutrientsOrder.Other,
+                            NutrientsOrder.Vitamins,
+                            NutrientsOrder.Minerals -> Unit
+                        }
                     }
                 }
 
                 Spacer(Modifier.weight(1f))
-
-                FilledIconButton(onClick = onAddFood, shape = MaterialTheme.shapes.medium) {
+                FilledTonalIconButton(
+                    onClick = onQuickAdd,
+                    shapes =
+                        IconButtonDefaults.shapes(
+                            MaterialTheme.shapes.medium,
+                            MaterialTheme.shapes.extraSmall,
+                        ),
+                ) {
+                    Icon(imageVector = Icons.Outlined.Bolt, contentDescription = null)
+                }
+                FilledIconButton(
+                    onClick = onAddFood,
+                    shapes =
+                        IconButtonDefaults.shapes(
+                            MaterialTheme.shapes.medium,
+                            MaterialTheme.shapes.extraSmall,
+                        ),
+                ) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = stringResource(Res.string.action_add),
@@ -184,13 +209,21 @@ internal fun MealCard(
 @Composable
 private fun FoodContainer(
     foods: List<MealEntryModel>,
-    onEditMeasurement: (Long) -> Unit,
-    onDeleteEntry: (Long) -> Unit,
+    onEditEntry: (MealEntryModel) -> Unit,
+    onDeleteEntry: (MealEntryModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         foods.forEachIndexed { i, entry ->
-            key(entry.id) {
+            val key =
+                remember(entry) {
+                    when (entry) {
+                        is FoodMealEntryModel -> entry.id.toString()
+                        is ManualMealEntryModel -> entry.id.toString()
+                    }
+                }
+
+            key(key) {
                 val topStart = animateTopCornerRadius(i)
                 val topEnd = animateTopCornerRadius(i)
                 val bottomStart = foods.animateBottomCornerRadius(i)
@@ -199,7 +232,7 @@ private fun FoodContainer(
 
                 FoodContainerItem(
                     entry = entry,
-                    onEditMeasurement = onEditMeasurement,
+                    onEditEntry = onEditEntry,
                     onDeleteEntry = onDeleteEntry,
                     shape = shape,
                 )
@@ -240,8 +273,8 @@ private fun <T> List<T>.animateBottomCornerRadius(index: Int, defaultRadius: Dp 
 @Composable
 private fun FoodContainerItem(
     entry: MealEntryModel,
-    onEditMeasurement: (Long) -> Unit,
-    onDeleteEntry: (Long) -> Unit,
+    onEditEntry: (MealEntryModel) -> Unit,
+    onDeleteEntry: (MealEntryModel) -> Unit,
     shape: Shape,
     modifier: Modifier = Modifier,
 ) {
@@ -256,7 +289,7 @@ private fun FoodContainerItem(
                 entry = entry,
                 onEdit = {
                     coroutineScope.launch {
-                        onEditMeasurement(entry.id)
+                        onEditEntry(entry)
                         sheetState.hide()
                         showBottomSheet = false
                     }
@@ -264,7 +297,7 @@ private fun FoodContainerItem(
                 onDelete = {
                     coroutineScope.launch {
                         sheetState.hide()
-                        onDeleteEntry(entry.id)
+                        onDeleteEntry(entry)
                         showBottomSheet = false
                     }
                 },
@@ -274,10 +307,10 @@ private fun FoodContainerItem(
 
     MealFoodListItem(
         entry = entry,
-        modifier = modifier.clickable { showBottomSheet = true },
         color = MaterialTheme.colorScheme.surfaceVariant,
         contentColor = MaterialTheme.colorScheme.onSurface,
         shape = shape,
+        modifier = modifier.clickable { showBottomSheet = true },
     )
 }
 
