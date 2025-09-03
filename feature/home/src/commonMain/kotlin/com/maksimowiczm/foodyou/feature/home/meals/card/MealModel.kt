@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.home.meals.card
 
 import androidx.compose.runtime.Immutable
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import kotlinx.datetime.LocalTime
 
@@ -42,4 +43,14 @@ internal data class FoodMealEntryModel(
     val isRecipe: Boolean,
     val servingWeight: Double?,
     val totalWeight: Double?,
+) : MealEntryModel
+
+@Immutable
+internal data class ManualMealEntryModel(
+    val id: ManualDiaryEntryId,
+    override val name: String,
+    override val energy: Int?,
+    override val proteins: Double?,
+    override val carbohydrates: Double?,
+    override val fats: Double?,
 ) : MealEntryModel

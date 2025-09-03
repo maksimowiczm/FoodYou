@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntry
+import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +27,8 @@ import kotlinx.datetime.LocalDate
 
 internal class MealsCardsViewModel(
     private val observeDiaryMealsUseCase: ObserveDiaryMealsUseCase,
-    private val entryRepository: FoodDiaryEntryRepository,
+    private val foodEntryRepository: FoodDiaryEntryRepository,
+    private val manualEntryRepository: ManualDiaryEntryRepository,
     mealsPreferencesRepository: MealsPreferencesRepository,
 ) : ViewModel() {
     private val dateState = MutableStateFlow<LocalDate?>(null)
@@ -58,7 +60,8 @@ internal class MealsCardsViewModel(
     fun onDeleteEntry(model: MealEntryModel) {
         viewModelScope.launch {
             when (model) {
-                is FoodMealEntryModel -> entryRepository.delete(model.id)
+                is FoodMealEntryModel -> foodEntryRepository.delete(model.id)
+                is ManualMealEntryModel -> manualEntryRepository.delete(model.id)
             }
         }
     }
@@ -96,5 +99,13 @@ private fun DiaryEntry.toMealEntryModel(): MealEntryModel =
                 servingWeight = food.servingWeight,
             )
 
-        is ManualDiaryEntry -> TODO()
+        is ManualDiaryEntry ->
+            ManualMealEntryModel(
+                id = id,
+                name = name,
+                energy = nutritionFacts.energy.value?.roundToInt(),
+                proteins = nutritionFacts.proteins.value,
+                carbohydrates = nutritionFacts.carbohydrates.value,
+                fats = nutritionFacts.fats.value,
+            )
     }
