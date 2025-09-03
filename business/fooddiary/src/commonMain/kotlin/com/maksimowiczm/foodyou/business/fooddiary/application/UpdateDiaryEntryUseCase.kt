@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.business.fooddiary.application
 
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
@@ -9,7 +10,6 @@ import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.result.Ok
 import com.maksimowiczm.foodyou.shared.common.result.Result
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDate
 
@@ -23,7 +23,7 @@ sealed interface UpdateDiaryEntryError {
 
 fun interface UpdateDiaryEntryUseCase {
     suspend fun update(
-        id: Long,
+        id: FoodDiaryEntryId,
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
@@ -32,19 +32,19 @@ fun interface UpdateDiaryEntryUseCase {
 
 internal class UpdateDiaryEntryUseCaseImpl(
     private val mealRepository: MealRepository,
-    private val diaryEntryRepository: DiaryEntryRepository,
+    private val entryRepository: FoodDiaryEntryRepository,
     private val dateProvider: DateProvider,
     private val transactionProvider: TransactionProvider,
     private val logger: Logger,
 ) : UpdateDiaryEntryUseCase {
     override suspend fun update(
-        id: Long,
+        id: FoodDiaryEntryId,
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
     ): Result<Unit, UpdateDiaryEntryError> =
         transactionProvider.withTransaction {
-            val entry = diaryEntryRepository.observeEntry(id).first()
+            val entry = entryRepository.observe(id).firstOrNull()
 
             if (entry == null) {
                 return@withTransaction logger.logAndReturnFailure(
@@ -118,7 +118,7 @@ internal class UpdateDiaryEntryUseCaseImpl(
                     updatedAt = dateProvider.now(),
                 )
 
-            diaryEntryRepository.updateDiaryEntry(updated)
+            entryRepository.update(updated)
             Ok(Unit)
         }
 

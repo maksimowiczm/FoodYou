@@ -5,20 +5,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
-interface DiaryEntryRepository {
-    fun observeEntry(id: Long): Flow<DiaryEntry?>
+interface FoodDiaryEntryRepository {
+    fun observe(id: FoodDiaryEntryId): Flow<FoodDiaryEntry?>
 
-    fun observeEntries(mealId: Long, date: LocalDate): Flow<List<DiaryEntry>>
+    fun observeAll(mealId: Long, date: LocalDate): Flow<List<FoodDiaryEntry>>
 
-    suspend fun insertDiaryEntry(
+    suspend fun insert(
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
         food: DiaryFood,
         createdAt: LocalDateTime,
-    ): Long
+    ): FoodDiaryEntryId
 
-    suspend fun updateDiaryEntry(entry: DiaryEntry)
+    suspend fun update(entry: FoodDiaryEntry)
 
-    suspend fun deleteDiaryEntry(id: Long)
+    suspend fun delete(id: FoodDiaryEntryId)
 }

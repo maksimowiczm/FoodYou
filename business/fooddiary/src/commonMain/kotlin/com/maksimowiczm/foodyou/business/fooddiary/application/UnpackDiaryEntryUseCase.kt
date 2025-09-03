@@ -1,8 +1,9 @@
 package com.maksimowiczm.foodyou.business.fooddiary.application
 
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
@@ -25,7 +26,7 @@ sealed interface UnpackDiaryEntryError {
 
 fun interface UnpackDiaryEntryUseCase {
     suspend fun unpack(
-        id: Long,
+        id: FoodDiaryEntryId,
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
@@ -33,20 +34,20 @@ fun interface UnpackDiaryEntryUseCase {
 }
 
 internal class UnpackDiaryEntryUseCaseImpl(
-    private val diaryEntryRepository: DiaryEntryRepository,
+    private val entryRepository: FoodDiaryEntryRepository,
     private val mealRepository: MealRepository,
     private val transactionProvider: TransactionProvider,
     private val dateProvider: DateProvider,
     private val logger: Logger,
 ) : UnpackDiaryEntryUseCase {
     override suspend fun unpack(
-        id: Long,
+        id: FoodDiaryEntryId,
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
     ): Result<Unit, UnpackDiaryEntryError> =
         transactionProvider.withTransaction {
-            val entry = diaryEntryRepository.observeEntry(id).first()
+            val entry = entryRepository.observe(id).firstOrNull()
             if (entry == null) {
                 return@withTransaction logger.logAndReturnFailure(
                     tag = TAG,
@@ -77,14 +78,14 @@ internal class UnpackDiaryEntryUseCaseImpl(
             }
 
             // Replace the entry with unpacked entries
-            diaryEntryRepository.deleteDiaryEntry(entry.id)
+            entryRepository.delete(entry.id)
 
             val now = dateProvider.observeDateTime().first()
             val unpacked = food.unpack(measurement)
             unpacked.forEach {
                 val entry =
-                    DiaryEntry(
-                        id = 0,
+                    FoodDiaryEntry(
+                        id = FoodDiaryEntryId(0),
                         mealId = mealId,
                         date = date,
                         measurement = it.measurement,
@@ -93,7 +94,7 @@ internal class UnpackDiaryEntryUseCaseImpl(
                         updatedAt = now,
                     )
 
-                diaryEntryRepository.insertDiaryEntry(
+                entryRepository.insert(
                     mealId = entry.mealId,
                     date = entry.date,
                     measurement = entry.measurement,

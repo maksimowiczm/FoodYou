@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.fooddiary.application
 
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
@@ -10,6 +10,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
@@ -21,7 +22,7 @@ fun interface ObserveDiaryMealsUseCase {
 internal class ObserveDiaryMealsUseCaseImpl(
     private val mealRepository: MealRepository,
     private val mealsPreferencesRepository: MealsPreferencesRepository,
-    private val diaryEntryRepository: DiaryEntryRepository,
+    private val entryRepository: FoodDiaryEntryRepository,
     private val dateProvider: DateProvider,
 ) : ObserveDiaryMealsUseCase {
     override fun observe(date: LocalDate): Flow<List<DiaryMeal>> {
@@ -48,7 +49,9 @@ internal class ObserveDiaryMealsUseCaseImpl(
             .flatMapLatest { meals ->
                 val diaryEntries =
                     meals.map { meal ->
-                        diaryEntryRepository.observeEntries(mealId = meal.id, date = date)
+                        entryRepository.observeAll(mealId = meal.id, date = date).map { list ->
+                            list.sortedBy { it.name }
+                        }
                     }
 
                 combine(diaryEntries) { entries ->

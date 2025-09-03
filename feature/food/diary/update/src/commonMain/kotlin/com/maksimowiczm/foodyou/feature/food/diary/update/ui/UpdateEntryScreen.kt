@@ -32,16 +32,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodProduct
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.ChipsDatePicker
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.ChipsMealPicker
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.FoodMeasurementFormState
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.Source
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.rememberFoodMeasurementFormState
 import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.UpdateEntryEvent
-import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.UpdateEntryViewModel
+import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.UpdateFoodDiaryEntryViewModel
 import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPicker
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
@@ -62,7 +63,9 @@ fun UpdateEntryScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: UpdateEntryViewModel = koinViewModel { parametersOf(entryId) }
+    val viewModel: UpdateFoodDiaryEntryViewModel = koinViewModel {
+        parametersOf(FoodDiaryEntryId(entryId))
+    }
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {
@@ -141,7 +144,7 @@ private fun UpdateEntryScreen(
     onUnpack: () -> Unit,
     onSave: () -> Unit,
     state: FoodMeasurementFormState,
-    entry: DiaryEntry,
+    entry: FoodDiaryEntry,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {

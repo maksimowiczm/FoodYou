@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.defaultMeasurement
 import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
-import com.maksimowiczm.foodyou.business.fooddiary.application.CreateDiaryEntryUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.application.CreateFoodDiaryEntryUseCase
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
@@ -34,7 +34,7 @@ import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class AddEntryViewModel(
-    private val createDiaryEntryUseCase: CreateDiaryEntryUseCase,
+    private val createFoodDiaryEntryUseCase: CreateFoodDiaryEntryUseCase,
     observeFoodUseCase: ObserveFoodUseCase,
     foodEventRepository: FoodEventRepository,
     private val deleteFoodUseCase: DeleteFoodUseCase,
@@ -155,7 +155,7 @@ internal class AddEntryViewModel(
             }
             val diaryFood = food.toDiaryFood()
 
-            createDiaryEntryUseCase
+            createFoodDiaryEntryUseCase
                 .createDiaryEntry(
                     foodId = food.id,
                     measurement = measurement,
@@ -185,7 +185,7 @@ internal class AddEntryViewModel(
             food.unpack(weight).map { (food, measurement) ->
                 val diaryFood = food.toDiaryFood()
 
-                createDiaryEntryUseCase
+                createFoodDiaryEntryUseCase
                     .createDiaryEntry(
                         foodId = food.id,
                         measurement = measurement,

@@ -7,7 +7,6 @@ import kotlinx.datetime.LocalDateTime
 
 data class FoodDiaryEntryCreatedDomainEvent(
     val foodId: FoodId,
-    val entryId: Long,
     val date: LocalDateTime,
     val measurement: Measurement,
 ) : DomainEvent

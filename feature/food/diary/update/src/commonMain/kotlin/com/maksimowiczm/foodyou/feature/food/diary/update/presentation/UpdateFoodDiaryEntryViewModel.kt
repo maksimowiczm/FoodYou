@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackDiaryEntryUseCase
 import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateDiaryEntryUseCase
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.business.fooddiary.domain.suggestions
@@ -25,11 +26,11 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class UpdateEntryViewModel(
-    private val entryId: Long,
+internal class UpdateFoodDiaryEntryViewModel(
+    private val entryId: FoodDiaryEntryId,
     private val updateDiaryEntryUseCase: UpdateDiaryEntryUseCase,
     private val unpackDiaryEntryError: UnpackDiaryEntryUseCase,
-    diaryEntryRepository: DiaryEntryRepository,
+    entryRepository: FoodDiaryEntryRepository,
     mealRepository: MealRepository,
     dateProvider: DateProvider,
 ) : ViewModel() {
@@ -44,8 +45,8 @@ internal class UpdateEntryViewModel(
             )
 
     val entry =
-        diaryEntryRepository
-            .observeEntry(entryId)
+        entryRepository
+            .observe(entryId)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -121,6 +122,6 @@ internal class UpdateEntryViewModel(
     }
 
     private companion object {
-        const val TAG = "UpdateEntryViewModel"
+        const val TAG = "UpdateFoodDiaryEntryViewModel"
     }
 }

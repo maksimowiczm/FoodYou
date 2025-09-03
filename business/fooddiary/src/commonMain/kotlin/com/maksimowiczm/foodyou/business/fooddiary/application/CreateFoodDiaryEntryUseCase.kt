@@ -1,7 +1,8 @@
 package com.maksimowiczm.foodyou.business.fooddiary.application
 
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFood
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
 import com.maksimowiczm.foodyou.business.shared.application.error.logAndReturnFailure
@@ -16,37 +17,37 @@ import com.maksimowiczm.foodyou.shared.common.result.Result
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.LocalDate
 
-sealed interface CreateDiaryEntryError {
-    data object MealNotFound : CreateDiaryEntryError
+sealed interface CreateFoodDiaryEntryError {
+    data object MealNotFound : CreateFoodDiaryEntryError
 
-    data object InvalidMeasurement : CreateDiaryEntryError
+    data object InvalidMeasurement : CreateFoodDiaryEntryError
 }
 
-fun interface CreateDiaryEntryUseCase {
+fun interface CreateFoodDiaryEntryUseCase {
     suspend fun createDiaryEntry(
         foodId: FoodId,
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
         food: DiaryFood,
-    ): Result<Long, CreateDiaryEntryError>
+    ): Result<FoodDiaryEntryId, CreateFoodDiaryEntryError>
 }
 
-internal class CreateDiaryEntryUseCaseImpl(
+internal class CreateFoodDiaryEntryUseCaseImpl(
     private val mealRepository: MealRepository,
-    private val diaryEntryRepository: DiaryEntryRepository,
+    private val entryRepository: FoodDiaryEntryRepository,
     private val transactionProvider: TransactionProvider,
     private val dateProvider: DateProvider,
     private val eventBus: EventBus,
     private val logger: Logger,
-) : CreateDiaryEntryUseCase {
+) : CreateFoodDiaryEntryUseCase {
     override suspend fun createDiaryEntry(
         foodId: FoodId,
         measurement: Measurement,
         mealId: Long,
         date: LocalDate,
         food: DiaryFood,
-    ): Result<Long, CreateDiaryEntryError> {
+    ): Result<FoodDiaryEntryId, CreateFoodDiaryEntryError> {
         when (measurement) {
             is Measurement.Gram,
             is Measurement.Ounce ->
@@ -54,7 +55,7 @@ internal class CreateDiaryEntryUseCaseImpl(
                     return logger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
-                        error = CreateDiaryEntryError.InvalidMeasurement,
+                        error = CreateFoodDiaryEntryError.InvalidMeasurement,
                         message = { "Food must not be liquid for gram measurement" },
                     )
                 }
@@ -65,7 +66,7 @@ internal class CreateDiaryEntryUseCaseImpl(
                     return logger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
-                        error = CreateDiaryEntryError.InvalidMeasurement,
+                        error = CreateFoodDiaryEntryError.InvalidMeasurement,
                         message = { "Food must be liquid for milliliter measurement" },
                     )
                 }
@@ -75,7 +76,7 @@ internal class CreateDiaryEntryUseCaseImpl(
                     return logger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
-                        error = CreateDiaryEntryError.InvalidMeasurement,
+                        error = CreateFoodDiaryEntryError.InvalidMeasurement,
                         message = { "Total weight must be provided for package measurement" },
                     )
                 }
@@ -85,7 +86,7 @@ internal class CreateDiaryEntryUseCaseImpl(
                     return logger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
-                        error = CreateDiaryEntryError.InvalidMeasurement,
+                        error = CreateFoodDiaryEntryError.InvalidMeasurement,
                         message = { "Total weight must be provided for serving measurement" },
                     )
                 }
@@ -100,13 +101,13 @@ internal class CreateDiaryEntryUseCaseImpl(
                     return@withTransaction logger.logAndReturnFailure(
                         tag = TAG,
                         throwable = null,
-                        error = CreateDiaryEntryError.MealNotFound,
+                        error = CreateFoodDiaryEntryError.MealNotFound,
                         message = { "Meal with id $mealId not found" },
                     )
                 }
 
                 val entryId =
-                    diaryEntryRepository.insertDiaryEntry(
+                    entryRepository.insert(
                         measurement = measurement,
                         mealId = mealId,
                         date = date,
@@ -120,7 +121,6 @@ internal class CreateDiaryEntryUseCaseImpl(
                 eventBus.publish(
                     FoodDiaryEntryCreatedDomainEvent(
                         foodId = foodId,
-                        entryId = id,
                         date = now,
                         measurement = measurement,
                     )
