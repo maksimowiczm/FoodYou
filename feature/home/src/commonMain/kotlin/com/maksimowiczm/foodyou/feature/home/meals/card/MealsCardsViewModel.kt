@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.home.meals.card
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCase
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
@@ -73,18 +74,21 @@ private fun DiaryMeal.toMealModel(): MealModel =
         fats = nutritionFacts.fats.value ?: 0.0,
     )
 
-private fun FoodDiaryEntry.toMealEntryModel(): MealEntryModel =
-    MealEntryModel(
-        id = id.value,
-        name = food.name,
-        energy = nutritionFacts.energy.value?.roundToInt(),
-        proteins = nutritionFacts.proteins.value,
-        carbohydrates = nutritionFacts.carbohydrates.value,
-        fats = nutritionFacts.fats.value,
-        measurement = measurement,
-        weight = weight,
-        isLiquid = food.isLiquid,
-        isRecipe = food is DiaryFoodRecipe,
-        totalWeight = food.totalWeight,
-        servingWeight = food.servingWeight,
-    )
+private fun DiaryEntry.toMealEntryModel(): MealEntryModel =
+    when (this) {
+        is FoodDiaryEntry ->
+            MealEntryModel(
+                id = id.value,
+                name = food.name,
+                energy = nutritionFacts.energy.value?.roundToInt(),
+                proteins = nutritionFacts.proteins.value,
+                carbohydrates = nutritionFacts.carbohydrates.value,
+                fats = nutritionFacts.fats.value,
+                measurement = measurement,
+                weight = weight,
+                isLiquid = food.isLiquid,
+                isRecipe = food is DiaryFoodRecipe,
+                totalWeight = food.totalWeight,
+                servingWeight = food.servingWeight,
+            )
+    }

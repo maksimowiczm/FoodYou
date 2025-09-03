@@ -33,7 +33,7 @@ internal class GoalsViewModel(
                         incompleteFoods =
                             it.entries
                                 .filterNot { it.nutritionFacts.isComplete }
-                                .map { it.food.name }
+                                .map { it.name }
                                 .distinct(),
                     )
                 }
