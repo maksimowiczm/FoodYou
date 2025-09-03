@@ -215,7 +215,15 @@ private fun FoodContainer(
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         foods.forEachIndexed { i, entry ->
-            key(entry.hashCode()) {
+            val key =
+                remember(entry) {
+                    when (entry) {
+                        is FoodMealEntryModel -> entry.id.toString()
+                        is ManualMealEntryModel -> entry.id.toString()
+                    }
+                }
+
+            key(key) {
                 val topStart = animateTopCornerRadius(i)
                 val topEnd = animateTopCornerRadius(i)
                 val bottomStart = foods.animateBottomCornerRadius(i)
