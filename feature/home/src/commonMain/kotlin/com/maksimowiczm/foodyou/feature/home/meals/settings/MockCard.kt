@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -47,14 +47,20 @@ internal fun MockCard(modifier: Modifier = Modifier) {
                 Spacer(
                     Modifier.clip(MaterialTheme.shapes.medium)
                         .background(MaterialTheme.colorScheme.outlineVariant)
-                        .width(40.dp)
+                        .width(30.dp)
                         .height(8.dp)
                 )
 
                 Spacer(Modifier.weight(1f))
 
                 Spacer(
-                    Modifier.clip(CircleShape)
+                    Modifier.clip(RoundedCornerShape(2.dp))
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .size(8.dp)
+                )
+                Spacer(Modifier.width(4.dp))
+                Spacer(
+                    Modifier.clip(RoundedCornerShape(2.dp))
                         .background(MaterialTheme.colorScheme.primary)
                         .size(8.dp)
                 )
