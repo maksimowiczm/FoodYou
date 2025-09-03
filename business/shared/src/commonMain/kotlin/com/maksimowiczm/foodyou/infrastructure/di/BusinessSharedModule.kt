@@ -46,6 +46,7 @@ private val databaseDefinition: Module.() -> Unit = {
     factory { database.mealDao }
     factory { database.sponsorshipDao }
     factory { database.measurementSuggestionDao }
+    factory { database.manualDiaryEntryDao }
 }
 
 internal const val DATASTORE_FILE_NAME = "user_preferences.preferences_pb"

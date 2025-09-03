@@ -10,11 +10,13 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateDiaryEntryU
 import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateDiaryEntryUseCaseImpl
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore.DataStoreGoalsRepository
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore.DataStoreMealsPreferencesRepository
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room.RoomFoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room.RoomManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room.RoomMealRepository
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
@@ -25,6 +27,7 @@ val businessFoodDiaryModule = module {
     factoryOf(::RoomFoodDiaryEntryRepository).bind<FoodDiaryEntryRepository>()
     factoryOf(::DataStoreGoalsRepository).bind<GoalsRepository>()
     factoryOf(::DataStoreMealsPreferencesRepository).bind<MealsPreferencesRepository>()
+    factoryOf(::RoomManualDiaryEntryRepository).bind<ManualDiaryEntryRepository>()
 
     factoryOf(::CreateFoodDiaryEntryUseCaseImpl).bind<CreateFoodDiaryEntryUseCase>()
     factoryOf(::ObserveDiaryMealsUseCaseImpl).bind<ObserveDiaryMealsUseCase>()

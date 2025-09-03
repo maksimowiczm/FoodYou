@@ -29,6 +29,8 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.Di
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.DiaryRecipeEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.DiaryRecipeIngredientEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.InitializeMealsCallback
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.ManualDiaryEntryDao
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.ManualDiaryEntryEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.MealDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.MealEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.MeasurementDao
@@ -65,6 +67,7 @@ import kotlinx.coroutines.flow.Flow
             DiaryRecipeIngredientEntity::class,
             SponsorshipEntity::class,
             MeasurementSuggestionEntity::class,
+            ManualDiaryEntryEntity::class,
         ],
     views = [RecipeAllIngredientsView::class, LatestMeasurementSuggestion::class],
     version = FoodYouDatabase.VERSION,
@@ -109,6 +112,7 @@ import kotlinx.coroutines.flow.Flow
              */
             AutoMigration(from = 23, to = 24), // Add LatestFoodMeasuredEventView
             AutoMigration(from = 24, to = 25), // Add FoodEventEntity onDelete cascade
+            AutoMigration(from = 28, to = 29), // Add ManualDiaryEntryEntity
         ],
 )
 @TypeConverters(
@@ -127,6 +131,7 @@ abstract class FoodYouDatabase : RoomDatabase(), TransactionProvider, DatabaseDu
     abstract val mealDao: MealDao
     abstract val sponsorshipDao: SponsorshipDao
     abstract val measurementSuggestionDao: MeasurementSuggestionDao
+    abstract val manualDiaryEntryDao: ManualDiaryEntryDao
 
     override suspend fun <T> withTransaction(block: suspend DomainTransactionScope<T>.() -> T): T =
         useWriterConnection {
@@ -145,7 +150,7 @@ abstract class FoodYouDatabase : RoomDatabase(), TransactionProvider, DatabaseDu
     }
 
     companion object {
-        const val VERSION = 28
+        const val VERSION = 29
 
         private val migrations: List<Migration> =
             listOf(
