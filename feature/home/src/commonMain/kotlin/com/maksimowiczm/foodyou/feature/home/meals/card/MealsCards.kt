@@ -12,6 +12,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun MealsCards(
     homeState: HomeState,
     onAdd: (epochDay: Long, mealId: Long) -> Unit,
+    onQuickAdd: (epochDay: Long, mealId: Long) -> Unit,
     onEditEntry: (foodEntryId: Long?, manualEntryId: Long?) -> Unit,
     onLongClick: (mealId: Long) -> Unit,
     contentPadding: PaddingValues,
@@ -28,9 +29,11 @@ internal fun MealsCards(
             HorizontalMealsCards(
                 meals = diaryMeals,
                 onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
+                onQuickAdd = { mealId -> onQuickAdd(homeState.selectedDate.toEpochDays(), mealId) },
                 onEditEntry = { model ->
                     val foodEntry = model as? FoodMealEntryModel
-                    onEditEntry(foodEntry?.id?.value, null)
+                    val manualEntry = model as? ManualMealEntryModel
+                    onEditEntry(foodEntry?.id?.value, manualEntry?.id?.value)
                 },
                 onDeleteEntry = viewModel::onDeleteEntry,
                 onLongClick = onLongClick,
@@ -43,9 +46,11 @@ internal fun MealsCards(
             VerticalMealsCards(
                 meals = diaryMeals,
                 onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
+                onQuickAdd = { mealId -> onQuickAdd(homeState.selectedDate.toEpochDays(), mealId) },
                 onEditEntry = { model ->
                     val foodEntry = model as? FoodMealEntryModel
-                    onEditEntry(foodEntry?.id?.value, null)
+                    val manualEntry = model as? ManualMealEntryModel
+                    onEditEntry(foodEntry?.id?.value, manualEntry?.id?.value)
                 },
                 onDeleteEntry = viewModel::onDeleteEntry,
                 onLongClick = onLongClick,

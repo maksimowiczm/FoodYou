@@ -13,6 +13,7 @@ import com.valentinilk.shimmer.Shimmer
 internal fun VerticalMealsCards(
     meals: List<MealModel>?,
     onAdd: (mealId: Long) -> Unit,
+    onQuickAdd: (mealId: Long) -> Unit,
     onEditEntry: (MealEntryModel) -> Unit,
     onDeleteEntry: (MealEntryModel) -> Unit,
     onLongClick: (mealId: Long) -> Unit,
@@ -31,6 +32,7 @@ internal fun VerticalMealsCards(
                 MealCard(
                     meal = meal,
                     onAddFood = { onAdd(meal.id) },
+                    onQuickAdd = { onQuickAdd(meal.id) },
                     onEditEntry = onEditEntry,
                     onDeleteEntry = onDeleteEntry,
                     onLongClick = { onLongClick(meal.id) },

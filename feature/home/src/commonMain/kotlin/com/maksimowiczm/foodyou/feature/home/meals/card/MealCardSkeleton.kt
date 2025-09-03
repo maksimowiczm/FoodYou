@@ -54,9 +54,7 @@ internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
                         .clip(MaterialTheme.shapes.medium)
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
-
                 Spacer(Modifier.weight(1f))
-
                 FilledIconButton(
                     onClick = {},
                     modifier = Modifier.shimmer(shimmer),
@@ -65,6 +63,19 @@ internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
                             disabledContainerColor =
                                 MaterialTheme.colorScheme.surfaceContainerHighest
                         ),
+                    shape = MaterialTheme.shapes.medium,
+                    enabled = false,
+                    content = {},
+                )
+                FilledIconButton(
+                    onClick = {},
+                    modifier = Modifier.shimmer(shimmer),
+                    colors =
+                        IconButtonDefaults.filledIconButtonColors(
+                            disabledContainerColor =
+                                MaterialTheme.colorScheme.surfaceContainerHighest
+                        ),
+                    shape = MaterialTheme.shapes.medium,
                     enabled = false,
                     content = {},
                 )

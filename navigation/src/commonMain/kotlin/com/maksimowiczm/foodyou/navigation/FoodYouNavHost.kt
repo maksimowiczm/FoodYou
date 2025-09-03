@@ -61,12 +61,19 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnFoodDiarySearch = { epochDay, mealId ->
                 navController.navigateSingleTop(FoodDiarySearchDestination(epochDay, mealId))
             },
+            masterOnFoodDiaryQuickAdd = { epochDay, mealId -> TODO() },
             masterOnGoalsCardSettings = {
                 navController.navigateSingleTop(GoalsCardSettingsDestination)
             },
             masterOnGoals = { navController.navigateSingleTop(GoalsMasterDestination(it)) },
-            masterOnEditDiaryEntry = {
-                navController.navigateSingleTop(UpdateFoodDiaryEntryDestination(it))
+            masterOnEditDiaryEntry = { food, manual ->
+                when {
+                    food != null ->
+                        navController.navigateSingleTop(UpdateFoodDiaryEntryDestination(food))
+
+                    manual != null -> TODO()
+                    else -> error("Either food or manual must be non-null")
+                }
             },
             mealsCardsSettingsOnBack = {
                 navController.popBackStack<MealsCardsSettingsDestination>(true)

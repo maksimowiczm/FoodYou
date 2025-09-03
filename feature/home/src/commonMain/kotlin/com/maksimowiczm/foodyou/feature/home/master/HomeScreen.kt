@@ -37,7 +37,8 @@ fun HomeScreen(
     onSettings: () -> Unit,
     onTitle: () -> Unit,
     onMealCardLongClick: (mealId: Long) -> Unit,
-    onMealCardClick: (epochDay: Long, mealId: Long) -> Unit,
+    onMealCardAddClick: (epochDay: Long, mealId: Long) -> Unit,
+    onMealCardQuickAddClick: (epochDay: Long, mealId: Long) -> Unit,
     onGoalsCardLongClick: () -> Unit,
     onGoalsCardClick: (epochDay: Long) -> Unit,
     onEditDiaryEntryClick: (foodEntryId: Long?, manualEntryId: Long?) -> Unit,
@@ -99,7 +100,8 @@ fun HomeScreen(
                     HomeCard.Meals ->
                         MealsCards(
                             homeState = homeState,
-                            onAdd = onMealCardClick,
+                            onAdd = onMealCardAddClick,
+                            onQuickAdd = onMealCardQuickAddClick,
                             onEditEntry = onEditDiaryEntryClick,
                             onLongClick = onMealCardLongClick,
                             contentPadding = PaddingValues(horizontal = 8.dp),
