@@ -63,6 +63,7 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.androidx.room.testing)
             implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.androidx.datastore.preferences.core)
         }
 
         androidMain.dependencies {

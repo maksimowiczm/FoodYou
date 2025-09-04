@@ -8,10 +8,12 @@ import com.maksimowiczm.foodyou.business.shared.application.database.Transaction
 import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
 import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.domain.identity.UserIdentifierProvider
 import com.maksimowiczm.foodyou.business.shared.infrastructure.DateProviderImpl
 import com.maksimowiczm.foodyou.business.shared.infrastructure.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.business.shared.infrastructure.SharedFlowEventBus
 import com.maksimowiczm.foodyou.business.shared.infrastructure.VibeCsvParser
+import com.maksimowiczm.foodyou.business.shared.infrastructure.datastore.DataStoreUserIdentifierProvider
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.InitializeMealsCallback
 import kotlinx.coroutines.CoroutineScope
@@ -73,4 +75,6 @@ fun businessSharedModule(applicationCoroutineScope: CoroutineScope) = module {
     singleOf(::SharedFlowEventBus).bind<EventBus>()
 
     singleOf(::DateProviderImpl).bind<DateProvider>()
+
+    factoryOf(::DataStoreUserIdentifierProvider).bind<UserIdentifierProvider>()
 }
