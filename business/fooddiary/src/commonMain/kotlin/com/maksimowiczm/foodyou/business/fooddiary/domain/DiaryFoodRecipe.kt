@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.business.fooddiary.domain
 
 import com.maksimowiczm.foodyou.business.shared.domain.food.WeightedStrict
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 
 /**
  * Represents a food recipe in the food diary.

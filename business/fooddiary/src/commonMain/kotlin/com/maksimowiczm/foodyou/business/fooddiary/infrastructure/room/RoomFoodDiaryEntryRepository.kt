@@ -8,6 +8,10 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.from
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.rawValue
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.type
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.DiaryProductEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.DiaryRecipeEntity
@@ -19,10 +23,6 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toDom
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toNutritionFacts
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.from
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.rawValue
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.type
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.ExperimentalCoroutinesApi

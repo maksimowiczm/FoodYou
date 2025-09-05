@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.shared.domain.food
 
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 
 interface WeightedStrict : Weighted {
     override val totalWeight: Double

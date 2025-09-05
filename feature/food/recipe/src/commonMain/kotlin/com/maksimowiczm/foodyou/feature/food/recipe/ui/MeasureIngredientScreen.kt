@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.isComplete
 import com.maksimowiczm.foodyou.feature.food.recipe.presentation.MeasureIngredientViewModel
 import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator
@@ -37,7 +38,6 @@ import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPicker
 import com.maksimowiczm.foodyou.feature.food.shared.ui.NutrientList
 import com.maksimowiczm.foodyou.feature.food.shared.ui.rememberMeasurementPickerState
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.shared.ui.ext.add

@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.business.food.application.UpdateRecipeUseCase
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.RecipeFormState
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.mapNotNull

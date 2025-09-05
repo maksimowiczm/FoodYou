@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.business.food.domain
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 

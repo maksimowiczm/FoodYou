@@ -61,6 +61,9 @@ kotlin {
             implementation(projects.feature.home)
 
             implementation(projects.feature.goals)
+
+            // TODO get rid of business dependency
+            implementation(projects.business.shared)
         }
     }
 }

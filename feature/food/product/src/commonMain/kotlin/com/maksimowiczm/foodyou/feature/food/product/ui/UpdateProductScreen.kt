@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.food.product.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
 import com.maksimowiczm.foodyou.feature.food.product.ui.update.UpdateProductScreen
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 

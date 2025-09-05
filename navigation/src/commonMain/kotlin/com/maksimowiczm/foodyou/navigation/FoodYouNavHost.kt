@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
 import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
@@ -43,7 +44,6 @@ import com.maksimowiczm.foodyou.navigation.graph.goals.goalsNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.home.homeNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.settings.settingsDatabaseNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.settings.settingsNavigationGraph
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 
 @Composable
 fun FoodYouNavHost(modifier: Modifier = Modifier) {

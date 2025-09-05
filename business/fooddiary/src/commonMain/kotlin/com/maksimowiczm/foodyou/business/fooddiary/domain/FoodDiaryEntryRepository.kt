@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.fooddiary.domain
 
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime

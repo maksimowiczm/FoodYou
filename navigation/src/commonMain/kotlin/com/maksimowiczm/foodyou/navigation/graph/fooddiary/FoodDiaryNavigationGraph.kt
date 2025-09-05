@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.navigation.graph.fooddiary
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.diary.add.ui.AddEntryScreen
 import com.maksimowiczm.foodyou.feature.food.diary.quickadd.CreateQuickAddScreen
 import com.maksimowiczm.foodyou.feature.food.diary.quickadd.UpdateQuickAddScreen
@@ -16,8 +18,6 @@ import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateRecipeDestinati
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiarySearchDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryUpdateQuickAdd
 import com.maksimowiczm.foodyou.navigation.domain.UpdateFoodDiaryEntryDestination
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
 import kotlinx.datetime.LocalDate
 

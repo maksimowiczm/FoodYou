@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.fooddiary.domain
 
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import kotlin.jvm.JvmInline
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime

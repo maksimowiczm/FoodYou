@@ -9,9 +9,9 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistoryRepository
 import com.maksimowiczm.foodyou.business.food.domain.queryType
 import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.RemoteStatus.Companion.toRemoteStatus
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.time.Clock

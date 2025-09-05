@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.MeasurementType
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.MeasurementType
 
 @Entity(
     tableName = "DiaryRecipeIngredient",

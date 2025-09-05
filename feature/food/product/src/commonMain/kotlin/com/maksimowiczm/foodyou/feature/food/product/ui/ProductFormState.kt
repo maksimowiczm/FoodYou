@@ -17,10 +17,11 @@ import androidx.compose.runtime.snapshotFlow
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientsHelper
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.feature.shared.ui.Saver
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.nonBlankStringValidator
 import com.maksimowiczm.foodyou.shared.ui.form.nonNegativeFloatValidator
@@ -29,7 +30,6 @@ import com.maksimowiczm.foodyou.shared.ui.form.nullableStringParser
 import com.maksimowiczm.foodyou.shared.ui.form.positiveFloatValidator
 import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.shared.ui.form.stringParser
-import com.maksimowiczm.foodyou.shared.ui.res.Saver
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine

@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.business.food.application
 import com.maksimowiczm.foodyou.business.food.domain.Food
 import com.maksimowiczm.foodyou.business.food.domain.MeasurementSuggestionRepository
 import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.type
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.type
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest

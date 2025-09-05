@@ -6,9 +6,9 @@ import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.business.food.application.ObserveMeasurementSuggestionsUseCase
 import com.maksimowiczm.foodyou.business.food.domain.Food
 import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.MeasurementType
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.MeasurementType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

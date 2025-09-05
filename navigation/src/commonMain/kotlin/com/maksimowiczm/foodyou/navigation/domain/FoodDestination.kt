@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.navigation.domain
 
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
 import kotlinx.serialization.Serializable
 
 @Serializable

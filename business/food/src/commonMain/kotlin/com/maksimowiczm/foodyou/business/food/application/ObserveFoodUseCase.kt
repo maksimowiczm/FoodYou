@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.business.food.application
 import com.maksimowiczm.foodyou.business.food.domain.Food
 import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.food.domain.RecipeRepository
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
 import kotlinx.coroutines.flow.Flow
 
 fun interface ObserveFoodUseCase {

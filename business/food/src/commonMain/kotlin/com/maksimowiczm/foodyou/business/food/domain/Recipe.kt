@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
 import com.maksimowiczm.foodyou.business.shared.domain.food.WeightedStrict
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 
 /**
  * Represents a recipe in the food domain.

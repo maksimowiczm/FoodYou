@@ -15,8 +15,8 @@ import com.maksimowiczm.foodyou.business.food.domain.remote.ProductRemoteMediato
 import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
 import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest

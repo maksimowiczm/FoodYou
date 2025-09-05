@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.shared.common.domain.measurement
+package com.maksimowiczm.foodyou.business.shared.domain.measurement
 
 val Measurement.type: MeasurementType
     get() =
