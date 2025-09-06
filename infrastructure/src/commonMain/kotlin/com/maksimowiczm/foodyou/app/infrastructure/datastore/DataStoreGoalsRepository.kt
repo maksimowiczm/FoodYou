@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore
+package com.maksimowiczm.foodyou.app.infrastructure.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
 import com.maksimowiczm.foodyou.shared.food.NutritionFactsField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -34,13 +35,13 @@ internal class DataStoreGoalsRepository(private val dataStore: DataStore<Prefere
     override fun observeDailyGoals(date: LocalDate): Flow<DailyGoal> =
         observeWeeklyGoals().map {
             when (date.dayOfWeek) {
-                kotlinx.datetime.DayOfWeek.MONDAY -> it.monday
-                kotlinx.datetime.DayOfWeek.TUESDAY -> it.tuesday
-                kotlinx.datetime.DayOfWeek.WEDNESDAY -> it.wednesday
-                kotlinx.datetime.DayOfWeek.THURSDAY -> it.thursday
-                kotlinx.datetime.DayOfWeek.FRIDAY -> it.friday
-                kotlinx.datetime.DayOfWeek.SATURDAY -> it.saturday
-                kotlinx.datetime.DayOfWeek.SUNDAY -> it.sunday
+                DayOfWeek.MONDAY -> it.monday
+                DayOfWeek.TUESDAY -> it.tuesday
+                DayOfWeek.WEDNESDAY -> it.wednesday
+                DayOfWeek.THURSDAY -> it.thursday
+                DayOfWeek.FRIDAY -> it.friday
+                DayOfWeek.SATURDAY -> it.saturday
+                DayOfWeek.SUNDAY -> it.sunday
             }
         }
 }

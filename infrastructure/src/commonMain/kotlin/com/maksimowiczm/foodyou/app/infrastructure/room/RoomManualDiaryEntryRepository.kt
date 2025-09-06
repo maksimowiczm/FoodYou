@@ -1,9 +1,9 @@
-package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room
+package com.maksimowiczm.foodyou.app.infrastructure.room
 
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.ManualDiaryEntryDao
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.ManualDiaryEntryEntity
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntityNutrients
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toNutritionFacts
+import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.ManualDiaryEntryDao
+import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.ManualDiaryEntryEntity
+import com.maksimowiczm.foodyou.app.infrastructure.room.shared.toEntityNutrients
+import com.maksimowiczm.foodyou.app.infrastructure.room.shared.toNutritionFacts
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntry
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntryId
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository

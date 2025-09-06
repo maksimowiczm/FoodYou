@@ -9,18 +9,28 @@ import com.maksimowiczm.foodyou.app.infrastructure.SponsorRepositoryImpl
 import com.maksimowiczm.foodyou.app.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.app.infrastructure.TranslationRepositoryImpl
 import com.maksimowiczm.foodyou.app.infrastructure.VibeCsvParser
+import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreGoalsRepository
+import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreMealsPreferencesRepository
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreSettingsRepository
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreSponsorshipPreferencesDataSource
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreUserIdentifierProvider
 import com.maksimowiczm.foodyou.app.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
 import com.maksimowiczm.foodyou.app.infrastructure.room.FoodYouDatabase
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomFoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomManualDiaryEntryRepository
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomMealRepository
 import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.InitializeMealsCallback
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
 import com.maksimowiczm.foodyou.business.shared.application.csv.CsvParser
 import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseDumpService
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
 import com.maksimowiczm.foodyou.business.shared.domain.identity.UserIdentifierProvider
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
+import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
 import com.maksimowiczm.foodyou.infrastructure.di.applicationCoroutineScopeQualifier
 import com.maksimowiczm.foodyou.shared.database.TransactionProvider
 import com.maksimowiczm.foodyou.shared.date.DateProvider
@@ -108,7 +118,7 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
     }
 
     factoryOf(::DataStoreSponsorshipPreferencesDataSource) {
-            qualifier = sponsorshipPreferencesQualifier
+            qualifier = named(SponsorshipPreferences::class.qualifiedName!!)
         }
         .bind<UserPreferencesRepository<SponsorshipPreferences>>()
 
@@ -116,7 +126,7 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
             SponsorRepositoryImpl(
                 sponsorshipDao = get(),
                 networkDataSource = get(),
-                preferences = get(sponsorshipPreferencesQualifier),
+                preferences = get(named(SponsorshipPreferences::class.qualifiedName!!)),
                 logger = get(),
             )
         }
@@ -126,13 +136,21 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
     factory {
             TranslationRepositoryImpl(
                 systemDetails = get(),
-                settingsRepository = get(settingsPreferencesQualifier),
+                settingsRepository = get(named(Settings::class.qualifiedName!!)),
             )
         }
         .bind<TranslationRepository>()
     factoryOf(::DataStoreSettingsRepository).bind<UserPreferencesRepository<Settings>>()
     systemDetails()
-}
 
-val sponsorshipPreferencesQualifier = named(SponsorshipPreferences::class.qualifiedName!!)
-val settingsPreferencesQualifier = named(Settings::class.qualifiedName!!)
+    // ---
+
+    factoryOf(::RoomFoodDiaryEntryRepository).bind<FoodDiaryEntryRepository>()
+    factoryOf(::RoomManualDiaryEntryRepository).bind<ManualDiaryEntryRepository>()
+    factoryOf(::RoomMealRepository).bind<MealRepository>()
+    factoryOf(::DataStoreMealsPreferencesRepository) {
+            qualifier = named(MealsPreferences::class.qualifiedName!!)
+        }
+        .bind<UserPreferencesRepository<MealsPreferences>>()
+    factoryOf(::DataStoreGoalsRepository).bind<GoalsRepository>()
+}

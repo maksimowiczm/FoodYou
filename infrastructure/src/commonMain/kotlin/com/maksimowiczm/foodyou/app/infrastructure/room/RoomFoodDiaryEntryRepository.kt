@@ -1,12 +1,10 @@
-package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room
+package com.maksimowiczm.foodyou.app.infrastructure.room
 
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.DiaryProductEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.DiaryRecipeEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.DiaryRecipeIngredientEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.MeasurementDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.MeasurementEntity
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.immediateTransaction
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toDomain
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toNutritionFacts

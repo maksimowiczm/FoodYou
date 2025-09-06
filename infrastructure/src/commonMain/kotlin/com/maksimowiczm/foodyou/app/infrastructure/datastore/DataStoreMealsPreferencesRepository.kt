@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore
+package com.maksimowiczm.foodyou.app.infrastructure.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
