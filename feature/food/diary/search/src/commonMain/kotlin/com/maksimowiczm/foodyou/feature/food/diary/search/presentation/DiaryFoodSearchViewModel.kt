@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.food.diary.search.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.fooddiary.domain.repository.MealRepository
-import com.maksimowiczm.foodyou.core.shared.event.EventBus
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
+import com.maksimowiczm.foodyou.shared.event.EventBus
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel

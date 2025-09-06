@@ -32,10 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodProduct
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodRecipe
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.FoodDiaryEntry
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.ChipsDatePicker
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.ChipsMealPicker
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.FoodMeasurementFormState
@@ -44,6 +40,10 @@ import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.rememberFoodMeasure
 import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.UpdateEntryEvent
 import com.maksimowiczm.foodyou.feature.food.diary.update.presentation.UpdateFoodDiaryEntryViewModel
 import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPicker
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodProduct
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodRecipe
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.FoodDiaryEntry
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.ext.add

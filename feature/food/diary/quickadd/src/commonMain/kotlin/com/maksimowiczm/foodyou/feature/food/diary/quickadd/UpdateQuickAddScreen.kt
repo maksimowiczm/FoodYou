@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.ManualDiaryEntryId
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntryId
 import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf

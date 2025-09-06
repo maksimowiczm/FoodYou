@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
-import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.Sponsorship
-import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.SponsorshipPreferences
-import com.maksimowiczm.foodyou.core.sponsorship.domain.repository.SponsorRepository
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.SponsorshipPreferences
+import com.maksimowiczm.foodyou.sponsorship.domain.repository.SponsorRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

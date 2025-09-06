@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room
 
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.MealDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.MealEntity
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.Meal
-import com.maksimowiczm.foodyou.core.fooddiary.domain.repository.MealRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.Meal
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime

@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.food.domain.entity.Product
-import com.maksimowiczm.foodyou.core.shared.food.FoodSource
-import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
-import com.maksimowiczm.foodyou.core.shared.food.Weighted
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.Product
+import com.maksimowiczm.foodyou.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.food.Weighted
 
 @Immutable
 internal data class ProductModel(

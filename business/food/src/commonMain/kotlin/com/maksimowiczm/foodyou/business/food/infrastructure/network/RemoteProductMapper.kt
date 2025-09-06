@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network
 
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.food.domain.entity.Product
-import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteProduct
-import com.maksimowiczm.foodyou.core.shared.food.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.Product
+import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
+import com.maksimowiczm.foodyou.shared.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.shared.food.NutritionFacts
 
 internal class RemoteProductMapper {
     fun toModel(remote: RemoteProduct, id: FoodId.Product = FoodId.Product(0)): Product {

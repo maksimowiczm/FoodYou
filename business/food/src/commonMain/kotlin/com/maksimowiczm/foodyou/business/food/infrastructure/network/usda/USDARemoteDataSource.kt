@@ -4,8 +4,8 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.UsdaFoodPageResponse
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.UsdaFoodPageResponseImpl
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
-import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteFoodException
-import com.maksimowiczm.foodyou.core.shared.log.Logger
+import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
+import com.maksimowiczm.foodyou.shared.log.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

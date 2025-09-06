@@ -7,11 +7,11 @@ import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.sponsorship.SponsorshipEntity
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.room.RoomSponsorshipDataSource
-import com.maksimowiczm.foodyou.core.shared.log.Logger
-import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
-import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.Sponsorship
-import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.SponsorshipPreferences
-import com.maksimowiczm.foodyou.core.sponsorship.domain.repository.SponsorRepository
+import com.maksimowiczm.foodyou.shared.log.Logger
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.SponsorshipPreferences
+import com.maksimowiczm.foodyou.sponsorship.domain.repository.SponsorRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest

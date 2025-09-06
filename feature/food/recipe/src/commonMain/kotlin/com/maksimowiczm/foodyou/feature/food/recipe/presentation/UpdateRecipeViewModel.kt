@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.feature.food.recipe.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.food.domain.entity.Recipe
-import com.maksimowiczm.foodyou.core.food.domain.usecase.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.core.food.domain.usecase.UpdateRecipeUseCase
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.RecipeFormState
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.Recipe
+import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.food.domain.usecase.UpdateRecipeUseCase
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted

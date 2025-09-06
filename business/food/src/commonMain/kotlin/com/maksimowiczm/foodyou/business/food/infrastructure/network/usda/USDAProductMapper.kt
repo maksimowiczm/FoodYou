@@ -41,10 +41,10 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.Nutrient.VITAMIN_E
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.Nutrient.VITAMIN_K
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.Nutrient.ZINC
-import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteNutritionFacts
-import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteProduct
-import com.maksimowiczm.foodyou.core.shared.food.FoodSource
-import com.maksimowiczm.foodyou.core.shared.food.NutrientsHelper
+import com.maksimowiczm.foodyou.food.domain.entity.RemoteNutritionFacts
+import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
+import com.maksimowiczm.foodyou.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.food.NutrientsHelper
 
 private val allowedServingUnits by lazy { setOf("g", "GRM", "ml", "MLT") }
 private val liquidServingUnits by lazy { setOf("ml", "MLT") }

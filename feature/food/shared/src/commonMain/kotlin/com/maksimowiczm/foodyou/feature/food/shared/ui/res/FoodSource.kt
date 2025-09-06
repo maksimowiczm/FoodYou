@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.food.FoodSource
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

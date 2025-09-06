@@ -13,9 +13,9 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.VibeCsvParser
 import com.maksimowiczm.foodyou.business.shared.infrastructure.datastore.DataStoreUserIdentifierProvider
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.InitializeMealsCallback
-import com.maksimowiczm.foodyou.core.shared.database.TransactionProvider
-import com.maksimowiczm.foodyou.core.shared.date.DateProvider
-import com.maksimowiczm.foodyou.core.shared.event.EventBus
+import com.maksimowiczm.foodyou.shared.database.TransactionProvider
+import com.maksimowiczm.foodyou.shared.date.DateProvider
+import com.maksimowiczm.foodyou.shared.event.EventBus
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module

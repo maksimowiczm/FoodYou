@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteFoodException
+import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

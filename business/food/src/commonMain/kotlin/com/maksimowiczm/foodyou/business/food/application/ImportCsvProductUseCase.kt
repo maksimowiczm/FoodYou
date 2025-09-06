@@ -2,16 +2,16 @@ package com.maksimowiczm.foodyou.business.food.application
 
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
 import com.maksimowiczm.foodyou.business.shared.application.csv.CsvParser
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodHistory
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.food.domain.entity.Product
-import com.maksimowiczm.foodyou.core.food.domain.repository.FoodHistoryRepository
-import com.maksimowiczm.foodyou.core.food.domain.repository.ProductRepository
-import com.maksimowiczm.foodyou.core.shared.database.TransactionProvider
-import com.maksimowiczm.foodyou.core.shared.date.DateProvider
-import com.maksimowiczm.foodyou.core.shared.food.FoodSource
-import com.maksimowiczm.foodyou.core.shared.food.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.Product
+import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
+import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
+import com.maksimowiczm.foodyou.shared.database.TransactionProvider
+import com.maksimowiczm.foodyou.shared.date.DateProvider
+import com.maksimowiczm.foodyou.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.shared.food.NutritionFacts
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 

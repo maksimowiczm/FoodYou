@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.room
 
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodSearchDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.SearchEntry
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearchHistory
-import com.maksimowiczm.foodyou.core.food.domain.repository.FoodSearchHistoryRepository
-import com.maksimowiczm.foodyou.core.shared.search.SearchQuery
+import com.maksimowiczm.foodyou.food.domain.entity.FoodSearchHistory
+import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository
+import com.maksimowiczm.foodyou.shared.search.SearchQuery
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow

@@ -22,8 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteFoodException
 import com.maksimowiczm.foodyou.feature.food.shared.ui.DownloadProductUsdaErrorCard
+import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

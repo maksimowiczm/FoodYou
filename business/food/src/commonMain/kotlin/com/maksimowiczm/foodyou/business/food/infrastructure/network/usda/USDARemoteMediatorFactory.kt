@@ -3,15 +3,15 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearchPreferences
-import com.maksimowiczm.foodyou.core.food.domain.repository.FoodHistoryRepository
-import com.maksimowiczm.foodyou.core.food.domain.repository.ProductRemoteMediatorFactory
-import com.maksimowiczm.foodyou.core.food.domain.repository.ProductRepository
-import com.maksimowiczm.foodyou.core.shared.database.TransactionProvider
-import com.maksimowiczm.foodyou.core.shared.date.DateProvider
-import com.maksimowiczm.foodyou.core.shared.log.Logger
-import com.maksimowiczm.foodyou.core.shared.search.SearchQuery
-import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.food.domain.ProductRemoteMediatorFactory
+import com.maksimowiczm.foodyou.food.domain.entity.FoodSearchPreferences
+import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
+import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
+import com.maksimowiczm.foodyou.shared.database.TransactionProvider
+import com.maksimowiczm.foodyou.shared.date.DateProvider
+import com.maksimowiczm.foodyou.shared.log.Logger
+import com.maksimowiczm.foodyou.shared.search.SearchQuery
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalPagingApi::class)

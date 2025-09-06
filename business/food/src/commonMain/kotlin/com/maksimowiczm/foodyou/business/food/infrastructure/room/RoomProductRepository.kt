@@ -6,11 +6,11 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toDom
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toNutritionFacts
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.food.domain.entity.Product
-import com.maksimowiczm.foodyou.core.food.domain.repository.ProductRepository
-import com.maksimowiczm.foodyou.core.shared.food.FoodSource
-import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.Product
+import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
+import com.maksimowiczm.foodyou.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.food.NutritionFacts
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapValues

@@ -7,11 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodRecipe
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodRecipeIngredient
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodRecipe
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodRecipeIngredient
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.Res

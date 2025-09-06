@@ -39,12 +39,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.core.goals.domain.entity.DailyGoal
-import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
-import com.maksimowiczm.foodyou.core.shared.food.NutritionFactsField
-import com.maksimowiczm.foodyou.core.shared.food.get
-import com.maksimowiczm.foodyou.core.shared.food.sum
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
+import com.maksimowiczm.foodyou.goals.domain.entity.DailyGoal
+import com.maksimowiczm.foodyou.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.food.NutritionFactsField
+import com.maksimowiczm.foodyou.shared.food.get
+import com.maksimowiczm.foodyou.shared.food.sum
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette

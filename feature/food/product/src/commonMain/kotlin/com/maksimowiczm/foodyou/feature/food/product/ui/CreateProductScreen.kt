@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.feature.food.product.presentation.create.CreateProductEvent
 import com.maksimowiczm.foodyou.feature.food.product.presentation.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.feature.food.product.ui.create.CreateProductApp
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 

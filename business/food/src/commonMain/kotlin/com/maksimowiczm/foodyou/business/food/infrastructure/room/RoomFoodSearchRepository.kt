@@ -8,16 +8,16 @@ import androidx.paging.map
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodSearch as FoodSearchData
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodSearchDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntity
-import com.maksimowiczm.foodyou.core.food.domain.RemoteMediatorFactory
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearch
-import com.maksimowiczm.foodyou.core.food.domain.repository.FoodSearchRepository
-import com.maksimowiczm.foodyou.core.shared.food.FoodSource
-import com.maksimowiczm.foodyou.core.shared.food.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
-import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
-import com.maksimowiczm.foodyou.core.shared.measurement.from
-import com.maksimowiczm.foodyou.core.shared.search.SearchQuery
+import com.maksimowiczm.foodyou.food.domain.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.FoodSearch
+import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchRepository
+import com.maksimowiczm.foodyou.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.measurement.from
+import com.maksimowiczm.foodyou.shared.search.SearchQuery
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

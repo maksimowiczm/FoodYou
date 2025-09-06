@@ -6,9 +6,9 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.core.shared.food.FoodSource
 import com.maksimowiczm.foodyou.feature.food.shared.ui.res.Icon
 import com.maksimowiczm.foodyou.feature.food.shared.ui.res.stringResource
+import com.maksimowiczm.foodyou.shared.food.FoodSource
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

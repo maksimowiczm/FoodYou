@@ -6,13 +6,13 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.Food
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodHistory
-import com.maksimowiczm.foodyou.core.food.domain.entity.Product
-import com.maksimowiczm.foodyou.core.food.domain.repository.FoodHistoryRepository
-import com.maksimowiczm.foodyou.core.food.domain.repository.ProductRepository
-import com.maksimowiczm.foodyou.core.shared.database.TransactionProvider
-import com.maksimowiczm.foodyou.core.shared.date.DateProvider
-import com.maksimowiczm.foodyou.core.shared.log.Logger
+import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
+import com.maksimowiczm.foodyou.food.domain.entity.Product
+import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
+import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
+import com.maksimowiczm.foodyou.shared.database.TransactionProvider
+import com.maksimowiczm.foodyou.shared.date.DateProvider
+import com.maksimowiczm.foodyou.shared.log.Logger
 import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)

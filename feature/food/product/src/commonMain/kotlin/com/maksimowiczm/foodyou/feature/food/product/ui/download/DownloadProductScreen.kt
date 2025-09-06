@@ -50,7 +50,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.food.domain.usecase.DownloadProductError
+import com.maksimowiczm.foodyou.food.domain.usecase.DownloadProductError
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.unorderedList
 import foodyou.app.generated.resources.*

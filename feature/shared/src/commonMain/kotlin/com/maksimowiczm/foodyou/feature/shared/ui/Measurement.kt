@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.feature.shared.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
-import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
-import com.maksimowiczm.foodyou.core.shared.measurement.MeasurementType
-import com.maksimowiczm.foodyou.core.shared.measurement.type
+import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.measurement.MeasurementType
+import com.maksimowiczm.foodyou.shared.measurement.type
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

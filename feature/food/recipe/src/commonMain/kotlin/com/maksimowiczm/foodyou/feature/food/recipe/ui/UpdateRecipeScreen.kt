@@ -5,10 +5,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.feature.food.recipe.presentation.UpdateRecipeEvent
 import com.maksimowiczm.foodyou.feature.food.recipe.presentation.UpdateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.food.recipe.presentation.toMinimalIngredient
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.shared.ui.BackHandler
 import com.maksimowiczm.foodyou.shared.ui.DiscardDialog
 import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle

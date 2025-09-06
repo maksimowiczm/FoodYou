@@ -41,11 +41,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.DiaryFoodSearchViewModel
 import com.maksimowiczm.foodyou.feature.food.shared.ui.search.FoodSearchApp
 import com.maksimowiczm.foodyou.feature.food.shared.ui.search.FoodSearchAppDefaults
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.BackHandler
 import com.maksimowiczm.foodyou.shared.ui.Scrim

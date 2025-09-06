@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.feature.food.recipe.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodHistory
-import com.maksimowiczm.foodyou.core.food.domain.usecase.CreateRecipeUseCase
-import com.maksimowiczm.foodyou.core.food.domain.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.RecipeFormState
+import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
+import com.maksimowiczm.foodyou.food.domain.usecase.CreateRecipeUseCase
+import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.ui.ext.now
 import kotlinx.coroutines.channels.Channel

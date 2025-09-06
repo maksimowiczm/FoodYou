@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.feature.food.recipe.presentation
 
 import androidx.lifecycle.ViewModel
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.food.domain.entity.Recipe
-import com.maksimowiczm.foodyou.core.food.domain.entity.RecipeIngredient
-import com.maksimowiczm.foodyou.core.food.domain.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.RecipeFormState
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.Recipe
+import com.maksimowiczm.foodyou.food.domain.entity.RecipeIngredient
+import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull

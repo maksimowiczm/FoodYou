@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.diary.meal
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.fooddiary.domain.repository.MealRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged

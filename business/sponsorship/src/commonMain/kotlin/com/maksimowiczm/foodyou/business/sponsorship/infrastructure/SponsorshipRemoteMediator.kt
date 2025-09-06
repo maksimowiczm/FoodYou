@@ -7,8 +7,8 @@ import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.NetworkSponsorship
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.room.RoomSponsorshipDataSource
-import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.Sponsorship
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.CancellationException

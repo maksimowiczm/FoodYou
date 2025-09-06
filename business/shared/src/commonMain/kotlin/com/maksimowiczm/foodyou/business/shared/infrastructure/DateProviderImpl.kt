@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.shared.infrastructure
 
-import com.maksimowiczm.foodyou.core.shared.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.date.DateProvider
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.delay

@@ -8,7 +8,7 @@ import androidx.paging.RemoteMediator
 import androidx.paging.map
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.sponsorship.SponsorshipDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.sponsorship.SponsorshipEntity
-import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.Sponsorship
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow

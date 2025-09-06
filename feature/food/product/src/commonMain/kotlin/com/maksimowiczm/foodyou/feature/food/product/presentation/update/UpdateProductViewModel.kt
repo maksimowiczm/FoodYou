@@ -2,15 +2,15 @@ package com.maksimowiczm.foodyou.feature.food.product.presentation.update
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.food.domain.entity.Product
-import com.maksimowiczm.foodyou.core.food.domain.usecase.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.core.food.domain.usecase.UpdateProductUseCase
-import com.maksimowiczm.foodyou.core.shared.food.FoodSource
-import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.nutritionFacts
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.Product
+import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.food.domain.usecase.UpdateProductUseCase
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.measurement.Measurement
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.mapNotNull

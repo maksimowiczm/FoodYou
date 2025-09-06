@@ -2,12 +2,12 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.room
 
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.MeasurementSuggestionDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.MeasurementSuggestionEntity
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.food.domain.repository.FoodMeasurementSuggestionRepository
-import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
-import com.maksimowiczm.foodyou.core.shared.measurement.from
-import com.maksimowiczm.foodyou.core.shared.measurement.rawValue
-import com.maksimowiczm.foodyou.core.shared.measurement.type
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.repository.FoodMeasurementSuggestionRepository
+import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.measurement.from
+import com.maksimowiczm.foodyou.shared.measurement.rawValue
+import com.maksimowiczm.foodyou.shared.measurement.type
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant

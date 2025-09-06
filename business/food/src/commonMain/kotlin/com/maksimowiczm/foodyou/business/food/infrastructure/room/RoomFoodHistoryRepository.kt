@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.room
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventType
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodHistory
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.food.domain.repository.FoodHistoryRepository
+import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow

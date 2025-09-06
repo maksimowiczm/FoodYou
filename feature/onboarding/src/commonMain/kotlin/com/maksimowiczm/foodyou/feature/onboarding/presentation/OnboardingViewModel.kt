@@ -3,10 +3,10 @@ package com.maksimowiczm.foodyou.feature.onboarding.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.ImportSwissFoodCompositionDatabaseUseCase
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearchPreferences
-import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
 import com.maksimowiczm.foodyou.feature.onboarding.ui.OnboardingState
+import com.maksimowiczm.foodyou.food.domain.entity.FoodSearchPreferences
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.last

@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.business.food.application
 
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
-import com.maksimowiczm.foodyou.core.food.domain.entity.Product
-import com.maksimowiczm.foodyou.core.food.domain.repository.ProductRepository
-import com.maksimowiczm.foodyou.core.shared.database.TransactionProvider
+import com.maksimowiczm.foodyou.food.domain.entity.Product
+import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
+import com.maksimowiczm.foodyou.shared.database.TransactionProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.first

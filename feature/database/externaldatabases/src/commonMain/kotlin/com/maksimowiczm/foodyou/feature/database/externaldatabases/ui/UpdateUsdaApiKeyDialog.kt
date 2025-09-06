@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearchPreferences
-import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.food.domain.entity.FoodSearchPreferences
 import com.maksimowiczm.foodyou.infrastructure.di.foodSearchPreferencesQualifier
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_cancel
 import foodyou.app.generated.resources.action_save

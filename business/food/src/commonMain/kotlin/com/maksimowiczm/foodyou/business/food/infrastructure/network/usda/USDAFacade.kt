@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda
 
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearchPreferences
-import com.maksimowiczm.foodyou.core.shared.log.Logger
-import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.food.domain.entity.FoodSearchPreferences
+import com.maksimowiczm.foodyou.shared.log.Logger
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 
 internal class USDAFacade(
     private val dataSource: USDARemoteDataSource,

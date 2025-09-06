@@ -4,9 +4,9 @@ import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.SponsorRepos
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.datastore.DataStoreSponsorshipPreferencesDataSource
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.room.RoomSponsorshipDataSource
-import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
-import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.SponsorshipPreferences
-import com.maksimowiczm.foodyou.core.sponsorship.domain.repository.SponsorRepository
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.SponsorshipPreferences
+import com.maksimowiczm.foodyou.sponsorship.domain.repository.SponsorRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

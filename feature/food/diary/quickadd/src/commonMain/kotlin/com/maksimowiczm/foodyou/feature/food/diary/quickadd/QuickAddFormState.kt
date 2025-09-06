@@ -4,7 +4,7 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import com.maksimowiczm.foodyou.core.shared.food.NutrientsHelper
+import com.maksimowiczm.foodyou.shared.food.NutrientsHelper
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.nonBlankStringValidator
 import com.maksimowiczm.foodyou.shared.ui.form.nullableDoubleParser

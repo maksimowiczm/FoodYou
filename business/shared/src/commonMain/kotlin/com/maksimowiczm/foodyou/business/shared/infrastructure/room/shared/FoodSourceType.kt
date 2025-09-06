@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared
 
-import com.maksimowiczm.foodyou.core.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.food.FoodSource
 
 enum class FoodSourceType {
     User,

@@ -22,8 +22,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.shared.food.NutrientValue
-import com.maksimowiczm.foodyou.core.shared.food.NutritionFactsField
+import com.maksimowiczm.foodyou.shared.food.NutrientValue
+import com.maksimowiczm.foodyou.shared.food.NutritionFactsField
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.*

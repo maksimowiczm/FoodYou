@@ -8,12 +8,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.IngredientModel
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import com.maksimowiczm.foodyou.shared.ui.ext.horizontal
 import com.maksimowiczm.foodyou.shared.ui.ext.vertical

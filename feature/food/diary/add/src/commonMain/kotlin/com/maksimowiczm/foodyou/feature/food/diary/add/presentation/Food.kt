@@ -1,13 +1,13 @@
 package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 
-import com.maksimowiczm.foodyou.core.food.domain.entity.Food
-import com.maksimowiczm.foodyou.core.food.domain.entity.Product
-import com.maksimowiczm.foodyou.core.food.domain.entity.Recipe
-import com.maksimowiczm.foodyou.core.food.domain.entity.RecipeIngredient
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFood
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodProduct
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodRecipe
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodRecipeIngredient
+import com.maksimowiczm.foodyou.food.domain.entity.Food
+import com.maksimowiczm.foodyou.food.domain.entity.Product
+import com.maksimowiczm.foodyou.food.domain.entity.Recipe
+import com.maksimowiczm.foodyou.food.domain.entity.RecipeIngredient
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFood
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodProduct
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodRecipe
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodRecipeIngredient
 
 fun Food.toDiaryFood(): DiaryFood =
     when (this) {

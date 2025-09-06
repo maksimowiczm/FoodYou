@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.shared.infrastructure.room.food
 
 import androidx.room.DatabaseView
-import com.maksimowiczm.foodyou.core.shared.measurement.MeasurementType
+import com.maksimowiczm.foodyou.shared.measurement.MeasurementType
 
 @DatabaseView(
     """

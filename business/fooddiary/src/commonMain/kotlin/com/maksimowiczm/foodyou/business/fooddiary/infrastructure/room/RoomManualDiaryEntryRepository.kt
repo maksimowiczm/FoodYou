@@ -4,10 +4,10 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.Ma
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.ManualDiaryEntryEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toNutritionFacts
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.ManualDiaryEntry
-import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.ManualDiaryEntryId
-import com.maksimowiczm.foodyou.core.fooddiary.domain.repository.ManualDiaryEntryRepository
-import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntry
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntryId
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
+import com.maksimowiczm.foodyou.shared.food.NutritionFacts
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
