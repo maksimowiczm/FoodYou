@@ -30,6 +30,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kermit)
+            implementation(libs.core.shared)
         }
 
         commonTest { dependencies { implementation(libs.kotlin.test) } }

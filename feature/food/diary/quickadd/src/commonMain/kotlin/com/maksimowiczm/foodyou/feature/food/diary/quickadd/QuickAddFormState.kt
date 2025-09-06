@@ -2,18 +2,9 @@ package com.maksimowiczm.foodyou.feature.food.diary.quickadd
 
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientsHelper
+import com.maksimowiczm.foodyou.core.shared.food.NutrientsHelper
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.nonBlankStringValidator
 import com.maksimowiczm.foodyou.shared.ui.form.nullableDoubleParser
@@ -21,9 +12,6 @@ import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.shared.ui.form.stringParser
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.component3
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import org.jetbrains.compose.resources.stringResource

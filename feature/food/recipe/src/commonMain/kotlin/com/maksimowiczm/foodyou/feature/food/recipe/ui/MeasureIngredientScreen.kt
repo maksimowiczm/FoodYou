@@ -28,10 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.food.domain.Product
-import com.maksimowiczm.foodyou.business.food.domain.Recipe
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.isComplete
+import com.maksimowiczm.foodyou.core.food.domain.entity.Product
+import com.maksimowiczm.foodyou.core.food.domain.entity.Recipe
+import com.maksimowiczm.foodyou.core.shared.food.isComplete
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.recipe.presentation.MeasureIngredientViewModel
 import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPicker

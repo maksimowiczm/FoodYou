@@ -2,10 +2,10 @@ package com.maksimowiczm.foodyou.feature.food.product.presentation.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.CreateProductUseCase
-import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodHistory
+import com.maksimowiczm.foodyou.core.food.domain.usecase.CreateProductUseCase
+import com.maksimowiczm.foodyou.core.shared.food.FoodSource
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.nutritionFacts
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
@@ -50,7 +50,7 @@ internal class CreateProductViewModel(private val createProductUseCase: CreatePr
                     servingWeight = form.servingWeight.value?.toDouble(),
                     source = FoodSource(type = form.sourceType, url = form.sourceUrl.value),
                     nutritionFacts = form.nutritionFacts(multiplier),
-                    event = FoodEvent.Created(LocalDateTime.now()),
+                    history = FoodHistory.Created(LocalDateTime.now()),
                 )
                 .fold(
                     onSuccess = {

@@ -1,17 +1,5 @@
 package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room
 
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFood
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodProduct
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipeIngredient
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.from
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.rawValue
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.type
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.DiaryProductEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.DiaryRecipeEntity
@@ -23,6 +11,18 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toDom
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toNutritionFacts
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFood
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodProduct
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodRecipe
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodRecipeIngredient
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.FoodDiaryEntry
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.core.fooddiary.domain.repository.FoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.core.shared.food.FoodSource
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.core.shared.measurement.from
+import com.maksimowiczm.foodyou.core.shared.measurement.rawValue
+import com.maksimowiczm.foodyou.core.shared.measurement.type
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -164,17 +164,15 @@ internal class RoomFoodDiaryEntryRepository(private val database: FoodYouDatabas
 
             // Insert the new product or recipe
             val newProductId = run {
-                if (entry.food is DiaryFoodProduct) {
-                    insertProduct(entry.food)
-                } else {
-                    null
+                when (val food = entry.food) {
+                    is DiaryFoodProduct -> insertProduct(food)
+                    else -> null
                 }
             }
             val newRecipeId = run {
-                if (entry.food is DiaryFoodRecipe) {
-                    insertRecipe(entry.food)
-                } else {
-                    null
+                when (val food = entry.food) {
+                    is DiaryFoodRecipe -> insertRecipe(food)
+                    else -> null
                 }
             }
 
@@ -276,18 +274,16 @@ internal class RoomFoodDiaryEntryRepository(private val database: FoodYouDatabas
 
         diaryRecipe.ingredients.forEach { ingredient ->
             val ingredientRecipeId = run {
-                if (ingredient.food is DiaryFoodRecipe) {
-                    insertRecipe(ingredient.food)
-                } else {
-                    null
+                when (val food = ingredient.food) {
+                    is DiaryFoodRecipe -> insertRecipe(food)
+                    else -> null
                 }
             }
 
             val ingredientProductId = run {
-                if (ingredient.food is DiaryFoodProduct) {
-                    insertProduct(ingredient.food)
-                } else {
-                    null
+                when (val food = ingredient.food) {
+                    is DiaryFoodProduct -> insertProduct(food)
+                    else -> null
                 }
             }
 

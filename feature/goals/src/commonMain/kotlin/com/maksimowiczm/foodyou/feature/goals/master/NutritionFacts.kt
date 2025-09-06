@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.goals.master
 
 import androidx.compose.runtime.Composable
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
+import com.maksimowiczm.foodyou.core.shared.food.NutritionFactsField
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

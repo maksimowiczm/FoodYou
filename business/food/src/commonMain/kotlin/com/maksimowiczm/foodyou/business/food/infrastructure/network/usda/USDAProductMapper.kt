@@ -1,7 +1,5 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda
 
-import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteNutritionFacts
-import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.UnitType
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.multiplier
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.Food
@@ -43,8 +41,10 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.Nutrient.VITAMIN_E
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.Nutrient.VITAMIN_K
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.model.Nutrient.ZINC
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientsHelper
+import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteNutritionFacts
+import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteProduct
+import com.maksimowiczm.foodyou.core.shared.food.FoodSource
+import com.maksimowiczm.foodyou.core.shared.food.NutrientsHelper
 
 private val allowedServingUnits by lazy { setOf("g", "GRM", "ml", "MLT") }
 private val liquidServingUnits by lazy { setOf("ml", "MLT") }

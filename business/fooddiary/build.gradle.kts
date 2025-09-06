@@ -12,6 +12,10 @@ kotlin {
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets.commonMain.dependencies {
+        implementation(libs.core.shared)
+        implementation(libs.core.fooddiary)
+        implementation(libs.core.goals)
+
         implementation(libs.androidx.paging.common)
         implementation(libs.kotlinx.serialization.json)
         implementation(libs.androidx.room.runtime)

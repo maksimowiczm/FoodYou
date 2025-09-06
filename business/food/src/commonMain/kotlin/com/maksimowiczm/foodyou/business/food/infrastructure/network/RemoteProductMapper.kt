@@ -1,71 +1,73 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network
 
-import com.maksimowiczm.foodyou.business.food.domain.Product
-import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.Product
+import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteProduct
+import com.maksimowiczm.foodyou.core.shared.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
 
 internal class RemoteProductMapper {
     fun toModel(remote: RemoteProduct, id: FoodId.Product = FoodId.Product(0)): Product {
-        if (remote.name == null) {
+        val name = remote.name
+        if (name == null) {
             error("Product name cannot be null")
         }
 
-        if (remote.nutritionFacts == null) {
+        val nutritionFacts = remote.nutritionFacts
+        if (nutritionFacts == null) {
             error("Nutrition facts cannot be null")
         }
 
         val facts =
             NutritionFacts.requireAll(
-                proteins = remote.nutritionFacts.proteins.toNutrientValue(),
-                carbohydrates = remote.nutritionFacts.carbohydrates.toNutrientValue(),
-                energy = remote.nutritionFacts.energy.toNutrientValue(),
-                fats = remote.nutritionFacts.fats.toNutrientValue(),
-                saturatedFats = remote.nutritionFacts.saturatedFats.toNutrientValue(),
-                transFats = remote.nutritionFacts.transFats.toNutrientValue(),
-                monounsaturatedFats = remote.nutritionFacts.monounsaturatedFats.toNutrientValue(),
-                polyunsaturatedFats = remote.nutritionFacts.polyunsaturatedFats.toNutrientValue(),
-                omega3 = remote.nutritionFacts.omega3.toNutrientValue(),
-                omega6 = remote.nutritionFacts.omega6.toNutrientValue(),
-                sugars = remote.nutritionFacts.sugars.toNutrientValue(),
-                addedSugars = remote.nutritionFacts.addedSugars.toNutrientValue(),
-                dietaryFiber = remote.nutritionFacts.dietaryFiber.toNutrientValue(),
-                solubleFiber = remote.nutritionFacts.solubleFiber.toNutrientValue(),
-                insolubleFiber = remote.nutritionFacts.insolubleFiber.toNutrientValue(),
-                salt = remote.nutritionFacts.salt.toNutrientValue(),
-                cholesterol = remote.nutritionFacts.cholesterol.toNutrientValue(),
-                caffeine = remote.nutritionFacts.caffeine.toNutrientValue(),
-                vitaminA = remote.nutritionFacts.vitaminA.toNutrientValue(),
-                vitaminB1 = remote.nutritionFacts.vitaminB1.toNutrientValue(),
-                vitaminB2 = remote.nutritionFacts.vitaminB2.toNutrientValue(),
-                vitaminB3 = remote.nutritionFacts.vitaminB3.toNutrientValue(),
-                vitaminB5 = remote.nutritionFacts.vitaminB5.toNutrientValue(),
-                vitaminB6 = remote.nutritionFacts.vitaminB6.toNutrientValue(),
-                vitaminB7 = remote.nutritionFacts.vitaminB7.toNutrientValue(),
-                vitaminB9 = remote.nutritionFacts.vitaminB9.toNutrientValue(),
-                vitaminB12 = remote.nutritionFacts.vitaminB12.toNutrientValue(),
-                vitaminC = remote.nutritionFacts.vitaminC.toNutrientValue(),
-                vitaminD = remote.nutritionFacts.vitaminD.toNutrientValue(),
-                vitaminE = remote.nutritionFacts.vitaminE.toNutrientValue(),
-                vitaminK = remote.nutritionFacts.vitaminK.toNutrientValue(),
-                manganese = remote.nutritionFacts.manganese.toNutrientValue(),
-                magnesium = remote.nutritionFacts.magnesium.toNutrientValue(),
-                potassium = remote.nutritionFacts.potassium.toNutrientValue(),
-                calcium = remote.nutritionFacts.calcium.toNutrientValue(),
-                copper = remote.nutritionFacts.copper.toNutrientValue(),
-                zinc = remote.nutritionFacts.zinc.toNutrientValue(),
-                sodium = remote.nutritionFacts.sodium.toNutrientValue(),
-                iron = remote.nutritionFacts.iron.toNutrientValue(),
-                phosphorus = remote.nutritionFacts.phosphorus.toNutrientValue(),
-                selenium = remote.nutritionFacts.selenium.toNutrientValue(),
-                iodine = remote.nutritionFacts.iodine.toNutrientValue(),
-                chromium = remote.nutritionFacts.chromium.toNutrientValue(),
+                proteins = nutritionFacts.proteins.toNutrientValue(),
+                carbohydrates = nutritionFacts.carbohydrates.toNutrientValue(),
+                energy = nutritionFacts.energy.toNutrientValue(),
+                fats = nutritionFacts.fats.toNutrientValue(),
+                saturatedFats = nutritionFacts.saturatedFats.toNutrientValue(),
+                transFats = nutritionFacts.transFats.toNutrientValue(),
+                monounsaturatedFats = nutritionFacts.monounsaturatedFats.toNutrientValue(),
+                polyunsaturatedFats = nutritionFacts.polyunsaturatedFats.toNutrientValue(),
+                omega3 = nutritionFacts.omega3.toNutrientValue(),
+                omega6 = nutritionFacts.omega6.toNutrientValue(),
+                sugars = nutritionFacts.sugars.toNutrientValue(),
+                addedSugars = nutritionFacts.addedSugars.toNutrientValue(),
+                dietaryFiber = nutritionFacts.dietaryFiber.toNutrientValue(),
+                solubleFiber = nutritionFacts.solubleFiber.toNutrientValue(),
+                insolubleFiber = nutritionFacts.insolubleFiber.toNutrientValue(),
+                salt = nutritionFacts.salt.toNutrientValue(),
+                cholesterol = nutritionFacts.cholesterol.toNutrientValue(),
+                caffeine = nutritionFacts.caffeine.toNutrientValue(),
+                vitaminA = nutritionFacts.vitaminA.toNutrientValue(),
+                vitaminB1 = nutritionFacts.vitaminB1.toNutrientValue(),
+                vitaminB2 = nutritionFacts.vitaminB2.toNutrientValue(),
+                vitaminB3 = nutritionFacts.vitaminB3.toNutrientValue(),
+                vitaminB5 = nutritionFacts.vitaminB5.toNutrientValue(),
+                vitaminB6 = nutritionFacts.vitaminB6.toNutrientValue(),
+                vitaminB7 = nutritionFacts.vitaminB7.toNutrientValue(),
+                vitaminB9 = nutritionFacts.vitaminB9.toNutrientValue(),
+                vitaminB12 = nutritionFacts.vitaminB12.toNutrientValue(),
+                vitaminC = nutritionFacts.vitaminC.toNutrientValue(),
+                vitaminD = nutritionFacts.vitaminD.toNutrientValue(),
+                vitaminE = nutritionFacts.vitaminE.toNutrientValue(),
+                vitaminK = nutritionFacts.vitaminK.toNutrientValue(),
+                manganese = nutritionFacts.manganese.toNutrientValue(),
+                magnesium = nutritionFacts.magnesium.toNutrientValue(),
+                potassium = nutritionFacts.potassium.toNutrientValue(),
+                calcium = nutritionFacts.calcium.toNutrientValue(),
+                copper = nutritionFacts.copper.toNutrientValue(),
+                zinc = nutritionFacts.zinc.toNutrientValue(),
+                sodium = nutritionFacts.sodium.toNutrientValue(),
+                iron = nutritionFacts.iron.toNutrientValue(),
+                phosphorus = nutritionFacts.phosphorus.toNutrientValue(),
+                selenium = nutritionFacts.selenium.toNutrientValue(),
+                iodine = nutritionFacts.iodine.toNutrientValue(),
+                chromium = nutritionFacts.chromium.toNutrientValue(),
             )
 
         return Product(
             id = id,
-            name = remote.name,
+            name = name,
             brand = remote.brand?.takeIf { it.isNotBlank() },
             barcode = remote.barcode?.takeIf { it.isNotBlank() },
             packageWeight = remote.packageWeight,

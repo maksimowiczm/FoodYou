@@ -3,10 +3,10 @@ package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.datastore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DailyGoal
-import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
-import com.maksimowiczm.foodyou.business.fooddiary.domain.WeeklyGoals
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
+import com.maksimowiczm.foodyou.core.goals.domain.entity.DailyGoal
+import com.maksimowiczm.foodyou.core.goals.domain.entity.WeeklyGoals
+import com.maksimowiczm.foodyou.core.goals.domain.repository.GoalsRepository
+import com.maksimowiczm.foodyou.core.shared.food.NutritionFactsField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
@@ -95,3 +95,6 @@ private class DataStoreDailyGoal(
         dailyGoal: DailyGoal
     ) : this(map = dailyGoal.map, isDistribution = dailyGoal.isDistribution)
 }
+
+private val DailyGoal.map: Map<NutritionFactsField, Double>
+    get() = NutritionFactsField.entries.associateWith { this[it] }

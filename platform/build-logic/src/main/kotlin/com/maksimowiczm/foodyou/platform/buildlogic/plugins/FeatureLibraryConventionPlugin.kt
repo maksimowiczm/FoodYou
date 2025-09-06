@@ -46,6 +46,12 @@ internal class FeatureLibraryConventionPlugin : Plugin<Project> {
 
             sourceSets.apply {
                 commonMain.dependencies {
+                    implementation(libs.findLibrary("core.shared").get())
+                    implementation(libs.findLibrary("core.food").get())
+                    implementation(libs.findLibrary("core.food-search").get())
+                    implementation(libs.findLibrary("core.fooddiary").get())
+                    implementation(libs.findLibrary("core.goals").get())
+
                     implementation(project(":shared:common"))
                     implementation(project(":shared:ui"))
                     implementation(project(":feature:shared"))

@@ -7,12 +7,12 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsCardsLayout
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
+import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class DataStoreMealsPreferencesRepository(private val dataStore: DataStore<Preferences>) :
-    MealsPreferencesRepository {
+    UserPreferencesRepository<MealsPreferences> {
     override fun observe(): Flow<MealsPreferences> =
         dataStore.data.map(Preferences::toMealsPreferences)
 

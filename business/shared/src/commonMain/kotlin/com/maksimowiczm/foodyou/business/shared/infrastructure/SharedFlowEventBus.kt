@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.shared.infrastructure
 
-import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
-import com.maksimowiczm.foodyou.business.shared.domain.event.DomainEvent
+import com.maksimowiczm.foodyou.core.shared.event.DomainEvent
+import com.maksimowiczm.foodyou.core.shared.event.EventBus
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow

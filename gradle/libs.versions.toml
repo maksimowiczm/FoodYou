@@ -75,6 +75,10 @@ reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reo
 sqlite-android = { module = "com.github.requery:sqlite-android", version.ref = "sqliteAndroid" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 
+core-food = { group = "com.maksimowiczm.foodyou.core", name = "food" }
+core-food-search = { group = "com.maksimowiczm.foodyou.core", name = "food-search" }
+core-fooddiary = { group = "com.maksimowiczm.foodyou.core", name = "fooddiary" }
+core-goals = { group = "com.maksimowiczm.foodyou.core", name = "goals" }
 core-shared = { group = "com.maksimowiczm.foodyou.core", name = "shared" }
 core-sponsorship = { group = "com.maksimowiczm.foodyou.core", name = "sponsorship" }
 

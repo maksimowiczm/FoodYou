@@ -22,6 +22,10 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.core.shared)
+            implementation(libs.core.food)
+            implementation(libs.core.food.search)
+
             implementation(libs.androidx.paging.common)
 
             // Ktor

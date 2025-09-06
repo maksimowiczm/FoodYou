@@ -50,6 +50,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.core.shared)
+            implementation(libs.core.fooddiary)
+
             implementation(projects.shared.common)
             implementation(libs.koin.core)
             implementation(libs.androidx.room.runtime)

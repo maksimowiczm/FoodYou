@@ -4,16 +4,16 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
-import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
-import com.maksimowiczm.foodyou.business.food.domain.Product
-import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
-import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteFoodException
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.model.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
-import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
-import com.maksimowiczm.foodyou.shared.common.application.log.Logger
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodHistory
+import com.maksimowiczm.foodyou.core.food.domain.entity.Product
+import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteFoodException
+import com.maksimowiczm.foodyou.core.food.domain.repository.FoodHistoryRepository
+import com.maksimowiczm.foodyou.core.food.domain.repository.ProductRepository
+import com.maksimowiczm.foodyou.core.shared.database.TransactionProvider
+import com.maksimowiczm.foodyou.core.shared.date.DateProvider
+import com.maksimowiczm.foodyou.core.shared.log.Logger
 import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)
@@ -23,7 +23,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
     private val isBarcode: Boolean,
     private val transactionProvider: TransactionProvider,
     private val productRepository: ProductRepository,
-    private val foodEventRepository: FoodEventRepository,
+    private val foodHistoryRepository: FoodHistoryRepository,
     private val remoteDataSource: OpenFoodFactsRemoteDataSource,
     private val openFoodFactsPagingHelper: LocalOpenFoodFactsPagingHelper,
     private val offMapper: OpenFoodFactsProductMapper,
@@ -163,9 +163,9 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
             )
 
         if (id != null) {
-            foodEventRepository.insert(
+            foodHistoryRepository.insert(
                 foodId = id,
-                event = FoodEvent.Downloaded(date = now, url = this.source.url),
+                history = FoodHistory.Downloaded(date = now, url = this.source.url),
             )
         }
     }

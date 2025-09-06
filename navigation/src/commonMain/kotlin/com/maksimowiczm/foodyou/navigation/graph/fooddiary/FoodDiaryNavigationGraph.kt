@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.navigation.graph.fooddiary
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.diary.add.ui.AddEntryScreen
 import com.maksimowiczm.foodyou.feature.food.diary.quickadd.CreateQuickAddScreen
 import com.maksimowiczm.foodyou.feature.food.diary.quickadd.UpdateQuickAddScreen

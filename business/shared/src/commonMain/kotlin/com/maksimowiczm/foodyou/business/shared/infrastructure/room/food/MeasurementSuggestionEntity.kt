@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.business.shared.infrastructure.room.food
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.MeasurementType
+import com.maksimowiczm.foodyou.core.shared.measurement.MeasurementType
 
 @Entity(
     tableName = "MeasurementSuggestion",

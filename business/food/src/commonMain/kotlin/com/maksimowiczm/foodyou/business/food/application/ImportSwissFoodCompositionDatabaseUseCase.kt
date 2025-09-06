@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.business.food.application
 
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
 import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.core.shared.food.FoodSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow

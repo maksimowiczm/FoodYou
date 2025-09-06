@@ -19,9 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.isComplete
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.shared.food.isComplete
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.FoodModel
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.RecipeModel
 import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator

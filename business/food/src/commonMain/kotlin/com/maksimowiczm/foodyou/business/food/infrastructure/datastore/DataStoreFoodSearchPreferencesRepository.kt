@@ -5,14 +5,14 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearchPreferences
+import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class DataStoreFoodSearchPreferencesRepository(
     private val dataStore: DataStore<Preferences>
-) : FoodSearchPreferencesRepository {
+) : UserPreferencesRepository<FoodSearchPreferences> {
 
     override fun observe(): Flow<FoodSearchPreferences> =
         dataStore.data.map(Preferences::toFoodSearchPreferences)
@@ -46,10 +46,10 @@ private fun MutablePreferences.updateFoodSearchPreferences(
 ) {
     this[FoodPreferencesKeys.UseOpenFoodFacts] = foodSearchPreferences.openFoodFacts.enabled
     this[FoodPreferencesKeys.UseUsda] = foodSearchPreferences.usda.enabled
-    if (foodSearchPreferences.usda.apiKey == null) {
-        remove(FoodPreferencesKeys.UsdaApiKey)
-    } else {
-        this[FoodPreferencesKeys.UsdaApiKey] = foodSearchPreferences.usda.apiKey
+
+    when (val apiKey = foodSearchPreferences.usda.apiKey) {
+        null -> remove(FoodPreferencesKeys.UsdaApiKey)
+        else -> this[FoodPreferencesKeys.UsdaApiKey] = apiKey
     }
 }
 

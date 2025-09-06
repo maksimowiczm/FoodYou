@@ -4,14 +4,14 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.shared.infrastructure.room.sponsorship.SponsorshipEntity
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.room.RoomSponsorshipDataSource
+import com.maksimowiczm.foodyou.core.shared.log.Logger
 import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
 import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.Sponsorship
 import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.SponsorshipPreferences
 import com.maksimowiczm.foodyou.core.sponsorship.domain.repository.SponsorRepository
-import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -58,14 +58,12 @@ internal class SponsorRepositoryImpl(
             )
         }
 
-    private fun remoteMediatorFactory(): RemoteMediatorFactory =
-        object : RemoteMediatorFactory {
-            override fun <K : Any, T : Any> create(): RemoteMediator<K, T>? =
-                SponsorshipRemoteMediator(
-                    localDataSource = localDataSource,
-                    networkDataSource = networkDataSource,
-                )
-        }
+    private fun remoteMediatorFactory(): () -> RemoteMediator<Int, SponsorshipEntity> = {
+        SponsorshipRemoteMediator(
+            localDataSource = localDataSource,
+            networkDataSource = networkDataSource,
+        )
+    }
 
     private companion object {
         const val TAG = "SponsorRepositoryImpl"

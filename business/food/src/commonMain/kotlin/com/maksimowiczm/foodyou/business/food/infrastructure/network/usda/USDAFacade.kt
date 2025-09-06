@@ -1,12 +1,13 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda
 
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
-import com.maksimowiczm.foodyou.shared.common.application.log.Logger
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearchPreferences
+import com.maksimowiczm.foodyou.core.shared.log.Logger
+import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
 
 internal class USDAFacade(
     private val dataSource: USDARemoteDataSource,
     private val mapper: USDAProductMapper,
-    private val preferencesRepository: FoodSearchPreferencesRepository,
+    private val preferencesRepository: UserPreferencesRepository<FoodSearchPreferences>,
     private val logger: Logger,
 ) {
     /** Extracts the ID from a given USDA product URL. */

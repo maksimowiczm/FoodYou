@@ -5,19 +5,19 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
-import com.maksimowiczm.foodyou.business.food.domain.QueryType
-import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.from
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodSearch as FoodSearchData
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodSearchDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntity
+import com.maksimowiczm.foodyou.core.food.domain.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearch
+import com.maksimowiczm.foodyou.core.food.domain.repository.FoodSearchRepository
+import com.maksimowiczm.foodyou.core.shared.food.FoodSource
+import com.maksimowiczm.foodyou.core.shared.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.core.shared.measurement.from
+import com.maksimowiczm.foodyou.core.shared.search.SearchQuery
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +30,7 @@ import kotlinx.datetime.toInstant
 internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao) :
     FoodSearchRepository {
     override fun search(
-        query: QueryType,
+        query: SearchQuery,
         source: FoodSource.Type,
         config: PagingConfig,
         remoteMediatorFactory: RemoteMediatorFactory?,
@@ -40,15 +40,15 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
                 config = config,
                 pagingSourceFactory = {
                     when (query) {
-                        QueryType.Blank,
-                        is QueryType.NotBlank.Text ->
+                        SearchQuery.Blank,
+                        is SearchQuery.Text ->
                             foodSearchDao.observeFoodByQuery(
                                 query = query.query,
                                 source = source.toEntity(),
                                 excludedRecipeId = excludedRecipeId?.id,
                             )
 
-                        is QueryType.NotBlank.Barcode ->
+                        is SearchQuery.Barcode ->
                             foodSearchDao.observeFoodByBarcode(
                                 barcode = query.query,
                                 source = source.toEntity(),
@@ -61,7 +61,7 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
             .map { data -> data.map { it.toModel() } }
 
     override fun searchRecent(
-        query: QueryType,
+        query: SearchQuery,
         config: PagingConfig,
         now: LocalDateTime,
         excludedRecipeId: FoodId.Recipe?,
@@ -73,15 +73,15 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
                         now.toInstant(TimeZone.currentSystemDefault()).epochSeconds
 
                     when (query) {
-                        QueryType.Blank,
-                        is QueryType.NotBlank.Text ->
+                        SearchQuery.Blank,
+                        is SearchQuery.Text ->
                             foodSearchDao.observeRecentFoodByQuery(
                                 query = query.query,
                                 nowEpochSeconds = nowEpochSeconds,
                                 excludedRecipeId = excludedRecipeId?.id,
                             )
 
-                        is QueryType.NotBlank.Barcode ->
+                        is SearchQuery.Barcode ->
                             foodSearchDao.observeRecentFoodByBarcode(
                                 barcode = query.query,
                                 nowEpochSeconds = nowEpochSeconds,
@@ -93,20 +93,20 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
             .map { data -> data.map { it.toModel() } }
 
     override fun searchFoodCount(
-        query: QueryType,
+        query: SearchQuery,
         source: FoodSource.Type,
         excludedRecipeId: FoodId.Recipe?,
     ): Flow<Int> =
         when (query) {
-            QueryType.Blank,
-            is QueryType.NotBlank.Text ->
+            SearchQuery.Blank,
+            is SearchQuery.Text ->
                 foodSearchDao.observeFoodCountByQuery(
                     query = query.query,
                     source = source.toEntity(),
                     excludedRecipeId = excludedRecipeId?.id,
                 )
 
-            is QueryType.NotBlank.Barcode ->
+            is SearchQuery.Barcode ->
                 foodSearchDao.observeFoodCountByBarcode(
                     barcode = query.query,
                     source = source.toEntity(),
@@ -114,20 +114,20 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
         }
 
     override fun searchRecentFoodCount(
-        query: QueryType,
+        query: SearchQuery,
         now: LocalDateTime,
         excludedRecipeId: FoodId.Recipe?,
     ): Flow<Int> =
         when (query) {
-            QueryType.Blank,
-            is QueryType.NotBlank.Text ->
+            SearchQuery.Blank,
+            is SearchQuery.Text ->
                 foodSearchDao.observeRecentFoodCountByQuery(
                     query = query.query,
                     nowEpochSeconds = now.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
                     excludedRecipeId = excludedRecipeId?.id,
                 )
 
-            is QueryType.NotBlank.Barcode ->
+            is SearchQuery.Barcode ->
                 foodSearchDao.observeRecentFoodCountByBarcode(
                     barcode = query.query,
                     nowEpochSeconds = now.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
@@ -190,7 +190,7 @@ private fun FoodSearchData.toModel(): FoodSearch =
                     ),
                 totalWeight = totalWeight,
                 servingWeight = servingWeight,
-                defaultMeasurement = defaultMeasurement,
+                suggestedMeasurement = suggestedMeasurement,
             )
 
         is FoodId.Recipe ->
@@ -198,7 +198,7 @@ private fun FoodSearchData.toModel(): FoodSearch =
                 id = foodId,
                 headline = headline,
                 isLiquid = isLiquid,
-                defaultMeasurement = defaultMeasurement,
+                suggestedMeasurement = suggestedMeasurement,
             )
     }
 
@@ -208,7 +208,7 @@ private val FoodSearchData.foodId: FoodId
             ?: recipeId?.let(FoodId::Recipe)
             ?: error("Food must have either productId or recipeId")
 
-private val FoodSearchData.defaultMeasurement
+private val FoodSearchData.suggestedMeasurement
     get() =
         when {
             measurementType != null && measurementValue != null ->

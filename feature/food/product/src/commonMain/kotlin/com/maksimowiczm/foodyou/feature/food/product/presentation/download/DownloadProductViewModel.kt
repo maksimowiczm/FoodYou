@@ -2,10 +2,10 @@ package com.maksimowiczm.foodyou.feature.food.product.presentation.download
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.DownloadProductError
-import com.maksimowiczm.foodyou.business.food.application.DownloadProductUseCase
-import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteProduct
+import com.maksimowiczm.foodyou.core.food.domain.usecase.DownloadProductError
+import com.maksimowiczm.foodyou.core.food.domain.usecase.DownloadProductUseCase
+import com.maksimowiczm.foodyou.core.shared.food.FoodSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull

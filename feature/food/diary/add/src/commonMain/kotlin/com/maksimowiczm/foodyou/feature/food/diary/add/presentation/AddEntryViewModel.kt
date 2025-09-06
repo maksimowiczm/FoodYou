@@ -2,23 +2,24 @@ package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.DeleteFoodUseCase
-import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.business.food.application.ObserveMeasurementSuggestionsUseCase
-import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
-import com.maksimowiczm.foodyou.business.food.domain.Product
-import com.maksimowiczm.foodyou.business.food.domain.Recipe
-import com.maksimowiczm.foodyou.business.food.domain.defaultMeasurement
-import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
-import com.maksimowiczm.foodyou.business.fooddiary.application.CreateFoodDiaryEntryUseCase
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
-import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.core.food.domain.entity.Food
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.Product
+import com.maksimowiczm.foodyou.core.food.domain.entity.Recipe
+import com.maksimowiczm.foodyou.core.food.domain.repository.FoodHistoryRepository
+import com.maksimowiczm.foodyou.core.food.domain.usecase.DeleteFoodUseCase
+import com.maksimowiczm.foodyou.core.food.domain.usecase.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.core.food.domain.usecase.ObserveMeasurementSuggestionsUseCase
+import com.maksimowiczm.foodyou.core.fooddiary.domain.repository.MealRepository
+import com.maksimowiczm.foodyou.core.fooddiary.domain.usecase.CreateFoodDiaryEntryUseCase
+import com.maksimowiczm.foodyou.core.shared.date.DateProvider
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.core.shared.measurement.MeasurementType
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.ui.ext.now
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -36,7 +37,7 @@ import kotlinx.datetime.LocalDate
 internal class AddEntryViewModel(
     private val createFoodDiaryEntryUseCase: CreateFoodDiaryEntryUseCase,
     observeFoodUseCase: ObserveFoodUseCase,
-    foodEventRepository: FoodEventRepository,
+    foodHistoryRepository: FoodHistoryRepository,
     private val deleteFoodUseCase: DeleteFoodUseCase,
     observeMeasurementSuggestionsUseCase: ObserveMeasurementSuggestionsUseCase,
     mealRepository: MealRepository,
@@ -70,9 +71,9 @@ internal class AddEntryViewModel(
                 initialValue = null,
             )
 
-    val foodEvents =
-        foodEventRepository
-            .observeFoodEvents(foodId)
+    val foodHistory =
+        foodHistoryRepository
+            .observeFoodHistory(foodId)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -109,7 +110,7 @@ internal class AddEntryViewModel(
 
     val suggestions: StateFlow<List<Measurement>?> =
         observeMeasurementSuggestionsUseCase
-            .observe(foodId)
+            .observe(foodId, limit = 5)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -133,7 +134,7 @@ internal class AddEntryViewModel(
     fun deleteFood() {
         viewModelScope.launch {
             deleteFoodUseCase
-                .deleteFood(foodId)
+                .delete(foodId)
                 .fold(
                     onSuccess = {
                         FoodYouLogger.d(TAG) { "Food with ID $foodId deleted successfully." }
@@ -157,7 +158,6 @@ internal class AddEntryViewModel(
 
             createFoodDiaryEntryUseCase
                 .createDiaryEntry(
-                    foodId = food.id,
                     measurement = measurement,
                     mealId = mealId,
                     date = date,
@@ -187,7 +187,6 @@ internal class AddEntryViewModel(
 
                 createFoodDiaryEntryUseCase
                     .createDiaryEntry(
-                        foodId = food.id,
                         measurement = measurement,
                         mealId = mealId,
                         date = date,
@@ -213,3 +212,32 @@ internal class AddEntryViewModel(
         const val TAG = "AddEntryViewModel"
     }
 }
+
+// These extensions will probably be moved into business when user would be able to choose between
+// metric and imperial measurements. This is why they are wrapped in Flow, so they can be
+// easily converted to the appropriate measurement system later.
+private val Food.possibleMeasurementTypes: Flow<List<MeasurementType>>
+    get() =
+        flowOf(
+            MeasurementType.entries.filter { type ->
+                when (type) {
+                    MeasurementType.Gram -> !isLiquid
+                    MeasurementType.Ounce -> !isLiquid
+                    MeasurementType.Milliliter -> isLiquid
+                    MeasurementType.FluidOunce -> isLiquid
+                    MeasurementType.Package -> totalWeight != null
+                    MeasurementType.Serving -> servingWeight != null
+                }
+            }
+        )
+
+private val Food.defaultMeasurement: Flow<Measurement>
+    get() =
+        flowOf(
+            when {
+                servingWeight != null -> Measurement.Serving(1.0)
+                totalWeight != null -> Measurement.Package(1.0)
+                isLiquid -> Measurement.Milliliter(100.0)
+                else -> Measurement.Gram(100.0)
+            }
+        )

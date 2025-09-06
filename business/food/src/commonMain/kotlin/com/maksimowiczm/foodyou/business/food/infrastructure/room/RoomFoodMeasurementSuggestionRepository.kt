@@ -1,13 +1,13 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.room
 
-import com.maksimowiczm.foodyou.business.food.domain.MeasurementSuggestionRepository
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.from
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.rawValue
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.type
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.MeasurementSuggestionDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.MeasurementSuggestionEntity
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.repository.FoodMeasurementSuggestionRepository
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.core.shared.measurement.from
+import com.maksimowiczm.foodyou.core.shared.measurement.rawValue
+import com.maksimowiczm.foodyou.core.shared.measurement.type
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -15,9 +15,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalTime::class)
-internal class RoomMeasurementSuggestionRepository(
+internal class RoomFoodMeasurementSuggestionRepository(
     private val measurementSuggestionDao: MeasurementSuggestionDao
-) : MeasurementSuggestionRepository {
+) : FoodMeasurementSuggestionRepository {
     override suspend fun insert(foodId: FoodId, measurement: Measurement) {
         measurementSuggestionDao.insert(measurement.toEntity(foodId))
     }

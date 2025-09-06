@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared
 
 import androidx.room.TypeConverter
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.MeasurementType
+import com.maksimowiczm.foodyou.core.shared.measurement.MeasurementType
 
 internal class MeasurementTypeConverter {
     @TypeConverter

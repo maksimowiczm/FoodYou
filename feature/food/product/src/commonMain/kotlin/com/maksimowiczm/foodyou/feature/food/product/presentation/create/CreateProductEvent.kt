@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.food.product.presentation.create
 
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
 
 internal sealed interface CreateProductEvent {
 

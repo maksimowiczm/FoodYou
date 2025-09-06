@@ -16,8 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.business.food.application.DownloadProductError
-import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteFoodException
+import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteFoodException
+import com.maksimowiczm.foodyou.core.food.domain.usecase.DownloadProductError
 import com.maksimowiczm.foodyou.feature.food.shared.ui.DownloadProductUsdaErrorCard
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

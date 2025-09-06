@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.goals.setup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
-import com.maksimowiczm.foodyou.business.fooddiary.domain.WeeklyGoals
+import com.maksimowiczm.foodyou.core.goals.domain.entity.WeeklyGoals
+import com.maksimowiczm.foodyou.core.goals.domain.repository.GoalsRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow

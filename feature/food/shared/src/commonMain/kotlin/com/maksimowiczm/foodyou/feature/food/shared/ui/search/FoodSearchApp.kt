@@ -46,10 +46,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.error
 import androidx.paging.compose.itemKey
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteFoodException
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearch
+import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteFoodException
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodFilter
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodSearchUiState
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodSearchViewModel
@@ -225,7 +225,7 @@ private fun FoodSearchApp(
                     when (food) {
                         null -> FoodListItemSkeleton(shimmer)
                         is FoodSearch.Product -> {
-                            val measurement = food.defaultMeasurement
+                            val measurement = food.suggestedMeasurement
                             FoodSearchListItem(
                                 food = food,
                                 measurement = measurement,
@@ -234,7 +234,7 @@ private fun FoodSearchApp(
                         }
 
                         is FoodSearch.Recipe -> {
-                            val measurement = food.defaultMeasurement
+                            val measurement = food.suggestedMeasurement
                             FoodSearchListItem(
                                 food = food,
                                 measurement = measurement,

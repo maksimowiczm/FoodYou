@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.feature.home.goals
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCase
-import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.ObserveDiaryMealsUseCase
 import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
+import com.maksimowiczm.foodyou.core.goals.domain.repository.GoalsRepository
+import com.maksimowiczm.foodyou.core.shared.food.NutritionFactsField
+import com.maksimowiczm.foodyou.core.shared.food.sum
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow

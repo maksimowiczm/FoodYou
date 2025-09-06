@@ -45,8 +45,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.core.shared.food.FoodSource
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.shared.ui.res.Icon
 import com.maksimowiczm.foodyou.feature.food.shared.ui.res.stringResource
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder

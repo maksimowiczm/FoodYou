@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.navigation.domain
 
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.MeasurementType
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.from
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.rawValue
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.type
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.core.shared.measurement.MeasurementType
+import com.maksimowiczm.foodyou.core.shared.measurement.from
+import com.maksimowiczm.foodyou.core.shared.measurement.rawValue
+import com.maksimowiczm.foodyou.core.shared.measurement.type
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 

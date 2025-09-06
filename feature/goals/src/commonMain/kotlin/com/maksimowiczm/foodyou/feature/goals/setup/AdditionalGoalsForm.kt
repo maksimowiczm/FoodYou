@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
+import com.maksimowiczm.foodyou.core.goals.domain.entity.DailyGoal
+import com.maksimowiczm.foodyou.core.shared.food.NutritionFactsField
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.doubleParser

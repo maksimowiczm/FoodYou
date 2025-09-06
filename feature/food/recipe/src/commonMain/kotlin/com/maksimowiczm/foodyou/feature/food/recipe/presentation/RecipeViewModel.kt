@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.feature.food.recipe.presentation
 
 import androidx.lifecycle.ViewModel
-import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.business.food.domain.Recipe
-import com.maksimowiczm.foodyou.business.food.domain.RecipeIngredient
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.Recipe
+import com.maksimowiczm.foodyou.core.food.domain.entity.RecipeIngredient
+import com.maksimowiczm.foodyou.core.food.domain.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.RecipeFormState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

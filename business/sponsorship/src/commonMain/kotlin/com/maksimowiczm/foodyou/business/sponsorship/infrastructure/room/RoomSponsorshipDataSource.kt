@@ -4,8 +4,8 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.RemoteMediator
 import androidx.paging.map
-import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.sponsorship.SponsorshipDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.sponsorship.SponsorshipEntity
 import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.Sponsorship
@@ -31,12 +31,12 @@ internal class RoomSponsorshipDataSource(private val sponsorshipDao: Sponsorship
     @OptIn(ExperimentalPagingApi::class)
     fun observeSponsorships(
         config: PagingConfig,
-        remoteMediatorFactory: RemoteMediatorFactory?,
+        remoteMediatorFactory: (() -> RemoteMediator<Int, SponsorshipEntity>?)?,
     ): Flow<PagingData<Sponsorship>> =
         Pager(
                 config = config,
                 pagingSourceFactory = { sponsorshipDao.pagedFromLatest() },
-                remoteMediator = remoteMediatorFactory?.create(),
+                remoteMediator = remoteMediatorFactory?.invoke(),
             )
             .flow
             .map { data -> data.map { it.toModel() } }

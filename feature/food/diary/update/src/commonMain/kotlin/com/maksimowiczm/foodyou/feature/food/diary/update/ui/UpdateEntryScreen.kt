@@ -32,10 +32,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodProduct
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodProduct
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.DiaryFoodRecipe
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.FoodDiaryEntry
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.ChipsDatePicker
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.ChipsMealPicker
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.FoodMeasurementFormState

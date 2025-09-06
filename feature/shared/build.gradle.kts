@@ -36,6 +36,8 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
 
+            implementation(libs.core.shared)
+
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
 

@@ -9,7 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.business.food.domain.remote.RemoteProduct
+import com.maksimowiczm.foodyou.core.food.domain.entity.RemoteProduct
 import com.maksimowiczm.foodyou.feature.food.product.presentation.download.DownloadProductViewModel
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.download.DownloadProductScreen

@@ -1,17 +1,17 @@
 package com.maksimowiczm.foodyou.business.food.application
 
-import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
-import com.maksimowiczm.foodyou.business.food.domain.FoodEventRepository
-import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
-import com.maksimowiczm.foodyou.business.food.domain.ProductRepository
 import com.maksimowiczm.foodyou.business.shared.application.csv.CsvParser
-import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
-import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodHistory
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.Product
+import com.maksimowiczm.foodyou.core.food.domain.repository.FoodHistoryRepository
+import com.maksimowiczm.foodyou.core.food.domain.repository.ProductRepository
+import com.maksimowiczm.foodyou.core.shared.database.TransactionProvider
+import com.maksimowiczm.foodyou.core.shared.date.DateProvider
+import com.maksimowiczm.foodyou.core.shared.food.FoodSource
+import com.maksimowiczm.foodyou.core.shared.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
@@ -36,7 +36,7 @@ fun interface ImportCsvProductUseCase {
 internal class ImportCsvProductUseCaseImpl(
     private val transactionProvider: TransactionProvider,
     private val productRepository: ProductRepository,
-    private val foodEventRepository: FoodEventRepository,
+    private val historyRepository: FoodHistoryRepository,
     private val dateProvider: DateProvider,
     private val csvParser: CsvParser,
 ) : ImportCsvProductUseCase {
@@ -167,10 +167,7 @@ internal class ImportCsvProductUseCaseImpl(
             )
 
         if (id != null) {
-            foodEventRepository.insert(
-                foodId = id,
-                event = FoodEvent.Imported(date = dateProvider.now()),
-            )
+            historyRepository.insert(id, FoodHistory.Imported(date = dateProvider.now()))
         }
     }
 }

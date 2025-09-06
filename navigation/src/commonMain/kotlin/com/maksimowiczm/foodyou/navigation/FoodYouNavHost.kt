@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination

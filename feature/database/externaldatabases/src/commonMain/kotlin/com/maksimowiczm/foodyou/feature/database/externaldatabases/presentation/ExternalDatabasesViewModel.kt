@@ -2,14 +2,15 @@ package com.maksimowiczm.foodyou.feature.database.externaldatabases.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearchPreferences
+import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class ExternalDatabasesViewModel(
-    private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository
+    private val foodSearchPreferencesRepository: UserPreferencesRepository<FoodSearchPreferences>
 ) : ViewModel() {
 
     val foodPreferences =

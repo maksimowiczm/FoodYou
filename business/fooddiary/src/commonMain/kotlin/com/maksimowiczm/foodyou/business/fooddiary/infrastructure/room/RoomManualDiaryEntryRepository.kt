@@ -1,13 +1,13 @@
 package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room
 
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntry
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryId
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryRepository
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.ManualDiaryEntryDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.ManualDiaryEntryEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toNutritionFacts
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.ManualDiaryEntry
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.ManualDiaryEntryId
+import com.maksimowiczm.foodyou.core.fooddiary.domain.repository.ManualDiaryEntryRepository
+import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow

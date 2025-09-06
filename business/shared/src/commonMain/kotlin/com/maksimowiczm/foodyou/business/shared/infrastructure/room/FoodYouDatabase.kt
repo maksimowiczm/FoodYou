@@ -9,8 +9,6 @@ import androidx.room.immediateTransaction
 import androidx.room.migration.Migration
 import androidx.room.useWriterConnection
 import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseDumpService
-import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
-import com.maksimowiczm.foodyou.business.shared.application.database.TransactionScope as DomainTransactionScope
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodEventTypeConverter
@@ -48,6 +46,8 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.room.sponsorship.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.sponsorship.SponsorshipEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.usda.USDAPagingKeyDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.usda.USDAPagingKeyEntity
+import com.maksimowiczm.foodyou.core.shared.database.TransactionProvider
+import com.maksimowiczm.foodyou.core.shared.database.TransactionScope as DomainTransactionScope
 import kotlinx.coroutines.flow.Flow
 
 @Database(

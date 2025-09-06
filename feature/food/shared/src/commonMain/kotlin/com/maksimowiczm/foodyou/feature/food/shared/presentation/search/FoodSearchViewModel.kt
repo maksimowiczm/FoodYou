@@ -3,14 +3,15 @@ package com.maksimowiczm.foodyou.feature.food.shared.presentation.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.business.food.application.FoodSearchUseCase
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
-import com.maksimowiczm.foodyou.business.food.domain.SearchHistoryRepository
-import com.maksimowiczm.foodyou.business.food.domain.queryType
-import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodSearchPreferences
+import com.maksimowiczm.foodyou.core.food.domain.repository.FoodSearchHistoryRepository
+import com.maksimowiczm.foodyou.core.food.domain.repository.FoodSearchRepository
+import com.maksimowiczm.foodyou.core.food.domain.usecase.FoodSearchUseCase
+import com.maksimowiczm.foodyou.core.shared.date.DateProvider
+import com.maksimowiczm.foodyou.core.shared.food.FoodSource
+import com.maksimowiczm.foodyou.core.shared.search.searchQuery
+import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.RemoteStatus.Companion.toRemoteStatus
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -35,8 +36,8 @@ import kotlinx.coroutines.runBlocking
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 internal class FoodSearchViewModel(
     private val excludedRecipeId: FoodId.Recipe?,
-    private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
-    searchHistoryRepository: SearchHistoryRepository,
+    private val foodSearchPreferencesRepository: UserPreferencesRepository<FoodSearchPreferences>,
+    searchHistoryRepository: FoodSearchHistoryRepository,
     private val foodSearchRepository: FoodSearchRepository,
     private val foodSearchUseCase: FoodSearchUseCase,
     private val dateProvider: DateProvider,
@@ -73,7 +74,7 @@ internal class FoodSearchViewModel(
         searchQuery
             .flatMapLatest { query ->
                 foodSearchRepository.searchRecentFoodCount(
-                    query = queryType(query),
+                    query = searchQuery(query),
                     now = dateProvider.now(),
                     excludedRecipeId = excludedRecipeId,
                 )
@@ -133,7 +134,7 @@ internal class FoodSearchViewModel(
     private fun observeFoodCount(source: FoodSource.Type) =
         searchQuery.flatMapLatest { query ->
             foodSearchRepository.searchFoodCount(
-                query = queryType(query),
+                query = searchQuery(query),
                 source = source,
                 excludedRecipeId = excludedRecipeId,
             )
@@ -146,7 +147,7 @@ internal class FoodSearchViewModel(
 
     private val searchHistory =
         searchHistoryRepository
-            .observeSearchHistory()
+            .observeHistory(limit = 10)
             .map { list -> list.map { it.query } }
             .stateIn(
                 scope = viewModelScope,
@@ -181,7 +182,7 @@ internal class FoodSearchViewModel(
                             FoodFilter.Source.SwissFoodCompositionDatabase to swissState,
                         ),
                     filter = filter,
-                    recentSearches = searchHistory,
+                    recentSearches = searchHistory.map { it.query },
                 )
             }
             .stateIn(

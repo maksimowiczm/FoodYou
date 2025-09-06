@@ -2,12 +2,12 @@ package com.maksimowiczm.foodyou.feature.food.product.presentation.update
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.business.food.application.UpdateProductUseCase
-import com.maksimowiczm.foodyou.business.food.domain.Product
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodId
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.core.food.domain.entity.Product
+import com.maksimowiczm.foodyou.core.food.domain.usecase.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.core.food.domain.usecase.UpdateProductUseCase
+import com.maksimowiczm.foodyou.core.shared.food.FoodSource
+import com.maksimowiczm.foodyou.core.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.nutritionFacts
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger

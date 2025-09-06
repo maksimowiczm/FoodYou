@@ -1,17 +1,15 @@
-package com.maksimowiczm.foodyou.business.fooddiary.application
+package com.maksimowiczm.foodyou.business.fooddiary.domain
 
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryRepository
-import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
-import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.core.fooddiary.domain.entity.Meal
+import com.maksimowiczm.foodyou.core.fooddiary.domain.repository.FoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.core.fooddiary.domain.repository.ManualDiaryEntryRepository
+import com.maksimowiczm.foodyou.core.fooddiary.domain.repository.MealRepository
+import com.maksimowiczm.foodyou.core.shared.date.DateProvider
+import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
@@ -22,7 +20,7 @@ fun interface ObserveDiaryMealsUseCase {
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ObserveDiaryMealsUseCaseImpl(
     private val mealRepository: MealRepository,
-    private val mealsPreferencesRepository: MealsPreferencesRepository,
+    private val mealsPreferencesRepository: UserPreferencesRepository<MealsPreferences>,
     private val foodEntryRepository: FoodDiaryEntryRepository,
     private val manualEntryRepository: ManualDiaryEntryRepository,
     private val dateProvider: DateProvider,

@@ -20,8 +20,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
+import com.maksimowiczm.foodyou.core.shared.food.NutrientValue
+import com.maksimowiczm.foodyou.core.shared.food.NutritionFacts
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette

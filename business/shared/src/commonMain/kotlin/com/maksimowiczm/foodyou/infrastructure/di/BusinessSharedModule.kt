@@ -4,10 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.business.shared.application.csv.CsvParser
 import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseDumpService
-import com.maksimowiczm.foodyou.business.shared.application.database.TransactionProvider
-import com.maksimowiczm.foodyou.business.shared.application.event.EventBus
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
-import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.business.shared.domain.identity.UserIdentifierProvider
 import com.maksimowiczm.foodyou.business.shared.infrastructure.DateProviderImpl
 import com.maksimowiczm.foodyou.business.shared.infrastructure.FoodYouNetworkConfig
@@ -16,6 +13,9 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.VibeCsvParser
 import com.maksimowiczm.foodyou.business.shared.infrastructure.datastore.DataStoreUserIdentifierProvider
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.InitializeMealsCallback
+import com.maksimowiczm.foodyou.core.shared.database.TransactionProvider
+import com.maksimowiczm.foodyou.core.shared.date.DateProvider
+import com.maksimowiczm.foodyou.core.shared.event.EventBus
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module

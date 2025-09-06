@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.feature.food.recipe.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.CreateRecipeUseCase
-import com.maksimowiczm.foodyou.business.food.application.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
+import com.maksimowiczm.foodyou.core.food.domain.entity.FoodHistory
+import com.maksimowiczm.foodyou.core.food.domain.usecase.CreateRecipeUseCase
+import com.maksimowiczm.foodyou.core.food.domain.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.RecipeFormState
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.ui.ext.now
@@ -33,7 +33,7 @@ internal class CreateRecipeViewModel(
                     note = form.note.value,
                     isLiquid = form.isLiquid,
                     ingredients = form.ingredients.map { it.intoPair() },
-                    event = FoodEvent.Created(LocalDateTime.now()),
+                    history = FoodHistory.Created(LocalDateTime.now()),
                 )
                 .consume(
                     onSuccess = { eventBus.send(CreateRecipeEvent.Created(it)) },
