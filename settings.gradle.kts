@@ -16,6 +16,8 @@ pluginManagement {
 
 includeBuild("platform/build-logic")
 
+includeBuild("FoodYouCore")
+
 dependencyResolutionManagement {
     repositories {
         google {

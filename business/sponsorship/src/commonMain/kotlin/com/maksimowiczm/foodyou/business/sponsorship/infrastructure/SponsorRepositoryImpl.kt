@@ -5,12 +5,12 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
-import com.maksimowiczm.foodyou.business.sponsorship.domain.SponsorRepository
-import com.maksimowiczm.foodyou.business.sponsorship.domain.Sponsorship
-import com.maksimowiczm.foodyou.business.sponsorship.domain.SponsorshipPreferences
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.datastore.DataStoreSponsorshipPreferencesDataSource
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.room.RoomSponsorshipDataSource
+import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.Sponsorship
+import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.SponsorshipPreferences
+import com.maksimowiczm.foodyou.core.sponsorship.domain.repository.SponsorRepository
 import com.maksimowiczm.foodyou.shared.common.application.log.Logger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -20,21 +20,21 @@ import kotlinx.coroutines.flow.flatMapLatest
 internal class SponsorRepositoryImpl(
     private val localDataSource: RoomSponsorshipDataSource,
     private val networkDataSource: FoodYouSponsorsApiClient,
-    private val preferencesDataSource: DataStoreSponsorshipPreferencesDataSource,
+    private val preferences: UserPreferencesRepository<SponsorshipPreferences>,
     private val logger: Logger,
 ) : SponsorRepository {
-    override fun observeSponsorships(allowRemote: Boolean?): Flow<PagingData<Sponsorship>> =
-        preferencesDataSource.observe().flatMapLatest { prefs ->
+    override fun observeSponsorships(fetchRemote: Boolean?): Flow<PagingData<Sponsorship>> =
+        preferences.observe().flatMapLatest { prefs ->
             val mediatorFactory =
                 when {
-                    allowRemote == true -> {
+                    fetchRemote == true -> {
                         logger.d(TAG) {
                             "User preferences overridden, allowing remote sponsorships"
                         }
                         remoteMediatorFactory()
                     }
 
-                    allowRemote == false -> {
+                    fetchRemote == false -> {
                         logger.d(TAG) {
                             "User preferences overridden, disallowing remote sponsorships"
                         }
@@ -66,13 +66,6 @@ internal class SponsorRepositoryImpl(
                     networkDataSource = networkDataSource,
                 )
         }
-
-    override fun observeSponsorshipPreferences(): Flow<SponsorshipPreferences> =
-        preferencesDataSource.observe()
-
-    override suspend fun setSponsorshipPreferences(prefs: SponsorshipPreferences) {
-        preferencesDataSource.update(prefs)
-    }
 
     private companion object {
         const val TAG = "SponsorRepositoryImpl"

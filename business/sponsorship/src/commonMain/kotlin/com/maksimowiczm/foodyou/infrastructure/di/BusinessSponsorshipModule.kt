@@ -1,10 +1,12 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.business.sponsorship.domain.SponsorRepository
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.SponsorRepositoryImpl
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.datastore.DataStoreSponsorshipPreferencesDataSource
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.room.RoomSponsorshipDataSource
+import com.maksimowiczm.foodyou.core.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.SponsorshipPreferences
+import com.maksimowiczm.foodyou.core.sponsorship.domain.repository.SponsorRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -15,6 +17,8 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.dsl.onClose
+
+val sponsorshipPreferencesQualifier = named(SponsorshipPreferences::class.qualifiedName!!)
 
 val businessSponsorshipModule = module {
     single(named("ktorSponsorshipHttpClient")) {
@@ -31,7 +35,18 @@ val businessSponsorshipModule = module {
 
     factoryOf(::RoomSponsorshipDataSource)
 
-    factoryOf(::DataStoreSponsorshipPreferencesDataSource)
+    factoryOf(::DataStoreSponsorshipPreferencesDataSource) {
+            qualifier = sponsorshipPreferencesQualifier
+        }
+        .bind<UserPreferencesRepository<SponsorshipPreferences>>()
 
-    factoryOf(::SponsorRepositoryImpl).bind<SponsorRepository>()
+    factory {
+            SponsorRepositoryImpl(
+                localDataSource = get(),
+                networkDataSource = get(),
+                preferences = get(sponsorshipPreferencesQualifier),
+                logger = get(),
+            )
+        }
+        .bind<SponsorRepository>()
 }

@@ -4,10 +4,10 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.business.sponsorship.domain.Sponsorship
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.NetworkSponsorship
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.room.RoomSponsorshipDataSource
+import com.maksimowiczm.foodyou.core.sponsorship.domain.entity.Sponsorship
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant

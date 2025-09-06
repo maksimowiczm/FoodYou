@@ -60,6 +60,9 @@ kotlin {
             implementation(libs.koin.android)
         }
         commonMain.dependencies {
+            implementation(libs.core.shared)
+            implementation(libs.core.sponsorship)
+
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
             implementation(projects.shared.barcodescanner)

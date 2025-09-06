@@ -15,6 +15,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.core.shared)
+            implementation(libs.core.sponsorship)
+
             implementation(libs.androidx.paging.common)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.client.core)
