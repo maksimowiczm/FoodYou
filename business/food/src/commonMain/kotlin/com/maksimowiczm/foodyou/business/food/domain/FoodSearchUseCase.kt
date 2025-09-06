@@ -20,8 +20,7 @@ import kotlinx.coroutines.runBlocking
 class FoodSearchUseCase(
     private val foodSearchRepository: FoodSearchRepository,
     private val foodSearchPreferencesRepository: UserPreferencesRepository<FoodSearchPreferences>,
-    private val openFoodFactsRemoteMediatorFactory: ProductRemoteMediatorFactory,
-    private val usdaRemoteMediatorFactory: ProductRemoteMediatorFactory,
+    private val foodRemoteMediatorFactoryAggregate: FoodRemoteMediatorFactoryAggregate,
     private val eventBus: EventBus,
     private val dateProvider: DateProvider,
 ) {
@@ -70,9 +69,10 @@ class FoodSearchUseCase(
     ): ProductRemoteMediatorFactory? =
         when (source) {
             FoodSource.Type.OpenFoodFacts if this.openFoodFacts.enabled ->
-                openFoodFactsRemoteMediatorFactory
+                foodRemoteMediatorFactoryAggregate.openFoodFactsRemoteMediatorFactory
 
-            FoodSource.Type.USDA if this.usda.enabled -> usdaRemoteMediatorFactory
+            FoodSource.Type.USDA if this.usda.enabled ->
+                foodRemoteMediatorFactoryAggregate.usdaRemoteMediatorFactory
             else -> null
         }
 

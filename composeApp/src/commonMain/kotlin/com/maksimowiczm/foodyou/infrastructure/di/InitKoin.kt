@@ -18,12 +18,7 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
         modules(appModule, infrastructureModule(applicationCoroutineScope))
 
         // Business modules
-        modules(
-            businessFoodModule,
-            businessFoodDiaryModule,
-            businessSettingsModule,
-            businessSponsorshipModule,
-        )
+        modules(businessFoodModule, businessFoodDiaryModule)
 
         // About
         modules(featureAboutMasterModule, featureAboutSponsorModule)

@@ -3,6 +3,8 @@ package com.maksimowiczm.foodyou.feature.home.personalization
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -10,8 +12,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-internal class HomePersonalizationViewModel(private val settingsRepository: SettingsRepository) :
-    ViewModel() {
+internal class HomePersonalizationViewModel(
+    private val settingsRepository: UserPreferencesRepository<Settings>
+) : ViewModel() {
 
     private val _homeOrder = settingsRepository.observe().map { it.homeCardOrder }
     val homeOrder =

@@ -3,10 +3,10 @@ package com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.maksimowiczm.foodyou.app.infrastructure.room.shared.FoodSourceType
 import com.maksimowiczm.foodyou.app.infrastructure.room.shared.Minerals
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.FoodSourceType
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.Nutrients
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.Vitamins
+import com.maksimowiczm.foodyou.app.infrastructure.room.shared.Nutrients
+import com.maksimowiczm.foodyou.app.infrastructure.room.shared.Vitamins
 
 @Entity(tableName = "DiaryProduct")
 data class DiaryProductEntity(

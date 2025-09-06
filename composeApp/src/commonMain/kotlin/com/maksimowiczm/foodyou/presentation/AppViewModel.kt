@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.shared.ui.utils.EnergyFormatter
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -12,7 +14,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-internal class AppViewModel(private val settingsRepository: SettingsRepository) : ViewModel() {
+internal class AppViewModel(private val settingsRepository: UserPreferencesRepository<Settings>) :
+    ViewModel() {
 
     private val settings = settingsRepository.observe()
 

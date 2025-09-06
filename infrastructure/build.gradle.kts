@@ -31,7 +31,10 @@ buildConfig {
 room { schemaDirectory("$projectDir/schemas") }
 
 kotlin {
-    sourceSets.all { languageSettings.enableLanguageFeature("ExpectActualClasses") }
+    sourceSets.all {
+        languageSettings.enableLanguageFeature("ExpectActualClasses")
+        languageSettings.enableLanguageFeature("WhenGuards")
+    }
 
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.app.infrastructure"

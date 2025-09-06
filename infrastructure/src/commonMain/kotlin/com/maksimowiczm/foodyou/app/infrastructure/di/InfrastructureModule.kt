@@ -9,17 +9,45 @@ import com.maksimowiczm.foodyou.app.infrastructure.SponsorRepositoryImpl
 import com.maksimowiczm.foodyou.app.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.app.infrastructure.TranslationRepositoryImpl
 import com.maksimowiczm.foodyou.app.infrastructure.VibeCsvParser
+import com.maksimowiczm.foodyou.app.infrastructure.compose.ComposeSwissFoodCompositionDatabaseRepository
+import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreFoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreGoalsRepository
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreMealsPreferencesRepository
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreSettingsRepository
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreSponsorshipPreferencesDataSource
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreUserIdentifierProvider
 import com.maksimowiczm.foodyou.app.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
+import com.maksimowiczm.foodyou.app.infrastructure.network.FoodRemoteMediatorFactoryAggregateImpl
+import com.maksimowiczm.foodyou.app.infrastructure.network.RemoteProductMapper
+import com.maksimowiczm.foodyou.app.infrastructure.network.RemoteProductRequestFactoryImpl
+import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.LocalOpenFoodFactsPagingHelper
+import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.OpenFoodFactsFacade
+import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.OpenFoodFactsProductMapper
+import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteMediatorFactory
+import com.maksimowiczm.foodyou.app.infrastructure.network.usda.LocalUsdaPagingHelper
+import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDAFacade
+import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDAProductMapper
+import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDARemoteDataSource
+import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDARemoteMediatorFactory
 import com.maksimowiczm.foodyou.app.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomFoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomFoodHistoryRepository
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomFoodMeasurementSuggestionRepository
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomFoodSearchHistoryRepository
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomFoodSearchRepository
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomMealRepository
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomOpenFoodFactsPagingHelper
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomProductRepository
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomRecipeRepository
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomUsdaPagingHelper
 import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.InitializeMealsCallback
+import com.maksimowiczm.foodyou.business.food.domain.FoodRemoteMediatorFactoryAggregate
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
+import com.maksimowiczm.foodyou.business.food.domain.ProductRemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
@@ -27,6 +55,12 @@ import com.maksimowiczm.foodyou.business.shared.application.csv.CsvParser
 import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseDumpService
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
 import com.maksimowiczm.foodyou.business.shared.domain.identity.UserIdentifierProvider
+import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
+import com.maksimowiczm.foodyou.food.domain.repository.FoodMeasurementSuggestionRepository
+import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository
+import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
+import com.maksimowiczm.foodyou.food.domain.repository.RecipeRepository
+import com.maksimowiczm.foodyou.food.domain.repository.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
@@ -49,6 +83,7 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
+import org.koin.core.qualifier.qualifier
 import org.koin.core.scope.Scope
 import org.koin.dsl.bind
 import org.koin.dsl.binds
@@ -140,7 +175,8 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
             )
         }
         .bind<TranslationRepository>()
-    factoryOf(::DataStoreSettingsRepository).bind<UserPreferencesRepository<Settings>>()
+    factoryOf(::DataStoreSettingsRepository) { qualifier = named(Settings::class.qualifiedName!!) }
+        .bind<UserPreferencesRepository<Settings>>()
     systemDetails()
 
     // ---
@@ -153,4 +189,85 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
         }
         .bind<UserPreferencesRepository<MealsPreferences>>()
     factoryOf(::DataStoreGoalsRepository).bind<GoalsRepository>()
+
+    // ---
+    factoryOf(::RoomOpenFoodFactsPagingHelper).bind<LocalOpenFoodFactsPagingHelper>()
+    factoryOf(::RoomUsdaPagingHelper).bind<LocalUsdaPagingHelper>()
+
+    factoryOf(::RoomFoodHistoryRepository).bind<FoodHistoryRepository>()
+    factoryOf(::RoomFoodMeasurementSuggestionRepository).bind<FoodMeasurementSuggestionRepository>()
+    factoryOf(::RoomFoodSearchHistoryRepository).bind<FoodSearchHistoryRepository>()
+    factoryOf(::RoomProductRepository).bind<ProductRepository>()
+    factoryOf(::RoomRecipeRepository).bind<RecipeRepository>()
+    factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
+
+    factoryOf(::ComposeSwissFoodCompositionDatabaseRepository)
+        .bind<SwissFoodCompositionDatabaseRepository>()
+
+    factoryOf(::RoomFoodSearchRepository).bind<FoodSearchRepository>()
+    factoryOf(::DataStoreFoodSearchPreferencesRepository) {
+            qualifier = qualifier(FoodSearchPreferences::class.qualifiedName!!)
+        }
+        .bind<UserPreferencesRepository<FoodSearchPreferences>>()
+
+    factoryOf(::RemoteProductMapper)
+
+    single(named(OpenFoodFactsRemoteDataSource::class.qualifiedName!!)) {
+            HttpClient {
+                install(HttpTimeout)
+                install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+            }
+        }
+        .onClose { it?.close() }
+    factory {
+        OpenFoodFactsRemoteDataSource(
+            client = get(named(OpenFoodFactsRemoteDataSource::class.qualifiedName!!)),
+            get(),
+            get(),
+        )
+    }
+    factoryOf(::OpenFoodFactsFacade)
+    factoryOf(::OpenFoodFactsProductMapper)
+    factoryOf(::OpenFoodFactsRemoteMediatorFactory).bind<ProductRemoteMediatorFactory>()
+
+    single(named(USDARemoteDataSource::class.qualifiedName!!)) {
+        HttpClient {
+            install(HttpTimeout)
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+    }
+    factory {
+        USDARemoteDataSource(
+            client = get(named(USDARemoteDataSource::class.qualifiedName!!)),
+            get(),
+            get(),
+        )
+    }
+    factory {
+        USDAFacade(
+            dataSource = get(),
+            mapper = get(),
+            preferencesRepository = get(named(FoodSearchPreferences::class.qualifiedName!!)),
+            logger = get(),
+        )
+    }
+    factoryOf(::USDAProductMapper)
+    factory {
+            USDARemoteMediatorFactory(
+                foodSearchPreferencesRepository =
+                    get(named(FoodSearchPreferences::class.qualifiedName!!)),
+                transactionProvider = get(),
+                productRepository = get(),
+                historyRepository = get(),
+                remoteDataSource = get(),
+                usdaHelper = get(),
+                usdaMapper = get(),
+                remoteMapper = get(),
+                dateProvider = get(),
+                logger = get(),
+            )
+        }
+        .bind<ProductRemoteMediatorFactory>()
+
+    factoryOf(::FoodRemoteMediatorFactoryAggregateImpl).bind<FoodRemoteMediatorFactoryAggregate>()
 }

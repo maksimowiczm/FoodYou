@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.app.infrastructure
 
-import FoodYou.infrastructure.BuildConfig
 import com.maksimowiczm.foodyou.business.shared.domain.config.AppConfig
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
 

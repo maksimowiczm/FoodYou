@@ -3,6 +3,8 @@ package com.maksimowiczm.foodyou.feature.about.master.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +17,7 @@ import kotlinx.coroutines.launch
 
 internal class PreviewReleaseDialogViewModel(
     changelog: Changelog,
-    private val settingsRepository: SettingsRepository,
+    private val settingsRepository: UserPreferencesRepository<Settings>,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
