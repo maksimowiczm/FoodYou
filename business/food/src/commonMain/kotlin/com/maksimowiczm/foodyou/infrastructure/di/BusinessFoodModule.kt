@@ -64,41 +64,50 @@ import org.koin.dsl.onClose
 val foodSearchPreferencesQualifier = qualifier(FoodSearchPreferences::class.qualifiedName!!)
 
 val businessFoodModule = module {
-    factoryOf(::RoomProductRepository).bind<ProductRepository>()
-    factoryOf(::RoomRecipeRepository).bind<RecipeRepository>()
+    // Core
     factoryOf(::RoomOpenFoodFactsPagingHelper).bind<LocalOpenFoodFactsPagingHelper>()
     factoryOf(::RoomUsdaPagingHelper).bind<LocalUsdaPagingHelper>()
+
     factoryOf(::RoomFoodHistoryRepository).bind<FoodHistoryRepository>()
     factoryOf(::RoomFoodMeasurementSuggestionRepository).bind<FoodMeasurementSuggestionRepository>()
+    factoryOf(::RoomFoodSearchHistoryRepository).bind<FoodSearchHistoryRepository>()
+    factoryOf(::RoomProductRepository).bind<ProductRepository>()
+    factoryOf(::RoomRecipeRepository).bind<RecipeRepository>()
+    factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
+
+    factoryOf(::CreateProductUseCase)
+    factoryOf(::CreateRecipeUseCase)
+    factoryOf(::DeleteFoodUseCase)
+    factoryOf(::DownloadProductUseCase)
+    factoryOf(::ObserveFoodUseCase)
+    factoryOf(::ObserveMeasurementSuggestionsUseCase)
+    factoryOf(::UpdateProductUseCase)
+    factoryOf(::UpdateRecipeUseCase)
+
+    // App
+    factoryOf(::ComposeSwissFoodCompositionDatabaseRepository)
+        .bind<SwissFoodCompositionDatabaseRepository>()
+
+    factoryOf(::ExportCsvProductsUseCaseImpl).bind<ExportCsvProductsUseCase>()
+    factoryOf(::ImportCsvProductUseCaseImpl).bind<ImportCsvProductUseCase>()
+    factoryOf(::ImportSwissFoodCompositionDatabaseUseCaseImpl)
+        .bind<ImportSwissFoodCompositionDatabaseUseCase>()
+
+    // Core search
+    // TODO
+    //  eventHandlerOf(::FoodDiaryEntryCreatedEventHandler)
+    eventHandlerOf(::FoodSearchEventHandler)
+
     factoryOf(::RoomFoodSearchRepository).bind<FoodSearchRepository>()
     factoryOf(::DataStoreFoodSearchPreferencesRepository) {
             qualifier = foodSearchPreferencesQualifier
         }
         .bind<UserPreferencesRepository<FoodSearchPreferences>>()
-    factoryOf(::RoomFoodSearchHistoryRepository).bind<FoodSearchHistoryRepository>()
-    factoryOf(::ComposeSwissFoodCompositionDatabaseRepository)
-        .bind<SwissFoodCompositionDatabaseRepository>()
 
-    factoryOf(::RemoteProductMapper)
-    factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
-
-    // TODO
-    //  eventHandlerOf(::FoodDiaryEntryCreatedEventHandler)
-    eventHandlerOf(::FoodSearchEventHandler)
-
-    factoryOf(::CreateProductUseCase)
-    factoryOf(::CreateRecipeUseCase)
-    factoryOf(::DeleteFoodUseCase)
-    factoryOf(::ObserveFoodUseCase)
-    factoryOf(::UpdateProductUseCase)
-    factoryOf(::UpdateRecipeUseCase)
-    factoryOf(::ExportCsvProductsUseCaseImpl).bind<ExportCsvProductsUseCase>()
-    factoryOf(::ImportCsvProductUseCaseImpl).bind<ImportCsvProductUseCase>()
-    factoryOf(::ObserveMeasurementSuggestionsUseCase)
     factory {
             FoodSearchUseCase(
                 foodSearchRepository = get(),
-                foodSearchPreferencesRepository = get(),
+                foodSearchPreferencesRepository = get(foodSearchPreferencesQualifier),
                 openFoodFactsRemoteMediatorFactory =
                     get(named(OpenFoodFactsRemoteDataSource::class.qualifiedName!!)),
                 usdaRemoteMediatorFactory = get(named(USDARemoteDataSource::class.qualifiedName!!)),
@@ -107,9 +116,8 @@ val businessFoodModule = module {
             )
         }
         .bind<FoodSearchUseCase>()
-    factoryOf(::DownloadProductUseCase)
-    factoryOf(::ImportSwissFoodCompositionDatabaseUseCaseImpl)
-        .bind<ImportSwissFoodCompositionDatabaseUseCase>()
+
+    factoryOf(::RemoteProductMapper)
 
     single(named(OpenFoodFactsRemoteDataSource::class.qualifiedName!!)) {
             HttpClient {
@@ -145,10 +153,28 @@ val businessFoodModule = module {
             get(),
         )
     }
-    factoryOf(::USDAFacade)
+    factory {
+        USDAFacade(
+            dataSource = get(),
+            mapper = get(),
+            preferencesRepository = get(foodSearchPreferencesQualifier),
+            logger = get(),
+        )
+    }
     factoryOf(::USDAProductMapper)
-    factoryOf(::USDARemoteMediatorFactory) {
-            qualifier = named(USDARemoteDataSource::class.qualifiedName!!)
+    factory(qualifier = named(USDARemoteDataSource::class.qualifiedName!!)) {
+            USDARemoteMediatorFactory(
+                foodSearchPreferencesRepository = get(foodSearchPreferencesQualifier),
+                transactionProvider = get(),
+                productRepository = get(),
+                historyRepository = get(),
+                remoteDataSource = get(),
+                usdaHelper = get(),
+                usdaMapper = get(),
+                remoteMapper = get(),
+                dateProvider = get(),
+                logger = get(),
+            )
         }
         .bind<ProductRemoteMediatorFactory>()
 }

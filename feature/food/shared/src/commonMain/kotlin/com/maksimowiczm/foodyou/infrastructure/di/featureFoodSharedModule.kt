@@ -7,6 +7,13 @@ import org.koin.dsl.module
 
 val featureFoodSharedModule = module {
     viewModel { (excluded: FoodId.Recipe?) ->
-        FoodSearchViewModel(excluded, get(), get(), get(), get(), get())
+        FoodSearchViewModel(
+            excludedRecipeId = excluded,
+            foodSearchPreferencesRepository = get(foodSearchPreferencesQualifier),
+            searchHistoryRepository = get(),
+            foodSearchRepository = get(),
+            foodSearchUseCase = get(),
+            dateProvider = get(),
+        )
     }
 }

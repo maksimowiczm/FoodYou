@@ -11,6 +11,9 @@ import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.room.RoomMealR
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.usecase.CreateFoodDiaryEntryUseCase
+import com.maksimowiczm.foodyou.fooddiary.domain.usecase.UnpackFoodDiaryEntryUseCase
+import com.maksimowiczm.foodyou.fooddiary.domain.usecase.UpdateFoodDiaryEntryUseCase
 import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
 import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 import org.koin.core.module.dsl.factoryOf
@@ -21,12 +24,29 @@ import org.koin.dsl.module
 val mealsPreferencesQualifier = named(MealsPreferences::class.qualifiedName!!)
 
 val businessFoodDiaryModule = module {
-    factoryOf(::RoomMealRepository).bind<MealRepository>()
+    // Core food diary
     factoryOf(::RoomFoodDiaryEntryRepository).bind<FoodDiaryEntryRepository>()
-    factoryOf(::DataStoreGoalsRepository).bind<GoalsRepository>()
+    factoryOf(::RoomManualDiaryEntryRepository).bind<ManualDiaryEntryRepository>()
+    factoryOf(::RoomMealRepository).bind<MealRepository>()
     factoryOf(::DataStoreMealsPreferencesRepository) { qualifier = mealsPreferencesQualifier }
         .bind<UserPreferencesRepository<MealsPreferences>>()
-    factoryOf(::RoomManualDiaryEntryRepository).bind<ManualDiaryEntryRepository>()
 
-    factoryOf(::ObserveDiaryMealsUseCaseImpl).bind<ObserveDiaryMealsUseCase>()
+    factoryOf(::CreateFoodDiaryEntryUseCase)
+    factoryOf(::UnpackFoodDiaryEntryUseCase)
+    factoryOf(::UpdateFoodDiaryEntryUseCase)
+
+    // App
+    factory {
+            ObserveDiaryMealsUseCaseImpl(
+                mealRepository = get(),
+                mealsPreferencesRepository = get(mealsPreferencesQualifier),
+                foodEntryRepository = get(),
+                manualEntryRepository = get(),
+                dateProvider = get(),
+            )
+        }
+        .bind<ObserveDiaryMealsUseCase>()
+
+    // Core goals
+    factoryOf(::DataStoreGoalsRepository).bind<GoalsRepository>()
 }
