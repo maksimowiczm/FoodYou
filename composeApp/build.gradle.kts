@@ -60,6 +60,8 @@ kotlin {
             implementation(libs.koin.android)
         }
         commonMain.dependencies {
+            implementation(projects.infrastructure)
+
             implementation(libs.core.shared)
             implementation(libs.core.sponsorship)
 

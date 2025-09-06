@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
+import com.maksimowiczm.foodyou.app.infrastructure.di.infrastructureModule
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
@@ -14,8 +15,7 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
     startKoin {
         config?.invoke(this)
 
-        // Shared modules
-        modules(appModule, businessSharedModule(applicationCoroutineScope))
+        modules(appModule, infrastructureModule(applicationCoroutineScope))
 
         // Business modules
         modules(

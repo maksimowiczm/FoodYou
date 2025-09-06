@@ -3,9 +3,7 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.room
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.ProductDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.ProductEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toDomain
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntityNutrients
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toNutritionFacts
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository

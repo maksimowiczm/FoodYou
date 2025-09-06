@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.Me
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.fooddiary.MeasurementEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.immediateTransaction
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toDomain
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toNutritionFacts
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFood

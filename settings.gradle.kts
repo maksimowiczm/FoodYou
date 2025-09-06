@@ -101,3 +101,5 @@ include(":feature:onboarding")
 include(":feature:database:exportcsvproducts")
 
 include(":feature:food:diary:quickadd")
+
+include(":infrastructure")

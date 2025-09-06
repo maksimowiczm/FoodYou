@@ -10,7 +10,6 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
 import com.maksimowiczm.foodyou.business.food.domain.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodSearch as FoodSearchData
 import com.maksimowiczm.foodyou.business.shared.infrastructure.room.food.FoodSearchDao
-import com.maksimowiczm.foodyou.business.shared.infrastructure.room.shared.toEntity
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.shared.food.FoodSource
 import com.maksimowiczm.foodyou.shared.food.NutrientValue.Companion.toNutrientValue
