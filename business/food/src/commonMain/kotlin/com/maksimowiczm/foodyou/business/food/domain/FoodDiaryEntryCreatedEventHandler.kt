@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.food.application.event
+package com.maksimowiczm.foodyou.business.food.domain
 
 // import com.maksimowiczm.foodyou.business.food.domain.MeasurementSuggestionRepository
 // import com.maksimowiczm.foodyou.business.shared.application.event.EventHandler

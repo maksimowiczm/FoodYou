@@ -46,12 +46,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.error
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodFilter
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodSearchUiState
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodSearchViewModel
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.food.domain.entity.FoodSearch
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import com.maksimowiczm.foodyou.shared.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.shared.measurement.Measurement

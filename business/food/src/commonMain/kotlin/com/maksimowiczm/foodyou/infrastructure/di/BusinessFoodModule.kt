@@ -1,11 +1,16 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.business.food.application.ExportCsvProductsUseCase
-import com.maksimowiczm.foodyou.business.food.application.ExportCsvProductsUseCaseImpl
-import com.maksimowiczm.foodyou.business.food.application.ImportCsvProductUseCase
-import com.maksimowiczm.foodyou.business.food.application.ImportCsvProductUseCaseImpl
-import com.maksimowiczm.foodyou.business.food.application.ImportSwissFoodCompositionDatabaseUseCase
-import com.maksimowiczm.foodyou.business.food.application.ImportSwissFoodCompositionDatabaseUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.domain.ExportCsvProductsUseCase
+import com.maksimowiczm.foodyou.business.food.domain.ExportCsvProductsUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchEventHandler
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchUseCase
+import com.maksimowiczm.foodyou.business.food.domain.ImportCsvProductUseCase
+import com.maksimowiczm.foodyou.business.food.domain.ImportCsvProductUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.domain.ImportSwissFoodCompositionDatabaseUseCase
+import com.maksimowiczm.foodyou.business.food.domain.ImportSwissFoodCompositionDatabaseUseCaseImpl
+import com.maksimowiczm.foodyou.business.food.domain.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.compose.ComposeSwissFoodCompositionDatabaseRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.datastore.DataStoreFoodSearchPreferencesRepository
@@ -29,13 +34,9 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomOpenFoodFa
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomProductRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomRecipeRepository
 import com.maksimowiczm.foodyou.business.food.infrastructure.room.RoomUsdaPagingHelper
-import com.maksimowiczm.foodyou.food.domain.ProductRemoteMediatorFactory
-import com.maksimowiczm.foodyou.food.domain.entity.FoodSearchPreferences
-import com.maksimowiczm.foodyou.food.domain.eventhandler.FoodSearchEventHandler
 import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
 import com.maksimowiczm.foodyou.food.domain.repository.FoodMeasurementSuggestionRepository
 import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository
-import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchRepository
 import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
 import com.maksimowiczm.foodyou.food.domain.repository.RecipeRepository
 import com.maksimowiczm.foodyou.food.domain.repository.RemoteProductRequestFactory
@@ -43,7 +44,6 @@ import com.maksimowiczm.foodyou.food.domain.usecase.CreateProductUseCase
 import com.maksimowiczm.foodyou.food.domain.usecase.CreateRecipeUseCase
 import com.maksimowiczm.foodyou.food.domain.usecase.DeleteFoodUseCase
 import com.maksimowiczm.foodyou.food.domain.usecase.DownloadProductUseCase
-import com.maksimowiczm.foodyou.food.domain.usecase.FoodSearchUseCase
 import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.food.domain.usecase.ObserveMeasurementSuggestionsUseCase
 import com.maksimowiczm.foodyou.food.domain.usecase.UpdateProductUseCase

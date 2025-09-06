@@ -76,7 +76,6 @@ sqlite-android = { module = "com.github.requery:sqlite-android", version.ref = "
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 
 core-food = { group = "com.maksimowiczm.foodyou", name = "food" }
-core-food-search = { group = "com.maksimowiczm.foodyou", name = "food-search" }
 core-fooddiary = { group = "com.maksimowiczm.foodyou", name = "fooddiary" }
 core-goals = { group = "com.maksimowiczm.foodyou", name = "goals" }
 core-shared = { group = "com.maksimowiczm.foodyou", name = "shared" }

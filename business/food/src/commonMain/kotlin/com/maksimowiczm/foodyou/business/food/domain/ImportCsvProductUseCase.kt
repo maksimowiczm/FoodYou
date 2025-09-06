@@ -1,6 +1,5 @@
-package com.maksimowiczm.foodyou.business.food.application
+package com.maksimowiczm.foodyou.business.food.domain
 
-import com.maksimowiczm.foodyou.business.food.domain.ProductField
 import com.maksimowiczm.foodyou.business.shared.application.csv.CsvParser
 import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId

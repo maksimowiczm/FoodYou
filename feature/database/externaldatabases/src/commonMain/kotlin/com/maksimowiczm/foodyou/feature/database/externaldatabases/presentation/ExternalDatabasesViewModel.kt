@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.database.externaldatabases.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.food.domain.entity.FoodSearchPreferences
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
 import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

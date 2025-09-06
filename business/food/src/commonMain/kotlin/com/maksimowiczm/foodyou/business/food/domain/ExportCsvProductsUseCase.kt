@@ -1,6 +1,5 @@
-package com.maksimowiczm.foodyou.business.food.application
+package com.maksimowiczm.foodyou.business.food.domain
 
-import com.maksimowiczm.foodyou.business.food.domain.ProductField
 import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
 import com.maksimowiczm.foodyou.shared.database.TransactionProvider
