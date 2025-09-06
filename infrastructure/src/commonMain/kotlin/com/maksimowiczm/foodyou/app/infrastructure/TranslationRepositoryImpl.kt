@@ -1,25 +1,35 @@
-package com.maksimowiczm.foodyou.business.settings.domain
+package com.maksimowiczm.foodyou.app.infrastructure
 
-data class Translation(
-    val languageName: String,
-    val languageTag: String,
-    val authorsStrings: List<Author>,
-    val isVerified: Boolean = false,
-) {
-    internal constructor(
-        languageName: String,
-        languageTag: String,
-        isVerified: Boolean = false,
-        vararg authors: Author,
-    ) : this(
-        languageName = languageName,
-        languageTag = languageTag,
-        authorsStrings = authors.toList(),
-        isVerified = isVerified,
-    )
+import com.maksimowiczm.foodyou.business.settings.domain.Author
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.business.settings.domain.Translation
+import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+
+internal class TranslationRepositoryImpl(
+    private val systemDetails: SystemDetails,
+    private val settingsRepository: UserPreferencesRepository<Settings>,
+) : TranslationRepository {
+    override fun observe(): Flow<List<Translation>> = flowOf(languages)
+
+    override fun observeCurrent(): Flow<Translation> =
+        systemDetails.languageTag.map { currentLanguage ->
+            languages.firstOrNull { it.languageTag == currentLanguage } ?: EnglishUS
+        }
+
+    override suspend fun setTranslation(translation: Translation?) {
+        if (translation == null) {
+            systemDetails.setSystemLanguage()
+        } else {
+            systemDetails.setLanguage(translation.languageTag)
+        }
+
+        settingsRepository.update { copy(showTranslationWarning = true) }
+    }
 }
-
-data class Author(val name: String, val link: String? = null)
 
 // Me
 private val me = Author("Mateusz Maksimowicz", "https://github.com/maksimowiczm")
@@ -28,7 +38,7 @@ private val me = Author("Mateusz Maksimowicz", "https://github.com/maksimowiczm"
 private val grizzleNL = Author("GrizzleNL", "https://grizzle.nl")
 private val mikropsoft = Author("mikropsoft", "https://github.com/mikropsoft")
 
-internal val EnglishUS =
+private val EnglishUS =
     Translation(
         languageName = "English (United States)",
         languageTag = "en-US",
@@ -36,7 +46,7 @@ internal val EnglishUS =
         isVerified = true,
     )
 
-internal val languages =
+private val languages =
     listOf(
         // If you'd like to be credited for your translations, please add your name here.
         // "language name (Country)" to Translation(

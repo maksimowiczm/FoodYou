@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.business.settings.domain
 
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferences
+
 data class Settings(
     val lastRememberedVersion: String?,
     val hidePreviewDialog: Boolean,
@@ -10,4 +12,4 @@ data class Settings(
     val expandGoalCard: Boolean,
     val onboardingFinished: Boolean,
     val energyFormat: EnergyFormat,
-)
+) : UserPreferences

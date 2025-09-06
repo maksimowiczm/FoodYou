@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.settings.infrastructure
+package com.maksimowiczm.foodyou.app.infrastructure
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate

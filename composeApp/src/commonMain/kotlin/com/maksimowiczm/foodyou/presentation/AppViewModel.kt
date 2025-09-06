@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
 import com.maksimowiczm.foodyou.shared.ui.utils.EnergyFormatter
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first

@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.settings.language.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
 import com.maksimowiczm.foodyou.business.settings.domain.Translation
 import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
 import kotlinx.coroutines.flow.SharingStarted

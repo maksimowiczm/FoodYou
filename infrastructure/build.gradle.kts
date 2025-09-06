@@ -31,6 +31,8 @@ buildConfig {
 room { schemaDirectory("$projectDir/schemas") }
 
 kotlin {
+    sourceSets.all { languageSettings.enableLanguageFeature("ExpectActualClasses") }
+
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.app.infrastructure"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -62,7 +64,8 @@ kotlin {
             implementation(projects.business.shared)
             implementation(projects.business.food)
             implementation(projects.business.fooddiary)
-            implementation(projects.business.sponsorship)
+            implementation(projects.business.settings)
+            implementation(projects.shared.common)
 
             // Kotlinx
             implementation(libs.kotlinx.datetime)

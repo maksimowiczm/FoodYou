@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.settings.infrastructure.datastore
+package com.maksimowiczm.foodyou.app.infrastructure.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
@@ -10,13 +10,13 @@ import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
-import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
+import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 import kotlin.collections.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class DataStoreSettingsRepository(private val dataStore: DataStore<Preferences>) :
-    SettingsRepository {
+    UserPreferencesRepository<Settings> {
 
     override fun observe(): Flow<Settings> = dataStore.data.map(Preferences::toSettings)
 

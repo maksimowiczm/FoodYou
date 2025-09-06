@@ -50,8 +50,6 @@ include(":business:food")
 
 include(":business:fooddiary")
 
-include(":business:sponsorship")
-
 include(":business:settings")
 
 include(":feature:shared")

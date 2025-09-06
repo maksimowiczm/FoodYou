@@ -1,24 +1,21 @@
-package com.maksimowiczm.foodyou.business.sponsorship.infrastructure
+package com.maksimowiczm.foodyou.app.infrastructure.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors.NetworkSponsorship
-import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.room.RoomSponsorshipDataSource
+import com.maksimowiczm.foodyou.app.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
+import com.maksimowiczm.foodyou.app.infrastructure.foodyousponsors.NetworkSponsorship
+import com.maksimowiczm.foodyou.app.infrastructure.room.sponsorship.SponsorshipDao
+import com.maksimowiczm.foodyou.app.infrastructure.room.sponsorship.SponsorshipEntity
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
-import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.CancellationException
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)
 internal class SponsorshipRemoteMediator<K : Any, T : Any>(
-    private val localDataSource: RoomSponsorshipDataSource,
+    private val sponsorshipDao: SponsorshipDao,
     private val networkDataSource: FoodYouSponsorsApiClient,
 ) : RemoteMediator<K, T>() {
 
@@ -32,10 +29,10 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
                     FoodYouLogger.d(TAG) { "Refresh" }
 
                     // Initially get the latest sponsorships and download sponsorships after that
-                    val sponsorship = localDataSource.getLatestSponsorship()
+                    val sponsorship = sponsorshipDao.getLatestSponsorship()
 
                     // If there are no sponsorships, fetch the latest ones from the API
-                    val after = sponsorship?.dateTime?.toInstant(TimeZone.currentSystemDefault())
+                    val after = sponsorship?.sponsorshipEpochSeconds?.let(Instant::fromEpochSeconds)
 
                     val response =
                         networkDataSource.getSponsorships(
@@ -47,9 +44,9 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
                         return MediatorResult.Success(endOfPaginationReached = true)
                     }
 
-                    val entities = response.sponsorships.map { it.toSponsorship() }
+                    val entities = response.sponsorships.map(NetworkSponsorship::toEntity)
 
-                    localDataSource.upsertSponsorships(entities)
+                    sponsorshipDao.upsert(entities)
 
                     MediatorResult.Success(
                         endOfPaginationReached = response.sponsorships.size == response.totalSize
@@ -57,7 +54,7 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
                 }
 
                 LoadType.PREPEND -> {
-                    val first = localDataSource.getLatestSponsorship()
+                    val first = sponsorshipDao.getLatestSponsorship()
 
                     FoodYouLogger.d(TAG) { "Prepend, $first" }
 
@@ -66,33 +63,33 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
                         return MediatorResult.Success(endOfPaginationReached = true)
                     }
 
-                    val after = first.dateTime.toInstant(TimeZone.currentSystemDefault())
+                    val after = first.sponsorshipEpochSeconds.let(Instant::fromEpochSeconds)
 
                     val response =
                         networkDataSource.getSponsorships(
                             after = after,
                             size = state.config.pageSize,
                         )
-                    val entities = response.sponsorships.map { it.toSponsorship() }
-                    localDataSource.upsertSponsorships(entities)
+                    val entities = response.sponsorships.map(NetworkSponsorship::toEntity)
+                    sponsorshipDao.upsert(entities)
 
                     MediatorResult.Success(endOfPaginationReached = !response.hasMoreAfter)
                 }
 
                 LoadType.APPEND -> {
-                    val last = localDataSource.getOldestSponsorship()
+                    val last = sponsorshipDao.getOldestSponsorship()
 
                     FoodYouLogger.d(TAG) { "Append, $last" }
 
-                    val before = last?.dateTime?.toInstant(TimeZone.currentSystemDefault())
+                    val before = last?.sponsorshipEpochSeconds?.let(Instant::fromEpochSeconds)
 
                     val response =
                         networkDataSource.getSponsorships(
                             before = before,
                             size = state.config.pageSize,
                         )
-                    val entities = response.sponsorships.map { it.toSponsorship() }
-                    localDataSource.upsertSponsorships(entities)
+                    val entities = response.sponsorships.map(NetworkSponsorship::toEntity)
+                    sponsorshipDao.upsert(entities)
 
                     MediatorResult.Success(endOfPaginationReached = !response.hasMoreBefore)
                 }
@@ -111,14 +108,14 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
 }
 
 @OptIn(ExperimentalTime::class)
-private fun NetworkSponsorship.toSponsorship(): Sponsorship =
-    Sponsorship(
+private fun NetworkSponsorship.toEntity(): SponsorshipEntity =
+    SponsorshipEntity(
         id = id,
         sponsorName = sponsor,
         message = message,
         amount = amount,
         currency = currency,
         inEuro = inEuro,
-        dateTime = Instant.parse(sponsorshipDate).toLocalDateTime(TimeZone.currentSystemDefault()),
+        sponsorshipEpochSeconds = Instant.parse(sponsorshipDate).epochSeconds,
         method = method,
     )

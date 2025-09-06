@@ -1,8 +1,6 @@
 plugins { alias(libs.plugins.business) }
 
 kotlin {
-    sourceSets.all { languageSettings.enableLanguageFeature("ExpectActualClasses") }
-
     androidLibrary { namespace = "com.maksimowiczm.foodyou.business.settings" }
 
     val xcfName = "business:settingsKit"
@@ -13,5 +11,5 @@ kotlin {
 
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
-    sourceSets { androidMain.dependencies { implementation(libs.androidx.appcompat) } }
+    sourceSets.commonMain.dependencies { implementation(libs.core.shared) }
 }

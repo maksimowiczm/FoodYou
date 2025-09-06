@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.settings.infrastructure
+package com.maksimowiczm.foodyou.app.infrastructure
 
 import kotlinx.coroutines.flow.Flow
 

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.sponsorship.infrastructure.foodyousponsors
+package com.maksimowiczm.foodyou.app.infrastructure.foodyousponsors
 
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
 import io.ktor.client.HttpClient
