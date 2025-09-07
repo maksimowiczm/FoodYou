@@ -1,7 +1,15 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
+import com.maksimowiczm.foodyou.business.shared.di.userPreferencesRepository
 import com.maksimowiczm.foodyou.feature.onboarding.presentation.OnboardingViewModel
-import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val featureOnboardingModule = module { viewModelOf(::OnboardingViewModel) }
+val featureOnboardingModule = module {
+    viewModel {
+        OnboardingViewModel(
+            importSwissUseCase = get(),
+            foodSearchPreferencesRepository = userPreferencesRepository(),
+        )
+    }
+}
