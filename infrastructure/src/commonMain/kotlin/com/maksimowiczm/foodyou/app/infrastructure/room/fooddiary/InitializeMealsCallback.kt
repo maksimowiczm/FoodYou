@@ -5,10 +5,6 @@ import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
 import com.maksimowiczm.foodyou.shared.domain.log.Logger
 
-fun interface MealsProvider {
-    fun getMeals(): List<MealEntity>
-}
-
 class InitializeMealsCallback(private val provider: MealsProvider, private val logger: Logger) :
     RoomDatabase.Callback() {
 

@@ -1,31 +1,32 @@
-package com.maksimowiczm.foodyou.infrastructure
+package com.maksimowiczm.foodyou.app.infrastructure.compose
 
-import androidx.compose.ui.text.intl.Locale
+import com.maksimowiczm.foodyou.app.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.MealEntity
 import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.MealsProvider
 import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
-import foodyou.app.generated.resources.Res
+import foodyou.infrastructure.generated.resources.Res
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-internal class ComposeMealsProvider : MealsProvider {
+internal class ComposeMealsProvider(private val systemDetails: SystemDetails) : MealsProvider {
     override fun getMeals(): List<MealEntity> = runBlocking {
-        val tag = Locale.current.toLanguageTag()
+        val tag = runBlocking { systemDetails.languageTag.first() }
 
         val content =
             try {
-                Res.readBytes("files/meals-$tag.json")
+                Res.readBytes("files/meals/meals-$tag.json")
             } catch (e: Exception) {
                 FoodYouLogger.w(TAG, e) {
                     "Failed to read meals file for locale $tag, falling back to default"
                 }
 
-                Res.readBytes("files/meals.json")
+                Res.readBytes("files/meals/meals.json")
             }
 
         val meals =
-            Json.decodeFromString<List<MealJson>>(content.decodeToString()).mapIndexed {
+            Json.Default.decodeFromString<List<MealJson>>(content.decodeToString()).mapIndexed {
                 index,
                 mealJson ->
                 MealEntity(

@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.SponsorRepositoryImpl
 import com.maksimowiczm.foodyou.app.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.app.infrastructure.TranslationRepositoryImpl
 import com.maksimowiczm.foodyou.app.infrastructure.VibeCsvParser
+import com.maksimowiczm.foodyou.app.infrastructure.compose.ComposeMealsProvider
 import com.maksimowiczm.foodyou.app.infrastructure.compose.ComposeSwissFoodCompositionDatabaseRepository
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreFoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreGoalsRepository
@@ -42,6 +43,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.RoomProductRepository
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomRecipeRepository
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomUsdaPagingHelper
 import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.InitializeMealsCallback
+import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.MealsProvider
 import com.maksimowiczm.foodyou.business.food.domain.FoodRemoteMediatorFactoryAggregate
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
 import com.maksimowiczm.foodyou.business.food.domain.ProductRemoteMediatorFactory
@@ -92,6 +94,7 @@ private val Scope.database: FoodYouDatabase
     get() = get<FoodYouDatabase>()
 
 private val databaseDefinition: Module.() -> Unit = {
+    factoryOf(::ComposeMealsProvider).bind<MealsProvider>()
     factoryOf(::InitializeMealsCallback)
     single<FoodYouDatabase> { database() }
         .binds(arrayOf(TransactionProvider::class, DatabaseDumpService::class))
