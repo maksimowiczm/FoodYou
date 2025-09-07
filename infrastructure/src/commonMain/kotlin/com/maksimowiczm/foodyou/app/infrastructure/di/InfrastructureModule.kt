@@ -31,6 +31,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDAProductMappe
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDARemoteMediatorFactory
 import com.maksimowiczm.foodyou.app.infrastructure.room.FoodYouDatabase
+import com.maksimowiczm.foodyou.app.infrastructure.room.RoomDatabaseDumpService
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomFoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomFoodHistoryRepository
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomFoodMeasurementSuggestionRepository
@@ -96,8 +97,9 @@ private val Scope.database: FoodYouDatabase
 private val databaseDefinition: Module.() -> Unit = {
     factoryOf(::ComposeMealsProvider).bind<MealsProvider>()
     factoryOf(::InitializeMealsCallback)
-    single<FoodYouDatabase> { database() }
-        .binds(arrayOf(TransactionProvider::class, DatabaseDumpService::class))
+    single<FoodYouDatabase> { database() }.binds(arrayOf(TransactionProvider::class))
+    factory { RoomDatabaseDumpService(database = get<FoodYouDatabase>()) }
+        .bind<DatabaseDumpService>()
     factory { database.productDao }
     factory { database.recipeDao }
     factory { database.foodSearchDao }

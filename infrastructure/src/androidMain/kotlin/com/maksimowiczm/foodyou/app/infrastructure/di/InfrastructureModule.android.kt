@@ -9,8 +9,6 @@ import com.maksimowiczm.foodyou.app.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.app.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.app.infrastructure.room.FoodYouDatabase.Companion.buildDatabase
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
-import java.io.File
-import kotlinx.coroutines.flow.flow
 import okio.Path.Companion.toPath
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.definition.KoinDefinition
@@ -31,16 +29,7 @@ internal actual fun Scope.database(): FoodYouDatabase =
                 openHelperFactory(RequerySQLiteOpenHelperFactory())
             }
         }
-        .buildDatabase(
-            mealsCallback = get(),
-            databaseReader = {
-                flow {
-                    File(this@buildDatabase.openHelper.writableDatabase.path!!).inputStream().use {
-                        emit(it.readBytes())
-                    }
-                }
-            },
-        )
+        .buildDatabase(mealsCallback = get())
 
 actual fun Scope.createDataStore(): DataStore<Preferences> =
     PreferenceDataStoreFactory.createWithPath {

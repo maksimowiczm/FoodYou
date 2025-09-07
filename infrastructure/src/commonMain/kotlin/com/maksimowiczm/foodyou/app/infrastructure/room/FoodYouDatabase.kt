@@ -4,7 +4,6 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.execSQL
 import androidx.room.immediateTransaction
 import androidx.room.migration.Migration
 import androidx.room.useWriterConnection
@@ -45,10 +44,8 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.sponsorship.SponsorshipD
 import com.maksimowiczm.foodyou.app.infrastructure.room.sponsorship.SponsorshipEntity
 import com.maksimowiczm.foodyou.app.infrastructure.room.usda.USDAPagingKeyDao
 import com.maksimowiczm.foodyou.app.infrastructure.room.usda.USDAPagingKeyEntity
-import com.maksimowiczm.foodyou.business.shared.domain.database.DatabaseDumpService
 import com.maksimowiczm.foodyou.shared.domain.database.TransactionProvider
 import com.maksimowiczm.foodyou.shared.domain.database.TransactionScope as DomainTransactionScope
-import kotlinx.coroutines.flow.Flow
 
 @Database(
     entities =
@@ -120,7 +117,7 @@ import kotlinx.coroutines.flow.Flow
     MeasurementTypeConverter::class,
     FoodEventTypeConverter::class,
 )
-abstract class FoodYouDatabase : RoomDatabase(), TransactionProvider, DatabaseDumpService {
+abstract class FoodYouDatabase : RoomDatabase(), TransactionProvider {
     abstract val productDao: ProductDao
     abstract val recipeDao: RecipeDao
     abstract val foodSearchDao: FoodSearchDao
@@ -140,14 +137,6 @@ abstract class FoodYouDatabase : RoomDatabase(), TransactionProvider, DatabaseDu
                 scope.block()
             }
         }
-
-    private lateinit var databaseFileReader: FoodYouDatabase.() -> Flow<ByteArray>
-
-    override suspend fun provideDatabaseDump(): Flow<ByteArray> {
-        // Create a checkpoint to ensure the database is in a consistent state
-        useWriterConnection { connection -> connection.execSQL("PRAGMA wal_checkpoint(FULL);") }
-        return databaseFileReader()
-    }
 
     companion object {
         const val VERSION = 29
@@ -169,12 +158,11 @@ abstract class FoodYouDatabase : RoomDatabase(), TransactionProvider, DatabaseDu
             )
 
         fun Builder<FoodYouDatabase>.buildDatabase(
-            mealsCallback: InitializeMealsCallback,
-            databaseReader: FoodYouDatabase.() -> Flow<ByteArray>,
+            mealsCallback: InitializeMealsCallback
         ): FoodYouDatabase {
             addMigrations(*migrations.toTypedArray())
             addCallback(mealsCallback)
-            return build().apply { databaseFileReader = databaseReader }
+            return build()
         }
     }
 }
