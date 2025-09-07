@@ -13,6 +13,7 @@ kotlin {
 
     sourceSets.commonMain.dependencies {
         implementation(libs.core.shared)
+        implementation(libs.core.food)
         implementation(libs.core.fooddiary)
         implementation(libs.core.goals)
 

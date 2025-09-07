@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryCreatedEvent
 import com.maksimowiczm.foodyou.food.domain.entity.Food
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.Product
@@ -14,6 +15,7 @@ import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.usecase.CreateFoodDiaryEntryUseCase
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.date.DateProvider
+import com.maksimowiczm.foodyou.shared.event.EventBus
 import com.maksimowiczm.foodyou.shared.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.measurement.MeasurementType
 import com.maksimowiczm.foodyou.shared.ui.ext.now
@@ -41,7 +43,8 @@ internal class AddEntryViewModel(
     private val deleteFoodUseCase: DeleteFoodUseCase,
     observeMeasurementSuggestionsUseCase: ObserveMeasurementSuggestionsUseCase,
     mealRepository: MealRepository,
-    dateProvider: DateProvider,
+    private val dateProvider: DateProvider,
+    private val eventBus: EventBus,
     private val foodId: FoodId,
 ) : ViewModel() {
 
@@ -165,6 +168,13 @@ internal class AddEntryViewModel(
                 )
                 .fold(
                     onSuccess = {
+                        eventBus.publish(
+                            FoodDiaryEntryCreatedEvent(
+                                foodId = food.id,
+                                date = dateProvider.now(),
+                                measurement = measurement,
+                            )
+                        )
                         FoodYouLogger.d(TAG) { "Diary entry created successfully" }
                         _uiEventBus.send(AddEntryEvent.EntryAdded)
                     },

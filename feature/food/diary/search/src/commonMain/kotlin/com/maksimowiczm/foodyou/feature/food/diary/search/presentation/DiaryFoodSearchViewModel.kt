@@ -2,8 +2,10 @@ package com.maksimowiczm.foodyou.feature.food.diary.search.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryCreatedEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.shared.event.EventBus
+import com.maksimowiczm.foodyou.shared.event.subscribe
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -34,9 +36,6 @@ internal class DiaryFoodSearchViewModel(
     val newEntryEvents = eventChannel.receiveAsFlow()
 
     init {
-        // TODO
-        //        eventBus.subscribe<FoodDiaryEntryCreatedDomainEvent>(viewModelScope) {
-        //            eventChannel.send(Unit)
-        //        }
+        eventBus.subscribe<FoodDiaryEntryCreatedEvent>(viewModelScope) { eventChannel.send(Unit) }
     }
 }
