@@ -3,7 +3,7 @@ default:
 
 # $KTFMT_JAR - path to the ktfmt jar file
 format:
-    @find . -type f \( -name "*.kt" -o -name "*.kts" \) -not -path "*/build/*" | xargs java -jar $KTFMT_JAR --kotlinlang-style
+    @find . -type f \( -name "*.kt" -o -name "*.kts" \) -not -path "*/build/*" -not -path "FoodYouCore" | xargs java -jar $KTFMT_JAR --kotlinlang-style
 
 release:
     @./gradlew --no-daemon --no-build-cache clean
