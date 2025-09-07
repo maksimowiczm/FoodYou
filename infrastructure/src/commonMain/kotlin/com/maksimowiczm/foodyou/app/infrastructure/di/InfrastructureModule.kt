@@ -43,14 +43,13 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.RoomRecipeRepository
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomUsdaPagingHelper
 import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.InitializeMealsCallback
 import com.maksimowiczm.foodyou.business.food.domain.FoodRemoteMediatorFactoryAggregate
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
 import com.maksimowiczm.foodyou.business.food.domain.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
-import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
-import com.maksimowiczm.foodyou.business.shared.di.applicationCoroutineScopeQualifier
+import com.maksimowiczm.foodyou.business.shared.di.applicationCoroutineScope
+import com.maksimowiczm.foodyou.business.shared.di.userPreferencesRepository
+import com.maksimowiczm.foodyou.business.shared.di.userPreferencesRepositoryOf
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
 import com.maksimowiczm.foodyou.business.shared.domain.csv.CsvParser
 import com.maksimowiczm.foodyou.business.shared.domain.database.DatabaseDumpService
@@ -67,8 +66,6 @@ import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
 import com.maksimowiczm.foodyou.shared.database.TransactionProvider
 import com.maksimowiczm.foodyou.shared.date.DateProvider
 import com.maksimowiczm.foodyou.shared.event.EventBus
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
-import com.maksimowiczm.foodyou.sponsorship.domain.entity.SponsorshipPreferences
 import com.maksimowiczm.foodyou.sponsorship.domain.repository.SponsorRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
@@ -81,7 +78,6 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
-import org.koin.core.qualifier.qualifier
 import org.koin.core.scope.Scope
 import org.koin.dsl.bind
 import org.koin.dsl.binds
@@ -123,7 +119,7 @@ private val dataStoreDefinition: Module.() -> KoinDefinition<DataStore<Preferenc
 internal expect val systemDetails: Module.() -> KoinDefinition<out SystemDetails>
 
 fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
-    single(applicationCoroutineScopeQualifier) { applicationCoroutineScope }
+    applicationCoroutineScope { applicationCoroutineScope }
 
     databaseDefinition()
     dataStoreDefinition()
@@ -148,16 +144,13 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
         FoodYouSponsorsApiClient(client = get(named("ktorSponsorshipHttpClient")), config = get())
     }
 
-    factoryOf(::DataStoreSponsorshipPreferencesDataSource) {
-            qualifier = named(SponsorshipPreferences::class.qualifiedName!!)
-        }
-        .bind<UserPreferencesRepository<SponsorshipPreferences>>()
+    userPreferencesRepositoryOf(::DataStoreSponsorshipPreferencesDataSource)
 
     factory {
             SponsorRepositoryImpl(
                 sponsorshipDao = get(),
                 networkDataSource = get(),
-                preferences = get(named(SponsorshipPreferences::class.qualifiedName!!)),
+                preferences = userPreferencesRepository(),
                 logger = get(),
             )
         }
@@ -167,12 +160,11 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
     factory {
             TranslationRepositoryImpl(
                 systemDetails = get(),
-                settingsRepository = get(named(Settings::class.qualifiedName!!)),
+                settingsRepository = userPreferencesRepository(),
             )
         }
         .bind<TranslationRepository>()
-    factoryOf(::DataStoreSettingsRepository) { qualifier = named(Settings::class.qualifiedName!!) }
-        .bind<UserPreferencesRepository<Settings>>()
+    userPreferencesRepositoryOf(::DataStoreSettingsRepository)
     systemDetails()
 
     // ---
@@ -180,10 +172,7 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
     factoryOf(::RoomFoodDiaryEntryRepository).bind<FoodDiaryEntryRepository>()
     factoryOf(::RoomManualDiaryEntryRepository).bind<ManualDiaryEntryRepository>()
     factoryOf(::RoomMealRepository).bind<MealRepository>()
-    factoryOf(::DataStoreMealsPreferencesRepository) {
-            qualifier = named(MealsPreferences::class.qualifiedName!!)
-        }
-        .bind<UserPreferencesRepository<MealsPreferences>>()
+    userPreferencesRepositoryOf(::DataStoreMealsPreferencesRepository)
     factoryOf(::DataStoreGoalsRepository).bind<GoalsRepository>()
 
     // ---
@@ -201,10 +190,7 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
         .bind<SwissFoodCompositionDatabaseRepository>()
 
     factoryOf(::RoomFoodSearchRepository).bind<FoodSearchRepository>()
-    factoryOf(::DataStoreFoodSearchPreferencesRepository) {
-            qualifier = qualifier(FoodSearchPreferences::class.qualifiedName!!)
-        }
-        .bind<UserPreferencesRepository<FoodSearchPreferences>>()
+    userPreferencesRepositoryOf(::DataStoreFoodSearchPreferencesRepository)
 
     factoryOf(::RemoteProductMapper)
 
@@ -243,15 +229,14 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
         USDAFacade(
             dataSource = get(),
             mapper = get(),
-            preferencesRepository = get(named(FoodSearchPreferences::class.qualifiedName!!)),
+            preferencesRepository = userPreferencesRepository(),
             logger = get(),
         )
     }
     factoryOf(::USDAProductMapper)
     factory {
             USDARemoteMediatorFactory(
-                foodSearchPreferencesRepository =
-                    get(named(FoodSearchPreferences::class.qualifiedName!!)),
+                foodSearchPreferencesRepository = userPreferencesRepository(),
                 transactionProvider = get(),
                 productRepository = get(),
                 historyRepository = get(),
