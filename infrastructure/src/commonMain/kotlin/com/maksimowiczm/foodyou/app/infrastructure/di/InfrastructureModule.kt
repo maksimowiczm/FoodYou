@@ -15,7 +15,6 @@ import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreGoalsRepos
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreMealsPreferencesRepository
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreSettingsRepository
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreSponsorshipPreferencesDataSource
-import com.maksimowiczm.foodyou.app.infrastructure.datastore.DataStoreUserIdentifierProvider
 import com.maksimowiczm.foodyou.app.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
 import com.maksimowiczm.foodyou.app.infrastructure.network.FoodRemoteMediatorFactoryAggregateImpl
 import com.maksimowiczm.foodyou.app.infrastructure.network.RemoteProductMapper
@@ -55,7 +54,6 @@ import com.maksimowiczm.foodyou.business.shared.di.applicationCoroutineScopeQual
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
 import com.maksimowiczm.foodyou.business.shared.domain.csv.CsvParser
 import com.maksimowiczm.foodyou.business.shared.domain.database.DatabaseDumpService
-import com.maksimowiczm.foodyou.business.shared.domain.identity.UserIdentifierProvider
 import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
 import com.maksimowiczm.foodyou.food.domain.repository.FoodMeasurementSuggestionRepository
 import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository
@@ -136,8 +134,6 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
     singleOf(::SharedFlowEventBus).bind<EventBus>()
 
     singleOf(::DateProviderImpl).bind<DateProvider>()
-
-    factoryOf(::DataStoreUserIdentifierProvider).bind<UserIdentifierProvider>()
 
     // ---
     single(named("ktorSponsorshipHttpClient")) {
