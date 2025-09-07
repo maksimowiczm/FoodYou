@@ -13,7 +13,7 @@ import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.food.domain.usecase.ObserveMeasurementSuggestionsUseCase
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.usecase.CreateFoodDiaryEntryUseCase
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.domain.event.EventBus
 import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement

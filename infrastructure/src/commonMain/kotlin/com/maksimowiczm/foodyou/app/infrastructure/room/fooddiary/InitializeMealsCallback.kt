@@ -3,13 +3,14 @@ package com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary
 import androidx.room.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.domain.log.Logger
 
 fun interface MealsProvider {
     fun getMeals(): List<MealEntity>
 }
 
-class InitializeMealsCallback(private val provider: MealsProvider) : RoomDatabase.Callback() {
+class InitializeMealsCallback(private val provider: MealsProvider, private val logger: Logger) :
+    RoomDatabase.Callback() {
 
     override fun onCreate(connection: SQLiteConnection) {
         val meals = provider.getMeals()
@@ -41,7 +42,7 @@ class InitializeMealsCallback(private val provider: MealsProvider) : RoomDatabas
 
             connection.execSQL("COMMIT;")
         } catch (e: Exception) {
-            FoodYouLogger.e(TAG, e) { "Failed to insert meals" }
+            logger.e(TAG, e) { "Failed to insert meals" }
             connection.execSQL("ROLLBACK;")
         }
     }

@@ -92,7 +92,7 @@ private val Scope.database: FoodYouDatabase
     get() = get<FoodYouDatabase>()
 
 private val databaseDefinition: Module.() -> Unit = {
-    factory { InitializeMealsCallback(get()) }
+    factoryOf(::InitializeMealsCallback)
     single<FoodYouDatabase> { database() }
         .binds(arrayOf(TransactionProvider::class, DatabaseDumpService::class))
     factory { database.productDao }

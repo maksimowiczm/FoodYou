@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.foodyousponsors.FoodYouSponso
 import com.maksimowiczm.foodyou.app.infrastructure.foodyousponsors.NetworkSponsorship
 import com.maksimowiczm.foodyou.app.infrastructure.room.sponsorship.SponsorshipDao
 import com.maksimowiczm.foodyou.app.infrastructure.room.sponsorship.SponsorshipEntity
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.CancellationException
@@ -17,6 +17,7 @@ import kotlinx.coroutines.CancellationException
 internal class SponsorshipRemoteMediator<K : Any, T : Any>(
     private val sponsorshipDao: SponsorshipDao,
     private val networkDataSource: FoodYouSponsorsApiClient,
+    private val logger: Logger,
 ) : RemoteMediator<K, T>() {
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
@@ -26,7 +27,7 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
         return try {
             when (loadType) {
                 LoadType.REFRESH -> {
-                    FoodYouLogger.d(TAG) { "Refresh" }
+                    logger.d(TAG) { "Refresh" }
 
                     // Initially get the latest sponsorships and download sponsorships after that
                     val sponsorship = sponsorshipDao.getLatestSponsorship()
@@ -56,10 +57,10 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
                 LoadType.PREPEND -> {
                     val first = sponsorshipDao.getLatestSponsorship()
 
-                    FoodYouLogger.d(TAG) { "Prepend, $first" }
+                    logger.d(TAG) { "Prepend, $first" }
 
                     if (first == null) {
-                        FoodYouLogger.d(TAG) { "No items to prepend" }
+                        logger.d(TAG) { "No items to prepend" }
                         return MediatorResult.Success(endOfPaginationReached = true)
                     }
 
@@ -79,7 +80,7 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
                 LoadType.APPEND -> {
                     val last = sponsorshipDao.getOldestSponsorship()
 
-                    FoodYouLogger.d(TAG) { "Append, $last" }
+                    logger.d(TAG) { "Append, $last" }
 
                     val before = last?.sponsorshipEpochSeconds?.let(Instant::fromEpochSeconds)
 
@@ -97,7 +98,7 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            FoodYouLogger.w(TAG, e) { "Error loading sponsorships" }
+            logger.w(TAG, e) { "Error loading sponsorships" }
             MediatorResult.Error(e)
         }
     }

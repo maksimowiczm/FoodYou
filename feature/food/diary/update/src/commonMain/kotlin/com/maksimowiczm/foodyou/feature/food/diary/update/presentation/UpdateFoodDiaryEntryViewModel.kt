@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryReposi
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.usecase.UnpackFoodDiaryEntryUseCase
 import com.maksimowiczm.foodyou.fooddiary.domain.usecase.UpdateFoodDiaryEntryUseCase
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.domain.measurement.MeasurementType

@@ -6,7 +6,7 @@ import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.nutritionFacts
 import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
 import com.maksimowiczm.foodyou.food.domain.usecase.CreateProductUseCase
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ext.now

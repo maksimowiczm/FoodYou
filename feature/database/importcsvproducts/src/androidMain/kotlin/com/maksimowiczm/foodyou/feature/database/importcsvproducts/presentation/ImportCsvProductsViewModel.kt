@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.domain.ImportCsvProductUseCase
 import com.maksimowiczm.foodyou.business.food.domain.ProductField
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
 import java.io.BufferedReader
 import java.io.IOException

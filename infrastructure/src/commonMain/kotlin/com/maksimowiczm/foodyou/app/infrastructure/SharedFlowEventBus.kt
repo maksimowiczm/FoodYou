@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.app.infrastructure
 
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.domain.event.DomainEvent
 import com.maksimowiczm.foodyou.shared.domain.event.EventBus
+import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 // They can also be used in view models, though I’m not sure if that’s a good idea—but it does work
 // flawlessly.
 
-internal class SharedFlowEventBus : EventBus {
+internal class SharedFlowEventBus(private val logger: Logger) : EventBus {
 
     // Sometimes it is possible that there will more events published than can be handled. We don't
     // want to suspend the publisher, so we use a shared flow with a buffer. If we still overflow
@@ -38,9 +38,9 @@ internal class SharedFlowEventBus : EventBus {
 
     override fun publish(domainEvent: DomainEvent) {
         if (_events.tryEmit(domainEvent)) {
-            FoodYouLogger.d(TAG) { "Published event: $domainEvent" }
+            logger.d(TAG) { "Published event: $domainEvent" }
         } else {
-            FoodYouLogger.w(TAG) { "Failed to publish event: $domainEvent" }
+            logger.w(TAG) { "Failed to publish event: $domainEvent" }
         }
     }
 

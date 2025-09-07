@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.app.infrastructure
 
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.delay
@@ -18,7 +18,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 
 @OptIn(ExperimentalTime::class)
-internal class DateProviderImpl : DateProvider {
+internal class DateProviderImpl(private val logger: Logger) : DateProvider {
 
     override fun now(): LocalDateTime =
         Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
@@ -46,18 +46,23 @@ internal class DateProviderImpl : DateProvider {
                     .atStartOfDayIn(TimeZone.currentSystemDefault())
             val delayMillis = (midnight - now).inWholeMilliseconds
 
-            FoodYouLogger.d(TAG) { "Current date: $currentDate" }
-            FoodYouLogger.d(TAG) { "Delaying for $delayMillis ms" }
+            logger.d(TAG) {
+                buildString {
+                    appendLine("Current time: $now")
+                    appendLine("Midnight: $midnight")
+                    appendLine("Delay millis: $delayMillis")
+                }
+            }
             delay(delayMillis)
-            FoodYouLogger.d(TAG) { "Woke up" }
+            logger.d(TAG) { "Woke up" }
 
             val newDate = now().date
-            FoodYouLogger.d(TAG) { "New date: $newDate" }
+            logger.d(TAG) { "New date: $newDate" }
 
             if (newDate != currentDate) {
                 currentDate = newDate
 
-                FoodYouLogger.d(TAG) { "Emitting new date: $currentDate" }
+                logger.d(TAG) { "Emitting new date: $currentDate" }
                 emit(currentDate)
             }
         }

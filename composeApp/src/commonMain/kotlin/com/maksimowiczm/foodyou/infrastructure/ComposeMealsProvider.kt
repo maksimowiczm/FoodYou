@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.infrastructure
 import androidx.compose.ui.text.intl.Locale
 import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.MealEntity
 import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.MealsProvider
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable

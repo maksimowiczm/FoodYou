@@ -64,6 +64,7 @@ internal class SponsorRepositoryImpl(
                     SponsorshipRemoteMediator<Int, SponsorshipEntity>(
                         sponsorshipDao = sponsorshipDao,
                         networkDataSource = networkDataSource,
+                        logger = logger,
                     )
                 } else {
                     null
