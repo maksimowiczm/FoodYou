@@ -2,29 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.android.lint)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
-    alias(libs.plugins.gmazzo.buildconfig)
-    alias(libs.plugins.kotlin.serialization)
 }
-
-buildConfig {
-    val sponsorApiUrl = "https://sponsors.foodyou.maksimowiczm.com"
-    buildConfigField("String", "SPONSOR_API_URL", "\"$sponsorApiUrl\"")
-
-    // -- OPEN FOOD FACTS --
-    sourceSets.getByName("main") {
-        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org\"")
-    }
-    sourceSets.getByName("test") {
-        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.net\"")
-    }
-
-    // -- USDA --
-    buildConfigField("String", "USDA_URL", "\"https://api.nal.usda.gov\"")
-}
-
-room { schemaDirectory("$projectDir/schemas") }
 
 kotlin {
     androidLibrary {
@@ -36,8 +14,6 @@ kotlin {
 
         withDeviceTestBuilder { sourceSetTreeName = "test" }
             .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
-
-        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
     }
 
     val xcfName = "business:sharedKit"
@@ -50,46 +26,14 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.core.shared)
+            implementation(libs.core.food)
             implementation(libs.core.fooddiary)
+            implementation(libs.core.goals)
+            implementation(libs.core.shared)
+            implementation(libs.core.sponsorship)
 
-            implementation(projects.shared.common)
             implementation(libs.koin.core)
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.paging)
-            implementation(libs.androidx.datastore.preferences.core)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.serialization.json)
-        }
-
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.androidx.room.testing)
-            implementation(libs.androidx.sqlite.bundled)
-            implementation(libs.androidx.datastore.preferences.core)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.koin.android)
-            implementation(libs.sqlite.android)
-        }
-
-        getByName("androidDeviceTest").dependencies {
-            implementation(libs.androidx.testCore)
-            implementation(libs.androidx.testCore.ktx)
-            implementation(libs.androidx.testRunner)
-            implementation(libs.androidx.testExt.junit)
+            implementation(libs.kotlinx.coroutines.core)
         }
     }
-}
-
-dependencies {
-    listOf(
-            "kspCommonMainMetadata",
-            "kspAndroid",
-            "kspIosX64",
-            "kspIosArm64",
-            "kspIosSimulatorArm64",
-        )
-        .forEach { add(it, libs.androidx.room.compiler) }
 }

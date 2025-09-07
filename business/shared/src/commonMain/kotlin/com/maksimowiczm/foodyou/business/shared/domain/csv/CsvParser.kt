@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.shared.application.csv
+package com.maksimowiczm.foodyou.business.shared.domain.csv
 
 fun interface CsvParser {
     /**

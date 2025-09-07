@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure
 
-import com.maksimowiczm.foodyou.business.shared.application.csv.CsvParser
+import com.maksimowiczm.foodyou.business.shared.domain.csv.CsvParser
 
 // This is 100% vibe coded, seems to be working well
 internal class VibeCsvParser : CsvParser {

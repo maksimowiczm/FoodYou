@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.infrastructure.di
+package com.maksimowiczm.foodyou.business.shared.di
 
 import com.maksimowiczm.foodyou.shared.event.DomainEvent
 import com.maksimowiczm.foodyou.shared.event.EventBus

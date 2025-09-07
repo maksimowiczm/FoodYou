@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.shared.application.database
+package com.maksimowiczm.foodyou.business.shared.domain.database
 
 import kotlinx.coroutines.flow.Flow
 

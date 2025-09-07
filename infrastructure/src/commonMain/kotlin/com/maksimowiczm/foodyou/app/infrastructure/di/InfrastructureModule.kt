@@ -51,9 +51,10 @@ import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabas
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
-import com.maksimowiczm.foodyou.business.shared.application.csv.CsvParser
-import com.maksimowiczm.foodyou.business.shared.application.database.DatabaseDumpService
+import com.maksimowiczm.foodyou.business.shared.di.applicationCoroutineScopeQualifier
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
+import com.maksimowiczm.foodyou.business.shared.domain.csv.CsvParser
+import com.maksimowiczm.foodyou.business.shared.domain.database.DatabaseDumpService
 import com.maksimowiczm.foodyou.business.shared.domain.identity.UserIdentifierProvider
 import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
 import com.maksimowiczm.foodyou.food.domain.repository.FoodMeasurementSuggestionRepository
@@ -65,7 +66,6 @@ import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryReposi
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
-import com.maksimowiczm.foodyou.infrastructure.di.applicationCoroutineScopeQualifier
 import com.maksimowiczm.foodyou.shared.database.TransactionProvider
 import com.maksimowiczm.foodyou.shared.date.DateProvider
 import com.maksimowiczm.foodyou.shared.event.EventBus

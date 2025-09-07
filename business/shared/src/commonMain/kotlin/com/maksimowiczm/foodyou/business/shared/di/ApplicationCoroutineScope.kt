@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.infrastructure.di
+package com.maksimowiczm.foodyou.business.shared.di
 
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.qualifier.named
