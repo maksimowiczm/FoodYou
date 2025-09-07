@@ -4,7 +4,7 @@ import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import androidx.lifecycle.lifecycleScope
 import androidx.test.core.app.launchActivity
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import org.junit.Test
