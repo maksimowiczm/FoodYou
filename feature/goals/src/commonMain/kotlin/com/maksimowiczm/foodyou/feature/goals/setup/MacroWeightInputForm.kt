@@ -37,7 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
-import com.maksimowiczm.foodyou.shared.food.NutrientsHelper
+import com.maksimowiczm.foodyou.shared.domain.food.NutrientsHelper
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.floatParser
 import com.maksimowiczm.foodyou.shared.ui.form.intParser

@@ -13,7 +13,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking

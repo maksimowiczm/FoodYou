@@ -17,7 +17,7 @@ import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateRecipeDestinati
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiarySearchDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryUpdateQuickAdd
 import com.maksimowiczm.foodyou.navigation.domain.UpdateFoodDiaryEntryDestination
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
 import kotlinx.datetime.LocalDate
 

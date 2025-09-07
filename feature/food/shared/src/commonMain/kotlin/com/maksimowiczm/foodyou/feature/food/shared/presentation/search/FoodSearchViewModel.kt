@@ -9,10 +9,10 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodSearchUseCase
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.RemoteStatus.Companion.toRemoteStatus
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository
-import com.maksimowiczm.foodyou.shared.date.DateProvider
-import com.maksimowiczm.foodyou.shared.food.FoodSource
-import com.maksimowiczm.foodyou.shared.search.searchQuery
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.shared.domain.search.searchQuery
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.time.Clock

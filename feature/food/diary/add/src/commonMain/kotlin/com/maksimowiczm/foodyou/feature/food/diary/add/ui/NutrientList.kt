@@ -25,8 +25,8 @@ import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.feature.food.shared.ui.NutrientList
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.shared.food.isComplete
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.food.isComplete
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList
 
 @Composable

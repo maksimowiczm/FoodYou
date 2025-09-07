@@ -13,7 +13,7 @@ import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import com.maksimowiczm.foodyou.shared.ui.ext.horizontal
 import com.maksimowiczm.foodyou.shared.ui.ext.vertical

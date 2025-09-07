@@ -7,8 +7,8 @@ import com.maksimowiczm.foodyou.app.infrastructure.network.usda.model.FoodNutrie
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.model.Nutrient.*
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteNutritionFacts
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
-import com.maksimowiczm.foodyou.shared.food.FoodSource
-import com.maksimowiczm.foodyou.shared.food.NutrientsHelper
+import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.shared.domain.food.NutrientsHelper
 
 private val allowedServingUnits by lazy { setOf("g", "GRM", "ml", "MLT") }
 private val liquidServingUnits by lazy { setOf("ml", "MLT") }

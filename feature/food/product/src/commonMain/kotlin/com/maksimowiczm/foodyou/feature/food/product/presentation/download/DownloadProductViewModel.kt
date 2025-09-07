@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
 import com.maksimowiczm.foodyou.food.domain.usecase.DownloadProductError
 import com.maksimowiczm.foodyou.food.domain.usecase.DownloadProductUseCase
-import com.maksimowiczm.foodyou.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull

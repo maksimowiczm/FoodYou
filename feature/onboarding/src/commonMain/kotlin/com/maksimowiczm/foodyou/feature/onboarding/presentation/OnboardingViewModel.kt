@@ -6,7 +6,7 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
 import com.maksimowiczm.foodyou.business.food.domain.ImportSwissFoodCompositionDatabaseUseCase
 import com.maksimowiczm.foodyou.feature.onboarding.ui.OnboardingState
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.last

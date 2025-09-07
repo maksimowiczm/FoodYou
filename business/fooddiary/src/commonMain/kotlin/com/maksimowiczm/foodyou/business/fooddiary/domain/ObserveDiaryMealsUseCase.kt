@@ -4,8 +4,8 @@ import com.maksimowiczm.foodyou.fooddiary.domain.entity.Meal
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
-import com.maksimowiczm.foodyou.shared.date.DateProvider
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

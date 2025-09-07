@@ -4,8 +4,8 @@ import androidx.compose.runtime.Immutable
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.Recipe
 import com.maksimowiczm.foodyou.food.domain.entity.RecipeIngredient
-import com.maksimowiczm.foodyou.shared.food.NutritionFacts
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 
 @Immutable
 internal data class IngredientModel(

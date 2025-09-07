@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.shared.common.application.log
 
-import com.maksimowiczm.foodyou.shared.log.Logger
+import com.maksimowiczm.foodyou.shared.domain.log.Logger
 
 object FoodYouLogger : Logger {
 

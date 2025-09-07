@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 
 import androidx.compose.runtime.Immutable
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.shared.food.NutritionFacts
-import com.maksimowiczm.foodyou.shared.food.Weighted
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.domain.food.Weighted
 
 @Immutable
 internal sealed interface FoodModel : Weighted {

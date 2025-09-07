@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.business.settings.domain.Translation
 import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

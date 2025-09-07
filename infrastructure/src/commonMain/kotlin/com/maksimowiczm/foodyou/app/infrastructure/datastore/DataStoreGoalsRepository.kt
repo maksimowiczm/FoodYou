@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.maksimowiczm.foodyou.goals.domain.entity.DailyGoal
 import com.maksimowiczm.foodyou.goals.domain.entity.WeeklyGoals
 import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
-import com.maksimowiczm.foodyou.shared.food.NutritionFactsField
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFactsField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DayOfWeek

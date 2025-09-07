@@ -63,9 +63,9 @@ import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryReposi
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
-import com.maksimowiczm.foodyou.shared.database.TransactionProvider
-import com.maksimowiczm.foodyou.shared.date.DateProvider
-import com.maksimowiczm.foodyou.shared.event.EventBus
+import com.maksimowiczm.foodyou.shared.domain.database.TransactionProvider
+import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.shared.domain.event.EventBus
 import com.maksimowiczm.foodyou.sponsorship.domain.repository.SponsorRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout

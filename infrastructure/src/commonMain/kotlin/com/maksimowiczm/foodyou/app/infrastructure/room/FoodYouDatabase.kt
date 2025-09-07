@@ -46,8 +46,8 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.sponsorship.SponsorshipE
 import com.maksimowiczm.foodyou.app.infrastructure.room.usda.USDAPagingKeyDao
 import com.maksimowiczm.foodyou.app.infrastructure.room.usda.USDAPagingKeyEntity
 import com.maksimowiczm.foodyou.business.shared.domain.database.DatabaseDumpService
-import com.maksimowiczm.foodyou.shared.database.TransactionProvider
-import com.maksimowiczm.foodyou.shared.database.TransactionScope as DomainTransactionScope
+import com.maksimowiczm.foodyou.shared.domain.database.TransactionProvider
+import com.maksimowiczm.foodyou.shared.domain.database.TransactionScope as DomainTransactionScope
 import kotlinx.coroutines.flow.Flow
 
 @Database(

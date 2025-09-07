@@ -9,9 +9,9 @@ import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.usecase.UnpackFoodDiaryEntryUseCase
 import com.maksimowiczm.foodyou.fooddiary.domain.usecase.UpdateFoodDiaryEntryUseCase
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
-import com.maksimowiczm.foodyou.shared.date.DateProvider
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.measurement.MeasurementType
+import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.MeasurementType
 import com.maksimowiczm.foodyou.shared.ui.ext.now
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel

@@ -54,7 +54,7 @@ import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import com.maksimowiczm.foodyou.shared.barcodescanner.FullScreenCameraBarcodeScanner
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer

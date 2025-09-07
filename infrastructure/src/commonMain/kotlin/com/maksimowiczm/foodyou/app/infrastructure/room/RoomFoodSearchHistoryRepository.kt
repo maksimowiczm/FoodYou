@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.food.FoodSearchDao
 import com.maksimowiczm.foodyou.app.infrastructure.room.food.SearchEntry
 import com.maksimowiczm.foodyou.food.domain.entity.FoodSearchHistory
 import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository
-import com.maksimowiczm.foodyou.shared.search.SearchQuery
+import com.maksimowiczm.foodyou.shared.domain.search.SearchQuery
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow

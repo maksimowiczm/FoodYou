@@ -6,7 +6,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.model.v
 import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.model.v2.OpenFoodFactsProductResponseV2
 import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
-import com.maksimowiczm.foodyou.shared.log.Logger
+import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.SocketTimeoutException

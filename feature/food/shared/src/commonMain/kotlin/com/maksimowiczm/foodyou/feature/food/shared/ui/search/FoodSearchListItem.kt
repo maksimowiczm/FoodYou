@@ -11,7 +11,7 @@ import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.food.domain.entity.Recipe
 import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import com.valentinilk.shimmer.Shimmer

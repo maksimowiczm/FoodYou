@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.business.food.domain
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.shared.food.FoodSource
-import com.maksimowiczm.foodyou.shared.search.SearchQuery
+import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.shared.domain.search.SearchQuery
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 

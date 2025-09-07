@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.home.meals.card
 import androidx.compose.runtime.Immutable
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntryId
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import kotlinx.datetime.LocalTime
 
 @Immutable

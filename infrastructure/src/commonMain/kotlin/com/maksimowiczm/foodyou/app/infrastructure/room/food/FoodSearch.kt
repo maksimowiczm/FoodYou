@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import com.maksimowiczm.foodyou.app.infrastructure.room.shared.Minerals
 import com.maksimowiczm.foodyou.app.infrastructure.room.shared.Nutrients
 import com.maksimowiczm.foodyou.app.infrastructure.room.shared.Vitamins
-import com.maksimowiczm.foodyou.shared.measurement.MeasurementType
+import com.maksimowiczm.foodyou.shared.domain.measurement.MeasurementType
 
 data class FoodSearch(
     val productId: Long?,

@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.business.food.domain
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.shared.search.SearchQuery
+import com.maksimowiczm.foodyou.shared.domain.search.SearchQuery
 
 @OptIn(ExperimentalPagingApi::class)
 interface ProductRemoteMediatorFactory {

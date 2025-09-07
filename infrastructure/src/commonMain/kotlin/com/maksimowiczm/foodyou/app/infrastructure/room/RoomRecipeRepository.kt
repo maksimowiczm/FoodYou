@@ -7,10 +7,10 @@ import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.Recipe
 import com.maksimowiczm.foodyou.food.domain.entity.RecipeIngredient
 import com.maksimowiczm.foodyou.food.domain.repository.RecipeRepository
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.measurement.from
-import com.maksimowiczm.foodyou.shared.measurement.rawValue
-import com.maksimowiczm.foodyou.shared.measurement.type
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.from
+import com.maksimowiczm.foodyou.shared.domain.measurement.rawValue
+import com.maksimowiczm.foodyou.shared.domain.measurement.type
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

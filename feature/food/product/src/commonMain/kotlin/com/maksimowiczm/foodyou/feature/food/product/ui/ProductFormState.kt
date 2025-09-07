@@ -17,11 +17,11 @@ import androidx.compose.runtime.snapshotFlow
 import com.maksimowiczm.foodyou.feature.shared.ui.Saver
 import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
-import com.maksimowiczm.foodyou.shared.food.FoodSource
-import com.maksimowiczm.foodyou.shared.food.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.shared.food.NutrientsHelper
-import com.maksimowiczm.foodyou.shared.food.NutritionFacts
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.shared.domain.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.shared.domain.food.NutrientsHelper
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.nonBlankStringValidator
 import com.maksimowiczm.foodyou.shared.ui.form.nonNegativeFloatValidator

@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.app.infrastructure.room.shared
 
-import com.maksimowiczm.foodyou.shared.food.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.domain.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFacts
 
 fun toEntityNutrients(nutritionFacts: NutritionFacts): Triple<Nutrients, Vitamins, Minerals> {
     val nutrients =

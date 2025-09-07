@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.business.fooddiary.domain
 
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.shared.event.DomainEvent
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.event.DomainEvent
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import kotlinx.datetime.LocalDateTime
 
 data class FoodDiaryEntryCreatedEvent(

@@ -7,8 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPickerState
 import com.maksimowiczm.foodyou.feature.food.shared.ui.rememberMeasurementPickerState
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.measurement.MeasurementType
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.MeasurementType
 import kotlinx.datetime.LocalDate
 
 @Composable

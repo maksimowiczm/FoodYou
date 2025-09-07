@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntryId
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
-import com.maksimowiczm.foodyou.shared.date.DateProvider
-import com.maksimowiczm.foodyou.shared.food.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.shared.log.Logger
+import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.shared.domain.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow

@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.business.food.domain
 
 import com.maksimowiczm.foodyou.food.domain.entity.FoodSearchHistory
 import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository
-import com.maksimowiczm.foodyou.shared.event.EventHandler
+import com.maksimowiczm.foodyou.shared.domain.event.EventHandler
 
 class FoodSearchEventHandler(private val repository: FoodSearchHistoryRepository) :
     EventHandler<FoodSearchEvent> {

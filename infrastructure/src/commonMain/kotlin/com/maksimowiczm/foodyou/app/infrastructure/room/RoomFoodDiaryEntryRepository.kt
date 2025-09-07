@@ -16,11 +16,11 @@ import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodRecipeIngredien
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.FoodDiaryEntry
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryRepository
-import com.maksimowiczm.foodyou.shared.food.FoodSource
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.measurement.from
-import com.maksimowiczm.foodyou.shared.measurement.rawValue
-import com.maksimowiczm.foodyou.shared.measurement.type
+import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.from
+import com.maksimowiczm.foodyou.shared.domain.measurement.rawValue
+import com.maksimowiczm.foodyou.shared.domain.measurement.type
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.ExperimentalCoroutinesApi

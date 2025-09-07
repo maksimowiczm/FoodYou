@@ -11,9 +11,9 @@ import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
 import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
-import com.maksimowiczm.foodyou.shared.database.TransactionProvider
-import com.maksimowiczm.foodyou.shared.date.DateProvider
-import com.maksimowiczm.foodyou.shared.log.Logger
+import com.maksimowiczm.foodyou.shared.domain.database.TransactionProvider
+import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)

@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 import androidx.compose.runtime.Immutable
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.Recipe
-import com.maksimowiczm.foodyou.shared.food.NutritionFacts
-import com.maksimowiczm.foodyou.shared.food.WeightedStrict
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.domain.food.WeightedStrict
 
 @Immutable
 internal data class RecipeModel(

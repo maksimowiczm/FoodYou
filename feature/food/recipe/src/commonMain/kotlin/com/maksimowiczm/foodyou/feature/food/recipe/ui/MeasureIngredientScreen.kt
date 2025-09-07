@@ -36,8 +36,8 @@ import com.maksimowiczm.foodyou.feature.food.shared.ui.rememberMeasurementPicker
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.entity.Recipe
-import com.maksimowiczm.foodyou.shared.food.isComplete
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.food.isComplete
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.shared.ui.ext.add

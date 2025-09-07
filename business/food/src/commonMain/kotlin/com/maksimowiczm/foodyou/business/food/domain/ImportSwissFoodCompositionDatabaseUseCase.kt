@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
-import com.maksimowiczm.foodyou.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow

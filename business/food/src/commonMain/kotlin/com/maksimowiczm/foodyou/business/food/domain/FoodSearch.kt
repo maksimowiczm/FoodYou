@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.shared.food.NutritionFacts
-import com.maksimowiczm.foodyou.shared.food.Weighted
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.domain.food.Weighted
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 
 sealed interface FoodSearch {
     val id: FoodId

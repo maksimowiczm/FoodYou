@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.business.shared.domain.config.AppConfig
 import com.maksimowiczm.foodyou.infrastructure.ComposeMealsProvider
 import com.maksimowiczm.foodyou.presentation.AppViewModel
 import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
-import com.maksimowiczm.foodyou.shared.log.Logger
+import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named

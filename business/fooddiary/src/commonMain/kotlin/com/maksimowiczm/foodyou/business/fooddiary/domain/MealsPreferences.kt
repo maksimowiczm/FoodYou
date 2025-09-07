@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.fooddiary.domain
 
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferences
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferences
 
 data class MealsPreferences(
     val layout: MealsCardsLayout,

@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts
 import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteNutritionFacts
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
-import com.maksimowiczm.foodyou.shared.food.FoodSource
+import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
 
 internal class OpenFoodFactsProductMapper {
     fun toRemoteProduct(product: OpenFoodFactsProduct): RemoteProduct {

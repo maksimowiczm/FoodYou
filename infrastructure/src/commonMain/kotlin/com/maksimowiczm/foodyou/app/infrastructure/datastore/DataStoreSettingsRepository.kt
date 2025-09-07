@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlin.collections.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

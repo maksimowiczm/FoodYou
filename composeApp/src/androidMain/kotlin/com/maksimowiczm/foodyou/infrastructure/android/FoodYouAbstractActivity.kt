@@ -9,11 +9,11 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.app.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidClipboardManager
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utils.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.shared.ui.utils.DateFormatterProvider
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch

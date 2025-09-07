@@ -4,10 +4,10 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.food.MeasurementSuggesti
 import com.maksimowiczm.foodyou.app.infrastructure.room.food.MeasurementSuggestionEntity
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.repository.FoodMeasurementSuggestionRepository
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.measurement.from
-import com.maksimowiczm.foodyou.shared.measurement.rawValue
-import com.maksimowiczm.foodyou.shared.measurement.type
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.from
+import com.maksimowiczm.foodyou.shared.domain.measurement.rawValue
+import com.maksimowiczm.foodyou.shared.domain.measurement.type
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant

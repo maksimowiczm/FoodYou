@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.business.shared.di
 
-import com.maksimowiczm.foodyou.shared.event.DomainEvent
-import com.maksimowiczm.foodyou.shared.event.EventBus
-import com.maksimowiczm.foodyou.shared.event.EventHandler
-import com.maksimowiczm.foodyou.shared.event.subscribe
+import com.maksimowiczm.foodyou.shared.domain.event.DomainEvent
+import com.maksimowiczm.foodyou.shared.domain.event.EventBus
+import com.maksimowiczm.foodyou.shared.domain.event.EventHandler
+import com.maksimowiczm.foodyou.shared.domain.event.subscribe
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.new
 import org.koin.core.parameter.ParametersHolder

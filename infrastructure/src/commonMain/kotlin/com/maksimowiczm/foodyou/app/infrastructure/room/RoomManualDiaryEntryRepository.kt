@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.shared.toNutritionFacts
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntry
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntryId
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
-import com.maksimowiczm.foodyou.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFacts
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow

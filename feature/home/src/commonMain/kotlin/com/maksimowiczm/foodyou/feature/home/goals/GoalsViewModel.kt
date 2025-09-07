@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.fooddiary.domain.ObserveDiaryMealsUseCase
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
-import com.maksimowiczm.foodyou.shared.food.NutritionFactsField
-import com.maksimowiczm.foodyou.shared.food.sum
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFactsField
+import com.maksimowiczm.foodyou.shared.domain.food.sum
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -39,11 +39,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.shared.ui.Saver
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResource
-import com.maksimowiczm.foodyou.shared.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.measurement.MeasurementType
-import com.maksimowiczm.foodyou.shared.measurement.from
-import com.maksimowiczm.foodyou.shared.measurement.rawValue
-import com.maksimowiczm.foodyou.shared.measurement.type
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.MeasurementType
+import com.maksimowiczm.foodyou.shared.domain.measurement.from
+import com.maksimowiczm.foodyou.shared.domain.measurement.rawValue
+import com.maksimowiczm.foodyou.shared.domain.measurement.type
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.nullableFloatParser
 import com.maksimowiczm.foodyou.shared.ui.form.positiveFloatValidator

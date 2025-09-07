@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.goals.master
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.shared.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFacts
 
 @Immutable
 internal data class MealModel(

@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.shared.di
 
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferences
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferences
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.new
 import org.koin.core.parameter.ParametersHolder

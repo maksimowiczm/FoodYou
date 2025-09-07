@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.shared.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.SponsorshipPreferences
 import com.maksimowiczm.foodyou.sponsorship.domain.repository.SponsorRepository
