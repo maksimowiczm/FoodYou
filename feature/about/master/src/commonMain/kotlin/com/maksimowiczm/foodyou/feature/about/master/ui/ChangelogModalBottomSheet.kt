@@ -27,20 +27,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.about.master.presentation.Changelog
-import com.maksimowiczm.foodyou.feature.about.master.presentation.Version
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.business.settings.domain.Changelog
+import com.maksimowiczm.foodyou.business.settings.domain.Version
+import com.maksimowiczm.foodyou.feature.about.master.presentation.ChangelogViewModel
+import com.maksimowiczm.foodyou.feature.about.master.presentation.stringResource
 import com.maksimowiczm.foodyou.shared.ui.unorderedList
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalClipboardManager
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalDateFormatter
@@ -48,7 +45,7 @@ import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +53,12 @@ internal fun ChangelogModalBottomSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val changelog: Changelog = koinInject()
+    val changelogViewModel: ChangelogViewModel = koinViewModel()
+    val changelog = changelogViewModel.changelog.collectAsStateWithLifecycle().value
+
+    if (changelog == null) {
+        return
+    }
 
     val sheetState = rememberModalBottomSheetState()
 
@@ -248,13 +250,13 @@ private fun ChangelogItem(
                 }
             }
 
-            version.notes?.let {
+            version.notes?.let { notes ->
                 Column {
                     Text(
                         text = stringResource(Res.string.changelog_notes),
                         style = MaterialTheme.typography.titleMedium,
                     )
-                    Text(text = version.notes, style = MaterialTheme.typography.bodyMedium)
+                    Text(text = notes, style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }

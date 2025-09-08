@@ -11,7 +11,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.about.master.presentation.PreviewReleaseDialogViewModel
+import com.maksimowiczm.foodyou.feature.about.master.presentation.ChangelogViewModel
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -19,7 +19,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreviewReleaseDialog(modifier: Modifier = Modifier) {
-    val viewModel: PreviewReleaseDialogViewModel = koinViewModel()
+    val viewModel: ChangelogViewModel = koinViewModel()
     val showDialog by viewModel.showDialog.collectAsStateWithLifecycle()
 
     if (showDialog)

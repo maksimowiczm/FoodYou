@@ -1,17 +1,15 @@
 @file:Suppress("ktlint:standard:max-line-length", "PropertyName")
 
-package com.maksimowiczm.foodyou.feature.about.master.presentation
+package com.maksimowiczm.foodyou.business.settings.domain
 
-import androidx.compose.runtime.Immutable
 import com.maksimowiczm.foodyou.business.shared.domain.config.AppConfig
 import kotlinx.datetime.LocalDate
 
-@Immutable
-internal class Changelog(private val appConfig: AppConfig) {
-    val currentVersion: Version?
+internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
+    override val currentVersion: Version?
         get() = versions.firstOrNull { it.version == appConfig.versionName }
 
-    val versions: List<Version>
+    override val versions: List<Version>
         get() =
             listOf(
                 v_3_0_0,
