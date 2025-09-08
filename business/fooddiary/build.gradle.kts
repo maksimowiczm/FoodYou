@@ -16,9 +16,5 @@ kotlin {
         implementation(libs.core.food)
         implementation(libs.core.fooddiary)
         implementation(libs.core.goals)
-
-        implementation(libs.androidx.paging.common)
-        implementation(libs.kotlinx.serialization.json)
-        implementation(libs.androidx.room.runtime)
     }
 }

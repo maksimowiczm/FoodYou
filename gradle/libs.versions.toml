@@ -32,7 +32,6 @@ runner = "1.7.0"
 sqliteAndroid = "3.49.0"
 sqliteBundled = "2.5.2"
 zxingAndroidEmbedded = "4.3.0"
-kotlinStdlib = "2.2.10"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -100,7 +99,6 @@ business-library-implementation = [
     "koin-core",
     "kotlinx-coroutines-core",
     "kotlinx-datetime",
-    "androidx-datastore-preferences-core"
 ]
 
 feature-library-implementation = [

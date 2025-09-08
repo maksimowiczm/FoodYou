@@ -24,16 +24,14 @@ kotlin {
 
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.core.food)
-            implementation(libs.core.fooddiary)
-            implementation(libs.core.goals)
-            implementation(libs.core.shared)
-            implementation(libs.core.sponsorship)
+    sourceSets.commonMain.dependencies {
+        implementation(libs.core.food)
+        implementation(libs.core.fooddiary)
+        implementation(libs.core.goals)
+        implementation(libs.core.shared)
+        implementation(libs.core.sponsorship)
 
-            implementation(libs.koin.core)
-            implementation(libs.kotlinx.coroutines.core)
-        }
+        implementation(libs.koin.core)
+        implementation(libs.kotlinx.coroutines.core)
     }
 }
