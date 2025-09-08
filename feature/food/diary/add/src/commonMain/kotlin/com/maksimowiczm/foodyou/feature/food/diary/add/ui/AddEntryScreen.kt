@@ -44,7 +44,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.AddEntryEvent
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.AddEntryViewModel
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.FoodModel
@@ -56,8 +55,9 @@ import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.FoodMeasurementForm
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.Source
 import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.rememberFoodMeasurementFormState
 import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPicker
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.ext.add
@@ -94,7 +94,7 @@ fun AddEntryScreen(
     }
 
     val food = viewModel.food.collectAsStateWithLifecycle().value
-    val events by viewModel.foodEvents.collectAsStateWithLifecycle()
+    val events by viewModel.foodHistory.collectAsStateWithLifecycle()
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
     val today by viewModel.today.collectAsStateWithLifecycle()
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
@@ -166,7 +166,7 @@ fun AddEntryScreen(
             onDelete = viewModel::deleteFood,
             onIngredient = onIngredient,
             food = food,
-            events = events,
+            history = events,
             state = state,
             animatedVisibilityScope = animatedVisibilityScope,
             modifier = modifier,
@@ -184,7 +184,7 @@ private fun AddEntryScreen(
     onDelete: () -> Unit,
     onIngredient: (FoodId, Measurement) -> Unit,
     food: FoodModel,
-    events: List<FoodEvent>,
+    history: List<FoodHistory>,
     state: FoodMeasurementFormState,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
@@ -328,10 +328,10 @@ private fun AddEntryScreen(
                 }
             }
 
-            if (events.isNotEmpty()) {
+            if (history.isNotEmpty()) {
                 item {
                     HorizontalDivider(Modifier.padding(horizontal = 8.dp))
-                    FoodEvents(events = events, modifier = Modifier.padding(16.dp))
+                    FoodHistory(events = history, modifier = Modifier.padding(16.dp))
                 }
             }
         }

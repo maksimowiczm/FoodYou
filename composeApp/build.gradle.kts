@@ -7,9 +7,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.room)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.gmazzo.buildconfig)
 }
 
@@ -60,6 +57,10 @@ kotlin {
             implementation(libs.koin.android)
         }
         commonMain.dependencies {
+            implementation(projects.infrastructure)
+
+            implementation(libs.core.shared)
+
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
             implementation(projects.shared.barcodescanner)
@@ -69,8 +70,8 @@ kotlin {
             implementation(projects.business.shared)
             implementation(projects.business.food)
             implementation(projects.business.fooddiary)
-            implementation(projects.business.sponsorship)
             implementation(projects.business.settings)
+            implementation(projects.business.shared)
 
             implementation(projects.feature.shared)
             implementation(projects.feature.about.master)
@@ -107,8 +108,6 @@ kotlin {
 
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
-
-            implementation(libs.kotlinx.serialization.json)
         }
 
         commonTest.dependencies { implementation(libs.kotlin.test) }
@@ -121,8 +120,6 @@ kotlin {
         }
     }
 }
-
-room { schemaDirectory("$projectDir/schemas") }
 
 android {
     namespace = "com.maksimowiczm.foodyou"
@@ -173,15 +170,4 @@ android {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
-
-    listOf(
-            "kspCommonMainMetadata",
-            "kspAndroid",
-            "kspIosX64",
-            "kspIosArm64",
-            "kspIosSimulatorArm64",
-        )
-        .forEach { add(it, libs.androidx.room.compiler) }
-}
+dependencies { debugImplementation(compose.uiTooling) }

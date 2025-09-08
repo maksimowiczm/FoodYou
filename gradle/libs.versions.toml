@@ -17,7 +17,6 @@ composeMultiplatformMaterial3 = "1.9.0-alpha04"
 composeShimmer = "1.3.3"
 datastorePreferences = "1.1.7"
 gmazzoBuildConfig = "5.6.7"
-kermit = "2.0.8"
 koin = "4.1.0"
 kotlin = "2.2.10"
 kotlinxCoroutinesCore = "1.10.2"
@@ -55,8 +54,7 @@ compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.
 jetbrains-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMultiplatformMaterial3" }
 gradle-android = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
-gradle-compose= { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "composeMultiplatform" }
-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+gradle-compose = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "composeMultiplatform" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
@@ -74,6 +72,12 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 sqlite-android = { module = "com.github.requery:sqlite-android", version.ref = "sqliteAndroid" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
+
+core-food = { group = "com.maksimowiczm.foodyou", name = "food" }
+core-fooddiary = { group = "com.maksimowiczm.foodyou", name = "fooddiary" }
+core-goals = { group = "com.maksimowiczm.foodyou", name = "goals" }
+core-shared = { group = "com.maksimowiczm.foodyou", name = "shared" }
+core-sponsorship = { group = "com.maksimowiczm.foodyou", name = "sponsorship" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -95,7 +99,6 @@ business-library-implementation = [
     "koin-core",
     "kotlinx-coroutines-core",
     "kotlinx-datetime",
-    "androidx-datastore-preferences-core"
 ]
 
 feature-library-implementation = [

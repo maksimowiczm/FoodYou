@@ -16,6 +16,8 @@ pluginManagement {
 
 includeBuild("platform/build-logic")
 
+includeBuild("FoodYouCore")
+
 dependencyResolutionManagement {
     repositories {
         google {
@@ -47,8 +49,6 @@ include(":business:shared")
 include(":business:food")
 
 include(":business:fooddiary")
-
-include(":business:sponsorship")
 
 include(":business:settings")
 
@@ -99,3 +99,5 @@ include(":feature:onboarding")
 include(":feature:database:exportcsvproducts")
 
 include(":feature:food:diary:quickadd")
+
+include(":infrastructure")

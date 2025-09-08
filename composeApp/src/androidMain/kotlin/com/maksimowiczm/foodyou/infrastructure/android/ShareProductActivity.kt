@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.DownloadProductApp
 import foodyou.app.generated.resources.*

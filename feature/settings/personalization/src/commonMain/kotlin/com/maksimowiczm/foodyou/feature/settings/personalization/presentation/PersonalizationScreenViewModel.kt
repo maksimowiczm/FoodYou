@@ -3,7 +3,8 @@ package com.maksimowiczm.foodyou.feature.settings.personalization.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
-import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -11,8 +12,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-internal class PersonalizationScreenViewModel(private val settingsRepository: SettingsRepository) :
-    ViewModel() {
+internal class PersonalizationScreenViewModel(
+    private val settingsRepository: UserPreferencesRepository<Settings>
+) : ViewModel() {
 
     private val _secureScreen = settingsRepository.observe().map { it.secureScreen }
     val secureScreen =

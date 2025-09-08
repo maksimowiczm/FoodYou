@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.home.meals.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 internal class MealsCardsSettingsViewModel(
-    private val mealsPreferencesRepository: MealsPreferencesRepository
+    private val mealsPreferencesRepository: UserPreferencesRepository<MealsPreferences>
 ) : ViewModel() {
 
     private val _preferences = mealsPreferencesRepository.observe()

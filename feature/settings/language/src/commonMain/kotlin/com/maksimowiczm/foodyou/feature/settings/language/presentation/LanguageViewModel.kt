@@ -2,9 +2,10 @@ package com.maksimowiczm.foodyou.feature.settings.language.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.business.settings.domain.Translation
 import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -14,7 +15,7 @@ import kotlinx.coroutines.runBlocking
 
 internal class LanguageViewModel(
     private val translationRepository: TranslationRepository,
-    private val settingsRepository: SettingsRepository,
+    private val settingsRepository: UserPreferencesRepository<Settings>,
 ) : ViewModel() {
 
     private val translationsFlow = translationRepository.observe()

@@ -12,8 +12,8 @@ import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.IngredientMo
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import com.maksimowiczm.foodyou.shared.ui.ext.horizontal
 import com.maksimowiczm.foodyou.shared.ui.ext.vertical

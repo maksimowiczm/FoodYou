@@ -2,10 +2,10 @@ package com.maksimowiczm.foodyou.feature.food.recipe.presentation
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
-import com.maksimowiczm.foodyou.business.food.domain.RecipeIngredient
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.ui.res.Saver
+import com.maksimowiczm.foodyou.feature.shared.ui.Saver
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.RecipeIngredient
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 
 /** Represents a minimal data structure for an ingredient. Easy to save and restore in the state. */
 @Immutable

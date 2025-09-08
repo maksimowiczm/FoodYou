@@ -39,9 +39,9 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.feature.home.shared.FoodYouHomeCard
 import com.maksimowiczm.foodyou.feature.home.shared.HomeState
+import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.ui.ext.now
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalDateFormatter
 import foodyou.app.generated.resources.*

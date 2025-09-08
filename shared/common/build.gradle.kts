@@ -11,11 +11,6 @@ kotlin {
         namespace = "com.maksimowiczm.foodyou.shared.common"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
-
-        withHostTestBuilder {}
-
-        withDeviceTestBuilder { sourceSetTreeName = "test" }
-            .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
     }
 
     val xcfName = "shared:commonKit"
@@ -29,7 +24,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kermit)
+            implementation(libs.core.shared)
         }
 
         commonTest { dependencies { implementation(libs.kotlin.test) } }

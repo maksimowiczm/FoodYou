@@ -2,15 +2,15 @@ package com.maksimowiczm.foodyou.business.food.domain
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.maksimowiczm.foodyou.business.shared.domain.RemoteMediatorFactory
-import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.shared.domain.search.SearchQuery
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 
 interface FoodSearchRepository {
     fun search(
-        query: QueryType,
+        query: SearchQuery,
         source: FoodSource.Type,
         config: PagingConfig,
         remoteMediatorFactory: RemoteMediatorFactory?,
@@ -18,20 +18,20 @@ interface FoodSearchRepository {
     ): Flow<PagingData<FoodSearch>>
 
     fun searchRecent(
-        query: QueryType,
+        query: SearchQuery,
         config: PagingConfig,
         now: LocalDateTime,
         excludedRecipeId: FoodId.Recipe?,
     ): Flow<PagingData<FoodSearch>>
 
     fun searchFoodCount(
-        query: QueryType,
+        query: SearchQuery,
         source: FoodSource.Type,
         excludedRecipeId: FoodId.Recipe?,
     ): Flow<Int>
 
     fun searchRecentFoodCount(
-        query: QueryType,
+        query: SearchQuery,
         now: LocalDateTime,
         excludedRecipeId: FoodId.Recipe?,
     ): Flow<Int>

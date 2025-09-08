@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.feature.food.diary.quickadd
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryId
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryRepository
-import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.shared.common.application.log.Logger
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntryId
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
+import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.shared.domain.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow

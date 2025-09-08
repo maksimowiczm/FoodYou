@@ -4,9 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.business.sponsorship.domain.SponsorRepository
-import com.maksimowiczm.foodyou.business.sponsorship.domain.Sponsorship
-import com.maksimowiczm.foodyou.business.sponsorship.domain.SponsorshipPreferences
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.SponsorshipPreferences
+import com.maksimowiczm.foodyou.sponsorship.domain.repository.SponsorRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +21,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-internal class SponsorMessagesViewModel(private val sponsorRepository: SponsorRepository) :
-    ViewModel() {
+internal class SponsorMessagesViewModel(
+    private val sponsorRepository: SponsorRepository,
+    private val preferencesRepository: UserPreferencesRepository<SponsorshipPreferences>,
+) : ViewModel() {
 
     private val remoteAllowedOnce = MutableStateFlow(false)
 
     private val preferenceRemoteAllowedOnce =
-        sponsorRepository.observeSponsorshipPreferences().map { it.remoteAllowed }
+        preferencesRepository.observe().map { it.remoteAllowed }
 
     private val _sponsorsAllowed =
         combine(preferenceRemoteAllowedOnce, remoteAllowedOnce.filterNotNull()) { always, oneTime ->
@@ -45,11 +48,7 @@ internal class SponsorMessagesViewModel(private val sponsorRepository: SponsorRe
     }
 
     fun allowAlways() {
-        viewModelScope.launch {
-            sponsorRepository.setSponsorshipPreferences(
-                SponsorshipPreferences(remoteAllowed = true)
-            )
-        }
+        viewModelScope.launch { preferencesRepository.update { copy(remoteAllowed = true) } }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.feature.home.meals.card
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryId
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntryId
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import kotlinx.datetime.LocalTime
 
 @Immutable

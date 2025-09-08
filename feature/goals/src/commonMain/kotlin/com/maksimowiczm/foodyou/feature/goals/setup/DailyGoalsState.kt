@@ -2,10 +2,10 @@ package com.maksimowiczm.foodyou.feature.goals.setup
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DailyGoal
-import com.maksimowiczm.foodyou.business.fooddiary.domain.WeeklyGoals
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientsHelper
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
+import com.maksimowiczm.foodyou.goals.domain.entity.DailyGoal
+import com.maksimowiczm.foodyou.goals.domain.entity.WeeklyGoals
+import com.maksimowiczm.foodyou.shared.domain.food.NutrientsHelper
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFactsField
 import kotlin.math.roundToInt
 
 @Composable

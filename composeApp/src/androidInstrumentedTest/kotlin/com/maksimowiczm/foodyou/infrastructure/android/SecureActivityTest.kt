@@ -3,18 +3,21 @@ package com.maksimowiczm.foodyou.infrastructure.android
 import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import androidx.lifecycle.lifecycleScope
 import androidx.test.core.app.launchActivity
-import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import org.junit.Test
 import org.koin.android.ext.android.get
+import org.koin.core.qualifier.named
 
 class SecureActivityTest {
     private inline fun <reified A : FoodYouAbstractActivity> testSecureFlag() {
         launchActivity<A>().use {
             it.onActivity { activity ->
                 with(activity) {
-                    val settingsRepository: SettingsRepository = get()
+                    val settingsRepository: UserPreferencesRepository<Settings> =
+                        get(named(Settings::class.qualifiedName!!))
 
                     // Run on same thread as the activity
                     lifecycleScope.launch {

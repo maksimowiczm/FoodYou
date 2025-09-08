@@ -14,7 +14,8 @@ kotlin {
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets.commonMain.dependencies {
-        implementation(projects.business.sponsorship)
+        implementation(libs.core.shared)
+        implementation(libs.core.sponsorship)
         implementation(libs.compose.shimmer)
         implementation(libs.androidx.paging.common)
         implementation(libs.kotlinx.datetime)

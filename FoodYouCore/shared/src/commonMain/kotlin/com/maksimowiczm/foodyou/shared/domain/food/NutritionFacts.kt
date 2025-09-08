@@ -1,0 +1,382 @@
+package com.maksimowiczm.foodyou.shared.domain.food
+
+/** Represents the nutritional facts of a food product. All values are in grams. */
+data class NutritionFacts(
+    val proteins: NutrientValue = NutrientValue.Incomplete(null),
+    val carbohydrates: NutrientValue = NutrientValue.Incomplete(null),
+    val energy: NutrientValue = NutrientValue.Incomplete(null),
+    val fats: NutrientValue = NutrientValue.Incomplete(null),
+    val saturatedFats: NutrientValue = NutrientValue.Incomplete(null),
+    val transFats: NutrientValue = NutrientValue.Incomplete(null),
+    val monounsaturatedFats: NutrientValue = NutrientValue.Incomplete(null),
+    val polyunsaturatedFats: NutrientValue = NutrientValue.Incomplete(null),
+    val omega3: NutrientValue = NutrientValue.Incomplete(null),
+    val omega6: NutrientValue = NutrientValue.Incomplete(null),
+    val sugars: NutrientValue = NutrientValue.Incomplete(null),
+    val addedSugars: NutrientValue = NutrientValue.Incomplete(null),
+    val dietaryFiber: NutrientValue = NutrientValue.Incomplete(null),
+    val solubleFiber: NutrientValue = NutrientValue.Incomplete(null),
+    val insolubleFiber: NutrientValue = NutrientValue.Incomplete(null),
+    val salt: NutrientValue = NutrientValue.Incomplete(null),
+    val cholesterol: NutrientValue = NutrientValue.Incomplete(null),
+    val caffeine: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminA: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminB1: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminB2: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminB3: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminB5: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminB6: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminB7: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminB9: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminB12: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminC: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminD: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminE: NutrientValue = NutrientValue.Incomplete(null),
+    val vitaminK: NutrientValue = NutrientValue.Incomplete(null),
+    val manganese: NutrientValue = NutrientValue.Incomplete(null),
+    val magnesium: NutrientValue = NutrientValue.Incomplete(null),
+    val potassium: NutrientValue = NutrientValue.Incomplete(null),
+    val calcium: NutrientValue = NutrientValue.Incomplete(null),
+    val copper: NutrientValue = NutrientValue.Incomplete(null),
+    val zinc: NutrientValue = NutrientValue.Incomplete(null),
+    val sodium: NutrientValue = NutrientValue.Incomplete(null),
+    val iron: NutrientValue = NutrientValue.Incomplete(null),
+    val phosphorus: NutrientValue = NutrientValue.Incomplete(null),
+    val selenium: NutrientValue = NutrientValue.Incomplete(null),
+    val iodine: NutrientValue = NutrientValue.Incomplete(null),
+    val chromium: NutrientValue = NutrientValue.Incomplete(null),
+) {
+    operator fun times(multiplier: Double): NutritionFacts =
+        NutritionFacts(
+            proteins = proteins * multiplier,
+            carbohydrates = carbohydrates * multiplier,
+            energy = energy * multiplier,
+            fats = fats * multiplier,
+            saturatedFats = saturatedFats * multiplier,
+            transFats = transFats * multiplier,
+            monounsaturatedFats = monounsaturatedFats * multiplier,
+            polyunsaturatedFats = polyunsaturatedFats * multiplier,
+            omega3 = omega3 * multiplier,
+            omega6 = omega6 * multiplier,
+            sugars = sugars * multiplier,
+            addedSugars = addedSugars * multiplier,
+            dietaryFiber = dietaryFiber * multiplier,
+            solubleFiber = solubleFiber * multiplier,
+            insolubleFiber = insolubleFiber * multiplier,
+            salt = salt * multiplier,
+            cholesterol = cholesterol * multiplier,
+            caffeine = caffeine * multiplier,
+            vitaminA = vitaminA * multiplier,
+            vitaminB1 = vitaminB1 * multiplier,
+            vitaminB2 = vitaminB2 * multiplier,
+            vitaminB3 = vitaminB3 * multiplier,
+            vitaminB5 = vitaminB5 * multiplier,
+            vitaminB6 = vitaminB6 * multiplier,
+            vitaminB7 = vitaminB7 * multiplier,
+            vitaminB9 = vitaminB9 * multiplier,
+            vitaminB12 = vitaminB12 * multiplier,
+            vitaminC = vitaminC * multiplier,
+            vitaminD = vitaminD * multiplier,
+            vitaminE = vitaminE * multiplier,
+            vitaminK = vitaminK * multiplier,
+            manganese = manganese * multiplier,
+            magnesium = magnesium * multiplier,
+            potassium = potassium * multiplier,
+            calcium = calcium * multiplier,
+            copper = copper * multiplier,
+            zinc = zinc * multiplier,
+            sodium = sodium * multiplier,
+            iron = iron * multiplier,
+            phosphorus = phosphorus * multiplier,
+            selenium = selenium * multiplier,
+            iodine = iodine * multiplier,
+            chromium = chromium * multiplier,
+        )
+
+    operator fun div(divisor: Double): NutritionFacts =
+        NutritionFacts(
+            proteins = proteins / divisor,
+            carbohydrates = carbohydrates / divisor,
+            energy = energy / divisor,
+            fats = fats / divisor,
+            saturatedFats = saturatedFats / divisor,
+            transFats = transFats / divisor,
+            monounsaturatedFats = monounsaturatedFats / divisor,
+            polyunsaturatedFats = polyunsaturatedFats / divisor,
+            omega3 = omega3 / divisor,
+            omega6 = omega6 / divisor,
+            sugars = sugars / divisor,
+            addedSugars = addedSugars / divisor,
+            dietaryFiber = dietaryFiber / divisor,
+            solubleFiber = solubleFiber / divisor,
+            insolubleFiber = insolubleFiber / divisor,
+            salt = salt / divisor,
+            cholesterol = cholesterol / divisor,
+            caffeine = caffeine / divisor,
+            vitaminA = vitaminA / divisor,
+            vitaminB1 = vitaminB1 / divisor,
+            vitaminB2 = vitaminB2 / divisor,
+            vitaminB3 = vitaminB3 / divisor,
+            vitaminB5 = vitaminB5 / divisor,
+            vitaminB6 = vitaminB6 / divisor,
+            vitaminB7 = vitaminB7 / divisor,
+            vitaminB9 = vitaminB9 / divisor,
+            vitaminB12 = vitaminB12 / divisor,
+            vitaminC = vitaminC / divisor,
+            vitaminD = vitaminD / divisor,
+            vitaminE = vitaminE / divisor,
+            vitaminK = vitaminK / divisor,
+            manganese = manganese / divisor,
+            magnesium = magnesium / divisor,
+            potassium = potassium / divisor,
+            calcium = calcium / divisor,
+            copper = copper / divisor,
+            zinc = zinc / divisor,
+            sodium = sodium / divisor,
+            iron = iron / divisor,
+            phosphorus = phosphorus / divisor,
+            selenium = selenium / divisor,
+            iodine = iodine / divisor,
+            chromium = chromium / divisor,
+        )
+
+    operator fun plus(other: NutritionFacts): NutritionFacts =
+        NutritionFacts(
+            proteins = proteins + other.proteins,
+            carbohydrates = carbohydrates + other.carbohydrates,
+            energy = energy + other.energy,
+            fats = fats + other.fats,
+            saturatedFats = saturatedFats + other.saturatedFats,
+            transFats = transFats + other.transFats,
+            monounsaturatedFats = monounsaturatedFats + other.monounsaturatedFats,
+            polyunsaturatedFats = polyunsaturatedFats + other.polyunsaturatedFats,
+            omega3 = omega3 + other.omega3,
+            omega6 = omega6 + other.omega6,
+            sugars = sugars + other.sugars,
+            addedSugars = addedSugars + other.addedSugars,
+            dietaryFiber = dietaryFiber + other.dietaryFiber,
+            solubleFiber = solubleFiber + other.solubleFiber,
+            insolubleFiber = insolubleFiber + other.insolubleFiber,
+            salt = salt + other.salt,
+            cholesterol = cholesterol + other.cholesterol,
+            caffeine = caffeine + other.caffeine,
+            vitaminA = vitaminA + other.vitaminA,
+            vitaminB1 = vitaminB1 + other.vitaminB1,
+            vitaminB2 = vitaminB2 + other.vitaminB2,
+            vitaminB3 = vitaminB3 + other.vitaminB3,
+            vitaminB5 = vitaminB5 + other.vitaminB5,
+            vitaminB6 = vitaminB6 + other.vitaminB6,
+            vitaminB7 = vitaminB7 + other.vitaminB7,
+            vitaminB9 = vitaminB9 + other.vitaminB9,
+            vitaminB12 = vitaminB12 + other.vitaminB12,
+            vitaminC = vitaminC + other.vitaminC,
+            vitaminD = vitaminD + other.vitaminD,
+            vitaminE = vitaminE + other.vitaminE,
+            vitaminK = vitaminK + other.vitaminK,
+            manganese = manganese + other.manganese,
+            magnesium = magnesium + other.magnesium,
+            potassium = potassium + other.potassium,
+            calcium = calcium + other.calcium,
+            copper = copper + other.copper,
+            zinc = zinc + other.zinc,
+            sodium = sodium + other.sodium,
+            iron = iron + other.iron,
+            phosphorus = phosphorus + other.phosphorus,
+            selenium = selenium + other.selenium,
+            iodine = iodine + other.iodine,
+            chromium = chromium + other.chromium,
+        )
+
+    companion object {
+        val Empty =
+            NutritionFacts(
+                proteins = NutrientValue.Complete(0.0),
+                carbohydrates = NutrientValue.Complete(0.0),
+                energy = NutrientValue.Complete(0.0),
+                fats = NutrientValue.Complete(0.0),
+                saturatedFats = NutrientValue.Complete(0.0),
+                transFats = NutrientValue.Complete(0.0),
+                monounsaturatedFats = NutrientValue.Complete(0.0),
+                polyunsaturatedFats = NutrientValue.Complete(0.0),
+                omega3 = NutrientValue.Complete(0.0),
+                omega6 = NutrientValue.Complete(0.0),
+                sugars = NutrientValue.Complete(0.0),
+                addedSugars = NutrientValue.Complete(0.0),
+                dietaryFiber = NutrientValue.Complete(0.0),
+                solubleFiber = NutrientValue.Complete(0.0),
+                insolubleFiber = NutrientValue.Complete(0.0),
+                salt = NutrientValue.Complete(0.0),
+                cholesterol = NutrientValue.Complete(0.0),
+                caffeine = NutrientValue.Complete(0.0),
+                vitaminA = NutrientValue.Complete(0.0),
+                vitaminB1 = NutrientValue.Complete(0.0),
+                vitaminB2 = NutrientValue.Complete(0.0),
+                vitaminB3 = NutrientValue.Complete(0.0),
+                vitaminB5 = NutrientValue.Complete(0.0),
+                vitaminB6 = NutrientValue.Complete(0.0),
+                vitaminB7 = NutrientValue.Complete(0.0),
+                vitaminB9 = NutrientValue.Complete(0.0),
+                vitaminB12 = NutrientValue.Complete(0.0),
+                vitaminC = NutrientValue.Complete(0.0),
+                vitaminD = NutrientValue.Complete(0.0),
+                vitaminE = NutrientValue.Complete(0.0),
+                vitaminK = NutrientValue.Complete(0.0),
+                manganese = NutrientValue.Complete(0.0),
+                magnesium = NutrientValue.Complete(0.0),
+                potassium = NutrientValue.Complete(0.0),
+                calcium = NutrientValue.Complete(0.0),
+                copper = NutrientValue.Complete(0.0),
+                zinc = NutrientValue.Complete(0.0),
+                sodium = NutrientValue.Complete(0.0),
+                iron = NutrientValue.Complete(0.0),
+                phosphorus = NutrientValue.Complete(0.0),
+                selenium = NutrientValue.Complete(0.0),
+                iodine = NutrientValue.Complete(0.0),
+                chromium = NutrientValue.Complete(0.0),
+            )
+
+        fun requireAll(
+            proteins: NutrientValue,
+            carbohydrates: NutrientValue,
+            energy: NutrientValue,
+            fats: NutrientValue,
+            saturatedFats: NutrientValue,
+            transFats: NutrientValue,
+            monounsaturatedFats: NutrientValue,
+            polyunsaturatedFats: NutrientValue,
+            omega3: NutrientValue,
+            omega6: NutrientValue,
+            sugars: NutrientValue,
+            addedSugars: NutrientValue,
+            dietaryFiber: NutrientValue,
+            solubleFiber: NutrientValue,
+            insolubleFiber: NutrientValue,
+            salt: NutrientValue,
+            cholesterol: NutrientValue,
+            caffeine: NutrientValue,
+            vitaminA: NutrientValue,
+            vitaminB1: NutrientValue,
+            vitaminB2: NutrientValue,
+            vitaminB3: NutrientValue,
+            vitaminB5: NutrientValue,
+            vitaminB6: NutrientValue,
+            vitaminB7: NutrientValue,
+            vitaminB9: NutrientValue,
+            vitaminB12: NutrientValue,
+            vitaminC: NutrientValue,
+            vitaminD: NutrientValue,
+            vitaminE: NutrientValue,
+            vitaminK: NutrientValue,
+            manganese: NutrientValue,
+            magnesium: NutrientValue,
+            potassium: NutrientValue,
+            calcium: NutrientValue,
+            copper: NutrientValue,
+            zinc: NutrientValue,
+            sodium: NutrientValue,
+            iron: NutrientValue,
+            phosphorus: NutrientValue,
+            selenium: NutrientValue,
+            iodine: NutrientValue,
+            chromium: NutrientValue,
+        ): NutritionFacts =
+            NutritionFacts(
+                proteins = proteins,
+                carbohydrates = carbohydrates,
+                energy = energy,
+                fats = fats,
+                saturatedFats = saturatedFats,
+                transFats = transFats,
+                monounsaturatedFats = monounsaturatedFats,
+                polyunsaturatedFats = polyunsaturatedFats,
+                omega3 = omega3,
+                omega6 = omega6,
+                sugars = sugars,
+                addedSugars = addedSugars,
+                dietaryFiber = dietaryFiber,
+                solubleFiber = solubleFiber,
+                insolubleFiber = insolubleFiber,
+                salt = salt,
+                cholesterol = cholesterol,
+                caffeine = caffeine,
+                vitaminA = vitaminA,
+                vitaminB1 = vitaminB1,
+                vitaminB2 = vitaminB2,
+                vitaminB3 = vitaminB3,
+                vitaminB5 = vitaminB5,
+                vitaminB6 = vitaminB6,
+                vitaminB7 = vitaminB7,
+                vitaminB9 = vitaminB9,
+                vitaminB12 = vitaminB12,
+                vitaminC = vitaminC,
+                vitaminD = vitaminD,
+                vitaminE = vitaminE,
+                vitaminK = vitaminK,
+                manganese = manganese,
+                magnesium = magnesium,
+                potassium = potassium,
+                calcium = calcium,
+                copper = copper,
+                zinc = zinc,
+                sodium = sodium,
+                iron = iron,
+                phosphorus = phosphorus,
+                selenium = selenium,
+                iodine = iodine,
+                chromium = chromium,
+            )
+    }
+}
+
+fun Iterable<NutritionFacts>.sum(): NutritionFacts =
+    this@sum.fold(NutritionFacts.Empty) { acc, nutrients -> acc + nutrients }
+
+operator fun NutritionFacts.get(field: NutritionFactsField): NutrientValue =
+    when (field) {
+        NutritionFactsField.Energy -> energy
+        NutritionFactsField.Proteins -> proteins
+        NutritionFactsField.Fats -> fats
+        NutritionFactsField.SaturatedFats -> saturatedFats
+        NutritionFactsField.TransFats -> transFats
+        NutritionFactsField.MonounsaturatedFats -> monounsaturatedFats
+        NutritionFactsField.PolyunsaturatedFats -> polyunsaturatedFats
+        NutritionFactsField.Omega3 -> omega3
+        NutritionFactsField.Omega6 -> omega6
+        NutritionFactsField.Carbohydrates -> carbohydrates
+        NutritionFactsField.Sugars -> sugars
+        NutritionFactsField.AddedSugars -> addedSugars
+        NutritionFactsField.DietaryFiber -> dietaryFiber
+        NutritionFactsField.SolubleFiber -> solubleFiber
+        NutritionFactsField.InsolubleFiber -> insolubleFiber
+        NutritionFactsField.Salt -> salt
+        NutritionFactsField.Cholesterol -> cholesterol
+        NutritionFactsField.Caffeine -> caffeine
+        NutritionFactsField.VitaminA -> vitaminA
+        NutritionFactsField.VitaminB1 -> vitaminB1
+        NutritionFactsField.VitaminB2 -> vitaminB2
+        NutritionFactsField.VitaminB3 -> vitaminB3
+        NutritionFactsField.VitaminB5 -> vitaminB5
+        NutritionFactsField.VitaminB6 -> vitaminB6
+        NutritionFactsField.VitaminB7 -> vitaminB7
+        NutritionFactsField.VitaminB9 -> vitaminB9
+        NutritionFactsField.VitaminB12 -> vitaminB12
+        NutritionFactsField.VitaminC -> vitaminC
+        NutritionFactsField.VitaminD -> vitaminD
+        NutritionFactsField.VitaminE -> vitaminE
+        NutritionFactsField.VitaminK -> vitaminK
+        NutritionFactsField.Manganese -> manganese
+        NutritionFactsField.Magnesium -> magnesium
+        NutritionFactsField.Potassium -> potassium
+        NutritionFactsField.Calcium -> calcium
+        NutritionFactsField.Copper -> copper
+        NutritionFactsField.Zinc -> zinc
+        NutritionFactsField.Sodium -> sodium
+        NutritionFactsField.Iron -> iron
+        NutritionFactsField.Phosphorus -> phosphorus
+        NutritionFactsField.Selenium -> selenium
+        NutritionFactsField.Iodine -> iodine
+        NutritionFactsField.Chromium -> chromium
+    }
+
+val NutritionFacts.isComplete: Boolean
+    get() = NutritionFactsField.entries.all { get(it).isComplete }

@@ -2,15 +2,16 @@ package com.maksimowiczm.foodyou.feature.home.meals.card
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCase
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntry
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntry
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ManualDiaryEntryRepository
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferencesRepository
+import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
+import com.maksimowiczm.foodyou.business.fooddiary.domain.ObserveDiaryMealsUseCase
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryEntry
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodRecipe
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.FoodDiaryEntry
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntry
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepository
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +30,7 @@ internal class MealsCardsViewModel(
     private val observeDiaryMealsUseCase: ObserveDiaryMealsUseCase,
     private val foodEntryRepository: FoodDiaryEntryRepository,
     private val manualEntryRepository: ManualDiaryEntryRepository,
-    mealsPreferencesRepository: MealsPreferencesRepository,
+    mealsPreferencesRepository: UserPreferencesRepository<MealsPreferences>,
 ) : ViewModel() {
     private val dateState = MutableStateFlow<LocalDate?>(null)
 

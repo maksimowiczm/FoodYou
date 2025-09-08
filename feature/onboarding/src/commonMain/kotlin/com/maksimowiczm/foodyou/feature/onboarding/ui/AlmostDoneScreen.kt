@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.shared.ui.BackHandler
 import foodyou.app.generated.resources.*
@@ -79,11 +80,13 @@ fun AlmostDoneScreen(modifier: Modifier = Modifier) {
                 text = stringResource(Res.string.headline_preparing_your_food_diary),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center,
             )
             Text(
                 text = stringResource(Res.string.headline_please_wait),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
             )
         }
     }

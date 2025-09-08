@@ -1,6 +1,9 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
-data class FoodSearchPreferences(val openFoodFacts: OpenFoodFacts, val usda: Usda) {
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferences
+
+data class FoodSearchPreferences(val openFoodFacts: OpenFoodFacts, val usda: Usda) :
+    UserPreferences {
     data class OpenFoodFacts(val enabled: Boolean)
 
     data class Usda(val enabled: Boolean, val apiKey: String?)

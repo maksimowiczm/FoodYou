@@ -3,7 +3,8 @@ package com.maksimowiczm.foodyou.feature.settings.personalization.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 internal class PersonalizeNutritionFactsViewModel(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: UserPreferencesRepository<Settings>
 ) : ViewModel() {
 
     private val _order = settingsRepository.observe().map { it.nutrientsOrder }

@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import com.maksimowiczm.foodyou.feature.food.product.presentation.create.CreateProductEvent
 import com.maksimowiczm.foodyou.feature.food.product.presentation.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.feature.food.product.ui.create.CreateProductApp
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 

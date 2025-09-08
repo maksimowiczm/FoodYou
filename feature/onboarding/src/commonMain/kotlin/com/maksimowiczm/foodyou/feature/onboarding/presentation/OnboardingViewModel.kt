@@ -2,10 +2,11 @@ package com.maksimowiczm.foodyou.feature.onboarding.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.ImportSwissFoodCompositionDatabaseUseCase
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
+import com.maksimowiczm.foodyou.business.food.domain.ImportSwissFoodCompositionDatabaseUseCase
 import com.maksimowiczm.foodyou.feature.onboarding.ui.OnboardingState
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.last
@@ -15,7 +16,7 @@ import kotlinx.coroutines.sync.withLock
 
 internal class OnboardingViewModel(
     private val importSwissUseCase: ImportSwissFoodCompositionDatabaseUseCase,
-    private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
+    private val foodSearchPreferencesRepository: UserPreferencesRepository<FoodSearchPreferences>,
 ) : ViewModel() {
     private val eventBus = MutableStateFlow<OnboardingEvent?>(null)
     val events = eventBus.filterNotNull()

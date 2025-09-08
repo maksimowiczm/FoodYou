@@ -5,10 +5,10 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.food.product.ui.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.food.product.ui.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.UpdateRecipeScreen
+import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.navigation.domain.CreateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateRecipeDestination
-import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
 
 internal fun NavGraphBuilder.foodNavigationGraphBuilder(

@@ -7,8 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
-import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
-import com.maksimowiczm.foodyou.business.settings.infrastructure.SystemDetails
+import com.maksimowiczm.foodyou.app.infrastructure.SystemDetails
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidClipboardManager
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utils.ClipboardManagerProvider
@@ -17,14 +18,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
+import org.koin.core.qualifier.named
 
 abstract class FoodYouAbstractActivity : AppCompatActivity() {
 
     private val systemDetails: SystemDetails
         get() = get()
 
-    private val settingsRepository: SettingsRepository
-        get() = get()
+    private val settingsRepository: UserPreferencesRepository<Settings>
+        get() = get(named(Settings::class.qualifiedName!!))
 
     fun setContent(content: @Composable () -> Unit) {
         enableEdgeToEdge()

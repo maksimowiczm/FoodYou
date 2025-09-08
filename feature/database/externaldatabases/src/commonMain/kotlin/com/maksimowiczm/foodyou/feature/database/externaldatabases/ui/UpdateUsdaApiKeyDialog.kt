@@ -12,16 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferencesRepository
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_cancel
-import foodyou.app.generated.resources.action_save
-import foodyou.app.generated.resources.action_set_key
-import foodyou.app.generated.resources.headline_api_key
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
+import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import org.koin.core.qualifier.named
 
 @Composable
 fun UpdateUsdaApiKeyDialog(
@@ -29,7 +27,8 @@ fun UpdateUsdaApiKeyDialog(
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val foodSearchPreferencesRepository: FoodSearchPreferencesRepository = koinInject()
+    val foodSearchPreferencesRepository: UserPreferencesRepository<FoodSearchPreferences> =
+        koinInject(named(FoodSearchPreferences::class.qualifiedName!!))
     val foodSearchPreferences =
         foodSearchPreferencesRepository.observe().collectAsStateWithLifecycle(null).value
 

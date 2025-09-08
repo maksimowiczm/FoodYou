@@ -2,11 +2,12 @@ package com.maksimowiczm.foodyou.feature.home.goals
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.ObserveDiaryMealsUseCase
-import com.maksimowiczm.foodyou.business.fooddiary.domain.GoalsRepository
-import com.maksimowiczm.foodyou.business.settings.domain.SettingsRepository
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
-import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
+import com.maksimowiczm.foodyou.business.fooddiary.domain.ObserveDiaryMealsUseCase
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFactsField
+import com.maksimowiczm.foodyou.shared.domain.food.sum
+import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDate
 
 internal class GoalsViewModel(
-    private val settingsRepository: SettingsRepository,
+    private val settingsRepository: UserPreferencesRepository<Settings>,
     private val observeDiaryMealsUseCase: ObserveDiaryMealsUseCase,
     private val goalsRepository: GoalsRepository,
 ) : ViewModel() {

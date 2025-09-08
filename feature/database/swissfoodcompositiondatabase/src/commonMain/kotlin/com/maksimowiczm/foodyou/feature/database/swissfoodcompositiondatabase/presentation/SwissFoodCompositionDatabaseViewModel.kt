@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.database.swissfoodcompositiondatabase.p
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.application.ImportSwissFoodCompositionDatabaseUseCase
+import com.maksimowiczm.foodyou.business.food.domain.ImportSwissFoodCompositionDatabaseUseCase
 import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay

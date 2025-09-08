@@ -2,24 +2,27 @@ package com.maksimowiczm.foodyou.feature.food.diary.update.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.application.UnpackFoodDiaryEntryUseCase
-import com.maksimowiczm.foodyou.business.fooddiary.application.UpdateFoodDiaryEntryUseCase
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryId
-import com.maksimowiczm.foodyou.business.fooddiary.domain.FoodDiaryEntryRepository
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealRepository
-import com.maksimowiczm.foodyou.business.fooddiary.domain.possibleMeasurementTypes
-import com.maksimowiczm.foodyou.business.fooddiary.domain.suggestions
-import com.maksimowiczm.foodyou.business.shared.domain.date.DateProvider
-import com.maksimowiczm.foodyou.shared.common.application.log.FoodYouLogger
-import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFood
+import com.maksimowiczm.foodyou.fooddiary.domain.entity.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.usecase.UnpackFoodDiaryEntryUseCase
+import com.maksimowiczm.foodyou.fooddiary.domain.usecase.UpdateFoodDiaryEntryUseCase
+import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
+import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.domain.measurement.MeasurementType
 import com.maksimowiczm.foodyou.shared.ui.ext.now
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapValues
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -125,3 +128,35 @@ internal class UpdateFoodDiaryEntryViewModel(
         const val TAG = "UpdateFoodDiaryEntryViewModel"
     }
 }
+
+// These extensions will probably be moved into business when user would be able to choose between
+// metric and imperial measurements. This is why they are wrapped in Flow, so they can be
+// easily converted to the appropriate measurement system later.
+
+val DiaryFood.possibleMeasurementTypes: Flow<List<MeasurementType>>
+    get() =
+        flowOf(
+            MeasurementType.entries.filter { type ->
+                when (type) {
+                    MeasurementType.Gram -> !isLiquid
+                    MeasurementType.Ounce -> !isLiquid
+                    MeasurementType.Milliliter -> isLiquid
+                    MeasurementType.FluidOunce -> isLiquid
+                    MeasurementType.Package -> totalWeight != null
+                    MeasurementType.Serving -> servingWeight != null
+                }
+            }
+        )
+
+val DiaryFood.suggestions: Flow<List<Measurement>>
+    get() =
+        possibleMeasurementTypes.mapValues {
+            when (it) {
+                MeasurementType.Gram -> Measurement.Gram(Measurement.Gram.DEFAULT)
+                MeasurementType.Ounce -> Measurement.Ounce(Measurement.Ounce.DEFAULT)
+                MeasurementType.Package -> Measurement.Package(Measurement.Package.DEFAULT)
+                MeasurementType.Serving -> Measurement.Serving(Measurement.Serving.DEFAULT)
+                MeasurementType.Milliliter -> Measurement.Milliliter(Measurement.Milliliter.DEFAULT)
+                MeasurementType.FluidOunce -> Measurement.FluidOunce(Measurement.FluidOunce.DEFAULT)
+            }
+        }
