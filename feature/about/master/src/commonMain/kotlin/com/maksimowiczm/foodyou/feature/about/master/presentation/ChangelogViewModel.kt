@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -27,17 +26,6 @@ internal class ChangelogViewModel(
             initialValue = null,
         )
 
-    private val settingsFlow = settingsRepository.observe()
-
-    init {
-        combine(_changelog, settingsFlow) { changelog, settings ->
-                if (settings.lastRememberedVersion != changelog.currentVersion?.version) {
-                    settingsRepository.update { copy(hidePreviewDialog = false) }
-                }
-            }
-            .launchIn(viewModelScope)
-    }
-
     private val isPreviewRelease =
         _changelog
             .map { it.currentVersion?.isPreview ?: true }
@@ -47,7 +35,7 @@ internal class ChangelogViewModel(
                 initialValue = false,
             )
 
-    private val hidePreviewDialogSetting = settingsFlow.map { it.hidePreviewDialog }
+    private val hidePreviewDialogSetting = settingsRepository.observe().map { it.hidePreviewDialog }
     private val hide = savedStateHandle.getStateFlow("hide", false)
 
     val showDialog =

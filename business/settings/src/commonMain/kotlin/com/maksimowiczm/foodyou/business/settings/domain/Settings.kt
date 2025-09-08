@@ -12,4 +12,5 @@ data class Settings(
     val expandGoalCard: Boolean,
     val onboardingFinished: Boolean,
     val energyFormat: EnergyFormat,
+    val appLaunchInfo: AppLaunchInfo,
 ) : UserPreferences

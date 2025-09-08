@@ -5,13 +5,17 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.maksimowiczm.foodyou.business.settings.domain.AppLaunchInfo
 import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlin.collections.map
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -29,6 +33,7 @@ internal class DataStoreSettingsRepository(private val dataStore: DataStore<Pref
     }
 }
 
+@OptIn(ExperimentalTime::class)
 private fun Preferences.toSettings(): Settings =
     Settings(
         lastRememberedVersion = this[SettingsPreferencesKeys.lastRememberedVersion],
@@ -40,8 +45,10 @@ private fun Preferences.toSettings(): Settings =
         expandGoalCard = this[SettingsPreferencesKeys.expandGoalCard] ?: true,
         onboardingFinished = this[SettingsPreferencesKeys.onboardingFinished] ?: false,
         energyFormat = this.getEnergyFormat(SettingsPreferencesKeys.energyFormat),
+        appLaunchInfo = this.getAppLaunchInfo(),
     )
 
+@OptIn(ExperimentalTime::class)
 private fun MutablePreferences.applySettings(settings: Settings): MutablePreferences = apply {
     setWithNull(SettingsPreferencesKeys.lastRememberedVersion, settings.lastRememberedVersion)
     setWithNull(SettingsPreferencesKeys.hidePreviewDialog, settings.hidePreviewDialog)
@@ -52,6 +59,7 @@ private fun MutablePreferences.applySettings(settings: Settings): MutablePrefere
     setWithNull(SettingsPreferencesKeys.expandGoalCard, settings.expandGoalCard)
     setWithNull(SettingsPreferencesKeys.onboardingFinished, settings.onboardingFinished)
     setEnergyFormat(SettingsPreferencesKeys.energyFormat, settings.energyFormat)
+    setAppLaunchInfo(settings.appLaunchInfo)
 }
 
 private fun <T> MutablePreferences.setWithNull(key: Preferences.Key<T>, value: T?) {
@@ -87,6 +95,54 @@ private fun Preferences.getEnergyFormat(key: Preferences.Key<Int>): EnergyFormat
     runCatching { EnergyFormat.entries[this[key] ?: EnergyFormat.DEFAULT.ordinal] }
         .getOrElse { EnergyFormat.DEFAULT }
 
+@OptIn(ExperimentalTime::class)
+private fun Preferences.getAppLaunchInfo(): AppLaunchInfo =
+    AppLaunchInfo(
+        firstLaunch = getInstantFromEpochSeconds(SettingsPreferencesKeys.firstLaunchEpoch),
+        firstLaunchCurrentVersion =
+            run {
+                val version = this[SettingsPreferencesKeys.firstLaunchCurrentVersionName]
+                val epoch =
+                    getInstantFromEpochSeconds(
+                        SettingsPreferencesKeys.firstLaunchCurrentVersionEpoch
+                    )
+                if (version != null && epoch != null) version to epoch else null
+            },
+        launchesCount = this[SettingsPreferencesKeys.launchesCount] ?: 0,
+    )
+
+@OptIn(ExperimentalTime::class)
+private fun MutablePreferences.setAppLaunchInfo(appLaunchInfo: AppLaunchInfo): MutablePreferences =
+    apply {
+        setInstantAsEpochSeconds(
+            SettingsPreferencesKeys.firstLaunchEpoch,
+            appLaunchInfo.firstLaunch,
+        )
+        setWithNull(
+            SettingsPreferencesKeys.firstLaunchCurrentVersionName,
+            appLaunchInfo.firstLaunchCurrentVersion?.first,
+        )
+        setInstantAsEpochSeconds(
+            SettingsPreferencesKeys.firstLaunchCurrentVersionEpoch,
+            appLaunchInfo.firstLaunchCurrentVersion?.second,
+        )
+        setWithNull(SettingsPreferencesKeys.launchesCount, appLaunchInfo.launchesCount)
+    }
+
+@OptIn(ExperimentalTime::class)
+private fun Preferences.getInstantFromEpochSeconds(key: Preferences.Key<Long>): Instant? =
+    this[key]?.let(Instant::fromEpochSeconds)
+
+@OptIn(ExperimentalTime::class)
+private fun MutablePreferences.setInstantAsEpochSeconds(
+    key: Preferences.Key<Long>,
+    value: Instant?,
+) =
+    when (val epochSeconds = value?.epochSeconds) {
+        null -> remove(key)
+        else -> this[key] = epochSeconds
+    }
+
 private object SettingsPreferencesKeys {
     val lastRememberedVersion = stringPreferencesKey("settings:lastRememberedVersion")
     val hidePreviewDialog = booleanPreferencesKey("settings:hidePreviewDialog")
@@ -97,4 +153,8 @@ private object SettingsPreferencesKeys {
     val expandGoalCard = booleanPreferencesKey("settings:expandGoalCard")
     val onboardingFinished = booleanPreferencesKey("settings:onboardingFinished")
     val energyFormat = intPreferencesKey("settings:energyFormat")
+    val firstLaunchEpoch = longPreferencesKey("first_launch_epoch")
+    val firstLaunchCurrentVersionName = stringPreferencesKey("first_launch_current_version_name")
+    val firstLaunchCurrentVersionEpoch = longPreferencesKey("first_launch_current_version_epoch")
+    val launchesCount = intPreferencesKey("launches_count")
 }

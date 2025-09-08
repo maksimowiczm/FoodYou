@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -21,7 +22,9 @@ import kotlinx.datetime.todayIn
 internal class DateProviderImpl(private val logger: Logger) : DateProvider {
 
     override fun now(): LocalDateTime =
-        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        nowInstant().toLocalDateTime(TimeZone.currentSystemDefault())
+
+    override fun nowInstant(): Instant = Clock.System.now()
 
     override fun observeDateTime(): Flow<LocalDateTime> = flow {
         while (true) {
