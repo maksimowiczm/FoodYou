@@ -7,42 +7,26 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsCardsLayout
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
-import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
-internal class DataStoreMealsPreferencesRepository(private val dataStore: DataStore<Preferences>) :
-    UserPreferencesRepository<MealsPreferences> {
-    override fun observe(): Flow<MealsPreferences> =
-        dataStore.data.map(Preferences::toMealsPreferences)
+internal class DataStoreMealsPreferencesRepository(dataStore: DataStore<Preferences>) :
+    AbstractDataStoreUserPreferencesRepository<MealsPreferences>(dataStore) {
+    override fun Preferences.toUserPreferences(): MealsPreferences =
+        MealsPreferences(
+            layout = getLayout(),
+            useTimeBasedSorting = this[MealsPreferencesDataStoreKeys.useTimeBasedSorting] ?: false,
+            ignoreAllDayMeals = this[MealsPreferencesDataStoreKeys.ignoreAllDayMeals] ?: false,
+        )
 
-    override suspend fun update(transform: MealsPreferences.() -> MealsPreferences) {
-        dataStore.updateData { preferences ->
-            val current = preferences.toMealsPreferences()
-            val updated = current.transform()
-            preferences.toMutablePreferences().applyMealsPreferences(updated)
-        }
+    override fun MutablePreferences.applyUserPreferences(updated: MealsPreferences) {
+        this[MealsPreferencesDataStoreKeys.layout] = updated.layout.ordinal
+        this[MealsPreferencesDataStoreKeys.useTimeBasedSorting] = updated.useTimeBasedSorting
+        this[MealsPreferencesDataStoreKeys.ignoreAllDayMeals] = updated.ignoreAllDayMeals
     }
 }
 
-private fun Preferences.toMealsPreferences(): MealsPreferences =
-    MealsPreferences(
-        layout = getLayout(),
-        useTimeBasedSorting = this[MealsPreferencesDataStoreKeys.useTimeBasedSorting] ?: false,
-        ignoreAllDayMeals = this[MealsPreferencesDataStoreKeys.ignoreAllDayMeals] ?: false,
-    )
-
 private fun Preferences.getLayout(): MealsCardsLayout =
-    this[MealsPreferencesDataStoreKeys.layout]?.let { MealsCardsLayout.entries[it] }
-        ?: MealsCardsLayout.default
-
-private fun MutablePreferences.applyMealsPreferences(
-    preferences: MealsPreferences
-): MutablePreferences = apply {
-    this[MealsPreferencesDataStoreKeys.layout] = preferences.layout.ordinal
-    this[MealsPreferencesDataStoreKeys.useTimeBasedSorting] = preferences.useTimeBasedSorting
-    this[MealsPreferencesDataStoreKeys.ignoreAllDayMeals] = preferences.ignoreAllDayMeals
-}
+    runCatching { this[MealsPreferencesDataStoreKeys.layout]?.let { MealsCardsLayout.entries[it] } }
+        .getOrNull() ?: MealsCardsLayout.default
 
 private object MealsPreferencesDataStoreKeys {
     val layout = intPreferencesKey("fooddiary:meals_preferences:layout")

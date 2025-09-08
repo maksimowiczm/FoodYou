@@ -12,54 +12,38 @@ import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
-import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlin.collections.map
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
-internal class DataStoreSettingsRepository(private val dataStore: DataStore<Preferences>) :
-    UserPreferencesRepository<Settings> {
+internal class DataStoreSettingsRepository(dataStore: DataStore<Preferences>) :
+    AbstractDataStoreUserPreferencesRepository<Settings>(dataStore) {
+    override fun Preferences.toUserPreferences(): Settings =
+        Settings(
+            lastRememberedVersion = this[SettingsPreferencesKeys.lastRememberedVersion],
+            hidePreviewDialog = this[SettingsPreferencesKeys.hidePreviewDialog] ?: false,
+            showTranslationWarning = this[SettingsPreferencesKeys.showTranslationWarning] ?: true,
+            nutrientsOrder = this.getNutrientsOrder(SettingsPreferencesKeys.nutrientsOrder),
+            secureScreen = this[SettingsPreferencesKeys.secureScreen] ?: false,
+            homeCardOrder = this.getHomeCardOrder(SettingsPreferencesKeys.homeCardOrder),
+            expandGoalCard = this[SettingsPreferencesKeys.expandGoalCard] ?: true,
+            onboardingFinished = this[SettingsPreferencesKeys.onboardingFinished] ?: false,
+            energyFormat = this.getEnergyFormat(SettingsPreferencesKeys.energyFormat),
+            appLaunchInfo = this.getAppLaunchInfo(),
+        )
 
-    override fun observe(): Flow<Settings> = dataStore.data.map(Preferences::toSettings)
-
-    override suspend fun update(transform: Settings.() -> Settings) {
-        dataStore.updateData { preferences ->
-            val currentSettings = preferences.toSettings()
-            val newSettings = currentSettings.transform()
-            preferences.toMutablePreferences().applySettings(newSettings)
-        }
+    override fun MutablePreferences.applyUserPreferences(updated: Settings) {
+        this[SettingsPreferencesKeys.lastRememberedVersion] = updated.lastRememberedVersion
+        this[SettingsPreferencesKeys.hidePreviewDialog] = updated.hidePreviewDialog
+        this[SettingsPreferencesKeys.showTranslationWarning] = updated.showTranslationWarning
+        setNutrientsOrder(SettingsPreferencesKeys.nutrientsOrder, updated.nutrientsOrder)
+        this[SettingsPreferencesKeys.secureScreen] = updated.secureScreen
+        setHomeCardOrder(SettingsPreferencesKeys.homeCardOrder, updated.homeCardOrder)
+        this[SettingsPreferencesKeys.expandGoalCard] = updated.expandGoalCard
+        this[SettingsPreferencesKeys.onboardingFinished] = updated.onboardingFinished
+        setEnergyFormat(SettingsPreferencesKeys.energyFormat, updated.energyFormat)
+        setAppLaunchInfo(updated.appLaunchInfo)
     }
-}
-
-@OptIn(ExperimentalTime::class)
-private fun Preferences.toSettings(): Settings =
-    Settings(
-        lastRememberedVersion = this[SettingsPreferencesKeys.lastRememberedVersion],
-        hidePreviewDialog = this[SettingsPreferencesKeys.hidePreviewDialog] ?: false,
-        showTranslationWarning = this[SettingsPreferencesKeys.showTranslationWarning] ?: true,
-        nutrientsOrder = this.getNutrientsOrder(SettingsPreferencesKeys.nutrientsOrder),
-        secureScreen = this[SettingsPreferencesKeys.secureScreen] ?: false,
-        homeCardOrder = this.getHomeCardOrder(SettingsPreferencesKeys.homeCardOrder),
-        expandGoalCard = this[SettingsPreferencesKeys.expandGoalCard] ?: true,
-        onboardingFinished = this[SettingsPreferencesKeys.onboardingFinished] ?: false,
-        energyFormat = this.getEnergyFormat(SettingsPreferencesKeys.energyFormat),
-        appLaunchInfo = this.getAppLaunchInfo(),
-    )
-
-@OptIn(ExperimentalTime::class)
-private fun MutablePreferences.applySettings(settings: Settings): MutablePreferences = apply {
-    setWithNull(SettingsPreferencesKeys.lastRememberedVersion, settings.lastRememberedVersion)
-    setWithNull(SettingsPreferencesKeys.hidePreviewDialog, settings.hidePreviewDialog)
-    setWithNull(SettingsPreferencesKeys.showTranslationWarning, settings.showTranslationWarning)
-    setNutrientsOrder(SettingsPreferencesKeys.nutrientsOrder, settings.nutrientsOrder)
-    setWithNull(SettingsPreferencesKeys.secureScreen, settings.secureScreen)
-    setHomeCardOrder(SettingsPreferencesKeys.homeCardOrder, settings.homeCardOrder)
-    setWithNull(SettingsPreferencesKeys.expandGoalCard, settings.expandGoalCard)
-    setWithNull(SettingsPreferencesKeys.onboardingFinished, settings.onboardingFinished)
-    setEnergyFormat(SettingsPreferencesKeys.energyFormat, settings.energyFormat)
-    setAppLaunchInfo(settings.appLaunchInfo)
 }
 
 private fun <T> MutablePreferences.setWithNull(key: Preferences.Key<T>, value: T?) {
