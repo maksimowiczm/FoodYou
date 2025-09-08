@@ -79,7 +79,6 @@ core-fooddiary = { group = "com.maksimowiczm.foodyou", name = "fooddiary" }
 core-goals = { group = "com.maksimowiczm.foodyou", name = "goals" }
 core-shared = { group = "com.maksimowiczm.foodyou", name = "shared" }
 core-sponsorship = { group = "com.maksimowiczm.foodyou", name = "sponsorship" }
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
