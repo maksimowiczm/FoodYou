@@ -19,6 +19,7 @@ import io.ktor.utils.io.CancellationException
 internal class OpenFoodFactsRemoteDataSource(
     private val client: HttpClient,
     private val networkConfig: NetworkConfig,
+    private val rateLimiter: OpenFoodFactsRateLimiter,
     private val logger: Logger,
 ) {
     suspend fun getProduct(
@@ -29,16 +30,21 @@ internal class OpenFoodFactsRemoteDataSource(
             val countries = countries?.lowercase()
             val url = "${networkConfig.openFoodFactsApiUrl}/api/v2/product/$barcode"
 
+            if (!rateLimiter.canMakeProductRequest()) {
+                logger.d(TAG) { "Rate limit exceeded for OpenFoodFacts API" }
+                return Result.failure(RemoteFoodException.OpenFoodFacts.RateLimit())
+            }
+
+            rateLimiter.recordProductRequest()
+
             val response =
                 client.get(url) {
                     userAgent(networkConfig.userAgent)
-
                     timeout {
                         requestTimeoutMillis = TIMEOUT
                         connectTimeoutMillis = TIMEOUT
                         socketTimeoutMillis = TIMEOUT
                     }
-
                     countries?.let { parameter("countries", countries) }
                     parameter("fields", FIELDS)
                 }
@@ -67,6 +73,13 @@ internal class OpenFoodFactsRemoteDataSource(
         pageSize: Int = 50,
     ): OpenFoodPageResponse =
         try {
+            if (!rateLimiter.canMakeSearchRequest()) {
+                logger.d(TAG) { "Rate limit exceeded for OpenFoodFacts API" }
+                throw RemoteFoodException.OpenFoodFacts.RateLimit()
+            }
+
+            rateLimiter.recordSearchRequest()
+
             client
                 .get("${networkConfig.openFoodFactsApiUrl}/cgi/search.pl?search_simple=1&json=1") {
                     parameter("search_terms", query)

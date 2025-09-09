@@ -36,7 +36,7 @@ internal fun FoodSearchErrorCard(
 ) {
     when (error) {
         is RemoteFoodException.Unknown,
-        is RemoteFoodException.OpenFoodFacts.Timeout ->
+        is RemoteFoodException.OpenFoodFacts.RateLimit ->
             FoodSearchErrorCard(message = error.message, onRetry = onRetry, modifier = modifier)
 
         is RemoteFoodException.ProductNotFoundException -> Unit

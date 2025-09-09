@@ -23,6 +23,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.network.RemoteProductRequestF
 import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.LocalOpenFoodFactsPagingHelper
 import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.OpenFoodFactsFacade
 import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.OpenFoodFactsProductMapper
+import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.OpenFoodFactsRateLimiter
 import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.LocalUsdaPagingHelper
@@ -207,9 +208,11 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
             }
         }
         .onClose { it?.close() }
+    singleOf(::OpenFoodFactsRateLimiter)
     factory {
         OpenFoodFactsRemoteDataSource(
             client = get(named(OpenFoodFactsRemoteDataSource::class.qualifiedName!!)),
+            get(),
             get(),
             get(),
         )
