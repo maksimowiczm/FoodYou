@@ -1,0 +1,6 @@
+New features
+- Added quick add diary entry.
+- Added polling for new features.
+
+Changes
+- Updated recipe icon size in food lists.
