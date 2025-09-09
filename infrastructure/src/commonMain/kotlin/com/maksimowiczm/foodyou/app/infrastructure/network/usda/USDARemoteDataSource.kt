@@ -13,6 +13,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
+import kotlin.coroutines.cancellation.CancellationException
 
 internal class USDARemoteDataSource(
     private val client: HttpClient,
@@ -51,7 +52,11 @@ internal class USDARemoteDataSource(
 
             return Result.success(product)
         } catch (e: Exception) {
-            return Result.failure(e)
+            when (e) {
+                is CancellationException -> throw e
+                is RemoteFoodException -> throw e
+                else -> throw RemoteFoodException.Unknown(e.message)
+            }
         }
     }
 
@@ -60,33 +65,40 @@ internal class USDARemoteDataSource(
         page: Int?,
         pageSize: Int,
         apiKey: String?,
-    ): UsdaFoodPageResponse {
-        val url = "${networkConfig.usdaApiUrl}/fdc/v1/foods/search"
+    ): UsdaFoodPageResponse =
+        try {
+            val url = "${networkConfig.usdaApiUrl}/fdc/v1/foods/search"
 
-        val response =
-            client.get(url) {
-                userAgent(networkConfig.userAgent)
+            val response =
+                client.get(url) {
+                    userAgent(networkConfig.userAgent)
 
-                parameter("query", query)
-                parameter("dataType", "Branded,Foundation")
-                parameter("pageSize", pageSize)
-                parameter("pageNumber", page)
-                parameter("api_key", apiKey ?: "DEMO_KEY")
-                parameter("sortBy", "dataType.keyword")
-                parameter("sortOrder", "asc")
+                    parameter("query", query)
+                    parameter("dataType", "Branded,Foundation")
+                    parameter("pageSize", pageSize)
+                    parameter("pageNumber", page)
+                    parameter("api_key", apiKey ?: "DEMO_KEY")
+                    parameter("sortBy", "dataType.keyword")
+                    parameter("sortOrder", "asc")
+                }
+
+            if (response.status == HttpStatusCode.Companion.TooManyRequests) {
+                throw RemoteFoodException.USDA.RateLimitException()
             }
 
-        if (response.status == HttpStatusCode.Companion.TooManyRequests) {
-            throw RemoteFoodException.USDA.RateLimitException()
-        }
+            if (response.status == HttpStatusCode.Companion.Forbidden) {
+                val error = response.getError()
+                throw error
+            }
 
-        if (response.status == HttpStatusCode.Companion.Forbidden) {
-            val error = response.getError()
-            throw error
+            response.body<UsdaFoodPageResponseImpl>()
+        } catch (e: Exception) {
+            when (e) {
+                is CancellationException -> throw e
+                is RemoteFoodException -> throw e
+                else -> throw RemoteFoodException.Unknown(e.message)
+            }
         }
-
-        return response.body<UsdaFoodPageResponseImpl>()
-    }
 
     private suspend fun HttpResponse.getError(): Exception =
         with(body<String>()) {
@@ -96,8 +108,10 @@ internal class USDARemoteDataSource(
                 contains("API_KEY_DISABLED") -> RemoteFoodException.USDA.ApiKeyDisabledException()
                 contains("API_KEY_UNAUTHORIZED") ->
                     RemoteFoodException.USDA.ApiKeyUnauthorizedException()
+
                 contains("API_KEY_UNVERIFIED") ->
                     RemoteFoodException.USDA.ApiKeyUnverifiedException()
+
                 else -> Exception("Unknown USDA API error: $this")
             }
         }
