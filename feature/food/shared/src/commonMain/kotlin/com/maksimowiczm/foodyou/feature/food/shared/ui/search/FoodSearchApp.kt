@@ -197,15 +197,17 @@ private fun FoodSearchApp(
                 bottom = 56.dp + 32.dp,
             )
 
-        Box(Modifier.fillMaxSize().zIndex(20f)) {
-            if (pages?.itemCount == 0 && pages.loadState.append !is LoadState.Loading) {
+        if (pages?.itemCount == 0 && pages.loadState.append !is LoadState.Loading) {
+            Box(Modifier.fillMaxSize()) {
                 Text(
                     text = stringResource(Res.string.neutral_no_food_found),
                     modifier = Modifier.safeContentPadding().align(Alignment.Center),
                 )
             }
+        }
 
-            if (pages?.delayedLoadingState() == true) {
+        if (pages?.delayedLoadingState() == true) {
+            Box(Modifier.fillMaxSize().zIndex(20f)) {
                 ContainedLoadingIndicator(
                     modifier =
                         Modifier.align(Alignment.TopCenter)
