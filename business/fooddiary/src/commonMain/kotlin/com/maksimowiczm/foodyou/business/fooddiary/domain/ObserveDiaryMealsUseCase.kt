@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.fooddiary.domain.repository.ManualDiaryEntryRepo
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -29,7 +30,7 @@ internal class ObserveDiaryMealsUseCaseImpl(
         return combine(
                 mealRepository.observeMeals(),
                 mealsPreferencesRepository.observe(),
-                dateProvider.observeTime(),
+                dateProvider.observeTime(1.seconds),
             ) { meals, prefs, time ->
                 val timeBased = prefs.useTimeBasedSorting
                 val ignoreAllDayMeals = prefs.ignoreAllDayMeals

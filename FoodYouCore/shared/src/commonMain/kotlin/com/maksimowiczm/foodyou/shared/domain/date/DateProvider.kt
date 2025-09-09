@@ -1,25 +1,37 @@
 package com.maksimowiczm.foodyou.shared.domain.date
 
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalTime::class)
 interface DateProvider {
 
-    fun now(): LocalDateTime
-
     fun nowInstant(): Instant
 
-    /** Returns a [Flow] that emits the current date and time and updates it every second. */
-    fun observeDateTime(): Flow<LocalDateTime>
+    fun now(timeZone: TimeZone = TimeZone.currentSystemDefault()): LocalDateTime =
+        nowInstant().toLocalDateTime(timeZone)
+
+    fun observeInstant(interval: Duration = 1.minutes): Flow<Instant>
+
+    fun observe(
+        interval: Duration = 1.minutes,
+        timeZone: TimeZone = TimeZone.currentSystemDefault(),
+    ): Flow<LocalDateTime> = observeInstant(interval).map { it.toLocalDateTime(timeZone) }
 
     /** Returns a [Flow] that emits the current date and updates it at midnight. */
-    fun observeDate(): Flow<LocalDate>
+    fun observeDate(timeZone: TimeZone = TimeZone.currentSystemDefault()): Flow<LocalDate>
 
-    /** Returns a [Flow] that emits the current time and updates it every minute. */
-    fun observeTime(): Flow<LocalTime>
+    fun observeTime(
+        interval: Duration = 1.minutes,
+        timeZone: TimeZone = TimeZone.currentSystemDefault(),
+    ): Flow<LocalTime> = observe(interval, timeZone).map { it.time }
 }

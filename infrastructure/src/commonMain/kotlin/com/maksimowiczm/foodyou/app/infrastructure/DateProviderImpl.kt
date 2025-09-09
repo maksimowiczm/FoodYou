@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.app.infrastructure
 
 import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
-import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import kotlin.time.Clock
+import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.delay
@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
@@ -19,70 +17,27 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 
 @OptIn(ExperimentalTime::class)
-internal class DateProviderImpl(private val logger: Logger) : DateProvider {
-
-    override fun now(): LocalDateTime =
-        nowInstant().toLocalDateTime(TimeZone.currentSystemDefault())
-
+internal class DateProviderImpl : DateProvider {
     override fun nowInstant(): Instant = Clock.System.now()
 
-    override fun observeDateTime(): Flow<LocalDateTime> = flow {
+    override fun observeInstant(interval: Duration): Flow<Instant> = flow {
         while (true) {
-            val dateTime = now()
-            emit(dateTime)
-
-            val millisUntilNextSecond = 1000L - dateTime.nanosecond / 1_000_000
-            delay(millisUntilNextSecond)
+            emit(nowInstant())
+            delay(interval)
         }
     }
 
-    override fun observeDate(): Flow<LocalDate> = flow {
-        var currentDate = now().date
-
-        emit(currentDate)
-
+    override fun observeDate(timeZone: TimeZone): Flow<LocalDate> = flow {
         while (true) {
+            val currentDate = nowInstant().toLocalDateTime(timeZone).date
+            emit(currentDate)
+
             val now = Clock.System.now()
             val midnight =
-                Clock.System.todayIn(TimeZone.currentSystemDefault())
-                    .plus(1, DateTimeUnit.DAY)
-                    .atStartOfDayIn(TimeZone.currentSystemDefault())
+                Clock.System.todayIn(timeZone).plus(1, DateTimeUnit.DAY).atStartOfDayIn(timeZone)
             val delayMillis = (midnight - now).inWholeMilliseconds
 
-            logger.d(TAG) {
-                buildString {
-                    appendLine("Current time: $now")
-                    appendLine("Midnight: $midnight")
-                    appendLine("Delay millis: $delayMillis")
-                }
-            }
             delay(delayMillis)
-            logger.d(TAG) { "Woke up" }
-
-            val newDate = now().date
-            logger.d(TAG) { "New date: $newDate" }
-
-            if (newDate != currentDate) {
-                currentDate = newDate
-
-                logger.d(TAG) { "Emitting new date: $currentDate" }
-                emit(currentDate)
-            }
         }
-    }
-
-    override fun observeTime(): Flow<LocalTime> = flow {
-        while (true) {
-            val time = now().time
-            emit(time)
-
-            // Delay until minute changes
-            val secondsUntilNextMinute = 60 - time.second
-            delay(secondsUntilNextMinute * 1000L)
-        }
-    }
-
-    private companion object {
-        private const val TAG = "DateProviderImpl"
     }
 }

@@ -12,7 +12,6 @@ import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import com.maksimowiczm.foodyou.shared.domain.log.logAndReturnFailure
 import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDate
 
@@ -71,7 +70,7 @@ class UnpackFoodDiaryEntryUseCase(
             // Replace the entry with unpacked entries
             entryRepository.delete(entry.id)
 
-            val now = dateProvider.observeDateTime().first()
+            val now = dateProvider.now()
             val unpacked = food.unpack(measurement)
             unpacked.forEach {
                 val entry =
