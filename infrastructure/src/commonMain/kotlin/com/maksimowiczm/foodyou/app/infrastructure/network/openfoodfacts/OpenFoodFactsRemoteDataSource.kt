@@ -9,12 +9,12 @@ import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.plugins.timeout
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
+import io.ktor.utils.io.CancellationException
 
 internal class OpenFoodFactsRemoteDataSource(
     private val client: HttpClient,
@@ -24,12 +24,12 @@ internal class OpenFoodFactsRemoteDataSource(
     suspend fun getProduct(
         barcode: String,
         countries: String? = null,
-    ): Result<OpenFoodFactsProduct> = runCatching {
-        val countries = countries?.lowercase()
-        val url = "${networkConfig.openFoodFactsApiUrl}/api/v2/product/$barcode"
+    ): Result<OpenFoodFactsProduct> {
+        try {
+            val countries = countries?.lowercase()
+            val url = "${networkConfig.openFoodFactsApiUrl}/api/v2/product/$barcode"
 
-        val response =
-            try {
+            val response =
                 client.get(url) {
                     userAgent(networkConfig.userAgent)
 
@@ -42,18 +42,22 @@ internal class OpenFoodFactsRemoteDataSource(
                     countries?.let { parameter("countries", countries) }
                     parameter("fields", FIELDS)
                 }
-            } catch (_: SocketTimeoutException) {
-                throw RemoteFoodException.OpenFoodFacts.Timeout()
+
+            if (response.status == HttpStatusCode.NotFound) {
+                logger.d(TAG) { "Product not found for code: $barcode" }
+                return Result.failure(RemoteFoodException.ProductNotFoundException())
             }
 
-        if (response.status == HttpStatusCode.NotFound) {
-            logger.d(TAG) { "Product not found for code: $barcode" }
-            return Result.failure(RemoteFoodException.ProductNotFoundException())
+            val product = response.body<OpenFoodFactsProductResponseV2>()
+
+            return Result.success(product).map { it.product }
+        } catch (e: Exception) {
+            when (e) {
+                is kotlin.coroutines.cancellation.CancellationException -> throw e
+                is RemoteFoodException -> throw e
+                else -> throw RemoteFoodException.Unknown(e.message)
+            }
         }
-
-        val product = response.body<OpenFoodFactsProductResponseV2>()
-
-        return Result.success(product).map { it.product }
     }
 
     suspend fun queryProducts(
@@ -62,16 +66,24 @@ internal class OpenFoodFactsRemoteDataSource(
         page: Int? = null,
         pageSize: Int = 50,
     ): OpenFoodPageResponse =
-        client
-            .get("${networkConfig.openFoodFactsApiUrl}/cgi/search.pl?search_simple=1&json=1") {
-                parameter("search_terms", query)
-                parameter("countries", countries)
-                parameter("page", page)
-                parameter("page_size", pageSize)
-                parameter("sort_by", "product_name")
-                parameter("fields", FIELDS)
+        try {
+            client
+                .get("${networkConfig.openFoodFactsApiUrl}/cgi/search.pl?search_simple=1&json=1") {
+                    parameter("search_terms", query)
+                    parameter("countries", countries)
+                    parameter("page", page)
+                    parameter("page_size", pageSize)
+                    parameter("sort_by", "product_name")
+                    parameter("fields", FIELDS)
+                }
+                .body<OpenFoodFactsPageResponseV1>()
+        } catch (e: Exception) {
+            when (e) {
+                is CancellationException -> throw e
+                is RemoteFoodException -> throw e
+                else -> throw RemoteFoodException.Unknown(e.message)
             }
-            .body<OpenFoodFactsPageResponseV1>()
+        }
 
     private companion object {
         private const val TAG = "OpenFoodFactsRemoteDataSource"
