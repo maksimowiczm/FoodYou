@@ -223,8 +223,10 @@ private fun SponsorMessagesScreen(
 
                 if (sponsorship != null) {
                     val showDateHeader =
-                        nextSponsorship == null || sponsorship.dateTime != nextSponsorship.dateTime
-                    val previousSameDate = previousSponsorship?.dateTime == sponsorship.dateTime
+                        nextSponsorship == null ||
+                            sponsorship.dateTime.date != nextSponsorship.dateTime.date
+                    val previousSameDate =
+                        previousSponsorship?.dateTime?.date == sponsorship.dateTime.date
 
                     Sent {
                         ChatBubble(
