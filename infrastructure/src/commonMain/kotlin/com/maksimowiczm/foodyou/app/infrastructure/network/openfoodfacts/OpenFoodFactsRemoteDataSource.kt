@@ -9,7 +9,6 @@ import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.plugins.timeout
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -19,6 +18,7 @@ import io.ktor.http.userAgent
 internal class OpenFoodFactsRemoteDataSource(
     private val client: HttpClient,
     private val networkConfig: NetworkConfig,
+    private val rateLimiter: OpenFoodFactsRateLimiter,
     private val logger: Logger,
 ) {
     suspend fun getProduct(
@@ -28,22 +28,25 @@ internal class OpenFoodFactsRemoteDataSource(
         val countries = countries?.lowercase()
         val url = "${networkConfig.openFoodFactsApiUrl}/api/v2/product/$barcode"
 
+        if (!rateLimiter.canMakeProductRequest()) {
+            logger.d(TAG) { "Rate limit exceeded for OpenFoodFacts API" }
+            return Result.failure(RemoteFoodException.OpenFoodFacts.RateLimit())
+        }
+
+        rateLimiter.recordProductRequest()
+
         val response =
-            try {
-                client.get(url) {
-                    userAgent(networkConfig.userAgent)
+            client.get(url) {
+                userAgent(networkConfig.userAgent)
 
-                    timeout {
-                        requestTimeoutMillis = TIMEOUT
-                        connectTimeoutMillis = TIMEOUT
-                        socketTimeoutMillis = TIMEOUT
-                    }
-
-                    countries?.let { parameter("countries", countries) }
-                    parameter("fields", FIELDS)
+                timeout {
+                    requestTimeoutMillis = TIMEOUT
+                    connectTimeoutMillis = TIMEOUT
+                    socketTimeoutMillis = TIMEOUT
                 }
-            } catch (_: SocketTimeoutException) {
-                throw RemoteFoodException.OpenFoodFacts.Timeout()
+
+                countries?.let { parameter("countries", countries) }
+                parameter("fields", FIELDS)
             }
 
         if (response.status == HttpStatusCode.NotFound) {
@@ -61,8 +64,15 @@ internal class OpenFoodFactsRemoteDataSource(
         countries: String? = null,
         page: Int? = null,
         pageSize: Int = 50,
-    ): OpenFoodPageResponse =
-        client
+    ): OpenFoodPageResponse {
+        if (!rateLimiter.canMakeSearchRequest()) {
+            logger.d(TAG) { "Rate limit exceeded for OpenFoodFacts API" }
+            throw RemoteFoodException.OpenFoodFacts.RateLimit()
+        }
+
+        rateLimiter.recordSearchRequest()
+
+        return client
             .get("${networkConfig.openFoodFactsApiUrl}/cgi/search.pl?search_simple=1&json=1") {
                 parameter("search_terms", query)
                 parameter("countries", countries)
@@ -72,6 +82,7 @@ internal class OpenFoodFactsRemoteDataSource(
                 parameter("fields", FIELDS)
             }
             .body<OpenFoodFactsPageResponseV1>()
+    }
 
     private companion object {
         private const val TAG = "OpenFoodFactsRemoteDataSource"

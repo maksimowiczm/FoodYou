@@ -89,7 +89,7 @@ private fun DownloadErrorCard(
 ) {
     val text =
         when (error) {
-            is RemoteFoodException.OpenFoodFacts.Timeout -> error.message
+            is RemoteFoodException.OpenFoodFacts.RateLimit -> error.message
 
             is RemoteFoodException.ProductNotFoundException ->
                 stringResource(Res.string.error_product_not_found)

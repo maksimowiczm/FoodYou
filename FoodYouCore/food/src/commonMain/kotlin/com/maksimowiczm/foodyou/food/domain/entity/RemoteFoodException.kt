@@ -26,10 +26,8 @@ sealed class RemoteFoodException(message: String?) : Exception(message) {
     }
 
     sealed class OpenFoodFacts(message: String) : RemoteFoodException(message) {
-        class Timeout :
-            OpenFoodFacts(
-                "OpenFoodFacts request timed out. You either have a slow connection or exceeded the API rate limit."
-            )
+        class RateLimit :
+            OpenFoodFacts("OpenFoodFacts API rate limit exceeded. Please try again later.")
     }
 
     companion object {
