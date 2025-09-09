@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.home.master
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,8 +24,8 @@ import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.feature.home.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.home.goals.GoalsCard
 import com.maksimowiczm.foodyou.feature.home.meals.card.MealsCards
+import com.maksimowiczm.foodyou.feature.home.poll.PollsCard
 import com.maksimowiczm.foodyou.feature.home.shared.rememberHomeState
-import com.maksimowiczm.foodyou.shared.ui.ext.add
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -78,15 +77,18 @@ fun HomeScreen(
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues.add(bottom = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = paddingValues,
         ) {
+            item {
+                PollsCard(modifier = Modifier.padding(horizontal = 8.dp).padding(bottom = 8.dp))
+            }
+
             items(order) {
                 when (it) {
                     HomeCard.Calendar ->
                         CalendarCard(
                             homeState = homeState,
-                            modifier = Modifier.padding(horizontal = 8.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp).padding(bottom = 8.dp),
                         )
 
                     HomeCard.Goals ->
@@ -94,7 +96,7 @@ fun HomeScreen(
                             homeState = homeState,
                             onClick = onGoalsCardClick,
                             onLongClick = onGoalsCardLongClick,
-                            modifier = Modifier.padding(horizontal = 8.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp).padding(bottom = 8.dp),
                         )
 
                     HomeCard.Meals ->
@@ -105,6 +107,7 @@ fun HomeScreen(
                             onEditEntry = onEditDiaryEntryClick,
                             onLongClick = onMealCardLongClick,
                             contentPadding = PaddingValues(horizontal = 8.dp),
+                            modifier = Modifier.padding(bottom = 8.dp),
                         )
                 }
             }

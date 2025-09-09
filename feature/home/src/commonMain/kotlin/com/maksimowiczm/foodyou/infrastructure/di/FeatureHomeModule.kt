@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.feature.home.master.HomeViewModel
 import com.maksimowiczm.foodyou.feature.home.meals.card.MealsCardsViewModel
 import com.maksimowiczm.foodyou.feature.home.meals.settings.MealsCardsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.home.personalization.HomePersonalizationViewModel
+import com.maksimowiczm.foodyou.feature.home.poll.PollsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -30,4 +31,11 @@ val featureHomeModule = module {
         )
     }
     viewModel { HomePersonalizationViewModel(settingsRepository = userPreferencesRepository()) }
+
+    viewModel {
+        PollsViewModel(
+            observeActivePollUseCase = get(),
+            pollPreferencesRepository = userPreferencesRepository(),
+        )
+    }
 }

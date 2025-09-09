@@ -30,6 +30,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDAFacade
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDAProductMapper
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.USDARemoteMediatorFactory
+import com.maksimowiczm.foodyou.app.infrastructure.poll.pollModule
 import com.maksimowiczm.foodyou.app.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomDatabaseDumpService
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomFoodDiaryEntryRepository
@@ -256,4 +257,6 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
         .bind<ProductRemoteMediatorFactory>()
 
     factoryOf(::FoodRemoteMediatorFactoryAggregateImpl).bind<FoodRemoteMediatorFactoryAggregate>()
+
+    pollModule()
 }

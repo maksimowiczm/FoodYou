@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.business.settings.di
 
 import com.maksimowiczm.foodyou.business.settings.domain.AppLaunchEventHandler
+import com.maksimowiczm.foodyou.business.settings.domain.ObserveActivePollUseCase
 import com.maksimowiczm.foodyou.business.settings.domain.ObserveChangelogUseCase
 import com.maksimowiczm.foodyou.business.shared.di.eventHandler
 import com.maksimowiczm.foodyou.business.shared.di.userPreferencesRepository
@@ -13,6 +14,14 @@ val businessSettingsModule = module {
         AppLaunchEventHandler(
             settingsRepository = userPreferencesRepository(),
             observeChangelogUseCase = get(),
+        )
+    }
+    factory {
+        ObserveActivePollUseCase(
+            settingsRepository = userPreferencesRepository(),
+            pollPreferencesRepository = userPreferencesRepository(),
+            pollRepository = get(),
+            dateProvider = get(),
         )
     }
 }
