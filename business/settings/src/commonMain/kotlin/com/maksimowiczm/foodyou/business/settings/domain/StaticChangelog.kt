@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_1_0,
                 v_3_0_0,
                 v_3_0_0_rc_2,
                 v_3_0_0_rc_1,
@@ -36,6 +37,23 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_1_0 =
+        Version(
+            version = "3.1.0",
+            date = LocalDate(2025, 9, 10),
+            newFeatures =
+                listOf(
+                    "Added quick add diary entry.",
+                    "Added rate limiting for Open Food Facts API requests to prevent IP bans.",
+                    "Added feature poll, vote for what should be built next.",
+                ),
+            changes = listOf("Updated recipe icon size in food lists."),
+            bugFixes =
+                listOf(
+                    "Fix sponsor bubbles not displaying correctly for messages sent on the same day."
+                ),
+        )
 
     val v_3_0_0 =
         Version(
@@ -62,7 +80,6 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                     "Updated Swiss Food Composition Database to v7.0.",
                     "Updated CSV import/export flow.",
                 ),
-            isPreview = false,
         )
 
     val v_3_0_0_rc_2 =
