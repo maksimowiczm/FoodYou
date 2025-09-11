@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.FoodDiaryEntryCreatedEvent
+import com.maksimowiczm.foodyou.app.ui.shared.extension.now
 import com.maksimowiczm.foodyou.food.domain.entity.Food
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.Product
@@ -18,7 +19,6 @@ import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.domain.event.EventBus
 import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.domain.measurement.MeasurementType
-import com.maksimowiczm.foodyou.shared.ui.ext.now
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

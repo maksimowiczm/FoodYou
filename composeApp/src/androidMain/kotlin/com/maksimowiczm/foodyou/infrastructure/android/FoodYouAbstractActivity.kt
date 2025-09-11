@@ -9,14 +9,19 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
 import com.maksimowiczm.foodyou.app.infrastructure.SystemDetails
+import com.maksimowiczm.foodyou.shared.common.infrastructure.system.defaultLocale
+import com.maksimowiczm.foodyou.shared.compose.utility.AndroidClipboardManager
+import com.maksimowiczm.foodyou.shared.compose.utility.AndroidDateFormatter
+import com.maksimowiczm.foodyou.shared.compose.utility.ClipboardManagerProvider
+import com.maksimowiczm.foodyou.shared.compose.utility.DateFormatterProvider
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
-import com.maksimowiczm.foodyou.shared.ui.utils.AndroidClipboardManager
-import com.maksimowiczm.foodyou.shared.ui.utils.AndroidDateFormatter
-import com.maksimowiczm.foodyou.shared.ui.utils.ClipboardManagerProvider
-import com.maksimowiczm.foodyou.shared.ui.utils.DateFormatterProvider
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.neutral_copied
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.getString
 import org.koin.android.ext.android.get
 import org.koin.core.qualifier.named
 
@@ -30,10 +35,15 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
 
     fun setContent(content: @Composable () -> Unit) {
         enableEdgeToEdge()
+
+        val clipboardManager =
+            AndroidClipboardManager(this) { runBlocking { getString(Res.string.neutral_copied) } }
+        val dateFormatter = AndroidDateFormatter(this) { this.defaultLocale }
+
         with<AppCompatActivity, Unit>(this) {
             setContent {
-                ClipboardManagerProvider(AndroidClipboardManager(this)) {
-                    DateFormatterProvider(AndroidDateFormatter(this)) { content() }
+                ClipboardManagerProvider(clipboardManager) {
+                    DateFormatterProvider(dateFormatter) { content() }
                 }
             }
         }

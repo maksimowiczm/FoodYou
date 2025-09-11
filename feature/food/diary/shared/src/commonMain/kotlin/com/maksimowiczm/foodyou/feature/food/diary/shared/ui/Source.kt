@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.food.shared.ui.res.Icon
 import com.maksimowiczm.foodyou.feature.food.shared.ui.res.stringResource
+import com.maksimowiczm.foodyou.shared.compose.utility.LocalClipboardManager
 import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalClipboardManager
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.headline_source
 import org.jetbrains.compose.resources.stringResource

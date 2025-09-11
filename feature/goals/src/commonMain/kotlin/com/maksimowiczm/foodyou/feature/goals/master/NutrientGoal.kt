@@ -22,10 +22,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.shared.utility.LocalEnergyFormatter
+import com.maksimowiczm.foodyou.shared.compose.utility.formatClipZeros
 import com.maksimowiczm.foodyou.shared.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.shared.domain.food.NutritionFactsField
-import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

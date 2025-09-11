@@ -18,12 +18,12 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.goals.domain.entity.DailyGoal
+import com.maksimowiczm.foodyou.shared.compose.form.FormField
+import com.maksimowiczm.foodyou.shared.compose.form.doubleParser
+import com.maksimowiczm.foodyou.shared.compose.form.nonNegativeDoubleValidator
+import com.maksimowiczm.foodyou.shared.compose.form.rememberFormField
+import com.maksimowiczm.foodyou.shared.compose.utility.formatClipZeros
 import com.maksimowiczm.foodyou.shared.domain.food.NutritionFactsField
-import com.maksimowiczm.foodyou.shared.ui.form.FormField
-import com.maksimowiczm.foodyou.shared.ui.form.doubleParser
-import com.maksimowiczm.foodyou.shared.ui.form.nonNegativeDoubleValidator
-import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
-import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

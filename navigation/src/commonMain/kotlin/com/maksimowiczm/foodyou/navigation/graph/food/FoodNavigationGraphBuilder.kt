@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.navigation.domain.CreateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateRecipeDestination
-import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.shared.compose.navigation.forwardBackwardComposable
 
 internal fun NavGraphBuilder.foodNavigationGraphBuilder(
     updateProductOnBack: () -> Unit,

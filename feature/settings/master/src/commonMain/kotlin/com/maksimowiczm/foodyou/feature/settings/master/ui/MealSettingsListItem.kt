@@ -8,7 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
+import com.maksimowiczm.foodyou.app.ui.shared.component.SettingsListItem
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

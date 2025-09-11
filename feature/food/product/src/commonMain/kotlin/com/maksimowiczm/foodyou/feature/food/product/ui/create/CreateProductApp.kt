@@ -14,9 +14,9 @@ import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.download.DownloadProductScreen
 import com.maksimowiczm.foodyou.feature.food.product.ui.rememberProductFormState
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
-import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalClipboardManager
+import com.maksimowiczm.foodyou.shared.compose.extension.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.shared.compose.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.shared.compose.utility.LocalClipboardManager
 import foodyou.app.generated.resources.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

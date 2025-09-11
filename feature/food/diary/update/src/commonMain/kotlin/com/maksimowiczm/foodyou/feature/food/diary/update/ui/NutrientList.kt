@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.shared.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.feature.food.shared.ui.NutrientList
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
@@ -25,7 +26,6 @@ import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFood
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.shared.domain.food.isComplete
 import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList
 
 @Composable
 internal fun NutrientList(

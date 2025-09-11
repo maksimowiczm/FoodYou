@@ -15,8 +15,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
+import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.shared.component.SettingsListItem
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

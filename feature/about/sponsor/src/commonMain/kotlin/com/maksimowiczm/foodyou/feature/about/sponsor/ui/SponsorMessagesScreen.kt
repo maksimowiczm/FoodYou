@@ -52,10 +52,10 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.feature.about.sponsor.presentation.SponsorMessagesViewModel
-import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.ext.add
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.shared.compose.extension.add
+import com.maksimowiczm.foodyou.shared.compose.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.defaultShimmerTheme

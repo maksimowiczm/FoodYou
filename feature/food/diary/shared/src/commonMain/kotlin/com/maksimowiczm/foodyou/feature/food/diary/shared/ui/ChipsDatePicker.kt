@@ -23,10 +23,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.shared.ui.ext.minus
-import com.maksimowiczm.foodyou.shared.ui.ext.now
-import com.maksimowiczm.foodyou.shared.ui.ext.plus
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.app.ui.shared.extension.minus
+import com.maksimowiczm.foodyou.app.ui.shared.extension.now
+import com.maksimowiczm.foodyou.app.ui.shared.extension.plus
+import com.maksimowiczm.foodyou.shared.compose.utility.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime

@@ -20,12 +20,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
+import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.app.ui.shared.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
+import com.maksimowiczm.foodyou.shared.compose.utility.formatClipZeros
 import com.maksimowiczm.foodyou.shared.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.shared.domain.food.NutritionFacts
-import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

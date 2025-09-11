@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
-import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

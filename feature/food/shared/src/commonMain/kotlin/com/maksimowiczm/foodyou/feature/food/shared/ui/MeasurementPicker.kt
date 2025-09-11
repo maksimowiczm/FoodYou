@@ -39,16 +39,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.shared.ui.Saver
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResource
+import com.maksimowiczm.foodyou.shared.compose.form.FormField
+import com.maksimowiczm.foodyou.shared.compose.form.nullableFloatParser
+import com.maksimowiczm.foodyou.shared.compose.form.positiveFloatValidator
+import com.maksimowiczm.foodyou.shared.compose.form.rememberFormField
+import com.maksimowiczm.foodyou.shared.compose.utility.formatClipZeros
 import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.domain.measurement.MeasurementType
 import com.maksimowiczm.foodyou.shared.domain.measurement.from
 import com.maksimowiczm.foodyou.shared.domain.measurement.rawValue
 import com.maksimowiczm.foodyou.shared.domain.measurement.type
-import com.maksimowiczm.foodyou.shared.ui.form.FormField
-import com.maksimowiczm.foodyou.shared.ui.form.nullableFloatParser
-import com.maksimowiczm.foodyou.shared.ui.form.positiveFloatValidator
-import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
-import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 

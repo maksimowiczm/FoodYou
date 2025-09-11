@@ -26,9 +26,6 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.core.shared)
         }
-
-        commonTest { dependencies { implementation(libs.kotlin.test) } }
-
         androidMain.dependencies { implementation(libs.androidx.appcompat) }
     }
 }

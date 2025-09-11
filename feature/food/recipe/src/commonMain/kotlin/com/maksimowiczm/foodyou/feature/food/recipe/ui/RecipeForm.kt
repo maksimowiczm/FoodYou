@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.shared.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.feature.food.recipe.presentation.MinimalIngredient
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
@@ -44,10 +45,9 @@ import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.shared.ui.ext.add
-import com.maksimowiczm.foodyou.shared.ui.form.FormField
-import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
+import com.maksimowiczm.foodyou.shared.compose.extension.add
+import com.maksimowiczm.foodyou.shared.compose.form.FormField
+import com.maksimowiczm.foodyou.shared.compose.utility.formatClipZeros
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer

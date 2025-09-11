@@ -46,8 +46,8 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
-import com.maksimowiczm.foodyou.shared.ui.InteractiveLogo
-import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
+import com.maksimowiczm.foodyou.app.ui.shared.component.InteractiveLogo
+import com.maksimowiczm.foodyou.app.ui.shared.component.SettingsListItem
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject

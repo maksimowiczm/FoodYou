@@ -38,9 +38,9 @@ import com.maksimowiczm.foodyou.app.business.opensource.domain.changelog.Changel
 import com.maksimowiczm.foodyou.app.business.opensource.domain.changelog.Version
 import com.maksimowiczm.foodyou.feature.about.master.presentation.ChangelogViewModel
 import com.maksimowiczm.foodyou.feature.about.master.presentation.stringResource
-import com.maksimowiczm.foodyou.shared.ui.unorderedList
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalClipboardManager
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.shared.compose.component.unorderedList
+import com.maksimowiczm.foodyou.shared.compose.utility.LocalClipboardManager
+import com.maksimowiczm.foodyou.shared.compose.utility.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -48,11 +48,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.SwissFoodCompositionDatabaseRepository.Language
+import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.feature.database.swissfoodcompositiondatabase.presentation.SwissFoodCompositionDatabaseUiState
 import com.maksimowiczm.foodyou.feature.database.swissfoodcompositiondatabase.presentation.SwissFoodCompositionDatabaseViewModel
-import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.BackHandler
-import com.maksimowiczm.foodyou.shared.ui.ext.add
+import com.maksimowiczm.foodyou.shared.compose.component.BackHandler
+import com.maksimowiczm.foodyou.shared.compose.extension.add
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource

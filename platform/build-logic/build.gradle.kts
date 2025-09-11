@@ -8,12 +8,6 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("library-business") {
-            id = "com.maksimowiczm.foodyou.plugins.libraries.business"
-            implementationClass =
-                "com.maksimowiczm.foodyou.platform.buildlogic.plugins.BusinessLibraryConventionPlugin"
-        }
-
         register("library-feature") {
             id = "com.maksimowiczm.foodyou.plugins.libraries.feature"
             implementationClass =

@@ -17,7 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

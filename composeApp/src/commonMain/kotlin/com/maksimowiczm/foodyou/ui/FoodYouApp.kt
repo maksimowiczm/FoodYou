@@ -3,6 +3,8 @@ package com.maksimowiczm.foodyou.ui
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.shared.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.app.ui.shared.utility.EnergyFormatterProvider
 import com.maksimowiczm.foodyou.feature.about.master.ui.AppUpdateChangelogModalBottomSheet
 import com.maksimowiczm.foodyou.feature.about.master.ui.PreviewReleaseDialog
 import com.maksimowiczm.foodyou.feature.onboarding.ui.Onboarding
@@ -10,8 +12,6 @@ import com.maksimowiczm.foodyou.feature.settings.language.ui.TranslationWarningS
 import com.maksimowiczm.foodyou.feature.shared.ui.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
 import com.maksimowiczm.foodyou.presentation.AppViewModel
-import com.maksimowiczm.foodyou.shared.ui.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.shared.ui.utils.EnergyFormatterProvider
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

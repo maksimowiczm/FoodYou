@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.feature.food.product.presentation.create.CreateP
 import com.maksimowiczm.foodyou.feature.food.product.presentation.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.feature.food.product.ui.create.CreateProductApp
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
-import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.shared.compose.extension.LaunchedCollectWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

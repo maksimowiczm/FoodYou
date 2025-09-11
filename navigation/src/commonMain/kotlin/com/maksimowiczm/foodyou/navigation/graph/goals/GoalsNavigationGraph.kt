@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.goals.master.GoalsScreen
 import com.maksimowiczm.foodyou.navigation.domain.GoalsMasterDestination
-import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.shared.compose.navigation.forwardBackwardComposable
 
 fun NavGraphBuilder.goalsNavigationGraph(masterOnBack: () -> Unit) {
     forwardBackwardComposable<GoalsMasterDestination> {

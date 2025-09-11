@@ -3,12 +3,12 @@ package com.maksimowiczm.foodyou.feature.food.diary.meal
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import com.maksimowiczm.foodyou.shared.ui.ext.Saver
-import com.maksimowiczm.foodyou.shared.ui.ext.now
-import com.maksimowiczm.foodyou.shared.ui.form.FormField
-import com.maksimowiczm.foodyou.shared.ui.form.nonBlankStringValidator
-import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
-import com.maksimowiczm.foodyou.shared.ui.form.stringParser
+import com.maksimowiczm.foodyou.app.ui.shared.extension.now
+import com.maksimowiczm.foodyou.shared.compose.extension.Saver
+import com.maksimowiczm.foodyou.shared.compose.form.FormField
+import com.maksimowiczm.foodyou.shared.compose.form.nonBlankStringValidator
+import com.maksimowiczm.foodyou.shared.compose.form.rememberFormField
+import com.maksimowiczm.foodyou.shared.compose.form.stringParser
 import kotlinx.datetime.LocalTime
 
 @Composable

@@ -44,10 +44,10 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.feature.database.externaldatabases.presentation.ExternalDatabasesViewModel
 import com.maksimowiczm.foodyou.feature.database.externaldatabases.presentation.FoodPreferencesModel
-import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.ext.add
+import com.maksimowiczm.foodyou.shared.compose.extension.add
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

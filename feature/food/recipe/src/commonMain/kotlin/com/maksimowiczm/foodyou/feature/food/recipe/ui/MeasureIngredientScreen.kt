@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.shared.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.feature.food.recipe.presentation.MeasureIngredientViewModel
 import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPicker
@@ -36,11 +38,9 @@ import com.maksimowiczm.foodyou.feature.food.shared.ui.rememberMeasurementPicker
 import com.maksimowiczm.foodyou.feature.shared.ui.stringResourceWithWeight
 import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.entity.Recipe
+import com.maksimowiczm.foodyou.shared.compose.extension.add
 import com.maksimowiczm.foodyou.shared.domain.food.isComplete
 import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList
-import com.maksimowiczm.foodyou.shared.ui.ext.add
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
+import com.maksimowiczm.foodyou.app.ui.shared.component.SettingsListItem
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.description_manage_database
 import foodyou.app.generated.resources.headline_database

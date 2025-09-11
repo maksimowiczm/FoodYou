@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.database.databasedump.ui
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -28,9 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
 import com.maksimowiczm.foodyou.app.business.opensource.domain.database.DatabaseDumpService
+import com.maksimowiczm.foodyou.app.ui.shared.extension.now
 import com.maksimowiczm.foodyou.feature.database.databasedump.presentation.DatabaseDumpViewModel
-import com.maksimowiczm.foodyou.shared.ui.BackHandler
-import com.maksimowiczm.foodyou.shared.ui.ext.now
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

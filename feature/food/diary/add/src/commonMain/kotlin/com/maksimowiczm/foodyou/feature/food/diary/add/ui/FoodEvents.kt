@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
-import com.maksimowiczm.foodyou.shared.ui.unorderedList
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.shared.compose.component.unorderedList
+import com.maksimowiczm.foodyou.shared.compose.utility.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

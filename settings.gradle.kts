@@ -38,8 +38,6 @@ include(":composeApp")
 
 include(":shared:common")
 
-include(":shared:ui")
-
 include(":shared:barcodescanner")
 
 include(":navigation")
@@ -95,3 +93,9 @@ include(":feature:database:exportcsvproducts")
 include(":feature:food:diary:quickadd")
 
 include(":infrastructure")
+
+include(":ui:shared")
+
+include(":shared:resources")
+
+include(":shared:compose")

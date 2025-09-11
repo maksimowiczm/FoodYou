@@ -34,7 +34,9 @@ kotlin {
             implementation(libs.kotlinx.datetime)
 
             implementation(projects.shared.common)
-            implementation(projects.shared.ui)
+            implementation(projects.shared.compose)
+
+            implementation(projects.ui.shared)
 
             implementation(projects.feature.about.master)
             implementation(projects.feature.about.sponsor)

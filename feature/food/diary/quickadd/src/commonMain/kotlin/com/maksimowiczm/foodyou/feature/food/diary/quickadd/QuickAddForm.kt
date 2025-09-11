@@ -20,8 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.maksimowiczm.foodyou.shared.ui.form.FormField
-import com.maksimowiczm.foodyou.shared.ui.unorderedList
+import com.maksimowiczm.foodyou.shared.compose.component.unorderedList
+import com.maksimowiczm.foodyou.shared.compose.form.FormField
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

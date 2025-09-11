@@ -45,13 +45,13 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.ext.add
+import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.compose.extension.add
+import com.maksimowiczm.foodyou.shared.compose.extension.hapticDraggableHandle
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import sh.calvin.reorderable.ReorderableItem
-import sh.calvin.reorderable.hapticDraggableHandle
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable

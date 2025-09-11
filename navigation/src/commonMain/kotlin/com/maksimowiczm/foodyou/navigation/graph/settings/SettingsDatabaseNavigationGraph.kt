@@ -18,7 +18,7 @@ import com.maksimowiczm.foodyou.navigation.domain.SettingsDatabaseMasterDestinat
 import com.maksimowiczm.foodyou.navigation.domain.SettingsExternalDatabasesDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsSwissFoodCompositionDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.UsdaApiKeyDestination
-import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.shared.compose.navigation.forwardBackwardComposable
 
 internal fun NavGraphBuilder.settingsDatabaseNavigationGraph(
     masterOnBack: () -> Unit,

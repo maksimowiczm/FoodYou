@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.feature.onboarding.presentation.OnboardingEvent
 import com.maksimowiczm.foodyou.feature.onboarding.presentation.OnboardingViewModel
-import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.shared.compose.extension.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.shared.compose.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 

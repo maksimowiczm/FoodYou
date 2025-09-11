@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
-import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.shared.compose.navigation.forwardBackwardComposable
 
 internal fun NavGraphBuilder.aboutNavigationGraph(
     masterOnBack: () -> Unit,

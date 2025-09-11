@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.ext.add
+import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.compose.extension.add
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

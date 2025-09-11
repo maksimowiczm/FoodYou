@@ -4,13 +4,13 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.maksimowiczm.foodyou.feature.food.recipe.presentation.MinimalIngredient
-import com.maksimowiczm.foodyou.shared.ui.form.FormField
-import com.maksimowiczm.foodyou.shared.ui.form.intParser
-import com.maksimowiczm.foodyou.shared.ui.form.nonBlankStringValidator
-import com.maksimowiczm.foodyou.shared.ui.form.nullableStringParser
-import com.maksimowiczm.foodyou.shared.ui.form.positiveIntValidator
-import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
-import com.maksimowiczm.foodyou.shared.ui.form.stringParser
+import com.maksimowiczm.foodyou.shared.compose.form.FormField
+import com.maksimowiczm.foodyou.shared.compose.form.intParser
+import com.maksimowiczm.foodyou.shared.compose.form.nonBlankStringValidator
+import com.maksimowiczm.foodyou.shared.compose.form.nullableStringParser
+import com.maksimowiczm.foodyou.shared.compose.form.positiveIntValidator
+import com.maksimowiczm.foodyou.shared.compose.form.rememberFormField
+import com.maksimowiczm.foodyou.shared.compose.form.stringParser
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

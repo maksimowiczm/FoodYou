@@ -23,11 +23,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.shared.component.DiscardDialog
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductForm
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
-import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.BackHandler
-import com.maksimowiczm.foodyou.shared.ui.DiscardDialog
+import com.maksimowiczm.foodyou.shared.compose.component.BackHandler
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

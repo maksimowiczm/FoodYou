@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.shared.compose.extension.LaunchedCollectWithLifecycle
 import kotlinx.datetime.LocalDate
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf

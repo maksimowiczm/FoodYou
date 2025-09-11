@@ -8,10 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
+import com.maksimowiczm.foodyou.app.ui.shared.component.MultiColorProgressIndicator
+import com.maksimowiczm.foodyou.app.ui.shared.component.MultiColorProgressIndicatorItem
+import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
-import com.maksimowiczm.foodyou.shared.ui.MultiColorProgressIndicator
-import com.maksimowiczm.foodyou.shared.ui.MultiColorProgressIndicatorItem
-import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
 import kotlin.math.max
 
 /** Indicator with goal. */

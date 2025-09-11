@@ -27,13 +27,13 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.shared.ui)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(libs.jetbrains.compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
+            implementation(projects.shared.resources)
         }
 
         androidMain.dependencies {

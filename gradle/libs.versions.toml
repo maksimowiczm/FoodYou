@@ -32,7 +32,6 @@ runner = "1.7.0"
 sqliteAndroid = "3.49.0"
 sqliteBundled = "2.5.2"
 zxingAndroidEmbedded = "4.3.0"
-kotlinStdlib = "2.2.10"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -79,7 +78,6 @@ core-fooddiary = { group = "com.maksimowiczm.foodyou", name = "fooddiary" }
 core-goals = { group = "com.maksimowiczm.foodyou", name = "goals" }
 core-shared = { group = "com.maksimowiczm.foodyou", name = "shared" }
 core-sponsorship = { group = "com.maksimowiczm.foodyou", name = "sponsorship" }
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -93,16 +91,9 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
-business = { id = "com.maksimowiczm.foodyou.plugins.libraries.business" }
 feature = { id = "com.maksimowiczm.foodyou.plugins.libraries.feature" }
 
 [bundles]
-business-library-implementation = [
-    "koin-core",
-    "kotlinx-coroutines-core",
-    "kotlinx-datetime",
-]
-
 feature-library-implementation = [
     "koin-core",
     "koin-compose",

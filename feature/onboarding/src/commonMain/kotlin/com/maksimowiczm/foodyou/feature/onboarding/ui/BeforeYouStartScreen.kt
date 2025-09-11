@@ -23,8 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.maksimowiczm.foodyou.shared.ui.InteractiveLogo
-import com.maksimowiczm.foodyou.shared.ui.ext.add
+import com.maksimowiczm.foodyou.app.ui.shared.component.InteractiveLogo
+import com.maksimowiczm.foodyou.shared.compose.extension.add
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

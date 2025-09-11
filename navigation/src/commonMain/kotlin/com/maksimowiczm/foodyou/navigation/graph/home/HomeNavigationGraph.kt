@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.navigation.domain.GoalsCardSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.HomeDestination
 import com.maksimowiczm.foodyou.navigation.domain.HomeMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.MealsCardsSettingsDestination
-import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.shared.compose.navigation.forwardBackwardComposable
 
 fun NavGraphBuilder.homeNavigationGraph(
     masterOnSettings: () -> Unit,

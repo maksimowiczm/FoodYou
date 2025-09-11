@@ -16,12 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_clear
-import foodyou.app.generated.resources.action_scan_barcode
-import foodyou.app.generated.resources.action_search
-import foodyou.app.generated.resources.ic_barcode_scanner
+import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
+import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

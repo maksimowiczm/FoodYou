@@ -32,12 +32,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
+import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.app.ui.shared.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.feature.home.shared.FoodYouHomeCard
 import com.maksimowiczm.foodyou.feature.home.shared.HomeState
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
-import com.maksimowiczm.foodyou.shared.ui.ext.toDp
-import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalEnergyFormatter
+import com.maksimowiczm.foodyou.shared.compose.extension.toDp
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*

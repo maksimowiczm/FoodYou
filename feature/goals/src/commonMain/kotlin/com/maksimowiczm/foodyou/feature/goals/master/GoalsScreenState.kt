@@ -10,8 +10,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.maksimowiczm.foodyou.shared.ui.ext.now
-import com.maksimowiczm.foodyou.shared.ui.ext.plus
+import com.maksimowiczm.foodyou.app.ui.shared.extension.now
+import com.maksimowiczm.foodyou.app.ui.shared.extension.plus
 import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
