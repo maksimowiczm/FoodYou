@@ -33,7 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.business.food.domain.ProductField
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.ProductField
 import com.maksimowiczm.foodyou.feature.food.shared.ui.res.stringResource
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.BackHandler

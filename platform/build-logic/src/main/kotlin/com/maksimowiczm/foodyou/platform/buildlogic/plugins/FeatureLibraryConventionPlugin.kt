@@ -54,7 +54,7 @@ internal class FeatureLibraryConventionPlugin : Plugin<Project> {
                     implementation(project(":shared:common"))
                     implementation(project(":shared:ui"))
                     implementation(project(":feature:shared"))
-                    implementation(project(":business:shared"))
+                    implementation(project(":business:opensource"))
 
                     implementation(libs.findBundle("feature.library.implementation").get())
 

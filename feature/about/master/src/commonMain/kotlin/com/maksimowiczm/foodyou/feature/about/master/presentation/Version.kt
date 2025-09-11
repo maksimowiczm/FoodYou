@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.about.master.presentation
 
 import androidx.compose.runtime.*
-import com.maksimowiczm.foodyou.business.settings.domain.Version
+import com.maksimowiczm.foodyou.app.business.opensource.domain.changelog.Version
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

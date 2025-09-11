@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.feature.food.shared.presentation.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchUseCase
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchPreferences
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchRepository
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchUseCase
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.RemoteStatus.Companion.toRemoteStatus
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository

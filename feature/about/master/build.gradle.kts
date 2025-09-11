@@ -11,8 +11,5 @@ kotlin {
 
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
-    sourceSets.commonMain.dependencies {
-        implementation(projects.business.settings)
-        implementation(libs.kotlinx.datetime)
-    }
+    sourceSets.commonMain.dependencies { implementation(libs.kotlinx.datetime) }
 }

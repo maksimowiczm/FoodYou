@@ -19,10 +19,6 @@ kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.shared.barcodescanner)
 
-        implementation(projects.business.shared)
-        implementation(projects.business.settings)
-        implementation(projects.business.food)
-
         implementation(projects.feature.food.shared)
 
         implementation(libs.navigation.compose)

@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.food.shared.ui.res
 
 import androidx.compose.runtime.Composable
-import com.maksimowiczm.foodyou.business.food.domain.ProductField
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.ProductField
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

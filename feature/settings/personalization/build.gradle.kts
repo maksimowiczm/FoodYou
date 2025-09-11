@@ -13,8 +13,5 @@ kotlin {
 
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
-    sourceSets.commonMain.dependencies {
-        implementation(projects.business.settings)
-        implementation(libs.reorderable)
-    }
+    sourceSets.commonMain.dependencies { implementation(libs.reorderable) }
 }

@@ -14,10 +14,6 @@ kotlin {
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets.commonMain.dependencies {
-        implementation(projects.business.shared)
-        implementation(projects.business.settings)
-        implementation(projects.business.fooddiary)
-
         implementation(libs.compose.shimmer)
         implementation(libs.kotlinx.datetime)
         implementation(libs.reorderable)

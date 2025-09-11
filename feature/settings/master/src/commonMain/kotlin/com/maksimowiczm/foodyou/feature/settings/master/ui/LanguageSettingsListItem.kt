@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
+import com.maksimowiczm.foodyou.app.business.opensource.domain.translation.TranslationRepository
 import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

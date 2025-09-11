@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchPreferences
 
 internal class DataStoreFoodSearchPreferencesRepository(dataStore: DataStore<Preferences>) :
     AbstractDataStoreUserPreferencesRepository<FoodSearchPreferences>(dataStore) {

@@ -13,7 +13,6 @@ kotlin {
 
     sourceSets.commonMain.dependencies {
         implementation(libs.core.fooddiary)
-        implementation(projects.business.fooddiary)
 
         implementation(libs.kotlinx.datetime)
     }

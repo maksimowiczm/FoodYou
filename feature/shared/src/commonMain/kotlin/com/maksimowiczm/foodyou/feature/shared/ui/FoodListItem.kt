@@ -20,11 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.headline_recipe
-import foodyou.app.generated.resources.ic_skillet_filled
+import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

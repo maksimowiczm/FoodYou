@@ -44,13 +44,7 @@ include(":shared:barcodescanner")
 
 include(":navigation")
 
-include(":business:shared")
-
-include(":business:food")
-
-include(":business:fooddiary")
-
-include(":business:settings")
+include(":business:opensource")
 
 include(":feature:shared")
 

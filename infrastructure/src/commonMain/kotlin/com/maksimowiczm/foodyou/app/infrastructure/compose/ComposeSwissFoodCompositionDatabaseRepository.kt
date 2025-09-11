@@ -1,10 +1,7 @@
 package com.maksimowiczm.foodyou.app.infrastructure.compose
 
-import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository
-import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository.Language.ENGLISH
-import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository.Language.FRENCH
-import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository.Language.GERMAN
-import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository.Language.ITALIAN
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.SwissFoodCompositionDatabaseRepository
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.SwissFoodCompositionDatabaseRepository.Language.*
 import foodyou.infrastructure.generated.resources.Res
 
 internal class ComposeSwissFoodCompositionDatabaseRepository :

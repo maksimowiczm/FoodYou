@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.settings.personalization.ui
 
 import androidx.compose.runtime.Composable
-import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

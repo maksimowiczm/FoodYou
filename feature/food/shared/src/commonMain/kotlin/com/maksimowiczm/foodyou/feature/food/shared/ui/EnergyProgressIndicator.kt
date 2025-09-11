@@ -7,7 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.shared.ui.MultiColorProgressIndicatorItem

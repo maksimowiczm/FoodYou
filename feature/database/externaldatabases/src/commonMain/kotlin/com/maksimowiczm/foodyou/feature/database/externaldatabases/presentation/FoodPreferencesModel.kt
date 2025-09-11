@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.database.externaldatabases.presentation
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchPreferences
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchPreferences
 
 @Immutable
 internal data class FoodPreferencesModel(

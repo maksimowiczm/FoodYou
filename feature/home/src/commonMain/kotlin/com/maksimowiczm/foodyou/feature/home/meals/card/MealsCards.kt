@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsCardsLayout
+import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.MealsCardsLayout
 import com.maksimowiczm.foodyou.feature.home.shared.HomeState
 import org.koin.compose.viewmodel.koinViewModel
 

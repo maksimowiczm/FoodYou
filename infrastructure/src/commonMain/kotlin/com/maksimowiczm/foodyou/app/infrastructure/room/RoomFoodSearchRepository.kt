@@ -5,12 +5,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearch
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchRepository
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.app.infrastructure.room.food.FoodSearch as FoodSearchData
 import com.maksimowiczm.foodyou.app.infrastructure.room.food.FoodSearchDao
 import com.maksimowiczm.foodyou.app.infrastructure.room.shared.toEntity
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
-import com.maksimowiczm.foodyou.business.food.domain.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.shared.domain.food.NutrientValue.Companion.toNutrientValue

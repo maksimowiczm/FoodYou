@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.database.swissfoodcompositiondatabase.p
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.domain.ImportSwissFoodCompositionDatabaseUseCase
-import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.ImportSwissFoodCompositionDatabaseUseCase
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.SwissFoodCompositionDatabaseRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -24,7 +24,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsCardsLayout
+import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.MealsCardsLayout
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import com.maksimowiczm.foodyou.shared.ui.ext.performToggle

@@ -31,7 +31,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.home.shared.FoodYouHomeCard
 import com.maksimowiczm.foodyou.feature.home.shared.HomeState
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder

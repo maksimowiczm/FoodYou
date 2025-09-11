@@ -41,8 +41,7 @@ kotlin {
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
 
-            implementation(projects.business.shared)
-            implementation(projects.business.settings)
+            implementation(projects.business.opensource)
 
             implementation(libs.compose.shimmer)
             implementation(libs.kotlinx.coroutines.core)

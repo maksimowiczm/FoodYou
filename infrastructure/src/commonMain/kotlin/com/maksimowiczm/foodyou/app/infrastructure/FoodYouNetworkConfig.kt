@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.app.infrastructure
 
-import com.maksimowiczm.foodyou.business.shared.domain.config.AppConfig
-import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.NetworkConfig
 
 internal class FoodYouNetworkConfig(appConfig: AppConfig) : NetworkConfig {
     override val userAgent: String =

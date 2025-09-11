@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.feature.home.meals.card
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ObserveDiaryMealsUseCase
+import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.DiaryMeal
+import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.MealsPreferences
+import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.ObserveDiaryMealsUseCase
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryEntry
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.FoodDiaryEntry

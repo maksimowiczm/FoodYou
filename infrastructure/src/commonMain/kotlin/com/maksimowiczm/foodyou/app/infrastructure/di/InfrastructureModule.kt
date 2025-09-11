@@ -2,6 +2,17 @@ package com.maksimowiczm.foodyou.app.infrastructure.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.maksimowiczm.foodyou.app.business.opensource.di.applicationCoroutineScope
+import com.maksimowiczm.foodyou.app.business.opensource.di.userPreferencesRepository
+import com.maksimowiczm.foodyou.app.business.opensource.di.userPreferencesRepositoryOf
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.NetworkConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.csv.CsvParser
+import com.maksimowiczm.foodyou.app.business.opensource.domain.database.DatabaseDumpService
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.SwissFoodCompositionDatabaseRepository
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodRemoteMediatorFactoryAggregate
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchRepository
+import com.maksimowiczm.foodyou.app.business.opensource.domain.search.ProductRemoteMediatorFactory
+import com.maksimowiczm.foodyou.app.business.opensource.domain.translation.TranslationRepository
 import com.maksimowiczm.foodyou.app.infrastructure.DateProviderImpl
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.app.infrastructure.SharedFlowEventBus
@@ -47,17 +58,6 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.RoomRecipeRepository
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomUsdaPagingHelper
 import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.InitializeMealsCallback
 import com.maksimowiczm.foodyou.app.infrastructure.room.fooddiary.MealsProvider
-import com.maksimowiczm.foodyou.business.food.domain.FoodRemoteMediatorFactoryAggregate
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearchRepository
-import com.maksimowiczm.foodyou.business.food.domain.ProductRemoteMediatorFactory
-import com.maksimowiczm.foodyou.business.food.domain.SwissFoodCompositionDatabaseRepository
-import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
-import com.maksimowiczm.foodyou.business.shared.di.applicationCoroutineScope
-import com.maksimowiczm.foodyou.business.shared.di.userPreferencesRepository
-import com.maksimowiczm.foodyou.business.shared.di.userPreferencesRepositoryOf
-import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
-import com.maksimowiczm.foodyou.business.shared.domain.csv.CsvParser
-import com.maksimowiczm.foodyou.business.shared.domain.database.DatabaseDumpService
 import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
 import com.maksimowiczm.foodyou.food.domain.repository.FoodMeasurementSuggestionRepository
 import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository

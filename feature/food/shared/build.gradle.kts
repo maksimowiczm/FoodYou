@@ -16,10 +16,6 @@ kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.shared.barcodescanner)
 
-        implementation(projects.business.shared)
-        implementation(projects.business.settings)
-        implementation(projects.business.food)
-
         implementation(libs.compose.shimmer)
         implementation(libs.androidx.paging.common)
         implementation(libs.kotlinx.datetime)

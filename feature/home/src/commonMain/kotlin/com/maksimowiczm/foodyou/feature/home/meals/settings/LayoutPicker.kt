@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsCardsLayout
+import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.MealsCardsLayout
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

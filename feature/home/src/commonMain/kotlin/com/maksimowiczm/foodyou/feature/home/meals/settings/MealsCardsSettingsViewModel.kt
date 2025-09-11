@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.home.meals.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
+import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.MealsPreferences
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first

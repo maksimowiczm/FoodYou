@@ -7,11 +7,11 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.maksimowiczm.foodyou.business.settings.domain.AppLaunchInfo
-import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
-import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
-import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.AppLaunchInfo
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.EnergyFormat
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.HomeCard
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
 import kotlin.collections.map
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant

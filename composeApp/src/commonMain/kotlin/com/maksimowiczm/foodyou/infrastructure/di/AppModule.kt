@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.FoodYouConfig
-import com.maksimowiczm.foodyou.business.settings.domain.Settings
-import com.maksimowiczm.foodyou.business.shared.domain.config.AppConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
 import com.maksimowiczm.foodyou.presentation.AppViewModel
 import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.domain.log.Logger

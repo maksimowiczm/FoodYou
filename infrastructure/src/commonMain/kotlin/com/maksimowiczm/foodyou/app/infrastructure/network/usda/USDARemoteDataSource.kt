@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.app.infrastructure.network.usda
 
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.NetworkConfig
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.model.DetailedFood
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.model.UsdaFoodPageResponse
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.model.UsdaFoodPageResponseImpl
-import com.maksimowiczm.foodyou.business.shared.domain.config.NetworkConfig
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import com.maksimowiczm.foodyou.shared.domain.log.Logger
 import io.ktor.client.HttpClient

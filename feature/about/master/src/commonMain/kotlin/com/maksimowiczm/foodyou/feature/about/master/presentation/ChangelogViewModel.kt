@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.feature.about.master.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.domain.ObserveChangelogUseCase
-import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.app.business.opensource.domain.changelog.ObserveChangelogUseCase
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine

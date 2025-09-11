@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.goals.master
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.fooddiary.domain.ObserveDiaryMealsUseCase
+import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.ObserveDiaryMealsUseCase
 import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
 import com.maksimowiczm.foodyou.shared.domain.food.isComplete
 import kotlinx.coroutines.flow.SharingStarted

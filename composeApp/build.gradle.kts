@@ -67,11 +67,7 @@ kotlin {
 
             implementation(projects.navigation)
 
-            implementation(projects.business.shared)
-            implementation(projects.business.food)
-            implementation(projects.business.fooddiary)
-            implementation(projects.business.settings)
-            implementation(projects.business.shared)
+            implementation(projects.business.opensource)
 
             implementation(projects.feature.shared)
             implementation(projects.feature.about.master)

@@ -4,14 +4,12 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.domain.ImportCsvProductUseCase
-import com.maksimowiczm.foodyou.business.food.domain.ProductField
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.ImportCsvProductUseCase
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.ProductField
 import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
 import java.io.BufferedReader
 import java.io.IOException
-import kotlin.collections.component1
-import kotlin.collections.component2
 import kotlin.getValue
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow

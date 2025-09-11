@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.HomeCard
 import com.maksimowiczm.foodyou.feature.home.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.home.goals.GoalsCard
 import com.maksimowiczm.foodyou.feature.home.meals.card.MealsCards

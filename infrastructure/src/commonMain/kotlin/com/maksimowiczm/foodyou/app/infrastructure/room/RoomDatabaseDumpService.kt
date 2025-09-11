@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.infrastructure.room
 import androidx.room.RoomDatabase
 import androidx.room.execSQL
 import androidx.room.useWriterConnection
-import com.maksimowiczm.foodyou.business.shared.domain.database.DatabaseDumpService
+import com.maksimowiczm.foodyou.app.business.opensource.domain.database.DatabaseDumpService
 import kotlinx.coroutines.flow.Flow
 
 internal class RoomDatabaseDumpService(private val database: RoomDatabase) : DatabaseDumpService {

@@ -4,8 +4,8 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.food.domain.ExportCsvProductsUseCase
-import com.maksimowiczm.foodyou.business.food.domain.ProductField
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.ExportCsvProductsUseCase
+import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.ProductField
 import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
 import java.io.BufferedWriter
 import kotlinx.coroutines.CancellationException

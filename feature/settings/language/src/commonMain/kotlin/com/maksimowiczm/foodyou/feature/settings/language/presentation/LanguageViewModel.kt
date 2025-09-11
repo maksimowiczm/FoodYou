@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.feature.settings.language.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.business.settings.domain.Settings
-import com.maksimowiczm.foodyou.business.settings.domain.Translation
-import com.maksimowiczm.foodyou.business.settings.domain.TranslationRepository
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
+import com.maksimowiczm.foodyou.app.business.opensource.domain.translation.Translation
+import com.maksimowiczm.foodyou.app.business.opensource.domain.translation.TranslationRepository
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first

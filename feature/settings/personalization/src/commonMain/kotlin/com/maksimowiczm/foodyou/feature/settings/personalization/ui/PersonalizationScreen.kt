@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.settings.domain.EnergyFormat
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.EnergyFormat
 import com.maksimowiczm.foodyou.feature.settings.personalization.presentation.PersonalizationScreenViewModel
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
