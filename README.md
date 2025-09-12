@@ -53,6 +53,9 @@ Want to help make Food You even better? Here are some great ways to contribute:
   via [GitHub issue](https://github.com/maksimowiczm/FoodYou/issues) so it can be fixed
 - ⭐ **Star the Repository** – If you like the project, give it a star
 
+**Important Note:** I am currently not accepting any code contributions due to licensing and the
+fact that this app generates some income.
+
 ## ❤️ Sponsor
 
 This app is free, open-source, and ad-free. You directly support full-time development of the
@@ -85,3 +88,17 @@ Looking for alternatives or similar tools?
 - [ReadYou](https://github.com/Ashinch/ReadYou) — I shamelessly borrowed inspiration from this
   project 🙃
 - [Icons8](https://icons8.com) — sushi icon 🍣
+
+## 📜 License
+
+> Everything after commit `bd829fc` is licensed under GPLv3.
+
+```
+Copyright (C) 2024-2025 Mateusz Maksimowicz
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+```
