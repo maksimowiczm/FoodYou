@@ -26,7 +26,27 @@ abstract class MealDao {
         deleteMeal(meal)
     }
 
-    @Update abstract suspend fun updateMeal(meal: MealEntity)
+    @Update protected abstract suspend fun updateMeal(meal: MealEntity)
+
+    @Query(
+        """
+        UPDATE meal
+        SET name = :name,
+            fromHour = :fromHour,
+            fromMinute = :fromMinute,
+            toHour = :toHour,
+            toMinute = :toMinute
+        WHERE id = :id
+        """
+    )
+    abstract suspend fun updateMealIgnoreRank(
+        id: Long,
+        name: String,
+        fromHour: Int,
+        fromMinute: Int,
+        toHour: Int,
+        toMinute: Int,
+    )
 
     @Transaction
     open suspend fun updateMealsRanks(map: Map<Long, Int>) {

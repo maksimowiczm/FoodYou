@@ -21,8 +21,14 @@ internal class RoomMealRepository(private val mealDao: MealDao) : MealRepository
     }
 
     override suspend fun updateMeal(id: Long, name: String, from: LocalTime, to: LocalTime) {
-        val meal = Meal(id = id, name = name, from = from, to = to, rank = 0)
-        mealDao.updateMeal(meal.toEntity())
+        mealDao.updateMealIgnoreRank(
+            id = id,
+            name = name,
+            fromHour = from.hour,
+            fromMinute = from.minute,
+            toHour = to.hour,
+            toMinute = to.minute,
+        )
     }
 
     override suspend fun deleteMeal(mealId: Long) {
