@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.navigation.graph.settings
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import com.maksimowiczm.foodyou.app.ui.theme.ThemeScreen
 import com.maksimowiczm.foodyou.feature.food.diary.meal.MealSettingsScreen
 import com.maksimowiczm.foodyou.feature.goals.setup.DailyGoalsScreen
 import com.maksimowiczm.foodyou.feature.home.personalization.HomePersonalizationScreen
@@ -17,6 +18,7 @@ import com.maksimowiczm.foodyou.navigation.domain.SettingsMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
+import com.maksimowiczm.foodyou.navigation.domain.ThemeDestination
 import com.maksimowiczm.foodyou.shared.compose.navigation.forwardBackwardComposable
 
 internal fun NavGraphBuilder.settingsNavigationGraph(
@@ -36,10 +38,12 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
     personalizationOnBack: () -> Unit,
     personalizationOnHome: () -> Unit,
     personalizationOnNutrition: () -> Unit,
+    personalizationOnTheme: () -> Unit,
     nutritionOnBack: () -> Unit,
     homeOnBack: () -> Unit,
     homeOnGoals: () -> Unit,
     homeOnMeals: () -> Unit,
+    themeOnBack: () -> Unit,
 ) {
     navigation<SettingsDestination>(startDestination = SettingsMasterDestination) {
         forwardBackwardComposable<SettingsMasterDestination> {
@@ -71,6 +75,7 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
                 onBack = personalizationOnBack,
                 onHomePersonalization = personalizationOnHome,
                 onNutritionFactsPersonalization = personalizationOnNutrition,
+                onTheme = personalizationOnTheme,
             )
         }
         forwardBackwardComposable<SettingsNutritionFactsDestination> {
@@ -83,5 +88,6 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
                 onMeals = homeOnMeals,
             )
         }
+        forwardBackwardComposable<ThemeDestination> { ThemeScreen(onBack = themeOnBack) }
     }
 }

@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.app.business.opensource.di.businessOpenSourceModule
 import com.maksimowiczm.foodyou.app.infrastructure.di.infrastructureModule
+import com.maksimowiczm.foodyou.app.ui.theme.uiThemeModule
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
@@ -55,4 +56,7 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
 
         // Onboarding
         modules(featureOnboardingModule)
+
+        // Theme
+        modules(uiThemeModule)
     }

@@ -33,6 +33,7 @@ import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsSwissFoodCompositionDatabaseDestination
+import com.maksimowiczm.foodyou.navigation.domain.ThemeDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateFoodDiaryEntryDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateRecipeDestination
@@ -134,12 +135,14 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             personalizationOnNutrition = {
                 navController.navigateSingleTop(SettingsNutritionFactsDestination)
             },
+            personalizationOnTheme = { navController.navigateSingleTop(ThemeDestination) },
             nutritionOnBack = {
                 navController.popBackStack<SettingsNutritionFactsDestination>(true)
             },
             homeOnBack = { navController.popBackStack<SettingsHomeDestination>(true) },
             homeOnGoals = { navController.navigateSingleTop(GoalsCardSettingsDestination) },
             homeOnMeals = { navController.navigateSingleTop(MealsCardsSettingsDestination) },
+            themeOnBack = { navController.popBackStack<ThemeDestination>(true) },
         )
         settingsDatabaseNavigationGraph(
             masterOnBack = { navController.popBackStack<SettingsDatabaseDestination>(true) },

@@ -64,6 +64,8 @@ kotlin {
 
             implementation(projects.feature.goals)
 
+            implementation(projects.ui.theme)
+
             // TODO get rid of business dependency
             implementation(libs.core.shared)
             implementation(libs.core.food)

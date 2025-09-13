@@ -433,4 +433,30 @@
 
     <string name="action_open_poll">Open poll</string>
 
+    <string name="headline_colors">Colors</string>
+    <string name="description_colors">Customize the app colors</string>
+
+    <string name="headline_custom_palette">Custom palette</string>
+    <string name="description_custom_palette">Setup your own palette</string>
+    <string name="headline_dynamic_colors">Dynamic colors</string>
+    <string name="description_dynamic_colors">Apply colors from system</string>
+
+    <string name="headline_seed_color">Seed color</string>
+    <string name="headline_palette_style">Palette style</string>
+
+    <string name="headline_contrast">Contrast</string>
+    <string name="headline_amoled">AMOLED</string>
+
+    <string name="headline_light">Light</string>
+    <string name="headline_dark">Dark</string>
+
+    <string name="headline_appearance">Appearance</string>
+    <string name="headline_theme">Theme</string>
+
+    <string name="headline_pick_a_color">Pick a color</string>
+    <string name="headline_color">Color</string>
+
+    <string name="headline_nutrients_colors">Nutrients colors</string>
+    <string name="description_nutrients_colors_reset">Nutrients colors settings will be reset to default values</string>
+
 </resources>

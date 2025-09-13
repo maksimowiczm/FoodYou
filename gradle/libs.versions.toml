@@ -1,4 +1,5 @@
 [versions]
+materialKolor = "3.0.1"
 version-name = "3.1.0"
 android-versionCode = "104"
 android-compileSdk = "36"
@@ -68,11 +69,12 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 sqlite-android = { module = "com.github.requery:sqlite-android", version.ref = "sqliteAndroid" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
-
+# FoodYouCore modules
 core-food = { group = "com.maksimowiczm.foodyou", name = "food" }
 core-fooddiary = { group = "com.maksimowiczm.foodyou", name = "fooddiary" }
 core-goals = { group = "com.maksimowiczm.foodyou", name = "goals" }
@@ -92,9 +94,17 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
 feature = { id = "com.maksimowiczm.foodyou.plugins.libraries.feature" }
+ui = { id = "com.maksimowiczm.foodyou.plugins.libraries.ui" }
 
 [bundles]
 feature-library-implementation = [
+    "koin-core",
+    "koin-compose",
+    "koin-compose-viewmodel",
+    "kotlinx-coroutines-core",
+]
+
+ui-library-implementation = [
     "koin-core",
     "koin-compose",
     "koin-compose-viewmodel",

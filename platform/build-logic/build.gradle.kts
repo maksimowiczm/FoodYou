@@ -13,5 +13,11 @@ gradlePlugin {
             implementationClass =
                 "com.maksimowiczm.foodyou.platform.buildlogic.plugins.FeatureLibraryConventionPlugin"
         }
+
+        register("library-ui") {
+            id = "com.maksimowiczm.foodyou.plugins.libraries.ui"
+            implementationClass =
+                "com.maksimowiczm.foodyou.platform.buildlogic.plugins.UiLibraryConventionPlugin"
+        }
     }
 }

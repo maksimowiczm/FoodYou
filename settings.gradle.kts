@@ -99,3 +99,5 @@ include(":ui:shared")
 include(":shared:resources")
 
 include(":shared:compose")
+
+include("ui:theme")

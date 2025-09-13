@@ -10,6 +10,7 @@ import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.Bolt
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,6 +42,7 @@ fun PersonalizationScreen(
     onBack: () -> Unit,
     onHomePersonalization: () -> Unit,
     onNutritionFactsPersonalization: () -> Unit,
+    onTheme: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: PersonalizationScreenViewModel = koinViewModel()
@@ -71,6 +73,7 @@ fun PersonalizationScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
+            item { ThemeSettingsListItem(onClick = onTheme, modifier = Modifier.fillMaxWidth()) }
             item {
                 SecureScreenSettingsListItem(
                     checked = viewModel.secureScreen.collectAsStateWithLifecycle().value,
@@ -180,6 +183,19 @@ private fun EnergyUnitSettingsListItem(
             }
         },
         icon = { Icon(imageVector = Icons.Outlined.Bolt, contentDescription = null) },
+        color = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+    )
+}
+
+@Composable
+private fun ThemeSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    SettingsListItem(
+        label = { Text(stringResource(Res.string.headline_colors)) },
+        onClick = onClick,
+        modifier = modifier,
+        supportingContent = { Text(stringResource(Res.string.description_colors)) },
+        icon = { Icon(imageVector = Icons.Outlined.Palette, contentDescription = null) },
         color = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
     )

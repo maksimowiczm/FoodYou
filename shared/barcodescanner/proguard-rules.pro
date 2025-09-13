@@ -1,1 +1,1 @@
--keep class com.maksimowiczm.foodyou.shared.barcodescanner.FullScreenCameraBarcodeScannerKt { *; }
+-keep class com.maksimowiczm.foodyou.shared.barcodescanner.CameraBarcodeScannerScreen_androidKt

@@ -97,6 +97,8 @@ kotlin {
             implementation(projects.feature.food.diary.quickadd)
             implementation(projects.feature.onboarding)
 
+            implementation(projects.ui.theme)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             // implementation(compose.material3)

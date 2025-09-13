@@ -10,8 +10,14 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.AppLaunchInfo
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.EnergyFormat
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.HomeCard
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsColors
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Theme
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeContrast
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeOption
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeSettings
+import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeStyle
 import kotlin.collections.map
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -30,6 +36,8 @@ internal class DataStoreSettingsRepository(dataStore: DataStore<Preferences>) :
             onboardingFinished = this[SettingsPreferencesKeys.onboardingFinished] ?: false,
             energyFormat = this.getEnergyFormat(SettingsPreferencesKeys.energyFormat),
             appLaunchInfo = this.getAppLaunchInfo(),
+            themeSettings = this.getThemeSettings(),
+            nutrientsColors = this.getNutrientsColors(),
         )
 
     override fun MutablePreferences.applyUserPreferences(updated: Settings) {
@@ -43,6 +51,8 @@ internal class DataStoreSettingsRepository(dataStore: DataStore<Preferences>) :
         this[SettingsPreferencesKeys.onboardingFinished] = updated.onboardingFinished
         setEnergyFormat(SettingsPreferencesKeys.energyFormat, updated.energyFormat)
         setAppLaunchInfo(updated.appLaunchInfo)
+        setThemeSettings(updated.themeSettings)
+        setNutrientsColors(updated.nutrientsColors)
     }
 }
 
@@ -113,6 +123,94 @@ private fun MutablePreferences.setAppLaunchInfo(appLaunchInfo: AppLaunchInfo): M
         setWithNull(SettingsPreferencesKeys.launchesCount, appLaunchInfo.launchesCount)
     }
 
+private fun Preferences.getThemeSettings(): ThemeSettings =
+    ThemeSettings(
+        themeOption =
+            runCatching {
+                    ThemeOption.entries[
+                            this[SettingsPreferencesKeys.themeOption] ?: ThemeOption.System.ordinal]
+                }
+                .getOrElse { ThemeOption.System },
+        theme = getTheme(),
+    )
+
+private fun Preferences.getTheme(): Theme {
+    val isDefault = this[SettingsPreferencesKeys.themeDefault] ?: false
+    if (isDefault) return Theme.Default
+
+    val isDynamic = this[SettingsPreferencesKeys.themeDynamicColor] ?: false
+    if (isDynamic) return Theme.Dynamic
+
+    val keyColorString = this[SettingsPreferencesKeys.themeKeyColor]
+    val seedColor = keyColorString?.toULongOrNull(16)
+
+    val style =
+        runCatching {
+                ThemeStyle.entries[
+                        this[SettingsPreferencesKeys.themeStyle] ?: ThemeStyle.TonalSpot.ordinal]
+            }
+            .getOrElse { ThemeStyle.TonalSpot }
+
+    val contrast =
+        runCatching {
+                ThemeContrast.entries[
+                        this[SettingsPreferencesKeys.themeContrast]
+                            ?: ThemeContrast.Default.ordinal]
+            }
+            .getOrElse { ThemeContrast.Default }
+
+    val isAmoled = this[SettingsPreferencesKeys.themeAmoled] ?: false
+
+    if (isDynamic) return Theme.Dynamic
+    if (seedColor == null) return Theme.Default
+    return Theme.Custom(
+        seedColor = seedColor,
+        style = style,
+        contrast = contrast,
+        isAmoled = isAmoled,
+    )
+}
+
+private fun MutablePreferences.setThemeSettings(themeSettings: ThemeSettings): MutablePreferences =
+    apply {
+        this[SettingsPreferencesKeys.themeOption] = themeSettings.themeOption.ordinal
+        setTheme(themeSettings.theme)
+    }
+
+private fun MutablePreferences.setTheme(theme: Theme): MutablePreferences = apply {
+    when (theme) {
+        is Theme.Default -> {
+            this[SettingsPreferencesKeys.themeDefault] = true
+        }
+
+        is Theme.Dynamic -> {
+            this[SettingsPreferencesKeys.themeDynamicColor] = true
+        }
+
+        is Theme.Custom -> {
+            this[SettingsPreferencesKeys.themeDefault] = false
+            this[SettingsPreferencesKeys.themeDynamicColor] = false
+            this[SettingsPreferencesKeys.themeKeyColor] = theme.seedColor.toString(16)
+            this[SettingsPreferencesKeys.themeStyle] = theme.style.ordinal
+            this[SettingsPreferencesKeys.themeContrast] = theme.contrast.ordinal
+            this[SettingsPreferencesKeys.themeAmoled] = theme.isAmoled
+        }
+    }
+}
+
+private fun Preferences.getNutrientsColors() =
+    NutrientsColors(
+        proteins = this[SettingsPreferencesKeys.proteinsColor]?.toULong(),
+        carbohydrates = this[SettingsPreferencesKeys.carbohydratesColor]?.toULong(),
+        fats = this[SettingsPreferencesKeys.fatsColor]?.toULong(),
+    )
+
+private fun MutablePreferences.setNutrientsColors(nutrientsColors: NutrientsColors) = apply {
+    this[SettingsPreferencesKeys.proteinsColor] = nutrientsColors.proteins?.toLong()
+    this[SettingsPreferencesKeys.carbohydratesColor] = nutrientsColors.carbohydrates?.toLong()
+    this[SettingsPreferencesKeys.fatsColor] = nutrientsColors.fats?.toLong()
+}
+
 @OptIn(ExperimentalTime::class)
 private fun Preferences.getInstantFromEpochSeconds(key: Preferences.Key<Long>): Instant? =
     this[key]?.let(Instant::fromEpochSeconds)
@@ -141,4 +239,14 @@ private object SettingsPreferencesKeys {
     val firstLaunchCurrentVersionName = stringPreferencesKey("first_launch_current_version_name")
     val firstLaunchCurrentVersionEpoch = longPreferencesKey("first_launch_current_version_epoch")
     val launchesCount = intPreferencesKey("launches_count")
+    val themeOption = intPreferencesKey("theme:option")
+    val themeDefault = booleanPreferencesKey("theme:default")
+    val themeDynamicColor = booleanPreferencesKey("theme:dynamicColor")
+    val themeKeyColor = stringPreferencesKey("theme:keyColor")
+    val themeStyle = intPreferencesKey("theme:style")
+    val themeContrast = intPreferencesKey("theme:contrast")
+    val themeAmoled = booleanPreferencesKey("theme:amoled")
+    val proteinsColor = longPreferencesKey("nutrientsColors:proteins")
+    val carbohydratesColor = longPreferencesKey("nutrientsColors:carbohydrates")
+    val fatsColor = longPreferencesKey("nutrientsColors:fats")
 }
