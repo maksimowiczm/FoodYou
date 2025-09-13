@@ -1,9 +1,16 @@
-@file:Suppress("ktlint:standard:max-line-length", "PropertyName")
-
-package com.maksimowiczm.foodyou.app.business.opensource.domain.changelog
+package com.maksimowiczm.foodyou.app.infrastructure
 
 import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
+import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.Changelog
+import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.ChangelogRepository
+import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.Version
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.LocalDate
+
+internal class ChangelogRepositoryImpl(private val appConfig: AppConfig) : ChangelogRepository {
+    override fun observe(): Flow<Changelog> = flowOf(StaticChangelog(appConfig))
+}
 
 internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val currentVersion: Version?

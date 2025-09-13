@@ -47,7 +47,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.app.ui.shared.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.feature.home.shared.FoodYouHomeCard

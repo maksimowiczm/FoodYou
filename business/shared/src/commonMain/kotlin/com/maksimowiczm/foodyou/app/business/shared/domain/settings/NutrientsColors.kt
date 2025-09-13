@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.business.opensource.domain.settings
+package com.maksimowiczm.foodyou.app.business.shared.domain.settings
 
 /**
  * Colors for nutrients used in the app theme.

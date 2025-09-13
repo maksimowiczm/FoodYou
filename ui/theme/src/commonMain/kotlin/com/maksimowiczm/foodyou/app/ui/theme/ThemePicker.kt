@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeOption
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeOption
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

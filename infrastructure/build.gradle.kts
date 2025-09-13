@@ -64,7 +64,10 @@ kotlin {
             implementation(libs.core.fooddiary)
             implementation(libs.core.sponsorship)
             implementation(libs.core.goals)
+
             implementation(projects.business.opensource)
+            implementation(projects.business.shared)
+
             implementation(projects.shared.common)
 
             // Kotlinx

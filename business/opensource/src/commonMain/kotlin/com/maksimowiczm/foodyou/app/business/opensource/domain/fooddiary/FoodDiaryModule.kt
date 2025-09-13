@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary
 
-import com.maksimowiczm.foodyou.app.business.opensource.di.eventHandlerOf
-import com.maksimowiczm.foodyou.app.business.opensource.di.userPreferencesRepository
+import com.maksimowiczm.foodyou.app.business.shared.di.eventHandlerOf
+import com.maksimowiczm.foodyou.app.business.shared.di.userPreferencesRepository
 import org.koin.core.module.Module
 import org.koin.dsl.bind
 

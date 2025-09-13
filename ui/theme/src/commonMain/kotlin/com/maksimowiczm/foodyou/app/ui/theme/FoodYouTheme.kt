@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.app.ui.theme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsColors
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeSettings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsColors
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeSettings
 import com.maksimowiczm.foodyou.app.ui.shared.theme.NutrientsPalette
 import org.koin.compose.viewmodel.koinViewModel
 

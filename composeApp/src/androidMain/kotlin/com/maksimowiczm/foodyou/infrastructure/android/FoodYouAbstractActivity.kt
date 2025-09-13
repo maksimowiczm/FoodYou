@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.Settings
 import com.maksimowiczm.foodyou.app.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.shared.common.infrastructure.system.defaultLocale
 import com.maksimowiczm.foodyou.shared.compose.utility.AndroidClipboardManager

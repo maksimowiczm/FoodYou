@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.business.opensource.domain.changelog
+package com.maksimowiczm.foodyou.app.business.shared.domain.changelog
 
 import kotlinx.datetime.LocalDate
 

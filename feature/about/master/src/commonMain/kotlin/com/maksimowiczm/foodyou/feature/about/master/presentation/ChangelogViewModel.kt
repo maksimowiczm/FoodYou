@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.feature.about.master.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.business.opensource.domain.changelog.ObserveChangelogUseCase
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
+import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.ChangelogRepository
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.Settings
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class ChangelogViewModel(
-    observeChangelogUseCase: ObserveChangelogUseCase,
+    changelogRepository: ChangelogRepository,
     private val settingsRepository: UserPreferencesRepository<Settings>,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _changelog = observeChangelogUseCase.observe()
+    private val _changelog = changelogRepository.observe()
     val changelog =
         _changelog.stateIn(
             scope = viewModelScope,

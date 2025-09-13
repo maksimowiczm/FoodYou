@@ -34,8 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.changelog.Changelog
-import com.maksimowiczm.foodyou.app.business.opensource.domain.changelog.Version
+import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.Changelog
+import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.Version
 import com.maksimowiczm.foodyou.feature.about.master.presentation.ChangelogViewModel
 import com.maksimowiczm.foodyou.feature.about.master.presentation.stringResource
 import com.maksimowiczm.foodyou.shared.compose.component.unorderedList

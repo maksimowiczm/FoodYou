@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.business.opensource.domain.translation
+package com.maksimowiczm.foodyou.app.business.shared.domain.translation
 
 import kotlinx.coroutines.flow.Flow
 

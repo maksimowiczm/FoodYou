@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
-import com.maksimowiczm.foodyou.app.business.opensource.domain.translation.Translation
+import com.maksimowiczm.foodyou.app.business.shared.domain.translation.Translation
 import com.maksimowiczm.foodyou.feature.settings.language.presentation.LanguageViewModel
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

@@ -4,11 +4,11 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Theme
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeContrast
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeOption
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeSettings
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeStyle
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.Theme
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeContrast
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeOption
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeSettings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeStyle
 import com.materialkolor.Contrast
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme

@@ -34,7 +34,7 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.shared.component.ResetToDefaultDialog
 import com.maksimowiczm.foodyou.feature.settings.personalization.presentation.PersonalizeNutritionFactsViewModel

@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.app.business.opensource.domain.poll
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.AppLaunchInfo
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.AppLaunchInfo
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.Settings
 import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlin.time.Duration.Companion.days
@@ -34,12 +34,15 @@ class ObserveActivePollUseCase(
 
     // Show polls only if first launch was more than 3 days ago and user launched app at least
     // 10 times
-    private fun AppLaunchInfo.canShowPolls(): Boolean =
-        if (firstLaunch == null || launchesCount < 10) {
+    private fun AppLaunchInfo.canShowPolls(): Boolean {
+        val firstLaunch = firstLaunch
+
+        return if (firstLaunch == null || launchesCount < 10) {
             false
         } else {
             firstLaunch.plus(3.days) < dateProvider.nowInstant()
         }
+    }
 
     private fun activePollsFlow(): Flow<List<Poll>> =
         combine(pollPreferencesRepository.observe(), pollRepository.observeActivePolls()) {

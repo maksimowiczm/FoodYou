@@ -12,9 +12,9 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsColors
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Theme
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeSettings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsColors
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.Theme
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeSettings
 import com.maksimowiczm.foodyou.app.ui.shared.theme.DarkNutrientsPalette
 import com.maksimowiczm.foodyou.app.ui.shared.theme.LightNutrientsPalette
 import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette

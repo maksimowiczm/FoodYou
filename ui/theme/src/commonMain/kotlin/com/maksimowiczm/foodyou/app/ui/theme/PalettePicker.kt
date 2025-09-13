@@ -35,7 +35,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Theme
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.Theme
 import kotlin.math.absoluteValue
 import kotlinx.coroutines.launch
 

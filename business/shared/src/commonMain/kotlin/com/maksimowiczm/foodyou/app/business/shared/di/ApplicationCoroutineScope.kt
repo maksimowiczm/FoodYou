@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.business.opensource.di
+package com.maksimowiczm.foodyou.app.business.shared.di
 
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.module.Module

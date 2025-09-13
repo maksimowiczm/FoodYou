@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Intent
 import android.os.Build
 import com.maksimowiczm.foodyou.BuildConfig
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.AppLaunchEvent
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.AppLaunchEvent
 import com.maksimowiczm.foodyou.infrastructure.di.initKoin
 import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.domain.event.EventBus

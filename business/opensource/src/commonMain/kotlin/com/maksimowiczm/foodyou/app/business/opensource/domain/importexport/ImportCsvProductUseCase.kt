@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.business.opensource.domain.importexport
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.csv.CsvParser
+import com.maksimowiczm.foodyou.app.business.shared.domain.csv.CsvParser
 import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.Product

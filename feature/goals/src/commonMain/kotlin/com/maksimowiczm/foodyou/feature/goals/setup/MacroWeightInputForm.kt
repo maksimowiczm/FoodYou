@@ -35,7 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.compose.form.FormField

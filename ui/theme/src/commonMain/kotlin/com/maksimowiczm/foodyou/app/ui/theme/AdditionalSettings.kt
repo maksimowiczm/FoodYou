@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.theme
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeSettings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeSettings
 
 @Composable
 internal expect fun AdditionalSettings(

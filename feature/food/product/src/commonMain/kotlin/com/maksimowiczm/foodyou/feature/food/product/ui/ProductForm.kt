@@ -44,7 +44,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.shared.component.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.food.shared.ui.res.Icon
 import com.maksimowiczm.foodyou.feature.food.shared.ui.res.stringResource

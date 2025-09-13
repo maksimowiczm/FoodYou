@@ -9,7 +9,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.translation.Author
+import com.maksimowiczm.foodyou.app.business.shared.domain.translation.Author
 
 @Composable
 internal fun Author.toAnnotatedString(): AnnotatedString =

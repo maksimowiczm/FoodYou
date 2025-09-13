@@ -13,8 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsColors
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeSettings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsColors
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeSettings
 import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.shared.compose.extension.plus
 import foodyou.app.generated.resources.*

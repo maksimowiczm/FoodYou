@@ -1,7 +1,7 @@
-package com.maksimowiczm.foodyou.app.business.opensource.domain.settings
+package com.maksimowiczm.foodyou.app.business.shared.domain.settings
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.changelog.Changelog
-import com.maksimowiczm.foodyou.app.business.opensource.domain.changelog.ObserveChangelogUseCase
+import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.Changelog
+import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.ChangelogRepository
 import com.maksimowiczm.foodyou.shared.domain.event.EventHandler
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlin.time.ExperimentalTime
@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.first
 @OptIn(ExperimentalTime::class)
 internal class AppLaunchEventHandler(
     private val settingsRepository: UserPreferencesRepository<Settings>,
-    private val observeChangelogUseCase: ObserveChangelogUseCase,
+    private val changelogRepository: ChangelogRepository,
 ) : EventHandler<AppLaunchEvent> {
     override suspend fun handle(event: AppLaunchEvent) {
-        val changelog = observeChangelogUseCase.observe().first()
+        val changelog = changelogRepository.observe().first()
 
         settingsRepository.update {
             // If the app version has changed since the last launch, we want reset the preview

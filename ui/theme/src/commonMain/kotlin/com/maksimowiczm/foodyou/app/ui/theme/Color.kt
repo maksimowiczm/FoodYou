@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.app.ui.theme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Theme
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeContrast
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeStyle
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.Theme
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeContrast
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeStyle
 import com.materialkolor.hct.Hct
 
 internal val MaterialDeepPurple = Color(0xFF6200EE)

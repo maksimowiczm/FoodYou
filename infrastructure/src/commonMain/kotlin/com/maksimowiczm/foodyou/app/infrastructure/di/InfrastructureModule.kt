@@ -2,17 +2,19 @@ package com.maksimowiczm.foodyou.app.infrastructure.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.maksimowiczm.foodyou.app.business.opensource.di.applicationCoroutineScope
-import com.maksimowiczm.foodyou.app.business.opensource.di.userPreferencesRepository
-import com.maksimowiczm.foodyou.app.business.opensource.di.userPreferencesRepositoryOf
 import com.maksimowiczm.foodyou.app.business.opensource.domain.config.NetworkConfig
-import com.maksimowiczm.foodyou.app.business.opensource.domain.csv.CsvParser
 import com.maksimowiczm.foodyou.app.business.opensource.domain.database.DatabaseDumpService
 import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.SwissFoodCompositionDatabaseRepository
 import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodRemoteMediatorFactoryAggregate
 import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchRepository
 import com.maksimowiczm.foodyou.app.business.opensource.domain.search.ProductRemoteMediatorFactory
-import com.maksimowiczm.foodyou.app.business.opensource.domain.translation.TranslationRepository
+import com.maksimowiczm.foodyou.app.business.shared.di.applicationCoroutineScope
+import com.maksimowiczm.foodyou.app.business.shared.di.userPreferencesRepository
+import com.maksimowiczm.foodyou.app.business.shared.di.userPreferencesRepositoryOf
+import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.ChangelogRepository
+import com.maksimowiczm.foodyou.app.business.shared.domain.csv.CsvParser
+import com.maksimowiczm.foodyou.app.business.shared.domain.translation.TranslationRepository
+import com.maksimowiczm.foodyou.app.infrastructure.ChangelogRepositoryImpl
 import com.maksimowiczm.foodyou.app.infrastructure.DateProviderImpl
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.app.infrastructure.SharedFlowEventBus
@@ -137,6 +139,8 @@ fun infrastructureModule(applicationCoroutineScope: CoroutineScope) = module {
     singleOf(::SharedFlowEventBus).bind<EventBus>()
 
     singleOf(::DateProviderImpl).bind<DateProvider>()
+
+    factoryOf(::ChangelogRepositoryImpl).bind<ChangelogRepository>()
 
     // ---
     single(named("ktorSponsorshipHttpClient")) {

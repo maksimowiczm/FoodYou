@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.app.business.opensource.di.userPreferencesRepository
+import com.maksimowiczm.foodyou.app.business.shared.di.userPreferencesRepository
 import com.maksimowiczm.foodyou.feature.home.goals.GoalsViewModel
 import com.maksimowiczm.foodyou.feature.home.master.HomeViewModel
 import com.maksimowiczm.foodyou.feature.home.meals.card.MealsCardsViewModel

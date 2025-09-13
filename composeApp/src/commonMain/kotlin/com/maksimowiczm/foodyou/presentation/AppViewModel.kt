@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.EnergyFormat
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.EnergyFormat
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.Settings
 import com.maksimowiczm.foodyou.app.ui.shared.utility.EnergyFormatter
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted

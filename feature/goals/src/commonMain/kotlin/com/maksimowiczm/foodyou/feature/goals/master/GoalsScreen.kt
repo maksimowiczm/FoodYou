@@ -38,7 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsOrder
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.shared.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette

@@ -43,6 +43,7 @@ kotlin {
             implementation(projects.shared.resources)
             implementation(projects.ui.shared)
 
+            implementation(projects.business.shared)
             implementation(projects.business.opensource)
 
             implementation(libs.compose.shimmer)

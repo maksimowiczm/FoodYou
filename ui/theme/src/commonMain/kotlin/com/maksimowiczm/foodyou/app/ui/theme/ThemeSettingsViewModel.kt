@@ -2,13 +2,13 @@ package com.maksimowiczm.foodyou.app.ui.theme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.NutrientsColors
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.Settings
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.ThemeSettings
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.observeNutrientsColors
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.observeThemeSettings
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.updateNutrientsColors
-import com.maksimowiczm.foodyou.app.business.opensource.domain.settings.updateThemeSettings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsColors
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.Settings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.ThemeSettings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.observeNutrientsColors
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.observeThemeSettings
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.updateNutrientsColors
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.updateThemeSettings
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn

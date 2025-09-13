@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.business.opensource.domain.settings
+package com.maksimowiczm.foodyou.app.business.shared.domain.settings
 
 enum class HomeCard {
     Calendar,

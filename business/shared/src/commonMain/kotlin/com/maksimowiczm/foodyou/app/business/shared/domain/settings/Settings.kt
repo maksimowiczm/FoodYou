@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.business.opensource.domain.settings
+package com.maksimowiczm.foodyou.app.business.shared.domain.settings
 
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferences
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
