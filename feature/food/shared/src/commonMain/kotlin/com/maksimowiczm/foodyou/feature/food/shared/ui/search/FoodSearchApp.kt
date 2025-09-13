@@ -270,6 +270,8 @@ object FoodSearchAppDefaults {
         onCreateProduct: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val colorScheme = MaterialTheme.colorScheme
+
         FloatingActionButtonMenu(
             expanded = fabExpanded,
             modifier = modifier,
@@ -277,6 +279,13 @@ object FoodSearchAppDefaults {
                 ToggleFloatingActionButton(
                     checked = fabExpanded,
                     onCheckedChange = onFabExpandedChange,
+                    containerColor = {
+                        lerp(
+                            start = colorScheme.secondaryContainer,
+                            stop = colorScheme.secondary,
+                            fraction = it,
+                        )
+                    },
                 ) {
                     val rotation by remember { derivedStateOf { checkedProgress * 45f } }
 
