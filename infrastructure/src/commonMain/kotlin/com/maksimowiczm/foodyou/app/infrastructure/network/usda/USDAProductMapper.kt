@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.network.usda
 
+import com.maksimowiczm.foodyou.app.business.opensource.domain.food.USDA
 import com.maksimowiczm.foodyou.app.infrastructure.network.UnitType
 import com.maksimowiczm.foodyou.app.infrastructure.network.multiplier
 import com.maksimowiczm.foodyou.app.infrastructure.network.usda.model.Food

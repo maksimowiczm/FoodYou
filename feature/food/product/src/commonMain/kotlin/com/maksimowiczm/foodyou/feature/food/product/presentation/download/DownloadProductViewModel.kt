@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.product.presentation.download
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.app.business.opensource.domain.food.User
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
 import com.maksimowiczm.foodyou.food.domain.usecase.DownloadProductError
 import com.maksimowiczm.foodyou.food.domain.usecase.DownloadProductUseCase

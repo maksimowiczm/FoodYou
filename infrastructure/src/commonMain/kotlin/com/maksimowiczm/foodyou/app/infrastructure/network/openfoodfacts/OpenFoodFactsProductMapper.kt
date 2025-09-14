@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts
 
+import com.maksimowiczm.foodyou.app.business.opensource.domain.food.OpenFoodFacts
 import com.maksimowiczm.foodyou.app.infrastructure.network.openfoodfacts.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteNutritionFacts
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct

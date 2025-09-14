@@ -1,5 +1,9 @@
 package com.maksimowiczm.foodyou.app.infrastructure.room.shared
 
+import com.maksimowiczm.foodyou.app.business.opensource.domain.food.OpenFoodFacts
+import com.maksimowiczm.foodyou.app.business.opensource.domain.food.SwissFoodCompositionDatabase
+import com.maksimowiczm.foodyou.app.business.opensource.domain.food.USDA
+import com.maksimowiczm.foodyou.app.business.opensource.domain.food.User
 import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
 
 enum class FoodSourceType {
@@ -23,4 +27,5 @@ fun FoodSource.Type.toEntity(): FoodSourceType =
         FoodSource.Type.OpenFoodFacts -> FoodSourceType.OpenFoodFacts
         FoodSource.Type.USDA -> FoodSourceType.USDA
         FoodSource.Type.SwissFoodCompositionDatabase -> FoodSourceType.SwissFoodCompositionDatabase
+        else -> error("Unknown FoodSource.Type: $this")
     }
