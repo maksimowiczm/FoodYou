@@ -92,8 +92,6 @@ include(":feature:database:exportcsvproducts")
 
 include(":feature:food:diary:quickadd")
 
-include(":infrastructure")
-
 include(":ui:shared")
 
 include(":shared:resources")
@@ -103,3 +101,7 @@ include(":shared:compose")
 include("ui:theme")
 
 include(":business:shared")
+
+include(":infrastructure:opensource")
+
+include(":infrastructure:shared")

@@ -2,7 +2,8 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.app.business.opensource.di.businessOpenSourceModule
 import com.maksimowiczm.foodyou.app.business.shared.di.businessSharedModule
-import com.maksimowiczm.foodyou.app.infrastructure.di.infrastructureModule
+import com.maksimowiczm.foodyou.app.infrastructure.opensource.infrastructureOpenSourceModule
+import com.maksimowiczm.foodyou.app.infrastructure.shared.infrastructureSharedModule
 import com.maksimowiczm.foodyou.app.ui.theme.uiThemeModule
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.context.startKoin
@@ -18,7 +19,13 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
     startKoin {
         config?.invoke(this)
 
-        modules(appModule, infrastructureModule(applicationCoroutineScope))
+        modules(appModule)
+
+        // Infrastructure modules
+        modules(
+            infrastructureOpenSourceModule,
+            infrastructureSharedModule(applicationCoroutineScope),
+        )
 
         // Business modules
         modules(businessOpenSourceModule, businessSharedModule)

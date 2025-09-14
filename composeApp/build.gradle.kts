@@ -57,7 +57,8 @@ kotlin {
             implementation(libs.koin.android)
         }
         commonMain.dependencies {
-            implementation(projects.infrastructure)
+            implementation(projects.infrastructure.opensource)
+            implementation(projects.infrastructure.shared)
 
             implementation(libs.core.shared)
 
