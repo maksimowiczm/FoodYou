@@ -9,17 +9,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.feature.food.product.presentation.download.DownloadProductHolder
 import com.maksimowiczm.foodyou.feature.food.product.presentation.download.DownloadProductViewModel
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.download.DownloadProductScreen
 import com.maksimowiczm.foodyou.feature.food.product.ui.rememberProductFormState
-import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
 import com.maksimowiczm.foodyou.shared.compose.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.compose.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.shared.compose.utility.LocalClipboardManager
 import foodyou.app.generated.resources.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -34,26 +33,15 @@ internal fun CreateProductApp(
 ) =
     key(url) {
         val navController = rememberNavController()
+        val holder = koinViewModel<DownloadProductHolder>()
 
         NavHost(
             navController = navController,
-            startDestination =
-                if (url != null) {
-                    Download(url)
-                } else {
-                    Create(null)
-                },
+            startDestination = if (url != null) Download(url) else Create,
             modifier = modifier,
         ) {
             forwardBackwardComposable<Create> {
-                val (json) = it.toRoute<Create>()
-
-                val product =
-                    if (json != null) {
-                        Json.decodeFromString<RemoteProduct>(json)
-                    } else {
-                        null
-                    }
+                val product = holder.product.collectAsStateWithLifecycle().value
 
                 val state =
                     when (product) {
@@ -73,11 +61,11 @@ internal fun CreateProductApp(
             forwardBackwardComposable<Download> {
                 val (url) = it.toRoute<Download>()
 
-                val viewModel = koinViewModel<DownloadProductViewModel> { parametersOf(url) }
+                val viewModel =
+                    koinViewModel<DownloadProductViewModel> { parametersOf(url, holder) }
 
                 LaunchedCollectWithLifecycle(viewModel.productEvent) {
-                    val json = Json.encodeToString(it)
-                    navController.navigate(Create(json)) {
+                    navController.navigate(Create) {
                         launchSingleTop = true
 
                         if (url != null) {
@@ -118,6 +106,6 @@ internal fun CreateProductApp(
         }
     }
 
-@Serializable private data class Create(val productJson: String?)
+@Serializable private data object Create
 
 @Serializable private data class Download(val url: String?)
