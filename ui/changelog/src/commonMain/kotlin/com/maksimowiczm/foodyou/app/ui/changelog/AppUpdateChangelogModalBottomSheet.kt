@@ -1,9 +1,9 @@
-package com.maksimowiczm.foodyou.feature.about.master.ui
+package com.maksimowiczm.foodyou.app.ui.changelog
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceAppConfig
+import com.maksimowiczm.foodyou.app.business.shared.domain.config.AppConfig
 import com.maksimowiczm.foodyou.app.business.shared.domain.settings.Settings
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ fun AppUpdateChangelogModalBottomSheet(modifier: Modifier = Modifier) {
     val coroutineScope = rememberCoroutineScope()
     val settingsRepository: UserPreferencesRepository<Settings> =
         koinInject(named(Settings::class.qualifiedName!!))
-    val appConfig: OpenSourceAppConfig = koinInject()
+    val appConfig: AppConfig = koinInject()
 
     val currentVersion = remember(appConfig) { appConfig.versionName }
     val settings = settingsRepository.observe().collectAsStateWithLifecycle(null).value

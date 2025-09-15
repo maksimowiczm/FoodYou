@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.master.ui
+package com.maksimowiczm.foodyou.app.ui.changelog
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
@@ -36,8 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.Changelog
 import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.Version
-import com.maksimowiczm.foodyou.feature.about.master.presentation.ChangelogViewModel
-import com.maksimowiczm.foodyou.feature.about.master.presentation.stringResource
 import com.maksimowiczm.foodyou.shared.compose.component.unorderedList
 import com.maksimowiczm.foodyou.shared.compose.utility.LocalClipboardManager
 import com.maksimowiczm.foodyou.shared.compose.utility.LocalDateFormatter
@@ -49,10 +47,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ChangelogModalBottomSheet(
-    onDismissRequest: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun ChangelogModalBottomSheet(onDismissRequest: () -> Unit, modifier: Modifier = Modifier) {
     val changelogViewModel: ChangelogViewModel = koinViewModel()
     val changelog = changelogViewModel.changelog.collectAsStateWithLifecycle().value
 

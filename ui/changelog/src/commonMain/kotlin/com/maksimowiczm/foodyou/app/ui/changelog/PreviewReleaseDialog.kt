@@ -1,22 +1,19 @@
-package com.maksimowiczm.foodyou.feature.about.master.ui
+package com.maksimowiczm.foodyou.app.ui.changelog
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.about.master.presentation.ChangelogViewModel
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreviewReleaseDialog(modifier: Modifier = Modifier) {
     val viewModel: ChangelogViewModel = koinViewModel()

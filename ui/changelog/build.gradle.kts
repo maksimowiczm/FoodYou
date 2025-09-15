@@ -1,9 +1,9 @@
 plugins { alias(libs.plugins.ui) }
 
 kotlin {
-    androidLibrary { namespace = "com.maksimowiczm.foodyou.app.ui.sponsor" }
+    androidLibrary { namespace = "com.maksimowiczm.foodyou.app.ui.changelog" }
 
-    val xcfName = "ui:sponsorKit"
+    val xcfName = "ui:changelogKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }
 
@@ -14,10 +14,6 @@ kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.business.shared)
         implementation(libs.core.shared)
-        implementation(libs.core.sponsorship)
-
-        implementation(libs.compose.shimmer)
-        implementation(libs.androidx.paging.common)
         implementation(libs.kotlinx.datetime)
     }
 }

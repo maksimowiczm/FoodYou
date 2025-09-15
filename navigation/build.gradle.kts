@@ -38,8 +38,6 @@ kotlin {
 
             implementation(projects.ui.shared)
 
-            implementation(projects.feature.about.master)
-
             implementation(projects.feature.settings.master)
             implementation(projects.feature.settings.language)
             implementation(projects.feature.settings.personalization)
@@ -65,6 +63,7 @@ kotlin {
 
             implementation(projects.ui.theme)
             implementation(projects.ui.sponsor)
+            implementation(projects.ui.about.opensource)
 
             // TODO get rid of business dependency
             implementation(libs.core.shared)

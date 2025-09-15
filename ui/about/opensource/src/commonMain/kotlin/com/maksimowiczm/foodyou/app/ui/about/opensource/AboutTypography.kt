@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.master.ui
+package com.maksimowiczm.foodyou.app.ui.about.opensource
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -11,9 +11,9 @@ import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.roboto_flex
 import org.jetbrains.compose.resources.Font
 
-@Immutable data class AboutTypography(val brandName: TextStyle)
+@Immutable internal data class AboutTypography(val brandName: TextStyle)
 
-val aboutTypography: AboutTypography
+internal val aboutTypography: AboutTypography
     @Composable
     get() {
         val fontFamily =

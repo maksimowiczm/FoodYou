@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.app.business.opensource.di.businessOpenSourceMod
 import com.maksimowiczm.foodyou.app.business.shared.di.businessSharedModule
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.infrastructureOpenSourceModule
 import com.maksimowiczm.foodyou.app.infrastructure.shared.infrastructureSharedModule
+import com.maksimowiczm.foodyou.app.ui.changelog.uiChangelogModule
 import com.maksimowiczm.foodyou.app.ui.sponsor.uiSponsorModule
 import com.maksimowiczm.foodyou.app.ui.theme.uiThemeModule
 import kotlinx.coroutines.CoroutineScope
@@ -30,9 +31,6 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
 
         // Business modules
         modules(businessOpenSourceModule, businessSharedModule)
-
-        // About
-        modules(featureAboutMasterModule)
 
         // Settings
         modules(
@@ -70,4 +68,6 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
         modules(uiThemeModule)
 
         modules(uiSponsorModule)
+
+        modules(uiChangelogModule)
     }

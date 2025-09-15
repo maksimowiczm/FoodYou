@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.master.presentation
+package com.maksimowiczm.foodyou.app.ui.changelog
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

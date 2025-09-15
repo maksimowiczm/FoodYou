@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.master.ui
+package com.maksimowiczm.foodyou.app.ui.about.opensource
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceAppConfig
+import com.maksimowiczm.foodyou.app.ui.changelog.ChangelogModalBottomSheet
 import com.maksimowiczm.foodyou.app.ui.shared.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.shared.component.SettingsListItem
 import foodyou.app.generated.resources.*

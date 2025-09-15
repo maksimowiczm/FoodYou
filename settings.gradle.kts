@@ -46,8 +46,6 @@ include(":business:opensource")
 
 include(":feature:shared")
 
-include(":feature:about:master")
-
 include(":feature:settings:master")
 
 include(":feature:settings:language")
@@ -105,3 +103,11 @@ include(":infrastructure:opensource")
 include(":infrastructure:shared")
 
 include(":ui:sponsor")
+
+include(":ui:changelog")
+
+include(":ui:about:opensource")
+
+include(":ui:language")
+
+include(":ui:personalization")

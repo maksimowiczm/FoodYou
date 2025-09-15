@@ -1,9 +1,9 @@
 plugins { alias(libs.plugins.ui) }
 
 kotlin {
-    androidLibrary { namespace = "com.maksimowiczm.foodyou.app.ui.theme" }
+    androidLibrary { namespace = "com.maksimowiczm.foodyou.app.ui.about.opensource" }
 
-    val xcfName = "ui:themeKit"
+    val xcfName = "ui:about:opensourceKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }
 
@@ -13,7 +13,8 @@ kotlin {
 
     sourceSets.commonMain.dependencies {
         implementation(projects.business.shared)
-        implementation(libs.core.shared)
-        implementation(libs.material.kolor)
+        implementation(projects.business.opensource)
+
+        implementation(projects.ui.changelog)
     }
 }

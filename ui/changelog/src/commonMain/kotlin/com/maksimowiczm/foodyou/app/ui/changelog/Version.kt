@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.master.presentation
+package com.maksimowiczm.foodyou.app.ui.changelog
 
 import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.app.business.shared.domain.changelog.Version
@@ -6,7 +6,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun Version.stringResource(): String {
+internal fun Version.stringResource(): String {
     val newFeaturesString = stringResource(Res.string.changelog_new_features)
     val changesString = stringResource(Res.string.changelog_changes)
     val bugFixesString = stringResource(Res.string.changelog_bug_fixes)

@@ -75,7 +75,6 @@ kotlin {
             implementation(projects.business.opensource)
 
             implementation(projects.feature.shared)
-            implementation(projects.feature.about.master)
             implementation(projects.feature.settings.master)
             implementation(projects.feature.settings.language)
             implementation(projects.feature.settings.personalization)
@@ -98,8 +97,10 @@ kotlin {
             implementation(projects.feature.food.diary.quickadd)
             implementation(projects.feature.onboarding)
 
+            implementation(projects.ui.changelog)
             implementation(projects.ui.theme)
             implementation(projects.ui.sponsor)
+            implementation(projects.ui.about.opensource)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
