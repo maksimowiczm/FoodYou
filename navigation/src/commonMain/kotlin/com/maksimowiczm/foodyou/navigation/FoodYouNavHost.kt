@@ -119,12 +119,6 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             },
             masterOnDatabase = { navController.navigateSingleTop(SettingsDatabaseDestination) },
             mealsOnBack = { navController.popBackStack<SettingsMealsDestination>(true) },
-            mealsOnMealsCardsSettings = {
-                navController.navigate(MealsCardsSettingsDestination) {
-                    launchSingleTop = true
-                    popUpTo<MealsCardsSettingsDestination>()
-                }
-            },
             languageOnBack = { navController.popBackStack<SettingsLanguageDestination>(true) },
             goalsOnBack = { navController.popBackStack<SettingsGoalsDestination>(true) },
             goalsOnSave = { navController.popBackStack<SettingsGoalsDestination>(true) },

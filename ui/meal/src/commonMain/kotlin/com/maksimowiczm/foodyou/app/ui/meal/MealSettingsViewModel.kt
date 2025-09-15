@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.meal
+package com.maksimowiczm.foodyou.app.ui.meal
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

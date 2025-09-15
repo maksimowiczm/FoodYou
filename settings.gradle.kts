@@ -62,8 +62,6 @@ include(":feature:food:diary:add")
 
 include(":feature:food:diary:update")
 
-include(":feature:food:diary:meal")
-
 include(":feature:food:diary:quickadd")
 
 include(":ui:shared")
@@ -97,3 +95,5 @@ include(":ui:onboarding:opensource")
 include(":ui:goals")
 
 include(":ui:database:opensource")
+
+include(":ui:meal")

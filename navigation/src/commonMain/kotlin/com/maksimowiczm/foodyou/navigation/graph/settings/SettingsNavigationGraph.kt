@@ -4,11 +4,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
 import com.maksimowiczm.foodyou.app.ui.goals.setup.DailyGoalsScreen
 import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
+import com.maksimowiczm.foodyou.app.ui.meal.MealSettingsScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.app.ui.settings.opensource.SettingsScreen
 import com.maksimowiczm.foodyou.app.ui.theme.ThemeScreen
-import com.maksimowiczm.foodyou.feature.food.diary.meal.MealSettingsScreen
 import com.maksimowiczm.foodyou.feature.home.personalization.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsGoalsDestination
@@ -31,7 +31,6 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
     masterOnPersonalization: () -> Unit,
     masterOnDatabase: () -> Unit,
     mealsOnBack: () -> Unit,
-    mealsOnMealsCardsSettings: () -> Unit,
     goalsOnBack: () -> Unit,
     goalsOnSave: () -> Unit,
     languageOnBack: () -> Unit,
@@ -59,10 +58,7 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
             )
         }
         forwardBackwardComposable<SettingsMealsDestination> {
-            MealSettingsScreen(
-                onBack = mealsOnBack,
-                onMealsCardsSettings = mealsOnMealsCardsSettings,
-            )
+            MealSettingsScreen(onBack = mealsOnBack)
         }
         forwardBackwardComposable<SettingsLanguageDestination> {
             LanguageScreen(onBack = languageOnBack)

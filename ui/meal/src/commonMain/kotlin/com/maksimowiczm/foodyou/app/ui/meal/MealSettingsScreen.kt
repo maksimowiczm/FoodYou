@@ -1,6 +1,5 @@
-package com.maksimowiczm.foodyou.feature.food.diary.meal
+package com.maksimowiczm.foodyou.app.ui.meal
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,10 +18,8 @@ import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
@@ -55,11 +52,7 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
-fun MealSettingsScreen(
-    onBack: () -> Unit,
-    onMealsCardsSettings: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun MealSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: MealSettingsViewModel = koinViewModel()
 
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
@@ -69,7 +62,6 @@ fun MealSettingsScreen(
     } else {
         MealSettingsScreen(
             onBack = onBack,
-            onMealsCardsSettings = onMealsCardsSettings,
             onDelete = viewModel::deleteMeal,
             onUpdate = { mealId, state ->
                 val model = state.intoMealModel(mealId)
@@ -90,7 +82,6 @@ fun MealSettingsScreen(
 @Composable
 private fun MealSettingsScreen(
     onBack: () -> Unit,
-    onMealsCardsSettings: () -> Unit,
     onDelete: (MealModel) -> Unit,
     onUpdate: (mealId: Long, MealCardState) -> Unit,
     onCreate: (MealCardState) -> Unit,
@@ -217,16 +208,6 @@ private fun MealSettingsScreen(
                             .focusRequester(formFocusRequester),
                 )
                 Spacer(Modifier.height(8.dp))
-            }
-
-            item {
-                HorizontalDivider()
-                ListItem(
-                    headlineContent = {
-                        Text(stringResource(Res.string.headline_meals_cards_settings))
-                    },
-                    modifier = Modifier.clickable { onMealsCardsSettings() },
-                )
             }
         }
     }

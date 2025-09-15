@@ -1,11 +1,11 @@
-plugins { alias(libs.plugins.feature) }
+plugins { alias(libs.plugins.ui) }
 
 kotlin {
     sourceSets.all { languageSettings.enableLanguageFeature("ContextParameters") }
 
-    androidLibrary { namespace = "com.maksimowiczm.foodyou.feature.food.diary.meal" }
+    androidLibrary { namespace = "com.maksimowiczm.foodyou.app.ui.meal" }
 
-    val xcfName = "feature:food:diary:mealKit"
+    val xcfName = "ui:mealKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }
 
@@ -14,8 +14,11 @@ kotlin {
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets.commonMain.dependencies {
-        implementation(projects.shared.compose)
-        implementation(libs.reorderable)
+        implementation(projects.business.shared)
+        implementation(libs.core.shared)
+        implementation(libs.core.fooddiary)
+
         implementation(libs.kotlinx.datetime)
+        implementation(libs.reorderable)
     }
 }

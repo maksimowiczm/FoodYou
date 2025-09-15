@@ -41,7 +41,6 @@ kotlin {
             implementation(projects.feature.food.diary.search)
             implementation(projects.feature.food.diary.add)
             implementation(projects.feature.food.diary.update)
-            implementation(projects.feature.food.diary.meal)
             implementation(projects.feature.food.diary.quickadd)
 
             implementation(projects.feature.food.product)
@@ -58,6 +57,7 @@ kotlin {
             implementation(projects.ui.settings.opensource)
             implementation(projects.ui.onboarding.opensource)
             implementation(projects.ui.database.opensource)
+            implementation(projects.ui.meal)
 
             // TODO get rid of business dependency
             implementation(libs.core.shared)
