@@ -22,18 +22,20 @@ fun FoodYouApp() {
     val energyFormatter by viewModel.energyFormatter.collectAsStateWithLifecycle()
 
     NutrientsOrderProvider(nutrientsOrder) {
-        EnergyFormatterProvider(energyFormatter) {
-            FoodYouTheme {
-                PreviewReleaseDialog()
-                TranslationWarningStartupDialog()
+        com.maksimowiczm.foodyou.app.ui.shared.utility.NutrientsOrderProvider(nutrientsOrder) {
+            EnergyFormatterProvider(energyFormatter) {
+                FoodYouTheme {
+                    PreviewReleaseDialog()
+                    TranslationWarningStartupDialog()
 
-                if (onboardingFinished) {
-                    Surface {
-                        FoodYouNavHost()
-                        AppUpdateChangelogModalBottomSheet()
+                    if (onboardingFinished) {
+                        Surface {
+                            FoodYouNavHost()
+                            AppUpdateChangelogModalBottomSheet()
+                        }
+                    } else {
+                        Onboarding(onFinish = viewModel::finishOnboarding)
                     }
-                } else {
-                    Onboarding(onFinish = viewModel::finishOnboarding)
                 }
             }
         }

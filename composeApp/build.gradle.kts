@@ -82,7 +82,6 @@ kotlin {
             implementation(projects.feature.database.importcsvproducts)
             implementation(projects.feature.database.exportcsvproducts)
             implementation(projects.feature.home)
-            implementation(projects.feature.goals)
             implementation(projects.feature.food.shared)
             implementation(projects.feature.food.diary.search)
             implementation(projects.feature.food.diary.add)
@@ -94,6 +93,7 @@ kotlin {
             implementation(projects.feature.food.diary.quickadd)
 
             implementation(projects.ui.changelog)
+            implementation(projects.ui.goals)
             implementation(projects.ui.language)
             implementation(projects.ui.theme)
             implementation(projects.ui.personalization)

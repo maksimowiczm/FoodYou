@@ -56,8 +56,7 @@ kotlin {
 
             implementation(projects.feature.home)
 
-            implementation(projects.feature.goals)
-
+            implementation(projects.ui.goals)
             implementation(projects.ui.language)
             implementation(projects.ui.theme)
             implementation(projects.ui.personalization)

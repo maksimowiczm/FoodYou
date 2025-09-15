@@ -44,5 +44,7 @@ kotlin {
         implementation(projects.shared.barcodescanner)
 
         implementation(libs.androidx.paging.common)
+
+        implementation(projects.business.shared)
     }
 }

@@ -5,8 +5,8 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
-import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.MealsCardsLayout
-import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.MealsPreferences
+import com.maksimowiczm.foodyou.app.business.shared.domain.fooddiary.MealsCardsLayout
+import com.maksimowiczm.foodyou.app.business.shared.domain.fooddiary.MealsPreferences
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.shared.datastore.AbstractDataStoreUserPreferencesRepository
 
 internal class DataStoreMealsPreferencesRepository(dataStore: DataStore<Preferences>) :

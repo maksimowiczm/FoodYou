@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.business.opensource.domain.fooddiary.FoodDiaryEntryCreatedEvent
+import com.maksimowiczm.foodyou.app.business.shared.domain.fooddiary.FoodDiaryEntryCreatedEvent
 import com.maksimowiczm.foodyou.app.ui.shared.extension.now
 import com.maksimowiczm.foodyou.food.domain.entity.Food
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId

@@ -58,8 +58,6 @@ include(":feature:database:importcsvproducts")
 
 include(":feature:home")
 
-include(":feature:goals")
-
 include(":feature:food:shared")
 
 include(":feature:food:product")
@@ -107,3 +105,5 @@ include(":ui:personalization")
 include(":ui:settings:opensource")
 
 include(":ui:onboarding:opensource")
+
+include(":ui:goals")
