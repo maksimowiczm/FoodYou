@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.opensource.sponsorship.foodyousponsors
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.NetworkConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceNetworkConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout
@@ -14,7 +14,7 @@ import kotlin.time.Instant
 @OptIn(ExperimentalTime::class)
 internal class FoodYouSponsorsApiClient(
     private val client: HttpClient,
-    private val config: NetworkConfig,
+    private val config: OpenSourceNetworkConfig,
 ) {
     suspend fun getSponsorships(
         before: Instant? = null,

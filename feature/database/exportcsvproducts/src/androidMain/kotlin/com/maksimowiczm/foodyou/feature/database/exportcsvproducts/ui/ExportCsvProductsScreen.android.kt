@@ -6,7 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceAppConfig
 import com.maksimowiczm.foodyou.feature.database.exportcsvproducts.presentation.ExportProductsViewModel
 import com.maksimowiczm.foodyou.feature.database.exportcsvproducts.presentation.UiState
 import com.maksimowiczm.foodyou.feature.shared.ui.SomethingWentWrongScreen
@@ -31,7 +31,7 @@ actual fun ExportCsvProductsScreen(onBack: () -> Unit, onFinish: () -> Unit, mod
             }
         }
 
-    val appConfig: AppConfig = koinInject()
+    val appConfig: OpenSourceAppConfig = koinInject()
     val fileName = remember {
         "Food You ${appConfig.versionName}-products-${LocalDateTime.now()}.csv"
     }

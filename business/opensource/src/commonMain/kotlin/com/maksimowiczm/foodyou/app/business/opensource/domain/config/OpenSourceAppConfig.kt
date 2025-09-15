@@ -1,9 +1,8 @@
 package com.maksimowiczm.foodyou.app.business.opensource.domain.config
 
-interface AppConfig {
-    val contactEmail: String
-    val contactEmailUri: String
-    val versionName: String
+import com.maksimowiczm.foodyou.app.business.shared.domain.config.AppConfig
+
+interface OpenSourceAppConfig : AppConfig {
     val sourceCodeUrl: String
     val issueTrackerUrl: String
     val featureRequestUrl: String

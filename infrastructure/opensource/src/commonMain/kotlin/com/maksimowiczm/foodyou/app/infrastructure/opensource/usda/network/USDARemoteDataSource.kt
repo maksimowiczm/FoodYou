@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.opensource.usda.network
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.NetworkConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceNetworkConfig
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.usda.network.model.DetailedFood
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.usda.network.model.UsdaFoodPageResponse
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.usda.network.model.UsdaFoodPageResponseImpl
@@ -17,7 +17,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 internal class USDARemoteDataSource(
     private val client: HttpClient,
-    private val networkConfig: NetworkConfig,
+    private val networkConfig: OpenSourceNetworkConfig,
     private val logger: Logger,
 ) {
     suspend fun getProduct(id: String, apiKey: String?): Result<DetailedFood> {

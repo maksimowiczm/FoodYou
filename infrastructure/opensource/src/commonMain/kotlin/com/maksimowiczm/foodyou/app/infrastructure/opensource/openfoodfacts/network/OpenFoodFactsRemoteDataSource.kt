@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.opensource.openfoodfacts.network
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.NetworkConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceNetworkConfig
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.openfoodfacts.network.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.openfoodfacts.network.model.OpenFoodPageResponse
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.openfoodfacts.network.model.v1.OpenFoodFactsPageResponseV1
@@ -18,7 +18,7 @@ import io.ktor.utils.io.CancellationException
 
 internal class OpenFoodFactsRemoteDataSource(
     private val client: HttpClient,
-    private val networkConfig: NetworkConfig,
+    private val networkConfig: OpenSourceNetworkConfig,
     private val rateLimiter: OpenFoodFactsRateLimiter,
     private val logger: Logger,
 ) {

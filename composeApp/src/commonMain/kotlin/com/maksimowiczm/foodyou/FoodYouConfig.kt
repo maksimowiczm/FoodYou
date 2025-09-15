@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceAppConfig
 
-internal class FoodYouConfig : AppConfig {
+internal class FoodYouConfig : OpenSourceAppConfig {
     override val contactEmail: String = BuildConfig.FEEDBACK_EMAIL
     override val contactEmailUri: String = BuildConfig.FEEDBACK_EMAIL_URI
     override val versionName: String = BuildConfig.VERSION_NAME

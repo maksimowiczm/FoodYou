@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceAppConfig
 import com.maksimowiczm.foodyou.app.business.opensource.domain.database.DatabaseDumpService
 import com.maksimowiczm.foodyou.app.ui.shared.extension.now
 import com.maksimowiczm.foodyou.feature.database.databasedump.presentation.DatabaseDumpViewModel
@@ -46,7 +46,7 @@ import org.koin.compose.viewmodel.koinViewModel
 actual fun DatabaseDumpScreen(onBack: () -> Unit, onSuccess: () -> Unit, modifier: Modifier) {
     val context = LocalContext.current
     val viewModel: DatabaseDumpViewModel = koinViewModel()
-    val appConfig: AppConfig = koinInject()
+    val appConfig: OpenSourceAppConfig = koinInject()
     val databaseDumpProvider: DatabaseDumpService = koinInject()
 
     var uiState by rememberSaveable { mutableStateOf(DatabaseDumpScreenUiState.WaitingForFileName) }

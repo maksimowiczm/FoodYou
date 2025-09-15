@@ -22,7 +22,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceAppConfig
 import com.maksimowiczm.foodyou.app.business.shared.domain.translation.Translation
 import com.maksimowiczm.foodyou.feature.settings.language.presentation.LanguageViewModel
 import foodyou.app.generated.resources.*
@@ -33,7 +33,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun LanguageScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: LanguageViewModel = koinViewModel()
-    val appConfig: AppConfig = koinInject()
+    val appConfig: OpenSourceAppConfig = koinInject()
     val uriHandler = LocalUriHandler.current
 
     val selectedTranslation by viewModel.translation.collectAsStateWithLifecycle()

@@ -45,7 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
+import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceAppConfig
 import com.maksimowiczm.foodyou.app.ui.shared.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.shared.component.SettingsListItem
 import foodyou.app.generated.resources.*
@@ -55,7 +55,7 @@ import org.koin.compose.koinInject
 @Composable
 fun AboutScreen(onBack: () -> Unit, onSponsor: () -> Unit, modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
-    val appConfig: AppConfig = koinInject()
+    val appConfig: OpenSourceAppConfig = koinInject()
     val currentVersion = remember(appConfig) { appConfig.versionName }
 
     var showChangelog by rememberSaveable { mutableStateOf(false) }

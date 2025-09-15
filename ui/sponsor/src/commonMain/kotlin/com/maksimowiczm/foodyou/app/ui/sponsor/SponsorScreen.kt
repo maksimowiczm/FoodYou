@@ -41,7 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.AppConfig
+import com.maksimowiczm.foodyou.app.business.shared.domain.config.AppConfig
 import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.compose.extension.add
 import com.maksimowiczm.foodyou.shared.compose.utility.LocalClipboardManager
