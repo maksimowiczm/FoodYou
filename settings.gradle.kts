@@ -46,16 +46,6 @@ include(":business:opensource")
 
 include(":feature:shared")
 
-include(":feature:database:master")
-
-include(":feature:database:externaldatabases")
-
-include(":feature:database:databasedump")
-
-include(":feature:database:swissfoodcompositiondatabase")
-
-include(":feature:database:importcsvproducts")
-
 include(":feature:home")
 
 include(":feature:food:shared")
@@ -73,8 +63,6 @@ include(":feature:food:diary:add")
 include(":feature:food:diary:update")
 
 include(":feature:food:diary:meal")
-
-include(":feature:database:exportcsvproducts")
 
 include(":feature:food:diary:quickadd")
 
@@ -107,3 +95,5 @@ include(":ui:settings:opensource")
 include(":ui:onboarding:opensource")
 
 include(":ui:goals")
+
+include(":ui:database:opensource")

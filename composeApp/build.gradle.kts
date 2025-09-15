@@ -75,12 +75,6 @@ kotlin {
             implementation(projects.business.opensource)
 
             implementation(projects.feature.shared)
-            implementation(projects.feature.database.master)
-            implementation(projects.feature.database.externaldatabases)
-            implementation(projects.feature.database.databasedump)
-            implementation(projects.feature.database.swissfoodcompositiondatabase)
-            implementation(projects.feature.database.importcsvproducts)
-            implementation(projects.feature.database.exportcsvproducts)
             implementation(projects.feature.home)
             implementation(projects.feature.food.shared)
             implementation(projects.feature.food.diary.search)
@@ -101,6 +95,7 @@ kotlin {
             implementation(projects.ui.about.opensource)
             implementation(projects.ui.settings.opensource)
             implementation(projects.ui.onboarding.opensource)
+            implementation(projects.ui.database.opensource)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

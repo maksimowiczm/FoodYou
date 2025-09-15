@@ -38,13 +38,6 @@ kotlin {
 
             implementation(projects.ui.shared)
 
-            implementation(projects.feature.database.master)
-            implementation(projects.feature.database.externaldatabases)
-            implementation(projects.feature.database.databasedump)
-            implementation(projects.feature.database.swissfoodcompositiondatabase)
-            implementation(projects.feature.database.importcsvproducts)
-            implementation(projects.feature.database.exportcsvproducts)
-
             implementation(projects.feature.food.diary.search)
             implementation(projects.feature.food.diary.add)
             implementation(projects.feature.food.diary.update)
@@ -64,6 +57,7 @@ kotlin {
             implementation(projects.ui.about.opensource)
             implementation(projects.ui.settings.opensource)
             implementation(projects.ui.onboarding.opensource)
+            implementation(projects.ui.database.opensource)
 
             // TODO get rid of business dependency
             implementation(libs.core.shared)
