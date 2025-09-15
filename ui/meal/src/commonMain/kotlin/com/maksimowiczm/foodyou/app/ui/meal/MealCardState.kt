@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.meal
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import com.maksimowiczm.foodyou.app.ui.shared.extension.now
+import com.maksimowiczm.foodyou.shared.common.extension.now
 import com.maksimowiczm.foodyou.shared.compose.extension.Saver
 import com.maksimowiczm.foodyou.shared.compose.form.FormField
 import com.maksimowiczm.foodyou.shared.compose.form.nonBlankStringValidator

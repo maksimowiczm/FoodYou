@@ -6,8 +6,8 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
 import androidx.compose.runtime.*
-import com.maksimowiczm.foodyou.app.ui.shared.extension.now
-import com.maksimowiczm.foodyou.app.ui.shared.extension.plus
+import com.maksimowiczm.foodyou.shared.common.extension.now
+import com.maksimowiczm.foodyou.shared.common.extension.plus
 import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant

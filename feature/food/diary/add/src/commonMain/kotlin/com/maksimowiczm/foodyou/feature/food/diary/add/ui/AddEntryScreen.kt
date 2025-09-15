@@ -45,8 +45,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.app.ui.shared.extension.minus
-import com.maksimowiczm.foodyou.app.ui.shared.extension.plus
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.AddEntryEvent
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.AddEntryViewModel
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.FoodModel
@@ -60,6 +58,8 @@ import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.rememberFoodMeasure
 import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPicker
 import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
+import com.maksimowiczm.foodyou.shared.common.extension.minus
+import com.maksimowiczm.foodyou.shared.common.extension.plus
 import com.maksimowiczm.foodyou.shared.compose.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.compose.extension.add
 import com.maksimowiczm.foodyou.shared.domain.measurement.Measurement

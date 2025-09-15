@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.shared.extension
+package com.maksimowiczm.foodyou.shared.common.extension
 
 import kotlin.time.Duration
 import kotlinx.datetime.DateTimeUnit

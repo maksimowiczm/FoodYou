@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceAppConfig
 import com.maksimowiczm.foodyou.app.business.opensource.domain.database.DatabaseDumpService
-import com.maksimowiczm.foodyou.app.ui.shared.extension.now
 import foodyou.app.generated.resources.*
 import java.time.LocalDateTime
 import kotlinx.coroutines.async
