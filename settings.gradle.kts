@@ -48,8 +48,6 @@ include(":feature:shared")
 
 include(":feature:settings:master")
 
-include(":feature:settings:personalization")
-
 include(":feature:database:master")
 
 include(":feature:database:externaldatabases")

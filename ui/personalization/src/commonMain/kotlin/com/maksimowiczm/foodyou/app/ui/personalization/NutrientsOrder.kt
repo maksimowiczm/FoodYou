@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.personalization.ui
+package com.maksimowiczm.foodyou.app.ui.personalization
 
 import androidx.compose.runtime.Composable
 import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder

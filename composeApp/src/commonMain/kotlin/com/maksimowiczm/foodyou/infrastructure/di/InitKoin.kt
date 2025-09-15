@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.opensource.infrastructureOpen
 import com.maksimowiczm.foodyou.app.infrastructure.shared.infrastructureSharedModule
 import com.maksimowiczm.foodyou.app.ui.changelog.uiChangelogModule
 import com.maksimowiczm.foodyou.app.ui.language.uiLanguageModule
+import com.maksimowiczm.foodyou.app.ui.personalization.uiPersonalizationModule
 import com.maksimowiczm.foodyou.app.ui.sponsor.uiSponsorModule
 import com.maksimowiczm.foodyou.app.ui.theme.uiThemeModule
 import kotlinx.coroutines.CoroutineScope
@@ -40,7 +41,6 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
             featureSettingsDatabaseExternalDatabasesModule,
             featureSettingsDatabaseImportCsvProductsModule,
             featureSettingsDatabaseSwissFoodCompositionDatabaseModule,
-            featureSettingsPersonalizationModule,
         )
 
         // Home
@@ -72,4 +72,6 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
         modules(uiChangelogModule)
 
         modules(uiLanguageModule)
+
+        modules(uiPersonalizationModule)
     }

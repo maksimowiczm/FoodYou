@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.personalization.presentation
+package com.maksimowiczm.foodyou.app.ui.personalization
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

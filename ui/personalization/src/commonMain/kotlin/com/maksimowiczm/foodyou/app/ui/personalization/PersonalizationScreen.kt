@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.personalization.ui
+package com.maksimowiczm.foodyou.app.ui.personalization
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,7 +31,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.business.shared.domain.settings.EnergyFormat
 import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.shared.component.SettingsListItem
-import com.maksimowiczm.foodyou.feature.settings.personalization.presentation.PersonalizationScreenViewModel
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

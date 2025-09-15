@@ -1,12 +1,10 @@
-package com.maksimowiczm.foodyou.infrastructure.di
+package com.maksimowiczm.foodyou.app.ui.personalization
 
 import com.maksimowiczm.foodyou.app.business.shared.di.userPreferencesRepository
-import com.maksimowiczm.foodyou.feature.settings.personalization.presentation.PersonalizationScreenViewModel
-import com.maksimowiczm.foodyou.feature.settings.personalization.presentation.PersonalizeNutritionFactsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val featureSettingsPersonalizationModule = module {
+val uiPersonalizationModule = module {
     viewModel { PersonalizationScreenViewModel(settingsRepository = userPreferencesRepository()) }
     viewModel {
         PersonalizeNutritionFactsViewModel(settingsRepository = userPreferencesRepository())

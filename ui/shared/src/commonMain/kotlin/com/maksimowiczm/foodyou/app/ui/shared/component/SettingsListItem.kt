@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SettingsListItem(
-    icon: @Composable () -> Unit,
     label: @Composable () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    icon: (@Composable () -> Unit)? = null,
     supportingContent: (@Composable () -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
     shape: Shape = RectangleShape,
@@ -45,7 +45,7 @@ fun SettingsListItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            icon()
+            icon?.invoke()
 
             Column(Modifier.weight(1f)) {
                 CompositionLocalProvider(

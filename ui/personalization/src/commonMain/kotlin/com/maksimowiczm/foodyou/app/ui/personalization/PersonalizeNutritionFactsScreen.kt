@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.personalization.ui
+package com.maksimowiczm.foodyou.app.ui.personalization
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
@@ -37,7 +37,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.shared.component.ResetToDefaultDialog
-import com.maksimowiczm.foodyou.feature.settings.personalization.presentation.PersonalizeNutritionFactsViewModel
 import com.maksimowiczm.foodyou.shared.compose.extension.add
 import com.maksimowiczm.foodyou.shared.compose.extension.hapticDraggableHandle
 import foodyou.app.generated.resources.*
