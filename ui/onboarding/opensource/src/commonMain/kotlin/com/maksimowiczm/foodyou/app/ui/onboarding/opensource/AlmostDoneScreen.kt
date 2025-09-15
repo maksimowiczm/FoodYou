@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.onboarding.ui
+package com.maksimowiczm.foodyou.app.ui.onboarding.opensource
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,7 +32,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun AlmostDoneScreen(modifier: Modifier = Modifier) {
+internal fun AlmostDoneScreen(modifier: Modifier = Modifier) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val snackbarMessage = stringResource(Res.string.headline_please_wait)

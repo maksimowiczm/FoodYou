@@ -6,9 +6,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.changelog.AppUpdateChangelogModalBottomSheet
 import com.maksimowiczm.foodyou.app.ui.changelog.PreviewReleaseDialog
 import com.maksimowiczm.foodyou.app.ui.language.TranslationWarningStartupDialog
+import com.maksimowiczm.foodyou.app.ui.onboarding.opensource.Onboarding
 import com.maksimowiczm.foodyou.app.ui.shared.utility.EnergyFormatterProvider
 import com.maksimowiczm.foodyou.app.ui.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.feature.onboarding.ui.Onboarding
 import com.maksimowiczm.foodyou.feature.shared.ui.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
 import com.maksimowiczm.foodyou.presentation.AppViewModel

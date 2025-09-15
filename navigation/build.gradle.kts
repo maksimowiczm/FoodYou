@@ -64,6 +64,7 @@ kotlin {
             implementation(projects.ui.sponsor)
             implementation(projects.ui.about.opensource)
             implementation(projects.ui.settings.opensource)
+            implementation(projects.ui.onboarding.opensource)
 
             // TODO get rid of business dependency
             implementation(libs.core.shared)

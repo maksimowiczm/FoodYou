@@ -92,7 +92,6 @@ kotlin {
             implementation(projects.feature.food.diary.shared)
             implementation(projects.feature.food.diary.meal)
             implementation(projects.feature.food.diary.quickadd)
-            implementation(projects.feature.onboarding)
 
             implementation(projects.ui.changelog)
             implementation(projects.ui.language)
@@ -101,6 +100,7 @@ kotlin {
             implementation(projects.ui.sponsor)
             implementation(projects.ui.about.opensource)
             implementation(projects.ui.settings.opensource)
+            implementation(projects.ui.onboarding.opensource)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

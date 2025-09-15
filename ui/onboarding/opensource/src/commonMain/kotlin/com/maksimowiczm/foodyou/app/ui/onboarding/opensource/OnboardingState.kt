@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.onboarding.ui
+package com.maksimowiczm.foodyou.app.ui.onboarding.opensource
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState

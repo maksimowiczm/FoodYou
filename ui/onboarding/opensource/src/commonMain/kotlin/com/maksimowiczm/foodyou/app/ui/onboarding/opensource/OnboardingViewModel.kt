@@ -1,10 +1,9 @@
-package com.maksimowiczm.foodyou.feature.onboarding.presentation
+package com.maksimowiczm.foodyou.app.ui.onboarding.opensource
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.ImportSwissFoodCompositionDatabaseUseCase
 import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchPreferences
-import com.maksimowiczm.foodyou.feature.onboarding.ui.OnboardingState
 import com.maksimowiczm.foodyou.shared.common.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow

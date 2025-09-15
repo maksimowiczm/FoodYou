@@ -1,11 +1,10 @@
-package com.maksimowiczm.foodyou.infrastructure.di
+package com.maksimowiczm.foodyou.app.ui.onboarding.opensource
 
 import com.maksimowiczm.foodyou.app.business.shared.di.userPreferencesRepository
-import com.maksimowiczm.foodyou.feature.onboarding.presentation.OnboardingViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val featureOnboardingModule = module {
+val uiOnboardingModule = module {
     viewModel {
         OnboardingViewModel(
             importSwissUseCase = get(),

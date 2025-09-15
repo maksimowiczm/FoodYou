@@ -4,8 +4,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.onboarding.opensource.Onboarding
 import com.maksimowiczm.foodyou.app.ui.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.feature.onboarding.ui.Onboarding
 import com.maksimowiczm.foodyou.navigation.DownloadProductNavHost
 import com.maksimowiczm.foodyou.presentation.AppViewModel
 import org.koin.compose.viewmodel.koinViewModel

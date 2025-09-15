@@ -1,12 +1,10 @@
-package com.maksimowiczm.foodyou.feature.onboarding.ui
+package com.maksimowiczm.foodyou.app.ui.onboarding.opensource
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.maksimowiczm.foodyou.feature.onboarding.presentation.OnboardingEvent
-import com.maksimowiczm.foodyou.feature.onboarding.presentation.OnboardingViewModel
 import com.maksimowiczm.foodyou.shared.compose.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.compose.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable

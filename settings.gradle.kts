@@ -76,8 +76,6 @@ include(":feature:food:diary:update")
 
 include(":feature:food:diary:meal")
 
-include(":feature:onboarding")
-
 include(":feature:database:exportcsvproducts")
 
 include(":feature:food:diary:quickadd")
@@ -107,3 +105,5 @@ include(":ui:language")
 include(":ui:personalization")
 
 include(":ui:settings:opensource")
+
+include(":ui:onboarding:opensource")
