@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.sponsor.ui
+package com.maksimowiczm.foodyou.app.ui.sponsor
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -54,7 +54,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.feature.about.sponsor.presentation.SponsorMessagesViewModel
 import com.maksimowiczm.foodyou.shared.compose.extension.add
 import com.maksimowiczm.foodyou.shared.compose.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
@@ -284,7 +283,7 @@ private fun SponsorMessagesScreen(
                                 ),
                             containerColor = ChatBubbleDefaults.sentContainerColor,
                             contentColor = ChatBubbleDefaults.sentContentColor,
-                            modifier = Modifier.shimmer(shimmer).fillMaxWidth(),
+                            modifier = Modifier.Companion.shimmer(shimmer).fillMaxWidth(),
                         )
                     }
                     Spacer(Modifier.height(8.dp))

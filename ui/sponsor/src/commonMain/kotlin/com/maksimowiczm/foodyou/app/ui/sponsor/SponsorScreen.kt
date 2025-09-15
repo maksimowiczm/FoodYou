@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.sponsor.ui
+package com.maksimowiczm.foodyou.app.ui.sponsor
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

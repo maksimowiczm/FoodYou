@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.sponsor.presentation
+package com.maksimowiczm.foodyou.app.ui.sponsor
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,7 +39,7 @@ internal class SponsorMessagesViewModel(
     val sponsorsAllowed =
         _sponsorsAllowed.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
+            started = SharingStarted.Companion.WhileSubscribed(2_000),
             initialValue = runBlocking { _sponsorsAllowed.first() },
         )
 

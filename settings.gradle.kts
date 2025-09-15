@@ -48,8 +48,6 @@ include(":feature:shared")
 
 include(":feature:about:master")
 
-include(":feature:about:sponsor")
-
 include(":feature:settings:master")
 
 include(":feature:settings:language")
@@ -105,3 +103,5 @@ include(":business:shared")
 include(":infrastructure:opensource")
 
 include(":infrastructure:shared")
+
+include(":ui:sponsor")

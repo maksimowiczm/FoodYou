@@ -14,7 +14,6 @@ kotlin {
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets.commonMain.dependencies {
-        implementation(projects.business.opensource)
         implementation(projects.business.shared)
         implementation(libs.core.shared)
         implementation(libs.material.kolor)

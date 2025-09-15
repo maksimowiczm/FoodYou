@@ -39,7 +39,6 @@ kotlin {
             implementation(projects.ui.shared)
 
             implementation(projects.feature.about.master)
-            implementation(projects.feature.about.sponsor)
 
             implementation(projects.feature.settings.master)
             implementation(projects.feature.settings.language)
@@ -65,6 +64,7 @@ kotlin {
             implementation(projects.feature.goals)
 
             implementation(projects.ui.theme)
+            implementation(projects.ui.sponsor)
 
             // TODO get rid of business dependency
             implementation(libs.core.shared)

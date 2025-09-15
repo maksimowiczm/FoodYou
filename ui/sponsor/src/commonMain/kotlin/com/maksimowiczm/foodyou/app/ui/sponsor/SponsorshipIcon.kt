@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.sponsor.ui
+package com.maksimowiczm.foodyou.app.ui.sponsor
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.shape.CircleShape
@@ -95,7 +95,7 @@ internal fun SponsorMethod.Icon(modifier: Modifier = Modifier) {
     }
 }
 
-fun Sponsorship.icon(): (@Composable (Modifier) -> Unit)? {
+internal fun Sponsorship.icon(): (@Composable (Modifier) -> Unit)? {
     val method =
         when (method) {
             "Ko-fi" -> Ko_Fi
