@@ -75,7 +75,6 @@ kotlin {
             implementation(projects.business.opensource)
 
             implementation(projects.feature.shared)
-            implementation(projects.feature.settings.master)
             implementation(projects.feature.database.master)
             implementation(projects.feature.database.externaldatabases)
             implementation(projects.feature.database.databasedump)
@@ -101,6 +100,7 @@ kotlin {
             implementation(projects.ui.personalization)
             implementation(projects.ui.sponsor)
             implementation(projects.ui.about.opensource)
+            implementation(projects.ui.settings.opensource)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

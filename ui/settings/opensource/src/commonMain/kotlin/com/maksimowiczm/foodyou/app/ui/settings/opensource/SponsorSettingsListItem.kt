@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.master.ui
+package com.maksimowiczm.foodyou.app.ui.settings.opensource
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,7 +1,7 @@
-package com.maksimowiczm.foodyou.feature.settings.master.ui
+package com.maksimowiczm.foodyou.app.ui.settings.opensource
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -13,7 +13,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun GoalsSettingsListItem(
+internal fun MealSettingsListItem(
     onClick: () -> Unit,
     shape: Shape,
     color: Color,
@@ -21,9 +21,9 @@ fun GoalsSettingsListItem(
     modifier: Modifier = Modifier,
 ) {
     SettingsListItem(
-        icon = { Icon(imageVector = Icons.Outlined.Flag, contentDescription = null) },
-        label = { Text(stringResource(Res.string.headline_daily_goals)) },
-        supportingContent = { Text(stringResource(Res.string.neutral_set_your_daily_goals)) },
+        icon = { Icon(Icons.Outlined.Restaurant, null) },
+        label = { Text(stringResource(Res.string.headline_meals)) },
+        supportingContent = { Text(stringResource(Res.string.neutral_set_your_meal_schedule)) },
         onClick = onClick,
         modifier = modifier,
         shape = shape,

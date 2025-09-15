@@ -38,7 +38,6 @@ kotlin {
 
             implementation(projects.ui.shared)
 
-            implementation(projects.feature.settings.master)
             implementation(projects.feature.database.master)
             implementation(projects.feature.database.externaldatabases)
             implementation(projects.feature.database.databasedump)
@@ -64,6 +63,7 @@ kotlin {
             implementation(projects.ui.personalization)
             implementation(projects.ui.sponsor)
             implementation(projects.ui.about.opensource)
+            implementation(projects.ui.settings.opensource)
 
             // TODO get rid of business dependency
             implementation(libs.core.shared)

@@ -1,35 +1,29 @@
-package com.maksimowiczm.foodyou.feature.settings.master.ui
+package com.maksimowiczm.foodyou.app.ui.settings.opensource
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Translate
+import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.shared.domain.translation.TranslationRepository
 import com.maksimowiczm.foodyou.app.ui.shared.component.SettingsListItem
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
-internal fun LanguageSettingsListItem(
+internal fun GoalsSettingsListItem(
     onClick: () -> Unit,
     shape: Shape,
     color: Color,
     contentColor: Color,
     modifier: Modifier = Modifier,
 ) {
-    val translationRepository: TranslationRepository = koinInject()
-    val language = translationRepository.observeCurrent().collectAsStateWithLifecycle(null).value
-
     SettingsListItem(
-        icon = { Icon(Icons.Outlined.Translate, null) },
-        label = { Text(stringResource(Res.string.headline_language)) },
-        supportingContent = { language?.languageName?.let { Text(it) } },
+        icon = { Icon(imageVector = Icons.Outlined.Flag, contentDescription = null) },
+        label = { Text(stringResource(Res.string.headline_daily_goals)) },
+        supportingContent = { Text(stringResource(Res.string.neutral_set_your_daily_goals)) },
         onClick = onClick,
         modifier = modifier,
         shape = shape,
