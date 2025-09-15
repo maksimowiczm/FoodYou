@@ -1,9 +1,8 @@
-package com.maksimowiczm.foodyou.feature.settings.language.ui
+package com.maksimowiczm.foodyou.app.ui.language
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.settings.language.presentation.LanguageViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

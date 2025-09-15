@@ -1,11 +1,10 @@
-package com.maksimowiczm.foodyou.infrastructure.di
+package com.maksimowiczm.foodyou.app.ui.language
 
 import com.maksimowiczm.foodyou.app.business.shared.di.userPreferencesRepository
-import com.maksimowiczm.foodyou.feature.settings.language.presentation.LanguageViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val featureSettingsLanguageModule = module {
+val uiLanguageModule = module {
     viewModel {
         LanguageViewModel(
             translationRepository = get(),

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.language.ui
+package com.maksimowiczm.foodyou.app.ui.language
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -22,9 +21,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.config.OpenSourceAppConfig
+import com.maksimowiczm.foodyou.app.business.shared.domain.config.AppConfig
 import com.maksimowiczm.foodyou.app.business.shared.domain.translation.Translation
-import com.maksimowiczm.foodyou.feature.settings.language.presentation.LanguageViewModel
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -33,7 +31,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun LanguageScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: LanguageViewModel = koinViewModel()
-    val appConfig: OpenSourceAppConfig = koinInject()
+    val appConfig: AppConfig = koinInject()
     val uriHandler = LocalUriHandler.current
 
     val selectedTranslation by viewModel.translation.collectAsStateWithLifecycle()
@@ -118,48 +116,9 @@ private fun LanguageScreen(
                 }
             }
 
-            item { HorizontalDivider() }
-
-            //            item {
-            //                val context = LocalContext.current
-            //                val intent =
-            //                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            //                        Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
-            //                            val uri = Uri.fromParts("package", context.packageName,
-            // null)
-            //                            data = uri
-            //                        }
-            //                    } else {
-            //                        Intent()
-            //                    }
-            //
-            //                val isSystemLocaleSettingsAvailable =
-            //                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            //                        context.packageManager
-            //                            .queryIntentActivities(intent, PackageManager.MATCH_ALL)
-            //                            .isNotEmpty()
-            //                    } else {
-            //                        false
-            //                    }
-            //
-            //                if (isSystemLocaleSettingsAvailable) {
-            //                    ListItem(
-            //                        headlineContent = {
-            //
-            // Text(stringResource(Res.string.headline_system_language_settings))
-            //                        },
-            //                        modifier = Modifier.clickable { context.startActivity(intent)
-            // },
-            //                        trailingContent = {
-            //                            Icon(
-            //                                imageVector =
-            // Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            //                                contentDescription = null,
-            //                            )
-            //                        },
-            //                    )
-            //                }
-            //            }
+            item { SystemSettingsListItem() }
         }
     }
 }
+
+@Composable internal expect fun SystemSettingsListItem(modifier: Modifier = Modifier)

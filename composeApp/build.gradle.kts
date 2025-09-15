@@ -76,7 +76,6 @@ kotlin {
 
             implementation(projects.feature.shared)
             implementation(projects.feature.settings.master)
-            implementation(projects.feature.settings.language)
             implementation(projects.feature.settings.personalization)
             implementation(projects.feature.database.master)
             implementation(projects.feature.database.externaldatabases)
@@ -98,6 +97,7 @@ kotlin {
             implementation(projects.feature.onboarding)
 
             implementation(projects.ui.changelog)
+            implementation(projects.ui.language)
             implementation(projects.ui.theme)
             implementation(projects.ui.sponsor)
             implementation(projects.ui.about.opensource)

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.language.ui
+package com.maksimowiczm.foodyou.app.ui.language
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Translate

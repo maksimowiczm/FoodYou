@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.language.presentation
+package com.maksimowiczm.foodyou.app.ui.language
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

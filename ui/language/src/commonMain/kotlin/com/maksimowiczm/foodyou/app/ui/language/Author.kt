@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.language.ui
+package com.maksimowiczm.foodyou.app.ui.language
 
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme

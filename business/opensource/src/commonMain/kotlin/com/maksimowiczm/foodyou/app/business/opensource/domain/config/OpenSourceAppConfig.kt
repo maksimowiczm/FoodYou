@@ -6,5 +6,4 @@ interface OpenSourceAppConfig : AppConfig {
     val sourceCodeUrl: String
     val issueTrackerUrl: String
     val featureRequestUrl: String
-    val translationUrl: String
 }
