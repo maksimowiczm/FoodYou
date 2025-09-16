@@ -45,6 +45,7 @@ kotlin {
 
         implementation(libs.androidx.paging.common)
 
+        implementation(libs.core.shared)
         implementation(projects.business.shared)
     }
 }

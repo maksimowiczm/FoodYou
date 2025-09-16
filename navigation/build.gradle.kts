@@ -46,8 +46,6 @@ kotlin {
             implementation(projects.feature.food.product)
             implementation(projects.feature.food.recipe)
 
-            implementation(projects.feature.home)
-
             implementation(projects.ui.goals)
             implementation(projects.ui.language)
             implementation(projects.ui.theme)
@@ -58,6 +56,7 @@ kotlin {
             implementation(projects.ui.onboarding.opensource)
             implementation(projects.ui.database.opensource)
             implementation(projects.ui.meal)
+            implementation(projects.ui.home)
 
             // TODO get rid of business dependency
             implementation(libs.core.shared)

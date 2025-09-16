@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.shared.infrastructureSharedMo
 import com.maksimowiczm.foodyou.app.ui.changelog.uiChangelogModule
 import com.maksimowiczm.foodyou.app.ui.database.opensource.uiDatabaseModule
 import com.maksimowiczm.foodyou.app.ui.goals.uiGoalsModule
+import com.maksimowiczm.foodyou.app.ui.home.uiHomeModule
 import com.maksimowiczm.foodyou.app.ui.language.uiLanguageModule
 import com.maksimowiczm.foodyou.app.ui.meal.uiMealModule
 import com.maksimowiczm.foodyou.app.ui.onboarding.opensource.uiOnboardingModule
@@ -37,9 +38,6 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
 
         // Business modules
         modules(businessOpenSourceModule, businessSharedModule)
-
-        // Home
-        modules(featureHomeModule)
 
         // Food
         modules(featureFoodProductModule, featureFoodRecipeModule, featureFoodSharedModule)
@@ -72,4 +70,6 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
         modules(uiDatabaseModule)
 
         modules(uiMealModule)
+
+        modules(uiHomeModule)
     }

@@ -75,7 +75,6 @@ kotlin {
             implementation(projects.business.opensource)
 
             implementation(projects.feature.shared)
-            implementation(projects.feature.home)
             implementation(projects.feature.food.shared)
             implementation(projects.feature.food.diary.search)
             implementation(projects.feature.food.diary.add)
@@ -96,6 +95,7 @@ kotlin {
             implementation(projects.ui.onboarding.opensource)
             implementation(projects.ui.database.opensource)
             implementation(projects.ui.meal)
+            implementation(projects.ui.home)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

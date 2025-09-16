@@ -46,8 +46,6 @@ include(":business:opensource")
 
 include(":feature:shared")
 
-include(":feature:home")
-
 include(":feature:food:shared")
 
 include(":feature:food:product")
@@ -97,3 +95,5 @@ include(":ui:goals")
 include(":ui:database:opensource")
 
 include(":ui:meal")
+
+include(":ui:home")
