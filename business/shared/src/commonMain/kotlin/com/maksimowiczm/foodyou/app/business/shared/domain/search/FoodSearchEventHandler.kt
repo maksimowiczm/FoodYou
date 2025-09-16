@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.business.opensource.domain.search
+package com.maksimowiczm.foodyou.app.business.shared.domain.search
 
 import com.maksimowiczm.foodyou.food.domain.entity.FoodSearchHistory
 import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.business.opensource.domain.poll
+package com.maksimowiczm.foodyou.app.business.shared.domain.poll
 
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferences
 

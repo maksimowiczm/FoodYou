@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.opensource.openfoodfacts
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.ProductRemoteMediatorFactory
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.openfoodfacts.network.LocalOpenFoodFactsPagingHelper
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.openfoodfacts.network.OpenFoodFactsFacade
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.openfoodfacts.network.OpenFoodFactsProductMapper

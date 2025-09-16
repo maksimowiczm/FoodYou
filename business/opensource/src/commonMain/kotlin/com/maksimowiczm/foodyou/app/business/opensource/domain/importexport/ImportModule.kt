@@ -4,7 +4,7 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 
-fun Module.importExportModule() {
+internal fun Module.importExportModule() {
     factoryOf(::ExportCsvProductsUseCaseImpl).bind<ExportCsvProductsUseCase>()
     factoryOf(::ImportCsvProductUseCaseImpl).bind<ImportCsvProductUseCase>()
     factoryOf(::ImportSwissFoodCompositionDatabaseUseCaseImpl)

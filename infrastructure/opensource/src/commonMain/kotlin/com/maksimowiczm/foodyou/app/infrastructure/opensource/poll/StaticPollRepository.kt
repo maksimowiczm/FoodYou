@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.app.infrastructure.opensource.poll
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.LinkPoll
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.Poll
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.PollId
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.PollRepository
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.LinkPoll
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.Poll
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.PollId
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.PollRepository
 import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.Flow

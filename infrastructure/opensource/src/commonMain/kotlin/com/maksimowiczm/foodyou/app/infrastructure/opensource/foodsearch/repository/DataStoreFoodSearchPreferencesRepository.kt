@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchPreferences
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.FoodSearchPreferences
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.shared.datastore.AbstractDataStoreUserPreferencesRepository
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.shared.datastore.set
 

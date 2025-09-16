@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.app.infrastructure.opensource.usda
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.app.business.shared.di.userPreferencesRepository
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.usda.network.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.usda.network.USDAFacade
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.usda.network.USDAProductMapper

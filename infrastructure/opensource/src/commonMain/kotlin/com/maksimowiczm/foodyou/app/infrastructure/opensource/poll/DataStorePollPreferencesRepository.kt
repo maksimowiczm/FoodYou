@@ -4,8 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.PollId
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.PollPreferences
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.PollId
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.PollPreferences
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.shared.datastore.AbstractDataStoreUserPreferencesRepository
 
 internal class DataStorePollPreferencesRepository(dataStore: DataStore<Preferences>) :

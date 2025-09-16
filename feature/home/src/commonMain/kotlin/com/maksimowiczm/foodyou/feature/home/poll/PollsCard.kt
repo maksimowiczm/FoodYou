@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.LinkPoll
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.Poll
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.LinkPoll
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.Poll
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

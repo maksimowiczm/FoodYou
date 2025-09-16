@@ -45,7 +45,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.itemKey
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearch
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.FoodSearch
 import com.maksimowiczm.foodyou.app.ui.shared.component.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.app.ui.shared.extension.error
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodFilter

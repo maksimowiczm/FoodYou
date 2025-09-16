@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.app.business.opensource.domain.search
+package com.maksimowiczm.foodyou.app.business.shared.domain.search
 
 import com.maksimowiczm.foodyou.app.business.shared.di.eventHandlerOf
 import com.maksimowiczm.foodyou.app.business.shared.di.userPreferencesRepository
 import org.koin.core.module.Module
 import org.koin.dsl.bind
 
-fun Module.searchModule() {
+internal fun Module.searchModule() {
     factory {
             FoodSearchUseCase(
                 foodSearchRepository = get(),

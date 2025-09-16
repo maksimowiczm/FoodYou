@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.app.infrastructure.opensource.usda.network
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchPreferences
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.ProductRemoteMediatorFactory
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.FoodSearchPreferences
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.food.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
 import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository

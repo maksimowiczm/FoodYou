@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.opensource.usda.network
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchPreferences
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.FoodSearchPreferences
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProductRequest

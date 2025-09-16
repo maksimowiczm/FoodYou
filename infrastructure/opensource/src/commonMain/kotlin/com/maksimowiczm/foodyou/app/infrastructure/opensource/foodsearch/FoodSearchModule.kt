@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.app.infrastructure.opensource.foodsearch
 
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodRemoteMediatorFactoryAggregate
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchRepository
 import com.maksimowiczm.foodyou.app.business.shared.di.userPreferencesRepositoryOf
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.FoodRemoteMediatorFactoryAggregate
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.FoodSearchRepository
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.foodsearch.repository.DataStoreFoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.foodsearch.repository.RoomFoodSearchHistoryRepository
 import com.maksimowiczm.foodyou.app.infrastructure.opensource.foodsearch.repository.RoomFoodSearchRepository

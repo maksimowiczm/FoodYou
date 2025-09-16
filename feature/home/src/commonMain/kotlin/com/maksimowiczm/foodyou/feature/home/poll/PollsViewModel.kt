@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.feature.home.poll
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.ObserveActivePollUseCase
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.PollId
-import com.maksimowiczm.foodyou.app.business.opensource.domain.poll.PollPreferences
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.ObserveActivePollUseCase
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.PollId
+import com.maksimowiczm.foodyou.app.business.shared.domain.poll.PollPreferences
 import com.maksimowiczm.foodyou.shared.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn

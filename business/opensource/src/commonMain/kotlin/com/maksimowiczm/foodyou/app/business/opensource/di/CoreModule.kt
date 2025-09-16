@@ -14,7 +14,7 @@ import com.maksimowiczm.foodyou.fooddiary.domain.usecase.UpdateFoodDiaryEntryUse
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 
-fun Module.includeCoreUseCases() {
+internal fun Module.includeCoreUseCases() {
     // Food
     factoryOf(::CreateProductUseCase)
     factoryOf(::CreateRecipeUseCase)

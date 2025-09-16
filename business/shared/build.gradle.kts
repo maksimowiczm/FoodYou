@@ -5,6 +5,8 @@ plugins {
 }
 
 kotlin {
+    sourceSets.all { languageSettings.enableLanguageFeature("WhenGuards") }
+
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.app.business.shared"
         compileSdk = libs.versions.android.compileSdk.get().toInt()

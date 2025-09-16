@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearch
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.FoodSearch
 import kotlinx.coroutines.flow.Flow
 
 @Immutable

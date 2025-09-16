@@ -4,7 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearch
+import com.maksimowiczm.foodyou.app.business.shared.domain.search.FoodSearch
 import com.maksimowiczm.foodyou.app.ui.shared.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem

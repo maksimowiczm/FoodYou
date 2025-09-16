@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.business.opensource.domain.search
+package com.maksimowiczm.foodyou.app.business.shared.domain.search
 
 interface FoodRemoteMediatorFactoryAggregate {
     val openFoodFactsRemoteMediatorFactory: ProductRemoteMediatorFactory
