@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.platform.buildlogic.plugins
+package com.maksimowiczm.foodyou.app.buildlogic.plugin
 
 import com.android.build.api.dsl.androidLibrary
 import org.gradle.api.Plugin
@@ -6,9 +6,10 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.compose.ComposeExtension
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-internal class FeatureLibraryConventionPlugin : Plugin<Project> {
+internal class UiLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply(plugin = libs.findPlugin("kotlinMultiplatform").get().get().pluginId)
@@ -23,6 +24,7 @@ internal class FeatureLibraryConventionPlugin : Plugin<Project> {
         }
     }
 
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     internal fun Project.configureKotlinMultiplatform(
         kmp: KotlinMultiplatformExtension = extensions.getByType(),
         compose: ComposeExtension = extensions.getByType(),
@@ -31,26 +33,21 @@ internal class FeatureLibraryConventionPlugin : Plugin<Project> {
             kmp.androidLibrary {
                 compileSdk = libs.findVersion("android.compileSdk").get().requiredVersion.toInt()
                 minSdk = libs.findVersion("android.minSdk").get().requiredVersion.toInt()
+
+                withHostTestBuilder {}
+
+                withDeviceTestBuilder { sourceSetTreeName = "test" }
+                    .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
             }
 
             sourceSets.apply {
                 commonMain.dependencies {
-                    implementation(libs.findLibrary("core.shared").get())
-                    implementation(libs.findLibrary("core.food").get())
-                    implementation(libs.findLibrary("core.fooddiary").get())
-                    implementation(libs.findLibrary("core.goals").get())
-
                     implementation(project(":shared:common"))
                     implementation(project(":shared:compose"))
                     implementation(project(":shared:resources"))
-
-                    implementation(project(":feature:shared"))
                     implementation(project(":ui:shared"))
 
-                    implementation(project(":business:opensource"))
-                    implementation(project(":business:shared"))
-
-                    implementation(libs.findBundle("feature.library.implementation").get())
+                    implementation(libs.findBundle("ui.library.implementation").get())
 
                     implementation(compose.dependencies.runtime)
                     implementation(compose.dependencies.foundation)
@@ -59,6 +56,14 @@ internal class FeatureLibraryConventionPlugin : Plugin<Project> {
                     implementation(compose.dependencies.materialIconsExtended)
                     implementation(compose.dependencies.ui)
                     implementation(compose.dependencies.components.resources)
+                }
+
+                commonTest.dependencies { implementation(libs.findLibrary("kotlin.test").get()) }
+
+                getByName("androidDeviceTest").dependencies {
+                    implementation(libs.findLibrary("androidx.testRunner").get())
+                    implementation(libs.findLibrary("androidx.testCore").get())
+                    implementation(libs.findLibrary("androidx.testExt.junit").get())
                 }
             }
         }

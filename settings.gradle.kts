@@ -14,7 +14,7 @@ pluginManagement {
     }
 }
 
-includeBuild("platform/build-logic")
+includeBuild("build-logic")
 
 includeBuild("FoodYouCore")
 
