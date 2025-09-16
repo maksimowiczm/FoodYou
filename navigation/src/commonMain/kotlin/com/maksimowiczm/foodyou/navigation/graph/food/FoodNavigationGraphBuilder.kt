@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.navigation.graph.food
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.feature.food.product.ui.CreateProductScreen
-import com.maksimowiczm.foodyou.feature.food.product.ui.UpdateProductScreen
-import com.maksimowiczm.foodyou.feature.food.recipe.ui.UpdateRecipeScreen
+import com.maksimowiczm.foodyou.app.ui.food.product.CreateProductScreen
+import com.maksimowiczm.foodyou.app.ui.food.product.UpdateProductScreen
+import com.maksimowiczm.foodyou.app.ui.food.recipe.UpdateRecipeScreen
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.navigation.domain.CreateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateProductDestination

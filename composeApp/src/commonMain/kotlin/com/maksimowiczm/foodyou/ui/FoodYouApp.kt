@@ -8,8 +8,8 @@ import com.maksimowiczm.foodyou.app.ui.changelog.PreviewReleaseDialog
 import com.maksimowiczm.foodyou.app.ui.language.TranslationWarningStartupDialog
 import com.maksimowiczm.foodyou.app.ui.onboarding.opensource.Onboarding
 import com.maksimowiczm.foodyou.app.ui.shared.utility.EnergyFormatterProvider
+import com.maksimowiczm.foodyou.app.ui.shared.utility.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.app.ui.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.feature.shared.ui.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
 import com.maksimowiczm.foodyou.presentation.AppViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -22,20 +22,18 @@ fun FoodYouApp() {
     val energyFormatter by viewModel.energyFormatter.collectAsStateWithLifecycle()
 
     NutrientsOrderProvider(nutrientsOrder) {
-        com.maksimowiczm.foodyou.app.ui.shared.utility.NutrientsOrderProvider(nutrientsOrder) {
-            EnergyFormatterProvider(energyFormatter) {
-                FoodYouTheme {
-                    PreviewReleaseDialog()
-                    TranslationWarningStartupDialog()
+        EnergyFormatterProvider(energyFormatter) {
+            FoodYouTheme {
+                PreviewReleaseDialog()
+                TranslationWarningStartupDialog()
 
-                    if (onboardingFinished) {
-                        Surface {
-                            FoodYouNavHost()
-                            AppUpdateChangelogModalBottomSheet()
-                        }
-                    } else {
-                        Onboarding(onFinish = viewModel::finishOnboarding)
+                if (onboardingFinished) {
+                    Surface {
+                        FoodYouNavHost()
+                        AppUpdateChangelogModalBottomSheet()
                     }
+                } else {
+                    Onboarding(onFinish = viewModel::finishOnboarding)
                 }
             }
         }

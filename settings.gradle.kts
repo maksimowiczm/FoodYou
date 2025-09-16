@@ -44,24 +44,6 @@ include(":navigation")
 
 include(":business:opensource")
 
-include(":feature:shared")
-
-include(":feature:food:shared")
-
-include(":feature:food:product")
-
-include(":feature:food:recipe")
-
-include(":feature:food:diary:shared")
-
-include(":feature:food:diary:search")
-
-include(":feature:food:diary:add")
-
-include(":feature:food:diary:update")
-
-include(":feature:food:diary:quickadd")
-
 include(":ui:shared")
 
 include(":shared:resources")
@@ -97,3 +79,19 @@ include(":ui:database:opensource")
 include(":ui:meal")
 
 include(":ui:home")
+
+include(":ui:food:shared")
+
+include(":ui:food:product")
+
+include(":ui:food:diary:shared")
+
+include(":ui:food:diary:search")
+
+include(":ui:food:recipe")
+
+include(":ui:food:diary:add")
+
+include(":ui:food:diary:quickadd")
+
+include(":ui:food:diary:update")

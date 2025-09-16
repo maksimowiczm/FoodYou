@@ -73,17 +73,6 @@ kotlin {
 
             implementation(projects.business.shared)
             implementation(projects.business.opensource)
-
-            implementation(projects.feature.shared)
-            implementation(projects.feature.food.shared)
-            implementation(projects.feature.food.diary.search)
-            implementation(projects.feature.food.diary.add)
-            implementation(projects.feature.food.product)
-            implementation(projects.feature.food.recipe)
-            implementation(projects.feature.food.diary.update)
-            implementation(projects.feature.food.diary.shared)
-            implementation(projects.feature.food.diary.quickadd)
-
             implementation(projects.ui.changelog)
             implementation(projects.ui.goals)
             implementation(projects.ui.language)
@@ -96,6 +85,15 @@ kotlin {
             implementation(projects.ui.database.opensource)
             implementation(projects.ui.meal)
             implementation(projects.ui.home)
+            implementation(projects.ui.shared)
+            implementation(projects.ui.food.shared)
+            implementation(projects.ui.food.product)
+            implementation(projects.ui.food.recipe)
+            implementation(projects.ui.food.diary.search)
+            implementation(projects.ui.food.diary.add)
+            implementation(projects.ui.food.diary.update)
+            implementation(projects.ui.food.diary.shared)
+            implementation(projects.ui.food.diary.quickadd)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

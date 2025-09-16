@@ -2,13 +2,13 @@ package com.maksimowiczm.foodyou.navigation.graph.fooddiary
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.feature.food.diary.add.ui.AddEntryScreen
-import com.maksimowiczm.foodyou.feature.food.diary.quickadd.CreateQuickAddScreen
-import com.maksimowiczm.foodyou.feature.food.diary.quickadd.UpdateQuickAddScreen
-import com.maksimowiczm.foodyou.feature.food.diary.search.ui.DiaryFoodSearchScreen
-import com.maksimowiczm.foodyou.feature.food.diary.update.ui.UpdateEntryScreen
-import com.maksimowiczm.foodyou.feature.food.product.ui.CreateProductScreen
-import com.maksimowiczm.foodyou.feature.food.recipe.ui.CreateRecipeScreen
+import com.maksimowiczm.foodyou.app.ui.food.diary.add.AddEntryScreen
+import com.maksimowiczm.foodyou.app.ui.food.diary.quickadd.CreateQuickAddScreen
+import com.maksimowiczm.foodyou.app.ui.food.diary.quickadd.UpdateQuickAddScreen
+import com.maksimowiczm.foodyou.app.ui.food.diary.search.DiaryFoodSearchScreen
+import com.maksimowiczm.foodyou.app.ui.food.diary.update.UpdateEntryScreen
+import com.maksimowiczm.foodyou.app.ui.food.product.CreateProductScreen
+import com.maksimowiczm.foodyou.app.ui.food.recipe.CreateRecipeScreen
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddEntryDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateProductDestination

@@ -45,6 +45,8 @@ kotlin {
 
         implementation(libs.androidx.paging.common)
 
+        implementation(libs.compose.shimmer)
+
         implementation(libs.core.shared)
         implementation(projects.business.shared)
     }

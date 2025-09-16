@@ -6,6 +6,13 @@ import com.maksimowiczm.foodyou.app.infrastructure.opensource.infrastructureOpen
 import com.maksimowiczm.foodyou.app.infrastructure.shared.infrastructureSharedModule
 import com.maksimowiczm.foodyou.app.ui.changelog.uiChangelogModule
 import com.maksimowiczm.foodyou.app.ui.database.opensource.uiDatabaseModule
+import com.maksimowiczm.foodyou.app.ui.food.diary.add.uiFoodDiaryAddModule
+import com.maksimowiczm.foodyou.app.ui.food.diary.quickadd.uiFoodDiaryQuickAddModule
+import com.maksimowiczm.foodyou.app.ui.food.diary.search.uiFoodDiarySearchModule
+import com.maksimowiczm.foodyou.app.ui.food.diary.update.uiFoodDiaryUpdateModule
+import com.maksimowiczm.foodyou.app.ui.food.product.uiFoodProductModule
+import com.maksimowiczm.foodyou.app.ui.food.recipe.uiFoodRecipeModule
+import com.maksimowiczm.foodyou.app.ui.food.shared.uiFoodSharedModule
 import com.maksimowiczm.foodyou.app.ui.goals.uiGoalsModule
 import com.maksimowiczm.foodyou.app.ui.home.uiHomeModule
 import com.maksimowiczm.foodyou.app.ui.language.uiLanguageModule
@@ -39,20 +46,6 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
         // Business modules
         modules(businessOpenSourceModule, businessSharedModule)
 
-        // Food
-        modules(featureFoodProductModule, featureFoodRecipeModule, featureFoodSharedModule)
-
-        // Food Diary
-        modules(
-            featureFoodDiaryAddModule,
-            featureFoodDiarySearchModule,
-            featureFoodDiaryUpdateModule,
-            featureFoodDiaryQuickAddModule,
-        )
-
-        // Onboarding
-
-        // Theme
         modules(uiThemeModule)
 
         modules(uiSponsorModule)
@@ -72,4 +65,14 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
         modules(uiMealModule)
 
         modules(uiHomeModule)
+
+        modules(
+            uiFoodDiaryAddModule,
+            uiFoodDiaryQuickAddModule,
+            uiFoodDiarySearchModule,
+            uiFoodDiaryUpdateModule,
+            uiFoodProductModule,
+            uiFoodRecipeModule,
+            uiFoodSharedModule,
+        )
     }
