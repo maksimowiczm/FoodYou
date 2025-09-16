@@ -3,10 +3,6 @@ package com.maksimowiczm.foodyou.feature.food.shared.presentation.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.OpenFoodFacts
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.SwissFoodCompositionDatabase
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.USDA
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.User
 import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchPreferences
 import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchRepository
 import com.maksimowiczm.foodyou.app.business.opensource.domain.search.FoodSearchUseCase

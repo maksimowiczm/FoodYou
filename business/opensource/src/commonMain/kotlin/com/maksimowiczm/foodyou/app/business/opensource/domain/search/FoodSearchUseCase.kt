@@ -4,8 +4,6 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.OpenFoodFacts
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.USDA
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.shared.domain.date.DateProvider
 import com.maksimowiczm.foodyou.shared.domain.event.EventBus

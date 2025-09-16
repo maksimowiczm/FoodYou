@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.User
 import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.ImportCsvProductUseCase
 import com.maksimowiczm.foodyou.app.business.opensource.domain.importexport.ProductField
 import com.maksimowiczm.foodyou.shared.common.FoodYouLogger

@@ -9,10 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.OpenFoodFacts
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.SwissFoodCompositionDatabase
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.USDA
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.User
 import com.maksimowiczm.foodyou.shared.domain.food.FoodSource
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -54,5 +50,4 @@ fun FoodSource.Type.stringResource(): String =
         FoodSource.Type.USDA -> stringResource(Res.string.headline_food_data_central_usda)
         FoodSource.Type.SwissFoodCompositionDatabase ->
             stringResource(Res.string.headline_swiss_food_composition_database)
-        else -> error("Unknown food source type: $this")
     }

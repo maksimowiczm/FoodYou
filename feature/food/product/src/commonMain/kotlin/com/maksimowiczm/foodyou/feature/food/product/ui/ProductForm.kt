@@ -44,7 +44,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.OpenSourceFoodSourceType
 import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.shared.component.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.food.shared.ui.res.Icon
@@ -763,7 +762,7 @@ private fun EnergyTextField(
 private fun SourcePicker(
     url: FormField<String?, Nothing>,
     type: FoodSource.Type,
-    onTypeChange: (OpenSourceFoodSourceType) -> Unit,
+    onTypeChange: (FoodSource.Type) -> Unit,
     modifier: Modifier = Modifier,
     imeAction: ImeAction = ImeAction.Next,
 ) {
@@ -772,7 +771,7 @@ private fun SourcePicker(
     val dropdownMenu =
         @Composable {
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                OpenSourceFoodSourceType.all.forEach {
+                FoodSource.Type.entries.forEach {
                     DropdownMenuItem(
                         leadingIcon = { it.Icon() },
                         text = { Text(it.stringResource()) },

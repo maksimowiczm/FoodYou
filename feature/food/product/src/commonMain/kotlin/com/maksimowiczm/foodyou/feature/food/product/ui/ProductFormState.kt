@@ -3,10 +3,7 @@ package com.maksimowiczm.foodyou.feature.food.product.ui
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.OpenSourceFoodSourceType
-import com.maksimowiczm.foodyou.app.business.opensource.domain.food.User
 import com.maksimowiczm.foodyou.feature.shared.ui.Saver
 import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
@@ -274,15 +271,7 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
         rememberNotRequiredFormField(product?.nutritionFacts?.chromium?.times(1_000_000.0)?.value)
 
     val sourceType =
-        rememberSaveable(
-            product,
-            stateSaver =
-                Saver(save = { it.ordinal }, restore = { OpenSourceFoodSourceType.fromOrdinal(it) }),
-        ) {
-            mutableStateOf(
-                product?.source?.type as? OpenSourceFoodSourceType ?: FoodSource.Type.User
-            )
-        }
+        rememberSaveable(product) { mutableStateOf(product?.source?.type ?: FoodSource.Type.User) }
     val sourceUrl =
         rememberFormField<String?, Nothing>(
             initialValue = product?.source?.url,
@@ -777,14 +766,7 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
     val chromium =
         rememberNotRequiredFormField(product.nutritionFacts?.chromium?.times(1_000_000.0))
 
-    val sourceType =
-        rememberSaveable(
-            product,
-            stateSaver =
-                Saver(save = { it.ordinal }, restore = { OpenSourceFoodSourceType.fromOrdinal(it) }),
-        ) {
-            mutableStateOf(product.source.type as? OpenSourceFoodSourceType ?: FoodSource.Type.User)
-        }
+    val sourceType = rememberSaveable(product) { mutableStateOf(product.source.type) }
     val sourceUrl =
         rememberFormField<String?, Nothing>(
             initialValue = product.source.url,
@@ -1019,7 +1001,7 @@ internal class ProductFormState(
     val brand: FormField<String?, Nothing>,
     val barcode: FormField<String?, Nothing>,
     val note: FormField<String?, Nothing>,
-    sourceTypeState: MutableState<OpenSourceFoodSourceType>,
+    sourceTypeState: MutableState<FoodSource.Type>,
     val sourceUrl: FormField<String?, Nothing>,
     isLiquidState: MutableState<Boolean>,
     // Weight
@@ -1129,7 +1111,7 @@ internal class ProductFormState(
                 iodineMicro.error == null &&
                 chromiumMicro.error == null
 
-    var sourceType: OpenSourceFoodSourceType by sourceTypeState
+    var sourceType: FoodSource.Type by sourceTypeState
     var isLiquid: Boolean by isLiquidState
     var measurement: Measurement by measurementState
     val isModified: Boolean by isModifiedState
