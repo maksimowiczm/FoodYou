@@ -6,6 +6,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.YearMonth
 
 interface DateFormatter {
     /**
@@ -27,6 +28,8 @@ interface DateFormatter {
      * @return A string representing the formatted month and year.
      */
     fun formatMonthYear(date: LocalDate): String
+
+    fun formatMonthYear(date: YearMonth): String = formatMonthYear(date.firstDay)
 
     /**
      * Formats the specified [date] as a string in the "d MMMM yyyy, EEEE" format.
