@@ -6,7 +6,7 @@ import org.koin.dsl.module
 
 val uiSponsorModule = module {
     viewModel {
-        SponsorMessagesViewModel(
+        SponsorViewModel(
             sponsorRepository = get(),
             preferencesRepository = userPreferencesRepository(),
         )

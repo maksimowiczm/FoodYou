@@ -15,7 +15,6 @@ import com.maksimowiczm.foodyou.sponsorship.domain.entity.Monero
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.PayPal
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.Solana
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.SponsorMethod
-import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.Zcash
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -95,7 +94,7 @@ internal fun SponsorMethod.Icon(modifier: Modifier = Modifier) {
     }
 }
 
-internal fun Sponsorship.icon(): (@Composable (Modifier) -> Unit)? {
+internal fun SponsorMessageUiModel.icon(): (@Composable (Modifier) -> Unit)? {
     val method =
         when (method) {
             "Ko-fi" -> Ko_Fi

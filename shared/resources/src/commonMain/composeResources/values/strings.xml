@@ -35,7 +35,6 @@
     <string name="headline_home_settings" description="Home screen settings">Home settings</string>
     <string name="headline_calendar">Calendar</string>
     <string name="headline_meals_settings">Meals settings</string>
-    <string name="headline_meals_cards_settings">Meals cards settings</string>
     <string name="headline_horizontal">Horizontal</string>
     <string name="headline_vertical">Vertical</string>
     <string name="headline_values_per">Values per</string>
@@ -284,9 +283,6 @@
     <string name="headline_sponsor">Sponsor</string>
     <string name="description_sponsor_short">Contributions in any form are welcome</string>
     <string name="description_sponsor_short_2">Support the app's growth</string>
-    <string name="description_sponsor_1">In a world where every tap is tracked and every feature locked behind a paywall, this food tracker is different. No ads. No subscriptions. No surveillance.</string>
-    <string name="description_sponsor_2">Built on the belief that useful tools should be free, open, and respect your privacy, it offers a quiet stand against the exploitative models dominating app stores.</string>
-    <string name="description_sponsor_3">If this matters to you, consider supporting. You directly support full-time development of the project.</string>
     <string name="headline_source_code">Source code</string>
     <string name="description_source_code">View the project’s source code on GitHub</string>
     <string name="action_write_an_email">Write an email</string>
@@ -313,7 +309,6 @@
     <string name="headline_note">Note</string>
     <string name="description_add_note">Optional notes (e.g., ingredients, vegan status, allergens, additives) or any other non-nutrient details</string>
 
-    <string name="headline_now" description="Current time, now">Now</string>
     <string name="action_try_again">Try again</string>
 
     <string name="description_calories_are_calculated">Energy is automatically calculated from macronutrients. You can disable this feature and enter the value manually if needed. Alcohol is not included in the calculation.</string>
@@ -328,8 +323,6 @@
 
     <string name="headline_user" description="User, person who uses the app">User</string>
     <string name="description_food_source">Specify where the food data comes from. You can include a link here</string>
-
-    <string name="thank_you_for_your_support">Thank you for your support!</string>
 
     <string name="error_food_is_missing_required_fields">Food is missing required fields</string>
 
@@ -367,10 +360,6 @@
     <string name="headline_downloaded">Downloaded</string>
     <string name="headline_edited">Edited</string>
     <string name="headline_history">History</string>
-
-    <string name="action_allow_only_once">Only once</string>
-    <string name="action_allow_always">Allow always</string>
-    <string name="description_sponsors_external_server">To view the latest sponsors, we need to fetch updated data from our external server</string>
 
     <string name="headline_anonymous">Anonymous</string>
 
@@ -458,5 +447,21 @@
 
     <string name="headline_nutrients_colors">Nutrients colors</string>
     <string name="description_nutrients_colors_reset">Nutrients colors settings will be reset to default values</string>
+
+    <string name="action_tap_to_sponsor">Tap to sponsor</string>
+    <string name="headline_sponsorship_goals">Goals</string>
+    <string name="description_sponsorship_goals">By sponsoring, you help keep this project independent and sustainable without relying on exploitative business models. Many commercial apps make money by collecting and selling user data, targeting ads, or nudging users into addictive engagement patterns. Sponsorship ensures this app stays privacy-friendly, transparent, and focused on delivering real value without compromising your trust or well being.</string>
+    <string name="description_x_away_from_next_goal">%1$s away from the next goal</string>
+    <string name="headline_sponsors">Sponsors</string>
+    <string name="description_no_sponsors_this_month">No sponsors this month</string>
+
+    <string name="headline_latest" description="Latest, most recent">Latest</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Top</string>
+
+    <string name="headline_this_month_we_raised">This month we raised %1$s</string>
+
+    <string name="description_sponsors_privacy">Food You takes your privacy seriously. That’s why it won’t connect to any external service unless you allow it. To see the latest sponsors, the data must be downloaded from Food You’s servers.</string>
+
+    <string name="action_allow" description="Allow something">Allow</string>
 
 </resources>

@@ -101,11 +101,11 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
         aboutNavigationGraph(
             masterOnBack = { navController.popBackStack<AboutDestination>(true) },
             masterOnSponsor = { navController.navigateSingleTop(AboutSponsorMessagesDestination) },
-            sponsorMessagesOnBack = {
-                navController.popBackStack<AboutSponsorMessagesDestination>(true)
+            sponsorOnBack = { navController.popBackStack<AboutSponsorMessagesDestination>(true) },
+            sponsorOnSponsorshipMethods = {
+                navController.navigateSingleTop(AboutSponsorDestination)
             },
-            sponsorMessagesOnSponsor = { navController.navigateSingleTop(AboutSponsorDestination) },
-            sponsorOnBack = { navController.popBackStack<AboutSponsorDestination>(true) },
+            sponsorshipMethodOnBack = { navController.popBackStack<AboutSponsorDestination>(true) },
         )
         settingsNavigationGraph(
             masterOnBack = { navController.popBackStack<SettingsDestination>(true) },
