@@ -4,10 +4,8 @@ kotlin = "2.2.10"
 kotlinx-coroutines-core = "1.10.2"
 kotlinx-datetime = "0.7.1"
 kotlinx-serialization-json = "1.9.0"
-paging3 = "3.3.6"
 
 [libraries]
-androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "paging3" }
 gradle-android = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }

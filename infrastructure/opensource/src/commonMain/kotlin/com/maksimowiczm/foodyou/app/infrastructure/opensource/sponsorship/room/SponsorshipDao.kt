@@ -1,21 +1,22 @@
 package com.maksimowiczm.foodyou.app.infrastructure.opensource.sponsorship.room
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SponsorshipDao {
-
-    @Query("SELECT * FROM Sponsorship ORDER BY sponsorshipEpochSeconds DESC")
-    fun pagedFromLatest(): PagingSource<Int, SponsorshipEntity>
-
-    @Query("SELECT * FROM Sponsorship ORDER BY sponsorshipEpochSeconds DESC LIMIT 1")
-    suspend fun getLatestSponsorship(): SponsorshipEntity?
-
-    @Query("SELECT * FROM Sponsorship ORDER BY sponsorshipEpochSeconds ASC LIMIT 1")
-    suspend fun getOldestSponsorship(): SponsorshipEntity?
+    @Query(
+        """
+        SELECT * FROM Sponsorship 
+        WHERE sponsorshipEpochSeconds BETWEEN :fromEpochSeconds AND :toEpochSeconds
+        """
+    )
+    fun observeDateBetween(
+        fromEpochSeconds: Long,
+        toEpochSeconds: Long,
+    ): Flow<List<SponsorshipEntity>>
 
     @Upsert suspend fun upsert(sponsorship: List<SponsorshipEntity>)
 }

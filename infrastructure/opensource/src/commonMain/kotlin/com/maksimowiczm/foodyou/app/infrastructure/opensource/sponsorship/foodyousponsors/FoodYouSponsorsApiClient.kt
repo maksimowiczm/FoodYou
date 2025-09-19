@@ -9,6 +9,9 @@ import io.ktor.client.request.parameter
 import io.ktor.http.userAgent
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.atStartOfDayIn
 
 // https://github.com/maksimowiczm/FoodYou-sponsors API client
 @OptIn(ExperimentalTime::class)
@@ -16,6 +19,13 @@ internal class FoodYouSponsorsApiClient(
     private val client: HttpClient,
     private val config: OpenSourceNetworkConfig,
 ) {
+    suspend fun getSponsorships(yearMonth: YearMonth): List<NetworkSponsorship> {
+        val before = yearMonth.lastDay.atStartOfDayIn(TimeZone.UTC)
+        val after = yearMonth.firstDay.atStartOfDayIn(TimeZone.UTC)
+
+        return getSponsorships(before, after, size = 100).sponsorships
+    }
+
     suspend fun getSponsorships(
         before: Instant? = null,
         after: Instant? = null,
