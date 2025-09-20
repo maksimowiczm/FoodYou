@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.app.ui.theme
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -52,13 +53,12 @@ internal fun ThemeScreenContent(
             )
         }
         item {
-            ThemePreviewImage(
-                modifier =
-                    Modifier.fillMaxWidth()
-                        .aspectRatio(3f)
-                        .padding(horizontal = 32.dp)
-                        .sizeIn(maxWidth = 400.dp, maxHeight = 350.dp)
-            )
+            Box(
+                modifier = Modifier.padding(32.dp).fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                ThemePreviewImage(Modifier.sizeIn(maxWidth = 400.dp, maxHeight = 350.dp))
+            }
         }
         item {
             PalettePicker(
