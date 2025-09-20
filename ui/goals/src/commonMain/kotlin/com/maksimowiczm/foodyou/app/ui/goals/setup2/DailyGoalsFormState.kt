@@ -222,8 +222,8 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
 
                 // Update sliders
                 proteinsSlider.value =
-                    NutrientsHelper.proteinsPercentage(energy.roundToInt(), proteins) * 100f
-                fatsSlider.value = NutrientsHelper.fatsPercentage(energy.roundToInt(), fats) * 100f
+                    NutrientsHelper.proteinsPercentage(energy.roundToInt(), proteins) * 100
+                fatsSlider.value = NutrientsHelper.fatsPercentage(energy.roundToInt(), fats) * 100
                 carbsSlider.value =
                     NutrientsHelper.carbohydratesPercentage(energy.roundToInt(), carbs) * 100
             }
