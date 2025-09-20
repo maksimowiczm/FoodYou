@@ -4,6 +4,8 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import com.maksimowiczm.foodyou.app.ui.goals.setup.AdditionalGoalsFormState
+import com.maksimowiczm.foodyou.app.ui.goals.setup.rememberAdditionalGoalsFormState
 import com.maksimowiczm.foodyou.goals.domain.entity.DailyGoal
 import com.maksimowiczm.foodyou.goals.domain.entity.MacronutrientGoal
 import com.maksimowiczm.foodyou.shared.compose.form.FormField
@@ -37,12 +39,19 @@ internal class DailyGoalsFormState(
     isModifiedState: State<Boolean>,
     inputTypeState: MutableState<InputType>,
     autoCalculateEnergyState: MutableState<Boolean>,
+    val additionalState: AdditionalGoalsFormState,
 ) {
     val isValid: Boolean by derivedStateOf {
-        energy.error == null && proteins.error == null && fats.error == null && carbs.error == null
+        energy.error == null &&
+            proteins.error == null &&
+            fats.error == null &&
+            carbs.error == null &&
+            additionalState.isValid
     }
 
-    val isModified: Boolean by isModifiedState
+    val isModified: Boolean by derivedStateOf {
+        isModifiedState.value || additionalState.isModified
+    }
 
     var proteinsSlider by proteinsSliderState
     var fatsSlider by fatsSliderState
@@ -323,6 +332,8 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
         adjustMacros(fatsSlider, listOf(proteinsSlider, carbsSlider))
     }
 
+    val additionalState = rememberAdditionalGoalsFormState(dailyGoal)
+
     return remember(
         energyFormField,
         proteinsFormField,
@@ -334,6 +345,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
         isModifiedState,
         inputType,
         autoCalculateEnergyState,
+        additionalState,
     ) {
         DailyGoalsFormState(
             energy = energyFormField,
@@ -346,6 +358,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
             isModifiedState = isModifiedState,
             inputTypeState = inputType,
             autoCalculateEnergyState = autoCalculateEnergyState,
+            additionalState = additionalState,
         )
     }
 }
