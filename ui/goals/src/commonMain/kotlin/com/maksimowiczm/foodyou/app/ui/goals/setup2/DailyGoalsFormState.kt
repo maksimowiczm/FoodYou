@@ -38,6 +38,7 @@ internal class DailyGoalsFormState(
     carbsSliderState: MutableState<Float>,
     isModifiedState: State<Boolean>,
     inputTypeState: MutableState<InputType>,
+    autoCalculateEnergyState: MutableState<Boolean>,
 ) {
     val isValid: Boolean by derivedStateOf {
         energy.error == null && proteins.error == null && fats.error == null && carbs.error == null
@@ -49,6 +50,7 @@ internal class DailyGoalsFormState(
     var fatsSlider by fatsSliderState
     var carbsSlider by carbsSliderState
 
+    var autoCalculateEnergy by autoCalculateEnergyState
     var inputType by inputTypeState
 }
 
@@ -120,6 +122,8 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
 
     val isModifiedState = rememberSaveable { mutableStateOf(false) }
 
+    val autoCalculateEnergyState = rememberSaveable { mutableStateOf(true) }
+
     return remember(
         energy,
         proteins,
@@ -130,6 +134,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
         carbsSlider,
         isModifiedState,
         inputType,
+        autoCalculateEnergyState,
     ) {
         DailyGoalsFormState(
             energy = energy,
@@ -141,6 +146,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
             carbsSliderState = carbsSlider,
             isModifiedState = isModifiedState,
             inputTypeState = inputType,
+            autoCalculateEnergyState = autoCalculateEnergyState,
         )
     }
 }

@@ -1,27 +1,63 @@
 package com.maksimowiczm.foodyou.app.ui.goals.setup2
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Undo
+import androidx.compose.material.icons.outlined.Percent
 import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.shared.component.DiscardDialog
+import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.app.ui.shared.utility.LocalNutrientsOrder
+import com.maksimowiczm.foodyou.shared.compose.component.BackHandler
 import com.maksimowiczm.foodyou.shared.compose.extension.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.shared.compose.extension.add
+import com.maksimowiczm.foodyou.shared.compose.form.FormField
 import foodyou.app.generated.resources.*
+import kotlin.math.roundToInt
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -64,6 +100,7 @@ internal fun DailyGoalsContent(
 ) {
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     val handleOnBack = { if (state.isModified) showDiscardDialog = true else onBack() }
+    BackHandler(state.isModified) { showDiscardDialog = true }
     if (showDiscardDialog) {
         DiscardDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack) {
             Text(stringResource(Res.string.question_discard_changes))
@@ -96,7 +133,251 @@ internal fun DailyGoalsContent(
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues,
-        ) {}
+            contentPadding = paddingValues.add(vertical = 8.dp),
+        ) {
+            item {
+                Column(modifier) {
+                    Text(
+                        text = stringResource(Res.string.action_set_goals),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    )
+                    WeightOrPercentageToggle(
+                        useDistribution = state.inputType == InputType.Percentage,
+                        onUseDistributionChange = {
+                            state.inputType = if (it) InputType.Percentage else InputType.Weight
+                        },
+                        modifier =
+                            Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp),
+                    )
+                    if (state.inputType == InputType.Percentage) {
+                        MacroInputSliderForm(
+                            state = state,
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        )
+                    } else {
+                        MacroInput(
+                            state = state,
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        )
+                    }
+                }
+            }
+        }
     }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun WeightOrPercentageToggle(
+    useDistribution: Boolean,
+    onUseDistributionChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement =
+            Arrangement.spacedBy(
+                ButtonGroupDefaults.ConnectedSpaceBetween,
+                Alignment.CenterHorizontally,
+            ),
+    ) {
+        ToggleButton(
+            checked = !useDistribution,
+            onCheckedChange = { onUseDistributionChange(false) },
+            modifier = Modifier.height(56.dp).semantics { role = Role.RadioButton },
+        ) {
+            Icon(painter = painterResource(Res.drawable.ic_weight), contentDescription = null)
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(Res.string.weight))
+        }
+        ToggleButton(
+            checked = useDistribution,
+            onCheckedChange = { onUseDistributionChange(true) },
+            modifier = Modifier.height(56.dp).semantics { role = Role.RadioButton },
+        ) {
+            Icon(imageVector = Icons.Outlined.Percent, contentDescription = null)
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(Res.string.headline_percentages))
+        }
+    }
+}
+
+@Composable
+private fun MacroInputSliderForm(state: DailyGoalsFormState, modifier: Modifier = Modifier) {
+    val nutrientsPalette = LocalNutrientsPalette.current
+    val nutrientsOrder = LocalNutrientsOrder.current
+
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        OutlinedTextField(
+            state = state.energy.textFieldState,
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(Res.string.unit_energy)) },
+            suffix = { Text(stringResource(Res.string.unit_kcal)) },
+            isError = state.energy.error != null,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+
+        nutrientsOrder.forEach {
+            when (it) {
+                NutrientsOrder.Proteins ->
+                    MacroSlider(
+                        value = state.proteinsSlider,
+                        onValueChange = { state.proteinsSlider = it },
+                        color = nutrientsPalette.proteinsOnSurfaceContainer,
+                        label = stringResource(Res.string.nutriment_proteins),
+                    )
+
+                NutrientsOrder.Fats ->
+                    MacroSlider(
+                        value = state.fatsSlider,
+                        onValueChange = { state.fatsSlider = it },
+                        color = nutrientsPalette.fatsOnSurfaceContainer,
+                        label = stringResource(Res.string.nutriment_fats),
+                    )
+
+                NutrientsOrder.Carbohydrates ->
+                    MacroSlider(
+                        value = state.carbsSlider,
+                        onValueChange = { state.carbsSlider = it },
+                        color = nutrientsPalette.carbohydratesOnSurfaceContainer,
+                        label = stringResource(Res.string.nutriment_carbohydrates),
+                    )
+
+                NutrientsOrder.Other,
+                NutrientsOrder.Vitamins,
+                NutrientsOrder.Minerals -> Unit
+            }
+        }
+    }
+}
+
+@Composable
+private fun MacroSlider(
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    color: Color,
+    label: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(text = label, color = color, style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text =
+                    buildString {
+                        append(value.roundToInt())
+                        append("%")
+                    },
+                color = color,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+        Slider(
+            value = value,
+            onValueChange = { onValueChange(it.roundToInt().toFloat()) },
+            valueRange = 0f..100f,
+            colors = SliderDefaults.colors(activeTrackColor = color, thumbColor = color),
+        )
+    }
+}
+
+@Composable
+private fun MacroInput(state: DailyGoalsFormState, modifier: Modifier = Modifier) {
+    val nutrientsPalette = LocalNutrientsPalette.current
+    val nutrientsOrder = LocalNutrientsOrder.current
+
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        nutrientsOrder.forEach {
+            when (it) {
+                NutrientsOrder.Proteins ->
+                    state.proteins.TextField(
+                        label = stringResource(Res.string.nutriment_proteins),
+                        color = nutrientsPalette.proteinsOnSurfaceContainer,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+
+                NutrientsOrder.Fats ->
+                    state.fats.TextField(
+                        label = stringResource(Res.string.nutriment_fats),
+                        color = nutrientsPalette.fatsOnSurfaceContainer,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+
+                NutrientsOrder.Carbohydrates ->
+                    state.carbs.TextField(
+                        label = stringResource(Res.string.nutriment_carbohydrates),
+                        color = nutrientsPalette.carbohydratesOnSurfaceContainer,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+
+                NutrientsOrder.Other,
+                NutrientsOrder.Vitamins,
+                NutrientsOrder.Minerals -> Unit
+            }
+        }
+
+        if (state.autoCalculateEnergy) {
+            val str = buildString {
+                append("=")
+                append(" ${state.energy.value.roundToInt()} ")
+                append(stringResource(Res.string.unit_kcal))
+            }
+
+            Text(
+                text = str,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineSmall,
+            )
+        } else {
+            OutlinedTextField(
+                state = state.energy.textFieldState,
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(stringResource(Res.string.unit_energy)) },
+                suffix = { Text(stringResource(Res.string.unit_kcal)) },
+                keyboardOptions =
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal,
+                        imeAction = ImeAction.Next,
+                    ),
+                trailingIcon = {
+                    IconButton(onClick = { state.autoCalculateEnergy = true }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.Undo,
+                            contentDescription = null,
+                        )
+                    }
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun FormField<Double, DailyGoalsFormError>.TextField(
+    label: String,
+    color: Color,
+    modifier: Modifier = Modifier,
+    suffix: String = stringResource(Res.string.unit_gram_short),
+    imeAction: ImeAction = ImeAction.Next,
+) {
+    OutlinedTextField(
+        state = textFieldState,
+        modifier = modifier,
+        label = { Text(label) },
+        suffix = { Text(suffix) },
+        keyboardOptions =
+            KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = imeAction),
+        isError = error != null,
+        colors =
+            OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = color,
+                unfocusedBorderColor = color,
+                focusedLabelColor = color,
+                unfocusedLabelColor = color,
+            ),
+    )
 }
