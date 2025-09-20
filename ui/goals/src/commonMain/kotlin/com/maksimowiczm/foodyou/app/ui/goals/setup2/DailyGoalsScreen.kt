@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Undo
 import androidx.compose.material.icons.outlined.Percent
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ButtonGroupDefaults
@@ -27,7 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -441,40 +439,18 @@ private fun MacroInput(state: DailyGoalsFormState, modifier: Modifier = Modifier
             }
         }
 
-        if (state.autoCalculateEnergy) {
-            val str = buildString {
-                append("=")
-                append(" ${state.energy.value.roundToInt()} ")
-                append(stringResource(Res.string.unit_kcal))
-            }
-
-            Text(
-                text = str,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineSmall,
-            )
-        } else {
-            OutlinedTextField(
-                state = state.energy.textFieldState,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(Res.string.unit_energy)) },
-                suffix = { Text(stringResource(Res.string.unit_kcal)) },
-                keyboardOptions =
-                    KeyboardOptions(
-                        keyboardType = KeyboardType.Decimal,
-                        imeAction = ImeAction.Next,
-                    ),
-                trailingIcon = {
-                    IconButton(onClick = { state.autoCalculateEnergy = true }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.Undo,
-                            contentDescription = null,
-                        )
-                    }
-                },
-            )
+        val str = buildString {
+            append("=")
+            append(" ${state.energy.value.roundToInt()} ")
+            append(stringResource(Res.string.unit_kcal))
         }
+
+        Text(
+            text = str,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.headlineSmall,
+        )
     }
 }
 

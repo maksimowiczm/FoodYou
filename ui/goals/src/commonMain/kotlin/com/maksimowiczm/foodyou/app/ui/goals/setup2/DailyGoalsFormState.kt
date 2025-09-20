@@ -40,7 +40,6 @@ internal class DailyGoalsFormState(
     carbsSliderState: MutableState<Float>,
     isModifiedState: State<Boolean>,
     inputTypeState: MutableState<InputType>,
-    autoCalculateEnergyState: MutableState<Boolean>,
     val additionalState: AdditionalGoalsFormState,
 ) {
     val isValid: Boolean by derivedStateOf {
@@ -59,7 +58,6 @@ internal class DailyGoalsFormState(
     var fatsSlider by fatsSliderState
     var carbsSlider by carbsSliderState
 
-    var autoCalculateEnergy by autoCalculateEnergyState
     var inputType by inputTypeState
 
     fun intoDailyGoals(): DailyGoal {
@@ -72,6 +70,7 @@ internal class DailyGoalsFormState(
                         fatsGrams = fats.value,
                         carbohydratesGrams = carbs.value,
                     )
+
                 InputType.Percentage ->
                     MacronutrientGoal.Distribution(
                         energyKcal = energy.value,
@@ -92,8 +91,10 @@ internal class DailyGoalsFormState(
                         NutritionFactsField.TransFats -> additionalState.transFats.value
                         NutritionFactsField.MonounsaturatedFats ->
                             additionalState.monounsaturatedFats.value
+
                         NutritionFactsField.PolyunsaturatedFats ->
                             additionalState.polyunsaturatedFats.value
+
                         NutritionFactsField.Omega3 -> additionalState.omega3.value
                         NutritionFactsField.Omega6 -> additionalState.omega6.value
                         NutritionFactsField.Carbohydrates -> null
@@ -105,9 +106,11 @@ internal class DailyGoalsFormState(
                         NutritionFactsField.Salt -> additionalState.salt.value
                         NutritionFactsField.Cholesterol ->
                             additionalState.cholesterolMilli.value / 1000
+
                         NutritionFactsField.Caffeine -> additionalState.caffeineMilli.value / 1000
                         NutritionFactsField.VitaminA ->
                             additionalState.vitaminAMicro.value / 1000_000
+
                         NutritionFactsField.VitaminB1 -> additionalState.vitaminB1Milli.value / 1000
                         NutritionFactsField.VitaminB2 -> additionalState.vitaminB2Milli.value / 1000
                         NutritionFactsField.VitaminB3 -> additionalState.vitaminB3Milli.value / 1000
@@ -115,16 +118,21 @@ internal class DailyGoalsFormState(
                         NutritionFactsField.VitaminB6 -> additionalState.vitaminB6Milli.value / 1000
                         NutritionFactsField.VitaminB7 ->
                             additionalState.vitaminB7Micro.value / 1000_000
+
                         NutritionFactsField.VitaminB9 ->
                             additionalState.vitaminB9Micro.value / 1000_000
+
                         NutritionFactsField.VitaminB12 ->
                             additionalState.vitaminB12Micro.value / 1000_000
+
                         NutritionFactsField.VitaminC -> additionalState.vitaminCMilli.value / 1000
                         NutritionFactsField.VitaminD ->
                             additionalState.vitaminDMicro.value / 1000_000
+
                         NutritionFactsField.VitaminE -> additionalState.vitaminEMilli.value / 1000
                         NutritionFactsField.VitaminK ->
                             additionalState.vitaminKMicro.value / 1000_000
+
                         NutritionFactsField.Manganese -> additionalState.manganeseMilli.value / 1000
                         NutritionFactsField.Magnesium -> additionalState.magnesiumMilli.value / 1000
                         NutritionFactsField.Potassium -> additionalState.potassiumMilli.value / 1000
@@ -135,8 +143,10 @@ internal class DailyGoalsFormState(
                         NutritionFactsField.Iron -> additionalState.ironMilli.value / 1000
                         NutritionFactsField.Phosphorus ->
                             additionalState.phosphorusMilli.value / 1000
+
                         NutritionFactsField.Selenium ->
                             additionalState.seleniumMicro.value / 1000_000
+
                         NutritionFactsField.Iodine -> additionalState.iodineMicro.value / 1000_000
                         NutritionFactsField.Chromium ->
                             additionalState.chromiumMicro.value / 1000_000
@@ -269,28 +279,9 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
         }
     }
 
-    val autoCalculateEnergyState = rememberSaveable {
-        val currentEnergy =
-            NutrientsHelper.calculateEnergy(
-                    proteins = dailyGoal.macronutrientGoal.proteinsGrams,
-                    carbohydrates = dailyGoal.macronutrientGoal.carbohydratesGrams,
-                    fats = dailyGoal.macronutrientGoal.fatsGrams,
-                )
-                .roundToInt()
-
-        // Allow 2% error
-        val allowedError = (currentEnergy * 0.02).toInt()
-        val shouldAutoCalculate =
-            dailyGoal.macronutrientGoal.energyKcal.roundToInt() in
-                (currentEnergy - allowedError)..(currentEnergy + allowedError)
-
-        mutableStateOf(shouldAutoCalculate)
-    }
-
     LaunchedEffect(Unit) {
         combine(
                 snapshotFlow { inputType.value },
-                snapshotFlow { autoCalculateEnergyState.value },
                 snapshotFlow {
                     arrayOf(
                         energyFormField.value,
@@ -299,22 +290,20 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
                         carbsFormField.value,
                     )
                 },
-            ) { inputType, autoCalculateEnergy, (energy, proteins, fats, carbs) ->
+            ) { inputType, (energy, proteins, fats, carbs) ->
                 if (inputType != InputType.Weight) {
                     return@combine
                 }
 
-                if (autoCalculateEnergy) {
-                    val energyKcal =
-                        NutrientsHelper.calculateEnergy(
-                            proteins = proteins,
-                            carbohydrates = carbs,
-                            fats = fats,
-                        )
-                    energyFormField.textFieldState.setTextAndPlaceCursorAtEnd(
-                        energyKcal.roundToInt().toString()
+                val energyKcal =
+                    NutrientsHelper.calculateEnergy(
+                        proteins = proteins,
+                        carbohydrates = carbs,
+                        fats = fats,
                     )
-                }
+                energyFormField.textFieldState.setTextAndPlaceCursorAtEnd(
+                    energyKcal.roundToInt().toString()
+                )
 
                 // Update sliders
                 proteinsSlider.value =
@@ -440,7 +429,6 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
         carbsSlider,
         isModifiedState,
         inputType,
-        autoCalculateEnergyState,
         additionalState,
     ) {
         DailyGoalsFormState(
@@ -453,7 +441,6 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
             carbsSliderState = carbsSlider,
             isModifiedState = isModifiedState,
             inputTypeState = inputType,
-            autoCalculateEnergyState = autoCalculateEnergyState,
             additionalState = additionalState,
         )
     }
