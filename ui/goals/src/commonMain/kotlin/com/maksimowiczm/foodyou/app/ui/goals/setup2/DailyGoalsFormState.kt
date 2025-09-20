@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.maksimowiczm.foodyou.goals.domain.entity.DailyGoal
+import com.maksimowiczm.foodyou.goals.domain.entity.MacronutrientGoal
 import com.maksimowiczm.foodyou.shared.compose.form.FormField
 import com.maksimowiczm.foodyou.shared.compose.form.doubleParser
 import com.maksimowiczm.foodyou.shared.compose.form.rememberFormField
@@ -118,9 +119,40 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
 
     val carbsSlider = rememberSaveable { mutableFloatStateOf(0f) }
 
-    val inputType = rememberSaveable { mutableStateOf(InputType.Weight) }
+    val inputType = rememberSaveable {
+        mutableStateOf(
+            when (dailyGoal.macronutrientGoal) {
+                is MacronutrientGoal.Distribution -> InputType.Percentage
+                else -> InputType.Weight
+            }
+        )
+    }
 
-    val isModifiedState = rememberSaveable { mutableStateOf(false) }
+    val isModifiedState = remember {
+        derivedStateOf {
+            if (energy.value != dailyGoal.macronutrientGoal.energyKcal) {
+                return@derivedStateOf true
+            }
+
+            if (
+                inputType.value == InputType.Weight &&
+                    dailyGoal.macronutrientGoal is MacronutrientGoal.Distribution
+            ) {
+                return@derivedStateOf true
+            }
+
+            if (
+                inputType.value == InputType.Percentage &&
+                    dailyGoal.macronutrientGoal is MacronutrientGoal.Manual
+            ) {
+                return@derivedStateOf true
+            }
+
+            proteins.value.toInt() != dailyGoal.macronutrientGoal.proteinsGrams.toInt() ||
+                fats.value.toInt() != dailyGoal.macronutrientGoal.fatsGrams.toInt() ||
+                carbs.value.toInt() != dailyGoal.macronutrientGoal.carbohydratesGrams.toInt()
+        }
+    }
 
     val autoCalculateEnergyState = rememberSaveable { mutableStateOf(true) }
 
