@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.shared.compose.form.doubleParser
 import com.maksimowiczm.foodyou.shared.compose.form.rememberFormField
 import com.maksimowiczm.foodyou.shared.compose.utility.formatClipZeros
 import com.maksimowiczm.foodyou.shared.domain.food.NutrientsHelper
+import com.maksimowiczm.foodyou.shared.domain.food.NutritionFactsField
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
@@ -60,6 +61,92 @@ internal class DailyGoalsFormState(
 
     var autoCalculateEnergy by autoCalculateEnergyState
     var inputType by inputTypeState
+
+    fun intoDailyGoals(): DailyGoal {
+        val macronutrientGoal =
+            when (inputType) {
+                InputType.Weight ->
+                    MacronutrientGoal.Manual(
+                        energyKcal = energy.value,
+                        proteinsGrams = proteins.value,
+                        fatsGrams = fats.value,
+                        carbohydratesGrams = carbs.value,
+                    )
+                InputType.Percentage ->
+                    MacronutrientGoal.Distribution(
+                        energyKcal = energy.value,
+                        proteinsPercentage = proteinsSlider.toDouble() / 100,
+                        fatsPercentage = fatsSlider.toDouble() / 100,
+                        carbohydratesPercentage = carbsSlider.toDouble() / 100,
+                    )
+            }
+
+        val map =
+            NutritionFactsField.entries
+                .associateWith {
+                    when (it) {
+                        NutritionFactsField.Energy -> null
+                        NutritionFactsField.Proteins -> null
+                        NutritionFactsField.Fats -> null
+                        NutritionFactsField.SaturatedFats -> additionalState.saturatedFats.value
+                        NutritionFactsField.TransFats -> additionalState.transFats.value
+                        NutritionFactsField.MonounsaturatedFats ->
+                            additionalState.monounsaturatedFats.value
+                        NutritionFactsField.PolyunsaturatedFats ->
+                            additionalState.polyunsaturatedFats.value
+                        NutritionFactsField.Omega3 -> additionalState.omega3.value
+                        NutritionFactsField.Omega6 -> additionalState.omega6.value
+                        NutritionFactsField.Carbohydrates -> null
+                        NutritionFactsField.Sugars -> additionalState.sugars.value
+                        NutritionFactsField.AddedSugars -> additionalState.addedSugars.value
+                        NutritionFactsField.DietaryFiber -> additionalState.dietaryFiber.value
+                        NutritionFactsField.SolubleFiber -> additionalState.solubleFiber.value
+                        NutritionFactsField.InsolubleFiber -> additionalState.insolubleFiber.value
+                        NutritionFactsField.Salt -> additionalState.salt.value
+                        NutritionFactsField.Cholesterol ->
+                            additionalState.cholesterolMilli.value / 1000
+                        NutritionFactsField.Caffeine -> additionalState.caffeineMilli.value / 1000
+                        NutritionFactsField.VitaminA ->
+                            additionalState.vitaminAMicro.value / 1000_000
+                        NutritionFactsField.VitaminB1 -> additionalState.vitaminB1Milli.value / 1000
+                        NutritionFactsField.VitaminB2 -> additionalState.vitaminB2Milli.value / 1000
+                        NutritionFactsField.VitaminB3 -> additionalState.vitaminB3Milli.value / 1000
+                        NutritionFactsField.VitaminB5 -> additionalState.vitaminB5Milli.value / 1000
+                        NutritionFactsField.VitaminB6 -> additionalState.vitaminB6Milli.value / 1000
+                        NutritionFactsField.VitaminB7 ->
+                            additionalState.vitaminB7Micro.value / 1000_000
+                        NutritionFactsField.VitaminB9 ->
+                            additionalState.vitaminB9Micro.value / 1000_000
+                        NutritionFactsField.VitaminB12 ->
+                            additionalState.vitaminB12Micro.value / 1000_000
+                        NutritionFactsField.VitaminC -> additionalState.vitaminCMilli.value / 1000
+                        NutritionFactsField.VitaminD ->
+                            additionalState.vitaminDMicro.value / 1000_000
+                        NutritionFactsField.VitaminE -> additionalState.vitaminEMilli.value / 1000
+                        NutritionFactsField.VitaminK ->
+                            additionalState.vitaminKMicro.value / 1000_000
+                        NutritionFactsField.Manganese -> additionalState.manganeseMilli.value / 1000
+                        NutritionFactsField.Magnesium -> additionalState.magnesiumMilli.value / 1000
+                        NutritionFactsField.Potassium -> additionalState.potassiumMilli.value / 1000
+                        NutritionFactsField.Calcium -> additionalState.calciumMilli.value / 1000
+                        NutritionFactsField.Copper -> additionalState.copperMilli.value / 1000
+                        NutritionFactsField.Zinc -> additionalState.zincMilli.value / 1000
+                        NutritionFactsField.Sodium -> additionalState.sodiumMilli.value / 1000
+                        NutritionFactsField.Iron -> additionalState.ironMilli.value / 1000
+                        NutritionFactsField.Phosphorus ->
+                            additionalState.phosphorusMilli.value / 1000
+                        NutritionFactsField.Selenium ->
+                            additionalState.seleniumMicro.value / 1000_000
+                        NutritionFactsField.Iodine -> additionalState.iodineMicro.value / 1000_000
+                        NutritionFactsField.Chromium ->
+                            additionalState.chromiumMicro.value / 1000_000
+                    }
+                }
+                .filterValues { it != null }
+                .mapValues { it.value!! }
+
+        return DailyGoal(macronutrientGoal = macronutrientGoal, map = map)
+    }
 }
 
 @Composable

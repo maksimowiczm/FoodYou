@@ -57,9 +57,31 @@ internal class WeeklyGoalsState(
         }
     }
 
-    fun intoWeeklyGoals() {
-        TODO()
-    }
+    fun intoWeeklyGoals() =
+        if (!useSeparateGoals) {
+            val dailyGoals = monday.intoDailyGoals()
+            WeeklyGoals(
+                monday = dailyGoals,
+                tuesday = dailyGoals,
+                wednesday = dailyGoals,
+                thursday = dailyGoals,
+                friday = dailyGoals,
+                saturday = dailyGoals,
+                sunday = dailyGoals,
+                useSeparateGoals = false,
+            )
+        } else {
+            WeeklyGoals(
+                monday = monday.intoDailyGoals(),
+                tuesday = tuesday.intoDailyGoals(),
+                wednesday = wednesday.intoDailyGoals(),
+                thursday = thursday.intoDailyGoals(),
+                friday = friday.intoDailyGoals(),
+                saturday = saturday.intoDailyGoals(),
+                sunday = sunday.intoDailyGoals(),
+                useSeparateGoals = true,
+            )
+        }
 }
 
 @Composable
