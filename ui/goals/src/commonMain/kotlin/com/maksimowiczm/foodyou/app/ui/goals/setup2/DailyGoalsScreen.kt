@@ -1,7 +1,10 @@
 package com.maksimowiczm.foodyou.app.ui.goals.setup2
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,12 +14,14 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Undo
 import androidx.compose.material.icons.outlined.Percent
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -40,7 +45,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -59,6 +66,7 @@ import com.maksimowiczm.foodyou.shared.compose.component.BackHandler
 import com.maksimowiczm.foodyou.shared.compose.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.compose.extension.add
 import com.maksimowiczm.foodyou.shared.compose.form.FormField
+import com.maksimowiczm.foodyou.shared.compose.utility.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.painterResource
@@ -82,10 +90,10 @@ fun DailyGoalsScreen(onBack: () -> Unit, onSave: () -> Unit, modifier: Modifier 
         return
     }
 
-    val state = rememberDailyGoalsFormState(weeklyGoals.monday)
+    val state = rememberWeeklyGoalsState(weeklyGoals)
 
     DailyGoalsContent(
-        state = state,
+        weeklyState = state,
         onBack = onBack,
         onSave = {
             // TODO
@@ -97,14 +105,14 @@ fun DailyGoalsScreen(onBack: () -> Unit, onSave: () -> Unit, modifier: Modifier 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun DailyGoalsContent(
-    state: DailyGoalsFormState,
+    weeklyState: WeeklyGoalsState,
     onBack: () -> Unit,
     onSave: () -> Unit,
     modifier: Modifier,
 ) {
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
-    val handleOnBack = { if (state.isModified) showDiscardDialog = true else onBack() }
-    BackHandler(state.isModified) { showDiscardDialog = true }
+    val handleOnBack = { if (weeklyState.isModified) showDiscardDialog = true else onBack() }
+    BackHandler(weeklyState.isModified) { showDiscardDialog = true }
     if (showDiscardDialog) {
         DiscardDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack) {
             Text(stringResource(Res.string.question_discard_changes))
@@ -123,7 +131,7 @@ internal fun DailyGoalsContent(
                     FilledIconButton(
                         onClick = onSave,
                         shapes = IconButtonDefaults.shapes(),
-                        enabled = state.isValid,
+                        enabled = weeklyState.isValid,
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Save,
@@ -143,6 +151,21 @@ internal fun DailyGoalsContent(
             contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
             item {
+                DayPicker(
+                    useSeparateGoals = weeklyState.useSeparateGoals,
+                    onUseSeparateGoalsChange = { weeklyState.useSeparateGoals = it },
+                    selectedDay = weeklyState.selectedDay,
+                    onSelectedDayChange = { weeklyState.selectedDay = it },
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            item { Spacer(Modifier.height(16.dp)) }
+
+            item {
+                val state = weeklyState.selectedDayGoals
+
                 Column(modifier) {
                     Text(
                         text = stringResource(Res.string.action_set_goals),
@@ -174,6 +197,90 @@ internal fun DailyGoalsContent(
                         state = state.additionalState,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun DayPicker(
+    useSeparateGoals: Boolean,
+    onUseSeparateGoalsChange: (Boolean) -> Unit,
+    selectedDay: Int,
+    onSelectedDayChange: (Int) -> Unit,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+) {
+    val hapticFeedback = LocalHapticFeedback.current
+
+    Column(modifier) {
+        Text(
+            text = stringResource(Res.string.headline_pick_the_days),
+            modifier = Modifier.padding(contentPadding),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Spacer(Modifier.height(8.dp))
+        Row(
+            modifier =
+                Modifier.fillMaxWidth()
+                    .clickable { onUseSeparateGoalsChange(!useSeparateGoals) }
+                    .padding(contentPadding),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Checkbox(
+                modifier = Modifier.padding(vertical = 16.dp),
+                checked = useSeparateGoals,
+                onCheckedChange = null,
+            )
+            Text(
+                text = stringResource(Res.string.action_set_separate_goals),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+        AnimatedVisibility(useSeparateGoals) {
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                contentPadding = contentPadding,
+            ) {
+                item {
+                    val dateFormatter = LocalDateFormatter.current
+                    val weekDayNamesShort = dateFormatter.weekDayNamesShort
+
+                    Row(
+                        horizontalArrangement =
+                            Arrangement.spacedBy(
+                                ButtonGroupDefaults.ConnectedSpaceBetween,
+                                Alignment.CenterHorizontally,
+                            )
+                    ) {
+                        weekDayNamesShort.forEachIndexed { i, name ->
+                            ToggleButton(
+                                checked = selectedDay == i,
+                                onCheckedChange = {
+                                    onSelectedDayChange(i)
+                                    hapticFeedback.performHapticFeedback(
+                                        HapticFeedbackType.SegmentTick
+                                    )
+                                },
+                                modifier = Modifier.semantics { role = Role.RadioButton },
+                                shapes =
+                                    when (i) {
+                                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                        weekDayNamesShort.lastIndex ->
+                                            ButtonGroupDefaults.connectedTrailingButtonShapes()
+
+                                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                                    },
+                            ) {
+                                Text(name)
+                            }
+                        }
+                    }
                 }
             }
         }
