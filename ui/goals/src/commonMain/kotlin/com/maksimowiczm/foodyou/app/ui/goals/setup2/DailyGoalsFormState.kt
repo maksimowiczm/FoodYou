@@ -4,8 +4,6 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import com.maksimowiczm.foodyou.app.ui.goals.setup.AdditionalGoalsFormState
-import com.maksimowiczm.foodyou.app.ui.goals.setup.rememberAdditionalGoalsFormState
 import com.maksimowiczm.foodyou.goals.domain.entity.DailyGoal
 import com.maksimowiczm.foodyou.goals.domain.entity.MacronutrientGoal
 import com.maksimowiczm.foodyou.shared.compose.form.FormField
@@ -18,12 +16,6 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-
-internal enum class DailyGoalsFormError {
-    Empty,
-    NotANumber,
-    Negative,
-}
 
 internal enum class InputType {
     Weight,
@@ -168,7 +160,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
             initialValue = dailyGoal.macronutrientGoal.energyKcal,
             parser =
                 doubleParser(
-                    onBlank = { DailyGoalsFormError.Empty },
+                    onBlank = { DailyGoalsFormError.Required },
                     onNotANumber = { DailyGoalsFormError.NotANumber },
                 ),
             validator = { if (it < 0) DailyGoalsFormError.Negative else null },
@@ -181,7 +173,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
             initialValue = dailyGoal.macronutrientGoal.proteinsGrams,
             parser =
                 doubleParser(
-                    onBlank = { DailyGoalsFormError.Empty },
+                    onBlank = { DailyGoalsFormError.Required },
                     onNotANumber = { DailyGoalsFormError.NotANumber },
                 ),
             validator = { if (it < 0) DailyGoalsFormError.Negative else null },
@@ -203,7 +195,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
             initialValue = dailyGoal.macronutrientGoal.fatsGrams,
             parser =
                 doubleParser(
-                    onBlank = { DailyGoalsFormError.Empty },
+                    onBlank = { DailyGoalsFormError.Required },
                     onNotANumber = { DailyGoalsFormError.NotANumber },
                 ),
             validator = { if (it < 0) DailyGoalsFormError.Negative else null },
@@ -225,7 +217,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
             initialValue = dailyGoal.macronutrientGoal.carbohydratesGrams,
             parser =
                 doubleParser(
-                    onBlank = { DailyGoalsFormError.Empty },
+                    onBlank = { DailyGoalsFormError.Required },
                     onNotANumber = { DailyGoalsFormError.NotANumber },
                 ),
             validator = { if (it < 0) DailyGoalsFormError.Negative else null },

@@ -55,7 +55,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.business.shared.domain.settings.NutrientsOrder
-import com.maksimowiczm.foodyou.app.ui.goals.setup.AdditionalGoalsForm
 import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.shared.component.DiscardDialog
 import com.maksimowiczm.foodyou.app.ui.shared.theme.LocalNutrientsPalette
