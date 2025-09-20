@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.goals
 
 import com.maksimowiczm.foodyou.app.ui.goals.master.GoalsViewModel
-import com.maksimowiczm.foodyou.app.ui.goals.setup.DailyGoalsViewModel
+import com.maksimowiczm.foodyou.app.ui.goals.setup2.DailyGoalsViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
