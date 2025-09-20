@@ -1,22 +1,20 @@
 package com.maksimowiczm.foodyou.app.ui.goals.setup2
 
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import com.maksimowiczm.foodyou.goals.domain.entity.DailyGoal
 import com.maksimowiczm.foodyou.goals.domain.entity.MacronutrientGoal
 import com.maksimowiczm.foodyou.shared.compose.form.FormField
 import com.maksimowiczm.foodyou.shared.compose.form.doubleParser
 import com.maksimowiczm.foodyou.shared.compose.form.rememberFormField
 import com.maksimowiczm.foodyou.shared.compose.utility.formatClipZeros
+import com.maksimowiczm.foodyou.shared.domain.food.NutrientsHelper
+import kotlin.math.roundToInt
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 
 internal enum class DailyGoalsFormError {
     Empty,
@@ -59,7 +57,7 @@ internal class DailyGoalsFormState(
 internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoalsFormState {
     val dailyGoal = dailyGoal ?: DailyGoal.defaultGoals
 
-    val energy =
+    val energyFormField =
         rememberFormField(
             initialValue = dailyGoal.macronutrientGoal.energyKcal,
             parser =
@@ -72,7 +70,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
                 rememberTextFieldState(dailyGoal.macronutrientGoal.energyKcal.formatClipZeros()),
         )
 
-    val proteins =
+    val proteinsFormField =
         rememberFormField(
             initialValue = dailyGoal.macronutrientGoal.proteinsGrams,
             parser =
@@ -87,7 +85,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
 
     val proteinsSlider = rememberSaveable { mutableFloatStateOf(0f) }
 
-    val fats =
+    val fatsFormField =
         rememberFormField(
             initialValue = dailyGoal.macronutrientGoal.fatsGrams,
             parser =
@@ -102,7 +100,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
 
     val fatsSlider = rememberSaveable { mutableFloatStateOf(0f) }
 
-    val carbs =
+    val carbsFormField =
         rememberFormField(
             initialValue = dailyGoal.macronutrientGoal.carbohydratesGrams,
             parser =
@@ -130,7 +128,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
 
     val isModifiedState = remember {
         derivedStateOf {
-            if (energy.value != dailyGoal.macronutrientGoal.energyKcal) {
+            if (energyFormField.value != dailyGoal.macronutrientGoal.energyKcal) {
                 return@derivedStateOf true
             }
 
@@ -148,33 +146,78 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
                 return@derivedStateOf true
             }
 
-            proteins.value.toInt() != dailyGoal.macronutrientGoal.proteinsGrams.toInt() ||
-                fats.value.toInt() != dailyGoal.macronutrientGoal.fatsGrams.toInt() ||
-                carbs.value.toInt() != dailyGoal.macronutrientGoal.carbohydratesGrams.toInt()
+            proteinsFormField.value.toInt() != dailyGoal.macronutrientGoal.proteinsGrams.toInt() ||
+                fatsFormField.value.toInt() != dailyGoal.macronutrientGoal.fatsGrams.toInt() ||
+                carbsFormField.value.toInt() !=
+                    dailyGoal.macronutrientGoal.carbohydratesGrams.toInt()
         }
     }
 
-    val autoCalculateEnergyState = rememberSaveable { mutableStateOf(true) }
+    val autoCalculateEnergyState = rememberSaveable {
+        val currentEnergy =
+            NutrientsHelper.calculateEnergy(
+                    proteins = dailyGoal.macronutrientGoal.proteinsGrams,
+                    carbohydrates = dailyGoal.macronutrientGoal.carbohydratesGrams,
+                    fats = dailyGoal.macronutrientGoal.fatsGrams,
+                )
+                .roundToInt()
+
+        // Allow 2% error
+        val allowedError = (currentEnergy * 0.02).toInt()
+        val shouldAutoCalculate =
+            dailyGoal.macronutrientGoal.energyKcal.roundToInt() in
+                (currentEnergy - allowedError)..(currentEnergy + allowedError)
+
+        mutableStateOf(shouldAutoCalculate)
+    }
+
+    LaunchedEffect(Unit) {
+        combine(
+                snapshotFlow { inputType.value }.filter { it == InputType.Weight },
+                snapshotFlow { autoCalculateEnergyState.value },
+                snapshotFlow {
+                    arrayOf(
+                        energyFormField.value,
+                        proteinsFormField.value,
+                        fatsFormField.value,
+                        carbsFormField.value,
+                    )
+                },
+            ) { inputType, autoCalculateEnergy, (energy, proteins, fats, carbs) ->
+                if (autoCalculateEnergy) {
+                    val energyKcal =
+                        NutrientsHelper.calculateEnergy(
+                            proteins = proteins,
+                            carbohydrates = carbs,
+                            fats = fats,
+                        )
+                    energyFormField.textFieldState.setTextAndPlaceCursorAtEnd(
+                        energyKcal.roundToInt().toString()
+                    )
+                }
+            }
+            .collectLatest {}
+    }
 
     return remember(
-        energy,
-        proteins,
+        energyFormField,
+        proteinsFormField,
         proteinsSlider,
-        fats,
+        fatsFormField,
         fatsSlider,
-        carbs,
+        carbsFormField,
         carbsSlider,
         isModifiedState,
         inputType,
         autoCalculateEnergyState,
     ) {
         DailyGoalsFormState(
-            energy = energy,
-            proteins = proteins,
+            energy = energyFormField,
+            proteins = proteinsFormField,
             proteinsSliderState = proteinsSlider,
-            fats = fats,
+            fats = fatsFormField,
             fatsSliderState = fatsSlider,
-            carbs = carbs,
+            carbs = carbsFormField,
             carbsSliderState = carbsSlider,
             isModifiedState = isModifiedState,
             inputTypeState = inputType,
