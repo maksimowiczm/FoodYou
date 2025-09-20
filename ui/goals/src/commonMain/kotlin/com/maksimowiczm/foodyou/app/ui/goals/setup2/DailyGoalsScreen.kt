@@ -30,6 +30,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
@@ -187,18 +188,20 @@ private fun WeightOrPercentageToggle(
             checked = !useDistribution,
             onCheckedChange = { onUseDistributionChange(false) },
             modifier = Modifier.height(56.dp).semantics { role = Role.RadioButton },
+            shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
         ) {
             Icon(painter = painterResource(Res.drawable.ic_weight), contentDescription = null)
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(ToggleButtonDefaults.IconSpacing))
             Text(stringResource(Res.string.weight))
         }
         ToggleButton(
             checked = useDistribution,
             onCheckedChange = { onUseDistributionChange(true) },
             modifier = Modifier.height(56.dp).semantics { role = Role.RadioButton },
+            shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
         ) {
             Icon(imageVector = Icons.Outlined.Percent, contentDescription = null)
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(ToggleButtonDefaults.IconSpacing))
             Text(stringResource(Res.string.headline_percentages))
         }
     }
