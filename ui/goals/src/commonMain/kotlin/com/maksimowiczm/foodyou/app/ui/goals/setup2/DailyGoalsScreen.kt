@@ -96,7 +96,8 @@ fun DailyGoalsScreen(onBack: () -> Unit, onSave: () -> Unit, modifier: Modifier 
         weeklyState = state,
         onBack = onBack,
         onSave = {
-            // TODO
+            val weeklyGoals = state.intoWeeklyGoals()
+            viewModel.updateWeeklyGoals(weeklyGoals)
         },
         modifier = modifier,
     )
