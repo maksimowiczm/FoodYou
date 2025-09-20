@@ -14,7 +14,6 @@ import com.maksimowiczm.foodyou.shared.domain.food.NutrientsHelper
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
 
 internal enum class DailyGoalsFormError {
     Empty,
@@ -83,7 +82,14 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
                 rememberTextFieldState(dailyGoal.macronutrientGoal.proteinsGrams.formatClipZeros()),
         )
 
-    val proteinsSlider = rememberSaveable { mutableFloatStateOf(0f) }
+    val proteinsSlider = rememberSaveable {
+        val sliderValue =
+            (dailyGoal.macronutrientGoal as? MacronutrientGoal.Distribution)
+                ?.proteinsPercentage
+                ?.times(100)
+                ?.toFloat()
+        mutableFloatStateOf(sliderValue ?: 0f)
+    }
 
     val fatsFormField =
         rememberFormField(
@@ -98,7 +104,14 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
                 rememberTextFieldState(dailyGoal.macronutrientGoal.fatsGrams.formatClipZeros()),
         )
 
-    val fatsSlider = rememberSaveable { mutableFloatStateOf(0f) }
+    val fatsSlider = rememberSaveable {
+        val sliderValue =
+            (dailyGoal.macronutrientGoal as? MacronutrientGoal.Distribution)
+                ?.fatsPercentage
+                ?.times(100)
+                ?.toFloat()
+        mutableFloatStateOf(sliderValue ?: 0f)
+    }
 
     val carbsFormField =
         rememberFormField(
@@ -115,7 +128,14 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
                 ),
         )
 
-    val carbsSlider = rememberSaveable { mutableFloatStateOf(0f) }
+    val carbsSlider = rememberSaveable {
+        val sliderValue =
+            (dailyGoal.macronutrientGoal as? MacronutrientGoal.Distribution)
+                ?.carbohydratesPercentage
+                ?.times(100)
+                ?.toFloat()
+        mutableFloatStateOf(sliderValue ?: 0f)
+    }
 
     val inputType = rememberSaveable {
         mutableStateOf(
@@ -173,7 +193,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
 
     LaunchedEffect(Unit) {
         combine(
-                snapshotFlow { inputType.value }.filter { it == InputType.Weight },
+                snapshotFlow { inputType.value },
                 snapshotFlow { autoCalculateEnergyState.value },
                 snapshotFlow {
                     arrayOf(
@@ -184,6 +204,10 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
                     )
                 },
             ) { inputType, autoCalculateEnergy, (energy, proteins, fats, carbs) ->
+                if (inputType != InputType.Weight) {
+                    return@combine
+                }
+
                 if (autoCalculateEnergy) {
                     val energyKcal =
                         NutrientsHelper.calculateEnergy(
@@ -195,8 +219,108 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
                         energyKcal.roundToInt().toString()
                     )
                 }
+
+                // Update sliders
+                proteinsSlider.value =
+                    NutrientsHelper.proteinsPercentage(energy.roundToInt(), proteins) * 100f
+                fatsSlider.value = NutrientsHelper.fatsPercentage(energy.roundToInt(), fats) * 100f
+                carbsSlider.value =
+                    NutrientsHelper.carbohydratesPercentage(energy.roundToInt(), carbs) * 100
             }
             .collectLatest {}
+    }
+
+    LaunchedEffect(Unit) {
+        combine(
+                snapshotFlow { inputType.value },
+                snapshotFlow { energyFormField.value },
+                snapshotFlow { arrayOf(proteinsSlider.value, fatsSlider.value, carbsSlider.value) },
+            ) { inputType, energy, (proteins, fats, carbs) ->
+                if (inputType != InputType.Percentage) {
+                    return@combine
+                }
+
+                val proteinsGrams =
+                    NutrientsHelper.proteinsPercentageToGrams(
+                        energy.roundToInt(),
+                        proteins.toDouble() / 100,
+                    )
+                proteinsFormField.textFieldState.setTextAndPlaceCursorAtEnd(
+                    proteinsGrams.formatClipZeros()
+                )
+
+                val fatsGrams =
+                    NutrientsHelper.fatsPercentageToGrams(
+                        energy.roundToInt(),
+                        fats.toDouble() / 100,
+                    )
+                fatsFormField.textFieldState.setTextAndPlaceCursorAtEnd(fatsGrams.formatClipZeros())
+
+                val carbsGrams =
+                    NutrientsHelper.carbohydratesPercentageToGrams(
+                        energy.roundToInt(),
+                        carbs.toDouble() / 100,
+                    )
+                carbsFormField.textFieldState.setTextAndPlaceCursorAtEnd(
+                    carbsGrams.formatClipZeros()
+                )
+            }
+            .collectLatest {}
+    }
+
+    val adjustMacros: (MutableState<Float>, List<MutableState<Float>>) -> Unit = remember {
+        { changedState, otherStates ->
+            val total = proteinsSlider.value + carbsSlider.value + fatsSlider.value
+            val excess = total - 100f
+
+            if (excess == 0f) return@remember
+
+            if (excess > 0) {
+                // Reduce other macros when total exceeds 100% (smaller values first)
+                var remaining = excess
+                otherStates
+                    .sortedBy { it.value }
+                    .forEach { state ->
+                        if (remaining > 0 && state.value > 0) {
+                            val reduction = minOf(remaining, state.value)
+                            state.value -= reduction
+                            remaining -= reduction
+                        }
+                    }
+
+                // If we still have excess, reduce the changed state
+                if (remaining > 0) {
+                    changedState.value = (changedState.value - remaining).coerceAtLeast(0f)
+                }
+            } else {
+                // Increase other macros when total is under 100% (smaller values first)
+                var remaining = -excess
+                otherStates
+                    .sortedBy { it.value }
+                    .forEach { state ->
+                        if (remaining > 0 && state.value < 100f) {
+                            val increase = minOf(remaining, 100f - state.value)
+                            state.value += increase
+                            remaining -= increase
+                        }
+                    }
+
+                // If we still have deficit, increase the changed state
+                if (remaining > 0) {
+                    changedState.value = (changedState.value + remaining).coerceAtMost(100f)
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(proteinsSlider.value) {
+        adjustMacros(proteinsSlider, listOf(carbsSlider, fatsSlider))
+    }
+    LaunchedEffect(carbsSlider.value) {
+        adjustMacros(carbsSlider, listOf(proteinsSlider, fatsSlider))
+    }
+    LaunchedEffect(fatsSlider.value) {
+        adjustMacros(fatsSlider, listOf(proteinsSlider, carbsSlider))
     }
 
     return remember(
