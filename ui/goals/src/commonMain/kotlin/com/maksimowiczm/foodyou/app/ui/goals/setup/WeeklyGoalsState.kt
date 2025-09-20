@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.goals.setup2
+package com.maksimowiczm.foodyou.app.ui.goals.setup
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
