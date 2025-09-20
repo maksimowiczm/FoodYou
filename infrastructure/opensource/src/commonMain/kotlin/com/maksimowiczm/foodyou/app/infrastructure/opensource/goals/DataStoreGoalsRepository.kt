@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.maksimowiczm.foodyou.goals.domain.entity.DailyGoal
+import com.maksimowiczm.foodyou.goals.domain.entity.MacronutrientGoal
 import com.maksimowiczm.foodyou.goals.domain.entity.WeeklyGoals
 import com.maksimowiczm.foodyou.goals.domain.repository.GoalsRepository
 import com.maksimowiczm.foodyou.shared.domain.food.NutritionFactsField
@@ -47,7 +48,7 @@ internal class DataStoreGoalsRepository(private val dataStore: DataStore<Prefere
 }
 
 private object GoalsDataStoreKeys {
-    val weeklyGoals = stringPreferencesKey("fooddiary:weekly_goals")
+    val weeklyGoals = stringPreferencesKey("fooddiary:weekly_goals_2")
 }
 
 @Serializable
@@ -65,25 +66,25 @@ private class DataStoreWeeklyGoals(
         weeklyGoals: WeeklyGoals
     ) : this(
         useSeparateGoals = weeklyGoals.useSeparateGoals,
-        monday = DataStoreDailyGoal(weeklyGoals.monday),
-        tuesday = DataStoreDailyGoal(weeklyGoals.tuesday),
-        wednesday = DataStoreDailyGoal(weeklyGoals.wednesday),
-        thursday = DataStoreDailyGoal(weeklyGoals.thursday),
-        friday = DataStoreDailyGoal(weeklyGoals.friday),
-        saturday = DataStoreDailyGoal(weeklyGoals.saturday),
-        sunday = DataStoreDailyGoal(weeklyGoals.sunday),
+        monday = weeklyGoals.monday.intoDataStoreDailyGoal(),
+        tuesday = weeklyGoals.tuesday.intoDataStoreDailyGoal(),
+        wednesday = weeklyGoals.wednesday.intoDataStoreDailyGoal(),
+        thursday = weeklyGoals.thursday.intoDataStoreDailyGoal(),
+        friday = weeklyGoals.friday.intoDataStoreDailyGoal(),
+        saturday = weeklyGoals.saturday.intoDataStoreDailyGoal(),
+        sunday = weeklyGoals.sunday.intoDataStoreDailyGoal(),
     )
 
     fun toWeeklyGoals(): WeeklyGoals =
         WeeklyGoals(
             useSeparateGoals = useSeparateGoals,
-            monday = DailyGoal(monday.map, monday.isDistribution),
-            tuesday = DailyGoal(tuesday.map, tuesday.isDistribution),
-            wednesday = DailyGoal(wednesday.map, wednesday.isDistribution),
-            thursday = DailyGoal(thursday.map, thursday.isDistribution),
-            friday = DailyGoal(friday.map, friday.isDistribution),
-            saturday = DailyGoal(saturday.map, saturday.isDistribution),
-            sunday = DailyGoal(sunday.map, sunday.isDistribution),
+            monday = monday.toDailyGoal(),
+            tuesday = tuesday.toDailyGoal(),
+            wednesday = wednesday.toDailyGoal(),
+            thursday = thursday.toDailyGoal(),
+            friday = friday.toDailyGoal(),
+            saturday = saturday.toDailyGoal(),
+            sunday = sunday.toDailyGoal(),
         )
 }
 
@@ -92,10 +93,72 @@ private class DataStoreDailyGoal(
     val map: Map<NutritionFactsField, Double>,
     val isDistribution: Boolean,
 ) {
-    constructor(
-        dailyGoal: DailyGoal
-    ) : this(map = dailyGoal.map, isDistribution = dailyGoal.isDistribution)
+    fun toDailyGoal(): DailyGoal {
+        val macronutrientGoal =
+            if (isDistribution) {
+                MacronutrientGoal.Distribution(
+                    energyKcal =
+                        map[NutritionFactsField.Energy]
+                            ?: error("Energy must be set for distribution goal"),
+                    proteinsPercentage =
+                        map[NutritionFactsField.Proteins]
+                            ?: error("Proteins must be set for distribution goal"),
+                    fatsPercentage =
+                        map[NutritionFactsField.Fats]
+                            ?: error("Fats must be set for distribution goal"),
+                    carbohydratesPercentage =
+                        map[NutritionFactsField.Carbohydrates]
+                            ?: error("Carbohydrates must be set for distribution goal"),
+                )
+            } else {
+                MacronutrientGoal.Manual(
+                    energyKcal =
+                        map[NutritionFactsField.Energy]
+                            ?: error("Energy must be set for manual goal"),
+                    proteinsGrams =
+                        map[NutritionFactsField.Proteins]
+                            ?: error("Proteins must be set for manual goal"),
+                    fatsGrams =
+                        map[NutritionFactsField.Fats] ?: error("Fats must be set for manual goal"),
+                    carbohydratesGrams =
+                        map[NutritionFactsField.Carbohydrates]
+                            ?: error("Carbohydrates must be set for manual goal"),
+                )
+            }
+
+        return DailyGoal(macronutrientGoal = macronutrientGoal, map = map)
+    }
 }
 
-private val DailyGoal.map: Map<NutritionFactsField, Double>
-    get() = NutritionFactsField.entries.associateWith { this[it] }
+private fun DailyGoal.intoDataStoreDailyGoal(): DataStoreDailyGoal {
+    val macronutrientGoal = macronutrientGoal
+    val energy = macronutrientGoal.energyKcal
+
+    val proteins =
+        when (macronutrientGoal) {
+            is MacronutrientGoal.Manual -> macronutrientGoal.proteinsGrams
+            is MacronutrientGoal.Distribution -> macronutrientGoal.proteinsPercentage
+        }
+
+    val fats =
+        when (macronutrientGoal) {
+            is MacronutrientGoal.Manual -> macronutrientGoal.fatsGrams
+            is MacronutrientGoal.Distribution -> macronutrientGoal.fatsPercentage
+        }
+
+    val carbohydrates =
+        when (macronutrientGoal) {
+            is MacronutrientGoal.Manual -> macronutrientGoal.carbohydratesGrams
+            is MacronutrientGoal.Distribution -> macronutrientGoal.carbohydratesPercentage
+        }
+
+    val newMap =
+        map.toMutableMap().apply {
+            this[NutritionFactsField.Energy] = energy
+            this[NutritionFactsField.Proteins] = proteins
+            this[NutritionFactsField.Fats] = fats
+            this[NutritionFactsField.Carbohydrates] = carbohydrates
+        }
+
+    return DataStoreDailyGoal(map = newMap, isDistribution = isDistribution)
+}
