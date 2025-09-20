@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.shared.compose.form.doubleParser
 import com.maksimowiczm.foodyou.shared.compose.form.rememberFormField
 import com.maksimowiczm.foodyou.shared.compose.utility.formatClipZeros
 import com.maksimowiczm.foodyou.shared.domain.food.NutrientsHelper
+import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -157,7 +158,7 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
 
     val isModifiedState = remember {
         derivedStateOf {
-            if (energyFormField.value != dailyGoal.macronutrientGoal.energyKcal) {
+            if (!energyFormField.value.isCloseTo(dailyGoal.macronutrientGoal.energyKcal)) {
                 return@derivedStateOf true
             }
 
@@ -175,10 +176,9 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
                 return@derivedStateOf true
             }
 
-            proteinsFormField.value.toInt() != dailyGoal.macronutrientGoal.proteinsGrams.toInt() ||
-                fatsFormField.value.toInt() != dailyGoal.macronutrientGoal.fatsGrams.toInt() ||
-                carbsFormField.value.toInt() !=
-                    dailyGoal.macronutrientGoal.carbohydratesGrams.toInt()
+            !proteinsFormField.value.isCloseTo(dailyGoal.macronutrientGoal.proteinsGrams) &&
+                !fatsFormField.value.isCloseTo(dailyGoal.macronutrientGoal.fatsGrams) &&
+                !carbsFormField.value.isCloseTo(dailyGoal.macronutrientGoal.carbohydratesGrams)
         }
     }
 
@@ -254,25 +254,34 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
                         energy.roundToInt(),
                         proteins.toDouble() / 100,
                     )
-                proteinsFormField.textFieldState.setTextAndPlaceCursorAtEnd(
-                    proteinsGrams.formatClipZeros()
-                )
+
+                if (!proteinsFormField.value.isCloseTo(proteinsGrams)) {
+                    proteinsFormField.textFieldState.setTextAndPlaceCursorAtEnd(
+                        proteinsGrams.formatClipZeros()
+                    )
+                }
 
                 val fatsGrams =
                     NutrientsHelper.fatsPercentageToGrams(
                         energy.roundToInt(),
                         fats.toDouble() / 100,
                     )
-                fatsFormField.textFieldState.setTextAndPlaceCursorAtEnd(fatsGrams.formatClipZeros())
+                if (!fatsFormField.value.isCloseTo(fatsGrams)) {
+                    fatsFormField.textFieldState.setTextAndPlaceCursorAtEnd(
+                        fatsGrams.formatClipZeros()
+                    )
+                }
 
                 val carbsGrams =
                     NutrientsHelper.carbohydratesPercentageToGrams(
                         energy.roundToInt(),
                         carbs.toDouble() / 100,
                     )
-                carbsFormField.textFieldState.setTextAndPlaceCursorAtEnd(
-                    carbsGrams.formatClipZeros()
-                )
+                if (!carbsFormField.value.isCloseTo(carbsGrams)) {
+                    carbsFormField.textFieldState.setTextAndPlaceCursorAtEnd(
+                        carbsGrams.formatClipZeros()
+                    )
+                }
             }
             .collectLatest {}
     }
@@ -362,3 +371,6 @@ internal fun rememberDailyGoalsFormState(dailyGoal: DailyGoal? = null): DailyGoa
         )
     }
 }
+
+private fun Double.isCloseTo(other: Double, epsilon: Double = 1e-2): Boolean =
+    abs(this - other) < epsilon
