@@ -148,13 +148,22 @@ private fun SponsorPrivacyScreen(
     onAllow: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
     Scaffold(
         modifier = modifier,
-        topBar = { TopAppBar(title = {}, navigationIcon = { ArrowBackIconButton(onBack) }) },
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(Res.string.headline_sponsor)) },
+                navigationIcon = { ArrowBackIconButton(onBack) },
+                scrollBehavior = scrollBehavior,
+            )
+        },
     ) { paddingValues ->
         LazyColumn(
             modifier =
                 Modifier.fillMaxSize()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
                     .padding(paddingValues)
                     .consumeWindowInsets(paddingValues)
                     .padding(horizontal = 16.dp),
@@ -211,7 +220,7 @@ private fun SponsorScreen(
     val lazyListState = rememberLazyListState()
     val scrolledOffset = rememberSaveable { mutableFloatStateOf(0f) }
     val nestedScrollConnection =
-        StatusBarProtectionDefaults.scrollConnection { scrolledOffset.value = it.y }
+        StatusBarProtectionDefaults.scrollConnection { scrolledOffset.value -= it.y }
 
     Scaffold(
         modifier = modifier,
@@ -406,7 +415,7 @@ private fun Methods(modifier: Modifier = Modifier) {
     val clipboardManager = LocalClipboardManager.current
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text(text = "Methods", style = sponsorTypography.title)
+        Text(text = stringResource(Res.string.headline_sponsor_methods), style = sponsorTypography.title)
 
         Column {
             Text(
