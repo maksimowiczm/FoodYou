@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.app.ui.sponsor
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.animation.core.LinearEasing
@@ -10,10 +9,10 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +20,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
@@ -36,16 +36,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Hail
+import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.MoneyOff
 import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material.icons.outlined.SwapVert
-import androidx.compose.material.icons.outlined.VolunteerActivism
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -60,14 +64,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -80,30 +87,34 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.business.shared.domain.config.AppConfig
 import com.maksimowiczm.foodyou.app.ui.shared.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.common.extension.now
 import com.maksimowiczm.foodyou.shared.compose.component.StatusBarProtection
 import com.maksimowiczm.foodyou.shared.compose.component.StatusBarProtectionDefaults
 import com.maksimowiczm.foodyou.shared.compose.extension.add
+import com.maksimowiczm.foodyou.shared.compose.utility.LocalClipboardManager
 import com.maksimowiczm.foodyou.shared.compose.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.shared.compose.utility.formatClipZeros
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.AvailableSponsorMethod
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.CryptoSponsorMethod
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.LinkSponsorMethod
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.yearMonth
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SponsorScreen(
-    onBack: () -> Unit,
-    onSponsorshipMethods: () -> Unit,
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    modifier: Modifier = Modifier,
-) {
+fun SponsorScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<SponsorViewModel>()
 
     val privacyAccepted by viewModel.privacyAccepted.collectAsStateWithLifecycle()
@@ -114,17 +125,14 @@ fun SponsorScreen(
         SponsorScreen(
             uiState = uiState,
             onBack = onBack,
-            onSponsorshipMethods = onSponsorshipMethods,
             onOrderChange = viewModel::changeMessagesOrder,
             onNextMonth = viewModel::nextMonth,
             onPreviousMonth = viewModel::previousMonth,
-            animatedVisibilityScope = animatedVisibilityScope,
             modifier = modifier,
         )
     } else {
         SponsorPrivacyScreen(
             onBack = onBack,
-            onSponsorshipMethods = onSponsorshipMethods,
             onAllow = { viewModel.setPrivacyAccepted(true) },
             modifier = modifier,
         )
@@ -135,7 +143,6 @@ fun SponsorScreen(
 @Composable
 private fun SponsorPrivacyScreen(
     onBack: () -> Unit,
-    onSponsorshipMethods: () -> Unit,
     onAllow: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -143,36 +150,46 @@ private fun SponsorPrivacyScreen(
         modifier = modifier,
         topBar = { TopAppBar(title = {}, navigationIcon = { ArrowBackIconButton(onBack) }) },
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier =
                 Modifier.fillMaxSize()
                     .padding(paddingValues)
                     .consumeWindowInsets(paddingValues)
                     .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
-            Icon(
-                imageVector = Icons.Outlined.PrivacyTip,
-                contentDescription = null,
-                modifier = Modifier.size(64.dp),
-            )
-            Text(
-                text = stringResource(Res.string.description_sponsors_privacy),
-                style = MaterialTheme.typography.bodyLarge,
-            )
-            Column(Modifier.width(IntrinsicSize.Max)) {
-                Button(
-                    onClick = onAllow,
-                    shapes = ButtonDefaults.shapes(),
-                    modifier = Modifier.fillMaxWidth(),
+            item {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text(stringResource(Res.string.action_allow))
-                }
-                TextButton(onClick = onSponsorshipMethods, modifier = Modifier.fillMaxWidth()) {
-                    Text(text = stringResource(Res.string.action_tap_to_sponsor), maxLines = 1)
+                    Icon(
+                        imageVector = Icons.Outlined.PrivacyTip,
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                    )
+                    Text(
+                        text = stringResource(Res.string.description_sponsors_privacy),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                    Button(
+                        onClick = onAllow,
+                        shapes = ButtonDefaults.shapesFor(ButtonDefaults.LargeContainerHeight),
+                        modifier = Modifier.height(ButtonDefaults.LargeContainerHeight),
+                        contentPadding =
+                            ButtonDefaults.contentPaddingFor(ButtonDefaults.LargeContainerHeight),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.action_allow),
+                            style = ButtonDefaults.textStyleFor(ButtonDefaults.LargeContainerHeight),
+                        )
+                    }
                 }
             }
+
+            item { Methods() }
+
+            item { ContactCard() }
         }
     }
 }
@@ -182,13 +199,12 @@ private fun SponsorPrivacyScreen(
 private fun SponsorScreen(
     uiState: SponsorScreenUiState,
     onBack: () -> Unit,
-    onSponsorshipMethods: () -> Unit,
     onOrderChange: (MessagesOrder) -> Unit,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
     val scrolledOffset = rememberSaveable { mutableFloatStateOf(0f) }
     val nestedScrollConnection =
@@ -204,47 +220,11 @@ private fun SponsorScreen(
                 yearMonth = uiState.yearMonth,
             )
         },
-        floatingActionButton = {
-            Button(
-                onClick = onSponsorshipMethods,
-                modifier =
-                    Modifier.height(ButtonDefaults.LargeContainerHeight)
-                        .animateFloatingActionButton(
-                            visible = !animatedVisibilityScope.transition.isRunning,
-                            alignment = Alignment.BottomCenter,
-                        ),
-                contentPadding =
-                    ButtonDefaults.contentPaddingFor(ButtonDefaults.LargeContainerHeight),
-                shapes = ButtonDefaults.shapesFor(ButtonDefaults.LargeContainerHeight),
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                    ),
-                elevation = ButtonDefaults.elevatedButtonElevation(),
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.VolunteerActivism,
-                    contentDescription = null,
-                    modifier = Modifier.size(ButtonDefaults.LargeIconSize),
-                )
-                Spacer(Modifier.width(ButtonDefaults.LargeIconSpacing))
-                Text(
-                    text = stringResource(Res.string.action_tap_to_sponsor),
-                    style = ButtonDefaults.textStyleFor(ButtonDefaults.LargeContainerHeight),
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Center,
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(nestedScrollConnection),
             state = lazyListState,
-            contentPadding =
-                paddingValues
-                    .add(bottom = 8.dp)
-                    .add(bottom = ButtonDefaults.LargeContainerHeight + 16.dp)
-                    .add(bottom = if (uiState.messages.isEmpty()) 64.dp else 0.dp),
+            contentPadding = paddingValues.add(bottom = 8.dp),
         ) {
             item {
                 if (uiState.isLoading) {
@@ -256,7 +236,19 @@ private fun SponsorScreen(
 
             item { Spacer(Modifier.height(24.dp)) }
 
-            item { ThisMonth(uiState = uiState, modifier = Modifier.padding(horizontal = 16.dp)) }
+            item {
+                ThisMonth(
+                    uiState = uiState,
+                    onProgressBarClick = {
+                        coroutineScope.launch { lazyListState.animateScrollToItem(6) }
+                    },
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+            }
+
+            item { Spacer(Modifier.height(24.dp)) }
+
+            item { Methods(modifier = Modifier.padding(horizontal = 16.dp)) }
 
             item { Spacer(Modifier.height(24.dp)) }
 
@@ -276,6 +268,10 @@ private fun SponsorScreen(
                 onOrderChange = onOrderChange,
                 contentPadding = PaddingValues(horizontal = 16.dp),
             )
+
+            item { Spacer(Modifier.height(24.dp)) }
+
+            item { ContactCard(modifier = Modifier.padding(horizontal = 16.dp)) }
         }
     }
 
@@ -376,7 +372,183 @@ private fun TopBar(
 }
 
 @Composable
-private fun ThisMonth(uiState: SponsorScreenUiState, modifier: Modifier = Modifier) {
+private fun Methods(modifier: Modifier = Modifier) {
+    val uriHandler = LocalUriHandler.current
+    val clipboardManager = LocalClipboardManager.current
+
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Text(text = "Methods", style = sponsorTypography.title)
+
+        Column {
+            Text(
+                text = stringResource(Res.string.sponsor_bank_or_card).uppercase(),
+                modifier = Modifier.padding(start = 16.dp),
+                style = MaterialTheme.typography.labelLarge,
+            )
+
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                AvailableSponsorMethod.fiat.forEach {
+                    it.SponsorCard(onClick = { uriHandler.openUri(it.url) })
+                }
+            }
+        }
+
+        AvailableSponsorMethod.crypto.forEach {
+            it.SponsorCard(onClick = { clipboardManager.copy("address", it.address) })
+        }
+    }
+}
+
+@Composable
+private fun LinkSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    SponsorCard(
+        label = name,
+        leadingIcon = { Icon(Modifier.width(24.dp)) },
+        trailingIcon = { Icon(imageVector = Icons.Outlined.Link, contentDescription = null) },
+        onClick = onClick,
+        modifier = modifier,
+        color =
+            if (primary) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.surfaceContainer
+            },
+        contentColor =
+            if (primary) {
+                MaterialTheme.colorScheme.onPrimaryContainer
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            },
+    )
+}
+
+@Composable
+private fun CryptoSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    var clicked by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(clicked) {
+        if (clicked) {
+            delay(2000)
+            clicked = false
+        }
+    }
+
+    Column(modifier) {
+        Text(
+            text = name.uppercase(),
+            modifier = Modifier.padding(start = 16.dp),
+            style = MaterialTheme.typography.labelLarge,
+        )
+        SponsorCard(
+            label = address,
+            leadingIcon = { Icon(Modifier.height(24.dp)) },
+            trailingIcon = {
+                if (clicked) {
+                    Icon(
+                        imageVector = Icons.Outlined.Check,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                } else {
+                    Icon(imageVector = Icons.Outlined.ContentCopy, contentDescription = null)
+                }
+            },
+            onClick = {
+                clicked = true
+                onClick()
+            },
+            color =
+                if (primary) {
+                    MaterialTheme.colorScheme.primaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceContainer
+                },
+            contentColor =
+                if (primary) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
+        )
+    }
+}
+
+@Composable
+private fun SponsorCard(
+    label: String,
+    leadingIcon: @Composable () -> Unit,
+    trailingIcon: @Composable () -> Unit,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.surfaceContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth().heightIn(min = 56.dp),
+        shape = MaterialTheme.shapes.medium,
+        color = color,
+        contentColor = contentColor,
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            leadingIcon()
+            Text(
+                text = label,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            trailingIcon()
+        }
+    }
+}
+
+@Composable
+private fun ContactCard(modifier: Modifier = Modifier) {
+    val appConfig = koinInject<AppConfig>()
+    val uriHandler = LocalUriHandler.current
+
+    Card(
+        onClick = { uriHandler.openUri(appConfig.contactEmailUri) },
+        modifier = modifier,
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            ),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(imageVector = Icons.Outlined.Hail, contentDescription = null)
+                Text(
+                    text = stringResource(Res.string.headline_contact),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+
+            Text(
+                text = stringResource(Res.string.description_sponsor_contact),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ThisMonth(
+    uiState: SponsorScreenUiState,
+    onProgressBarClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val dateFormatter = LocalDateFormatter.current
 
     val title = dateFormatter.formatMonthYear(uiState.yearMonth)
@@ -392,7 +564,17 @@ private fun ThisMonth(uiState: SponsorScreenUiState, modifier: Modifier = Modifi
                 ),
             style = MaterialTheme.typography.titleMedium,
         )
-        ProgressBar(uiState = uiState, modifier = Modifier.fillMaxWidth().height(32.dp))
+        ProgressBar(
+            uiState = uiState,
+            modifier =
+                Modifier.fillMaxWidth()
+                    .height(32.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = null,
+                        onClick = onProgressBarClick,
+                    ),
+        )
         Spacer(Modifier.height(8.dp))
         Text(
             text = stringResource(Res.string.description_sponsorship_goals),

@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
-import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
 import com.maksimowiczm.foodyou.navigation.domain.CreateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.DumpDatabaseDestination
@@ -102,10 +101,6 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnBack = { navController.popBackStack<AboutDestination>(true) },
             masterOnSponsor = { navController.navigateSingleTop(AboutSponsorMessagesDestination) },
             sponsorOnBack = { navController.popBackStack<AboutSponsorMessagesDestination>(true) },
-            sponsorOnSponsorshipMethods = {
-                navController.navigateSingleTop(AboutSponsorDestination)
-            },
-            sponsorshipMethodOnBack = { navController.popBackStack<AboutSponsorDestination>(true) },
         )
         settingsNavigationGraph(
             masterOnBack = { navController.popBackStack<SettingsDestination>(true) },

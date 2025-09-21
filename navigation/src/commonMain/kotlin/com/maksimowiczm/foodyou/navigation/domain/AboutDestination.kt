@@ -7,5 +7,3 @@ import kotlinx.serialization.Serializable
 @Serializable internal data object AboutMasterDestination : NavigationDestination
 
 @Serializable internal data object AboutSponsorMessagesDestination : NavigationDestination
-
-@Serializable internal data object AboutSponsorDestination : NavigationDestination
