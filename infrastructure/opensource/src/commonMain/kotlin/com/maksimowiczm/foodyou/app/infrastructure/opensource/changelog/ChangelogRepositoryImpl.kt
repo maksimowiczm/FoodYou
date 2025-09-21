@@ -20,6 +20,7 @@ internal class StaticChangelog(private val appConfig: OpenSourceAppConfig) : Cha
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_2_0,
                 v_3_1_0,
                 v_3_0_0,
                 v_3_0_0_rc_2,
@@ -45,6 +46,24 @@ internal class StaticChangelog(private val appConfig: OpenSourceAppConfig) : Cha
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_2_0 =
+        Version(
+            version = "3.2.0",
+            date = LocalDate(2025, 9, 21),
+            newFeatures = listOf("Added fully customizable theme; it's now truly Material You."),
+            changes =
+                listOf(
+                    "Transitioned to GPL-3.0 license.",
+                    "Refreshed sponsors screen to use Material 3 Expressive.",
+                    "Updated daily goals form behavior.",
+                ),
+            bugFixes =
+                listOf(
+                    "Fixed unexpected meal reordering after editing a meal.",
+                    "Fixed button contrast issues on the food search screen.",
+                ),
+        )
 
     val v_3_1_0 =
         Version(

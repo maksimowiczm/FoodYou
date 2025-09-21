@@ -1,0 +1,11 @@
+New features
+- Added fully customizable theme; it's now truly Material You.
+
+Changes
+- Transitioned to GPL-3.0 license.
+- Refreshed sponsors screen to use Material 3 Expressive.
+- Updated daily goals form behavior.
+
+Bug fixes
+- Fixed unexpected meal reordering after editing a meal.
+- Fixed button contrast issues on the food search screen.
