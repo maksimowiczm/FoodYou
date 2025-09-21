@@ -8,8 +8,8 @@ import com.maksimowiczm.foodyou.shared.domain.userpreferences.get
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.Sponsorship
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.SponsorshipPreferences
 import com.maksimowiczm.foodyou.sponsorship.domain.repository.SponsorRepository
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -110,10 +110,11 @@ internal class SponsorViewModel(
             isLoading.value = true
             try {
                 sponsorRepository.requestSync(yearMonth)
-            } catch (_: Exception) {
-                // Ignore
+            } catch (e: Exception) {
+                when (e) {
+                    is CancellationException -> throw e
+                }
             } finally {
-                delay(200)
                 isLoading.value = false
             }
         }

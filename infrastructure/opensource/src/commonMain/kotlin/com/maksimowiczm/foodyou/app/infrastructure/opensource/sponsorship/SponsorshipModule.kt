@@ -8,6 +8,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
@@ -34,8 +36,11 @@ internal fun Module.sponsorshipModule() {
                 sponsorshipDao = get(),
                 networkDataSource = get(),
                 preferences = userPreferencesRepository(),
+                rateLimiter = get(),
                 logger = get(),
             )
         }
         .bind<SponsorRepository>()
+
+    single { SponsorRateLimiter(dateProvider = get(), timeWindow = 7.minutes + 30.seconds) }
 }

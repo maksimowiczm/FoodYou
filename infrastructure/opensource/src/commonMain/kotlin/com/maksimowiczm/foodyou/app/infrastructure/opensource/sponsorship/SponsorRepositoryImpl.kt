@@ -25,6 +25,7 @@ internal class SponsorRepositoryImpl(
     private val sponsorshipDao: SponsorshipDao,
     private val networkDataSource: FoodYouSponsorsApiClient,
     private val preferences: UserPreferencesRepository<SponsorshipPreferences>,
+    private val rateLimiter: SponsorRateLimiter,
     private val logger: Logger,
 ) : SponsorRepository {
 
@@ -35,7 +36,13 @@ internal class SponsorRepositoryImpl(
             return
         }
 
+        if (!rateLimiter.canMakeRequest(yearMonth)) {
+            logger.d(TAG) { "Rate limiter is preventing a new request for $yearMonth" }
+            return
+        }
+
         logger.d(TAG) { "Requesting sponsorship sync for $yearMonth" }
+        rateLimiter.recordRequest(yearMonth)
         val sponsorships = networkDataSource.getSponsorships(yearMonth)
         val entities = sponsorships.map(NetworkSponsorship::toEntity)
         sponsorshipDao.upsert(entities)
