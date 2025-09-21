@@ -20,7 +20,7 @@ internal class StaticChangelog(private val appConfig: OpenSourceAppConfig) : Cha
     override val versions: List<Version>
         get() =
             listOf(
-                v_3_2_0,
+                v_3_2_1,
                 v_3_1_0,
                 v_3_0_0,
                 v_3_0_0_rc_2,
@@ -47,9 +47,9 @@ internal class StaticChangelog(private val appConfig: OpenSourceAppConfig) : Cha
                 v2_0_0,
             )
 
-    val v_3_2_0 =
+    val v_3_2_1 =
         Version(
-            version = "3.2.0",
+            version = "3.2.1",
             date = LocalDate(2025, 9, 21),
             newFeatures = listOf("Added fully customizable theme; it's now truly Material You."),
             changes =
@@ -64,6 +64,9 @@ internal class StaticChangelog(private val appConfig: OpenSourceAppConfig) : Cha
                     "Fixed button contrast issues on the food search screen.",
                 ),
         )
+
+    // 3.2.0 blocked by Google Play Protect as harmful
+    // https://github.com/maksimowiczm/FoodYou/issues/265
 
     val v_3_1_0 =
         Version(
