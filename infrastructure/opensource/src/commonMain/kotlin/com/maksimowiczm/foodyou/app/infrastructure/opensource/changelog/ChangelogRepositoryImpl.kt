@@ -56,7 +56,7 @@ internal class StaticChangelog(private val appConfig: OpenSourceAppConfig) : Cha
                 listOf(
                     "Transitioned to GPL-3.0 license.",
                     "Refreshed sponsors screen to use Material 3 Expressive.",
-                    "Updated daily goals form behavior.",
+                    "Updated daily goals form behavior. Nutrient goals have been reset to default values (sorry for the inconvenience).",
                 ),
             bugFixes =
                 listOf(
