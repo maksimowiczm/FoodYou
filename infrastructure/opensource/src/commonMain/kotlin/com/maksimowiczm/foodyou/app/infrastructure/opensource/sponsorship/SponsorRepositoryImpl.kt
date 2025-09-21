@@ -42,8 +42,14 @@ internal class SponsorRepositoryImpl(
         }
 
         logger.d(TAG) { "Requesting sponsorship sync for $yearMonth" }
-        rateLimiter.recordRequest(yearMonth)
         val sponsorships = networkDataSource.getSponsorships(yearMonth)
+        // This is shady behavior because we only record a request if it was successful. This will
+        // allow retrying failed requests, but also means that a failure to fetch won't count
+        // towards
+        // the rate limit.
+        // It's food you server so this is okay for now. If this were a third-party API, I would
+        // rethink this.
+        rateLimiter.recordRequest(yearMonth)
         val entities = sponsorships.map(NetworkSponsorship::toEntity)
         sponsorshipDao.upsert(entities)
     }

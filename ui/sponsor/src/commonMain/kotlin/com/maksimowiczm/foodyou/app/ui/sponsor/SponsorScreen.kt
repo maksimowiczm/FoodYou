@@ -42,6 +42,7 @@ import androidx.compose.material.icons.outlined.Hail
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.MoneyOff
 import androidx.compose.material.icons.outlined.PrivacyTip
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.SwapVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -128,6 +129,7 @@ fun SponsorScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             onOrderChange = viewModel::changeMessagesOrder,
             onNextMonth = viewModel::nextMonth,
             onPreviousMonth = viewModel::previousMonth,
+            onRefresh = viewModel::refresh,
             modifier = modifier,
         )
     } else {
@@ -202,6 +204,7 @@ private fun SponsorScreen(
     onOrderChange: (MessagesOrder) -> Unit,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -217,7 +220,9 @@ private fun SponsorScreen(
                 onBack = onBack,
                 onPreviousMonth = onPreviousMonth,
                 onNextMonth = onNextMonth,
+                onRefresh = onRefresh,
                 yearMonth = uiState.yearMonth,
+                isError = uiState.isError,
             )
         },
     ) { paddingValues ->
@@ -291,7 +296,9 @@ private fun TopBar(
     onBack: () -> Unit,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
+    onRefresh: () -> Unit,
     yearMonth: YearMonth,
+    isError: Boolean,
 ) {
     val startYearMonth = remember { YearMonth(2025, 6) }
     val currentYearMonth = remember { LocalDate.now().yearMonth }
@@ -319,6 +326,27 @@ private fun TopBar(
                 overflowIndicator = {},
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
             ) {
+                if (isError) {
+                    customItem(
+                        buttonGroupContent = {
+                            FilledIconButton(
+                                onClick = onRefresh,
+                                shapes = IconButtonDefaults.shapes(),
+                                colors =
+                                    IconButtonDefaults.filledIconButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                                    ),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Refresh,
+                                    contentDescription = stringResource(Res.string.action_try_again),
+                                )
+                            }
+                        },
+                        menuContent = {},
+                    )
+                }
                 customItem(
                     buttonGroupContent = {
                         FilledIconButton(
@@ -334,7 +362,8 @@ private fun TopBar(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
-                                contentDescription = null,
+                                contentDescription =
+                                    stringResource(Res.string.action_previous_month),
                             )
                         }
                     },
@@ -355,7 +384,7 @@ private fun TopBar(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
-                                contentDescription = null,
+                                contentDescription = stringResource(Res.string.action_next_month),
                             )
                         }
                     },

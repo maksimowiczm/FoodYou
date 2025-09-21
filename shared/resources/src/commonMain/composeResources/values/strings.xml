@@ -448,7 +448,6 @@
     <string name="headline_nutrients_colors">Nutrients colors</string>
     <string name="description_nutrients_colors_reset">Nutrients colors settings will be reset to default values</string>
 
-    <string name="action_tap_to_sponsor">Tap to sponsor</string>
     <string name="headline_sponsorship_goals">Goals</string>
     <string name="description_sponsorship_goals">By sponsoring, you help keep this project independent and sustainable without relying on exploitative business models. Many commercial apps make money by collecting and selling user data, targeting ads, or nudging users into addictive engagement patterns. Sponsorship ensures this app stays privacy-friendly, transparent, and focused on delivering real value without compromising your trust or well being.</string>
     <string name="description_x_away_from_next_goal">%1$s away from the next goal</string>
@@ -463,5 +462,8 @@
     <string name="description_sponsors_privacy">Food You takes your privacy seriously. That’s why it won’t connect to any external service unless you allow it. To see the latest sponsors, the data must be downloaded from Food You’s servers.</string>
 
     <string name="action_allow" description="Allow something">Allow</string>
+
+    <string name="action_next_month">Next month</string>
+    <string name="action_previous_month">Previous month</string>
 
 </resources>

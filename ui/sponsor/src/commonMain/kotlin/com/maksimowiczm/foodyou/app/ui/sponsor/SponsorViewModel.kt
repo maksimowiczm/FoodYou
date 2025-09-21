@@ -33,6 +33,7 @@ internal class SponsorViewModel(
     private val preferencesRepository: UserPreferencesRepository<SponsorshipPreferences>,
 ) : ViewModel() {
     private val isLoading = MutableStateFlow(true)
+    private val isError = MutableStateFlow(false)
 
     private val yearMonth = MutableStateFlow(LocalDate.now().yearMonth)
 
@@ -47,7 +48,8 @@ internal class SponsorViewModel(
     private val ordering = MutableStateFlow(MessagesOrder.TopFirst)
 
     val uiState =
-        combine(isLoading, yearMonth, messages, ordering, goals) {
+        combine(isError, isLoading, yearMonth, messages, ordering, goals) {
+                isError,
                 isLoading,
                 yearMonth,
                 messages,
@@ -67,6 +69,7 @@ internal class SponsorViewModel(
                 val remainingForNextGoal = nextGoal?.let { (it.amount - totalAmount) }
 
                 SponsorScreenUiState(
+                    isError = isError,
                     isLoading = isLoading,
                     yearMonth = yearMonth,
                     amount = totalAmount,
@@ -81,6 +84,7 @@ internal class SponsorViewModel(
                 started = SharingStarted.WhileSubscribed(2_000),
                 initialValue =
                     SponsorScreenUiState(
+                        isError = false,
                         isLoading = true,
                         yearMonth = yearMonth.value,
                         amount = 0.0,
@@ -108,12 +112,14 @@ internal class SponsorViewModel(
     fun refresh(yearMonth: YearMonth) {
         viewModelScope.launch {
             isLoading.value = true
+            isError.value = false
             try {
                 sponsorRepository.requestSync(yearMonth)
             } catch (e: Exception) {
                 when (e) {
                     is CancellationException -> throw e
                 }
+                isError.value = true
             } finally {
                 isLoading.value = false
             }
@@ -139,6 +145,10 @@ internal class SponsorViewModel(
 
     fun nextMonth() {
         yearMonth.value = yearMonth.value.plusMonth()
+    }
+
+    fun refresh() {
+        refresh(yearMonth.value)
     }
 }
 

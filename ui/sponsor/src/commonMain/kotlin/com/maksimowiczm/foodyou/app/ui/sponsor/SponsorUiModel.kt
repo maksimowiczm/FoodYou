@@ -6,6 +6,7 @@ import kotlinx.datetime.YearMonth
 
 @Immutable
 internal data class SponsorScreenUiState(
+    val isError: Boolean,
     val isLoading: Boolean,
     val yearMonth: YearMonth,
     val amount: Double,
