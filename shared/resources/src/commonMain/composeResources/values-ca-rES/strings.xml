@@ -30,7 +30,6 @@
     <string name="headline_home_settings" description="Home screen settings">Configuració d'Inici</string>
     <string name="headline_calendar">Calendari</string>
     <string name="headline_meals_settings">Configuració dels àpats</string>
-    <string name="headline_meals_cards_settings">Configuració de les targetes dels àpats</string>
     <string name="headline_horizontal">Horitzontal</string>
     <string name="headline_vertical">Vertical</string>
     <string name="headline_values_per">Valors per</string>
@@ -134,7 +133,6 @@
     <string name="action_choose_other_date">Escull una altra data</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mostrar més</string>
     <string name="action_download_product">Descarregar producte</string>
-    <string name="action_suggest_external_database">Suggereix una base de dades externa</string>
     <string name="action_copy_and_open_bug_report">Copiar i obrir un informe d'error</string>
     <string name="action_show_details">Mostrar detalls</string>
     <string name="action_set_key">Establir clau</string>
@@ -200,9 +198,6 @@
     <string name="action_unpack" description="Unpack the recipe ingredients">Desempaqueta</string>
     <string name="headline_sponsor">Patrocinador</string>
     <string name="description_sponsor_short">Les contribucions en qualsevol forma són benvingudes</string>
-    <string name="description_sponsor_1">En un món on cada click és rastrejat i cada característica bloquejada darrere d'un pagament, aquesta app és diferent. No hi ha anuncis. No hi ha subscripcions. Sense vigilància.</string>
-    <string name="description_sponsor_2">Basada en la creença que les eines útils han de ser gratuïtes, obertes i respectuoses amb la teva privacitat, ofereix una postura silenciosa contra els models explotadors que dominen les botigues d'aplicacions.</string>
-    <string name="description_sponsor_3">Si això t'importa, considera l'opció de suportar-ho. Dones suport al desenvolupament a temps complet del projecte.</string>
     <string name="headline_source_code">Codi font</string>
     <string name="description_source_code">Mostra el codi font del projecte a GitHub</string>
     <string name="action_write_an_email">Escriure un correu electrònic</string>

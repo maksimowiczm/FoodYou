@@ -31,7 +31,6 @@
     <string name="headline_home_settings" description="Home screen settings">Voorpagina instellingen</string>
     <string name="headline_calendar">Kalender</string>
     <string name="headline_meals_settings">Maaltijd instellingen</string>
-    <string name="headline_meals_cards_settings">Maaltijd kaart instellingen</string>
     <string name="headline_horizontal">Horizontaal</string>
     <string name="headline_vertical">Verticaal</string>
     <string name="headline_values_per">Voedingswaarde per</string>
@@ -154,7 +153,6 @@
     <string name="action_choose_other_date">Kies een andere datum</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Laat meer zien</string>
     <string name="action_download_product">Product downloaden</string>
-    <string name="action_suggest_external_database">Externe database voorstellen</string>
     <string name="action_copy_and_open_bug_report">Kopieer en open bug rapport</string>
     <string name="action_show_details">Laat details zien</string>
     <string name="action_browse_usda">Doorzoek FoodData Central (USDA)</string>
@@ -239,9 +237,6 @@
     <string name="headline_sponsor">Sponsor</string>
     <string name="description_sponsor_short">Bijdragen in welke vorm dan ook zijn welkom</string>
     <string name="description_sponsor_short_2">Ondersteun de groei van deze app</string>
-    <string name="description_sponsor_1">In een wereld waar elke tik wordt bijgehouden en elke functie achter een betaalmuur zit, is deze voedseltracker anders. Geen advertenties. Geen abonnementen. Geen surveillance.</string>
-    <string name="description_sponsor_2">Het is gebaseerd op de overtuiging dat nuttige tools gratis en open moeten zijn en uw privacy moeten respecteren. Het biedt een stilzwijgend standpunt tegen de uitbuitende modellen die de app-winkels domineren.</string>
-    <string name="description_sponsor_3">Als dit voor jou van belang is, overweeg dan om te steunen. Je steunt direct de volledige ontwikkeling van het project.</string>
     <string name="headline_source_code">Bron code</string>
     <string name="description_source_code">Bekijk de bron code van het project op GitHub</string>
     <string name="action_write_an_email">Schrijf een e-mail</string>
@@ -260,7 +255,6 @@
     <string name="description_reset_nutrition_facts">Personalisering van voedingsfeiten terugzetten naar standaard</string>
     <string name="headline_note">Notitie</string>
     <string name="description_add_note">Optionele notities (Bijv., Ingrediënten, vegan status, allergenen, toevoegingen) of andere niet-voedingsdetails</string>
-    <string name="headline_now" description="Current time, now">Nu</string>
     <string name="action_try_again">Probeer nog een keer</string>
     <string name="description_calories_are_calculated">Energie wordt automatisch berekend uit macronutriënten. Je kan deze functie uitschakelen en de waarde handmatig invullen als het nodig is. Alcohol wordt niet meegenomen in de berekening.</string>
     <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
@@ -272,7 +266,6 @@
     <string name="headline_tomorrow" description="Tomorrow, date">Morgen, %1$s</string>
     <string name="headline_user" description="User, person who uses the app">Gebruiker</string>
     <string name="description_food_source">Specificeer waar de voedingsdata vandaan komt. Je kan er een koppeling aan toevoegen</string>
-    <string name="thank_you_for_your_support">Bedankt voor je support!</string>
     <string name="error_food_is_missing_required_fields">Voeding mist nog verplichte velden</string>
     <string name="headline_preview_release">Preview versie</string>
     <string name="description_preview_release">Je maakt op het moment gebruik van een preview versie. Het kan incompleet zijn, onstabiel zijn, of veranderd worden.</string>
@@ -298,9 +291,6 @@
     <string name="headline_downloaded">Gedownload</string>
     <string name="headline_edited">Bewerkt</string>
     <string name="headline_history">Geschiedenis</string>
-    <string name="action_allow_only_once">Eén keer</string>
-    <string name="action_allow_always">Altijd toestaan</string>
-    <string name="description_sponsors_external_server">Om de meest recente sponsors te zien moeten we geüpdatete data op halen van onze externe server</string>
     <string name="headline_anonymous">Anoniem</string>
     <string name="headline_recent">Recent</string>
     <string name="headline_database">Database</string>
@@ -309,10 +299,6 @@
     <string name="neutral_measurement_added">Begrepen! We hebben je afmetingen aangepast</string>
     <string name="headline_imported_from_food_you_2">Geïmporteerd uit Food You 2</string>
     <string name="action_set_goals">Doelen instellen</string>
-    <string name="action_fix_it">Herstellen</string>
-    <string name="error_total_energy_not_matching">De totale energie uit jouw eiwitten, koolhydraten en vetten tellen niet op tot jouw dagelijkse energiedoel</string>
-    <string name="neutral_set_energy_manually">Ik wil energie handmatig instellen</string>
-    <string name="description_energy_is_calculated_automatically">Energie is automatisch berekend op basis van macronutriënten</string>
     <string name="headline_pick_the_days">Kies de dagen</string>
     <string name="action_set_separate_goals">Stel aparte doelen in verschillende dagen</string>
     <string name="headline_percentages">Percentages</string>
@@ -338,4 +324,27 @@
         <item quantity="one">%1$d voedsel product geëxporteerd</item>
         <item quantity="other">%1$d voedsel producten geëxporteerd</item>
     </plurals>
+    <string name="headline_auto_calculate_energy">Energie automatisch berekenen</string>
+    <string name="headline_manual_energy_input">Handmatig energie invoeren</string>
+    <string name="headline_quick_add">Snel toevoegen</string>
+    <string name="description_quick_add">Snel toevoegen laat je invullen zonder te zoeken naar specifieke voeding. Het is een snelle manier om je maaltijden op te schrijven waarvan je het aantal calorieën.</string>
+    <string name="action_open_poll">Open peiling</string>
+    <string name="headline_colors">Kleuren</string>
+    <string name="description_colors">Pas de kleuren in de app aan</string>
+    <string name="headline_custom_palette">Aangepaste palet</string>
+    <string name="description_custom_palette">Jouw eigen palet instellen</string>
+    <string name="headline_dynamic_colors">Dynamische kleuren</string>
+    <string name="description_dynamic_colors">Kleuren toepassen van systeem</string>
+    <string name="headline_seed_color">Zaadkleur</string>
+    <string name="headline_palette_style">Palet stijl</string>
+    <string name="headline_contrast">Contrast</string>
+    <string name="headline_amoled">AMOLED</string>
+    <string name="headline_light">Licht</string>
+    <string name="headline_dark">Donker</string>
+    <string name="headline_appearance">Uiterlijk</string>
+    <string name="headline_theme">Thema</string>
+    <string name="headline_pick_a_color">Kies een kleur</string>
+    <string name="headline_color">Kleur</string>
+    <string name="headline_nutrients_colors">Nutriënt kleuren</string>
+    <string name="description_nutrients_colors_reset">Nutriënt kleuren instellingen zullen naar standaard waarden worden teruggezet</string>
 </resources>

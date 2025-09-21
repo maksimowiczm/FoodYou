@@ -31,7 +31,6 @@
     <string name="headline_home_settings" description="Home screen settings">Ustawienia strony głównej</string>
     <string name="headline_calendar">Kalendarz</string>
     <string name="headline_meals_settings">Ustawienia posiłków</string>
-    <string name="headline_meals_cards_settings">Ustawienia kart z posiłkami</string>
     <string name="headline_horizontal">Poziomo</string>
     <string name="headline_vertical">Pionowo</string>
     <string name="headline_values_per">Wartości na</string>
@@ -158,7 +157,6 @@
     <string name="action_choose_other_date">Wybierz inną datę</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Pokaż więcej</string>
     <string name="action_download_product">Pobierz produkt</string>
-    <string name="action_suggest_external_database">Zaproponuj zewnętrzną bazę danych</string>
     <string name="action_copy_and_open_bug_report">Skopiuj i otwórz raport o błędzie</string>
     <string name="action_show_details">Pokaż szczegóły</string>
     <string name="action_browse_usda">Przeglądaj FoodData Central (USDA)</string>
@@ -251,9 +249,6 @@
     <string name="headline_sponsor">Sponsoruj</string>
     <string name="description_sponsor_short">Wszelkie formy wsparcia są mile widziane</string>
     <string name="description_sponsor_short_2">Wspieraj rozwój aplikacji</string>
-    <string name="description_sponsor_1">W świecie, w którym każdy dotyk ekranu jest śledzony, a każda funkcja ukryta za opłatą, ten licznik kalorii to wyjątek. Bez reklam. Bez abonamentu. Bez śledzenia.</string>
-    <string name="description_sponsor_2">Stworzony z przekonania, że przydatne narzędzia powinny być darmowe, otwarte i szanować Twoją prywatność, stanowi cichy sprzeciw wobec wyzyskujących modeli, które dominują w sklepach z aplikacjami.</string>
-    <string name="description_sponsor_3">Jeśli to ma dla Ciebie znaczenie, rozważ wsparcie. Twoje wpłaty bezpośrednio wspierają pełnoetatowy rozwój tego projektu.</string>
     <string name="headline_source_code">Kod źródłowy</string>
     <string name="description_source_code">Zobacz kod źródłowy projektu na GitHub</string>
     <string name="action_write_an_email">Napisz e-mail</string>
@@ -272,7 +267,6 @@
     <string name="description_reset_nutrition_facts">Przywróć ustawienia personalizacji informacji żywieniowych do domyślnych</string>
     <string name="headline_note">Notatka</string>
     <string name="description_add_note">Uwagi opcjonalne (np. dotyczące składników, statusu wegańskiego, alergenów, dodatków) lub wszelkie inne szczegóły nieodżywcze</string>
-    <string name="headline_now" description="Current time, now">Teraz</string>
     <string name="action_try_again">Spróbuj ponownie</string>
     <string name="description_calories_are_calculated">Energia jest obliczana automatycznie na podstawie makroskładników. W razie potrzeby możesz wyłączyć tę funkcję i wprowadzić wartość ręcznie. Alkohol nie jest uwzględniany w obliczeniach.</string>
     <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
@@ -284,7 +278,6 @@
     <string name="headline_tomorrow" description="Tomorrow, date">Jutro, %1$s</string>
     <string name="headline_user" description="User, person who uses the app">Użytkownik</string>
     <string name="description_food_source">Podaj źródło danych o żywności. Możesz tu dodać link</string>
-    <string name="thank_you_for_your_support">Dziękuję za wsparcie!</string>
     <string name="error_food_is_missing_required_fields">Brak wymaganych pól w pożywieniu</string>
     <string name="headline_preview_release">Wersja zapoznawcza</string>
     <string name="description_preview_release">Aktualnie korzystasz z wersji zapoznawczej. Może być ona niekompletna, niestabilna lub może ulec zmianie.</string>
@@ -310,21 +303,14 @@
     <string name="headline_downloaded">Pobrany</string>
     <string name="headline_edited">Edytowany</string>
     <string name="headline_history">Historia</string>
-    <string name="action_allow_only_once">Tylko raz</string>
-    <string name="action_allow_always">Zawsze zezwalaj</string>
-    <string name="description_sponsors_external_server">Aby wyświetlić najnowszych sponsorów, musimy pobrać zaktualizowane dane z naszego zewnętrznego serwera</string>
     <string name="headline_anonymous">Anonimowy</string>
     <string name="headline_recent">Ostatnie</string>
     <string name="headline_database">Baza danych</string>
     <string name="description_manage_database">Zarządzaj swoją bazą danych</string>
     <string name="action_done">Zrobione</string>
-    <string name="neutral_measurement_added">Rozumiem! Dodaliśmy Twój pomiar</string>
+    <string name="neutral_measurement_added">Twój pomiar został dodany</string>
     <string name="headline_imported_from_food_you_2">Importowane z Food You 2</string>
     <string name="action_set_goals">Wyznacz cele</string>
-    <string name="action_fix_it">Napraw to</string>
-    <string name="error_total_energy_not_matching">Całkowita energia pochodząca z białek, węglowodanów i tłuszczów nie jest równa dziennemu celowi energetycznemu</string>
-    <string name="neutral_set_energy_manually">Chcę ręcznie ustawić energię</string>
-    <string name="description_energy_is_calculated_automatically">Energia jest obliczana automatycznie na podstawie makroskładników</string>
     <string name="headline_pick_the_days">Wybierz dni</string>
     <string name="action_set_separate_goals">Ustalaj osobne cele na każdy dzień</string>
     <string name="headline_percentages">Procenty</string>
@@ -354,4 +340,40 @@
         <item quantity="many">Eksportowano %1$d produktów</item>
         <item quantity="other">Eksportowano %1$d produktów</item>
     </plurals>
+    <string name="headline_auto_calculate_energy">Automatyczne obliczanie energii</string>
+    <string name="headline_manual_energy_input">Ręczne wprowadzanie energii</string>
+    <string name="headline_quick_add">Szybkie dodawanie</string>
+    <string name="description_quick_add">Szybkie dodawanie pozwala Ci zapisywać posiłki bez wyszukiwania konkretnych produktów. To szybki sposób na zapisanie posiłku, gdy już znasz liczbę kalorii lub chcesz wprowadzić prosty szacunek.</string>
+    <string name="action_open_poll">Otwórz ankietę</string>
+    <string name="headline_colors">Kolory</string>
+    <string name="description_colors">Dostosuj kolory aplikacji</string>
+    <string name="headline_custom_palette">Paleta niestandardowa</string>
+    <string name="description_custom_palette">Skonfiguruj własną paletę</string>
+    <string name="headline_dynamic_colors">Dynamiczne kolory</string>
+    <string name="description_dynamic_colors">Zastosuj kolory z systemu</string>
+    <string name="headline_seed_color">Kolor główny</string>
+    <string name="headline_palette_style">Styl palety</string>
+    <string name="headline_contrast">Kontrast</string>
+    <string name="headline_amoled">AMOLED</string>
+    <string name="headline_light">Jasny</string>
+    <string name="headline_dark">Ciemny</string>
+    <string name="headline_appearance">Wygląd</string>
+    <string name="headline_theme">Motyw</string>
+    <string name="headline_pick_a_color">Wybierz kolor</string>
+    <string name="headline_color">Kolor</string>
+    <string name="headline_nutrients_colors">Kolory składników odżywczych</string>
+    <string name="description_nutrients_colors_reset">Ustawienia kolorów składników odżywczych zostaną zresetowane do wartości domyślnych</string>
+    <string name="headline_sponsorship_goals">Cele</string>
+    <string name="description_sponsorship_goals">Dzięki sponsorowaniu pomagasz utrzymać ten projekt niezależnym, bez polegania na wyzyskujących modelach biznesowych. Wiele komercyjnych aplikacji zarabia poprzez zbieranie i sprzedaż danych użytkowników, wyświetlanie ukierunkowanych reklam lub nakłanianie do uzależniających schematów zaangażowania. Sponsoring zapewnia, że ta aplikacja pozostaje przyjazna prywatności, przejrzysta i skoncentrowana na dostarczaniu realnej wartości bez kompromisów w zakresie Twojego zaufania czy dobrostanu.</string>
+    <string name="description_x_away_from_next_goal">Do następnego celu brakuje %1$s</string>
+    <string name="headline_sponsors">Sponsorzy</string>
+    <string name="description_no_sponsors_this_month">Brak sponsorów w tym miesiącu</string>
+    <string name="headline_latest" description="Latest, most recent">Najnowsze</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Największe</string>
+    <string name="headline_this_month_we_raised">W tym miesiącu zebraliśmy %1$s</string>
+    <string name="description_sponsors_privacy">Food You traktuje Twoją prywatność poważnie. Dlatego nie łączy się z żadnymi zewnętrznymi usługami bez Twojej zgody. Aby zobaczyć najnowszych sponsorów, dane muszą zostać pobrane z serwerów Food You.</string>
+    <string name="action_allow" description="Allow something">Zezwól</string>
+    <string name="action_next_month">Następny miesiąc</string>
+    <string name="action_previous_month">Poprzedni miesiąc</string>
+    <string name="headline_sponsor_methods">Metody</string>
 </resources>

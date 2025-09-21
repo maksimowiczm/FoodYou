@@ -135,7 +135,5 @@
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Exportando produtos</string>
     <string name="notification_importing_products">Importando produtos</string>
-    <string name="description_sponsor_2">Construído sobre o princípio de que ferramentas úteis devem ser livres, abertas e respeitar sua privacidade, é uma opção contra os modelos dominantes nas lojas de aplicativos.</string>
-    <string name="description_sponsor_3">Se isso importa para você, considere patrocinar-nos. Você apoiará diretamente o desenvolvimento deste projeto.</string>
     <string name="description_source_code">Ver código-fonte do projeto no GitHub</string>
 </resources>

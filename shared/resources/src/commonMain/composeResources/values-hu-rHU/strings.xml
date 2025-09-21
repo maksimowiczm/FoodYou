@@ -30,7 +30,6 @@
     <string name="headline_home_settings" description="Home screen settings">Kezdőlap beállításai</string>
     <string name="headline_calendar">Naptár</string>
     <string name="headline_meals_settings">Étkezések beállításai</string>
-    <string name="headline_meals_cards_settings">Étkezések kártyáinak beállításai</string>
     <string name="headline_horizontal">Vízszintes</string>
     <string name="headline_vertical">Függőleges</string>
     <string name="headline_values_per">Értékek a következőre</string>
@@ -128,7 +127,6 @@
     <string name="action_choose_other_date">Másik dátum választása</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Továbbiak megjelenítése</string>
     <string name="action_download_product">Termék letöltése</string>
-    <string name="action_suggest_external_database">Javasolj egy külső adatbázist</string>
     <string name="neutral_barcode_scanner_camera_request">Kamera hozzáférés engedélyezése a kód beolvasásához</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Azért kell engedélyezni, hogy be lehessen olvasni a QR-kódot</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">A vonalkód beolvasásához szükség van a kamera engedélyeztetésére. Kérlek, engedélyezd ezt az alkalmazás beállításokban.</string>

@@ -31,7 +31,6 @@
     <string name="headline_home_settings" description="Home screen settings">Настройки главного экрана</string>
     <string name="headline_calendar">Календарь</string>
     <string name="headline_meals_settings">Настройки приёмов пищи</string>
-    <string name="headline_meals_cards_settings">Настройки карточек приёмов пищи</string>
     <string name="headline_horizontal">Горизонтально</string>
     <string name="headline_vertical">Вертикально</string>
     <string name="headline_values_per">Значения на</string>
@@ -158,7 +157,6 @@
     <string name="action_choose_other_date">Выбрать другую дату</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Показать больше</string>
     <string name="action_download_product">Загрузить продукт</string>
-    <string name="action_suggest_external_database">Предложить другую базу данных</string>
     <string name="action_copy_and_open_bug_report">Скопировать и открыть отчет об ошибке</string>
     <string name="action_show_details">Показать подробности</string>
     <string name="action_browse_usda">Найти в FoodData Central (USDA)</string>
@@ -251,9 +249,6 @@
     <string name="headline_sponsor">Спонсор</string>
     <string name="description_sponsor_short">Вклад в любой форме приветствуются</string>
     <string name="description_sponsor_short_2">Поддержите приложение в развитии</string>
-    <string name="description_sponsor_1">В мире, где каждое нажатие отслеживается, а каждая функция за пейволлом, этот трекер еды другой. Никакой рекламы. Никаких подписок. Никакого отслеживания.</string>
-    <string name="description_sponsor_2">Основанный на убеждении, что полезные инструменты должны быть бесплатными, открытыми и уважать вашу конфиденциальность, он предлагает тихий протест против эксплуататорских моделей, доминирующих в магазинах приложений.</string>
-    <string name="description_sponsor_3">Если для вас это важно, подумайте о том, чтобы поддержать проект. Вы напрямую профинансируете полноценную разработку проекта.</string>
     <string name="headline_source_code">Исходный код</string>
     <string name="description_source_code">Посмотреть исходный код проекта на GitHub</string>
     <string name="action_write_an_email">Написать email</string>
@@ -272,7 +267,6 @@
     <string name="description_reset_nutrition_facts">Сбросить персонализацию полей пищевой ценности</string>
     <string name="headline_note">Примечание</string>
     <string name="description_add_note">Дополнительные примечания (например, ингредиенты, подходит ли для веганов, аллергены, добавки) или любые другие детали, не связанные с питательными веществами</string>
-    <string name="headline_now" description="Current time, now">Сейчас</string>
     <string name="action_try_again">Попробовать снова</string>
     <string name="description_calories_are_calculated">Энергетическая ценность автоматически рассчитывается из макронутриентов. Вы можете отключить эту функцию и ввести значение вручную, если это необходимо. Алкоголь при расчете не учитывается.</string>
     <string name="x_kcal_per_g">%1$s %2$d ккал/г</string>
@@ -284,7 +278,6 @@
     <string name="headline_tomorrow" description="Tomorrow, date">Завтра, %1$s</string>
     <string name="headline_user" description="User, person who uses the app">Пользователь</string>
     <string name="description_food_source">Укажите источник данных о продукте питания. Здесь можно включить ссылку</string>
-    <string name="thank_you_for_your_support">Спасибо за вашу поддержку!</string>
     <string name="error_food_is_missing_required_fields">В продукте питания отсутствуют обязательные поля</string>
     <string name="headline_preview_release">Предварительный релиз</string>
     <string name="description_preview_release">Вы используете предварительную версию. Она может быть незавершенной, нестабильной или подверженной изменениям.</string>
@@ -310,9 +303,6 @@
     <string name="headline_downloaded">Загружено</string>
     <string name="headline_edited">Изменено</string>
     <string name="headline_history">История</string>
-    <string name="action_allow_only_once">Один раз</string>
-    <string name="action_allow_always">Разрешать всегда</string>
-    <string name="description_sponsors_external_server">Чтобы увидеть последних спонсоров, нам необходимо получить обновленные данные с нашего внешнего сервера</string>
     <string name="headline_anonymous">Аноним</string>
     <string name="headline_recent">Последнее</string>
     <string name="headline_database">База данных</string>
@@ -321,10 +311,6 @@
     <string name="neutral_measurement_added">Принято! Мы добавили ваши измерения</string>
     <string name="headline_imported_from_food_you_2">Импортировано из Food You 2</string>
     <string name="action_set_goals">Задать цели</string>
-    <string name="action_fix_it">Исправить это</string>
-    <string name="error_total_energy_not_matching">Общая энергия, полученная из белков, углеводов и жиров, не соответствует вашей дневной цели по потреблению энергии</string>
-    <string name="neutral_set_energy_manually">Я хочу задавать энергетическую ценность вручную</string>
-    <string name="description_energy_is_calculated_automatically">Энергетическая ценность рассчитывается автоматически на основе макроэлементов</string>
     <string name="headline_pick_the_days">Выбрать дни</string>
     <string name="action_set_separate_goals">Установить отдельные цели на каждый день</string>
     <string name="headline_percentages">Проценты</string>
@@ -354,4 +340,9 @@
         <item quantity="many">Экспортировано %1$d продуктов питания</item>
         <item quantity="other">Экспортировано %1$d продукта питания</item>
     </plurals>
+    <string name="headline_auto_calculate_energy">Авторасчёт энергетической ценности</string>
+    <string name="headline_manual_energy_input">Ручной ввод энергетической ценности</string>
+    <string name="headline_quick_add">Быстрое добавление</string>
+    <string name="description_quick_add">Быстрое добавление позволяет вносить данные без поиска конкретных продуктов. Это быстрый способ записать приём пищи, когда вы уже знаете калорийность или хотите указать примерное значение.</string>
+    <string name="action_open_poll">Открыть опрос</string>
 </resources>

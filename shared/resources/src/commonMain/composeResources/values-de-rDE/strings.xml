@@ -7,6 +7,7 @@
     <string name="headline_general">Allgemein</string>
     <string name="headline_macronutrients">Makronährstoffe</string>
     <string name="headline_meals">Mahlzeiten</string>
+    <string name="headline_delete_food">Entferne Essen</string>
     <string name="headline_edit_product">Produkt bearbeiten</string>
     <string name="headline_permission_required">Berechtigung erforderlich</string>
     <string name="headline_language">Sprache</string>
@@ -30,7 +31,6 @@
     <string name="headline_home_settings" description="Home screen settings">Einstellungen Startseite</string>
     <string name="headline_calendar">Kalender</string>
     <string name="headline_meals_settings">Einstellungen Mahlzeiten</string>
-    <string name="headline_meals_cards_settings">Einstellungen Mahlzeit-Kacheln</string>
     <string name="headline_horizontal">Horizontal</string>
     <string name="headline_vertical">Vertikal</string>
     <string name="headline_values_per">Werte pro</string>
@@ -46,6 +46,7 @@
     <string name="weight">Gewicht</string>
     <string name="unit_energy" description="Energy as calories">Brennwert in Kalorien</string>
     <string name="unit_kcal">kcal</string>
+    <string name="unit_kilojoules">kJ</string>
     <plurals name="unit_gram">
         <item quantity="one">Gramm</item>
         <item quantity="other">Gramm</item>
@@ -77,8 +78,23 @@
     <string name="nutriment_omega_3">Omega-3-Fettsäuren</string>
     <string name="nutriment_omega_6">Omega-6-Fettsäuren</string>
     <string name="nutriment_salt">Salz</string>
+    <string name="nutriment_fiber">Ballaststoffe</string>
     <string name="nutriment_cholesterol">Cholesterin</string>
     <string name="nutriment_caffeine">Koffein</string>
+    <string name="nutriment_trans_fats">Transfette</string>
+    <string name="nutriment_added_sugars">Hinzugefügte Zucker</string>
+    <string name="nutriment_insoluble_fiber">Unlösliche Ballaststoffe</string>
+    <string name="vitamin_a">Vitamin A (Retinol)</string>
+    <string name="vitamin_b1">Vitamin B1 (Thamin)</string>
+    <string name="vitamin_b2">Vitamin B2 (Riboflavin)</string>
+    <string name="vitamin_b3">Vitamin B3 (Niacin)</string>
+    <string name="vitamin_b5">Vitamin B5 (Pantothensäure)</string>
+    <string name="vitamin_b6">Vitamin B6 (Pyridoxine)</string>
+    <string name="vitamin_b7">Vitamin B7 (Biotin)</string>
+    <string name="vitamin_b9">Vitamin B9 (Folate)</string>
+    <string name="vitamin_b12">Vitamin B12 (Cobalamine)</string>
+    <string name="vitamin_c">Vitamin C (Ascorbinsäure)</string>
+    <string name="vitamin_d">Vitamin D (Calciferols)</string>
     <string name="vitamin_e">Vitamin E</string>
     <string name="vitamin_k">Vitamin K</string>
     <string name="mineral_manganese">Mangan</string>
@@ -134,9 +150,9 @@
     <string name="action_choose_other_date">Anderes Datum auswählen</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mehr anzeigen</string>
     <string name="action_download_product">Produkt herunterladen</string>
-    <string name="action_suggest_external_database">Externe Datenbank vorschlagen</string>
     <string name="action_copy_and_open_bug_report">Kopiere und erstelle Bug-Report</string>
     <string name="action_show_details">Details anzeigen</string>
+    <string name="action_browse_usda">Durchsuchen Sie FoodData Central (USDA)</string>
     <string name="action_set_key">Schlüssel setzen</string>
     <string name="action_obtain_key">Schlüssel erhalten</string>
     <string name="action_dont_show_again">Nicht erneut anzeigen</string>
@@ -148,6 +164,7 @@
         <item quantity="one">%1$d verbleibende Kalorien</item>
         <item quantity="other">%1$d verbleibende Kalorien</item>
     </plurals>
+    <string name="neutral_set_your_daily_goals">Lege deine täglichen Ernährungsziele fest</string>
     <string name="neutral_set_your_meal_schedule">Lege deinen Essensplan fest</string>
     <string name="neutral_permanently_delete_meal">Mahlzeit dauerhaft löschen?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Mahlzeit wird dauerhaft gelöscht. Alle Daten zu dieser Mahlzeit gehen verloren.</string>
@@ -167,6 +184,7 @@
     <string name="error_failed_to_download_product">Konnte Produkt nicht herunterladen</string>
     <string name="error_product_not_found">Konnte Produkt nicht finden</string>
     <string name="error_unknown_error">Unbekannter Fehler</string>
+    <string name="error_measurement_error">Messfehler, bitte überprüfe die Portionsgröße und das Verpackungsgewicht</string>
     <string name="error_api_key_is_invalid">API Schlüssel ist ungültig</string>
     <string name="positive_goal_reached">Ziel erreicht</string>
     <string name="positive_ok">OK</string>
@@ -174,6 +192,7 @@
         <item quantity="one">Um %1$d Kalorien überschritten</item>
         <item quantity="other">Um %1$d Kalorien überschritten</item>
     </plurals>
+    <string name="description_delete_food">Lebensmittel werden sofort gelöscht</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Dieser Eintrag wird aus Deinem Tagebuch gelöscht. Du kannst ihn jederzeit wieder hinzufügen.</string>
     <string name="description_about_setting">Mehr über die App erfahren</string>
     <string name="description_time_based_meals_sorting">Wenn aktiviert, werden aktuell laufende Mahlzeiten zuerst angezeigt</string>
@@ -182,6 +201,18 @@
     <string name="description_translation_warning">Die Übersetzungen werden von Freiwilligen erstellt. Sie können nicht perfekt sein oder fehlen. Falls du Fehler findest, zögere nicht dabei mitzuhelfen, sie zu verbessern.</string>
     <string name="description_changelog">Zeige Neuigkeiten der App an</string>
     <string name="description_home_settings">Passe deine Startseite an</string>
+    <string name="description_download_product">Füge einen Link zu einem Lebensmittel, und rufe automatisch Nährwertangaben und Produkt Informationen ab.</string>
+    <string name="description_download_product_hint">Du kannst beliebig Text einfügen. Die erste URL wird verwendet.</string>
+    <string name="description_show_macronutrients_goals">Makronährstoffziele anzeigen</string>
+    <string name="description_please_wait_while_importing_products">Bitte warte, während Produkte importiert werden</string>
+    <string name="description_please_wait_while_exporting_products">Bitte warte, während Produkte exportiert werden</string>
     <string name="headline_launcher_icon_by_icons8">Startprogramm-Symbol von Icons8</string>
+    <string name="description_open_food_facts">Eine kollaborative, kostenlose und offene Datenbank mit Lebensmitteln aus aller Welt</string>
     <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">Produkte werden exportiert</string>
+    <string name="notification_importing_products">Produkte werden importiert</string>
+    <string name="notification_importing_products_success">Import der Produkte abgeschlossen</string>
+    <string name="description_food_data_central_usda">FoodData Central ist USDA's umfassende Quelle von Daten zur Lebensmittelzusammensetzung mit mehreren unterschiedlichen Datentypen</string>
+    <string name="error_usda_rate_limit">FoodData Central (USDA) API-Rate-Limit überschritten</string>
+    <string name="description_swiss_food_composition_database_short">Die Schweizer Lebensmittelzusammensetzungsdatenbank enthält Nährwertangaben zu über 1.100 allgemeinen Lebensmitteln</string>
 </resources>

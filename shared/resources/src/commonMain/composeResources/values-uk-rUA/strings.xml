@@ -30,7 +30,6 @@
     <string name="headline_home_settings" description="Home screen settings">Налаштування головної</string>
     <string name="headline_calendar">Календар</string>
     <string name="headline_meals_settings">Налаштування прийомів їжі</string>
-    <string name="headline_meals_cards_settings">Налаштування карток прийомів їжі</string>
     <string name="headline_horizontal">Горизонтально</string>
     <string name="headline_vertical">Вертикально</string>
     <string name="headline_values_per">Значення на</string>
@@ -138,7 +137,6 @@
     <string name="action_choose_other_date">Обрати іншу дату</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Показати більше</string>
     <string name="action_download_product">Завантажити продукт</string>
-    <string name="action_suggest_external_database">Запропонувати зовнішню базу даних</string>
     <string name="action_copy_and_open_bug_report">Скопіювати та відкрити звіт про помилку</string>
     <string name="action_show_details">Показати деталі</string>
     <string name="action_set_key">Встановити ключ</string>
@@ -208,9 +206,6 @@
     <string name="action_unpack" description="Unpack the recipe ingredients">Розпакувати</string>
     <string name="headline_sponsor">Підтримати проєкт</string>
     <string name="description_sponsor_short">Будь-які внески вітаються</string>
-    <string name="description_sponsor_1">У світі, де кожен дотик відстежується, а кожна функція закрита за платною підпискою, цей трекер харчування інший. Без реклами. Без підписок. Без стеження.</string>
-    <string name="description_sponsor_2">Створений на переконанні, що корисні інструменти мають бути безкоштовними, відкритими та поважати вашу приватність, він є тихою протидією експлуатаційним моделям, що домінують у магазинах додатків.</string>
-    <string name="description_sponsor_3">Якщо це важливо для вас, будь ласка, підтримайте проєкт. Ви безпосередньо підтримуєте його постійну розробку.</string>
     <string name="headline_source_code">Вихідний код</string>
     <string name="description_source_code">Переглянути вихідний код проєкту на GitHub</string>
     <string name="action_write_an_email">Написати листа</string>

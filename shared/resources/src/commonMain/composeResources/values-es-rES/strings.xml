@@ -30,7 +30,6 @@
     <string name="headline_home_settings" description="Home screen settings">Configuración de Inicio</string>
     <string name="headline_calendar">Calendario</string>
     <string name="headline_meals_settings">Configuración de las comidas</string>
-    <string name="headline_meals_cards_settings">Configuración de tarjetas de comida</string>
     <string name="headline_horizontal">Horizontal</string>
     <string name="headline_vertical">Vertical</string>
     <string name="headline_values_per">Valores por</string>
@@ -134,7 +133,6 @@
     <string name="action_choose_other_date">Escoge otra fecha</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mostrar más</string>
     <string name="action_download_product">Descargar producto</string>
-    <string name="action_suggest_external_database">Sugiere una base de datos externa</string>
     <string name="action_copy_and_open_bug_report">Copiar y abrir informe de error</string>
     <string name="action_show_details">Mostrar detalles</string>
     <string name="action_set_key">Establece clave</string>
@@ -200,9 +198,6 @@
     <string name="action_unpack" description="Unpack the recipe ingredients">Desempaqueta</string>
     <string name="headline_sponsor">Patrocinador</string>
     <string name="description_sponsor_short">Se aceptan contribuciones de cualquier tipo</string>
-    <string name="description_sponsor_1">En un mundo en el que se rastrea cada click y cada función se bloquea tras un muro de pago, esta app es diferente. Sin anuncios. Sin suscripciones. Sin vigilancia.</string>
-    <string name="description_sponsor_2">Basada en la creencia de que las herramientas útiles deben ser gratuitas, abiertas y respetuosas con tu privacidad, ofrece una postura silenciosa contra los modelos explotadores que dominan las tiendas de aplicaciones.</string>
-    <string name="description_sponsor_3">Si esto te importa, considera la posibilidad de apoyar. Apoyas directamente el desarrollo a tiempo completo del proyecto.</string>
     <string name="headline_source_code">Código fuente</string>
     <string name="description_source_code">Ver el código fuente del proyecto en GitHub</string>
     <string name="action_write_an_email">Escribir un correo electrónico</string>

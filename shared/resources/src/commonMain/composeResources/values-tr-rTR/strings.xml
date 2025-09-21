@@ -31,7 +31,6 @@
     <string name="headline_home_settings" description="Home screen settings">Ana sayfa ayarları</string>
     <string name="headline_calendar">Takvim</string>
     <string name="headline_meals_settings">Öğün ayarları</string>
-    <string name="headline_meals_cards_settings">Öğün kartı ayarları</string>
     <string name="headline_horizontal">Yatay</string>
     <string name="headline_vertical">Dikey</string>
     <string name="headline_values_per">Değerler / porsiyon</string>
@@ -154,7 +153,6 @@
     <string name="action_choose_other_date">Başka bir tarih seç</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Daha fazla göster</string>
     <string name="action_download_product">Ürünü indir</string>
-    <string name="action_suggest_external_database">Harici veritabanı öner</string>
     <string name="action_copy_and_open_bug_report">Kopyala ve hata raporunu aç</string>
     <string name="action_show_details">Detayları göster</string>
     <string name="action_browse_usda">FoodData Central'a (USDA) göz at</string>
@@ -239,9 +237,6 @@
     <string name="headline_sponsor">Sponsor ol</string>
     <string name="description_sponsor_short">Her türlü katkıya açığız</string>
     <string name="description_sponsor_short_2">Uygulamanın gelişimini destekleyin</string>
-    <string name="description_sponsor_1">Her dokunuşun izlendiği ve her özelliğin bir ödeme duvarının arkasına kilitlendiği bir dünyada, bu yemek takip uygulaması farklı. Reklam yok. Abonelik yok. Gözetim yok.</string>
-    <string name="description_sponsor_2">Yararlı araçların ücretsiz, açık ve gizliliğinize saygılı olması gerektiği inancıyla geliştirilen bu uygulama, uygulama mağazalarına hakim olan sömürücü modellere karşı sessiz bir duruş sergiliyor.</string>
-    <string name="description_sponsor_3">Bu sizin için önemliyse, destek olmayı düşünün. Projenin tam zamanlı gelişimini doğrudan desteklemiş olursunuz.</string>
     <string name="headline_source_code">Kaynak kodu</string>
     <string name="description_source_code">Projenin kaynak kodunu GitHub'da görüntüleyin</string>
     <string name="action_write_an_email">E-posta yaz</string>
@@ -260,7 +255,6 @@
     <string name="description_reset_nutrition_facts">Besin değerleri kişiselleştirmesini varsayılana sıfırla</string>
     <string name="headline_note">Not</string>
     <string name="description_add_note">İsteğe bağlı notlar (ör. malzemeler, vegan durumu, alerjenler, katkı maddeleri) veya besin dışı diğer ayrıntılar</string>
-    <string name="headline_now" description="Current time, now">Şimdi</string>
     <string name="action_try_again">Tekrar dene</string>
     <string name="description_calories_are_calculated">Enerji, makro besinlerden otomatik olarak hesaplanır. İsterseniz bu özelliği devre dışı bırakıp değeri manuel olarak girebilirsiniz. Alkol hesaplamaya dahil edilmez.</string>
     <string name="x_kcal_per_g">%1$s %2$d kkal/g</string>
@@ -272,7 +266,6 @@
     <string name="headline_tomorrow" description="Tomorrow, date">Yarın, %1$s</string>
     <string name="headline_user" description="User, person who uses the app">Kullanıcı</string>
     <string name="description_food_source">Yiyecek verilerinin nereden geldiğini belirtin. Buraya bir bağlantı ekleyebilirsiniz</string>
-    <string name="thank_you_for_your_support">Desteğiniz için teşekkür ederiz!</string>
     <string name="error_food_is_missing_required_fields">Yiyecekte gerekli alanlar eksik</string>
     <string name="headline_preview_release">Önizleme sürümü</string>
     <string name="description_preview_release">Şu anda bir önizleme sürümü kullanıyorsunuz. Eksik, kararsız veya değişikliğe tabi olabilir.</string>
@@ -298,9 +291,6 @@
     <string name="headline_downloaded">İndirildi</string>
     <string name="headline_edited">Düzenlendi</string>
     <string name="headline_history">Geçmiş</string>
-    <string name="action_allow_only_once">Sadece bir kez</string>
-    <string name="action_allow_always">Her zaman izin ver</string>
-    <string name="description_sponsors_external_server">En son sponsorları görüntülemek için harici sunucumuzdan güncel verileri almamız gerekiyor</string>
     <string name="headline_anonymous">Anonim</string>
     <string name="headline_recent">Son kullanılanlar</string>
     <string name="headline_database">Veritabanı</string>
@@ -309,10 +299,6 @@
     <string name="neutral_measurement_added">Anlaşıldı! Ölçümünüzü ekledik</string>
     <string name="headline_imported_from_food_you_2">Food You 2'den içe aktarıldı</string>
     <string name="action_set_goals">Hedefleri belirle</string>
-    <string name="action_fix_it">Düzelt</string>
-    <string name="error_total_energy_not_matching">Proteinlerinizden, karbonhidratlarınızdan ve yağlarınızdan gelen toplam enerji, günlük enerji hedefinizle uyuşmuyor</string>
-    <string name="neutral_set_energy_manually">Enerjiyi manuel olarak ayarlamak istiyorum</string>
-    <string name="description_energy_is_calculated_automatically">Enerji, makro besinlere göre otomatik olarak hesaplanır</string>
     <string name="headline_pick_the_days">Günleri seçin</string>
     <string name="action_set_separate_goals">Her gün için ayrı hedefler belirleyin</string>
     <string name="headline_percentages">Yüzdeler</string>
@@ -338,4 +324,27 @@
         <item quantity="one">%1$d gıda ürünü dışa aktarıldı</item>
         <item quantity="other">%1$d gıda ürünü dışa aktarıldı</item>
     </plurals>
+    <string name="headline_auto_calculate_energy">Otomatik enerji hesaplama</string>
+    <string name="headline_manual_energy_input">Manuel enerji girişi</string>
+    <string name="headline_quick_add">Hızlı ekle</string>
+    <string name="description_quick_add">Hızlı ekle özelliği, belirli gıdaları aramadan kayıt yapmanıza olanak tanır. Bu, kalori sayısını bildiğiniz ya da sadece tahmini bir değer girmek istediğiniz durumlar için pratik bir yöntemdir.</string>
+    <string name="action_open_poll">Anketi aç</string>
+    <string name="headline_colors">Colors</string>
+    <string name="description_colors">Customize the app colors</string>
+    <string name="headline_custom_palette">Custom palette</string>
+    <string name="description_custom_palette">Setup your own palette</string>
+    <string name="headline_dynamic_colors">Dynamic colors</string>
+    <string name="description_dynamic_colors">Apply colors from system</string>
+    <string name="headline_seed_color">Seed color</string>
+    <string name="headline_palette_style">Palette style</string>
+    <string name="headline_contrast">Contrast</string>
+    <string name="headline_amoled">AMOLED</string>
+    <string name="headline_light">Light</string>
+    <string name="headline_dark">Dark</string>
+    <string name="headline_appearance">Appearance</string>
+    <string name="headline_theme">Theme</string>
+    <string name="headline_pick_a_color">Pick a color</string>
+    <string name="headline_color">Color</string>
+    <string name="headline_nutrients_colors">Nutrients colors</string>
+    <string name="description_nutrients_colors_reset">Nutrients colors settings will be reset to default values</string>
 </resources>

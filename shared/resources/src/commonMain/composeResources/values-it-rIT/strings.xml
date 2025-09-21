@@ -31,7 +31,6 @@
     <string name="headline_home_settings" description="Home screen settings">Impostazioni home</string>
     <string name="headline_calendar">Calendario</string>
     <string name="headline_meals_settings">Impostazioni pasti</string>
-    <string name="headline_meals_cards_settings">Impostazioni schede pasti</string>
     <string name="headline_horizontal">Orizzontale</string>
     <string name="headline_vertical">Verticale</string>
     <string name="headline_values_per">Valori per</string>
@@ -151,7 +150,6 @@
     <string name="action_choose_other_date">Scegli un'altra data</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mostra di più</string>
     <string name="action_download_product">Scarica prodotto</string>
-    <string name="action_suggest_external_database">Suggerisci database esterno</string>
     <string name="action_copy_and_open_bug_report">Copia e apri segnalazione bug</string>
     <string name="action_show_details">Mostra dettagli</string>
     <string name="action_browse_usda">Sfoglia FoodData Central (USDA)</string>
@@ -236,9 +234,6 @@
     <string name="headline_sponsor">Sostieni</string>
     <string name="description_sponsor_short">Sono benvenuti contributi di qualsiasi tipo</string>
     <string name="description_sponsor_short_2">Supporta la crescita dell'app</string>
-    <string name="description_sponsor_1">In un mondo in cui ogni tocco è tracciato e ogni funzionalità è bloccata da un pagamento, questo food tracker è diverso. Niente pubblicità. Niente abbonamenti. Nessun monitoraggio.</string>
-    <string name="description_sponsor_2">Basato sulla convinzione che gli strumenti utili debbano essere gratuiti, open source e rispettare la tua privacy, rappresenta una silenziosa forma di resistenza ai modelli sfruttatori che dominano gli app store.</string>
-    <string name="description_sponsor_3">Se tutto questo è importante per te, considera una donazione. Sosterrai direttamente lo sviluppo a tempo pieno del progetto.</string>
     <string name="headline_source_code">Codice sorgente</string>
     <string name="description_source_code">Visualizza il codice sorgente del progetto su GitHub</string>
     <string name="action_write_an_email">Scrivi una email</string>
@@ -257,7 +252,6 @@
     <string name="description_reset_nutrition_facts">Ripristina la personalizzazione delle informazioni nutrizionali ai valori predefiniti</string>
     <string name="headline_note">Note</string>
     <string name="description_add_note">Note facoltative (es. ingredienti, stato vegano, allergeni, additivi) o qualsiasi altro dettaglio non di nutrienti</string>
-    <string name="headline_now" description="Current time, now">Ora</string>
     <string name="action_try_again">Riprova</string>
     <string name="description_calories_are_calculated">L'energia è calcolata automaticamente dai macronutrienti. È possibile disattivare questa funzione e inserire il valore manualmente, se necessario. L'alcol non è incluso nel calcolo.</string>
     <string name="neutral_an_error_occurred">Si è verificato un errore</string>
@@ -268,7 +262,6 @@
     <string name="headline_tomorrow" description="Tomorrow, date">Domani, %1$s</string>
     <string name="headline_user" description="User, person who uses the app">Utente</string>
     <string name="description_food_source">Indica da dove vengono i dati sul cibo. Puoi includere un link</string>
-    <string name="thank_you_for_your_support">Grazie per il tuo supporto!</string>
     <string name="error_food_is_missing_required_fields">Dati alimentari necessari mancanti</string>
     <string name="headline_preview_release">Versione in anteprima</string>
     <string name="description_preview_release">Stai usando una versione in anteprima. Potrebbe essere incompleta, instabile o cambiare in futuro.</string>
@@ -294,9 +287,6 @@
     <string name="headline_downloaded">Scaricato</string>
     <string name="headline_edited">Modificato</string>
     <string name="headline_history">Storico</string>
-    <string name="action_allow_only_once">Solo una volta</string>
-    <string name="action_allow_always">Consenti sempre</string>
-    <string name="description_sponsors_external_server">Per vedere le ultime donazioni, dobbiamo recuperare i dati aggiornati dal nostro server esterno</string>
     <string name="headline_anonymous">Anonimo</string>
     <string name="headline_recent">Recenti</string>
     <string name="description_manage_database">Gestisci il tuo database</string>
@@ -304,9 +294,6 @@
     <string name="neutral_measurement_added">Benissimo! Abbiamo aggiunto la tua misura</string>
     <string name="headline_imported_from_food_you_2">Importato da Food You 2</string>
     <string name="action_set_goals">Imposta obiettivi</string>
-    <string name="error_total_energy_not_matching">L'energia totale di proteine, carboidrati e grassi non coincide con il tuo obiettivo energetico quotidiano</string>
-    <string name="neutral_set_energy_manually">Voglio impostare l'energia manualmente</string>
-    <string name="description_energy_is_calculated_automatically">L’energia è calcolata automaticamente sulla base dei macronutrienti</string>
     <string name="headline_pick_the_days">Seleziona giorni</string>
     <string name="action_set_separate_goals">Imposta obiettivi separati per ogni giorno</string>
     <string name="headline_percentages">Percentuali</string>

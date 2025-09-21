@@ -30,7 +30,6 @@
     <string name="headline_home_settings" description="Home screen settings">Hjemindstillinger</string>
     <string name="headline_calendar">Kalender</string>
     <string name="headline_meals_settings">Måltidsindstillinger</string>
-    <string name="headline_meals_cards_settings">Måltidskortindstillinger</string>
     <string name="headline_horizontal">Vandret</string>
     <string name="headline_vertical">Lodret</string>
     <string name="headline_values_per">Værdier pr.</string>
@@ -130,7 +129,6 @@
     <string name="action_choose_other_date">Vælg anden dato</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Vis mere</string>
     <string name="action_download_product">Download produkt</string>
-    <string name="action_suggest_external_database">Foreslå ekstern database</string>
     <string name="action_copy_and_open_bug_report">Kopiér og åbn fejlanmeldelse</string>
     <string name="action_show_details">Vis detaljer</string>
     <string name="neutral_barcode_scanner_camera_request">Tillad kameraadgang for at skanne stregkoder</string>

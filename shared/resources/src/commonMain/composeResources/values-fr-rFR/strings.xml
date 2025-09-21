@@ -30,7 +30,6 @@
     <string name="headline_home_settings" description="Home screen settings">Paramètres d'accueil</string>
     <string name="headline_calendar">Calendrier</string>
     <string name="headline_meals_settings">Paramètres des repas</string>
-    <string name="headline_meals_cards_settings">Paramètres des repas</string>
     <string name="headline_values_per">Valeurs par</string>
     <string name="headline_other">Autre</string>
     <string name="headline_vitamins">Vitamines</string>
@@ -172,9 +171,6 @@
     <string name="feature_manual_database_import">Importation manuelle de la base de données</string>
     <string name="headline_sponsor">Commanditaire</string>
     <string name="description_sponsor_short">Les contributions sous toutes leurs formes sont les bienvenues</string>
-    <string name="description_sponsor_1">Dans un monde où chaque clic est suivi et chaque fonctionnalité verrouillée derrière un mur payant, ce suivi alimentaire est différent. Pas de publicité. Pas d'abonnement. Pas de surveillance.</string>
-    <string name="description_sponsor_2">Conçu selon le principe que les outils utiles doivent être gratuits, ouverts et respecter votre vie privée, il s'oppose discrètement aux modèles abusifs qui dominent les boutiques d'applications.</string>
-    <string name="description_sponsor_3">Si cela vous tient à cœur, pensez à apporter votre soutien. Vous contribuerez ainsi directement au développement à plein temps du projet.</string>
     <string name="headline_source_code">Code source</string>
     <string name="description_source_code">Consultez le code source du projet sur GitHub</string>
     <string name="action_write_an_email">Écrire un e-mail</string>

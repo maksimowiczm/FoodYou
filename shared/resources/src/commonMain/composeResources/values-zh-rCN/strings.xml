@@ -30,7 +30,6 @@
     <string name="headline_home_settings" description="Home screen settings">主页设置</string>
     <string name="headline_calendar">日历</string>
     <string name="headline_meals_settings">餐食设置</string>
-    <string name="headline_meals_cards_settings">餐食卡设置</string>
     <string name="headline_horizontal">水平</string>
     <string name="headline_vertical">垂直</string>
     <string name="headline_values_per">每个</string>
@@ -132,7 +131,6 @@
     <string name="action_choose_other_date">选择其他日期</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">显示更多</string>
     <string name="action_download_product">下载产品</string>
-    <string name="action_suggest_external_database">建议外部数据库</string>
     <string name="action_copy_and_open_bug_report">复制并打开 bug 报告</string>
     <string name="action_show_details">显示详情</string>
     <string name="action_set_key">设置密钥</string>
