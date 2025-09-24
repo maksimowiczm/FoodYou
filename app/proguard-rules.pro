@@ -1,0 +1,1 @@
+-keep class com.maksimowiczm.foodyou.common.domain.measurement.MeasurementType

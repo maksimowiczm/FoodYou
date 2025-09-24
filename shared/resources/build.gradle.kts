@@ -7,14 +7,14 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "com.maksimowiczm.foodyou.shared.resources"
+        namespace = "com.maksimowiczm.foodyou.resources"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
         experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
     }
 
-    val xcfName = "shared:resourcesKit"
+    val xcfName = "resourcesKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }
 

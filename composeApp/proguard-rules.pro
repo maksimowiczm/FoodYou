@@ -1,1 +1,0 @@
--keep enum com.maksimowiczm.foodyou.shared.domain.measurement.MeasurementType

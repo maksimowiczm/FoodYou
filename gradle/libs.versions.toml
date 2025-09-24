@@ -32,6 +32,7 @@ runner = "1.7.0"
 sqliteAndroid = "3.49.0"
 sqliteBundled = "2.6.0"
 zxingAndroidEmbedded = "4.3.0"
+kotlinStdlib = "2.2.20"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -49,6 +50,7 @@ androidx-testCore-ktx = { module = "androidx.test:core-ktx", version.ref = "andr
 androidx-testExt-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-testExt" }
 androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
+jetbrains-compose-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "composeMultiplatform" }
 jetbrains-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMultiplatformMaterial3" }
 gradle-android = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -71,12 +73,7 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 sqlite-android = { module = "com.github.requery:sqlite-android", version.ref = "sqliteAndroid" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
-# FoodYouCore modules
-core-food = { group = "com.maksimowiczm.foodyou", name = "food" }
-core-fooddiary = { group = "com.maksimowiczm.foodyou", name = "fooddiary" }
-core-goals = { group = "com.maksimowiczm.foodyou", name = "goals" }
-core-shared = { group = "com.maksimowiczm.foodyou", name = "shared" }
-core-sponsorship = { group = "com.maksimowiczm.foodyou", name = "sponsorship" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

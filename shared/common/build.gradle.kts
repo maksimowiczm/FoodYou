@@ -1,19 +1,23 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
-    alias(libs.plugins.android.lint)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
-    sourceSets.all { languageSettings.enableLanguageFeature("ExpectActualClasses") }
-
     androidLibrary {
-        namespace = "com.maksimowiczm.foodyou.shared.common"
+        namespace = "com.maksimowiczm.foodyou.common"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+
+        withHostTestBuilder {}
+
+        withDeviceTestBuilder { sourceSetTreeName = "test" }
+            .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
     }
 
-    val xcfName = "shared:commonKit"
+    val xcfName = "commonKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }
 
@@ -21,12 +25,9 @@ kotlin {
 
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.core.shared)
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.datetime)
-        }
-        androidMain.dependencies { implementation(libs.androidx.appcompat) }
+    sourceSets.commonMain.dependencies {
+        implementation(compose.runtime)
+
+        implementation(libs.androidx.paging.common)
     }
 }

@@ -17,7 +17,7 @@ kotlin {
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
-    val xcfName = "shared:barcodescannerKit"
+    val xcfName = "barcodescannerKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }
 
@@ -47,7 +47,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.maksimowiczm.foodyou.shared.barcodescanner"
+    namespace = "com.maksimowiczm.foodyou.barcodescanner"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
