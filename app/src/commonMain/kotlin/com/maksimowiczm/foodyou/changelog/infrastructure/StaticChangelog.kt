@@ -197,8 +197,8 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 listOf("Fixed incorrect values displayed in the home screen meal card summary."),
             notes =
                 """
-            This is a preview version. Please don't report missing features, as this is still a work-in-progress.
-        """
+                    This is a preview version. Please don't report missing features, as this is still a work-in-progress.
+                """
                     .trimIndent(),
             isPreview = true,
         )
@@ -228,8 +228,8 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 ),
             notes =
                 """
-            This is a preview version. Please don't report missing features, as this is still a work-in-progress.
-        """
+                    This is a preview version. Please don't report missing features, as this is still a work-in-progress.
+                """
                     .trimIndent(),
             isPreview = true,
         )
@@ -440,8 +440,8 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
             translations = listOf("Updated Italian"),
             notes =
                 """
-            This is a hotfix release that addresses some issues with the previous version.
-        """
+                    This is a hotfix release that addresses some issues with the previous version.
+                """
                     .trimIndent(),
         )
 
@@ -515,9 +515,9 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 ),
             notes =
                 """
-            Why was the Open Food Facts search removed?
-            It was removed because it wasn't working as expected. The search often caused confusion among users, as it frequently returned inaccurate or irrelevant results. This led to my decision to remove the in-app search feature altogether and replace it with a manual entry option. This isn't a rant against Open Food Facts, as it's a great and free project. To be fair, the app used the deprecated V1 API, which seems inadequate for a modern app.
-        """
+                    Why was the Open Food Facts search removed?
+                    It was removed because it wasn't working as expected. The search often caused confusion among users, as it frequently returned inaccurate or irrelevant results. This led to my decision to remove the in-app search feature altogether and replace it with a manual entry option. This isn't a rant against Open Food Facts, as it's a great and free project. To be fair, the app used the deprecated V1 API, which seems inadequate for a modern app.
+                """
                     .trimIndent(),
         )
 
@@ -541,10 +541,10 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
             translations = listOf("Added Portuguese (Brazilian)", "Added Russian", "Added Arabic"),
             notes =
                 """
-            This release is marked as 2.0.0 because of significant source code changes that affect the overall structure of the app. The internal codebase has been heavily updated. The major version bump reflects these foundational changes.
+                    This release is marked as 2.0.0 because of significant source code changes that affect the overall structure of the app. The internal codebase has been heavily updated. The major version bump reflects these foundational changes.
 
-            Possible other unintended changes. If you notice something odd happening, please report it
-        """
+                    Possible other unintended changes. If you notice something odd happening, please report it
+                """
                     .trimIndent(),
         )
 }

@@ -11,17 +11,17 @@ internal val fixMeasurementSuggestions =
             connection.execSQL("DROP TABLE IF EXISTS MeasurementSuggestion")
             connection.execSQL(
                 """
-            CREATE TABLE MeasurementSuggestion (
-                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                productId INTEGER,
-                recipeId INTEGER,
-                type INTEGER NOT NULL,
-                value REAL NOT NULL,
-                epochSeconds INTEGER NOT NULL,
-                FOREIGN KEY (productId) REFERENCES Product(id) ON DELETE CASCADE,
-                FOREIGN KEY (recipeId) REFERENCES Recipe(id) ON DELETE CASCADE
-            )
-            """
+                CREATE TABLE MeasurementSuggestion (
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    productId INTEGER,
+                    recipeId INTEGER,
+                    type INTEGER NOT NULL,
+                    value REAL NOT NULL,
+                    epochSeconds INTEGER NOT NULL,
+                    FOREIGN KEY (productId) REFERENCES Product(id) ON DELETE CASCADE,
+                    FOREIGN KEY (recipeId) REFERENCES Recipe(id) ON DELETE CASCADE
+                )
+                """
                     .trimIndent()
             )
         }

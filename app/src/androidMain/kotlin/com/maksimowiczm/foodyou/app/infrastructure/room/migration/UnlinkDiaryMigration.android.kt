@@ -220,9 +220,9 @@ private fun SupportSQLiteDatabase.copyMeasurements() {
                 // Insert into DiaryMeasurement
                 execSQL(
                     """
-                    INSERT INTO Measurement_new (mealId, epochDay, productId, recipeId, measurement, quantity, createdAt, updatedAt)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """
+                        INSERT INTO Measurement_new (mealId, epochDay, productId, recipeId, measurement, quantity, createdAt, updatedAt)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """
                         .trimIndent(),
                     arrayOf<Any?>(
                         mealId,

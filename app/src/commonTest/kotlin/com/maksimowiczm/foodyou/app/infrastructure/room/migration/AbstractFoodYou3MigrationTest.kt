@@ -88,9 +88,9 @@ abstract class AbstractFoodYou3MigrationTest {
         connection
             .prepare(
                 """
-                SELECT id, name, brand, barcode, packageWeight, servingWeight, isLiquid, note, energy, proteins, fats, saturatedFats, transFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, carbohydrates, sugars, addedSugars, dietaryFiber, solubleFiber, insolubleFiber, salt, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro, chromiumMicro
-                FROM Product
-            """
+                    SELECT id, name, brand, barcode, packageWeight, servingWeight, isLiquid, note, energy, proteins, fats, saturatedFats, transFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, carbohydrates, sugars, addedSugars, dietaryFiber, solubleFiber, insolubleFiber, salt, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro, chromiumMicro
+                    FROM Product
+                """
                     .trimIndent()
             )
             .use { statement ->
@@ -327,26 +327,26 @@ private fun SQLiteConnection.insertFoodYou2Product(
     val statement =
         prepare(
             """
-            INSERT INTO ProductEntity (
-                id, name, brand, barcode, packageWeight, servingWeight, isLiquid, note, proteins, 
-                carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, 
-                polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli,
-                caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli,
-                vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro,
-                vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli,
-                magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli,
-                ironMilli, phosphorusMilli, seleniumMicro, iodineMicro, chromiumMicro
-            ) VALUES (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-                ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?
-            )
-        """
+                INSERT INTO ProductEntity (
+                    id, name, brand, barcode, packageWeight, servingWeight, isLiquid, note, proteins, 
+                    carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, 
+                    polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli,
+                    caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli,
+                    vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro,
+                    vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli,
+                    magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli,
+                    ironMilli, phosphorusMilli, seleniumMicro, iodineMicro, chromiumMicro
+                ) VALUES (
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+                    ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?
+                )
+            """
                 .trimIndent()
         )
 

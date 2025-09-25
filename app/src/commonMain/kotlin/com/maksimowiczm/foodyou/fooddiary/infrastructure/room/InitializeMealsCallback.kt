@@ -37,9 +37,9 @@ class InitializeMealsCallback(
             meals.forEach { meal ->
                 val query =
                     """
-                    INSERT INTO Meal (name, fromHour, fromMinute, toHour, toMinute, rank) 
-                    VALUES ($1, $2, $3, $4, $5, $6)
-                """
+                        INSERT INTO Meal (name, fromHour, fromMinute, toHour, toMinute, rank) 
+                        VALUES ($1, $2, $3, $4, $5, $6)
+                    """
                         .trimIndent()
 
                 val statement = connection.prepare(query)

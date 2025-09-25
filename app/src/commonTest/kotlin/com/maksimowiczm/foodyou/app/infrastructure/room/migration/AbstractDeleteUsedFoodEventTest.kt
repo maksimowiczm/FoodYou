@@ -40,9 +40,9 @@ abstract class AbstractDeleteUsedFoodEventTest {
             conn
                 .prepare(
                     """
-                SELECT COUNT(*) FROM FoodEvent
-                WHERE type = 4
-                """
+                    SELECT COUNT(*) FROM FoodEvent
+                    WHERE type = 4
+                    """
                         .trimIndent()
                 )
                 .use { stmt ->

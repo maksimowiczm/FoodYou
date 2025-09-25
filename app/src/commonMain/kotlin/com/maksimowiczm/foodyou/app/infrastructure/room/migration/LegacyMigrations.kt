@@ -13,16 +13,16 @@ object LegacyMigrations {
             override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL(
                     """
-            ALTER TABLE MealEntity 
-            ADD COLUMN rank INTEGER NOT NULL DEFAULT -1
-                """
+                    ALTER TABLE MealEntity 
+                    ADD COLUMN rank INTEGER NOT NULL DEFAULT -1
+                        """
                         .trimIndent()
                 )
                 connection.execSQL(
                     """
-            UPDATE MealEntity 
-            SET rank = id
-                """
+                    UPDATE MealEntity 
+                    SET rank = id
+                        """
                         .trimIndent()
                 )
             }
@@ -35,21 +35,21 @@ object LegacyMigrations {
                 // Change OpenFoodFactsPagingKey to OpenFoodFactsPagingKeyEntity
                 connection.execSQL(
                     """
-            CREATE TABLE IF NOT EXISTS OpenFoodFactsPagingKeyEntity(
-                queryString TEXT NOT NULL,
-                country TEXT NOT NULL,
-                fetchedCount INTEGER NOT NULL,
-                totalCount INTEGER NOT NULL,
-                PRIMARY KEY(queryString, country)
-            )
-                """
+                    CREATE TABLE IF NOT EXISTS OpenFoodFactsPagingKeyEntity(
+                        queryString TEXT NOT NULL,
+                        country TEXT NOT NULL,
+                        fetchedCount INTEGER NOT NULL,
+                        totalCount INTEGER NOT NULL,
+                        PRIMARY KEY(queryString, country)
+                    )
+                        """
                         .trimIndent()
                 )
                 connection.execSQL(
                     """
-            INSERT INTO OpenFoodFactsPagingKeyEntity (queryString, country, fetchedCount, totalCount)
-            SELECT queryString, country, fetchedCount, totalCount FROM OpenFoodFactsPagingKey
-                """
+                    INSERT INTO OpenFoodFactsPagingKeyEntity (queryString, country, fetchedCount, totalCount)
+                    SELECT queryString, country, fetchedCount, totalCount FROM OpenFoodFactsPagingKey
+                        """
                         .trimIndent()
                 )
                 connection.execSQL("DROP TABLE OpenFoodFactsPagingKey")
@@ -57,44 +57,44 @@ object LegacyMigrations {
                 // Create new ProductEntity structure
                 connection.execSQL(
                     """
-            CREATE TABLE IF NOT EXISTS ProductEntity_temp (
-                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                name TEXT NOT NULL,
-                brand TEXT,
-                barcode TEXT,
-                packageWeight REAL,
-                servingWeight REAL,
-                productSource INTEGER NOT NULL,
-                calories REAL NOT NULL,
-                proteins REAL NOT NULL,
-                carbohydrates REAL NOT NULL,
-                sugars REAL,
-                fats REAL NOT NULL,
-                saturatedFats REAL,
-                salt REAL,
-                sodium REAL,
-                fiber REAL
-            )
-                """
+                    CREATE TABLE IF NOT EXISTS ProductEntity_temp (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT NOT NULL,
+                        brand TEXT,
+                        barcode TEXT,
+                        packageWeight REAL,
+                        servingWeight REAL,
+                        productSource INTEGER NOT NULL,
+                        calories REAL NOT NULL,
+                        proteins REAL NOT NULL,
+                        carbohydrates REAL NOT NULL,
+                        sugars REAL,
+                        fats REAL NOT NULL,
+                        saturatedFats REAL,
+                        salt REAL,
+                        sodium REAL,
+                        fiber REAL
+                    )
+                        """
                         .trimIndent()
                 )
 
                 // Move data to temp table
                 connection.execSQL(
                     """
-            INSERT INTO ProductEntity_temp (
-                id, name, brand, barcode,
-                packageWeight, servingWeight, productSource,
-                calories, proteins, carbohydrates, sugars, fats, saturatedFats,
-                salt, sodium, fiber
-            )
-            SELECT 
-                id, name, brand, barcode,
-                packageWeight, servingWeight, productSource,
-                calories, proteins, carbohydrates, sugars, fats, saturatedFats,
-                salt, sodium, fiber
-            FROM ProductEntity
-                """
+                    INSERT INTO ProductEntity_temp (
+                        id, name, brand, barcode,
+                        packageWeight, servingWeight, productSource,
+                        calories, proteins, carbohydrates, sugars, fats, saturatedFats,
+                        salt, sodium, fiber
+                    )
+                    SELECT 
+                        id, name, brand, barcode,
+                        packageWeight, servingWeight, productSource,
+                        calories, proteins, carbohydrates, sugars, fats, saturatedFats,
+                        salt, sodium, fiber
+                    FROM ProductEntity
+                        """
                         .trimIndent()
                 )
 
@@ -104,57 +104,57 @@ object LegacyMigrations {
                 // Create ProductMeasurementEntity
                 connection.execSQL(
                     """
-            CREATE TABLE IF NOT EXISTS ProductMeasurementEntity (
-                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                mealId INTEGER NOT NULL,
-                diaryEpochDay INTEGER NOT NULL,
-                productId INTEGER NOT NULL,
-                measurement INTEGER NOT NULL,
-                quantity REAL NOT NULL,
-                createdAt INTEGER NOT NULL,
-                isDeleted INTEGER NOT NULL,
-                FOREIGN KEY (productId) REFERENCES ProductEntity(id) ON DELETE CASCADE,
-                FOREIGN KEY (mealId) REFERENCES MealEntity(id) ON DELETE CASCADE
-            )
-                """
+                    CREATE TABLE IF NOT EXISTS ProductMeasurementEntity (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        mealId INTEGER NOT NULL,
+                        diaryEpochDay INTEGER NOT NULL,
+                        productId INTEGER NOT NULL,
+                        measurement INTEGER NOT NULL,
+                        quantity REAL NOT NULL,
+                        createdAt INTEGER NOT NULL,
+                        isDeleted INTEGER NOT NULL,
+                        FOREIGN KEY (productId) REFERENCES ProductEntity(id) ON DELETE CASCADE,
+                        FOREIGN KEY (mealId) REFERENCES MealEntity(id) ON DELETE CASCADE
+                    )
+                        """
                         .trimIndent()
                 )
 
                 // Create proper indices for ProductMeasurementEntity
                 connection.execSQL(
                     """
-            CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_productId 
-            ON ProductMeasurementEntity (productId)
-                """
+                    CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_productId 
+                    ON ProductMeasurementEntity (productId)
+                        """
                         .trimIndent()
                 )
 
                 connection.execSQL(
                     """
-            CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_isDeleted 
-            ON ProductMeasurementEntity (isDeleted)
-                """
+                    CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_isDeleted 
+                    ON ProductMeasurementEntity (isDeleted)
+                        """
                         .trimIndent()
                 )
 
                 connection.execSQL(
                     """
-            CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_mealId 
-            ON ProductMeasurementEntity (mealId)
-                """
+                    CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_mealId 
+                    ON ProductMeasurementEntity (mealId)
+                        """
                         .trimIndent()
                 )
 
                 // Migrate data from WeightMeasurementEntity to ProductMeasurementEntity
                 connection.execSQL(
                     """
-            INSERT INTO ProductMeasurementEntity (
-                id, mealId, diaryEpochDay, productId, measurement, quantity, createdAt, isDeleted
-            )
-            SELECT 
-                id, mealId, diaryEpochDay, productId, measurement, quantity, createdAt, isDeleted
-            FROM WeightMeasurementEntity
-                """
+                    INSERT INTO ProductMeasurementEntity (
+                        id, mealId, diaryEpochDay, productId, measurement, quantity, createdAt, isDeleted
+                    )
+                    SELECT 
+                        id, mealId, diaryEpochDay, productId, measurement, quantity, createdAt, isDeleted
+                    FROM WeightMeasurementEntity
+                        """
                         .trimIndent()
                 )
 
@@ -163,20 +163,20 @@ object LegacyMigrations {
                 // Create SearchQueryEntity from ProductQueryEntity
                 connection.execSQL(
                     """
-            CREATE TABLE IF NOT EXISTS SearchQueryEntity (
-                query TEXT NOT NULL PRIMARY KEY,
-                epochSeconds INTEGER NOT NULL
-            )
-                """
+                    CREATE TABLE IF NOT EXISTS SearchQueryEntity (
+                        query TEXT NOT NULL PRIMARY KEY,
+                        epochSeconds INTEGER NOT NULL
+                    )
+                        """
                         .trimIndent()
                 )
 
                 // Migrate data from ProductQueryEntity to SearchQueryEntity
                 connection.execSQL(
                     """
-            INSERT INTO SearchQueryEntity (query, epochSeconds)
-            SELECT query, date FROM ProductQueryEntity
-                """
+                    INSERT INTO SearchQueryEntity (query, epochSeconds)
+                    SELECT query, date FROM ProductQueryEntity
+                        """
                         .trimIndent()
                 )
 
@@ -190,29 +190,29 @@ object LegacyMigrations {
             override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL(
                     """
-            WITH UsedInRecipes AS (
-                SELECT DISTINCT productId 
-                FROM RecipeIngredientEntity i
-            ),
-            UsedInMeals AS (
-                SELECT DISTINCT productId 
-                FROM ProductMeasurementEntity m
-            ),
-            UsedProducts AS (
-                SELECT DISTINCT productId 
-                FROM UsedInRecipes
-                UNION
-                SELECT DISTINCT productId 
-                FROM UsedInMeals
-            )
-            DELETE FROM ProductEntity 
-            WHERE id IN (
-                SELECT id 
-                FROM ProductEntity 
-                WHERE productSource = 1
-                AND id NOT IN (SELECT productId FROM UsedProducts)
-            ) 
-                """
+                    WITH UsedInRecipes AS (
+                        SELECT DISTINCT productId 
+                        FROM RecipeIngredientEntity i
+                    ),
+                    UsedInMeals AS (
+                        SELECT DISTINCT productId 
+                        FROM ProductMeasurementEntity m
+                    ),
+                    UsedProducts AS (
+                        SELECT DISTINCT productId 
+                        FROM UsedInRecipes
+                        UNION
+                        SELECT DISTINCT productId 
+                        FROM UsedInMeals
+                    )
+                    DELETE FROM ProductEntity 
+                    WHERE id IN (
+                        SELECT id 
+                        FROM ProductEntity 
+                        WHERE productSource = 1
+                        AND id NOT IN (SELECT productId FROM UsedProducts)
+                    ) 
+                        """
                         .trimIndent()
                 )
             }
@@ -223,8 +223,8 @@ object LegacyMigrations {
             override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL(
                     """
-            DROP TABLE IF EXISTS OpenFoodFactsPagingKeyEntity
-                """
+                    DROP TABLE IF EXISTS OpenFoodFactsPagingKeyEntity
+                        """
                         .trimIndent()
                 )
             }
@@ -243,10 +243,10 @@ object LegacyMigrations {
             override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL(
                     """
-            UPDATE ProductEntity 
-            SET sodiumMilli = sodiumMilli * 1000
-            WHERE sodiumMilli IS NOT NULL
-                """
+                    UPDATE ProductEntity 
+                    SET sodiumMilli = sodiumMilli * 1000
+                    WHERE sodiumMilli IS NOT NULL
+                        """
                         .trimIndent()
                 )
             }
@@ -268,82 +268,82 @@ object LegacyMigrations {
                 // Create new MeasurementEntity table
                 execSQL(
                     """
-            CREATE TABLE IF NOT EXISTS MeasurementEntity (
-                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                mealId INTEGER NOT NULL,
-                epochDay INTEGER NOT NULL,
-                productId INTEGER,
-                recipeId INTEGER,
-                measurement INTEGER NOT NULL,
-                quantity REAL NOT NULL,
-                createdAt INTEGER NOT NULL,
-                isDeleted INTEGER NOT NULL,
-                FOREIGN KEY (mealId) REFERENCES MealEntity(id) ON DELETE CASCADE,
-                FOREIGN KEY (productId) REFERENCES ProductEntity(id) ON DELETE CASCADE,
-                FOREIGN KEY (recipeId) REFERENCES RecipeEntity(id) ON DELETE CASCADE
-            )
-                """
+                    CREATE TABLE IF NOT EXISTS MeasurementEntity (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        mealId INTEGER NOT NULL,
+                        epochDay INTEGER NOT NULL,
+                        productId INTEGER,
+                        recipeId INTEGER,
+                        measurement INTEGER NOT NULL,
+                        quantity REAL NOT NULL,
+                        createdAt INTEGER NOT NULL,
+                        isDeleted INTEGER NOT NULL,
+                        FOREIGN KEY (mealId) REFERENCES MealEntity(id) ON DELETE CASCADE,
+                        FOREIGN KEY (productId) REFERENCES ProductEntity(id) ON DELETE CASCADE,
+                        FOREIGN KEY (recipeId) REFERENCES RecipeEntity(id) ON DELETE CASCADE
+                    )
+                        """
                         .trimIndent()
                 )
 
                 // Create proper indices for MeasurementEntity
                 execSQL(
                     """
-            CREATE INDEX IF NOT EXISTS index_MeasurementEntity_epochDay
-            ON MeasurementEntity (epochDay)
-                """
+                    CREATE INDEX IF NOT EXISTS index_MeasurementEntity_epochDay
+                    ON MeasurementEntity (epochDay)
+                        """
                         .trimIndent()
                 )
 
                 execSQL(
                     """
-            CREATE INDEX IF NOT EXISTS index_MeasurementEntity_productId
-            ON MeasurementEntity (productId)
-                """
+                    CREATE INDEX IF NOT EXISTS index_MeasurementEntity_productId
+                    ON MeasurementEntity (productId)
+                        """
                         .trimIndent()
                 )
 
                 execSQL(
                     """
-            CREATE INDEX IF NOT EXISTS index_MeasurementEntity_recipeId
-            ON MeasurementEntity (recipeId)
-                """
+                    CREATE INDEX IF NOT EXISTS index_MeasurementEntity_recipeId
+                    ON MeasurementEntity (recipeId)
+                        """
                         .trimIndent()
                 )
 
                 execSQL(
                     """
-            CREATE INDEX IF NOT EXISTS index_MeasurementEntity_mealId
-            ON MeasurementEntity (mealId)
-                """
+                    CREATE INDEX IF NOT EXISTS index_MeasurementEntity_mealId
+                    ON MeasurementEntity (mealId)
+                        """
                         .trimIndent()
                 )
 
                 // Move product measurements to MeasurementEntity
                 execSQL(
                     """
-            INSERT INTO MeasurementEntity (
-                mealId, epochDay, productId, measurement, quantity, createdAt, isDeleted
-            )
-            SELECT 
-                mealId, diaryEpochDay as epochDay, productId, measurement, quantity, createdAt, isDeleted
-            FROM ProductMeasurementEntity
-            WHERE true
-                """
+                    INSERT INTO MeasurementEntity (
+                        mealId, epochDay, productId, measurement, quantity, createdAt, isDeleted
+                    )
+                    SELECT 
+                        mealId, diaryEpochDay as epochDay, productId, measurement, quantity, createdAt, isDeleted
+                    FROM ProductMeasurementEntity
+                    WHERE true
+                        """
                         .trimIndent()
                 )
 
                 // Move recipe measurements to MeasurementEntity
                 execSQL(
                     """
-            INSERT INTO MeasurementEntity (
-                mealId, epochDay, recipeId, measurement, quantity, createdAt, isDeleted
-            )
-            SELECT 
-                mealId, epochDay, recipeId, measurement, quantity, createdAt, isDeleted
-            FROM RecipeMeasurementEntity
-            WHERE true
-                """
+                    INSERT INTO MeasurementEntity (
+                        mealId, epochDay, recipeId, measurement, quantity, createdAt, isDeleted
+                    )
+                    SELECT 
+                        mealId, epochDay, recipeId, measurement, quantity, createdAt, isDeleted
+                    FROM RecipeMeasurementEntity
+                    WHERE true
+                        """
                         .trimIndent()
                 )
 
@@ -361,14 +361,14 @@ object LegacyMigrations {
                 // Copy data from ProductEntity to the temporary table without productSource
                 execSQL(
                     """
-            INSERT INTO `ProductEntity_temp` (
-                id, name, brand, barcode, packageWeight, servingWeight, proteins, carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro
-            )
-            SELECT 
-                id, name, brand, barcode, packageWeight, servingWeight, proteins, carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro
-            FROM ProductEntity
-            WHERE true
-                """
+                    INSERT INTO `ProductEntity_temp` (
+                        id, name, brand, barcode, packageWeight, servingWeight, proteins, carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro
+                    )
+                    SELECT 
+                        id, name, brand, barcode, packageWeight, servingWeight, proteins, carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro
+                    FROM ProductEntity
+                    WHERE true
+                        """
                         .trimIndent()
                 )
 
@@ -383,13 +383,13 @@ object LegacyMigrations {
                 // Copy data back from the temporary table to the new ProductEntity table
                 execSQL(
                     """
-            INSERT INTO `ProductEntity` (
-                id, name, brand, barcode, packageWeight, servingWeight, proteins, carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro
-            )
-            SELECT 
-                id, name, brand, barcode, packageWeight, servingWeight, proteins, carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro
-            FROM ProductEntity_temp
-                """
+                    INSERT INTO `ProductEntity` (
+                        id, name, brand, barcode, packageWeight, servingWeight, proteins, carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro
+                    )
+                    SELECT 
+                        id, name, brand, barcode, packageWeight, servingWeight, proteins, carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro
+                    FROM ProductEntity_temp
+                        """
                         .trimIndent()
                 )
 
@@ -401,29 +401,29 @@ object LegacyMigrations {
                 // Create a temporary table to hold the data
                 execSQL(
                     """
-            CREATE TABLE IF NOT EXISTS `RecipeIngredientEntity_temp` (
-                `id` INTEGER,
-                `recipeId` INTEGER NOT NULL,
-                `ingredientProductId` INTEGER,
-                `ingredientRecipeId` INTEGER,
-                `measurement` INTEGER NOT NULL,
-                `quantity` REAL NOT NULL
-            )
-                """
+                    CREATE TABLE IF NOT EXISTS `RecipeIngredientEntity_temp` (
+                        `id` INTEGER,
+                        `recipeId` INTEGER NOT NULL,
+                        `ingredientProductId` INTEGER,
+                        `ingredientRecipeId` INTEGER,
+                        `measurement` INTEGER NOT NULL,
+                        `quantity` REAL NOT NULL
+                    )
+                        """
                         .trimIndent()
                 )
 
                 // Copy data from RecipeIngredientEntity to the temporary table
                 execSQL(
                     """
-            INSERT INTO `RecipeIngredientEntity_temp` (
-                id, recipeId, ingredientProductId, ingredientRecipeId, measurement, quantity
-            )
-            SELECT 
-                id, recipeId, productId AS ingredientProductId, recipeIngredientId AS ingredientRecipeId, measurement, quantity
-            FROM RecipeIngredientEntity
-            WHERE true
-                """
+                    INSERT INTO `RecipeIngredientEntity_temp` (
+                        id, recipeId, ingredientProductId, ingredientRecipeId, measurement, quantity
+                    )
+                    SELECT 
+                        id, recipeId, productId AS ingredientProductId, recipeIngredientId AS ingredientRecipeId, measurement, quantity
+                    FROM RecipeIngredientEntity
+                    WHERE true
+                        """
                         .trimIndent()
                 )
 
@@ -433,56 +433,56 @@ object LegacyMigrations {
                 // Create a new RecipeIngredientEntity table with the updated structure
                 execSQL(
                     """
-            CREATE TABLE IF NOT EXISTS `RecipeIngredientEntity` (
-                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                `recipeId` INTEGER NOT NULL,
-                `ingredientProductId` INTEGER,
-                `ingredientRecipeId` INTEGER,
-                `measurement` INTEGER NOT NULL,
-                `quantity` REAL NOT NULL,
-                FOREIGN KEY (recipeId) REFERENCES RecipeEntity(id) ON DELETE CASCADE,
-                FOREIGN KEY (ingredientProductId) REFERENCES ProductEntity(id) ON DELETE CASCADE,
-                FOREIGN KEY (ingredientRecipeId) REFERENCES RecipeEntity(id) ON DELETE CASCADE
-            )
-                """
+                    CREATE TABLE IF NOT EXISTS `RecipeIngredientEntity` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `recipeId` INTEGER NOT NULL,
+                        `ingredientProductId` INTEGER,
+                        `ingredientRecipeId` INTEGER,
+                        `measurement` INTEGER NOT NULL,
+                        `quantity` REAL NOT NULL,
+                        FOREIGN KEY (recipeId) REFERENCES RecipeEntity(id) ON DELETE CASCADE,
+                        FOREIGN KEY (ingredientProductId) REFERENCES ProductEntity(id) ON DELETE CASCADE,
+                        FOREIGN KEY (ingredientRecipeId) REFERENCES RecipeEntity(id) ON DELETE CASCADE
+                    )
+                        """
                         .trimIndent()
                 )
 
                 // Create proper indices for RecipeIngredientEntity
                 execSQL(
                     """
-            CREATE INDEX IF NOT EXISTS index_RecipeIngredientEntity_recipeId 
-            ON RecipeIngredientEntity (recipeId)
-                """
+                    CREATE INDEX IF NOT EXISTS index_RecipeIngredientEntity_recipeId 
+                    ON RecipeIngredientEntity (recipeId)
+                        """
                         .trimIndent()
                 )
 
                 execSQL(
                     """
-            CREATE INDEX IF NOT EXISTS index_RecipeIngredientEntity_ingredientProductId 
-            ON RecipeIngredientEntity (ingredientProductId)
-                """
+                    CREATE INDEX IF NOT EXISTS index_RecipeIngredientEntity_ingredientProductId 
+                    ON RecipeIngredientEntity (ingredientProductId)
+                        """
                         .trimIndent()
                 )
 
                 execSQL(
                     """
-            CREATE INDEX IF NOT EXISTS index_RecipeIngredientEntity_ingredientRecipeId 
-            ON RecipeIngredientEntity (ingredientRecipeId)
-                """
+                    CREATE INDEX IF NOT EXISTS index_RecipeIngredientEntity_ingredientRecipeId 
+                    ON RecipeIngredientEntity (ingredientRecipeId)
+                        """
                         .trimIndent()
                 )
 
                 // Copy data back from the temporary table to the new RecipeIngredientEntity table
                 execSQL(
                     """
-            INSERT INTO `RecipeIngredientEntity` (
-                id, recipeId, ingredientProductId, ingredientRecipeId, measurement, quantity
-            )
-            SELECT 
-                id, recipeId, ingredientProductId, ingredientRecipeId, measurement, quantity
-            FROM RecipeIngredientEntity_temp
-                """
+                    INSERT INTO `RecipeIngredientEntity` (
+                        id, recipeId, ingredientProductId, ingredientRecipeId, measurement, quantity
+                    )
+                    SELECT 
+                        id, recipeId, ingredientProductId, ingredientRecipeId, measurement, quantity
+                    FROM RecipeIngredientEntity_temp
+                        """
                         .trimIndent()
                 )
 
@@ -497,16 +497,16 @@ object LegacyMigrations {
             override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL(
                     """
-            ALTER TABLE ProductEntity 
-            ADD COLUMN isLiquid INTEGER NOT NULL DEFAULT 0
-                """
+                    ALTER TABLE ProductEntity 
+                    ADD COLUMN isLiquid INTEGER NOT NULL DEFAULT 0
+                        """
                         .trimIndent()
                 )
                 connection.execSQL(
                     """
-            ALTER TABLE RecipeEntity 
-            ADD COLUMN isLiquid INTEGER NOT NULL DEFAULT 0
-                """
+                    ALTER TABLE RecipeEntity 
+                    ADD COLUMN isLiquid INTEGER NOT NULL DEFAULT 0
+                        """
                         .trimIndent()
                 )
             }
@@ -518,16 +518,16 @@ object LegacyMigrations {
             override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL(
                     """
-            ALTER TABLE ProductEntity 
-            ADD COLUMN note TEXT
-                """
+                    ALTER TABLE ProductEntity 
+                    ADD COLUMN note TEXT
+                        """
                         .trimIndent()
                 )
                 connection.execSQL(
                     """
-            ALTER TABLE RecipeEntity 
-            ADD COLUMN note TEXT
-                """
+                    ALTER TABLE RecipeEntity 
+                    ADD COLUMN note TEXT
+                        """
                         .trimIndent()
                 )
             }

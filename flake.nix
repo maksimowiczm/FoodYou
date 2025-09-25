@@ -32,8 +32,8 @@
       };
 
       ktfmtJar = pkgs.fetchurl {
-        url = "https://github.com/facebook/ktfmt/releases/download/v0.56/ktfmt-0.56-with-dependencies.jar";
-        sha256 = "49b6b92baf2fc22562a96ba9522bd9eddc0f79706af830fbea0b2a159d57900c";
+        url = "https://github.com/facebook/ktfmt/releases/download/v0.58/ktfmt-0.58-with-dependencies.jar";
+        sha256 = "0369a4351367b0de2374b0f1c3962ef7d5d222a4bc58d7197d06948d46e4bea5";
       };
 
       pythonEnv = pkgs.python3.withPackages (ps: with ps; [ pandas openpyxl ]);
