@@ -35,6 +35,9 @@ internal actual fun AdditionalSettings(
         )
     }
 
+    val isDynamic = themeSettings.theme is Theme.Dynamic || themeSettings.theme is Theme.Default
+    val themes = rememberThemes()
+
     Column(modifier) {
         ListItem(
             headlineContent = { Text(stringResource(Res.string.headline_custom_palette)) },
@@ -46,13 +49,15 @@ internal actual fun AdditionalSettings(
                 headlineContent = { Text(stringResource(Res.string.headline_dynamic_colors)) },
                 modifier =
                     Modifier.clickable {
-                            onThemeSettingsChange(themeSettings.copy(theme = Theme.Dynamic))
+                            if (isDynamic) {
+                                onThemeSettingsChange(themeSettings.copy(theme = themes.first()))
+                            } else {
+                                onThemeSettingsChange(themeSettings.copy(theme = Theme.Dynamic))
+                            }
                         }
                         .semantics { role = Role.Switch },
                 supportingContent = { Text(stringResource(Res.string.description_dynamic_colors)) },
-                trailingContent = {
-                    Switch(checked = themeSettings.isDynamic, onCheckedChange = null)
-                },
+                trailingContent = { Switch(checked = isDynamic, onCheckedChange = null) },
             )
         }
     }

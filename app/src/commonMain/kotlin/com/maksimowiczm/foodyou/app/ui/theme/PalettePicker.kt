@@ -45,7 +45,7 @@ internal fun PalettePicker(
     onThemeChange: (Theme.Custom) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = rememberAvailableKeyColors()
+    val colors = rememberThemes()
     val chunks = remember(colors) { colors.chunked(5) }
     val initialPage = remember {
         chunks.indexOfFirst { chunk -> chunk.contains(selectedTheme) }.coerceAtLeast(0)

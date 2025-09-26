@@ -13,7 +13,7 @@ private val ColorList =
     ((4..10) + (1..3)).map { it * 35.0 }.map { Color(Hct.from(it, 40.0, 40.0).toInt()) }
 
 @Composable
-internal fun rememberAvailableKeyColors(): List<Theme.Custom> = remember {
+internal fun rememberThemes(): List<Theme.Custom> = remember {
     listOf(
         Theme.Custom(
             seedColor = MaterialDeepPurple.value,
