@@ -39,7 +39,7 @@ data object Bitcoin : CryptoSponsorMethod {
 data object Monero : CryptoSponsorMethod {
     override val name = "Monero"
     override val address =
-        "41tP8QxdL5hduxcntGwJD92GJDdCTKDyyGSKofbgdgaLG2uJuqgK7daYymBQuJ1iA48LuiLdfoduFMLk1kdkTRKSC4mHkMY"
+        "41eXqs6zg8PFQ8Fec3iyYcVA3rFHc7wgj9hLRuiVh2FtbE2q2TGoCbhSmVX5R76SmYPpSM2VR7qmD4SQ4YMZCEFK6DGGWfB"
 }
 
 data object Ko_Fi : LinkSponsorMethod {

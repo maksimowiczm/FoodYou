@@ -65,7 +65,7 @@ project.
 - **BTC**: `bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2`
 - **ETH**: `0x7C794aF78235504014cC5c987161b80a803ee514`
 - **Monero**:
-  `41tP8QxdL5hduxcntGwJD92GJDdCTKDyyGSKofbgdgaLG2uJuqgK7daYymBQuJ1iA48LuiLdfoduFMLk1kdkTRKSC4mHkMY`
+  `41eXqs6zg8PFQ8Fec3iyYcVA3rFHc7wgj9hLRuiVh2FtbE2q2TGoCbhSmVX5R76SmYPpSM2VR7qmD4SQ4YMZCEFK6DGGWfB`
 
 ## ✉️ Contact
 
