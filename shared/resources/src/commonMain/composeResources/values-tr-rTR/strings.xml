@@ -329,22 +329,35 @@
     <string name="headline_quick_add">Hızlı ekle</string>
     <string name="description_quick_add">Hızlı ekle özelliği, belirli gıdaları aramadan kayıt yapmanıza olanak tanır. Bu, kalori sayısını bildiğiniz ya da sadece tahmini bir değer girmek istediğiniz durumlar için pratik bir yöntemdir.</string>
     <string name="action_open_poll">Anketi aç</string>
-    <string name="headline_colors">Colors</string>
-    <string name="description_colors">Customize the app colors</string>
-    <string name="headline_custom_palette">Custom palette</string>
-    <string name="description_custom_palette">Setup your own palette</string>
-    <string name="headline_dynamic_colors">Dynamic colors</string>
-    <string name="description_dynamic_colors">Apply colors from system</string>
-    <string name="headline_seed_color">Seed color</string>
-    <string name="headline_palette_style">Palette style</string>
-    <string name="headline_contrast">Contrast</string>
+    <string name="headline_colors">Renkler</string>
+    <string name="description_colors">Uygulama renklerini özelleştir</string>
+    <string name="headline_custom_palette">Özel palet</string>
+    <string name="description_custom_palette">Kendi paletinizi oluşturun</string>
+    <string name="headline_dynamic_colors">Dinamik renkler</string>
+    <string name="description_dynamic_colors">Sistemden renkleri uygula</string>
+    <string name="headline_seed_color">Tohum rengi</string>
+    <string name="headline_palette_style">Palet stili</string>
+    <string name="headline_contrast">Kontrast</string>
     <string name="headline_amoled">AMOLED</string>
-    <string name="headline_light">Light</string>
-    <string name="headline_dark">Dark</string>
-    <string name="headline_appearance">Appearance</string>
-    <string name="headline_theme">Theme</string>
-    <string name="headline_pick_a_color">Pick a color</string>
-    <string name="headline_color">Color</string>
-    <string name="headline_nutrients_colors">Nutrients colors</string>
-    <string name="description_nutrients_colors_reset">Nutrients colors settings will be reset to default values</string>
+    <string name="headline_light">Açık</string>
+    <string name="headline_dark">Koyu</string>
+    <string name="headline_appearance">Görünüm</string>
+    <string name="headline_theme">Tema</string>
+    <string name="headline_pick_a_color">Bir renk seçin</string>
+    <string name="headline_color">Renk</string>
+    <string name="headline_nutrients_colors">Besin renkleri</string>
+    <string name="description_nutrients_colors_reset">Besin renkleri ayarları varsayılan değerlere sıfırlanacak</string>
+    <string name="headline_sponsorship_goals">Hedefler</string>
+    <string name="description_sponsorship_goals">Sponsor olarak, bu projenin sömürücü iş modellerine dayanmadan bağımsız ve sürdürülebilir kalmasına yardımcı olursunuz. Birçok ticari uygulama, kullanıcı verilerini toplayıp satarak, reklamları hedefleyerek veya kullanıcıları bağımlılık yaratan etkileşim kalıplarına yönlendirerek para kazanır. Sponsorluk, bu uygulamanın gizlilik dostu, şeffaf kalmasını ve güveninizi veya refahınızı tehlikeye atmadan gerçek değer sunmaya odaklanmasını sağlar.</string>
+    <string name="description_x_away_from_next_goal">Bir sonraki hedeften %1$s uzakta</string>
+    <string name="headline_sponsors">Sponsorlar</string>
+    <string name="description_no_sponsors_this_month">Bu ay sponsor yok</string>
+    <string name="headline_latest" description="Latest, most recent">En Son</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">En İyiler</string>
+    <string name="headline_this_month_we_raised">Bu ay %1$s topladık</string>
+    <string name="description_sponsors_privacy">Food You, gizliliğinizi ciddiye alır. Bu yüzden, siz izin vermedikçe hiçbir harici hizmete bağlanmaz. En son sponsorları görmek için verilerin Food You’nun sunucularından indirilmesi gerekir.</string>
+    <string name="action_allow" description="Allow something">İzin ver</string>
+    <string name="action_next_month">Gelecek ay</string>
+    <string name="action_previous_month">Önceki ay</string>
+    <string name="headline_sponsor_methods">Yöntemler</string>
 </resources>

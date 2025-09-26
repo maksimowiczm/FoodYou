@@ -345,4 +345,35 @@
     <string name="headline_quick_add">Быстрое добавление</string>
     <string name="description_quick_add">Быстрое добавление позволяет вносить данные без поиска конкретных продуктов. Это быстрый способ записать приём пищи, когда вы уже знаете калорийность или хотите указать примерное значение.</string>
     <string name="action_open_poll">Открыть опрос</string>
+    <string name="headline_colors">Цвета</string>
+    <string name="description_colors">Измените цвета приложения</string>
+    <string name="headline_custom_palette">Пользовательская палитра</string>
+    <string name="description_custom_palette">Задайте свою собственную палитру</string>
+    <string name="headline_dynamic_colors">Динамические цвета</string>
+    <string name="description_dynamic_colors">Применить цвета из системы</string>
+    <string name="headline_seed_color">Базовый цвет</string>
+    <string name="headline_palette_style">Стиль палитры</string>
+    <string name="headline_contrast">Контраст</string>
+    <string name="headline_amoled">AMOLED</string>
+    <string name="headline_light">Светлая</string>
+    <string name="headline_dark">Тёмная</string>
+    <string name="headline_appearance">Внешний вид</string>
+    <string name="headline_theme">Тема</string>
+    <string name="headline_pick_a_color">Выбрать цвет</string>
+    <string name="headline_color">Цвет</string>
+    <string name="headline_nutrients_colors">Цвета нутриентов</string>
+    <string name="description_nutrients_colors_reset">Настройки цветов нутриентов будут сброшены до значений по умолчанию</string>
+    <string name="headline_sponsorship_goals">Цели</string>
+    <string name="description_sponsorship_goals">Спонсируя проект, вы помогаете ему оставаться независимым и стабильным, не прибегая к эксплуататорским бизнес-моделям. Многие коммерческие приложения зарабатывают, собирая и продавая данные пользователей, показывая целевую рекламу или подталкивая пользователей к формированию зависимости. Спонсорство гарантирует, что это приложение останется конфиденциальным, прозрачным и сосредоточенным на предоставлении реальной ценности, не подрывая ваше доверие и благополучие.</string>
+    <string name="description_x_away_from_next_goal">%1$s до следующей цели</string>
+    <string name="headline_sponsors">Спонсоры</string>
+    <string name="description_no_sponsors_this_month">В этом месяце спонсоров нет</string>
+    <string name="headline_latest" description="Latest, most recent">Последние</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Лидеры</string>
+    <string name="headline_this_month_we_raised">В этом месяце мы собрали %1$s</string>
+    <string name="description_sponsors_privacy">Food You серьёзно относится к вашей конфиденциальности. Поэтому приложение не будет подключаться к каким-либо внешним сервисам без вашего разрешения. Чтобы увидеть последних спонсоров, необходимо загрузить данные с серверов Food You.</string>
+    <string name="action_allow" description="Allow something">Разрешить</string>
+    <string name="action_next_month">Следующий месяц</string>
+    <string name="action_previous_month">Предыдущий месяц</string>
+    <string name="headline_sponsor_methods">Методы</string>
 </resources>
