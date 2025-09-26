@@ -37,9 +37,6 @@ buildConfig {
     val crowdin = "https://crowdin.com/project/food-you"
     buildConfigField("String", "CROWDIN_URL", "\"$crowdin\"")
 
-    val sponsorApiUrl = "https://sponsors.foodyou.maksimowiczm.com"
-    buildConfigField("String", "SPONSOR_API_URL", "\"$sponsorApiUrl\"")
-
     // -- OPEN FOOD FACTS --
     sourceSets.getByName("main") {
         buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org\"")
@@ -50,6 +47,13 @@ buildConfig {
 
     // -- USDA --
     buildConfigField("String", "USDA_URL", "\"https://api.nal.usda.gov\"")
+
+    // -- Food You Sponsors github repository --
+    buildConfigField(
+        "String",
+        "GITHUB_SPONSORS_REPOSITORY_URL",
+        "\"https://maksimowiczm.github.io/FoodYou-sponsors\"",
+    )
 }
 
 kotlin {
