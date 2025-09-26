@@ -22,4 +22,11 @@ interface SponsorRepository {
      * @param yearMonth The year and month for which to request synchronization.
      */
     suspend fun requestSync(yearMonth: YearMonth)
+
+    /**
+     * Deletes all sponsorship records from the repository.
+     *
+     * This function is used to clear all sponsorship data, typically for cleanup or reset purposes.
+     */
+    suspend fun deleteAll()
 }

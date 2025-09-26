@@ -22,7 +22,6 @@ internal class SponsorRepositoryImpl(
     private val preferences: UserPreferencesRepository<SponsorshipPreferences>,
     private val logger: Logger,
 ) : SponsorRepository {
-
     override suspend fun requestSync(yearMonth: YearMonth) {
         val prefs = preferences.get()
         if (!prefs.remoteAllowed) {
@@ -33,6 +32,10 @@ internal class SponsorRepositoryImpl(
         val sponsorships = networkDataSource.getSponsorships(yearMonth)
         val entities = sponsorships.map(NetworkSponsorship::toEntity)
         sponsorshipDao.upsert(entities)
+    }
+
+    override suspend fun deleteAll() {
+        sponsorshipDao.deleteAll()
     }
 
     override fun observeByYearMonth(yearMonth: YearMonth): Flow<List<Sponsorship>> {

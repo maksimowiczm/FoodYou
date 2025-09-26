@@ -19,4 +19,6 @@ interface SponsorshipDao {
     ): Flow<List<SponsorshipEntity>>
 
     @Upsert suspend fun upsert(sponsorship: List<SponsorshipEntity>)
+
+    @Query("DELETE FROM Sponsorship") suspend fun deleteAll()
 }

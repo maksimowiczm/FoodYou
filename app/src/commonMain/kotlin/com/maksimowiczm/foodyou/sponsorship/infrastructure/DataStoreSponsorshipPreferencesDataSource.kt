@@ -11,14 +11,17 @@ internal class DataStoreSponsorshipPreferencesDataSource(dataStore: DataStore<Pr
     AbstractDataStoreUserPreferencesRepository<SponsorshipPreferences>(dataStore) {
     override fun Preferences.toUserPreferences(): SponsorshipPreferences =
         SponsorshipPreferences(
-            remoteAllowed = this[SponsorshipPreferencesKeys.allowRemoteSponsorships] ?: false
+            remoteAllowed = this[SponsorshipPreferencesKeys.allowRemoteSponsorships] ?: false,
+            shouldCleanLegacyEntities = this[SponsorshipPreferencesKeys.cleanLegacyEntities] ?: true,
         )
 
     override fun MutablePreferences.applyUserPreferences(updated: SponsorshipPreferences) {
         this[SponsorshipPreferencesKeys.allowRemoteSponsorships] = updated.remoteAllowed
+        this[SponsorshipPreferencesKeys.cleanLegacyEntities] = updated.shouldCleanLegacyEntities
     }
 }
 
 private object SponsorshipPreferencesKeys {
     val allowRemoteSponsorships = booleanPreferencesKey("sponsorship:allow_remote_sponsorships")
+    val cleanLegacyEntities = booleanPreferencesKey("sponsorship:clean_legacy_entities")
 }
