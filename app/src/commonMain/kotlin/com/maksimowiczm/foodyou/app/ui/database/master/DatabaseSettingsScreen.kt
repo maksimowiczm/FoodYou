@@ -94,7 +94,7 @@ private fun ExportCsvProductsSettingsListItem(onClick: () -> Unit, modifier: Mod
 private fun DeveloperSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     SettingsListItem(
         icon = { Icon(Icons.Outlined.DataObject, null) },
-        label = { Text("Developer options") },
+        label = { Text(stringResource(Res.string.headline_developer_options)) },
         onClick = onClick,
         modifier = modifier,
     )

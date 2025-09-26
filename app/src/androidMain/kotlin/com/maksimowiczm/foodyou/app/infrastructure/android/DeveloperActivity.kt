@@ -38,12 +38,14 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.DATABASE_NAME
 import com.maksimowiczm.foodyou.app.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.app.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.common.extension.now
+import foodyou.app.generated.resources.*
 import java.io.InputStream
 import java.io.OutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class DeveloperActivity : FoodYouAbstractActivity() {
@@ -86,7 +88,11 @@ private fun Context.DeveloperScreen(onReplaced: () -> Unit) {
             }
         }
     } else {
-        Scaffold(topBar = { TopAppBar(title = { Text("Developer options") }) }) { paddingValues ->
+        Scaffold(
+            topBar = {
+                TopAppBar(title = { Text(stringResource(Res.string.headline_developer_options)) })
+            }
+        ) { paddingValues ->
             Column(
                 modifier =
                     Modifier.padding(paddingValues)
