@@ -7,7 +7,6 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
-import com.maksimowiczm.foodyou.app.ui.database.databasedump.DatabaseDumpScreen
 import com.maksimowiczm.foodyou.app.ui.database.exportcsvproducts.ExportCsvProductsScreen
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiKeyDialog
@@ -155,12 +154,6 @@ fun FoodYouAppNavHost(onDeveloperOptions: () -> Unit, modifier: Modifier = Modif
             ExportCsvProductsScreen(
                 onBack = { navController.popBackStackInclusive<ExportCsvProducts>() },
                 onFinish = { navController.popBackStackInclusive<ExportCsvProducts>() },
-            )
-        }
-        forwardBackwardComposable<DatabaseDump> {
-            DatabaseDumpScreen(
-                onBack = { navController.popBackStackInclusive<DatabaseDump>() },
-                onSuccess = { navController.popBackStackInclusive<DatabaseDump>() },
             )
         }
         dialog<UsdaApiKey> {
@@ -397,8 +390,6 @@ fun FoodYouAppNavHost(onDeveloperOptions: () -> Unit, modifier: Modifier = Modif
 @Serializable private object SwissFoodCompositionDatabase
 
 @Serializable private object UsdaApiKey
-
-@Serializable private object DatabaseDump
 
 @Serializable private object ImportCsvProducts
 
