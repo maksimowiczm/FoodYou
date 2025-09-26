@@ -24,7 +24,7 @@ internal fun Module.sponsorshipInfrastructureModule() {
         .onClose { it?.close() }
 
     single(named("sponsorshipRateLimiter")) {
-        RateLimiter(dateProvider = get(), maxRequests = 1, timeWindow = 1.seconds)
+        RateLimiter(dateProvider = get(), maxRequests = 10, timeWindow = 1.seconds)
     }
     factory {
             GithubSponsorsApiClient(

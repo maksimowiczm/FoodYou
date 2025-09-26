@@ -16,10 +16,12 @@ internal class GithubSponsorsApiClient(
     private val rateLimiter: RateLimiter,
 ) : SponsorsNetworkDataSource {
     override suspend fun getSponsorships(yearMonth: YearMonth): List<NetworkSponsorship> {
-        if (rateLimiter.canMakeRequest()) rateLimiter.recordRequest() else return emptyList()
+        if (rateLimiter.canMakeRequest()) rateLimiter.recordRequest()
+        else error("Rate limit exceeded")
 
         val baseUrl = config.githubSponsorsRepositoryUrl
-        val path = "${yearMonth.year}/${yearMonth.month.ordinal}.json"
+        val month = yearMonth.month.ordinal + 1
+        val path = "${yearMonth.year}/$month.json"
         val url = "${baseUrl}/$path"
 
         val response = httpClient.get(url) { userAgent(config.userAgent) }
