@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_2_2,
                 v_3_2_1,
                 v_3_1_0,
                 v_3_0_0,
@@ -38,6 +39,16 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_2_2 =
+        Version(
+            version = "3.2.2",
+            date = LocalDate(2025, 10, 26),
+            newFeatures = listOf("Use dynamic colors as default theme on Android 12+."),
+            changes =
+                listOf("Use GitHub Pages as sponsorship API.", "Updated Monero donation address."),
+            bugFixes = listOf("Fix dynamic colors switch when default theme is selected."),
+        )
 
     val v_3_2_1 =
         Version(
