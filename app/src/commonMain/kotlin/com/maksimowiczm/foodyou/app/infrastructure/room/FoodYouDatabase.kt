@@ -104,6 +104,7 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipEntit
             AutoMigration(from = 23, to = 24), // Add LatestFoodMeasuredEventView
             AutoMigration(from = 24, to = 25), // Add FoodEventEntity onDelete cascade
             AutoMigration(from = 28, to = 29), // Add ManualDiaryEntryEntity
+            AutoMigration(from = 29, to = 30), // Add MeasurementSuggestion indices
         ],
 )
 @TypeConverters(
@@ -128,7 +129,7 @@ abstract class FoodYouDatabase :
         }
 
     companion object {
-        const val VERSION = 29
+        const val VERSION = 30
 
         private val migrations: List<Migration> =
             listOf(

@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.food.infrastructure.room
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.common.domain.measurement.MeasurementType
 
@@ -22,6 +23,7 @@ import com.maksimowiczm.foodyou.common.domain.measurement.MeasurementType
                 onDelete = ForeignKey.CASCADE,
             ),
         ],
+    indices = [Index(value = ["productId"]), Index(value = ["recipeId"])],
 )
 data class MeasurementSuggestionEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
