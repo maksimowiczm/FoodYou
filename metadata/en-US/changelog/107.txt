@@ -1,0 +1,9 @@
+New features
+- Use dynamic colors as default theme on Android 12+.
+
+Changes
+- Use GitHub Pages as sponsorship API.
+- Updated Monero donation address.
+
+Bug fixes
+- Fix dynamic colors switch when default theme is selected.

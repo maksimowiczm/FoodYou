@@ -1,6 +1,6 @@
 [versions]
-version-name = "3.2.1"
-android-versionCode = "106"
+version-name = "3.2.2"
+android-versionCode = "107"
 android-compileSdk = "36"
 android-minSdk = "26"
 android-targetSdk = "36"
@@ -32,7 +32,6 @@ runner = "1.7.0"
 sqliteAndroid = "3.49.0"
 sqliteBundled = "2.6.0"
 zxingAndroidEmbedded = "4.3.0"
-kotlinStdlib = "2.2.20"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -52,9 +51,6 @@ androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = 
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
 jetbrains-compose-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "composeMultiplatform" }
 jetbrains-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMultiplatformMaterial3" }
-gradle-android = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
-gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
-gradle-compose = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "composeMultiplatform" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
@@ -73,7 +69,6 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 sqlite-android = { module = "com.github.requery:sqlite-android", version.ref = "sqliteAndroid" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -87,12 +82,3 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
-ui = { id = "com.maksimowiczm.foodyou.app.buildlogic.plugin.ui" }
-
-[bundles]
-ui-library-implementation = [
-    "koin-core",
-    "koin-compose",
-    "koin-compose-viewmodel",
-    "kotlinx-coroutines-core",
-]
