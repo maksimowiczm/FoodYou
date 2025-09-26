@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.koin.userPreferencesReposi
 import com.maksimowiczm.foodyou.common.infrastructure.koin.userPreferencesRepositoryOf
 import com.maksimowiczm.foodyou.sponsorship.domain.repository.SponsorRepository
 import com.maksimowiczm.foodyou.sponsorship.infrastructure.foodyousponsors.FoodYouSponsorsApiClient
+import com.maksimowiczm.foodyou.sponsorship.infrastructure.foodyousponsors.SponsorRateLimiter
 import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
@@ -27,9 +28,15 @@ internal fun Module.sponsorshipInfrastructureModule() {
         }
         .onClose { it?.close() }
 
+    single { SponsorRateLimiter(dateProvider = get(), timeWindow = 7.minutes + 30.seconds) }
     factory {
-        FoodYouSponsorsApiClient(client = get(named("ktorSponsorshipHttpClient")), config = get())
-    }
+        FoodYouSponsorsApiClient(
+            client = get(named("ktorSponsorshipHttpClient")),
+            config = get(),
+            rateLimiter = get(),
+            logger = get(),
+        )
+    }.bind<SponsorsNetworkDataSource>()
 
     userPreferencesRepositoryOf(::DataStoreSponsorshipPreferencesDataSource)
 
@@ -38,13 +45,10 @@ internal fun Module.sponsorshipInfrastructureModule() {
                 sponsorshipDao = get(),
                 networkDataSource = get(),
                 preferences = userPreferencesRepository(),
-                rateLimiter = get(),
                 logger = get(),
             )
         }
         .bind<SponsorRepository>()
-
-    single { SponsorRateLimiter(dateProvider = get(), timeWindow = 7.minutes + 30.seconds) }
 
     factory { database.sponsorshipDao }
 }

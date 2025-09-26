@@ -1,6 +1,9 @@
 package com.maksimowiczm.foodyou.sponsorship.infrastructure.foodyousponsors
 
 import com.maksimowiczm.foodyou.common.config.NetworkConfig
+import com.maksimowiczm.foodyou.common.log.Logger
+import com.maksimowiczm.foodyou.sponsorship.infrastructure.NetworkSponsorship
+import com.maksimowiczm.foodyou.sponsorship.infrastructure.SponsorsNetworkDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout
@@ -16,10 +19,19 @@ import kotlinx.datetime.atStartOfDayIn
 internal class FoodYouSponsorsApiClient(
     private val client: HttpClient,
     private val config: NetworkConfig,
-) {
-    suspend fun getSponsorships(yearMonth: YearMonth): List<NetworkSponsorship> {
+    private val rateLimiter: SponsorRateLimiter,
+    private val logger: Logger,
+) : SponsorsNetworkDataSource {
+    override suspend fun getSponsorships(yearMonth: YearMonth): List<NetworkSponsorship> {
         val before = yearMonth.lastDay.atStartOfDayIn(TimeZone.UTC)
         val after = yearMonth.firstDay.atStartOfDayIn(TimeZone.UTC)
+
+        if (!rateLimiter.canMakeRequest(yearMonth)) {
+            logger.w(TAG) { "Rate limiter is preventing a new request for $yearMonth" }
+            return emptyList()
+        }
+
+        rateLimiter.recordRequest(yearMonth)
 
         return getSponsorships(before, after, size = 100).sponsorships
     }
@@ -58,6 +70,7 @@ internal class FoodYouSponsorsApiClient(
     }
 
     private companion object {
-        private const val TIMEOUT = 10_000L
+        const val TIMEOUT = 10_000L
+        const val TAG = "FoodYouSponsorsApiClient"
     }
 }

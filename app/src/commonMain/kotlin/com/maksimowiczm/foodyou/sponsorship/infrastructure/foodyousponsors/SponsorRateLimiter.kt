@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.sponsorship.infrastructure
+package com.maksimowiczm.foodyou.sponsorship.infrastructure.foodyousponsors
 
 import com.maksimowiczm.foodyou.common.domain.date.DateProvider
 import kotlin.time.Duration
