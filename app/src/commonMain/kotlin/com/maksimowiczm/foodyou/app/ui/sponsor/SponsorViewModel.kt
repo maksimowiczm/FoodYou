@@ -175,11 +175,7 @@ private class Goal(val amount: Int, val title: String, val description: String)
 private fun observeGoals(): Flow<List<Goal>> =
     flowOf(
         listOf(
-            Goal(
-                10,
-                "App maintenance",
-                "Covers small technical costs to keep the app online and improving",
-            ),
+            Goal(5, "App maintenance", "Covers small technical costs"),
             Goal(
                 60,
                 "Gym membership",

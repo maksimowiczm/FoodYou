@@ -5,5 +5,5 @@ interface NetworkConfig {
     val openFoodFactsApiUrl: String
     val usdaApiUrl: String
 
-    val sponsorshipApiUrl: String
+    val githubSponsorsRepositoryUrl: String
 }
