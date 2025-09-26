@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudDownload
+import androidx.compose.material.icons.outlined.DataObject
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
@@ -25,7 +26,7 @@ fun DatabaseSettingsScreen(
     onExternalDatabases: () -> Unit,
     onImportCsvProducts: () -> Unit,
     onExportCsvProducts: () -> Unit,
-    onDatabaseDump: () -> Unit,
+    onDeveloperOptions: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -47,7 +48,7 @@ fun DatabaseSettingsScreen(
             item { ExternalDatabasesSettingsListItem(onExternalDatabases) }
             item { ImportCsvProductsSettingsListItem(onImportCsvProducts) }
             item { ExportCsvProductsSettingsListItem(onExportCsvProducts) }
-            item { DatabaseDumpSettingsListItem(onDatabaseDump) }
+            item { DeveloperSettingsListItem(onDeveloperOptions) }
         }
     }
 }
@@ -58,17 +59,6 @@ private fun ExternalDatabasesSettingsListItem(onClick: () -> Unit, modifier: Mod
         icon = { Icon(imageVector = Icons.Outlined.CloudDownload, contentDescription = null) },
         label = { Text(stringResource(Res.string.headline_external_databases)) },
         supportingContent = { Text(stringResource(Res.string.description_external_databases)) },
-        onClick = onClick,
-        modifier = modifier,
-    )
-}
-
-@Composable
-private fun DatabaseDumpSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    SettingsListItem(
-        icon = { Icon(painterResource(Res.drawable.ic_file_export), null) },
-        label = { Text(stringResource(Res.string.headline_database_dump)) },
-        supportingContent = { Text(stringResource(Res.string.description_database_dump)) },
         onClick = onClick,
         modifier = modifier,
     )
@@ -95,6 +85,16 @@ private fun ExportCsvProductsSettingsListItem(onClick: () -> Unit, modifier: Mod
         supportingContent = {
             Text(stringResource(Res.string.description_export_csv_food_products))
         },
+        onClick = onClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun DeveloperSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    SettingsListItem(
+        icon = { Icon(Icons.Outlined.DataObject, null) },
+        label = { Text(stringResource(Res.string.headline_developer_options)) },
         onClick = onClick,
         modifier = modifier,
     )

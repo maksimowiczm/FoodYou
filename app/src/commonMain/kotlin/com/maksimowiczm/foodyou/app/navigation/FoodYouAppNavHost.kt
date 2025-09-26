@@ -7,7 +7,6 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
-import com.maksimowiczm.foodyou.app.ui.database.databasedump.DatabaseDumpScreen
 import com.maksimowiczm.foodyou.app.ui.database.exportcsvproducts.ExportCsvProductsScreen
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiKeyDialog
@@ -46,7 +45,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 @Composable
-fun FoodYouAppNavHost(modifier: Modifier = Modifier) {
+fun FoodYouAppNavHost(onDeveloperOptions: () -> Unit, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
 
     NavHost(modifier = modifier, navController = navController, startDestination = Home) {
@@ -129,7 +128,7 @@ fun FoodYouAppNavHost(modifier: Modifier = Modifier) {
                 onExternalDatabases = { navController.navigateSingleTop(ExternalDatabases) },
                 onImportCsvProducts = { navController.navigateSingleTop(ImportCsvProducts) },
                 onExportCsvProducts = { navController.navigateSingleTop(ExportCsvProducts) },
-                onDatabaseDump = { navController.navigateSingleTop(DatabaseDump) },
+                onDeveloperOptions = onDeveloperOptions,
             )
         }
         forwardBackwardComposable<ExternalDatabases> {
@@ -155,12 +154,6 @@ fun FoodYouAppNavHost(modifier: Modifier = Modifier) {
             ExportCsvProductsScreen(
                 onBack = { navController.popBackStackInclusive<ExportCsvProducts>() },
                 onFinish = { navController.popBackStackInclusive<ExportCsvProducts>() },
-            )
-        }
-        forwardBackwardComposable<DatabaseDump> {
-            DatabaseDumpScreen(
-                onBack = { navController.popBackStackInclusive<DatabaseDump>() },
-                onSuccess = { navController.popBackStackInclusive<DatabaseDump>() },
             )
         }
         dialog<UsdaApiKey> {
@@ -397,8 +390,6 @@ fun FoodYouAppNavHost(modifier: Modifier = Modifier) {
 @Serializable private object SwissFoodCompositionDatabase
 
 @Serializable private object UsdaApiKey
-
-@Serializable private object DatabaseDump
 
 @Serializable private object ImportCsvProducts
 
