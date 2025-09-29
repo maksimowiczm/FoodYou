@@ -37,6 +37,11 @@ buildConfig {
     val crowdin = "https://crowdin.com/project/food-you"
     buildConfigField("String", "CROWDIN_URL", "\"$crowdin\"")
 
+    val termsOfService = "TODO"
+    buildConfigField("String", "TERMS_OF_SERVICE_URL", "\"$termsOfService\"")
+    val privacyPolicy = "TODO"
+    buildConfigField("String", "PRIVACY_POLICY_URL", "\"$privacyPolicy\"")
+
     // -- OPEN FOOD FACTS --
     sourceSets.getByName("main") {
         buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org\"")

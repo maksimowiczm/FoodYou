@@ -16,4 +16,7 @@ interface AppConfig {
     val sourceCodeUrl: String
     val issueTrackerUrl: String
     val featureRequestUrl: String
+
+    val termsOfServiceUrl: String
+    val privacyPolicyUrl: String
 }
