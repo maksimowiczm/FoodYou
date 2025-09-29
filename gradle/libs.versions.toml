@@ -2,7 +2,7 @@
 version-name = "3.2.2"
 android-versionCode = "107"
 android-compileSdk = "36"
-android-minSdk = "26"
+android-minSdk = "28"
 android-targetSdk = "36"
 
 accompanistPermissions = "0.37.3"
