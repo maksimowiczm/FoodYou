@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.app.infrastructure.room.roomModule
 import com.maksimowiczm.foodyou.common.config.AppConfig
 import com.maksimowiczm.foodyou.common.config.NetworkConfig
+import com.maksimowiczm.foodyou.common.infrastructure.auth.authModule
 import com.maksimowiczm.foodyou.common.infrastructure.crypto.cryptoModule
 import com.maksimowiczm.foodyou.common.infrastructure.csv.csvModule
 import com.maksimowiczm.foodyou.common.infrastructure.datastore.dataStoreModule
@@ -24,6 +25,7 @@ fun appModule(applicationCoroutineScope: CoroutineScope) = module {
     single { FoodYouLogger }.bind<Logger>()
     applicationCoroutineScope { applicationCoroutineScope }
 
+    authModule()
     cryptoModule()
     csvModule()
     dataStoreModule()
