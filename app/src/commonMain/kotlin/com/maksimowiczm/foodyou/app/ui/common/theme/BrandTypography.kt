@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.about
+package com.maksimowiczm.foodyou.app.ui.common.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -9,9 +9,9 @@ import androidx.compose.ui.text.font.FontWeight
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.Font
 
-@Immutable internal data class AboutTypography(val brandName: TextStyle)
+@Immutable data class BrandTypography(val brandName: TextStyle)
 
-internal val aboutTypography: AboutTypography
+val brandTypography: BrandTypography
     @Composable
     get() {
         val fontFamily =
@@ -30,7 +30,7 @@ internal val aboutTypography: AboutTypography
             )
 
         return with(MaterialTheme.typography) {
-            AboutTypography(
+            BrandTypography(
                 brandName =
                     displayMedium.copy(fontFamily = fontFamily, fontWeight = FontWeight.W900)
             )

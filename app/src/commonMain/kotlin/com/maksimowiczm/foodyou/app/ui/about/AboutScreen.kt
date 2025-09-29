@@ -43,6 +43,7 @@ import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.app.ui.changelog.ChangelogModalBottomSheet
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.common.component.SettingsListItem
+import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
 import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -179,7 +180,7 @@ private fun AboutScreen(
 @Composable
 private fun LogoLabel(currentVersion: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = stringResource(Res.string.app_name), style = aboutTypography.brandName)
+        Text(text = stringResource(Res.string.app_name), style = brandTypography.brandName)
         Text(
             text =
                 buildString {
