@@ -23,6 +23,7 @@ import com.maksimowiczm.foodyou.food.infrastructure.room.FoodEventTypeConverter
 import com.maksimowiczm.foodyou.food.infrastructure.room.LatestMeasurementSuggestion
 import com.maksimowiczm.foodyou.food.infrastructure.room.MeasurementSuggestionEntity
 import com.maksimowiczm.foodyou.food.infrastructure.room.ProductEntity
+import com.maksimowiczm.foodyou.food.infrastructure.room.ProductFts
 import com.maksimowiczm.foodyou.food.infrastructure.room.RecipeEntity
 import com.maksimowiczm.foodyou.food.infrastructure.room.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.FoodSearchDatabase
@@ -59,6 +60,7 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipEntit
             SponsorshipEntity::class,
             MeasurementSuggestionEntity::class,
             ManualDiaryEntryEntity::class,
+            ProductFts::class,
         ],
     views = [RecipeAllIngredientsView::class, LatestMeasurementSuggestion::class],
     version = FoodYouDatabase.VERSION,
@@ -105,6 +107,7 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipEntit
             AutoMigration(from = 24, to = 25), // Add FoodEventEntity onDelete cascade
             AutoMigration(from = 28, to = 29), // Add ManualDiaryEntryEntity
             AutoMigration(from = 29, to = 30), // Add MeasurementSuggestion indices
+            AutoMigration(from = 30, to = 31),
         ],
 )
 @TypeConverters(
@@ -129,7 +132,7 @@ abstract class FoodYouDatabase :
         }
 
     companion object {
-        const val VERSION = 30
+        const val VERSION = 31
 
         private val migrations: List<Migration> =
             listOf(

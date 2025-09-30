@@ -38,7 +38,12 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
                 config = config,
                 pagingSourceFactory = {
                     when (query) {
-                        SearchQuery.Blank,
+                        SearchQuery.Blank ->
+                            foodSearchDao.observeFoodByQuery(
+                                source = source.toEntity(),
+                                excludedRecipeId = excludedRecipeId?.id,
+                            )
+
                         is SearchQuery.Text ->
                             foodSearchDao.observeFoodByQuery(
                                 query = query.query,
@@ -71,7 +76,12 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
                         now.toInstant(TimeZone.currentSystemDefault()).epochSeconds
 
                     when (query) {
-                        SearchQuery.Blank,
+                        SearchQuery.Blank ->
+                            foodSearchDao.observeRecentFoodByQuery(
+                                nowEpochSeconds = nowEpochSeconds,
+                                excludedRecipeId = excludedRecipeId?.id,
+                            )
+
                         is SearchQuery.Text ->
                             foodSearchDao.observeRecentFoodByQuery(
                                 query = query.query,
@@ -96,7 +106,12 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
         excludedRecipeId: FoodId.Recipe?,
     ): Flow<Int> =
         when (query) {
-            SearchQuery.Blank,
+            SearchQuery.Blank ->
+                foodSearchDao.observeFoodCountByQuery(
+                    source = source.toEntity(),
+                    excludedRecipeId = excludedRecipeId?.id,
+                )
+
             is SearchQuery.Text ->
                 foodSearchDao.observeFoodCountByQuery(
                     query = query.query,
@@ -117,7 +132,12 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
         excludedRecipeId: FoodId.Recipe?,
     ): Flow<Int> =
         when (query) {
-            SearchQuery.Blank,
+            SearchQuery.Blank ->
+                foodSearchDao.observeRecentFoodCountByQuery(
+                    nowEpochSeconds = now.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
+                    excludedRecipeId = excludedRecipeId?.id,
+                )
+
             is SearchQuery.Text ->
                 foodSearchDao.observeRecentFoodCountByQuery(
                     query = query.query,
