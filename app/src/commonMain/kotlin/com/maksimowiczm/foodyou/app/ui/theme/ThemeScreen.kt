@@ -39,7 +39,9 @@ fun ThemeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             content = { paddingValues ->
                 ThemeScreenContent(
                     themeSettings = themeSettings,
-                    onThemeSettingsChange = viewModel::updateThemeSettings,
+                    onUpdateTheme = viewModel::updateTheme,
+                    onUpdateThemeOption = viewModel::updateThemeOption,
+                    onRandomizeTheme = viewModel::updateRandomizeTheme,
                     nutrientsColors = nutrientsColors,
                     onNutrientsColorsChange = viewModel::updateNutrientsColors,
                     contentPadding = paddingValues.add(vertical = 8.dp),

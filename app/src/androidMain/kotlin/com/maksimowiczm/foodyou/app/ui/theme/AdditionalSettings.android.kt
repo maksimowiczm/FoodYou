@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -18,17 +18,16 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal actual fun AdditionalSettings(
+internal actual fun ColumnScope.PlatformAdditionalSettings(
     themeSettings: ThemeSettings,
-    onThemeSettingsChange: (ThemeSettings) -> Unit,
-    modifier: Modifier,
+    onUpdateTheme: (Theme) -> Unit,
 ) {
     var showCustomThemePicker by rememberSaveable { mutableStateOf(false) }
     if (showCustomThemePicker) {
         CustomThemePickerDialog(
             initialTheme = themeSettings.theme as? Theme.Custom,
             onConfirm = {
-                onThemeSettingsChange(themeSettings.copy(theme = it))
+                onUpdateTheme(it)
                 showCustomThemePicker = false
             },
             onDismiss = { showCustomThemePicker = false },
@@ -38,27 +37,22 @@ internal actual fun AdditionalSettings(
     val isDynamic = themeSettings.theme is Theme.Dynamic || themeSettings.theme is Theme.Default
     val themes = rememberThemes()
 
-    Column(modifier) {
+    ListItem(
+        headlineContent = { Text(stringResource(Res.string.headline_custom_palette)) },
+        modifier = Modifier.clickable { showCustomThemePicker = true },
+        supportingContent = { Text(stringResource(Res.string.description_custom_palette)) },
+    )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         ListItem(
-            headlineContent = { Text(stringResource(Res.string.headline_custom_palette)) },
-            modifier = Modifier.clickable { showCustomThemePicker = true },
-            supportingContent = { Text(stringResource(Res.string.description_custom_palette)) },
+            headlineContent = { Text(stringResource(Res.string.headline_dynamic_colors)) },
+            modifier =
+                Modifier.clickable {
+                        if (isDynamic) onUpdateTheme(themes.first())
+                        else onUpdateTheme(Theme.Dynamic)
+                    }
+                    .semantics { role = Role.Switch },
+            supportingContent = { Text(stringResource(Res.string.description_dynamic_colors)) },
+            trailingContent = { Switch(checked = isDynamic, onCheckedChange = null) },
         )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            ListItem(
-                headlineContent = { Text(stringResource(Res.string.headline_dynamic_colors)) },
-                modifier =
-                    Modifier.clickable {
-                            if (isDynamic) {
-                                onThemeSettingsChange(themeSettings.copy(theme = themes.first()))
-                            } else {
-                                onThemeSettingsChange(themeSettings.copy(theme = Theme.Dynamic))
-                            }
-                        }
-                        .semantics { role = Role.Switch },
-                supportingContent = { Text(stringResource(Res.string.description_dynamic_colors)) },
-                trailingContent = { Switch(checked = isDynamic, onCheckedChange = null) },
-            )
-        }
     }
 }

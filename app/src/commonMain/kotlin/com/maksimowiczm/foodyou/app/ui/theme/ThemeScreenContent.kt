@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.common.compose.extension.plus
 import com.maksimowiczm.foodyou.theme.NutrientsColors
+import com.maksimowiczm.foodyou.theme.Theme
+import com.maksimowiczm.foodyou.theme.ThemeOption
 import com.maksimowiczm.foodyou.theme.ThemeSettings
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -24,7 +26,9 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun ThemeScreenContent(
     themeSettings: ThemeSettings,
-    onThemeSettingsChange: (ThemeSettings) -> Unit,
+    onUpdateTheme: (Theme) -> Unit,
+    onUpdateThemeOption: (ThemeOption) -> Unit,
+    onRandomizeTheme: (Boolean) -> Unit,
     nutrientsColors: NutrientsColors,
     onNutrientsColorsChange: (NutrientsColors) -> Unit,
     contentPadding: PaddingValues,
@@ -46,9 +50,7 @@ internal fun ThemeScreenContent(
         item {
             ThemePicker(
                 themeOption = themeSettings.themeOption,
-                onThemeOptionChange = {
-                    onThemeSettingsChange(themeSettings.copy(themeOption = it))
-                },
+                onThemeOptionChange = onUpdateThemeOption,
                 Modifier.fillMaxWidth(),
             )
         }
@@ -64,15 +66,14 @@ internal fun ThemeScreenContent(
             PalettePicker(
                 isDark = themeSettings.isDark(),
                 selectedTheme = themeSettings.theme,
-                onThemeChange = { newTheme ->
-                    onThemeSettingsChange(themeSettings.copy(theme = newTheme))
-                },
+                onThemeChange = onUpdateTheme,
             )
         }
         item {
             AdditionalSettings(
                 themeSettings = themeSettings,
-                onThemeSettingsChange = onThemeSettingsChange,
+                onRandomizeTheme = onRandomizeTheme,
+                onUpdateTheme = onUpdateTheme,
                 modifier = Modifier.fillMaxWidth(),
             )
         }

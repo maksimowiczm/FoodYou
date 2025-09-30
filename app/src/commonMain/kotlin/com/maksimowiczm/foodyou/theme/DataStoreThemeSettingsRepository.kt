@@ -12,88 +12,97 @@ internal class DataStoreThemeSettingsRepository(dataStore: DataStore<Preferences
     AbstractDataStoreUserPreferencesRepository<ThemeSettings>(dataStore) {
     override fun Preferences.toUserPreferences(): ThemeSettings {
         return ThemeSettings(
-            themeOption =
-                runCatching {
-                        ThemeOption.entries[
-                                this[ThemeSettingsPreferencesKeys.themeOption]
-                                    ?: ThemeOption.System.ordinal]
-                    }
-                    .getOrElse { ThemeOption.System },
-            theme = getTheme(),
+            randomizeOnLaunch = this[Keys.randomizeOnLaunch] ?: false,
+            themeOption = themeOption,
+            theme = theme,
         )
     }
 
     override fun MutablePreferences.applyUserPreferences(updated: ThemeSettings) {
-        this[ThemeSettingsPreferencesKeys.themeOption] = updated.themeOption.ordinal
+        this[Keys.randomizeOnLaunch] = updated.randomizeOnLaunch
+        this[Keys.themeOption] = updated.themeOption.ordinal
         setTheme(updated.theme)
     }
-}
 
-private fun Preferences.getTheme(): Theme {
-    val isDefault = this[ThemeSettingsPreferencesKeys.themeDefault] ?: false
-    if (isDefault) return Theme.Default
+    private companion object {
+        val Preferences.themeOption: ThemeOption
+            get() =
+                runCatching {
+                        ThemeOption.entries[this[Keys.themeOption] ?: ThemeOption.System.ordinal]
+                    }
+                    .getOrElse { ThemeOption.System }
 
-    val isDynamic = this[ThemeSettingsPreferencesKeys.themeDynamicColor] ?: false
-    if (isDynamic) return Theme.Dynamic
+        val Preferences.themeStyle: ThemeStyle
+            get() =
+                runCatching {
+                        ThemeStyle.entries[this[Keys.themeStyle] ?: ThemeStyle.TonalSpot.ordinal]
+                    }
+                    .getOrElse { ThemeStyle.TonalSpot }
 
-    val keyColorString = this[ThemeSettingsPreferencesKeys.themeKeyColor]
-    val seedColor = keyColorString?.toULongOrNull(16)
+        val Preferences.themeContrast: ThemeContrast
+            get() =
+                runCatching {
+                        ThemeContrast.entries[
+                                this[Keys.themeContrast] ?: ThemeContrast.Default.ordinal]
+                    }
+                    .getOrElse { ThemeContrast.Default }
 
-    val style =
-        runCatching {
-                ThemeStyle.entries[
-                        this[ThemeSettingsPreferencesKeys.themeStyle]
-                            ?: ThemeStyle.TonalSpot.ordinal]
+        val Preferences.theme: Theme
+            get() {
+                val isDefault = this[Keys.themeDefault] ?: false
+                if (isDefault) return Theme.Default
+
+                val isDynamic = this[Keys.themeDynamicColor] ?: false
+                if (isDynamic) return Theme.Dynamic
+
+                val keyColorString = this[Keys.themeKeyColor]
+                val seedColor = keyColorString?.toULongOrNull(16)
+
+                val isAmoled = this[Keys.themeAmoled] ?: false
+
+                if (seedColor == null) return Theme.Default
+                return Theme.Custom(
+                    seedColor = seedColor,
+                    style = themeStyle,
+                    contrast = themeContrast,
+                    isAmoled = isAmoled,
+                )
             }
-            .getOrElse { ThemeStyle.TonalSpot }
 
-    val contrast =
-        runCatching {
-                ThemeContrast.entries[
-                        this[ThemeSettingsPreferencesKeys.themeContrast]
-                            ?: ThemeContrast.Default.ordinal]
+        fun MutablePreferences.setTheme(theme: Theme): MutablePreferences = apply {
+            when (theme) {
+                is Theme.Default -> {
+                    this[Keys.themeDefault] = true
+                    this[Keys.themeDynamicColor] = false
+                }
+
+                is Theme.Dynamic -> {
+                    this[Keys.themeDynamicColor] = true
+                    this[Keys.themeDefault] = false
+                }
+
+                is Theme.Custom -> {
+                    this[Keys.themeDefault] = false
+                    this[Keys.themeDynamicColor] = false
+                    this[Keys.themeKeyColor] = theme.seedColor.toString(16)
+                    this[Keys.themeStyle] = theme.style.ordinal
+                    this[Keys.themeContrast] = theme.contrast.ordinal
+                    this[Keys.themeAmoled] = theme.isAmoled
+                }
             }
-            .getOrElse { ThemeContrast.Default }
-
-    val isAmoled = this[ThemeSettingsPreferencesKeys.themeAmoled] ?: false
-
-    if (isDynamic) return Theme.Dynamic
-    if (seedColor == null) return Theme.Default
-    return Theme.Custom(
-        seedColor = seedColor,
-        style = style,
-        contrast = contrast,
-        isAmoled = isAmoled,
-    )
-}
-
-private fun MutablePreferences.setTheme(theme: Theme): MutablePreferences = apply {
-    when (theme) {
-        is Theme.Default -> {
-            this[ThemeSettingsPreferencesKeys.themeDefault] = true
         }
 
-        is Theme.Dynamic -> {
-            this[ThemeSettingsPreferencesKeys.themeDynamicColor] = true
-        }
+        object Keys {
+            val randomizeOnLaunch = booleanPreferencesKey("theme:random")
 
-        is Theme.Custom -> {
-            this[ThemeSettingsPreferencesKeys.themeDefault] = false
-            this[ThemeSettingsPreferencesKeys.themeDynamicColor] = false
-            this[ThemeSettingsPreferencesKeys.themeKeyColor] = theme.seedColor.toString(16)
-            this[ThemeSettingsPreferencesKeys.themeStyle] = theme.style.ordinal
-            this[ThemeSettingsPreferencesKeys.themeContrast] = theme.contrast.ordinal
-            this[ThemeSettingsPreferencesKeys.themeAmoled] = theme.isAmoled
+            val themeOption = intPreferencesKey("theme:option")
+
+            val themeDefault = booleanPreferencesKey("theme:default")
+            val themeDynamicColor = booleanPreferencesKey("theme:dynamicColor")
+            val themeKeyColor = stringPreferencesKey("theme:keyColor")
+            val themeStyle = intPreferencesKey("theme:style")
+            val themeContrast = intPreferencesKey("theme:contrast")
+            val themeAmoled = booleanPreferencesKey("theme:amoled")
         }
     }
-}
-
-private object ThemeSettingsPreferencesKeys {
-    val themeOption = intPreferencesKey("theme:option")
-    val themeDefault = booleanPreferencesKey("theme:default")
-    val themeDynamicColor = booleanPreferencesKey("theme:dynamicColor")
-    val themeKeyColor = stringPreferencesKey("theme:keyColor")
-    val themeStyle = intPreferencesKey("theme:style")
-    val themeContrast = intPreferencesKey("theme:contrast")
-    val themeAmoled = booleanPreferencesKey("theme:amoled")
 }

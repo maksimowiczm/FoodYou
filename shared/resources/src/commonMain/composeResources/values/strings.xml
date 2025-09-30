@@ -464,4 +464,6 @@
     <string name="headline_privacy_policy">Privacy Policy</string>
     <string name="error_there_was_an_error_while_signing_in">There was an error while signing in</string>
 
+    <string name="headline_random_theme">Random theme</string>
+    <string name="description_random_theme">A random theme will be applied each time the app is started</string>
 </resources>

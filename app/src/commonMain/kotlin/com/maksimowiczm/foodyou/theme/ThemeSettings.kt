@@ -2,10 +2,11 @@ package com.maksimowiczm.foodyou.theme
 
 import com.maksimowiczm.foodyou.common.domain.userpreferences.UserPreferences
 
-data class ThemeSettings(val themeOption: ThemeOption, val theme: Theme) : UserPreferences {
-    val isDynamic: Boolean
-        get() = theme is Theme.Dynamic
-}
+data class ThemeSettings(
+    val randomizeOnLaunch: Boolean,
+    val themeOption: ThemeOption,
+    val theme: Theme,
+) : UserPreferences
 
 sealed interface Theme {
 
