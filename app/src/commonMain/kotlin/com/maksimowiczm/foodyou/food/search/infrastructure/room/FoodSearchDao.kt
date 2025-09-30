@@ -35,11 +35,11 @@ interface FoodSearchDao {
         ),
         RecipesSearch AS (
             SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT
-            FROM Recipe r
+            FROM Recipe r JOIN RecipeFts fts ON r.id = fts.rowid
             WHERE
                 -- All recipes are from the user
                 :source = ${FoodSourceTypeSQLConstants.USER} AND
-                (:query IS NULL OR r.name COLLATE NOCASE LIKE '%' || :query || '%') AND
+                RecipeFts MATCH :query AND
                 (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
@@ -106,11 +106,11 @@ interface FoodSearchDao {
         ),
         RecipesSearch AS (
             SELECT 1
-            FROM Recipe r
+            FROM Recipe r JOIN RecipeFts fts ON r.id = fts.rowid
             WHERE
                 -- All recipes are from the user
                 :source = ${FoodSourceTypeSQLConstants.USER} AND
-                (:query IS NULL OR r.name COLLATE NOCASE LIKE '%' || :query || '%') AND
+                RecipeFts MATCH :query AND
                 (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
@@ -194,11 +194,13 @@ interface FoodSearchDao {
         ),
         RecipesSearch AS (
             SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
-            FROM LatestMeasurementSuggestion s LEFT JOIN Recipe r ON s.recipeId = r.id
+            FROM LatestMeasurementSuggestion s 
+                LEFT JOIN Recipe r ON s.recipeId = r.id
+                LEFT JOIN RecipeFts fts ON r.id = fts.rowid
             WHERE
                 s.recipeId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000 AND
-                (:query IS NULL OR r.name COLLATE NOCASE LIKE '%' || :query || '%') AND
+                RecipeFts MATCH :query AND
                 (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
@@ -281,11 +283,13 @@ interface FoodSearchDao {
         ),
         RecipesSearch AS (
             SELECT 1
-            FROM LatestMeasurementSuggestion s LEFT JOIN Recipe r ON s.recipeId = r.id
+            FROM LatestMeasurementSuggestion s 
+                LEFT JOIN Recipe r ON s.recipeId = r.id
+                LEFT JOIN RecipeFts fts ON r.id = fts.rowid
             WHERE
                 s.recipeId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000 AND
-                (:query IS NULL OR r.name COLLATE NOCASE LIKE '%' || :query || '%') AND
+                RecipeFts MATCH :query AND
                 (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1

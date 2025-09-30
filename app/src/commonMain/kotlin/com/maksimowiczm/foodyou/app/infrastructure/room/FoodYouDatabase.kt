@@ -25,6 +25,7 @@ import com.maksimowiczm.foodyou.food.infrastructure.room.MeasurementSuggestionEn
 import com.maksimowiczm.foodyou.food.infrastructure.room.ProductEntity
 import com.maksimowiczm.foodyou.food.infrastructure.room.ProductFts
 import com.maksimowiczm.foodyou.food.infrastructure.room.RecipeEntity
+import com.maksimowiczm.foodyou.food.infrastructure.room.RecipeFts
 import com.maksimowiczm.foodyou.food.infrastructure.room.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.FoodSearchDatabase
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.OpenFoodFactsPagingKeyEntity
@@ -61,6 +62,7 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipEntit
             MeasurementSuggestionEntity::class,
             ManualDiaryEntryEntity::class,
             ProductFts::class,
+            RecipeFts::class,
         ],
     views = [RecipeAllIngredientsView::class, LatestMeasurementSuggestion::class],
     version = FoodYouDatabase.VERSION,
@@ -107,7 +109,7 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipEntit
             AutoMigration(from = 24, to = 25), // Add FoodEventEntity onDelete cascade
             AutoMigration(from = 28, to = 29), // Add ManualDiaryEntryEntity
             AutoMigration(from = 29, to = 30), // Add MeasurementSuggestion indices
-            AutoMigration(from = 30, to = 31),
+            AutoMigration(from = 30, to = 31), // Add ProductFts and RecipeFts
         ],
 )
 @TypeConverters(
