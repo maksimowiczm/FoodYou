@@ -131,6 +131,8 @@ internal class USDARemoteMediator<K : Any, T : Any>(
 
     private companion object {
         private const val TAG = "USDARemoteMediator"
-        private const val PAGE_SIZE = 50
+
+        // USDA API has a maximum limit of 200, it's very fast so we can use maximum
+        private const val PAGE_SIZE = 200
     }
 }
