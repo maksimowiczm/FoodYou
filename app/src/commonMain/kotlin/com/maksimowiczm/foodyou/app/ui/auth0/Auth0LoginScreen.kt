@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.login
+package com.maksimowiczm.foodyou.app.ui.auth0
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -49,19 +49,19 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
-import com.maksimowiczm.foodyou.common.auth.Session
 import com.maksimowiczm.foodyou.common.auth.SessionRepository
 import com.maksimowiczm.foodyou.common.compose.extension.add
 import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
-import kotlin.time.Instant
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun LoginScreen(onBack: () -> Unit, onLoginSuccess: () -> Unit, modifier: Modifier = Modifier) {
+fun Auth0LoginScreen(
+    onBack: () -> Unit,
+    onLoginSuccess: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val sessionRepository: SessionRepository = koinInject()
     val appConfig: AppConfig = koinInject()
     val uriHandler = LocalUriHandler.current
@@ -76,7 +76,7 @@ fun LoginScreen(onBack: () -> Unit, onLoginSuccess: () -> Unit, modifier: Modifi
     var isLoading by rememberSaveable { mutableStateOf(false) }
     var isError by rememberSaveable { mutableStateOf(false) }
     val onLogin =
-        rememberOnLogin(
+        rememberAuth0OnLogin(
             onLoginSuccess = {
                 isLoading = false
                 isError = false
@@ -85,14 +85,11 @@ fun LoginScreen(onBack: () -> Unit, onLoginSuccess: () -> Unit, modifier: Modifi
             onLoginError = {
                 isError = true
                 isLoading = false
-                // TODO
-                //  show error details?
-                //  report via some analytics service?
             },
             onCancel = { isLoading = false },
         )
 
-    LoginScreen(
+    Auth0LoginScreen(
         isLoading = isLoading,
         isError = isError,
         onBack = onBack,
@@ -110,34 +107,14 @@ fun LoginScreen(onBack: () -> Unit, onLoginSuccess: () -> Unit, modifier: Modifi
 }
 
 @Composable
-internal fun rememberOnLogin(
+internal expect fun rememberAuth0OnLogin(
     onLoginSuccess: () -> Unit,
     onLoginError: (Throwable) -> Unit,
     onCancel: () -> Unit,
-): () -> Unit {
-    val sessionRepository: SessionRepository = koinInject()
-    val coroutineScope = rememberCoroutineScope()
-
-    return {
-        coroutineScope.launch {
-            delay(500)
-
-            val testSession =
-                Session(
-                    userId = "test-user-id",
-                    userEmail = "test@test.com",
-                    accessToken = "test",
-                    expiresAt = Instant.DISTANT_FUTURE,
-                )
-            sessionRepository.saveSession(testSession)
-
-            onLoginSuccess()
-        }
-    }
-}
+): () -> Unit
 
 @Composable
-private fun LoginScreen(
+private fun Auth0LoginScreen(
     isLoading: Boolean,
     isError: Boolean,
     onBack: () -> Unit,
@@ -246,6 +223,12 @@ private fun LoginScreen(
                     } else {
                         Spacer(Modifier.height(26.dp))
                     }
+
+                    Text(
+                        text = stringResource(Res.string.description_sign_in_auth0),
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(horizontal = 32.dp),
+                    )
 
                     AnimatedVisibility(
                         visible = isError,

@@ -1,3 +1,4 @@
+import java.util.Properties
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
@@ -14,6 +15,13 @@ plugins {
 }
 
 room { schemaDirectory("$projectDir/schemas") }
+
+// TODO: replace it with production values
+val auth0Properties =
+    Properties().apply { this.load(rootProject.file("auth0.properties").inputStream()) }
+val auth0Domain = auth0Properties.getProperty("domain") ?: error("Auth0 domain not found")
+val auth0ClientId = auth0Properties.getProperty("clientId") ?: error("Auth0 clientId not found")
+val auth0Scheme = "com.maksimowiczm.foodyou"
 
 buildConfig {
     packageName("com.maksimowiczm.foodyou.app")
@@ -59,6 +67,11 @@ buildConfig {
         "GITHUB_SPONSORS_REPOSITORY_URL",
         "\"https://maksimowiczm.github.io/FoodYou-sponsors\"",
     )
+
+    // -- Auth0 --
+    buildConfigField("String", "AUTH0_SCHEME", "\"$auth0Scheme\"")
+    buildConfigField("String", "AUTH0_DOMAIN", "\"$auth0Domain\"")
+    buildConfigField("String", "AUTH0_CLIENT_ID", "\"$auth0ClientId\"")
 }
 
 kotlin {
@@ -145,6 +158,10 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.sqlite.android)
+
+            // Keep it 3.0.0 as it's the last version which doesn't require proprietary blobs
+            // https://github.com/auth0/Auth0.Android/issues/871
+            implementation("com.auth0.android:auth0:3.0.0")
         }
 
         androidInstrumentedTest.dependencies {
@@ -173,6 +190,9 @@ android {
         manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders["auth0Domain"] = auth0Domain
+        manifestPlaceholders["auth0Scheme"] = auth0Scheme
     }
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
     buildTypes {

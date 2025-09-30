@@ -471,6 +471,7 @@
     <string name="headline_terms_of_service">Terms of Service</string>
     <string name="headline_privacy_policy">Privacy Policy</string>
     <string name="error_there_was_an_error_while_signing_in">There was an error while signing in</string>
+    <string name="description_sign_in_auth0">We’ll open a safe login window so you can sign in securely. Your password never stays in the app.</string>
 
     <string name="headline_random_theme">Random theme</string>
     <string name="description_random_theme">A random theme will be applied each time the app is started</string>

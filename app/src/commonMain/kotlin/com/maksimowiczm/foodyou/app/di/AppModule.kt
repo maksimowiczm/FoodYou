@@ -1,9 +1,11 @@
 package com.maksimowiczm.foodyou.app.di
 
+import com.maksimowiczm.foodyou.app.infrastructure.FoodYouAuth0Config
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouLogger
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.app.infrastructure.room.roomModule
+import com.maksimowiczm.foodyou.app.ui.auth0.Auth0Config
 import com.maksimowiczm.foodyou.common.config.AppConfig
 import com.maksimowiczm.foodyou.common.config.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.auth.authModule
@@ -24,6 +26,7 @@ fun appModule(applicationCoroutineScope: CoroutineScope) = module {
     factoryOf(::FoodYouNetworkConfig).bind<NetworkConfig>()
     single { FoodYouLogger }.bind<Logger>()
     applicationCoroutineScope { applicationCoroutineScope }
+    factoryOf(::FoodYouAuth0Config).bind<Auth0Config>()
 
     authModule()
     cryptoModule()
