@@ -459,4 +459,9 @@
 
     <string name="headline_developer_options">Developer options</string>
 
+    <string name="action_sign_in">Sign in</string>
+    <string name="headline_terms_of_service">Terms of Service</string>
+    <string name="headline_privacy_policy">Privacy Policy</string>
+    <string name="error_there_was_an_error_while_signing_in">There was an error while signing in</string>
+
 </resources>
