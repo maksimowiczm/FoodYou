@@ -183,7 +183,7 @@ interface FoodSearchDao {
             SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
             FROM LatestMeasurementSuggestion s 
                 LEFT JOIN Product p ON s.productId = p.id
-                LEFT JOIN ProductFts fts ON p.id = fts.rowid
+                JOIN ProductFts fts ON p.id = fts.rowid
             WHERE
                 s.productId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000 AND
@@ -193,7 +193,7 @@ interface FoodSearchDao {
             SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
             FROM LatestMeasurementSuggestion s 
                 LEFT JOIN Recipe r ON s.recipeId = r.id
-                LEFT JOIN RecipeFts fts ON r.id = fts.rowid
+                JOIN RecipeFts fts ON r.id = fts.rowid
             WHERE
                 s.recipeId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000 AND
@@ -230,7 +230,7 @@ interface FoodSearchDao {
             SELECT 1
             FROM LatestMeasurementSuggestion s 
                 LEFT JOIN Product p ON s.productId = p.id
-                LEFT JOIN ProductFts fts ON p.id = fts.rowid
+                JOIN ProductFts fts ON p.id = fts.rowid
             WHERE
                 s.productId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000 AND
@@ -240,7 +240,7 @@ interface FoodSearchDao {
             SELECT 1
             FROM LatestMeasurementSuggestion s 
                 LEFT JOIN Recipe r ON s.recipeId = r.id
-                LEFT JOIN RecipeFts fts ON r.id = fts.rowid
+                JOIN RecipeFts fts ON r.id = fts.rowid
             WHERE
                 s.recipeId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000 AND
@@ -266,9 +266,7 @@ interface FoodSearchDao {
         """
         WITH ProductsSearch AS (
             SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
-            FROM LatestMeasurementSuggestion s 
-                LEFT JOIN Product p ON s.productId = p.id
-                LEFT JOIN ProductFts fts ON p.id = fts.rowid
+            FROM LatestMeasurementSuggestion s LEFT JOIN Product p ON s.productId = p.id
             WHERE
                 s.productId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000
@@ -308,9 +306,7 @@ interface FoodSearchDao {
         """
         WITH ProductsSearch AS (
             SELECT 1
-            FROM LatestMeasurementSuggestion s 
-                LEFT JOIN Product p ON s.productId = p.id
-                LEFT JOIN ProductFts fts ON p.id = fts.rowid
+            FROM LatestMeasurementSuggestion s LEFT JOIN Product p ON s.productId = p.id
             WHERE
                 s.productId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000
