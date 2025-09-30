@@ -39,7 +39,7 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
                 pagingSourceFactory = {
                     when (query) {
                         SearchQuery.Blank ->
-                            foodSearchDao.observeFoodByQuery(
+                            foodSearchDao.observeFood(
                                 source = source.toEntity(),
                                 excludedRecipeId = excludedRecipeId?.id,
                             )
@@ -77,7 +77,7 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
 
                     when (query) {
                         SearchQuery.Blank ->
-                            foodSearchDao.observeRecentFoodByQuery(
+                            foodSearchDao.observeRecentFood(
                                 nowEpochSeconds = nowEpochSeconds,
                                 excludedRecipeId = excludedRecipeId?.id,
                             )
@@ -107,7 +107,7 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
     ): Flow<Int> =
         when (query) {
             SearchQuery.Blank ->
-                foodSearchDao.observeFoodCountByQuery(
+                foodSearchDao.observeFoodCount(
                     source = source.toEntity(),
                     excludedRecipeId = excludedRecipeId?.id,
                 )
@@ -133,7 +133,7 @@ internal class RoomFoodSearchRepository(private val foodSearchDao: FoodSearchDao
     ): Flow<Int> =
         when (query) {
             SearchQuery.Blank ->
-                foodSearchDao.observeRecentFoodCountByQuery(
+                foodSearchDao.observeRecentFoodCount(
                     nowEpochSeconds = now.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
                     excludedRecipeId = excludedRecipeId?.id,
                 )
