@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
-class AndroidMaterCryptoTest {
+class AndroidMasterCryptoTest {
     // This test doesn't really test anything other than if the device supports MasterCrypto which
     // depends on test runner device
     @Test
