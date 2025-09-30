@@ -7,6 +7,7 @@ import androidx.room.TypeConverters
 import androidx.room.immediateTransaction
 import androidx.room.migration.Migration
 import androidx.room.useWriterConnection
+import com.maksimowiczm.foodyou.app.infrastructure.room.migration.FoodSearchFtsMigration
 import com.maksimowiczm.foodyou.app.infrastructure.room.migration.LegacyMigrations
 import com.maksimowiczm.foodyou.app.infrastructure.room.migration.deleteUsedFoodEvent
 import com.maksimowiczm.foodyou.app.infrastructure.room.migration.fixMeasurementSuggestions
@@ -109,7 +110,7 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipEntit
             AutoMigration(from = 24, to = 25), // Add FoodEventEntity onDelete cascade
             AutoMigration(from = 28, to = 29), // Add ManualDiaryEntryEntity
             AutoMigration(from = 29, to = 30), // Add MeasurementSuggestion indices
-            AutoMigration(from = 30, to = 31), // Add ProductFts and RecipeFts
+            /** @see [FoodSearchFtsMigration] Add FTS tables for ProductEntity and RecipeEntity */
         ],
 )
 @TypeConverters(
@@ -150,6 +151,7 @@ abstract class FoodYouDatabase :
                 unlinkDiaryMigration,
                 deleteUsedFoodEvent,
                 fixMeasurementSuggestions,
+                FoodSearchFtsMigration,
             )
 
         fun Builder<FoodYouDatabase>.buildDatabase(
