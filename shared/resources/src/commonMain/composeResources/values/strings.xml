@@ -459,6 +459,14 @@
 
     <string name="headline_developer_options">Developer options</string>
 
+    <string name="headline_save_database">Save database</string>
+    <string name="description_save_database">Save a copy of your database</string>
+    <string name="headline_replace_database">Replace database</string>
+    <string name="description_replace_database">Replace your database with a previously saved copy</string>
+    <string name="action_replace">Replace</string>
+
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Your database will be REPLACED, and all current data will be LOST. The app will restart after the database is replaced. You may need to reopen the app.</string>
+
     <string name="action_sign_in">Sign in</string>
     <string name="headline_terms_of_service">Terms of Service</string>
     <string name="headline_privacy_policy">Privacy Policy</string>

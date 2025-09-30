@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.android
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Process
@@ -36,6 +37,7 @@ import androidx.room.execSQL
 import androidx.room.useWriterConnection
 import com.maksimowiczm.foodyou.app.infrastructure.room.DATABASE_NAME
 import com.maksimowiczm.foodyou.app.infrastructure.room.FoodYouDatabase
+import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.common.extension.now
 import foodyou.app.generated.resources.*
@@ -68,7 +70,7 @@ class DeveloperActivity : FoodYouAbstractActivity() {
 }
 
 @Composable
-private fun Context.DeveloperScreen(onReplaced: () -> Unit) {
+private fun Activity.DeveloperScreen(onReplaced: () -> Unit) {
     var isReplacingDatabase by rememberSaveable { mutableStateOf(false) }
 
     if (isReplacingDatabase) {
@@ -90,7 +92,10 @@ private fun Context.DeveloperScreen(onReplaced: () -> Unit) {
     } else {
         Scaffold(
             topBar = {
-                TopAppBar(title = { Text(stringResource(Res.string.headline_developer_options)) })
+                TopAppBar(
+                    title = { Text(stringResource(Res.string.headline_developer_options)) },
+                    navigationIcon = { ArrowBackIconButton(onClick = { finish() }) },
+                )
             }
         ) { paddingValues ->
             Column(
@@ -132,8 +137,8 @@ private fun Context.SaveDatabaseListItem() {
         }
 
     ListItem(
-        headlineContent = { Text("Save database") },
-        supportingContent = { Text("Saves the database to a file") },
+        headlineContent = { Text(stringResource(Res.string.headline_save_database)) },
+        supportingContent = { Text(stringResource(Res.string.description_save_database)) },
         modifier =
             Modifier.clickable {
                 val date = LocalDateTime.now()
@@ -176,23 +181,30 @@ private fun Context.ReplaceDatabaseListItem(onLock: () -> Unit, onFinish: () -> 
 
         AlertDialog(
             onDismissRequest = { showReplaceDatabaseDialog = false },
-            title = { Text("Replace database") },
+            title = { Text(stringResource(Res.string.headline_replace_database)) },
             text = {
-                Text(
-                    buildAnnotatedString {
-                        append("This will")
-                        withStyle(typography.bodyLarge.toSpanStyle().copy(color = Color.Red)) {
-                            append(" REPLACE ")
+                val str = stringResource(Res.string.warning_replace_database)
+                val words = remember(str) { str.customSplit() }
+                val annotated =
+                    remember(typography.bodyLarge, words) {
+                        buildAnnotatedString {
+                            words.forEachIndexed { i, word ->
+                                if (i > 0 && word.all(Char::isLetterOrDigit)) append(" ")
+
+                                if (word.all(Char::isUpperCase) && word.length >= 2) {
+                                    withStyle(
+                                        typography.bodyLarge.toSpanStyle().copy(color = Color.Red)
+                                    ) {
+                                        append(word)
+                                    }
+                                } else {
+                                    append(word)
+                                }
+                            }
                         }
-                        append("your existing database. This means that you will")
-                        withStyle(typography.bodyLarge.toSpanStyle().copy(color = Color.Red)) {
-                            append(" LOSE ")
-                        }
-                        append(
-                            "your existing data. App will restart after replacing the database. You might need to open the app again."
-                        )
                     }
-                )
+
+                Text(text = annotated, style = typography.bodyMedium)
             },
             confirmButton = {
                 TextButton(
@@ -205,7 +217,7 @@ private fun Context.ReplaceDatabaseListItem(onLock: () -> Unit, onFinish: () -> 
                     Text(
                         text =
                             buildString {
-                                append("Replace")
+                                append(stringResource(Res.string.action_replace))
                                 if (timeout > 0) {
                                     append(" ($timeout)")
                                 }
@@ -214,14 +226,16 @@ private fun Context.ReplaceDatabaseListItem(onLock: () -> Unit, onFinish: () -> 
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showReplaceDatabaseDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showReplaceDatabaseDialog = false }) {
+                    Text(stringResource(Res.string.action_cancel))
+                }
             },
         )
     }
 
     ListItem(
-        headlineContent = { Text("Replace database") },
-        supportingContent = { Text("Replaces the database with a file") },
+        headlineContent = { Text(stringResource(Res.string.headline_replace_database)) },
+        supportingContent = { Text(stringResource(Res.string.description_replace_database)) },
         modifier = Modifier.clickable { showReplaceDatabaseDialog = true },
     )
 }
@@ -253,4 +267,41 @@ private fun Context.replaceDatabase(database: FoodYouDatabase, stream: InputStre
 
     // Copy new database
     stream.use { input -> dbFile.outputStream().use { output -> input.copyTo(output) } }
+}
+
+/**
+ * Custom string splitting
+ *
+ * Example:
+ * ```kotlin
+ * val text = "Hello,   world! This is a test."
+ * val words = text.splitWords()
+ * // words will be ["Hello", ",", "world", "!", "This", "is", "a", "test", "."]
+ */
+private fun String.customSplit(): List<String> {
+    val words = mutableListOf<String>()
+    val currentWord = StringBuilder()
+
+    for (char in this) {
+        if (char.isWhitespace()) {
+            if (currentWord.isNotEmpty()) {
+                words.add(currentWord.toString())
+                currentWord.clear()
+            }
+        } else if (char.isLetterOrDigit()) {
+            currentWord.append(char)
+        } else {
+            if (currentWord.isNotEmpty()) {
+                words.add(currentWord.toString())
+                currentWord.clear()
+            }
+            words.add(char.toString())
+        }
+    }
+
+    if (currentWord.isNotEmpty()) {
+        words.add(currentWord.toString())
+    }
+
+    return words
 }
