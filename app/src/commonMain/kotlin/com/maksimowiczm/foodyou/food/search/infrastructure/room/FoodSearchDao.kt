@@ -29,7 +29,7 @@ interface FoodSearchDao {
         """
         WITH ProductsSearch AS (
             SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT
-            FROM Product p JOIN ProductFts fts ON p.id = fts.rowid
+            FROM Product p
             WHERE :source IS NULL OR p.sourceType = :source
         ),
         RecipesSearch AS (
@@ -88,7 +88,7 @@ interface FoodSearchDao {
             SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT
             FROM Product p JOIN ProductFts fts ON p.id = fts.rowid
             WHERE
-                ProductFts MATCH :query AND (:source IS NULL OR p.sourceType = :source)
+                (ProductFts MATCH :query) AND (:source IS NULL OR p.sourceType = :source)
         ),
         RecipesSearch AS (
             SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT
@@ -96,7 +96,7 @@ interface FoodSearchDao {
             WHERE
                 -- All recipes are from the user
                 :source = ${FoodSourceTypeSQLConstants.USER} AND
-                RecipeFts MATCH :query AND
+                (RecipeFts MATCH :query) AND
                 (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
@@ -125,7 +125,7 @@ interface FoodSearchDao {
             SELECT 1
             FROM Product p JOIN ProductFts fts ON p.id = fts.rowid
             WHERE
-                ProductFts MATCH :query AND (:source IS NULL OR p.sourceType = :source)
+                (ProductFts MATCH :query) AND (:source IS NULL OR p.sourceType = :source)
         ),
         RecipesSearch AS (
             SELECT 1
@@ -133,7 +133,7 @@ interface FoodSearchDao {
             WHERE
                 -- All recipes are from the user
                 :source = ${FoodSourceTypeSQLConstants.USER} AND
-                RecipeFts MATCH :query AND
+                (RecipeFts MATCH :query) AND
                 (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
@@ -187,7 +187,7 @@ interface FoodSearchDao {
             WHERE
                 s.productId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000 AND
-                ProductFts MATCH :query
+                (ProductFts MATCH :query)
         ),
         RecipesSearch AS (
             SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
@@ -197,7 +197,7 @@ interface FoodSearchDao {
             WHERE
                 s.recipeId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000 AND
-                RecipeFts MATCH :query AND
+                (RecipeFts MATCH :query) AND
                 (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
@@ -234,7 +234,7 @@ interface FoodSearchDao {
             WHERE
                 s.productId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000 AND
-                ProductFts MATCH :query
+                (ProductFts MATCH :query)
         ),
         RecipesSearch AS (
             SELECT 1
@@ -244,7 +244,7 @@ interface FoodSearchDao {
             WHERE
                 s.recipeId IS NOT NULL AND
                 s.epochSeconds >= :nowEpochSeconds - 2592000 AND
-                RecipeFts MATCH :query AND
+                (RecipeFts MATCH :query) AND
                 (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
