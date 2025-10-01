@@ -7,6 +7,7 @@ import androidx.room.TypeConverters
 import androidx.room.immediateTransaction
 import androidx.room.migration.Migration
 import androidx.room.useWriterConnection
+import com.maksimowiczm.foodyou.app.infrastructure.room.migration.FoodSearchFtsMigration
 import com.maksimowiczm.foodyou.app.infrastructure.room.migration.LegacyMigrations
 import com.maksimowiczm.foodyou.app.infrastructure.room.migration.deleteUsedFoodEvent
 import com.maksimowiczm.foodyou.app.infrastructure.room.migration.fixMeasurementSuggestions
@@ -23,7 +24,9 @@ import com.maksimowiczm.foodyou.food.infrastructure.room.FoodEventTypeConverter
 import com.maksimowiczm.foodyou.food.infrastructure.room.LatestMeasurementSuggestion
 import com.maksimowiczm.foodyou.food.infrastructure.room.MeasurementSuggestionEntity
 import com.maksimowiczm.foodyou.food.infrastructure.room.ProductEntity
+import com.maksimowiczm.foodyou.food.infrastructure.room.ProductFts
 import com.maksimowiczm.foodyou.food.infrastructure.room.RecipeEntity
+import com.maksimowiczm.foodyou.food.infrastructure.room.RecipeFts
 import com.maksimowiczm.foodyou.food.infrastructure.room.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.FoodSearchDatabase
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.OpenFoodFactsPagingKeyEntity
@@ -59,6 +62,8 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipEntit
             SponsorshipEntity::class,
             MeasurementSuggestionEntity::class,
             ManualDiaryEntryEntity::class,
+            ProductFts::class,
+            RecipeFts::class,
         ],
     views = [RecipeAllIngredientsView::class, LatestMeasurementSuggestion::class],
     version = FoodYouDatabase.VERSION,
@@ -105,6 +110,7 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipEntit
             AutoMigration(from = 24, to = 25), // Add FoodEventEntity onDelete cascade
             AutoMigration(from = 28, to = 29), // Add ManualDiaryEntryEntity
             AutoMigration(from = 29, to = 30), // Add MeasurementSuggestion indices
+            /** @see [FoodSearchFtsMigration] Add FTS tables for ProductEntity and RecipeEntity */
         ],
 )
 @TypeConverters(
@@ -129,7 +135,7 @@ abstract class FoodYouDatabase :
         }
 
     companion object {
-        const val VERSION = 30
+        const val VERSION = 31
 
         private val migrations: List<Migration> =
             listOf(
@@ -145,6 +151,7 @@ abstract class FoodYouDatabase :
                 unlinkDiaryMigration,
                 deleteUsedFoodEvent,
                 fixMeasurementSuggestions,
+                FoodSearchFtsMigration,
             )
 
         fun Builder<FoodYouDatabase>.buildDatabase(
