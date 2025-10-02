@@ -1,0 +1,7 @@
+New features
+- Added database developer options (export and import the app database).
+- Improved food search results.
+- Added randomized themes (random theme at each app start).
+
+Bug fixes
+- Cleaned up duplicated sponsorships.
