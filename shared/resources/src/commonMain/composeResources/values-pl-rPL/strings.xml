@@ -314,11 +314,6 @@
     <string name="headline_pick_the_days">Wybierz dni</string>
     <string name="action_set_separate_goals">Ustalaj osobne cele na każdy dzień</string>
     <string name="headline_percentages">Procenty</string>
-    <string name="headline_database_dump">Zrzut bazy danych</string>
-    <string name="description_database_dump">Eksportuj bazę danych SQL do pliku</string>
-    <string name="neutral_generating_database_dump">Generowanie zrzutu bazy danych</string>
-    <string name="neutral_database_dump_generated_successfully">Zrzut bazy danych wygenerowany pomyślnie</string>
-    <string name="error_failed_to_generate_database_dump">Nie udało się wygenerować zrzutu bazy danych</string>
     <string name="action_import_csv_food_products">Import produktów spożywczych w formacie CSV</string>
     <string name="description_import_csv_food_products">Importuj produkty spożywcze z pliku CSV</string>
     <string name="description_import_csv_food_products_hint">Musimy tylko wiedzieć, co jest czym. Powiedz nam, która kolumna w Twoim pliku zawiera nazwę produktu, markę itp.</string>
@@ -376,4 +371,17 @@
     <string name="action_next_month">Następny miesiąc</string>
     <string name="action_previous_month">Poprzedni miesiąc</string>
     <string name="headline_sponsor_methods">Metody</string>
+    <string name="headline_developer_options">Opcje programisty</string>
+    <string name="headline_save_database">Zapisz bazę danych</string>
+    <string name="description_save_database">Zapisz kopię swojej bazy danych</string>
+    <string name="headline_replace_database">Zastąp bazę danych</string>
+    <string name="description_replace_database">Zastąp swoją bazę danych wcześniej zapisaną kopią</string>
+    <string name="action_replace">Zastąp</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Twoja baza danych zostanie ZASTĄPIONA, a wszystkie bieżące dane zostaną UTRACONE. Po zastąpieniu bazy danych aplikacja uruchomi się ponownie. Może być konieczne ponowne otwarcie aplikacji.</string>
+    <string name="action_sign_in">Zaloguj się</string>
+    <string name="headline_terms_of_service">Warunki korzystania</string>
+    <string name="headline_privacy_policy">Polityka prywatności</string>
+    <string name="error_there_was_an_error_while_signing_in">Wystąpił błąd podczas logowania</string>
+    <string name="headline_random_theme">Losowy motyw</string>
+    <string name="description_random_theme">Przy każdym uruchomieniu aplikacji zostanie zastosowany losowy motyw</string>
 </resources>

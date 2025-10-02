@@ -297,8 +297,6 @@
     <string name="headline_pick_the_days">Seleziona giorni</string>
     <string name="action_set_separate_goals">Imposta obiettivi separati per ogni giorno</string>
     <string name="headline_percentages">Percentuali</string>
-    <string name="headline_database_dump">Esporta database</string>
-    <string name="description_database_dump">Esporta il tuo database SQL in un file</string>
     <string name="action_import_csv_food_products">Importa prodotti da CSV</string>
     <string name="description_import_csv_food_products">Importa prodotti alimentari da file CSV</string>
     <string name="description_import_csv_food_products_hint">Dobbiamo solo sapere cosa è cosa. Dicci quale colonna del file è il nome del prodotto, la marca, ecc.</string>

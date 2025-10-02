@@ -314,11 +314,6 @@
     <string name="headline_pick_the_days">Выбрать дни</string>
     <string name="action_set_separate_goals">Установить отдельные цели на каждый день</string>
     <string name="headline_percentages">Проценты</string>
-    <string name="headline_database_dump">Дамп базы данных</string>
-    <string name="description_database_dump">Экспортируйте базу данных SQL в файл</string>
-    <string name="neutral_generating_database_dump">Генерация дампа базы данных</string>
-    <string name="neutral_database_dump_generated_successfully">Дамп базы данных успешно сгенерирован</string>
-    <string name="error_failed_to_generate_database_dump">Ошибка при генерации дампа базы данных</string>
     <string name="action_import_csv_food_products">Импорт CSV продуктов питания</string>
     <string name="description_import_csv_food_products">Импорт продуктов питания из CSV-файла</string>
     <string name="description_import_csv_food_products_hint">Нам просто нужно знать, что есть что. Укажите, какой столбец в вашем файле содержит название продукта, бренда и т. д.</string>

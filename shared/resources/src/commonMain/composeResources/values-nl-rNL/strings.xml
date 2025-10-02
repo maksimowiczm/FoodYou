@@ -302,11 +302,6 @@
     <string name="headline_pick_the_days">Kies de dagen</string>
     <string name="action_set_separate_goals">Stel aparte doelen in verschillende dagen</string>
     <string name="headline_percentages">Percentages</string>
-    <string name="headline_database_dump">Database dumpen</string>
-    <string name="description_database_dump">Exporteer jouw SQL-database naar een bestand</string>
-    <string name="neutral_generating_database_dump">Genereer database dump</string>
-    <string name="neutral_database_dump_generated_successfully">Database dump succesvol gegenereerd</string>
-    <string name="error_failed_to_generate_database_dump">Database dump genereren gefaald</string>
     <string name="action_import_csv_food_products">Importeer CSV-bestand met voedsel producten</string>
     <string name="description_import_csv_food_products">Importeer voedsel producten uit CSV-bestand</string>
     <string name="description_import_csv_food_products_hint">We willen alleen weten wat wat is. Vertel ons welke kolom in jouw bestand het productnaam, merk, enz. is.</string>

@@ -302,11 +302,6 @@
     <string name="headline_pick_the_days">Günleri seçin</string>
     <string name="action_set_separate_goals">Her gün için ayrı hedefler belirleyin</string>
     <string name="headline_percentages">Yüzdeler</string>
-    <string name="headline_database_dump">Veritabanı dökümü</string>
-    <string name="description_database_dump">SQL veritabanınızı bir dosyaya aktarın</string>
-    <string name="neutral_generating_database_dump">Veritabanı dökümü oluşturuluyor</string>
-    <string name="neutral_database_dump_generated_successfully">Veritabanı dökümü başarıyla oluşturuldu</string>
-    <string name="error_failed_to_generate_database_dump">Veritabanı dökümü oluşturulamadı</string>
     <string name="action_import_csv_food_products">CSV gıda ürünlerini içe aktar</string>
     <string name="description_import_csv_food_products">CSV dosyasından gıda ürünlerini içe aktar</string>
     <string name="description_import_csv_food_products_hint">Sadece neyin ne olduğunu bilmemiz gerekiyor. Dosyanızdaki hangi sütunun ürün adı, marka vb. olduğunu bize söyleyin.</string>

@@ -6,13 +6,13 @@
     <string name="headline_daily_goals">Денна ціль</string>
     <string name="headline_general">Загальні</string>
     <string name="headline_macronutrients">Макроелементи</string>
-    <string name="headline_meals">Приймання їжі</string>
+    <string name="headline_meals">Страви</string>
     <string name="headline_edit_product">Редагувати продукт</string>
     <string name="headline_permission_required">Потрібен дозвіл</string>
     <string name="headline_language">Мова</string>
     <string name="headline_system">Система</string>
     <string name="headline_system_language_settings">Системні налаштування мови</string>
-    <string name="headline_secure_screen">Захистити екран</string>
+    <string name="headline_secure_screen">Заборонити знімки екрану</string>
     <string name="headline_about">Про додаток</string>
     <string name="headline_version">Версія</string>
     <string name="headline_all_day" description="All-day (meal)">Увесь день</string>
@@ -29,7 +29,7 @@
     <string name="headline_home" description="Home screen">Головна</string>
     <string name="headline_home_settings" description="Home screen settings">Налаштування головної</string>
     <string name="headline_calendar">Календар</string>
-    <string name="headline_meals_settings">Налаштування прийомів їжі</string>
+    <string name="headline_meals_settings">Налаштування страв</string>
     <string name="headline_horizontal">Горизонтально</string>
     <string name="headline_vertical">Вертикально</string>
     <string name="headline_values_per">Значення на</string>
@@ -45,6 +45,7 @@
     <string name="weight">Вага</string>
     <string name="unit_energy" description="Energy as calories">Енергетична цінність</string>
     <string name="unit_kcal">ккал</string>
+    <string name="unit_kilojoules">кДж</string>
     <plurals name="unit_gram">
         <item quantity="one">грам</item>
         <item quantity="few">грам</item>
@@ -57,6 +58,8 @@
         <item quantity="many">мілілітрів</item>
         <item quantity="other">мілілітри</item>
     </plurals>
+    <string name="unit_ounce_short">унц.</string>
+    <string name="unit_fluid_ounce_short">рідких унц.</string>
     <string name="product_package_weight">Вага паковання</string>
     <string name="product_package">Паковання</string>
     <string name="product_serving_weight">Вага порції</string>
@@ -80,8 +83,24 @@
     <string name="nutriment_omega_3">Омега-3 жирні кислоти</string>
     <string name="nutriment_omega_6">Омега-6 жирні кислоти</string>
     <string name="nutriment_salt">Сіль</string>
+    <string name="nutriment_fiber">Клітковина</string>
     <string name="nutriment_cholesterol">Холестерин</string>
     <string name="nutriment_caffeine">Кофеїн</string>
+    <string name="nutriment_trans_fats">Трансжири</string>
+    <string name="nutriment_added_sugars">Додані цукри</string>
+    <string name="nutriment_soluble_fiber">Розчинна клітковина</string>
+    <string name="nutriment_insoluble_fiber">Нерозчинна клітковина</string>
+    <string name="vitamin_a">Вітамін A (Ретинол)</string>
+    <string name="vitamin_b1">Вітамін B1 (Тіамін)</string>
+    <string name="vitamin_b2">Вітамін B2 (Рибофлавін)</string>
+    <string name="vitamin_b3">Вітамін B3 (Ніацин)</string>
+    <string name="vitamin_b5">Вітамін B5 (Пантотенова кислота)</string>
+    <string name="vitamin_b6">Вітамін B6 (Піридоксин)</string>
+    <string name="vitamin_b7">Вітамін B7 (Біотин)</string>
+    <string name="vitamin_b9">Вітамін B9 (Фолієва кислота)</string>
+    <string name="vitamin_b12">Вітамін B12 (Кобаламін)</string>
+    <string name="vitamin_c">Вітамін C (Аскорбінова кислота)</string>
+    <string name="vitamin_d">Вітамін D (Кальцифероли)</string>
     <string name="vitamin_e">Вітамін E</string>
     <string name="vitamin_k">Вітамін K</string>
     <string name="mineral_manganese">Марганець</string>
@@ -114,7 +133,7 @@
     <string name="action_edit_entry">Редагувати запис</string>
     <string name="action_delete_entry">Видалити запис</string>
     <string name="action_close">Закрити</string>
-    <string name="action_discard">Скасувати</string>
+    <string name="action_discard">Відмовитися</string>
     <string name="action_translate">Перекласти</string>
     <string name="action_enable_camera_flash">Включити спалах камери</string>
     <string name="action_disable_camera_flash">Відключити спалах камери</string>
@@ -127,7 +146,7 @@
     <string name="action_move_up" description="reorder list item up">Вгору</string>
     <string name="action_move_down" description="reorder list item down">Вниз</string>
     <string name="action_use_time_based_ordering">Впорядковувати за часом</string>
-    <string name="action_ignore_all_day_meals">Ігнорувати прийоми їжі протягом дня</string>
+    <string name="action_ignore_all_day_meals">Ігнорувати страви без визначеного часу</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Додати інгредієнт</string>
     <string name="action_delete_ingredient">Видалити інгредієнт</string>
     <string name="action_download">Завантажити</string>
@@ -139,6 +158,7 @@
     <string name="action_download_product">Завантажити продукт</string>
     <string name="action_copy_and_open_bug_report">Скопіювати та відкрити звіт про помилку</string>
     <string name="action_show_details">Показати деталі</string>
+    <string name="action_browse_usda">Переглянути FoodData Central (USDA)</string>
     <string name="action_set_key">Встановити ключ</string>
     <string name="action_obtain_key">Отримати ключ</string>
     <string name="action_dont_show_again">Більше не показувати</string>
@@ -152,9 +172,15 @@
         <item quantity="many">Залишилось %1$d калорій</item>
         <item quantity="other">Залишилось %1$d калорій</item>
     </plurals>
-    <string name="neutral_set_your_meal_schedule">Визначте свій розклад страв</string>
-    <string name="neutral_permanently_delete_meal">Видалити страву назавжди?</string>
-    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Страву буде видалено назавжди. Всі дані пов'язані з цією стравою буде втрачено.</string>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">Залишився %1$d кілоджоуль</item>
+        <item quantity="few">Залишилося %1$d кілоджоулів</item>
+        <item quantity="many">Залишилося %1$d кілоджоулів</item>
+        <item quantity="other">Залишилося %1$d кілоджоулів</item>
+    </plurals>
+    <string name="neutral_set_your_meal_schedule">Визначте свій розклад страв.</string>
+    <string name="neutral_permanently_delete_meal">Видалити страву остаточно?</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Страву буде видалено остаточно. Всі дані пов'язані з цією стравою буде втрачено.</string>
     <string name="neutral_required">Обов'язкове</string>
     <string name="neutral_help_translating_the_app">Допомогти перекласти додаток</string>
     <string name="neutral_copied">Інформацію скопійовано в буфер обміну</string>
@@ -183,8 +209,8 @@
     </plurals>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Цей запис буде видалено з вашого щоденнику. Ви зможете додати його знову в будь-який час.</string>
     <string name="description_about_setting">Дізнатися більше про додаток</string>
-    <string name="description_time_based_meals_sorting">Якщо ввімкнене, то страви які відбуваються прямо зараз будуть показуватися першими</string>
-    <string name="description_action_ignore_all_day_meals">Прийоми їжі протягом дня будуть відображатися в кінці списку</string>
+    <string name="description_time_based_meals_sorting">Якщо ввімкнене, то страви, що відбуваються прямо зараз, будуть показуватися першими</string>
+    <string name="description_action_ignore_all_day_meals">Страви без визначеного часу будуть показуватися наприкінці списку</string>
     <string name="description_incomplete_nutrition_data">У деяких з використаних продуктів відсутнє це значення; через це, показане значення може бути неточним</string>
     <string name="description_translation_warning">Переклади створені волонтерами. Вони можуть бути неточними або відсутніми в деяких місцях. Якщо ви бачите помилки, допоможіть нам виправити їх.</string>
     <string name="description_changelog">Подивитися що нового в додатку</string>
@@ -199,13 +225,16 @@
     <string name="notification_exporting_products">Експорт продуктів</string>
     <string name="notification_importing_products">Імпорт продуктів</string>
     <string name="description_food_data_central_usda">FoodData Central — це всеосяжне джерело даних про склад харчових продуктів від USDA з кількома різними типами даних</string>
+    <string name="error_usda_rate_limit">Перевищено ліміт API FoodData Central (USDA)</string>
     <string name="headline_external_databases">Зовнішні бази даних</string>
     <string name="feature_share_url_with_food_you">Поділитися URL-адресою з Food You</string>
     <string name="feature_in_app_download">Завантаження в додатку</string>
+    <string name="feature_in_app_search">Пошук у застосунку</string>
     <string name="feature_manual_database_import">Ручний імпорт бази даних</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Розпакувати</string>
     <string name="headline_sponsor">Підтримати проєкт</string>
     <string name="description_sponsor_short">Будь-які внески вітаються</string>
+    <string name="description_sponsor_short_2">Підтримати розвиток застосунку</string>
     <string name="headline_source_code">Вихідний код</string>
     <string name="description_source_code">Переглянути вихідний код проєкту на GitHub</string>
     <string name="action_write_an_email">Написати листа</string>
@@ -222,4 +251,45 @@
     <string name="action_reset" description="Confirm resetting">Скинути</string>
     <string name="description_reset_nutrition_facts">Скинути персоналізацію харчової цінності до стандартних налаштувань</string>
     <string name="headline_note">Примітка</string>
+    <string name="action_try_again">Спробувати ще раз</string>
+    <string name="description_calories_are_calculated">Енергія автоматично розраховується на основі макронутрієнтів. Ви можете вимкнути цю функцію і ввести значення вручну за потреби. Алкоголь не використовується в розрахунках.</string>
+    <string name="x_kcal_per_g">%1$s %2$d ккал/г</string>
+    <string name="neutral_an_error_occurred">Сталася помилка</string>
+    <string name="action_retry">Повторити спробу</string>
+    <string name="headline_today" description="Today, date">Сьогодні, %1$s</string>
+    <string name="headline_yesterday" description="Yesterday, date">Вчора, %1$s</string>
+    <string name="headline_tomorrow" description="Tomorrow, date">Завтра, %1$s</string>
+    <string name="headline_user" description="User, person who uses the app">Користувач</string>
+    <string name="headline_your_food">Ваша їжа</string>
+    <string name="headline_filters">Фільтри</string>
+    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">Вибрати інгредієнт</string>
+    <string name="headline_edit_recipe">Редагувати рецепт</string>
+    <string name="description_delete_ingredient">Інгредієнт буде видалено з рецепта</string>
+    <string name="headline_before_you_start">Перед тим, як почати</string>
+    <string name="action_agree_and_continue">Погодитися та продовжити</string>
+    <string name="description_food_database">Ви можете вирішити чи будете ви користуватися цими опціональними зовнішніми сервісами, в яких можуть бути свої умови та політики конфіденційності</string>
+    <string name="action_skip">Пропустити</string>
+    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Умови використання:https://world.openfoodfacts.org/terms-of-use} та {Політика конфіденційності:https://world.openfoodfacts.org/privacy}</string>
+    <string name="usda_privacy_policy">{Політика конфіденційності:https://www.usda.gov/privacy-policy}</string>
+    <string name="headline_please_wait">Зачекайте, будь ласка</string>
+    <string name="headline_created">Створено</string>
+    <string name="headline_imported">Імпортовано</string>
+    <string name="headline_downloaded">Завантажено</string>
+    <string name="headline_edited">Редаговано</string>
+    <string name="headline_history">Історія</string>
+    <string name="headline_recent">Нещодавнє</string>
+    <string name="headline_imported_from_food_you_2">Імпортовано з Food You 2</string>
+    <string name="action_set_goals">Визначити цілі</string>
+    <string name="headline_percentages">Проценти</string>
+    <string name="description_import_csv_food_products_hint_2">Всі поживні речовини мають бути наведені в грамах або кілокалоріях на 100 г</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="one">Імпортовано %1$d продукт</item>
+        <item quantity="few">Імпортовано %1$d продукти</item>
+        <item quantity="many">Імпортовано %1$d продуктів</item>
+        <item quantity="other">Імпортовано %1$d продуктів</item>
+    </plurals>
+    <string name="headline_energy_unit">Одиниці енергії</string>
+    <string name="action_allow" description="Allow something">Дозволити</string>
+    <string name="action_next_month">Наступний місяць</string>
+    <string name="action_previous_month">Попередній місяць</string>
 </resources>

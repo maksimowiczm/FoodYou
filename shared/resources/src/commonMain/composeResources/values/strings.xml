@@ -468,8 +468,8 @@
     <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Your database will be REPLACED, and all current data will be LOST. The app will restart after the database is replaced. You may need to reopen the app.</string>
 
     <string name="action_sign_in">Sign in</string>
-    <string name="headline_terms_of_service">Terms of Service</string>
-    <string name="headline_privacy_policy">Privacy Policy</string>
+    <string name="headline_terms_of_service">Terms of service</string>
+    <string name="headline_privacy_policy">Privacy policy</string>
     <string name="error_there_was_an_error_while_signing_in">There was an error while signing in</string>
 
     <string name="headline_random_theme">Random theme</string>
