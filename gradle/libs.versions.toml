@@ -1,6 +1,6 @@
 [versions]
-version-name = "3.2.2"
-android-versionCode = "107"
+version-name = "3.3.0"
+android-versionCode = "108"
 android-compileSdk = "36"
 android-minSdk = "28"
 android-targetSdk = "36"
@@ -27,10 +27,10 @@ materialKolor = "3.0.1"
 navigationCompose = "2.9.0"
 paging3 = "3.3.6"
 reorderable = "3.0.0"
-room = "2.8.0"
+room = "2.8.1"
 runner = "1.7.0"
 sqliteAndroid = "3.49.0"
-sqliteBundled = "2.6.0"
+sqliteBundled = "2.6.1"
 zxingAndroidEmbedded = "4.3.0"
 
 [libraries]
