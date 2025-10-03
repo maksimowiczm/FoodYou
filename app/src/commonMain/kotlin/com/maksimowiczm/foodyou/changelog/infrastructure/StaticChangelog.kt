@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_3_1,
                 v_3_3_0,
                 v_3_2_2,
                 v_3_2_1,
@@ -40,6 +41,16 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_3_1 =
+        Version(
+            version = "3.3.1",
+            date = LocalDate(2025, 10, 3),
+            bugFixes =
+                listOf(
+                    "Fixed search to use substring matching (e.g., \"app\" now matches \"apple\")."
+                ),
+        )
 
     val v_3_3_0 =
         Version(

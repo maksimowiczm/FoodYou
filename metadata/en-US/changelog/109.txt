@@ -1,0 +1,2 @@
+Bug fixes
+- Fixed search to use substring matching (e.g., "app" now matches "apple").
