@@ -371,4 +371,17 @@
     <string name="action_next_month">Следующий месяц</string>
     <string name="action_previous_month">Предыдущий месяц</string>
     <string name="headline_sponsor_methods">Методы</string>
+    <string name="headline_developer_options">Параметры разработчика</string>
+    <string name="headline_save_database">Сохранить базу данных</string>
+    <string name="description_save_database">Сохраните копию вашей базы данных</string>
+    <string name="headline_replace_database">Заменить базу данных</string>
+    <string name="description_replace_database">Замените базу данных ранее сохраненной копией</string>
+    <string name="action_replace">Заменить</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Ваша база данных будет ЗАМЕНЕНА, и все текущие данные будут ПОТЕРЯНЫ. Приложение перезапустится после замены базы данных. Возможно, вам потребуется снова открыть приложение.</string>
+    <string name="action_sign_in">Вход</string>
+    <string name="headline_terms_of_service">Условия использования</string>
+    <string name="headline_privacy_policy">Политика конфиденциальности</string>
+    <string name="error_there_was_an_error_while_signing_in">Произошла ошибка при входе</string>
+    <string name="headline_random_theme">Случайная тема</string>
+    <string name="description_random_theme">При каждом запуске приложения будет применяться случайная тема</string>
 </resources>
