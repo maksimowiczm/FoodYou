@@ -7,6 +7,7 @@ import androidx.room.TypeConverters
 import androidx.room.immediateTransaction
 import androidx.room.migration.Migration
 import androidx.room.useWriterConnection
+import com.maksimowiczm.foodyou.app.infrastructure.room.migration.FoodSearchFtsCyrillicMigration
 import com.maksimowiczm.foodyou.app.infrastructure.room.migration.FoodSearchFtsMigration
 import com.maksimowiczm.foodyou.app.infrastructure.room.migration.LegacyMigrations
 import com.maksimowiczm.foodyou.app.infrastructure.room.migration.deleteUsedFoodEvent
@@ -111,6 +112,9 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipEntit
             AutoMigration(from = 28, to = 29), // Add ManualDiaryEntryEntity
             AutoMigration(from = 29, to = 30), // Add MeasurementSuggestion indices
             /** @see [FoodSearchFtsMigration] Add FTS tables for ProductEntity and RecipeEntity */
+            /**
+             * @see [FoodSearchFtsCyrillicMigration] Add Cyrillic tokenizer support to FTS tables
+             */
         ],
 )
 @TypeConverters(
@@ -135,7 +139,7 @@ abstract class FoodYouDatabase :
         }
 
     companion object {
-        const val VERSION = 31
+        const val VERSION = 32
 
         private val migrations: List<Migration> =
             listOf(
@@ -152,6 +156,7 @@ abstract class FoodYouDatabase :
                 deleteUsedFoodEvent,
                 fixMeasurementSuggestions,
                 FoodSearchFtsMigration,
+                FoodSearchFtsCyrillicMigration,
             )
 
         fun Builder<FoodYouDatabase>.buildDatabase(
