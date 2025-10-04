@@ -12,17 +12,17 @@ import androidx.sqlite.execSQL
  */
 object FoodSearchFtsCyrillicMigration : Migration(31, 32) {
     override fun migrate(connection: SQLiteConnection) {
-        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_ProductFts_BEFORE_UPDATE;")
-        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_ProductFts_BEFORE_DELETE;")
-        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_ProductFts_AFTER_UPDATE;")
-        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_ProductFts_AFTER_INSERT;")
-        connection.execSQL("DROP TABLE IF EXISTS ProductFts;")
+        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_ProductFts_BEFORE_UPDATE")
+        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_ProductFts_BEFORE_DELETE")
+        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_ProductFts_AFTER_UPDATE")
+        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_ProductFts_AFTER_INSERT")
+        connection.execSQL("DROP TABLE IF EXISTS ProductFts")
 
-        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_RecipeFts_BEFORE_UPDATE;")
-        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_RecipeFts_BEFORE_DELETE;")
-        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_RecipeFts_AFTER_UPDATE;")
-        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_RecipeFts_AFTER_INSERT;")
-        connection.execSQL("DROP TABLE IF EXISTS RecipeFts;")
+        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_RecipeFts_BEFORE_UPDATE")
+        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_RecipeFts_BEFORE_DELETE")
+        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_RecipeFts_AFTER_UPDATE")
+        connection.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_RecipeFts_AFTER_INSERT")
+        connection.execSQL("DROP TABLE IF EXISTS RecipeFts")
 
         // Create ProductFts virtual table
         connection.execSQL(
