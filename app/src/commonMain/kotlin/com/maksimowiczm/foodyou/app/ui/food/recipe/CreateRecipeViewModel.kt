@@ -2,7 +2,8 @@ package com.maksimowiczm.foodyou.app.ui.food.recipe
 
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.common.domain.date.DateProvider
-import com.maksimowiczm.foodyou.common.result.consume
+import com.maksimowiczm.foodyou.common.result.onError
+import com.maksimowiczm.foodyou.common.result.onSuccess
 import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
 import com.maksimowiczm.foodyou.food.domain.usecase.CreateRecipeUseCase
 import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
@@ -34,13 +35,11 @@ internal class CreateRecipeViewModel(
                     ingredients = form.ingredients.map { it.intoPair() },
                     history = FoodHistory.Created(dateProvider.nowInstant()),
                 )
-                .consume(
-                    onSuccess = { eventBus.send(CreateRecipeEvent.Created(it)) },
-                    onFailure = {
-                        // Explode
-                        error("Failed to create recipe")
-                    },
-                )
+                .onSuccess { eventBus.send(CreateRecipeEvent.Created(it)) }
+                .onError {
+                    // Explode
+                    error("Failed to create recipe: $it")
+                }
         }
     }
 }

@@ -7,7 +7,8 @@ import com.maksimowiczm.foodyou.common.domain.event.EventBus
 import com.maksimowiczm.foodyou.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.common.domain.measurement.MeasurementType
 import com.maksimowiczm.foodyou.common.extension.now
-import com.maksimowiczm.foodyou.common.result.fold
+import com.maksimowiczm.foodyou.common.result.onError
+import com.maksimowiczm.foodyou.common.result.onSuccess
 import com.maksimowiczm.foodyou.food.domain.entity.Food
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.Product
@@ -138,13 +139,11 @@ internal class AddEntryViewModel(
         viewModelScope.launch {
             deleteFoodUseCase
                 .delete(foodId)
-                .fold(
-                    onSuccess = { _uiEventBus.send(AddEntryEvent.FoodDeleted) },
-                    onFailure = { e ->
-                        // Explode
-                        error("Failed to delete food with ID $foodId")
-                    },
-                )
+                .onSuccess { _uiEventBus.send(AddEntryEvent.FoodDeleted) }
+                .onError {
+                    // Explode
+                    error("Failed to delete food with ID $foodId")
+                }
         }
     }
 
@@ -163,22 +162,20 @@ internal class AddEntryViewModel(
                     date = date,
                     food = diaryFood,
                 )
-                .fold(
-                    onSuccess = {
-                        eventBus.publish(
-                            FoodDiaryEntryCreatedEvent(
-                                foodId = food.id,
-                                timestamp = dateProvider.nowInstant(),
-                                measurement = measurement,
-                            )
+                .onSuccess {
+                    eventBus.publish(
+                        FoodDiaryEntryCreatedEvent(
+                            foodId = food.id,
+                            timestamp = dateProvider.nowInstant(),
+                            measurement = measurement,
                         )
-                        _uiEventBus.send(AddEntryEvent.EntryAdded)
-                    },
-                    onFailure = {
-                        // Explode
-                        error("Failed to create diary entry for food with ID ${food.id}")
-                    },
-                )
+                    )
+                    _uiEventBus.send(AddEntryEvent.EntryAdded)
+                }
+                .onError {
+                    // Explode
+                    error("Failed to create diary entry for food with ID ${food.id}")
+                }
         }
     }
 
@@ -200,13 +197,11 @@ internal class AddEntryViewModel(
                         date = date,
                         food = diaryFood,
                     )
-                    .fold(
-                        onSuccess = { _uiEventBus.send(AddEntryEvent.EntryAdded) },
-                        onFailure = {
-                            // Explode
-                            error("Failed to unpack recipe with ID ${food.id}")
-                        },
-                    )
+                    .onSuccess { _uiEventBus.send(AddEntryEvent.EntryAdded) }
+                    .onError {
+                        // Explode
+                        error("Failed to create diary entry for food with ID ${food.id}")
+                    }
             }
         }
     }

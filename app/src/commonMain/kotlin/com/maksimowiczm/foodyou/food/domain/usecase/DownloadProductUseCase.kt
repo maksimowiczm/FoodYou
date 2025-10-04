@@ -47,7 +47,7 @@ class DownloadProductUseCase(
             .execute()
             .fold(
                 onSuccess = ::Ok,
-                onFailure = { error ->
+                onError = { error ->
                     logger.logAndReturnFailure(
                         tag = TAG,
                         throwable = error,

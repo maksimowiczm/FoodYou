@@ -1,7 +1,8 @@
 package com.maksimowiczm.foodyou.app.ui.food.recipe
 
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.common.result.consume
+import com.maksimowiczm.foodyou.common.result.onError
+import com.maksimowiczm.foodyou.common.result.onSuccess
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.Recipe
 import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
@@ -52,13 +53,11 @@ internal class UpdateRecipeViewModel(
                     isLiquid = form.isLiquid,
                     ingredients = form.ingredients.map { it.intoPair() },
                 )
-                .consume(
-                    onSuccess = { eventBus.send(UpdateRecipeEvent.Updated) },
-                    onFailure = {
-                        // Explode
-                        error("Failed to update recipe")
-                    },
-                )
+                .onSuccess { eventBus.send(UpdateRecipeEvent.Updated) }
+                .onError {
+                    // Explode
+                    error("Failed to update recipe: $it")
+                }
         }
     }
 }

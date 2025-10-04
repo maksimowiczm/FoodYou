@@ -6,7 +6,8 @@ import com.maksimowiczm.foodyou.app.ui.food.product.ProductFormState
 import com.maksimowiczm.foodyou.app.ui.food.product.nutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.common.result.consume
+import com.maksimowiczm.foodyou.common.result.onError
+import com.maksimowiczm.foodyou.common.result.onSuccess
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.usecase.ObserveFoodUseCase
@@ -63,13 +64,11 @@ internal class UpdateProductViewModel(
                     source = FoodSource(type = form.sourceType, url = form.sourceUrl.value),
                     isLiquid = form.isLiquid,
                 )
-                .consume(
-                    onSuccess = { eventBus.send(UpdateProductEvent.Updated) },
-                    onFailure = {
-                        // Explode
-                        error("Failed to update product")
-                    },
-                )
+                .onSuccess { eventBus.send(UpdateProductEvent.Updated) }
+                .onError {
+                    // Explode
+                    error("Failed to update product: $it")
+                }
         }
     }
 }

@@ -6,7 +6,8 @@ import com.maksimowiczm.foodyou.common.domain.date.DateProvider
 import com.maksimowiczm.foodyou.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.common.domain.measurement.MeasurementType
 import com.maksimowiczm.foodyou.common.extension.now
-import com.maksimowiczm.foodyou.common.result.fold
+import com.maksimowiczm.foodyou.common.result.onError
+import com.maksimowiczm.foodyou.common.result.onSuccess
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.DiaryFood
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.fooddiary.domain.repository.FoodDiaryEntryRepository
@@ -91,13 +92,11 @@ internal class UpdateFoodDiaryEntryViewModel(
         viewModelScope.launch {
             updateFoodDiaryEntryUseCase
                 .update(id = entryId, measurement = measurement, mealId = mealId, date = date)
-                .fold(
-                    onSuccess = { _uiEvents.send(UpdateEntryEvent.Saved) },
-                    onFailure = {
-                        // Explode
-                        error("Failed to update diary entry with id $entryId, $it")
-                    },
-                )
+                .onSuccess { _uiEvents.send(UpdateEntryEvent.Saved) }
+                .onError {
+                    // Explode
+                    error("Failed to update diary entry with id $entryId, $it")
+                }
 
             _uiEvents.send(UpdateEntryEvent.Saved)
         }
@@ -107,13 +106,11 @@ internal class UpdateFoodDiaryEntryViewModel(
         viewModelScope.launch {
             unpackDiaryEntryError
                 .unpack(id = entryId, measurement = measurement, mealId = mealId, date = date)
-                .fold(
-                    onSuccess = { _uiEvents.send(UpdateEntryEvent.Saved) },
-                    onFailure = {
-                        // Explode
-                        error("Failed to unpack diary entry with id $entryId, $it")
-                    },
-                )
+                .onSuccess { _uiEvents.send(UpdateEntryEvent.Saved) }
+                .onError {
+                    // Explode
+                    error("Failed to unpack diary entry with id $entryId, $it")
+                }
 
             _uiEvents.send(UpdateEntryEvent.Saved)
         }

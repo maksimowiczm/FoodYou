@@ -7,7 +7,8 @@ import com.maksimowiczm.foodyou.app.ui.food.product.nutritionFacts
 import com.maksimowiczm.foodyou.common.domain.date.DateProvider
 import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.measurement.Measurement
-import com.maksimowiczm.foodyou.common.result.fold
+import com.maksimowiczm.foodyou.common.result.onError
+import com.maksimowiczm.foodyou.common.result.onSuccess
 import com.maksimowiczm.foodyou.food.domain.entity.FoodHistory
 import com.maksimowiczm.foodyou.food.domain.usecase.CreateProductUseCase
 import kotlinx.coroutines.channels.Channel
@@ -51,13 +52,11 @@ internal class CreateProductViewModel(
                     nutritionFacts = form.nutritionFacts(multiplier),
                     history = FoodHistory.Created(dateProvider.nowInstant()),
                 )
-                .fold(
-                    onSuccess = { eventBus.send(CreateProductEvent.Created(it)) },
-                    onFailure = {
-                        // Explode
-                        error("Failed to create product: $it")
-                    },
-                )
+                .onSuccess { eventBus.send(CreateProductEvent.Created(it)) }
+                .onError {
+                    // Explode
+                    error("Failed to create product: $it")
+                }
         }
     }
 }
