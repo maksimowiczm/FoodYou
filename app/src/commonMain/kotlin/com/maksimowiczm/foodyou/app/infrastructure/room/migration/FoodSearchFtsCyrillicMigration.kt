@@ -93,8 +93,8 @@ object FoodSearchFtsCyrillicMigration : Migration(31, 32) {
                 USING FTS4(
                     `name` TEXT NOT NULL, 
                     `note` TEXT, 
-                    content=`Recipe`,
                     tokenize=unicode61 `remove_diacritics=2`,
+                    content=`Recipe`,
                 )
             """
                 .trimIndent()
