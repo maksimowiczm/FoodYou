@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_3_2,
                 v_3_3_1,
                 v_3_3_0,
                 v_3_2_2,
@@ -41,6 +42,13 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_3_2 =
+        Version(
+            version = "3.3.2",
+            date = LocalDate(2025, 10, 5),
+            bugFixes = listOf("Searching with Cyrillic characters is now case-insensitive."),
+        )
 
     val v_3_3_1 =
         Version(
