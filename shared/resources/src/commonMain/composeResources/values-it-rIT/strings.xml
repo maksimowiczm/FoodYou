@@ -46,6 +46,7 @@
     <string name="weight">Peso</string>
     <string name="unit_energy" description="Energy as calories">Energia</string>
     <string name="unit_kcal">kcal</string>
+    <string name="unit_kilojoules">kJ</string>
     <plurals name="unit_gram">
         <item quantity="one">grammo</item>
         <item quantity="other">grammi</item>
@@ -54,6 +55,8 @@
         <item quantity="one">millilitro</item>
         <item quantity="other">millilitri</item>
     </plurals>
+    <string name="unit_ounce_short">oncia</string>
+    <string name="unit_fluid_ounce_short">oncia fluida</string>
     <string name="product_package_weight">Peso confezione</string>
     <string name="product_package">Confezione</string>
     <string name="product_serving_weight">Peso porzione</string>
@@ -254,6 +257,7 @@
     <string name="description_add_note">Note facoltative (es. ingredienti, stato vegano, allergeni, additivi) o qualsiasi altro dettaglio non di nutrienti</string>
     <string name="action_try_again">Riprova</string>
     <string name="description_calories_are_calculated">L'energia è calcolata automaticamente dai macronutrienti. È possibile disattivare questa funzione e inserire il valore manualmente, se necessario. L'alcol non è incluso nel calcolo.</string>
+    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
     <string name="neutral_an_error_occurred">Si è verificato un errore</string>
     <string name="action_retry">Riprova</string>
     <string name="action_import">Importa</string>
@@ -289,6 +293,7 @@
     <string name="headline_history">Storico</string>
     <string name="headline_anonymous">Anonimo</string>
     <string name="headline_recent">Recenti</string>
+    <string name="headline_database">Database</string>
     <string name="description_manage_database">Gestisci il tuo database</string>
     <string name="action_done">Fatto</string>
     <string name="neutral_measurement_added">Benissimo! Abbiamo aggiunto la tua misura</string>
@@ -314,4 +319,15 @@
         <item quantity="one">Esportato %1$d prodotto alimentare</item>
         <item quantity="other">Esportati %1$d prodotti alimentari</item>
     </plurals>
+    <string name="headline_auto_calculate_energy">Calcola automaticamente l'energia</string>
+    <string name="headline_manual_energy_input">Inserimento manuale dell'energia</string>
+    <string name="headline_quick_add">Aggiunta rapida</string>
+    <string name="description_quick_add">Aggiunta Rapida ti consente di registrare un pasto senza cercare alimenti specifici. È un modo veloce per annotare i pasti quando conosci già le calorie o vuoi inserire una stima approssimativa.</string>
+    <string name="action_open_poll">Apri sondaggio</string>
+    <string name="headline_colors">Colori</string>
+    <string name="description_colors">Personalizza i colori dell'app</string>
+    <string name="headline_custom_palette">Schema colori personalizzato</string>
+    <string name="description_custom_palette">Imposta il tuo schema colori personale</string>
+    <string name="headline_dynamic_colors">Colori dinamici</string>
+    <string name="description_dynamic_colors">Applica i colori di sistema</string>
 </resources>

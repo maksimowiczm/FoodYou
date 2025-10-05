@@ -355,4 +355,17 @@
     <string name="action_next_month">Gelecek ay</string>
     <string name="action_previous_month">Önceki ay</string>
     <string name="headline_sponsor_methods">Yöntemler</string>
+    <string name="headline_developer_options">Geliştirici seçenekleri</string>
+    <string name="headline_save_database">Veritabanını kaydet</string>
+    <string name="description_save_database">Veritabanınızın bir kopyasını kaydedin</string>
+    <string name="headline_replace_database">Veritabanını değiştir</string>
+    <string name="description_replace_database">Veritabanınızı önceden kaydedilmiş bir kopyayla değiştirin</string>
+    <string name="action_replace">Değiştir</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Veritabanınız DEĞİŞTİRİLECEK ve mevcut tüm verileriniz KAYBOLACAKTIR. Veritabanı değiştirildikten sonra uygulama yeniden başlayacaktır. Uygulamayı yeniden açmanız gerekebilir.</string>
+    <string name="action_sign_in">Oturum aç</string>
+    <string name="headline_terms_of_service">Hizmet şartları</string>
+    <string name="headline_privacy_policy">Gizlilik politikası</string>
+    <string name="error_there_was_an_error_while_signing_in">Oturum açarken bir hata oluştu</string>
+    <string name="headline_random_theme">Rastgele tema</string>
+    <string name="description_random_theme">Uygulama her başlatıldığında rastgele bir tema uygulanacaktır</string>
 </resources>
