@@ -1,0 +1,2 @@
+Bug fixes
+- Searching with Cyrillic characters is now case-insensitive
