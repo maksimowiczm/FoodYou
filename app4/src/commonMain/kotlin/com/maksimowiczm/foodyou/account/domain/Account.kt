@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.account.domain
 
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
+import com.maksimowiczm.foodyou.common.LocalAccountId
 import kotlin.uuid.Uuid
 
 class Account(val localAccountId: LocalAccountId, settings: Settings, profiles: List<Profile>) {

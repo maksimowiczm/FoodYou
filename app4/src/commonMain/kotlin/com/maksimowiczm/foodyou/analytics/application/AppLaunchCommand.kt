@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.analytics.application
 
 import com.maksimowiczm.foodyou.analytics.domain.AccountAnalyticsRepository
 import com.maksimowiczm.foodyou.analytics.domain.AppLaunchedEvent
-import com.maksimowiczm.foodyou.common.domain.Err
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
-import com.maksimowiczm.foodyou.common.domain.Ok
-import com.maksimowiczm.foodyou.common.domain.Result
-import com.maksimowiczm.foodyou.common.domain.event.EventBus
+import com.maksimowiczm.foodyou.common.Err
+import com.maksimowiczm.foodyou.common.LocalAccountId
+import com.maksimowiczm.foodyou.common.Ok
+import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.common.event.EventBus
 import kotlin.time.Clock
 
 /**

@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
-import com.maksimowiczm.foodyou.common.domain.testLocalAccountId
+import com.maksimowiczm.foodyou.domain.testLocalAccountId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

@@ -1,7 +1,7 @@
-package com.maksimowiczm.foodyou.common.domain
+package com.maksimowiczm.foodyou.common
 
-import com.maksimowiczm.foodyou.common.domain.Result.Error
-import com.maksimowiczm.foodyou.common.domain.Result.Success
+import com.maksimowiczm.foodyou.common.Result.Error
+import com.maksimowiczm.foodyou.common.Result.Success
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 

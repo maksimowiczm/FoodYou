@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.device.application
 
 import com.maksimowiczm.foodyou.analytics.domain.AppLaunchedEvent
-import com.maksimowiczm.foodyou.common.domain.event.EventHandler
+import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.device.domain.ColorProvider
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
 

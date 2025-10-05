@@ -9,6 +9,7 @@
     </queries>
 
     <application
+        android:name=".app.infrastructure.android.FoodYouApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -20,6 +21,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodYou"
         tools:targetApi="36">
+
+        <activity
+            android:name=".app.infrastructure.android.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

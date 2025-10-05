@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
+import com.maksimowiczm.foodyou.common.LocalAccountId
 import kotlin.time.Clock
 import kotlin.time.Instant
 
