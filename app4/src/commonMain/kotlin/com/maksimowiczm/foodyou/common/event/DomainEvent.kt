@@ -1,3 +1,5 @@
 package com.maksimowiczm.foodyou.common.event
 
-interface DomainEvent
+interface DomainEvent {
+    val aggregateId: String
+}

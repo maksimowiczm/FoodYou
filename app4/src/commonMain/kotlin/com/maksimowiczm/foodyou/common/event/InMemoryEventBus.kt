@@ -18,4 +18,8 @@ class InMemoryEventBus : EventBus {
     override suspend fun publish(event: DomainEvent) {
         _events.emit(event)
     }
+
+    override suspend fun publish(events: List<DomainEvent>) {
+        events.forEach { _events.emit(it) }
+    }
 }

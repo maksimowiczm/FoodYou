@@ -9,6 +9,8 @@ interface EventBus {
     val events: Flow<DomainEvent>
 
     suspend fun publish(event: DomainEvent)
+
+    suspend fun publish(events: List<DomainEvent>)
 }
 
 inline fun <reified E : DomainEvent> EventBus.subscribe(
