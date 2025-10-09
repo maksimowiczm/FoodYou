@@ -1,21 +1,8 @@
 package com.maksimowiczm.foodyou.account.domain
 
 import com.maksimowiczm.foodyou.common.LocalAccountId
-import kotlin.uuid.Uuid
 
 class Account(val localAccountId: LocalAccountId, settings: Settings, profiles: List<Profile>) {
-    companion object {
-        fun new(): Account {
-            val id = Uuid.random()
-
-            return Account(
-                localAccountId = LocalAccountId(id.toString()),
-                settings = Settings.default,
-                profiles = emptyList(),
-            )
-        }
-    }
-
     var settings: Settings = settings
         private set
 

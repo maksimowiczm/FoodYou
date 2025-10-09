@@ -41,6 +41,7 @@ private object DomainEventSerializer {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <E : DomainEvent> serialize(event: E): String {
         val serializer = event::class.serializer() as KSerializer<E>
 
