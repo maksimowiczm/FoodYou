@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.infrastructure
+package com.maksimowiczm.foodyou.app.infrastructure.datastore
 
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.scope.Scope

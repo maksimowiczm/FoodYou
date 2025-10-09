@@ -7,6 +7,20 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+    alias(libs.plugins.gmazzo.buildconfig)
+}
+
+room { schemaDirectory("$projectDir/schemas") }
+
+buildConfig {
+    packageName("com.maksimowiczm.foodyou.app")
+    className("BuildConfig")
+
+    val versionName = libs.versions.version.name.get()
+    buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
 }
 
 kotlin {
@@ -62,6 +76,8 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.kotlinx.datetime)
+
+            implementation(libs.androidx.room.runtime)
         }
 
         commonTest.dependencies { implementation(libs.kotlin.test) }
@@ -70,6 +86,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
             implementation(libs.koin.android)
+            implementation(libs.sqlite.android)
         }
 
         androidInstrumentedTest.dependencies {
@@ -79,7 +96,7 @@ kotlin {
             implementation(libs.androidx.testExt.junit)
         }
 
-        iosMain.dependencies { implementation(libs.ktor.client.darwin) }
+        iosMain.dependencies {}
     }
 }
 
@@ -132,7 +149,18 @@ android {
     }
 }
 
-dependencies { debugImplementation(compose.uiTooling) }
+dependencies {
+    debugImplementation(compose.uiTooling)
+
+    listOf(
+            "kspCommonMainMetadata",
+            "kspAndroid",
+            "kspIosX64",
+            "kspIosArm64",
+            "kspIosSimulatorArm64",
+        )
+        .forEach { add(it, libs.androidx.room.compiler) }
+}
 
 compose.resources {
     publicResClass = true

@@ -7,7 +7,8 @@ import com.maksimowiczm.foodyou.common.event.DomainEvent
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-class AccountAnalytics(val ownerId: LocalAccountId) : AggregateRoot(), EventSourcedAggregateRoot {
+class AccountAnalytics private constructor(val ownerId: LocalAccountId) :
+    AggregateRoot(), EventSourcedAggregateRoot {
     companion object {
         fun of(ownerId: LocalAccountId): AccountAnalytics {
             return AccountAnalytics(ownerId = ownerId)

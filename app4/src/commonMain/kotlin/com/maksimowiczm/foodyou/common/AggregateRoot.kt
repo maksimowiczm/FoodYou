@@ -10,6 +10,4 @@ abstract class AggregateRoot {
     protected fun raise(event: DomainEvent) {
         _events.add(event)
     }
-
-    fun clearEvents(): Unit = _events.clear()
 }

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.infrastructure
+package com.maksimowiczm.foodyou.app.infrastructure.datastore
 
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import okio.Path.Companion.toPath
