@@ -19,11 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Engineering
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Person3
-import androidx.compose.material.icons.outlined.Person4
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconToggleButton
@@ -43,6 +38,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
@@ -72,7 +68,7 @@ fun AddProfileScreen(
 private fun AddProfileScreen(
     uiState: OnboardingUiState,
     onSetName: (String) -> Unit,
-    onSetAvatar: (UiAvatar) -> Unit,
+    onSetAvatar: (UiProfileAvatar) -> Unit,
     onBack: () -> Unit,
     onContinue: () -> Unit,
     modifier: Modifier = Modifier,
@@ -118,7 +114,7 @@ private fun AddProfileScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp),
                 ) {
-                    items(items = UiAvatar.entries) { avatar ->
+                    items(items = UiProfileAvatar.entries) { avatar ->
                         AvatarItem(
                             avatar = avatar,
                             isSelected = uiState.avatar == avatar,
@@ -180,19 +176,11 @@ private fun AddProfileScreen(
 
 @Composable
 private fun AvatarItem(
-    avatar: UiAvatar,
+    avatar: UiProfileAvatar,
     isSelected: Boolean,
     onSelect: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val vector =
-        when (avatar) {
-            UiAvatar.PERSON -> Icons.Outlined.Person
-            UiAvatar.WOMAN -> Icons.Outlined.Person3
-            UiAvatar.MAN -> Icons.Outlined.Person4
-            UiAvatar.ENGINEER -> Icons.Outlined.Engineering
-        }
-
     FilledIconToggleButton(
         checked = isSelected,
         onCheckedChange = { onSelect() },
@@ -200,7 +188,7 @@ private fun AvatarItem(
         modifier = modifier.size(56.dp),
     ) {
         Icon(
-            imageVector = vector,
+            imageVector = avatar.toImageVector(),
             contentDescription = null,
             modifier = Modifier.size(IconButtonDefaults.mediumIconSize),
         )

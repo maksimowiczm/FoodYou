@@ -487,4 +487,12 @@
 
     <string name="action_continue">Continue</string>
 
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Hi, %1$s!</string>
+
+    <string name="headline_data_backup_and_export">Data backup &amp; export</string>
+    <string name="headline_privacy">Privacy</string>
+
+    <string name="action_switch_profile">Switch profile</string>
+    <string name="action_add_profile">Add profile</string>
+
 </resources>

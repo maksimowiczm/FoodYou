@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -29,7 +30,7 @@ class OnboardingViewModel(private val createPrimaryAccountUseCase: CreatePrimary
         _uiState.value = _uiState.value.copy(profileName = name)
     }
 
-    fun setAvatar(avatar: UiAvatar) {
+    fun setAvatar(avatar: UiProfileAvatar) {
         _uiState.value = _uiState.value.copy(avatar = avatar)
     }
 
