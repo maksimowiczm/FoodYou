@@ -351,7 +351,7 @@
     <string name="open_food_facts_terms_of_use_and_privacy_policy">{Terms of Use:https://world.openfoodfacts.org/terms-of-use} and {Privacy Policy:https://world.openfoodfacts.org/privacy}</string>
     <string name="usda_privacy_policy">{Privacy Policy:https://www.usda.gov/privacy-policy}</string>
 
-    <string name="headline_almost_done">Almost done!</string>
+    <string name="headline_almost_done">Almost done</string>
     <string name="headline_preparing_your_food_diary">Preparing your food diary</string>
     <string name="headline_please_wait">Please wait</string>
 
