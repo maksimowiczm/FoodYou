@@ -58,6 +58,9 @@ buildConfig {
     val feedbackEmailUri =
         "mailto:$feedbackEmail?subject=Food You Feedback&body=Food You Version: $versionName\\n"
     buildConfigField("String", "FEEDBACK_EMAIL_URI", "\"$feedbackEmailUri\"")
+
+    val crowdin = "https://crowdin.com/project/food-you"
+    buildConfigField("String", "CROWDIN_URI", "\"$crowdin\"")
 }
 
 kotlin {

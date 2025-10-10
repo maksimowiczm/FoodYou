@@ -1,6 +1,11 @@
 package com.maksimowiczm.foodyou.device.domain
 
-class Device(name: String, themeSettings: ThemeSettings, privacySettings: PrivacySettings) {
+class Device(
+    name: String,
+    themeSettings: ThemeSettings,
+    privacySettings: PrivacySettings,
+    language: Language,
+) {
     var name: String = name
         private set
 
@@ -8,6 +13,9 @@ class Device(name: String, themeSettings: ThemeSettings, privacySettings: Privac
         private set
 
     var privacySettings: PrivacySettings = privacySettings
+        private set
+
+    var language: Language = language
         private set
 
     fun randomizeTheme(colorProvider: ColorProvider) {
@@ -24,5 +32,9 @@ class Device(name: String, themeSettings: ThemeSettings, privacySettings: Privac
 
     fun updatePrivacySettings(transform: (PrivacySettings) -> PrivacySettings) {
         privacySettings = transform(privacySettings)
+    }
+
+    fun updateLanguageTag(language: Language) {
+        this.language = language
     }
 }

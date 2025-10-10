@@ -8,8 +8,10 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.roomModule
 import com.maksimowiczm.foodyou.app.ui.appUiModule
 import com.maksimowiczm.foodyou.app.ui.common.theme.commonThemeModule
 import com.maksimowiczm.foodyou.app.ui.home.homeModule
+import com.maksimowiczm.foodyou.app.ui.language.languageModule
 import com.maksimowiczm.foodyou.app.ui.onboarding.onboardingModule
 import com.maksimowiczm.foodyou.common.clock.di.clockModule
+import com.maksimowiczm.foodyou.common.di.commonModule
 import com.maksimowiczm.foodyou.common.event.di.inMemoryEventBusModule
 import com.maksimowiczm.foodyou.device.di.deviceModule
 import org.koin.core.KoinApplication
@@ -21,13 +23,13 @@ fun initKoin(config: KoinAppDeclaration? = null): KoinApplication = startKoin {
     modules(dataStoreModule, roomModule, configModule)
 
     // Common modules
-    modules(clockModule, inMemoryEventBusModule)
+    modules(clockModule, inMemoryEventBusModule, commonModule)
 
     // Feature modules
     modules(accountModule, analyticsModule, deviceModule)
 
     // Ui modules
-    modules(commonThemeModule, onboardingModule, appUiModule, homeModule)
+    modules(commonThemeModule, onboardingModule, appUiModule, homeModule, languageModule)
 
     config?.invoke(this)
 }

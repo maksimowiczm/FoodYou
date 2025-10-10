@@ -1,10 +1,12 @@
 package com.maksimowiczm.foodyou.common.di
 
+import com.maksimowiczm.foodyou.common.infrastructure.systemDetails
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.module.Module
 import org.koin.core.parameter.ParametersHolder
 import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
+import org.koin.dsl.module
 
 private const val APPLICATION_COROUTINE_SCOPE = "APPLICATION_COROUTINE_SCOPE"
 
@@ -14,3 +16,5 @@ fun Module.applicationCoroutineScope(definition: Scope.(ParametersHolder) -> Cor
     single(applicationCoroutineScopeQualifier, false, definition)
 
 fun Scope.applicationCoroutineScope(): CoroutineScope = get(applicationCoroutineScopeQualifier)
+
+val commonModule = module { systemDetails() }

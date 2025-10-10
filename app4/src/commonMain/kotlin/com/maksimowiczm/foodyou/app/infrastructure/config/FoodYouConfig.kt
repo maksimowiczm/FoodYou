@@ -15,4 +15,5 @@ class FoodYouConfig : AppConfig {
     override val sourceCodeUri: String = BuildConfig.SOURCE_CODE_URI
     override val featureRequestUri: String = BuildConfig.FEATURE_REQUEST_URI
     override val emailContactUri: String = BuildConfig.FEEDBACK_EMAIL_URI
+    override val translateUri: String = BuildConfig.CROWDIN_URI
 }

@@ -7,8 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.About
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Home
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Language
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
+import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -22,7 +24,7 @@ fun FoodYouNavHost(
                 onFoodDatabase = { /* TODO */ },
                 onPersonalization = { /* TODO */ },
                 onDataBackupAndExport = { /* TODO */ },
-                onLanguage = { /* TODO */ },
+                onLanguage = { navController.navigateSingleTop(Language) },
                 onPrivacy = { /* TODO */ },
                 onAbout = { navController.navigateSingleTop(About) },
                 onAddProfile = { /* TODO */ },
@@ -32,6 +34,9 @@ fun FoodYouNavHost(
         forwardBackwardComposable<About> {
             AboutScreen(onBack = { navController.popBackStackInclusive<About>() })
         }
+        forwardBackwardComposable<Language> {
+            LanguageScreen(onBack = { navController.popBackStackInclusive<Language>() })
+        }
     }
 }
 
@@ -40,4 +45,6 @@ private object FoodYouNavHostRoutes {
     @Serializable data object Home
 
     @Serializable data object About
+
+    @Serializable data object Language
 }

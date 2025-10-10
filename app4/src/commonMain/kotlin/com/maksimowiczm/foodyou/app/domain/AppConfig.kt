@@ -27,4 +27,7 @@ interface AppConfig {
 
     /** URI to the email contact. */
     val emailContactUri: String
+
+    /** URI to the translation platform. */
+    val translateUri: String
 }
