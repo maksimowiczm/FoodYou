@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.home
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.common.ProfileId
 
