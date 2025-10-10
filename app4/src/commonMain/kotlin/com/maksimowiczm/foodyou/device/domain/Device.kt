@@ -1,10 +1,13 @@
 package com.maksimowiczm.foodyou.device.domain
 
-class Device(name: String, themeSettings: ThemeSettings) {
+class Device(name: String, themeSettings: ThemeSettings, privacySettings: PrivacySettings) {
     var name: String = name
         private set
 
-    var themeSettings = themeSettings
+    var themeSettings: ThemeSettings = themeSettings
+        private set
+
+    var privacySettings: PrivacySettings = privacySettings
         private set
 
     fun randomizeTheme(colorProvider: ColorProvider) {
