@@ -11,4 +11,8 @@ class OnboardingViewModel : ViewModel() {
     fun setAllowFoodYouServices(allow: Boolean) {
         _uiState.value = _uiState.value.copy(allowFoodYouServices = allow)
     }
+
+    fun setProfileName(name: String) {
+        _uiState.value = _uiState.value.copy(profileName = name)
+    }
 }

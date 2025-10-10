@@ -479,4 +479,8 @@
     <string name="onboarding_privacy_tip">This app is open-source and built for you. We respect your privacy, your information stays private.</string>
     <string name="onboarding_allow_food_you_services">Allow to connect to Food You services</string>
 
+    <string name="headline_add_profile">Add profile</string>
+    <string name="headline_how_do_you_want_to_be_called">How do you want to be called?</string>
+    <string name="headline_profile_name">Profile name</string>
+
 </resources>
