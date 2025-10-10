@@ -19,4 +19,12 @@ class OnboardingViewModel : ViewModel() {
     fun setAvatar(avatar: UiAvatar) {
         _uiState.value = _uiState.value.copy(avatar = avatar)
     }
+
+    fun setAllowOpenFoodFacts(allow: Boolean) {
+        _uiState.value = _uiState.value.copy(allowOpenFoodFacts = allow)
+    }
+
+    fun setAllowFoodDataCentral(allow: Boolean) {
+        _uiState.value = _uiState.value.copy(allowFoodDataCentral = allow)
+    }
 }

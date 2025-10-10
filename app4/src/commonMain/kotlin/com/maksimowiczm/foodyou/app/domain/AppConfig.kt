@@ -9,4 +9,13 @@ interface AppConfig {
 
     /** URI to the Privacy Policy document. */
     val privacyPolicyUri: String
+
+    /** URI to the Open Food Facts Terms of Use document. */
+    val openFoodFactsTermsOfUseUri: String
+
+    /** URI to the Open Food Facts Privacy Policy document. */
+    val openFoodFactsPrivacyPolicyUri: String
+
+    /** URI to the FoodData Central Privacy Policy document. */
+    val foodDataCentralPrivacyPolicyUri: String
 }

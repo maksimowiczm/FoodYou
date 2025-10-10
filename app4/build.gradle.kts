@@ -27,6 +27,26 @@ buildConfig {
 
     val privacyPolicyUri = "https://TODO"
     buildConfigField("String", "PRIVACY_POLICY_URI", "\"$privacyPolicyUri\"")
+
+    val openFoodFactsTermsOfUseUri = "https://world.openfoodfacts.org/terms-of-use"
+    buildConfigField(
+        "String",
+        "OPEN_FOOD_FACTS_TERMS_OF_USE_URI",
+        "\"$openFoodFactsTermsOfUseUri\"",
+    )
+    val openFoodFactsPrivacyPolicyUri = "https://world.openfoodfacts.org/privacy"
+    buildConfigField(
+        "String",
+        "OPEN_FOOD_FACTS_PRIVACY_POLICY_URI",
+        "\"$openFoodFactsPrivacyPolicyUri\"",
+    )
+
+    val foodDataCentralPrivacyPolicyUri = "https://www.usda.gov/privacy-policy"
+    buildConfigField(
+        "String",
+        "FOOD_DATA_CENTRAL_PRIVACY_POLICY_URI",
+        "\"$foodDataCentralPrivacyPolicyUri\"",
+    )
 }
 
 kotlin {

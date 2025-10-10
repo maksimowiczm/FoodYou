@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.app.ui.onboarding
 
 data class OnboardingUiState(
     val allowFoodYouServices: Boolean = false,
+    val allowOpenFoodFacts: Boolean = false,
+    val allowFoodDataCentral: Boolean = false,
     val avatar: UiAvatar = UiAvatar.PERSON,
     val profileName: String = "",
 ) {

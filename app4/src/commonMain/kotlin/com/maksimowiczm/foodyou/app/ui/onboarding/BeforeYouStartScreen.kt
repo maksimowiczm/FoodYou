@@ -11,20 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.OpenInNew
-import androidx.compose.material.icons.outlined.PrivacyTip
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.domain.AppConfig
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
+import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
+import com.maksimowiczm.foodyou.app.ui.common.component.TermsOfUseChip
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
@@ -136,28 +131,8 @@ private fun BeforeYouStartScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    AssistChip(
-                        onClick = onTermsOfUse,
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
-                                contentDescription = null,
-                                modifier = Modifier.size(AssistChipDefaults.IconSize),
-                            )
-                        },
-                        label = { Text(stringResource(Res.string.headline_terms_of_use)) },
-                    )
-                    AssistChip(
-                        onClick = onPrivacyPolicy,
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Outlined.PrivacyTip,
-                                contentDescription = null,
-                                modifier = Modifier.size(AssistChipDefaults.IconSize),
-                            )
-                        },
-                        label = { Text(stringResource(Res.string.headline_privacy_policy)) },
-                    )
+                    TermsOfUseChip(onTermsOfUse)
+                    PrivacyPolicyChip(onPrivacyPolicy)
                 }
             }
             item {
