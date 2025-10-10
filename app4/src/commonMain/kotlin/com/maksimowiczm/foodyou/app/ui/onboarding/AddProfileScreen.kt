@@ -2,10 +2,22 @@ package com.maksimowiczm.foodyou.app.ui.onboarding
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Engineering
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Person3
+import androidx.compose.material.icons.outlined.Person4
+import androidx.compose.material3.FilledIconToggleButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -37,6 +49,7 @@ fun AddProfileScreen(
     AddProfileScreen(
         uiState = uiState,
         onSetName = viewModel::setProfileName,
+        onSetAvatar = viewModel::setAvatar,
         onBack = onBack,
         onContinue = onContinue,
         modifier = modifier,
@@ -47,6 +60,7 @@ fun AddProfileScreen(
 private fun AddProfileScreen(
     uiState: OnboardingUiState,
     onSetName: (String) -> Unit,
+    onSetAvatar: (UiAvatar) -> Unit,
     onBack: () -> Unit,
     onContinue: () -> Unit,
     modifier: Modifier = Modifier,
@@ -68,6 +82,29 @@ private fun AddProfileScreen(
             contentPadding = paddingValues.add(vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = stringResource(Res.string.headline_profile_picture),
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                    ) {
+                        items(items = UiAvatar.entries) { avatar ->
+                            AvatarItem(
+                                avatar = avatar,
+                                isSelected = uiState.avatar == avatar,
+                                onSelect = { onSetAvatar(avatar) },
+                            )
+                        }
+                    }
+                }
+            }
+
             item {
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -97,6 +134,35 @@ private fun AddProfileScreen(
     }
 }
 
+@Composable
+private fun AvatarItem(
+    avatar: UiAvatar,
+    isSelected: Boolean,
+    onSelect: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val vector =
+        when (avatar) {
+            UiAvatar.PERSON -> Icons.Outlined.Person
+            UiAvatar.WOMAN -> Icons.Outlined.Person3
+            UiAvatar.MAN -> Icons.Outlined.Person4
+            UiAvatar.ENGINEER -> Icons.Outlined.Engineering
+        }
+
+    FilledIconToggleButton(
+        checked = isSelected,
+        onCheckedChange = { onSelect() },
+        shapes = IconButtonDefaults.toggleableShapes(),
+        modifier = modifier.size(56.dp),
+    ) {
+        Icon(
+            imageVector = vector,
+            contentDescription = null,
+            modifier = Modifier.size(IconButtonDefaults.mediumIconSize),
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun AddProfileScreenPreview() {
@@ -104,6 +170,7 @@ private fun AddProfileScreenPreview() {
         AddProfileScreen(
             uiState = OnboardingUiState(),
             onSetName = {},
+            onSetAvatar = {},
             onBack = {},
             onContinue = {},
         )

@@ -15,4 +15,8 @@ class OnboardingViewModel : ViewModel() {
     fun setProfileName(name: String) {
         _uiState.value = _uiState.value.copy(profileName = name)
     }
+
+    fun setAvatar(avatar: UiAvatar) {
+        _uiState.value = _uiState.value.copy(avatar = avatar)
+    }
 }
