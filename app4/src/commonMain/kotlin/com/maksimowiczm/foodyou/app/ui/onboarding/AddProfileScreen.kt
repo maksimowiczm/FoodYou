@@ -3,18 +3,29 @@ package com.maksimowiczm.foodyou.app.ui.onboarding
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Engineering
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Person3
 import androidx.compose.material.icons.outlined.Person4
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -24,16 +35,17 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.onboarding_privacy_tip
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -66,6 +78,12 @@ private fun AddProfileScreen(
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        delay(300)
+        focusRequester.requestFocus()
+    }
 
     Scaffold(
         modifier = modifier,
@@ -73,63 +91,89 @@ private fun AddProfileScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(Res.string.headline_add_profile)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                    ),
                 scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues.add(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp),
+        Column(
+            modifier =
+                Modifier.fillMaxSize()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .padding(paddingValues)
+                    .consumeWindowInsets(paddingValues)
+                    .verticalScroll(rememberScrollState())
         ) {
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        text = stringResource(Res.string.headline_profile_picture),
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                    ) {
-                        items(items = UiAvatar.entries) { avatar ->
-                            AvatarItem(
-                                avatar = avatar,
-                                isSelected = uiState.avatar == avatar,
-                                onSelect = { onSetAvatar(avatar) },
-                            )
-                        }
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = stringResource(Res.string.headline_profile_picture),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                ) {
+                    items(items = UiAvatar.entries) { avatar ->
+                        AvatarItem(
+                            avatar = avatar,
+                            isSelected = uiState.avatar == avatar,
+                            onSelect = { onSetAvatar(avatar) },
+                        )
                     }
                 }
             }
-
-            item {
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+            Spacer(Modifier.height(32.dp))
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(
+                    text = stringResource(Res.string.headline_how_do_you_want_to_be_called),
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                OutlinedTextField(
+                    value = uiState.profileName,
+                    onValueChange = onSetName,
+                    placeholder = { Text(stringResource(Res.string.headline_profile_name)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+                    keyboardActions =
+                        KeyboardActions {
+                            if (uiState.isProfileValid) {
+                                onContinue()
+                            }
+                        },
+                )
+            }
+            Spacer(Modifier.height(32.dp))
+            Text(
+                text = stringResource(Res.string.onboarding_privacy_tip),
+                modifier = Modifier.padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.ime))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                val fabHeight = 56.dp
+                Button(
+                    onClick = onContinue,
+                    shapes = ButtonDefaults.shapesFor(fabHeight),
+                    enabled = uiState.isProfileValid,
+                    contentPadding = ButtonDefaults.contentPaddingFor(fabHeight),
                 ) {
                     Text(
-                        text = stringResource(Res.string.headline_how_do_you_want_to_be_called),
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                    OutlinedTextField(
-                        value = uiState.profileName,
-                        onValueChange = onSetName,
-                        placeholder = { Text(stringResource(Res.string.headline_profile_name)) },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth(),
+                        text = stringResource(Res.string.action_continue),
+                        style = ButtonDefaults.textStyleFor(fabHeight),
                     )
                 }
             }
-            item {
-                Text(
-                    text = stringResource(Res.string.onboarding_privacy_tip),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
+            Spacer(Modifier.height(16.dp))
         }
     }
 }

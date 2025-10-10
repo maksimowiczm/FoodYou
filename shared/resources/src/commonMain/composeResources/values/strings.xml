@@ -485,4 +485,6 @@
 
     <string name="headline_profile_picture">Profile picture</string>
 
+    <string name="action_continue">Continue</string>
+
 </resources>
