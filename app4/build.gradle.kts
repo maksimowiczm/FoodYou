@@ -47,6 +47,17 @@ buildConfig {
         "FOOD_DATA_CENTRAL_PRIVACY_POLICY_URI",
         "\"$foodDataCentralPrivacyPolicyUri\"",
     )
+
+    val sourceCodeUri = "https://github.com/maksimowiczm/FoodYou"
+    buildConfigField("String", "SOURCE_CODE_URI", "\"$sourceCodeUri\"")
+
+    val featureRequestUri = "https://github.com/maksimowiczm/FoodYou/issues"
+    buildConfigField("String", "FEATURE_REQUEST_URI", "\"$featureRequestUri\"")
+
+    val feedbackEmail = "maksimowicz.dev@gmail.com"
+    val feedbackEmailUri =
+        "mailto:$feedbackEmail?subject=Food You Feedback&body=Food You Version: $versionName\\n"
+    buildConfigField("String", "FEEDBACK_EMAIL_URI", "\"$feedbackEmailUri\"")
 }
 
 kotlin {

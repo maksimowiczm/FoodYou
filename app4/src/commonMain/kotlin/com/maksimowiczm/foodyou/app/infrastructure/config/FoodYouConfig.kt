@@ -12,4 +12,7 @@ class FoodYouConfig : AppConfig {
         BuildConfig.OPEN_FOOD_FACTS_PRIVACY_POLICY_URI
     override val foodDataCentralPrivacyPolicyUri: String =
         BuildConfig.FOOD_DATA_CENTRAL_PRIVACY_POLICY_URI
+    override val sourceCodeUri: String = BuildConfig.SOURCE_CODE_URI
+    override val featureRequestUri: String = BuildConfig.FEATURE_REQUEST_URI
+    override val emailContactUri: String = BuildConfig.FEEDBACK_EMAIL_URI
 }

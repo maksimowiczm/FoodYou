@@ -18,4 +18,13 @@ interface AppConfig {
 
     /** URI to the FoodData Central Privacy Policy document. */
     val foodDataCentralPrivacyPolicyUri: String
+
+    /** URI to the source code repository. */
+    val sourceCodeUri: String
+
+    /** URI to the feature request page. */
+    val featureRequestUri: String
+
+    /** URI to the email contact. */
+    val emailContactUri: String
 }

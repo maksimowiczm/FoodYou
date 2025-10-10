@@ -5,7 +5,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.About
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Home
+import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
 import kotlinx.serialization.Serializable
 
@@ -22,10 +24,13 @@ fun FoodYouNavHost(
                 onDataBackupAndExport = { /* TODO */ },
                 onLanguage = { /* TODO */ },
                 onPrivacy = { /* TODO */ },
-                onAbout = { /* TODO */ },
+                onAbout = { navController.navigateSingleTop(About) },
                 onAddProfile = { /* TODO */ },
                 onEditProfile = { /* TODO */ },
             )
+        }
+        forwardBackwardComposable<About> {
+            AboutScreen(onBack = { navController.popBackStackInclusive<About>() })
         }
     }
 }
@@ -33,4 +38,6 @@ fun FoodYouNavHost(
 private object FoodYouNavHostRoutes {
 
     @Serializable data object Home
+
+    @Serializable data object About
 }
