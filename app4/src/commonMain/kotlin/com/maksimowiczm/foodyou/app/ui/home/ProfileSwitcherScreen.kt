@@ -248,8 +248,8 @@ private fun ProfileSwitcher(
                 RoundedCornerShape(
                     topStart = 16.dp,
                     topEnd = 16.dp,
-                    bottomStart = animateDpAsState(if (expanded) 4.dp else 16.dp).value,
-                    bottomEnd = animateDpAsState(if (expanded) 4.dp else 16.dp).value,
+                    bottomStart = animateDpAsState(if (expanded) 8.dp else 16.dp).value,
+                    bottomEnd = animateDpAsState(if (expanded) 8.dp else 16.dp).value,
                 ),
         )
         AnimatedVisibility(visible = expanded) {
@@ -287,8 +287,8 @@ private fun ProfileSwitcher(
                     onClick = onAddProfile,
                     shape =
                         RoundedCornerShape(
-                            topStart = 4.dp,
-                            topEnd = 4.dp,
+                            topStart = 8.dp,
+                            topEnd = 8.dp,
                             bottomStart = 16.dp,
                             bottomEnd = 16.dp,
                         ),
