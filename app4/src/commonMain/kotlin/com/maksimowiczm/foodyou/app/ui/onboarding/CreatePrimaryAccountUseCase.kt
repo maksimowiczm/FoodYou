@@ -24,10 +24,9 @@ class CreatePrimaryAccountUseCase(
             it.copy(foodYouServicesAllowed = uiState.allowFoodYouServices)
         }
 
-        val account = Account.create()
         val profile =
             Profile.new(name = uiState.profileName, avatar = uiState.avatar.toProfileAvatar())
-        account.addProfile(profile)
+        val account = Account.create(primaryProfile = profile)
 
         // TODO
         //  Setup search privacy settings based on user choice once food search is implemented
