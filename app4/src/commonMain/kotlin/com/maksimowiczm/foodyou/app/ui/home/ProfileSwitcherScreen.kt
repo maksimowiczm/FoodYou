@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.LocalDining
 import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material.icons.outlined.Tune
@@ -142,7 +143,7 @@ private fun ProfileSwitcherScreen(
                     SettingsListItem(
                         leadingIcon = {
                             Icon(
-                                painter = painterResource(Res.drawable.ic_database),
+                                imageVector = Icons.Outlined.LocalDining,
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.extraSmallIconSize),
                             )
@@ -168,7 +169,7 @@ private fun ProfileSwitcherScreen(
                     SettingsListItem(
                         leadingIcon = {
                             Icon(
-                                painter = painterResource(Res.drawable.ic_file_export),
+                                painter = painterResource(Res.drawable.ic_database),
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.extraSmallIconSize),
                             )
