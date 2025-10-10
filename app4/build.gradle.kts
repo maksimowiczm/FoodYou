@@ -78,6 +78,8 @@ kotlin {
             implementation(libs.kotlinx.datetime)
 
             implementation(libs.androidx.room.runtime)
+
+            implementation(libs.material.kolor)
         }
 
         commonTest.dependencies { implementation(libs.kotlin.test) }
