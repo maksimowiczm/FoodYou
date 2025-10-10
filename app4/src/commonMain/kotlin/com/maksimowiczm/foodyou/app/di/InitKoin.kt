@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.config.configModule
 import com.maksimowiczm.foodyou.app.infrastructure.datastore.dataStoreModule
 import com.maksimowiczm.foodyou.app.infrastructure.room.roomModule
 import com.maksimowiczm.foodyou.app.ui.common.theme.commonThemeModule
+import com.maksimowiczm.foodyou.app.ui.onboarding.onboardingModule
 import com.maksimowiczm.foodyou.common.clock.di.clockModule
 import com.maksimowiczm.foodyou.common.event.di.inMemoryEventBusModule
 import com.maksimowiczm.foodyou.device.di.deviceModule
@@ -24,7 +25,7 @@ fun initKoin(config: KoinAppDeclaration? = null): KoinApplication = startKoin {
     modules(accountModule, analyticsModule, deviceModule)
 
     // Ui modules
-    modules(commonThemeModule)
+    modules(commonThemeModule, onboardingModule)
 
     config?.invoke(this)
 }

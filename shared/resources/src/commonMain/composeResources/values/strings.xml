@@ -474,4 +474,9 @@
 
     <string name="headline_random_theme">Random theme</string>
     <string name="description_random_theme">A random theme will be applied each time the app is started</string>
+
+    <string name="headline_terms_of_use">Terms of use</string>
+    <string name="onboarding_privacy_tip">This app is open-source and built for you. We respect your privacy, your information stays private.</string>
+    <string name="onboarding_allow_food_you_services">Allow to connect to Food You services</string>
+
 </resources>

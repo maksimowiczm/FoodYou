@@ -21,6 +21,12 @@ buildConfig {
 
     val versionName = libs.versions.version.name.get()
     buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
+
+    val termsOfUseUri = "https://TODO"
+    buildConfigField("String", "TERMS_OF_USE_URI", "\"$termsOfUseUri\"")
+
+    val privacyPolicyUri = "https://TODO"
+    buildConfigField("String", "PRIVACY_POLICY_URI", "\"$privacyPolicyUri\"")
 }
 
 kotlin {
@@ -66,6 +72,7 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
             implementation(libs.navigation.compose)
 
             implementation(libs.androidx.datastore.preferences.core)
@@ -85,6 +92,7 @@ kotlin {
         commonTest.dependencies { implementation(libs.kotlin.test) }
 
         androidMain.dependencies {
+            implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
             implementation(libs.koin.android)
