@@ -54,9 +54,24 @@ private fun Settings.toEntity(accountId: String): SettingsEntity {
 }
 
 private fun ProfileEntity.toDomain(): Profile {
-    return Profile(id = ProfileId(this.id), name = this.name)
+    val avatarName = this.avatar.removePrefix("predefined:")
+    val avatar =
+        try {
+            Profile.Avatar.valueOf(avatarName)
+        } catch (_: IllegalArgumentException) {
+            Profile.Avatar.PERSON
+        }
+
+    return Profile(id = ProfileId(this.id), name = this.name, avatar = avatar)
 }
 
+private fun Profile.Avatar.toEntity(): String = "predefined:$name"
+
 private fun Profile.toEntity(localAccountId: String): ProfileEntity {
-    return ProfileEntity(id = this.id.value, localAccountId = localAccountId, name = this.name)
+    return ProfileEntity(
+        id = this.id.value,
+        localAccountId = localAccountId,
+        name = this.name,
+        avatar = this.avatar.toEntity(),
+    )
 }
