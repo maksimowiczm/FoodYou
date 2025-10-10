@@ -23,7 +23,7 @@ class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountReposit
             if (accountEntity == null) {
                 null
             } else {
-                Account(
+                Account.of(
                     localAccountId = LocalAccountId(accountEntity.id),
                     settings = settingsEntity?.toDomain() ?: Settings.default,
                     profiles = profileEntities.map { it.toDomain() },

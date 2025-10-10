@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.analytics.application
 
 import com.maksimowiczm.foodyou.analytics.domain.AccountAnalyticsRepository
-import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.LocalAccountId
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
@@ -14,21 +13,15 @@ import kotlin.time.Clock
  * @property localAccountId The ID of the account launching the app.
  * @property versionName The version name of the app being launched.
  */
-data class AppLaunchCommand(val localAccountId: LocalAccountId, val versionName: String) {
-    sealed interface Error {
-        data object AccountNotFound : Error
-    }
-}
+data class AppLaunchCommand(val localAccountId: LocalAccountId, val versionName: String)
 
 class AppLaunchCommandHandler(
     private val clock: Clock,
     private val accountAnalyticsRepository: AccountAnalyticsRepository,
     private val eventBus: EventBus,
 ) {
-    suspend fun execute(command: AppLaunchCommand): Result<Unit, AppLaunchCommand.Error> {
-        val account =
-            accountAnalyticsRepository.load(command.localAccountId)
-                ?: return Err(AppLaunchCommand.Error.AccountNotFound)
+    suspend fun handle(command: AppLaunchCommand): Result<Unit, Unit> {
+        val account = accountAnalyticsRepository.load(command.localAccountId)
 
         account.recordAppLaunch(versionName = command.versionName, clock = clock)
 

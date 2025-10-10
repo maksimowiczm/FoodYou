@@ -21,4 +21,8 @@ class Device(name: String, themeSettings: ThemeSettings, privacySettings: Privac
 
         themeSettings = themeSettings.copy(theme = newTheme)
     }
+
+    fun updatePrivacySettings(transform: (PrivacySettings) -> PrivacySettings) {
+        privacySettings = transform(privacySettings)
+    }
 }

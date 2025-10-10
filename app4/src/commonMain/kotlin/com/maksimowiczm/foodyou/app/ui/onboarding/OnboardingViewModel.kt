@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.app.ui.onboarding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,9 +48,10 @@ class OnboardingViewModel(private val createPrimaryAccountUseCase: CreatePrimary
             val realTask = async { createPrimaryAccountUseCase.execute(_uiState.value) }
             val minDelayTask = async { delay(2_000) }
 
-            awaitAll(realTask, minDelayTask)
+            val localAccountId = realTask.await()
+            minDelayTask.await()
 
-            eventBus.send(OnboardingEvent.Finished)
+            eventBus.send(OnboardingEvent.Finished(localAccountId))
         }
     }
 }

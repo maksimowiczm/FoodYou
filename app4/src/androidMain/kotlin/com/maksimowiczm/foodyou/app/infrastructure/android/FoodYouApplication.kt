@@ -1,16 +1,17 @@
 package com.maksimowiczm.foodyou.app.infrastructure.android
 
 import android.app.Application
+import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchCommand
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchCommandHandler
 import com.maksimowiczm.foodyou.app.di.initKoin
 import com.maksimowiczm.foodyou.app.domain.AppConfig
-import com.maksimowiczm.foodyou.common.LocalAccountId
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -30,11 +31,18 @@ class FoodYouApplication : Application() {
                 .koin
 
         coroutineScope.launch {
+            val accountManager = koin.get<AccountManager>()
+            val accountId = accountManager.observePrimaryAccountId().first()
+
+            if (accountId == null) {
+                return@launch
+            }
+
             koin
                 .get<AppLaunchCommandHandler>()
-                .execute(
+                .handle(
                     AppLaunchCommand(
-                        localAccountId = LocalAccountId.DEFAULT,
+                        localAccountId = accountId,
                         versionName = koin.get<AppConfig>().versionName,
                     )
                 )

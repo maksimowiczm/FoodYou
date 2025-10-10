@@ -11,7 +11,7 @@ class AccountAnalyticsRepositoryImpl(private val eventStoreDao: EventStoreDao) :
 
     private val mapper = RoomEventStoreMapper
 
-    override suspend fun load(localAccountId: LocalAccountId): AccountAnalytics? {
+    override suspend fun load(localAccountId: LocalAccountId): AccountAnalytics {
         val roomEvents = eventStoreDao.getAllByAggregateId(localAccountId.value)
         val events = roomEvents.map { mapper.toDomainEvent(it) }
 

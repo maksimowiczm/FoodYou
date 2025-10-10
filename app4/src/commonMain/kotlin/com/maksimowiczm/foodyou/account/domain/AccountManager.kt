@@ -4,5 +4,7 @@ import com.maksimowiczm.foodyou.common.LocalAccountId
 import kotlinx.coroutines.flow.Flow
 
 interface AccountManager {
-    fun observePrimaryAccountId(): Flow<LocalAccountId>
+    suspend fun setPrimaryAccountId(accountId: LocalAccountId)
+
+    fun observePrimaryAccountId(): Flow<LocalAccountId?>
 }

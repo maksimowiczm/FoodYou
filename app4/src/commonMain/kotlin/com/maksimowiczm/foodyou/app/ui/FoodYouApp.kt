@@ -1,21 +1,22 @@
 package com.maksimowiczm.foodyou.app.ui
 
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.onboarding.Onboarding
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun FoodYouApp() {
-    var onboardingFinished by rememberSaveable { mutableStateOf(false) }
+    val appViewModel: AppViewModel = koinViewModel()
+
+    val onboardingFinished = appViewModel.onboardingFinished.collectAsStateWithLifecycle().value
+
     FoodYouTheme {
         Surface {
-            if (!onboardingFinished) {
-                Onboarding(onFinish = { onboardingFinished = true })
+            if (onboardingFinished == false) {
+                Onboarding(onFinish = appViewModel::onFinishOnboarding)
             }
         }
     }
