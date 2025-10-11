@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.app.navigation.forwardBackwardComposable
@@ -28,7 +29,9 @@ fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier
     val finishingOnboarding = viewModel.finishingOnboarding.collectAsStateWithLifecycle().value
     LaunchedEffect(finishingOnboarding) {
         if (finishingOnboarding) {
-            navController.navigateSingleTop(AlmostDone)
+            if (navController.currentDestination?.hasRoute<AlmostDone>() == false) {
+                navController.navigateSingleTop(AlmostDone)
+            }
         }
     }
 
