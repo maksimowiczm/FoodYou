@@ -5,6 +5,7 @@ class Device(
     themeSettings: ThemeSettings,
     privacySettings: PrivacySettings,
     language: Language,
+    hideScreen: Boolean,
 ) {
     var name: String = name
         private set
@@ -16,6 +17,9 @@ class Device(
         private set
 
     var language: Language = language
+        private set
+
+    var hideScreen: Boolean = hideScreen
         private set
 
     fun randomizeTheme(colorProvider: ColorProvider) {
@@ -36,5 +40,9 @@ class Device(
 
     fun updateLanguageTag(language: Language) {
         this.language = language
+    }
+
+    fun updateHideScreen(hideScreen: Boolean) {
+        this.hideScreen = hideScreen
     }
 }

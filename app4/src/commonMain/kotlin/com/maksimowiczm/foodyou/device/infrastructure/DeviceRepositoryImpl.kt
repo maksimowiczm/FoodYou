@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.device.infrastructure
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.device.domain.Device
@@ -37,6 +38,7 @@ private suspend fun Preferences.toDevice(
     languageTag: String?,
 ): Device {
     val deviceName = this[OtherKeys.deviceName] ?: defaultDeviceNameProvider.provide()
+    val hideScreen = this[OtherKeys.hideScreen] ?: false
     return Device(
         name = deviceName,
         themeSettings = toThemeSettings(),
@@ -46,15 +48,18 @@ private suspend fun Preferences.toDevice(
                 null -> Language.System
                 else -> Language.Tag(languageTag)
             },
+        hideScreen = hideScreen,
     )
 }
 
 private fun MutablePreferences.applyDevice(device: Device): MutablePreferences = apply {
     this[OtherKeys.deviceName] = device.name
+    this[OtherKeys.hideScreen] = device.hideScreen
     applyThemeSettings(device.themeSettings)
     applyPrivacySettings(device.privacySettings)
 }
 
 private object OtherKeys {
     val deviceName = stringPreferencesKey("device:name")
+    val hideScreen = booleanPreferencesKey("device:hide_screen")
 }
