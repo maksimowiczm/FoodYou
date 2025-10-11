@@ -4,9 +4,7 @@ import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
-import com.maksimowiczm.foodyou.analytics.application.AppLaunchCommand
-import com.maksimowiczm.foodyou.analytics.application.AppLaunchCommandHandler
-import com.maksimowiczm.foodyou.app.domain.AppConfig
+import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.common.LocalAccountId
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
@@ -15,8 +13,7 @@ class CreatePrimaryAccountUseCase(
     private val accountRepository: AccountRepository,
     private val deviceRepository: DeviceRepository,
     private val accountManager: AccountManager,
-    private val appLaunchCommandHandler: AppLaunchCommandHandler,
-    private val appConfig: AppConfig,
+    private val appLaunchUseCase: AppLaunchUseCase,
 ) {
     suspend fun execute(uiState: OnboardingUiState): LocalAccountId {
         val device = deviceRepository.load()
@@ -35,12 +32,7 @@ class CreatePrimaryAccountUseCase(
         accountRepository.save(account)
         deviceRepository.save(device)
         accountManager.setPrimaryAccountId(account.localAccountId)
-        appLaunchCommandHandler.handle(
-            AppLaunchCommand(
-                localAccountId = account.localAccountId,
-                versionName = appConfig.versionName,
-            )
-        )
+        appLaunchUseCase.execute(account.localAccountId)
 
         return account.localAccountId
     }
