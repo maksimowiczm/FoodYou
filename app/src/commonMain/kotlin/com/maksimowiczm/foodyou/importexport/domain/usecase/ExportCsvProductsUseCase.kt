@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.common.domain.database.TransactionProvider
 import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
 import com.maksimowiczm.foodyou.importexport.domain.entity.ProductField
+import com.maksimowiczm.foodyou.importexport.domain.entity.csvHeader
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.first
@@ -27,7 +28,7 @@ internal class ExportCsvProductsUseCaseImpl(
 
         val header =
             fields
-                .map(ProductField::toCsvHeader)
+                .map(ProductField::csvHeader)
                 .joinToString(",", transform = csvWriter::writeString)
         send(header)
 
@@ -72,61 +73,6 @@ private class CsvWriter {
             else -> error("Unsupported type for CSV export: ${value::class.simpleName}")
         }
 }
-
-private fun ProductField.toCsvHeader(): String =
-    when (this) {
-        ProductField.Name -> "Name"
-        ProductField.Brand -> "Brand"
-        ProductField.Barcode -> "Barcode"
-        ProductField.Note -> "Note"
-        ProductField.IsLiquid -> "Is Liquid"
-        ProductField.PackageWeight -> "Package Weight (g)"
-        ProductField.ServingWeight -> "Serving Weight (g)"
-        ProductField.SourceUrl -> "Source URL"
-        ProductField.Proteins -> "Proteins (g)"
-        ProductField.Carbohydrates -> "Carbohydrates (g)"
-        ProductField.Energy -> "Energy (kcal)"
-        ProductField.Fats -> "Fats (g)"
-        ProductField.SaturatedFats -> "Saturated Fats (g)"
-        ProductField.TransFats -> "Trans Fats (g)"
-        ProductField.MonounsaturatedFats -> "Monounsaturated Fats (g)"
-        ProductField.PolyunsaturatedFats -> "Polyunsaturated Fats (g)"
-        ProductField.Omega3 -> "Omega-3 (g)"
-        ProductField.Omega6 -> "Omega-6 (g)"
-        ProductField.Sugars -> "Sugars (g)"
-        ProductField.AddedSugars -> "Added Sugars (g)"
-        ProductField.DietaryFiber -> "Dietary Fiber (g)"
-        ProductField.SolubleFiber -> "Soluble Fiber (g)"
-        ProductField.InsolubleFiber -> "Insoluble Fiber (g)"
-        ProductField.Salt -> "Salt (g)"
-        ProductField.Cholesterol -> "Cholesterol (g)"
-        ProductField.Caffeine -> "Caffeine (g)"
-        ProductField.VitaminA -> "Vitamin A (g)"
-        ProductField.VitaminB1 -> "Vitamin B1 (g)"
-        ProductField.VitaminB2 -> "Vitamin B2 (g)"
-        ProductField.VitaminB3 -> "Vitamin B3 (g)"
-        ProductField.VitaminB5 -> "Vitamin B5 (g)"
-        ProductField.VitaminB6 -> "Vitamin B6 (g)"
-        ProductField.VitaminB7 -> "Vitamin B7 (g)"
-        ProductField.VitaminB9 -> "Vitamin B9 (g)"
-        ProductField.VitaminB12 -> "Vitamin B12 (g)"
-        ProductField.VitaminC -> "Vitamin C (g)"
-        ProductField.VitaminD -> "Vitamin D (g)"
-        ProductField.VitaminE -> "Vitamin E (g)"
-        ProductField.VitaminK -> "Vitamin K (g)"
-        ProductField.Manganese -> "Manganese (g)"
-        ProductField.Magnesium -> "Magnesium (g)"
-        ProductField.Potassium -> "Potassium (g)"
-        ProductField.Calcium -> "Calcium (g)"
-        ProductField.Copper -> "Copper (g)"
-        ProductField.Zinc -> "Zinc (g)"
-        ProductField.Sodium -> "Sodium (g)"
-        ProductField.Iron -> "Iron (g)"
-        ProductField.Phosphorus -> "Phosphorus (g)"
-        ProductField.Selenium -> "Selenium (g)"
-        ProductField.Iodine -> "Iodine (g)"
-        ProductField.Chromium -> "Chromium (g)"
-    }
 
 private fun Product.field(field: ProductField): Any? =
     when (field) {

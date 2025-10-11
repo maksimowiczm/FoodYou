@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardDialog
 import com.maksimowiczm.foodyou.importexport.domain.entity.ProductField
+import com.maksimowiczm.foodyou.importexport.domain.entity.csvHeader
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
@@ -55,6 +56,24 @@ internal fun ImportCsvProductsScreen(
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
 
     var fieldsMap by rememberSaveable { mutableStateOf(mapOf<ProductField, String>()) }
+
+    // Auto-select fields when CSV headers match known exported headers
+    LaunchedEffect(header) {
+        if (fieldsMap.isEmpty()) {
+            val autoMapped =
+                header
+                    .mapNotNull { columnName ->
+                        val normalized = normalizeCsvHeader(columnName)
+                        val field = expectedFieldByNormalizedHeader[normalized]
+                        field?.let { it to columnName }
+                    }
+                    .toMap()
+
+            if (autoMapped.isNotEmpty()) {
+                fieldsMap = autoMapped
+            }
+        }
+    }
 
     BackHandler(enabled = fieldsMap.isNotEmpty(), onBack = { showDiscardDialog = true })
 
@@ -191,6 +210,18 @@ private val order =
         ProductField.Iodine,
         ProductField.Chromium,
     )
+
+// Normalizes header values for robust matching (trim quotes/space, case-insensitive)
+private fun normalizeCsvHeader(header: String): String = header.trim().trim('"').lowercase()
+
+// Expected CSV headers for each field (delegates to shared mapping)
+private val expectedCsvHeaderByField: Map<ProductField, String> =
+    ProductField.values().associateWith { it.csvHeader() }
+
+private val expectedFieldByNormalizedHeader: Map<String, ProductField> =
+    expectedCsvHeaderByField.entries.associate { (field, header) ->
+        normalizeCsvHeader(header) to field
+    }
 
 @Composable
 private fun ProductFieldSelector(
