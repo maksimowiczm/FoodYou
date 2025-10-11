@@ -6,7 +6,7 @@ import kotlin.uuid.Uuid
 class Account
 private constructor(
     val localAccountId: LocalAccountId,
-    settings: Settings,
+    settings: AccountSettings,
     profiles: List<Profile>,
 ) {
     companion object {
@@ -15,14 +15,14 @@ private constructor(
             val id = LocalAccountId(uuid.toString())
             return Account(
                 localAccountId = id,
-                settings = Settings.default,
+                settings = AccountSettings.default,
                 profiles = listOf(primaryProfile),
             )
         }
 
         fun of(
             localAccountId: LocalAccountId,
-            settings: Settings,
+            settings: AccountSettings,
             profiles: List<Profile>,
         ): Account =
             Account(localAccountId = localAccountId, settings = settings, profiles = profiles)
@@ -32,7 +32,7 @@ private constructor(
         require(profiles.isNotEmpty()) { "Account must have at least one profile" }
     }
 
-    var settings: Settings = settings
+    var settings: AccountSettings = settings
         private set
 
     private val _profiles: MutableList<Profile> = profiles.toMutableList()
@@ -42,7 +42,7 @@ private constructor(
     val primaryProfile: Profile
         get() = _profiles.first()
 
-    fun updateSettings(transform: (Settings) -> Settings) {
+    fun updateSettings(transform: (AccountSettings) -> AccountSettings) {
         settings = transform(settings)
     }
 }

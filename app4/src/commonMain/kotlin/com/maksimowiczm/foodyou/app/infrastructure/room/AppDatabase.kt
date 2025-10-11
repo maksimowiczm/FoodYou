@@ -2,8 +2,10 @@ package com.maksimowiczm.foodyou.app.infrastructure.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDatabase
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountEntity
+import com.maksimowiczm.foodyou.account.infrastructure.room.EnergyFormatConverter
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
 
@@ -12,6 +14,7 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
     version = AppDatabase.VERSION,
     exportSchema = false,
 )
+@TypeConverters(EnergyFormatConverter::class)
 abstract class AppDatabase : RoomDatabase(), AccountDatabase {
     companion object {
         const val VERSION = 1

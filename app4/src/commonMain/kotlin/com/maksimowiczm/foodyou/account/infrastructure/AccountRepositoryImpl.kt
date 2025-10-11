@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.account.infrastructure
 
 import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.account.domain.AccountSettings
 import com.maksimowiczm.foodyou.account.domain.Profile
-import com.maksimowiczm.foodyou.account.domain.Settings
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDao
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
@@ -25,7 +25,7 @@ class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountReposit
             } else {
                 Account.of(
                     localAccountId = LocalAccountId(accountEntity.id),
-                    settings = settingsEntity?.toDomain() ?: Settings.default,
+                    settings = settingsEntity?.toDomain() ?: AccountSettings.default,
                     profiles = profileEntities.map { it.toDomain() },
                 )
             }
@@ -45,12 +45,19 @@ class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountReposit
     }
 }
 
-private fun SettingsEntity.toDomain(): Settings {
-    return Settings(onboardingFinished = this.onboardingFinished)
+private fun SettingsEntity.toDomain(): AccountSettings {
+    return AccountSettings(
+        onboardingFinished = this.onboardingFinished,
+        energyFormat = this.energyFormat,
+    )
 }
 
-private fun Settings.toEntity(accountId: String): SettingsEntity {
-    return SettingsEntity(accountId = accountId, onboardingFinished = this.onboardingFinished)
+private fun AccountSettings.toEntity(accountId: String): SettingsEntity {
+    return SettingsEntity(
+        accountId = accountId,
+        onboardingFinished = this.onboardingFinished,
+        energyFormat = this.energyFormat,
+    )
 }
 
 private fun ProfileEntity.toDomain(): Profile {
