@@ -4,8 +4,8 @@ import com.maksimowiczm.foodyou.common.domain.database.TransactionProvider
 import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
 import com.maksimowiczm.foodyou.importexport.domain.entity.ProductField
-import kotlinx.coroutines.flow.Flow
 import com.maksimowiczm.foodyou.importexport.domain.entity.csvHeader
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.first
 
@@ -73,7 +73,6 @@ private class CsvWriter {
             else -> error("Unsupported type for CSV export: ${value::class.simpleName}")
         }
 }
-
 
 private fun Product.field(field: ProductField): Any? =
     when (field) {

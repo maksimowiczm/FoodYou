@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.importexport.domain.entity
 
 /**
- * CSV header mapping for [ProductField].
- * Kept in the domain layer so both export and import UIs can share a single source of truth.
+ * CSV header mapping for [ProductField]. Kept in the domain layer so both export and import UIs can
+ * share a single source of truth.
  */
 fun ProductField.csvHeader(): String =
     when (this) {
@@ -58,5 +58,3 @@ fun ProductField.csvHeader(): String =
         ProductField.Iodine -> "Iodine (g)"
         ProductField.Chromium -> "Chromium (g)"
     }
-
-

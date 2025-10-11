@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardDialog
 import com.maksimowiczm.foodyou.importexport.domain.entity.ProductField
-import foodyou.app.generated.resources.*
 import com.maksimowiczm.foodyou.importexport.domain.entity.csvHeader
+import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import org.jetbrains.compose.resources.painterResource
@@ -61,11 +61,13 @@ internal fun ImportCsvProductsScreen(
     LaunchedEffect(header) {
         if (fieldsMap.isEmpty()) {
             val autoMapped =
-                header.mapNotNull { columnName ->
-                    val normalized = normalizeCsvHeader(columnName)
-                    val field = expectedFieldByNormalizedHeader[normalized]
-                    field?.let { it to columnName }
-                }.toMap()
+                header
+                    .mapNotNull { columnName ->
+                        val normalized = normalizeCsvHeader(columnName)
+                        val field = expectedFieldByNormalizedHeader[normalized]
+                        field?.let { it to columnName }
+                    }
+                    .toMap()
 
             if (autoMapped.isNotEmpty()) {
                 fieldsMap = autoMapped
