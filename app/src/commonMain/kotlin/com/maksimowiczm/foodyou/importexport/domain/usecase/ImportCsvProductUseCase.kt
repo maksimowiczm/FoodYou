@@ -75,7 +75,14 @@ internal class ImportCsvProductUseCaseImpl(
                 brand = productData[ProductField.Brand],
                 barcode = productData[ProductField.Barcode],
                 note = productData[ProductField.Note],
-                isLiquid = productData[ProductField.IsLiquid]?.toBooleanStrict() ?: false,
+                isLiquid =
+                    when (productData[ProductField.IsLiquid]) {
+                        "true",
+                        "1" -> true
+                        "false",
+                        "0" -> false
+                        else -> false
+                    },
                 packageWeight = productData[ProductField.PackageWeight]?.toDouble(),
                 servingWeight = productData[ProductField.ServingWeight]?.toDouble(),
                 source = FoodSource(type = source, url = productData[ProductField.SourceUrl]),
