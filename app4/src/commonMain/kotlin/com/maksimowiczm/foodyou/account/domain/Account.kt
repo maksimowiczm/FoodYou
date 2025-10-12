@@ -39,7 +39,7 @@ private constructor(
     val profiles: List<Profile>
         get() = _profiles.toList()
 
-    val primaryProfile: Profile
+    val defaultProfile: Profile
         get() = _profiles.first()
 
     fun updateSettings(transform: (AccountSettings) -> AccountSettings) {

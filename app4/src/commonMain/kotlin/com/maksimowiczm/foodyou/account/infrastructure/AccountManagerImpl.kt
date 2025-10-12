@@ -82,12 +82,12 @@ class AccountManagerImpl(
                 val id = prefs[AccountManagerKeys.primaryProfileId]?.let(::ProfileId)
 
                 if (id == null) {
-                    return@map account.primaryProfile.id
+                    return@map account.defaultProfile.id
                 }
 
                 // If profile no longer exists, return the first one.
                 if (!account.profiles.any { it.id == id }) {
-                    return@map account.primaryProfile.id
+                    return@map account.defaultProfile.id
                 }
 
                 id
