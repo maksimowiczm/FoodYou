@@ -121,6 +121,8 @@ kotlin {
             implementation(libs.androidx.room.runtime)
 
             implementation(libs.material.kolor)
+
+            implementation(libs.reorderable)
         }
 
         commonTest.dependencies { implementation(libs.kotlin.test) }

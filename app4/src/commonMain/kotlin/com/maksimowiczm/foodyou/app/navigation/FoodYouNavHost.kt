@@ -8,11 +8,13 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.About
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Home
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Language
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.NutritionFactsPersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Personalization
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
+import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFactsScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -43,8 +45,15 @@ fun FoodYouNavHost(
             PersonalizationScreen(
                 onBack = { navController.popBackStackInclusive<Personalization>() },
                 onHome = { /* TODO */ },
-                onNutritionFacts = { /* TODO */ },
+                onNutritionFacts = {
+                    navController.navigateSingleTop(NutritionFactsPersonalization)
+                },
                 onColors = { /* TODO */ },
+            )
+        }
+        forwardBackwardComposable<NutritionFactsPersonalization> {
+            PersonalizeNutritionFactsScreen(
+                onBack = { navController.popBackStackInclusive<NutritionFactsPersonalization>() }
             )
         }
     }
@@ -59,4 +68,6 @@ private object FoodYouNavHostRoutes {
     @Serializable data object Language
 
     @Serializable data object Personalization
+
+    @Serializable data object NutritionFactsPersonalization
 }
