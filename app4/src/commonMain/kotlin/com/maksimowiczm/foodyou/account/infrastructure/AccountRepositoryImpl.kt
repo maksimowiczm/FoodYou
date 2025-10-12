@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.account.infrastructure
 import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.AccountSettings
+import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDao
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountEntity
@@ -46,17 +47,25 @@ class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountReposit
 }
 
 private fun SettingsEntity.toDomain(): AccountSettings {
+    val nutrientsOrder =
+        runCatching { this.nutrientsOrder.split(",").map { NutrientsOrder.entries[it.toInt()] } }
+            .getOrElse { NutrientsOrder.defaultOrder }
+
     return AccountSettings(
         onboardingFinished = this.onboardingFinished,
         energyFormat = this.energyFormat,
+        nutrientsOrder = nutrientsOrder,
     )
 }
 
 private fun AccountSettings.toEntity(accountId: String): SettingsEntity {
+    val nutrientsOrder = this.nutrientsOrder.joinToString(",") { it.ordinal.toString() }
+
     return SettingsEntity(
         accountId = accountId,
         onboardingFinished = this.onboardingFinished,
         energyFormat = this.energyFormat,
+        nutrientsOrder = nutrientsOrder,
     )
 }
 

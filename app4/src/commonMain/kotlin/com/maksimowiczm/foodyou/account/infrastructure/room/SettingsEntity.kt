@@ -8,4 +8,5 @@ data class SettingsEntity(
     val accountId: String,
     val onboardingFinished: Boolean,
     val energyFormat: EnergyFormat,
+    val nutrientsOrder: String,
 )
