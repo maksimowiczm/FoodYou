@@ -77,6 +77,7 @@ kotlin {
         optIn.add("kotlin.time.ExperimentalTime")
         optIn.add("kotlinx.coroutines.ExperimentalCoroutinesApi")
         optIn.add("kotlin.uuid.ExperimentalUuidApi")
+        optIn.add("kotlin.contracts.ExperimentalContracts")
     }
 
     androidTarget {
@@ -124,6 +125,9 @@ kotlin {
             implementation(libs.kermit)
 
             implementation(libs.reorderable)
+
+            implementation(libs.androidx.paging.common)
+            implementation(libs.androidx.paging.compose)
         }
 
         commonTest.dependencies { implementation(libs.kotlin.test) }
