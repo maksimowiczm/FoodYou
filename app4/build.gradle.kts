@@ -122,6 +122,8 @@ kotlin {
 
             implementation(libs.material.kolor)
 
+            implementation(libs.kermit)
+
             implementation(libs.reorderable)
         }
 
