@@ -1,4 +1,5 @@
 [versions]
+pagingCommon = "3.4.0-alpha04"
 version-name = "3.3.3"
 android-versionCode = "111"
 android-compileSdk = "36"
@@ -26,7 +27,7 @@ ksp = "2.2.20-2.0.2"
 ktor = "3.3.0"
 materialKolor = "3.0.1"
 navigationCompose = "2.9.0"
-paging3 = "3.3.6"
+paging3 = "3.4.0-alpha04"
 reorderable = "3.0.0"
 room = "2.8.1"
 runner = "1.7.0"
@@ -40,6 +41,7 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferences" }
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "paging3" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging3" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }

@@ -95,7 +95,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.shared.common)
             implementation(projects.shared.resources)
 
             implementation(compose.runtime)

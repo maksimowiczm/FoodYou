@@ -92,7 +92,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.shared.common)
             implementation(projects.shared.resources)
             implementation(projects.shared.barcodescanner)
 
@@ -127,6 +126,7 @@ kotlin {
             implementation(libs.ktor.client.serialization.kotlinx.json)
 
             implementation(libs.androidx.paging.common)
+            implementation(libs.androidx.paging.compose)
 
             implementation(libs.reorderable)
 

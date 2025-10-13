@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.shared.extension
+package com.maksimowiczm.foodyou.common.extension
 
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
