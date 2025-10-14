@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.android
 
 import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.maksimowiczm.foodyou.app.ui.FoodYouApp
 
