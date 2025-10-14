@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.home
 
 import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
-import com.maksimowiczm.foodyou.common.ProfileId
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 
 @Immutable
 data class ProfileUiState(val id: ProfileId, val name: String, val avatar: UiProfileAvatar)

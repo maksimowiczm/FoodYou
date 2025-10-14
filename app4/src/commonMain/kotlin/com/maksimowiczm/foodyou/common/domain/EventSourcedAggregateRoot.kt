@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.common
+package com.maksimowiczm.foodyou.common.domain
 
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 

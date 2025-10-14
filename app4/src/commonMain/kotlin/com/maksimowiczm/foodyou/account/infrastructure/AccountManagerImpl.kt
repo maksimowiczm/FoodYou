@@ -7,10 +7,10 @@ import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.common.Err
-import com.maksimowiczm.foodyou.common.LocalAccountId
 import com.maksimowiczm.foodyou.common.Ok
-import com.maksimowiczm.foodyou.common.ProfileId
 import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first

@@ -9,8 +9,8 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDao
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
-import com.maksimowiczm.foodyou.common.LocalAccountId
-import com.maksimowiczm.foodyou.common.ProfileId
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 

@@ -6,7 +6,7 @@ import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
-import com.maksimowiczm.foodyou.common.LocalAccountId
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferencesRepository
 import kotlinx.coroutines.flow.first

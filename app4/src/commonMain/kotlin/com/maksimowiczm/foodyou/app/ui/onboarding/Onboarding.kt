@@ -11,7 +11,7 @@ import com.maksimowiczm.foodyou.app.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.app.navigation.navigateSingleTop
 import com.maksimowiczm.foodyou.app.navigation.popBackStackInclusive
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
-import com.maksimowiczm.foodyou.common.LocalAccountId
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 

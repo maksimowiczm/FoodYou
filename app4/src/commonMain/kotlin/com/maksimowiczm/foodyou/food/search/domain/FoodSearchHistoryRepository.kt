@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.food.search.domain
 
-import com.maksimowiczm.foodyou.common.ProfileId
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlinx.coroutines.flow.Flow
 
 interface FoodSearchHistoryRepository {

@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
-import com.maksimowiczm.foodyou.common.AggregateRoot
-import com.maksimowiczm.foodyou.common.EventSourcedAggregateRoot
-import com.maksimowiczm.foodyou.common.LocalAccountId
+import com.maksimowiczm.foodyou.common.domain.AggregateRoot
+import com.maksimowiczm.foodyou.common.domain.EventSourcedAggregateRoot
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import kotlin.time.Clock
 import kotlin.time.Instant

@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.analytics.infrastructure
 
 import com.maksimowiczm.foodyou.analytics.domain.AccountAnalytics
 import com.maksimowiczm.foodyou.analytics.domain.AccountAnalyticsRepository
-import com.maksimowiczm.foodyou.common.LocalAccountId
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.infrastructure.room.eventstore.EventStoreDao
 import com.maksimowiczm.foodyou.common.infrastructure.room.eventstore.RoomEventStoreMapper
 

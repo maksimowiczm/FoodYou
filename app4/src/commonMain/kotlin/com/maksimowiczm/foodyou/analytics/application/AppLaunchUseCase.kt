@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.analytics.application
 
 import com.maksimowiczm.foodyou.analytics.domain.AccountAnalyticsRepository
 import com.maksimowiczm.foodyou.app.domain.AppConfig
-import com.maksimowiczm.foodyou.common.LocalAccountId
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.event.EventBus
 import kotlin.time.Clock
 

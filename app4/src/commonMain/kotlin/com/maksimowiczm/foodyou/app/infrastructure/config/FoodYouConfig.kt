@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.infrastructure.config
 
 import com.maksimowiczm.foodyou.app.BuildConfig
 import com.maksimowiczm.foodyou.app.domain.AppConfig
-import com.maksimowiczm.foodyou.common.NetworkConfig
+import com.maksimowiczm.foodyou.common.domain.NetworkConfig
 
 class FoodYouConfig : AppConfig, NetworkConfig {
     override val versionName: String = "4.0.0-dev"

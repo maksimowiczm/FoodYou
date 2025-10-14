@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
-import com.maksimowiczm.foodyou.common.LocalAccountId
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 
 interface AccountAnalyticsRepository {
     suspend fun load(localAccountId: LocalAccountId): AccountAnalytics

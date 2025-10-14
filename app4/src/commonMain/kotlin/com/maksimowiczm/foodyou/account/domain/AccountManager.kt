@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.account.domain
 
-import com.maksimowiczm.foodyou.common.LocalAccountId
-import com.maksimowiczm.foodyou.common.ProfileId
 import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlinx.coroutines.flow.Flow
 
 interface AccountManager {

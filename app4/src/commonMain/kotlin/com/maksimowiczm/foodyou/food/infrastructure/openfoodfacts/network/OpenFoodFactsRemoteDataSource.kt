@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network
 
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.common.NetworkConfig
+import com.maksimowiczm.foodyou.common.domain.NetworkConfig
 import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model.OpenFoodPageResponse
