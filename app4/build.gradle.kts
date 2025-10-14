@@ -119,6 +119,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
 
             implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.room.paging)
 
             implementation(libs.material.kolor)
 
@@ -128,6 +129,10 @@ kotlin {
 
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.paging.compose)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.serialization.kotlinx.json)
         }
 
         commonTest.dependencies { implementation(libs.kotlin.test) }
@@ -138,6 +143,7 @@ kotlin {
             implementation(libs.androidx.appcompat)
             implementation(libs.koin.android)
             implementation(libs.sqlite.android)
+            implementation(libs.ktor.client.okhttp)
         }
 
         androidInstrumentedTest.dependencies {
@@ -147,7 +153,7 @@ kotlin {
             implementation(libs.androidx.testExt.junit)
         }
 
-        iosMain.dependencies {}
+        iosMain.dependencies { implementation(libs.ktor.client.darwin) }
     }
 }
 

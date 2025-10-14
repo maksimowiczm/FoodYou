@@ -1,22 +1,23 @@
 package com.maksimowiczm.foodyou.food.domain
 
 data class FoodName(
-    val english: String?,
-    val catalan: String?,
-    val danish: String?,
-    val german: String?,
-    val spanish: String?,
-    val french: String?,
-    val italian: String?,
-    val hungarian: String?,
-    val dutch: String?,
-    val polish: String?,
-    val portugueseBrazil: String?,
-    val turkish: String?,
-    val russian: String?,
-    val ukrainian: String?,
-    val arabic: String?,
-    val chineseSimplified: String?,
+    val english: String? = null,
+    val catalan: String? = null,
+    val danish: String? = null,
+    val german: String? = null,
+    val spanish: String? = null,
+    val french: String? = null,
+    val italian: String? = null,
+    val hungarian: String? = null,
+    val dutch: String? = null,
+    val polish: String? = null,
+    val portugueseBrazil: String? = null,
+    val turkish: String? = null,
+    val russian: String? = null,
+    val ukrainian: String? = null,
+    val arabic: String? = null,
+    val chineseSimplified: String? = null,
+    val other: String? = null,
 ) {
     init {
         listOf(
@@ -36,6 +37,7 @@ data class FoodName(
                 ukrainian,
                 arabic,
                 chineseSimplified,
+                other,
             )
             .forEach {
                 if (it != null) {
@@ -61,6 +63,7 @@ data class FoodName(
                     ukrainian,
                     arabic,
                     chineseSimplified,
+                    other,
                 )
                 .any { !it.isNullOrBlank() }
         ) {
