@@ -76,7 +76,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     val v_3_2_2 =
         Version(
             version = "3.2.2",
-            date = LocalDate(2025, 10, 26),
+            date = LocalDate(2025, 9, 26),
             newFeatures = listOf("Use dynamic colors as default theme on Android 12+."),
             changes =
                 listOf("Use GitHub Pages as sponsorship API.", "Updated Monero donation address."),
