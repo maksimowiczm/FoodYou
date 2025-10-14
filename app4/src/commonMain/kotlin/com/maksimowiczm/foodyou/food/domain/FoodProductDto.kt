@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.food.domain
 
+import com.maksimowiczm.foodyou.common.domain.Quantity
+
 class FoodProductDto(
     val identity: FoodProductIdentity,
     val name: FoodName,
@@ -8,6 +10,6 @@ class FoodProductDto(
     val note: FoodNote?,
     val source: FoodSource?,
     val nutritionFacts: NutritionFacts,
-    val servingWeight: Weight?,
-    val packageWeight: Weight?,
+    val servingQuantity: Quantity?,
+    val packageQuantity: Quantity?,
 )

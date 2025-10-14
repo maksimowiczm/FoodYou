@@ -1,10 +1,14 @@
 package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts
 
+import com.maksimowiczm.foodyou.common.domain.FluidOunces
+import com.maksimowiczm.foodyou.common.domain.Grams
+import com.maksimowiczm.foodyou.common.domain.Milliliters
+import com.maksimowiczm.foodyou.common.domain.Ounces
+import com.maksimowiczm.foodyou.common.domain.Quantity
 import com.maksimowiczm.foodyou.food.domain.FoodName
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.food.domain.NutritionFacts
-import com.maksimowiczm.foodyou.food.domain.Weight
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsProductEntity
 import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
@@ -107,22 +111,36 @@ class OpenFoodFactsProductMapper {
                     chromium = nutrients?.chromium.toNutrientValue(),
                 )
 
-            val servingWeight = run {
+            val servingQuantity = run {
                 val weight = this.servingWeight?.takeIf { it > 0 } ?: return@run null
                 val unit = this.servingQuantityUnit?.lowercase() ?: return@run null
                 when (unit) {
-                    "g",
-                    "ml" -> Weight(weight.toDouble())
+                    "g" -> Quantity.Weight(Grams(weight.toDouble()))
+                    "oz",
+                    "oz." -> Quantity.Weight(Ounces(weight.toDouble()))
+
+                    "ml" -> Quantity.Volume(Milliliters(weight.toDouble()))
+                    "fl",
+                    "fl.oz",
+                    "fl. oz",
+                    "fl.oz." -> Quantity.Volume(FluidOunces(weight.toDouble()))
 
                     else -> null
                 }
             }
-            val packageWeight = run {
+            val packageQuantity = run {
                 val weight = this.packageWeight?.takeIf { it > 0 } ?: return@run null
                 val unit = this.packageQuantityUnit?.lowercase() ?: return@run null
                 when (unit) {
-                    "g",
-                    "ml" -> Weight(weight.toDouble())
+                    "g" -> Quantity.Weight(Grams(weight.toDouble()))
+                    "oz",
+                    "oz." -> Quantity.Weight(Ounces(weight.toDouble()))
+
+                    "ml" -> Quantity.Volume(Milliliters(weight.toDouble()))
+                    "fl",
+                    "fl.oz",
+                    "fl. oz",
+                    "fl.oz." -> Quantity.Volume(FluidOunces(weight.toDouble()))
 
                     else -> null
                 }
@@ -132,8 +150,8 @@ class OpenFoodFactsProductMapper {
                 identity = FoodProductIdentity.OpenFoodFacts(barcode),
                 name = name,
                 nutritionFacts = nutrients,
-                servingWeight = servingWeight,
-                totalWeight = packageWeight,
+                servingQuantity = servingQuantity,
+                packageQuantity = packageQuantity,
             )
         }
 }
