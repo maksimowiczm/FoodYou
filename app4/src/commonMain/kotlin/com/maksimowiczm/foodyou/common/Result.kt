@@ -60,6 +60,12 @@ inline fun <R, E, R2> Result<R, E>.map(transform: (R) -> R2): Result<R2, E> =
         is Error -> Error(error)
     }
 
+fun <R, E> Result<R, E>.expect(message: String): R =
+    when (this) {
+        is Success -> data
+        is Error -> error(message)
+    }
+
 @Suppress("FunctionName") fun <R, E> Ok(data: R): Result<R, E> = Success(data)
 
 @Suppress("FunctionName") fun <E> Ok(): Result<Unit, E> = Success(Unit)

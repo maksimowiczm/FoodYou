@@ -40,6 +40,7 @@ fun initKoin(config: KoinAppDeclaration? = null): KoinApplication = startKoin {
         homeModule,
         languageModule,
         personalizationModule,
+        com.maksimowiczm.foodyou.app.ui.food.search.foodSearchModule,
     )
 
     config?.invoke(this)

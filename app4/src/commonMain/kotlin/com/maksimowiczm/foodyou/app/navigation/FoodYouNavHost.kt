@@ -6,11 +6,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.About
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Home
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Language
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.NutritionFactsPersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Personalization
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
+import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
@@ -25,7 +27,7 @@ fun FoodYouNavHost(
     NavHost(modifier = modifier, navController = navController, startDestination = Home) {
         forwardBackwardComposable<Home> {
             HomeScreen(
-                onFoodDatabase = { /* TODO */ },
+                onFoodDatabase = { navController.navigateSingleTop(FoodDatabase) },
                 onPersonalization = { navController.navigateSingleTop(Personalization) },
                 onDataBackupAndExport = { /* TODO */ },
                 onLanguage = { navController.navigateSingleTop(Language) },
@@ -56,6 +58,21 @@ fun FoodYouNavHost(
                 onBack = { navController.popBackStackInclusive<NutritionFactsPersonalization>() }
             )
         }
+        forwardBackwardComposable<FoodDatabase> {
+            FoodDatabaseScreen(
+                onBack = { navController.popBackStackInclusive<FoodDatabase>() },
+                onCreateProduct = {
+                    // TODO
+                },
+                onCreateRecipe = {
+                    // TODO
+                },
+                onUpdateUsdaApiKey = {
+                    // TODO
+                },
+                animatedVisibilityScope = this,
+            )
+        }
     }
 }
 
@@ -70,4 +87,6 @@ private object FoodYouNavHostRoutes {
     @Serializable data object Personalization
 
     @Serializable data object NutritionFactsPersonalization
+
+    @Serializable data object FoodDatabase
 }
