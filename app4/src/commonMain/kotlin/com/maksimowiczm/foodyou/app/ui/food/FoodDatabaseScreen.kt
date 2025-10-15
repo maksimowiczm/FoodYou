@@ -85,6 +85,6 @@ fun FoodDatabaseScreen(
                 )
             },
         )
+        StatusBarProtection { (offset.value / topBarHeight).coerceIn(0f, 1f) }
     }
-    StatusBarProtection { (offset.value / topBarHeight).coerceIn(0f, 1f) }
 }
