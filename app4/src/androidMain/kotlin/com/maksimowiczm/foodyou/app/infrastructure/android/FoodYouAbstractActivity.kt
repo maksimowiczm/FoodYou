@@ -11,9 +11,11 @@ import com.maksimowiczm.foodyou.app.ui.common.utility.AndroidClipboardManager
 import com.maksimowiczm.foodyou.app.ui.common.utility.AndroidDateFormatter
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.DateFormatterProvider
+import com.maksimowiczm.foodyou.app.ui.food.FoodNameSelectorProvider
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.common.infrastructure.defaultLocale
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
+import com.maksimowiczm.foodyou.food.infrastructure.AndroidFoodNameSelector
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
@@ -33,11 +35,14 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
                 runBlocking { org.jetbrains.compose.resources.getString(Res.string.neutral_copied) }
             }
         val dateFormatter = AndroidDateFormatter(this) { defaultLocale }
+        val foodNameSelector = AndroidFoodNameSelector(this)
 
         with<AppCompatActivity, Unit>(this) {
             setContent {
                 ClipboardManagerProvider(clipboardManager) {
-                    DateFormatterProvider(dateFormatter) { content() }
+                    DateFormatterProvider(dateFormatter) {
+                        FoodNameSelectorProvider(foodNameSelector) { content() }
+                    }
                 }
             }
         }

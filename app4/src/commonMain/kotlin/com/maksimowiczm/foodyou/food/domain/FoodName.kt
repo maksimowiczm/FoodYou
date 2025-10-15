@@ -17,57 +17,34 @@ data class FoodName(
     val ukrainian: String? = null,
     val arabic: String? = null,
     val chineseSimplified: String? = null,
-    val other: String? = null,
+    val fallback: String,
 ) {
-    init {
+    private val list: List<String?> =
         listOf(
-                english,
-                catalan,
-                danish,
-                german,
-                spanish,
-                french,
-                italian,
-                hungarian,
-                dutch,
-                polish,
-                portugueseBrazil,
-                turkish,
-                russian,
-                ukrainian,
-                arabic,
-                chineseSimplified,
-                other,
-            )
-            .forEach {
-                if (it != null) {
-                    require(it.isNotBlank()) { "Food name cannot be blank if provided" }
-                }
-            }
+            english,
+            catalan,
+            danish,
+            german,
+            spanish,
+            french,
+            italian,
+            hungarian,
+            dutch,
+            polish,
+            portugueseBrazil,
+            turkish,
+            russian,
+            ukrainian,
+            arabic,
+            chineseSimplified,
+            fallback,
+        )
 
-        require(
-            listOf(
-                    english,
-                    catalan,
-                    danish,
-                    german,
-                    spanish,
-                    french,
-                    italian,
-                    hungarian,
-                    dutch,
-                    polish,
-                    portugueseBrazil,
-                    turkish,
-                    russian,
-                    ukrainian,
-                    arabic,
-                    chineseSimplified,
-                    other,
-                )
-                .any { !it.isNullOrBlank() }
-        ) {
-            "At least one food name must be provided"
+    init {
+        list.forEach {
+            if (it != null) {
+                require(it.isNotBlank()) { "Food name cannot be blank if provided" }
+            }
         }
     }
 }
