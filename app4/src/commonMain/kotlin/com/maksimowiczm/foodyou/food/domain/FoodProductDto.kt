@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.food.domain
 
-import com.maksimowiczm.foodyou.common.domain.Quantity
+import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
 
 class FoodProductDto(
     val identity: FoodProductIdentity,
@@ -10,6 +10,6 @@ class FoodProductDto(
     val note: FoodNote?,
     val source: FoodSource?,
     val nutritionFacts: NutritionFacts,
-    val servingQuantity: Quantity?,
-    val packageQuantity: Quantity?,
+    val servingQuantity: AbsoluteQuantity?,
+    val packageQuantity: AbsoluteQuantity?,
 )

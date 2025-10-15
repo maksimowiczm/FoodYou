@@ -6,6 +6,8 @@ sealed interface Volume {
     val milliliters: Double
 
     operator fun times(scalar: Double): Volume
+
+    operator fun div(divisor: Double): Volume = times(1.0 / divisor)
 }
 
 data class Milliliters(override val milliliters: Double) : Volume {

@@ -6,6 +6,8 @@ sealed interface Weight {
     val grams: Double
 
     operator fun times(scalar: Double): Weight
+
+    operator fun div(divisor: Double): Weight = times(1.0 / divisor)
 }
 
 data class Grams(override val grams: Double) : Weight {

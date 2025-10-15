@@ -5,4 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface SearchableFoodRepository {
     fun search(parameters: SearchParameters, pageSize: Int): Flow<PagingData<SearchableFoodDto>>
+
+    fun count(parameters: SearchParameters): Flow<Int>
 }
