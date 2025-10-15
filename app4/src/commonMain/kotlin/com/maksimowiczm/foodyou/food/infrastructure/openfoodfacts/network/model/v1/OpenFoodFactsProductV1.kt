@@ -28,6 +28,8 @@ data class OpenFoodFactsProductV1(
     override val servingWeight: Float?,
     override val servingQuantityUnit: String?,
     override val url: String?,
+    override val thumbnailUrl: String?,
+    override val imageUrl: String?,
 ) : OpenFoodFactsProduct
 
 object OpenFoodFactsProductV1Serializer : KSerializer<OpenFoodFactsProductV1> {
@@ -65,6 +67,8 @@ object OpenFoodFactsProductV1Serializer : KSerializer<OpenFoodFactsProductV1> {
                 },
             servingQuantityUnit = jsonObject["serving_quantity_unit"]?.jsonPrimitive?.contentOrNull,
             url = jsonObject["url"]?.jsonPrimitive?.contentOrNull,
+            thumbnailUrl = jsonObject["image_thumb_url"]?.jsonPrimitive?.contentOrNull,
+            imageUrl = jsonObject["image_url"]?.jsonPrimitive?.contentOrNull,
         )
     }
 

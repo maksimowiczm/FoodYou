@@ -26,6 +26,8 @@ data class OpenFoodFactsProductV2(
     override val servingWeight: Float?,
     override val servingQuantityUnit: String?,
     override val nutritionFacts: OpenFoodFactsNutrients?,
+    override val thumbnailUrl: String?,
+    override val imageUrl: String?,
 ) : OpenFoodFactsProduct {
     override val url: String? = "https://world.openfoodfacts.org/product/$barcode"
 }
@@ -69,6 +71,8 @@ object OpenFoodFactsProductV2Serializer : KSerializer<OpenFoodFactsProductV2> {
                 jsonObject["nutriments"]?.let {
                     json.decodeFromJsonElement<OpenFoodFactsNutrients>(it)
                 },
+            thumbnailUrl = jsonObject["image_thumb_url"]?.jsonPrimitive?.contentOrNull,
+            imageUrl = jsonObject["image_url"]?.jsonPrimitive?.contentOrNull,
         )
     }
 

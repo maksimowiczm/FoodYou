@@ -17,4 +17,6 @@ data class OpenFoodFactsProductEntity(
     val packageQuantityUnit: String?,
     val servingWeight: Float?,
     val servingQuantityUnit: String?,
+    val thumbnailUrl: String?,
+    val imageUrl: String?,
 )

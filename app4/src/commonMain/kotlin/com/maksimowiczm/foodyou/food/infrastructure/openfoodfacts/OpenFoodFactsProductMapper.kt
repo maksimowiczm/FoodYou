@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.common.domain.Ounces
 import com.maksimowiczm.foodyou.common.domain.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.Quantity
 import com.maksimowiczm.foodyou.common.domain.ServingQuantity
+import com.maksimowiczm.foodyou.food.domain.FoodImage
 import com.maksimowiczm.foodyou.food.domain.FoodName
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.NutrientValue.Companion.toNutrientValue
@@ -30,6 +31,8 @@ class OpenFoodFactsProductMapper {
                 packageQuantityUnit = packageQuantityUnit,
                 servingWeight = servingWeight,
                 servingQuantityUnit = servingQuantityUnit,
+                thumbnailUrl = thumbnailUrl,
+                imageUrl = imageUrl,
             )
         }
 
@@ -149,6 +152,13 @@ class OpenFoodFactsProductMapper {
                     else -> AbsoluteQuantity.Weight(Grams(100.0))
                 }
 
+            val image =
+                if (thumbnailUrl != null || imageUrl != null) {
+                    FoodImage.Remote(thumbnail = thumbnailUrl, fullSize = imageUrl)
+                } else {
+                    null
+                }
+
             return SearchableFoodDto(
                 identity = FoodProductIdentity.OpenFoodFacts(barcode),
                 name = name,
@@ -156,6 +166,7 @@ class OpenFoodFactsProductMapper {
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
                 suggestedQuantity = suggestedQuantity,
+                image = image,
             )
         }
 }

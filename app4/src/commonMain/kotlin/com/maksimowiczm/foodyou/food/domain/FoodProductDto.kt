@@ -8,6 +8,7 @@ class FoodProductDto(
     val brand: FoodBrand?,
     val barcode: Barcode?,
     val note: FoodNote?,
+    val image: FoodImage?,
     val source: FoodSource?,
     val nutritionFacts: NutritionFacts,
     val servingQuantity: AbsoluteQuantity?,
