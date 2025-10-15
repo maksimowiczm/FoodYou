@@ -8,14 +8,22 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.AccountEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.EnergyFormatConverter
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
+import com.maksimowiczm.foodyou.food.search.infrastructure.room.FoodSearchDatabase
+import com.maksimowiczm.foodyou.food.search.infrastructure.room.SearchHistoryEntity
 
 @Database(
-    entities = [AccountEntity::class, ProfileEntity::class, SettingsEntity::class],
+    entities =
+        [
+            AccountEntity::class,
+            ProfileEntity::class,
+            SettingsEntity::class,
+            SearchHistoryEntity::class,
+        ],
     version = AppDatabase.VERSION,
     exportSchema = false,
 )
 @TypeConverters(EnergyFormatConverter::class)
-abstract class AppDatabase : RoomDatabase(), AccountDatabase {
+abstract class AppDatabase : RoomDatabase(), AccountDatabase, FoodSearchDatabase {
     companion object {
         const val VERSION = 1
 

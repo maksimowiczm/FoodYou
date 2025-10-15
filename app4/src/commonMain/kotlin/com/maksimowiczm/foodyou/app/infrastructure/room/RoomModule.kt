@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.app.infrastructure.room
 
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDatabase
+import com.maksimowiczm.foodyou.food.search.infrastructure.room.FoodSearchDatabase
 import org.koin.core.scope.Scope
 import org.koin.dsl.binds
 import org.koin.dsl.module
@@ -17,5 +18,6 @@ val roomModule = module {
     single<EventStoreDatabase> { eventStoreDatabase() }
     factory { get<EventStoreDatabase>().eventStoreDao }
 
-    single<AppDatabase> { appDatabase() }.binds(arrayOf(AccountDatabase::class))
+    single<AppDatabase> { appDatabase() }
+        .binds(arrayOf(AccountDatabase::class, FoodSearchDatabase::class))
 }
