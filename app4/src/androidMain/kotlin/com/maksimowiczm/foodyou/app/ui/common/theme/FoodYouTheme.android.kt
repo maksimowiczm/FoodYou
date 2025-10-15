@@ -80,5 +80,9 @@ private fun FoodYouTheme(isDark: Boolean, theme: Theme, content: @Composable () 
             else -> rememberDynamicColorScheme(seedColor = MaterialDeepPurple, isDark = isDark)
         }
 
-    CompositionLocalProvider { MaterialTheme(colorScheme = colorScheme, content = content) }
+    val nutrientsPalette = if (isDark) DarkNutrientsPalette else LightNutrientsPalette
+
+    CompositionLocalProvider(LocalNutrientsPalette provides nutrientsPalette) {
+        MaterialTheme(colorScheme = colorScheme, content = content)
+    }
 }
