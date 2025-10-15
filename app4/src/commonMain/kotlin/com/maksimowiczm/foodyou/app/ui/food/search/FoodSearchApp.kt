@@ -227,6 +227,7 @@ private fun FoodSearchApp(
                                 food = food,
                                 quantity = food.suggestedQuantity,
                                 onClick = { onFoodClick(food, food.suggestedQuantity) },
+                                shimmer = shimmer,
                             )
                     }
                 }

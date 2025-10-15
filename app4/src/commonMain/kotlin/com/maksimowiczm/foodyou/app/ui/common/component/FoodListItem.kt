@@ -12,6 +12,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,14 +22,17 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun FoodListItem(
     name: @Composable () -> Unit,
+    image: @Composable (() -> Unit)?,
     proteins: @Composable () -> Unit,
     carbohydrates: @Composable () -> Unit,
     fats: @Composable () -> Unit,
@@ -118,12 +122,16 @@ fun FoodListItem(
 
     val content =
         @Composable {
-            Column(
+            Row(
                 modifier = Modifier.padding(contentPadding),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                headlineContent()
-                supportingContent()
+                image?.invoke()
+
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    headlineContent()
+                    supportingContent()
+                }
             }
         }
 
@@ -144,5 +152,24 @@ fun FoodListItem(
             shape = shape,
             content = content,
         )
+    }
+}
+
+@Preview
+@Composable
+private fun FoodListItemPreview() {
+    PreviewFoodYouTheme {
+        Surface {
+            FoodListItem(
+                name = { Text("Chicken breast") },
+                image = null,
+                proteins = { Text("30g") },
+                carbohydrates = { Text("0g") },
+                fats = { Text("3g") },
+                energy = { Text("165 kcal") },
+                quantity = { Text("100g") },
+                isRecipe = false,
+            )
+        }
     }
 }

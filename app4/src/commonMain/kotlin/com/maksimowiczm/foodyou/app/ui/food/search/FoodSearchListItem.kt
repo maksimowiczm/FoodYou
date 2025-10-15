@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItem
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
 import com.maksimowiczm.foodyou.app.ui.common.utility.stringResource
+import com.maksimowiczm.foodyou.app.ui.food.Image
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.Quantity
@@ -15,6 +16,7 @@ import com.maksimowiczm.foodyou.common.expect
 import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.food.search.domain.QuantityCalculator
 import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
+import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
@@ -24,15 +26,18 @@ internal fun FoodSearchListItem(
     food: SearchableFoodDto,
     quantity: Quantity,
     onClick: () -> Unit,
+    shimmer: Shimmer,
     modifier: Modifier = Modifier,
 ) {
     val nameSelector = LocalFoodNameSelector.current
+    val image = food.image?.let { @Composable { it.Image(shimmer) } }
 
     val weight =
         QuantityCalculator.calculateAbsoluteQuantity(food, quantity)
             .onError {
                 return FoodErrorListItem(
                     headline = nameSelector.select(food.name),
+                    image = image,
                     errorMessage = stringResource(Res.string.error_measurement_error),
                     modifier = modifier,
                     onClick = onClick,
@@ -62,6 +67,7 @@ internal fun FoodSearchListItem(
     ) {
         return FoodErrorListItem(
             headline = nameSelector.select(food.name),
+            image = image,
             modifier = modifier,
             onClick = onClick,
             errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
@@ -75,6 +81,7 @@ internal fun FoodSearchListItem(
         fats = fats,
         energy = energy,
         quantity = { Text(measurementString) },
+        image = image,
         isRecipe = false,
         onClick = onClick,
         modifier = modifier,
@@ -89,6 +96,7 @@ private fun FoodSearchListItem(
     fats: Double,
     energy: Double,
     quantity: @Composable () -> Unit,
+    image: @Composable (() -> Unit)?,
     isRecipe: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -97,6 +105,7 @@ private fun FoodSearchListItem(
 
     FoodListItem(
         name = { Text(text = headline) },
+        image = image,
         proteins = {
             val text = proteins.formatClipZeros()
             Text("$text $g")

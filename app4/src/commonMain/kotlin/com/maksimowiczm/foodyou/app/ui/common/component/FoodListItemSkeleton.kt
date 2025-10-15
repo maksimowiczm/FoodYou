@@ -9,18 +9,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.common.theme.LocalNutrientsPalette
@@ -50,10 +53,12 @@ fun FoodListItemSkeleton(
             CompositionLocalProvider(
                 LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
             ) {
+                val extraWidth = rememberSaveable { ((0..100).random().toFloat() / 100f) }
+
                 Spacer(
                     Modifier.shimmer(shimmer)
                         .height(MaterialTheme.typography.titleMediumEmphasized.toDp() - 4.dp)
-                        .width(200.dp)
+                        .width(200.dp + extraWidth * 50.dp)
                         .clip(MaterialTheme.shapes.medium)
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
@@ -66,7 +71,7 @@ fun FoodListItemSkeleton(
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         Spacer(
                             Modifier.shimmer(shimmer)
@@ -81,7 +86,7 @@ fun FoodListItemSkeleton(
                                     Spacer(
                                         Modifier.shimmer(shimmer)
                                             .height(MaterialTheme.typography.bodyMedium.toDp())
-                                            .width(30.dp)
+                                            .width(40.dp)
                                             .clip(MaterialTheme.shapes.medium)
                                             .background(nutrientsPalette.proteinsOnSurfaceContainer)
                                     )
@@ -90,7 +95,7 @@ fun FoodListItemSkeleton(
                                     Spacer(
                                         Modifier.shimmer(shimmer)
                                             .height(MaterialTheme.typography.bodyMedium.toDp())
-                                            .width(30.dp)
+                                            .width(40.dp)
                                             .clip(MaterialTheme.shapes.medium)
                                             .background(nutrientsPalette.fatsOnSurfaceContainer)
                                     )
@@ -99,7 +104,7 @@ fun FoodListItemSkeleton(
                                     Spacer(
                                         Modifier.shimmer(shimmer)
                                             .height(MaterialTheme.typography.bodyMedium.toDp())
-                                            .width(30.dp)
+                                            .width(40.dp)
                                             .clip(MaterialTheme.shapes.medium)
                                             .background(
                                                 nutrientsPalette.carbohydratesOnSurfaceContainer
@@ -126,12 +131,20 @@ fun FoodListItemSkeleton(
 
     val content =
         @Composable {
-            Column(
+            Row(
                 modifier = Modifier.padding(contentPadding),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                headlineContent()
-                supportingContent()
+                Spacer(
+                    Modifier.shimmer(shimmer)
+                        .size(56.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    headlineContent()
+                    supportingContent()
+                }
             }
         }
 

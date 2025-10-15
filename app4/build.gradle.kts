@@ -136,6 +136,9 @@ kotlin {
             implementation(libs.ktor.client.serialization.kotlinx.json)
 
             implementation(libs.compose.shimmer)
+
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
         }
 
         commonTest.dependencies { implementation(libs.kotlin.test) }

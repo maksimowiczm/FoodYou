@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
@@ -85,6 +86,8 @@ fun FoodDatabaseScreen(
                 )
             },
         )
-        StatusBarProtection { (offset.value / topBarHeight).coerceIn(0f, 1f) }
+        StatusBarProtection(MaterialTheme.colorScheme.surfaceContainerHigh) {
+            (offset.value / topBarHeight).coerceIn(0f, 1f)
+        }
     }
 }
