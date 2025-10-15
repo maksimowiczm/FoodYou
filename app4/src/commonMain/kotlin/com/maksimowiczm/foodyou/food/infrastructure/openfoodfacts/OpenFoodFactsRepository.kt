@@ -59,4 +59,12 @@ class OpenFoodFactsRepository(
                 .map { data -> data.map(mapper::map) }
         }
     }
+
+    fun count(parameters: SearchParameters.OpenFoodFacts): Flow<Int> {
+        return when (parameters.query) {
+            is SearchQuery.Blank -> dao.observeCount()
+            is SearchQuery.Barcode -> dao.observeCountByBarcode(parameters.query.barcode)
+            is SearchQuery.Text -> dao.observeCountByQuery(parameters.query.query)
+        }
+    }
 }

@@ -1,10 +1,13 @@
 package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts
 
+import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.Grams
 import com.maksimowiczm.foodyou.common.domain.Milliliters
 import com.maksimowiczm.foodyou.common.domain.Ounces
+import com.maksimowiczm.foodyou.common.domain.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.Quantity
+import com.maksimowiczm.foodyou.common.domain.ServingQuantity
 import com.maksimowiczm.foodyou.food.domain.FoodName
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.NutrientValue.Companion.toNutrientValue
@@ -32,37 +35,29 @@ class OpenFoodFactsProductMapper {
 
     fun map(entity: OpenFoodFactsProductEntity): SearchableFoodDto =
         with(entity) {
-            val nameMap = Json.decodeFromString<Map<String, String>>(names).toMutableMap()
+            val nameMap = Json.decodeFromString<Map<String, String>>(names)
 
             val name =
-                try {
-                    FoodName(
-                        english = nameMap.remove("en").takeIfNotBlank(),
-                        catalan = nameMap.remove("ca").takeIfNotBlank(),
-                        danish = nameMap.remove("da").takeIfNotBlank(),
-                        german = nameMap.remove("de").takeIfNotBlank(),
-                        spanish = nameMap.remove("es").takeIfNotBlank(),
-                        french = nameMap.remove("fr").takeIfNotBlank(),
-                        italian = nameMap.remove("it").takeIfNotBlank(),
-                        hungarian = nameMap.remove("hu").takeIfNotBlank(),
-                        dutch = nameMap.remove("nl").takeIfNotBlank(),
-                        polish = nameMap.remove("pl").takeIfNotBlank(),
-                        portugueseBrazil =
-                            nameMap.remove("pt_br").takeIfNotBlank()
-                                ?: nameMap.remove("pt").takeIfNotBlank(),
-                        turkish = nameMap.remove("tr").takeIfNotBlank(),
-                        russian = nameMap.remove("ru").takeIfNotBlank(),
-                        ukrainian = nameMap.remove("uk").takeIfNotBlank(),
-                        arabic = nameMap.remove("ar").takeIfNotBlank(),
-                        chineseSimplified = nameMap.remove("zh").takeIfNotBlank(),
-                    )
-                } catch (_: IllegalArgumentException) {
-                    val other = nameMap.values.firstOrNull().takeIfNotBlank()
-
-                    if (other != null) FoodName(other = other)
-                    // Fallback to barcode as name if all names are blank
-                    else FoodName(other = barcode)
-                }
+                FoodName(
+                    english = nameMap["en"].takeIfNotBlank(),
+                    catalan = nameMap["ca"].takeIfNotBlank(),
+                    danish = nameMap["da"].takeIfNotBlank(),
+                    german = nameMap["de"].takeIfNotBlank(),
+                    spanish = nameMap["es"].takeIfNotBlank(),
+                    french = nameMap["fr"].takeIfNotBlank(),
+                    italian = nameMap["it"].takeIfNotBlank(),
+                    hungarian = nameMap["hu"].takeIfNotBlank(),
+                    dutch = nameMap["nl"].takeIfNotBlank(),
+                    polish = nameMap["pl"].takeIfNotBlank(),
+                    portugueseBrazil =
+                        nameMap["pt_br"].takeIfNotBlank() ?: nameMap["pt"].takeIfNotBlank(),
+                    turkish = nameMap["tr"].takeIfNotBlank(),
+                    russian = nameMap["ru"].takeIfNotBlank(),
+                    ukrainian = nameMap["uk"].takeIfNotBlank(),
+                    arabic = nameMap["ar"].takeIfNotBlank(),
+                    chineseSimplified = nameMap["zh"].takeIfNotBlank(),
+                    fallback = nameMap.values.firstOrNull { it.isNotBlank() } ?: barcode,
+                )
 
             val nutrients =
                 NutritionFacts.requireAll(
@@ -115,15 +110,15 @@ class OpenFoodFactsProductMapper {
                 val weight = this.servingWeight?.takeIf { it > 0 } ?: return@run null
                 val unit = this.servingQuantityUnit?.lowercase() ?: return@run null
                 when (unit) {
-                    "g" -> Quantity.Weight(Grams(weight.toDouble()))
+                    "g" -> AbsoluteQuantity.Weight(Grams(weight.toDouble()))
                     "oz",
-                    "oz." -> Quantity.Weight(Ounces(weight.toDouble()))
+                    "oz." -> AbsoluteQuantity.Weight(Ounces(weight.toDouble()))
 
-                    "ml" -> Quantity.Volume(Milliliters(weight.toDouble()))
+                    "ml" -> AbsoluteQuantity.Volume(Milliliters(weight.toDouble()))
                     "fl",
                     "fl.oz",
                     "fl. oz",
-                    "fl.oz." -> Quantity.Volume(FluidOunces(weight.toDouble()))
+                    "fl.oz." -> AbsoluteQuantity.Volume(FluidOunces(weight.toDouble()))
 
                     else -> null
                 }
@@ -132,19 +127,27 @@ class OpenFoodFactsProductMapper {
                 val weight = this.packageWeight?.takeIf { it > 0 } ?: return@run null
                 val unit = this.packageQuantityUnit?.lowercase() ?: return@run null
                 when (unit) {
-                    "g" -> Quantity.Weight(Grams(weight.toDouble()))
+                    "g" -> AbsoluteQuantity.Weight(Grams(weight.toDouble()))
                     "oz",
-                    "oz." -> Quantity.Weight(Ounces(weight.toDouble()))
+                    "oz." -> AbsoluteQuantity.Weight(Ounces(weight.toDouble()))
 
-                    "ml" -> Quantity.Volume(Milliliters(weight.toDouble()))
+                    "ml" -> AbsoluteQuantity.Volume(Milliliters(weight.toDouble()))
                     "fl",
                     "fl.oz",
                     "fl. oz",
-                    "fl.oz." -> Quantity.Volume(FluidOunces(weight.toDouble()))
+                    "fl.oz." -> AbsoluteQuantity.Volume(FluidOunces(weight.toDouble()))
 
                     else -> null
                 }
             }
+
+            // Probably move it to domain service
+            val suggestedQuantity: Quantity =
+                when {
+                    servingQuantity != null -> ServingQuantity(1.0)
+                    packageQuantity != null -> PackageQuantity(1.0)
+                    else -> AbsoluteQuantity.Weight(Grams(100.0))
+                }
 
             return SearchableFoodDto(
                 identity = FoodProductIdentity.OpenFoodFacts(barcode),
@@ -152,6 +155,7 @@ class OpenFoodFactsProductMapper {
                 nutritionFacts = nutrients,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
+                suggestedQuantity = suggestedQuantity,
             )
         }
 }

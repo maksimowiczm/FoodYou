@@ -15,6 +15,8 @@ import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
 import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.ensureActive
 
+// TODO
+//  Fix issue with downloading first pages multiple times
 @OptIn(ExperimentalPagingApi::class)
 class OpenFoodFactsRemoteMediator(
     private val query: SearchQuery.NotBlank,
@@ -53,7 +55,7 @@ class OpenFoodFactsRemoteMediator(
                     }
 
                     LoadType.APPEND -> {
-                        val count = dao.getCountByQuery(query.query)
+                        val count = dao.getPagingKeyCountByQuery(query.query)
                         val nextPage = (count / PAGE_SIZE) + 1
                         nextPage
                     }
