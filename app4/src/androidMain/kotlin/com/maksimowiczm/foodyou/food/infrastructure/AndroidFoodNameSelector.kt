@@ -2,19 +2,25 @@ package com.maksimowiczm.foodyou.food.infrastructure
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.food.domain.FoodName
 import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import java.util.Locale
 
 class AndroidFoodNameSelector(private val context: Context) : FoodNameSelector {
     override fun select(foodName: FoodName): String {
+        val language = select()
+        return foodName[language] ?: foodName.fallback
+    }
+
+    override fun select(): Language {
         val compat = AppCompatDelegate.getApplicationLocales()
         if (!compat.isEmpty) {
             for (i in 0 until compat.size()) {
                 val locale = compat.get(i) ?: continue
-                val name = localizedName(foodName, locale)
-                if (name != null) {
-                    return name
+                val language = localizedLanguage(locale)
+                if (language != null) {
+                    return language
                 }
             }
         }
@@ -23,40 +29,40 @@ class AndroidFoodNameSelector(private val context: Context) : FoodNameSelector {
         if (!config.isEmpty) {
             for (i in 0 until config.size()) {
                 val locale = config.get(i) ?: continue
-                val name = localizedName(foodName, locale)
-                if (name != null) {
-                    return name
+                val language = localizedLanguage(locale)
+                if (language != null) {
+                    return language
                 }
             }
         }
 
         val default = Locale.getDefault()
-        val name = localizedName(foodName, default)
-        if (name != null) {
-            return name
+        val language = localizedLanguage(default)
+        if (language != null) {
+            return language
         }
 
-        return foodName.fallback
+        return Language.English
     }
 
-    private fun localizedName(foodName: FoodName, locale: Locale): String? =
+    private fun localizedLanguage(locale: Locale): Language? =
         when (locale.language) {
-            "en" -> foodName.english
-            "ca" -> foodName.catalan
-            "da" -> foodName.danish
-            "de" -> foodName.german
-            "es" -> foodName.spanish
-            "fr" -> foodName.french
-            "it" -> foodName.italian
-            "hu" -> foodName.hungarian
-            "nl" -> foodName.dutch
-            "pl" -> foodName.polish
-            "pt" -> foodName.portugueseBrazil
-            "tr" -> foodName.turkish
-            "ru" -> foodName.russian
-            "uk" -> foodName.ukrainian
-            "ar" -> foodName.arabic
-            "zh" -> foodName.chineseSimplified
+            "en" -> Language.English
+            "ca" -> Language.Catalan
+            "da" -> Language.Danish
+            "de" -> Language.German
+            "es" -> Language.Spanish
+            "fr" -> Language.French
+            "it" -> Language.Italian
+            "hu" -> Language.Hungarian
+            "nl" -> Language.Dutch
+            "pl" -> Language.Polish
+            "pt" -> Language.PortugueseBrazil
+            "tr" -> Language.Turkish
+            "ru" -> Language.Russian
+            "uk" -> Language.Ukrainian
+            "ar" -> Language.Arabic
+            "zh" -> Language.ChineseSimplified
             else -> null
         }
 }

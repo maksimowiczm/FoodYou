@@ -15,7 +15,7 @@ import com.maksimowiczm.foodyou.app.ui.food.FoodNameSelectorProvider
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.common.infrastructure.defaultLocale
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
-import com.maksimowiczm.foodyou.food.infrastructure.AndroidFoodNameSelector
+import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
@@ -26,6 +26,7 @@ import org.koin.android.ext.android.inject
 abstract class FoodYouAbstractActivity : AppCompatActivity() {
     private val systemDetails: SystemDetails by inject()
     private val deviceRepository: DeviceRepository by inject()
+    private val foodNameSelector: FoodNameSelector by inject()
 
     fun setContent(content: @Composable () -> Unit) {
         enableEdgeToEdge()
@@ -35,7 +36,6 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
                 runBlocking { org.jetbrains.compose.resources.getString(Res.string.neutral_copied) }
             }
         val dateFormatter = AndroidDateFormatter(this) { defaultLocale }
-        val foodNameSelector = AndroidFoodNameSelector(this)
 
         with<AppCompatActivity, Unit>(this) {
             setContent {

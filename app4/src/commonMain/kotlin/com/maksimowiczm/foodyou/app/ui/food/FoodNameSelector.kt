@@ -4,10 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
+import com.maksimowiczm.foodyou.common.domain.Language
+import com.maksimowiczm.foodyou.food.domain.FoodName
 import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 
 val LocalFoodNameSelector: ProvidableCompositionLocal<FoodNameSelector> = compositionLocalOf {
-    FoodNameSelector { it.english ?: it.fallback }
+    object : FoodNameSelector {
+        override fun select(foodName: FoodName): String = foodName.english ?: foodName.fallback
+
+        override fun select(): Language = Language.English
+    }
 }
 
 @Composable

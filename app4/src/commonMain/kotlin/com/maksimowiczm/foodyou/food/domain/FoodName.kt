@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.food.domain
 
+import com.maksimowiczm.foodyou.common.domain.Language
+
 data class FoodName(
     val english: String? = null,
     val catalan: String? = null,
@@ -47,4 +49,24 @@ data class FoodName(
             }
         }
     }
+
+    operator fun get(language: Language): String? =
+        when (language) {
+            Language.English -> english
+            Language.Catalan -> catalan
+            Language.Danish -> danish
+            Language.German -> german
+            Language.Spanish -> spanish
+            Language.French -> french
+            Language.Italian -> italian
+            Language.Hungarian -> hungarian
+            Language.Dutch -> dutch
+            Language.Polish -> polish
+            Language.PortugueseBrazil -> portugueseBrazil
+            Language.Turkish -> turkish
+            Language.Russian -> russian
+            Language.Ukrainian -> ukrainian
+            Language.Arabic -> arabic
+            Language.ChineseSimplified -> chineseSimplified
+        }
 }
