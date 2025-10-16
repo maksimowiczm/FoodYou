@@ -10,21 +10,22 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
+import com.maksimowiczm.foodyou.common.domain.Language
 
 data class Translation(
     val languageName: String,
-    val languageTag: String,
+    val language: Language,
     val authorsStrings: List<Author>,
     val isVerified: Boolean = false,
 ) {
     constructor(
         languageName: String,
-        languageTag: String,
+        language: Language,
         isVerified: Boolean = false,
         vararg authors: Author,
     ) : this(
         languageName = languageName,
-        languageTag = languageTag,
+        language = language,
         authorsStrings = authors.toList(),
         isVerified = isVerified,
     )
@@ -56,7 +57,11 @@ private val grizzleNL = Author("GrizzleNL", "https://grizzle.nl")
 private val mikropsoft = Author("mikropsoft", "https://github.com/mikropsoft")
 
 private val EnglishUS =
-    Translation(languageName = "English (United States)", languageTag = "en-US", isVerified = true)
+    Translation(
+        languageName = "English (United States)",
+        language = Language.English,
+        isVerified = true,
+    )
 
 val languages =
     listOf(
@@ -72,19 +77,19 @@ val languages =
         //     )
         // ),
         EnglishUS,
-        Translation("Català (Espanya)", "ca-ES"),
-        Translation("Dansk (Danmark)", "da-DK"),
-        Translation("Deutsch (Deutschland)", "de-DE"),
-        Translation("Español (España)", "es-ES"),
-        Translation("Français (France)", "fr-FR"),
-        Translation("Italiano (Italia)", "it-IT"),
-        Translation("Magyar (Magyarország)", "hu-HU"),
-        Translation("Nederlands (Nederland)", "nl-NL", false, grizzleNL),
-        Translation("Polski (Polska)", "pl-PL", true, me),
-        Translation("Português (Brasil)", "pt-BR"),
-        Translation("Türkçe (Türkiye)", "tr-TR", false, mikropsoft),
-        Translation("Русский (Россия)", "ru-RU"),
-        Translation("Українська (Україна)", "uk-UA"),
-        Translation("العربية (المملكة العربية السعودية)", "ar-SA"),
-        Translation("简体中文", "zh-CN"),
+        Translation("Català (Espanya)", Language.Catalan),
+        Translation("Dansk (Danmark)", Language.Danish),
+        Translation("Deutsch (Deutschland)", Language.German),
+        Translation("Español (España)", Language.Spanish),
+        Translation("Français (France)", Language.French),
+        Translation("Italiano (Italia)", Language.Italian),
+        Translation("Magyar (Magyarország)", Language.Hungarian),
+        Translation("Nederlands (Nederland)", Language.Dutch, false, grizzleNL),
+        Translation("Polski (Polska)", Language.Polish, true, me),
+        Translation("Português (Brasil)", Language.PortugueseBrazil),
+        Translation("Türkçe (Türkiye)", Language.Turkish, false, mikropsoft),
+        Translation("Русский (Россия)", Language.Russian),
+        Translation("Українська (Україна)", Language.Ukrainian),
+        Translation("العربية (المملكة العربية السعودية)", Language.Arabic),
+        Translation("简体中文", Language.ChineseSimplified),
     )

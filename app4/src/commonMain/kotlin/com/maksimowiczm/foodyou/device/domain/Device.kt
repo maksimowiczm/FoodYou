@@ -1,10 +1,12 @@
 package com.maksimowiczm.foodyou.device.domain
 
+import com.maksimowiczm.foodyou.common.domain.Language
+
 class Device(
     name: String,
     themeSettings: ThemeSettings,
     privacySettings: PrivacySettings,
-    language: Language,
+    language: Language?,
     hideScreen: Boolean,
 ) {
     var name: String = name
@@ -16,7 +18,7 @@ class Device(
     var privacySettings: PrivacySettings = privacySettings
         private set
 
-    var language: Language = language
+    var language: Language? = language
         private set
 
     var hideScreen: Boolean = hideScreen
@@ -38,7 +40,7 @@ class Device(
         privacySettings = transform(privacySettings)
     }
 
-    fun updateLanguageTag(language: Language) {
+    fun updateLanguage(language: Language?) {
         this.language = language
     }
 

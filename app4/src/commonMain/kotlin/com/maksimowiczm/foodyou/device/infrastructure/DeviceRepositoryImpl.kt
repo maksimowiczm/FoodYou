@@ -5,10 +5,10 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.device.domain.Device
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
-import com.maksimowiczm.foodyou.device.domain.Language
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
@@ -27,8 +27,8 @@ class DeviceRepositoryImpl(
         dataStore.updateData { it.toMutablePreferences().applyDevice(device) }
 
         when (val language = device.language) {
-            Language.System -> systemDetails.setSystemLanguage()
-            is Language.Tag -> systemDetails.setLanguage(language.tag)
+            null -> systemDetails.setSystemLanguage()
+            else -> systemDetails.setLanguage(language.tag)
         }
     }
 }
@@ -45,8 +45,8 @@ private suspend fun Preferences.toDevice(
         privacySettings = toPrivacySettings(),
         language =
             when (languageTag) {
-                null -> Language.System
-                else -> Language.Tag(languageTag)
+                null -> null
+                else -> Language.entries.firstOrNull { it.tag == languageTag }
             },
         hideScreen = hideScreen,
     )
