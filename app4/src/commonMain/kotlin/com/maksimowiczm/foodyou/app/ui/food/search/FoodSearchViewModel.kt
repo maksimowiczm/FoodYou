@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -99,7 +100,18 @@ internal class FoodSearchViewModel(
     //            }
 
     private val localSearchParams =
-        searchQuery.map { query -> SearchParameters.Local(query = query) }
+        combine(
+            searchQuery,
+            accountManager.observePrimaryAccountId().filterNotNull(),
+            accountManager.observePrimaryProfileId(),
+        ) { query, accountId, profileId ->
+            SearchParameters.User(
+                query = query,
+                orderBy = SearchParameters.User.OrderBy.NameAscending,
+                accountId = accountId,
+                profileId = profileId,
+            )
+        }
     private val localPages =
         localSearchParams
             .flatMapLatest { params ->
