@@ -16,6 +16,8 @@ abstract class OpenFoodFactsDatabase : RoomDatabase() {
 
     companion object {
         const val VERSION = 1
+
+        fun Builder<OpenFoodFactsDatabase>.buildDatabase(): OpenFoodFactsDatabase = build()
     }
 }
 
