@@ -8,18 +8,18 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
-import org.koin.dsl.module
 import org.koin.dsl.onClose
 
 internal const val OPEN_FOOD_FACTS_DATABASE_NAME = "OpenFoodFactsDatabase.db"
 
 internal expect fun Scope.openFoodFactsDatabase(): OpenFoodFactsDatabase
 
-val openFoodFactsModule = module {
+fun Module.openFoodFactsModule() {
     single { openFoodFactsDatabase() }
     factory { get<OpenFoodFactsDatabase>().dao }
 
