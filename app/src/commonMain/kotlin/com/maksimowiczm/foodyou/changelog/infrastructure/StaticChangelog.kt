@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_3_4,
                 v_3_3_3,
                 v_3_3_1,
                 v_3_3_0,
@@ -42,6 +43,18 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_3_4 =
+        Version(
+            version = "3.3.4",
+            date = LocalDate(2025, 10, 16),
+            newFeatures = listOf("Added automatic column selection when importing CSV files."),
+            bugFixes =
+                listOf(
+                    "Fixed partial matching for barcode searches.",
+                    "Corrected invalid release date in 3.2.2 notes.",
+                ),
+        )
 
     val v_3_3_3 =
         Version(

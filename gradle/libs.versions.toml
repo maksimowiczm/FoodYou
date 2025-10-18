@@ -1,7 +1,6 @@
 [versions]
-pagingCommon = "3.4.0-alpha04"
-version-name = "3.3.3"
-android-versionCode = "111"
+version-name = "3.3.4"
+android-versionCode = "112"
 android-compileSdk = "36"
 android-minSdk = "28"
 android-targetSdk = "36"
