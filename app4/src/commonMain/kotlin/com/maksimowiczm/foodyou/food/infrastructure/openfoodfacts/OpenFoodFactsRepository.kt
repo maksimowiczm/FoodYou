@@ -6,6 +6,14 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import co.touchlab.kermit.Logger
+import com.maksimowiczm.foodyou.common.Err
+import com.maksimowiczm.foodyou.common.Ok
+import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
+import com.maksimowiczm.foodyou.food.domain.FoodProductDto
+import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
+import com.maksimowiczm.foodyou.food.domain.FoodProductRepository.FoodStatus
+import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsDatabase
@@ -14,6 +22,10 @@ import com.maksimowiczm.foodyou.food.search.domain.SearchParameters
 import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
 import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
@@ -56,7 +68,7 @@ class OpenFoodFactsRepository(
 
             Pager(config = config, pagingSourceFactory = factory, remoteMediator = remoteMediator)
                 .flow
-                .map { data -> data.map(mapper::map) }
+                .map { data -> data.map(mapper::searchableFoodDto) }
         }
     }
 
@@ -65,6 +77,52 @@ class OpenFoodFactsRepository(
             is SearchQuery.Blank -> dao.observeCount()
             is SearchQuery.Barcode -> dao.observeCountByBarcode(parameters.query.barcode)
             is SearchQuery.Text -> dao.observeCountByQuery(parameters.query.query)
+        }
+    }
+
+    fun observe(parameters: QueryParameters.OpenFoodFacts): Flow<FoodStatus> = channelFlow {
+        send(FoodStatus.Loading(null))
+
+        val barcode = parameters.identity.barcode
+
+        val localProduct = dao.observe(barcode).first()
+
+        if (localProduct == null) {
+            try {
+                val openFoodFactsProduct = networkDataSource.getProduct(barcode).getOrThrow()
+                val entity = mapper.openFoodFactsProductEntity(openFoodFactsProduct)
+                dao.upsertProduct(entity)
+                send(FoodStatus.Available(mapper.foodProductDto(entity)))
+            } catch (e: FoodDatabaseError) {
+                when (e) {
+                    is FoodDatabaseError.ProductNotFound -> send(FoodStatus.NotFound)
+                    else -> send(FoodStatus.Error(null, e))
+                }
+            }
+        } else {
+            send(FoodStatus.Available(mapper.foodProductDto(localProduct)))
+        }
+
+        dao.observe(barcode).drop(1).collectLatest {
+            when (it) {
+                null -> send(FoodStatus.NotFound)
+                else -> send(FoodStatus.Available(mapper.foodProductDto(it)))
+            }
+        }
+    }
+
+    suspend fun refresh(
+        identity: FoodProductIdentity.OpenFoodFacts
+    ): Result<FoodProductDto, FoodDatabaseError> {
+        val barcode = identity.barcode
+
+        return try {
+            val remote = networkDataSource.getProduct(barcode).getOrThrow()
+            val entity = mapper.openFoodFactsProductEntity(remote)
+            dao.upsertProduct(entity)
+            Ok(mapper.foodProductDto(entity))
+        } catch (e: FoodDatabaseError) {
+            Err(e)
         }
     }
 }

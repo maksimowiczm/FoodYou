@@ -6,11 +6,14 @@ import com.maksimowiczm.foodyou.common.domain.Grams
 import com.maksimowiczm.foodyou.common.domain.Milliliters
 import com.maksimowiczm.foodyou.common.domain.Ounces
 import com.maksimowiczm.foodyou.common.domain.PackageQuantity
-import com.maksimowiczm.foodyou.common.domain.Quantity
 import com.maksimowiczm.foodyou.common.domain.ServingQuantity
+import com.maksimowiczm.foodyou.food.domain.Barcode
+import com.maksimowiczm.foodyou.food.domain.FoodBrand
 import com.maksimowiczm.foodyou.food.domain.FoodImage
 import com.maksimowiczm.foodyou.food.domain.FoodName
+import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
+import com.maksimowiczm.foodyou.food.domain.FoodSource
 import com.maksimowiczm.foodyou.food.domain.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model.OpenFoodFactsProduct
@@ -19,7 +22,7 @@ import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
 import kotlinx.serialization.json.Json
 
 class OpenFoodFactsProductMapper {
-    fun map(product: OpenFoodFactsProduct): OpenFoodFactsProductEntity =
+    fun openFoodFactsProductEntity(product: OpenFoodFactsProduct): OpenFoodFactsProductEntity =
         with(product) {
             return OpenFoodFactsProductEntity(
                 barcode = barcode,
@@ -36,7 +39,43 @@ class OpenFoodFactsProductMapper {
             )
         }
 
-    fun map(entity: OpenFoodFactsProductEntity): SearchableFoodDto =
+    fun searchableFoodDto(entity: OpenFoodFactsProductEntity): SearchableFoodDto =
+        buildFoodDto(entity) { name, nutrients, servingQuantity, packageQuantity, image ->
+            SearchableFoodDto(
+                identity = FoodProductIdentity.OpenFoodFacts(entity.barcode),
+                name = name,
+                nutritionFacts = nutrients,
+                servingQuantity = servingQuantity,
+                packageQuantity = packageQuantity,
+                suggestedQuantity =
+                    servingQuantity?.let { ServingQuantity(1.0) }
+                        ?: packageQuantity?.let { PackageQuantity(1.0) }
+                        ?: AbsoluteQuantity.Weight(Grams(100.0)),
+                image = image,
+            )
+        }
+
+    fun foodProductDto(entity: OpenFoodFactsProductEntity): FoodProductDto =
+        buildFoodDto(entity) { name, nutrients, servingQuantity, packageQuantity, image ->
+            FoodProductDto(
+                identity = FoodProductIdentity.OpenFoodFacts(entity.barcode),
+                name = name,
+                brand = entity.brand.takeIfNotBlank()?.let { FoodBrand(it) },
+                barcode = entity.barcode.takeIfNotBlank()?.let { Barcode(it) },
+                note = null,
+                image = image,
+                source = entity.url.takeIfNotBlank()?.let { FoodSource.OpenFoodFacts(it) },
+                nutritionFacts = nutrients,
+                servingQuantity = servingQuantity,
+                packageQuantity = packageQuantity,
+            )
+        }
+
+    private inline fun <T> buildFoodDto(
+        entity: OpenFoodFactsProductEntity,
+        build:
+            (FoodName, NutritionFacts, AbsoluteQuantity?, AbsoluteQuantity?, FoodImage.Remote?) -> T,
+    ): T =
         with(entity) {
             val nameMap = Json.decodeFromString<Map<String, String>>(names)
 
@@ -109,48 +148,8 @@ class OpenFoodFactsProductMapper {
                     chromium = nutrients?.chromium.toNutrientValue(),
                 )
 
-            val servingQuantity = run {
-                val weight = this.servingWeight?.takeIf { it > 0 } ?: return@run null
-                val unit = this.servingQuantityUnit?.lowercase() ?: return@run null
-                when (unit) {
-                    "g" -> AbsoluteQuantity.Weight(Grams(weight.toDouble()))
-                    "oz",
-                    "oz." -> AbsoluteQuantity.Weight(Ounces(weight.toDouble()))
-
-                    "ml" -> AbsoluteQuantity.Volume(Milliliters(weight.toDouble()))
-                    "fl",
-                    "fl.oz",
-                    "fl. oz",
-                    "fl.oz." -> AbsoluteQuantity.Volume(FluidOunces(weight.toDouble()))
-
-                    else -> null
-                }
-            }
-            val packageQuantity = run {
-                val weight = this.packageWeight?.takeIf { it > 0 } ?: return@run null
-                val unit = this.packageQuantityUnit?.lowercase() ?: return@run null
-                when (unit) {
-                    "g" -> AbsoluteQuantity.Weight(Grams(weight.toDouble()))
-                    "oz",
-                    "oz." -> AbsoluteQuantity.Weight(Ounces(weight.toDouble()))
-
-                    "ml" -> AbsoluteQuantity.Volume(Milliliters(weight.toDouble()))
-                    "fl",
-                    "fl.oz",
-                    "fl. oz",
-                    "fl.oz." -> AbsoluteQuantity.Volume(FluidOunces(weight.toDouble()))
-
-                    else -> null
-                }
-            }
-
-            // Probably move it to domain service
-            val suggestedQuantity: Quantity =
-                when {
-                    servingQuantity != null -> ServingQuantity(1.0)
-                    packageQuantity != null -> PackageQuantity(1.0)
-                    else -> AbsoluteQuantity.Weight(Grams(100.0))
-                }
+            val servingQuantity = parseQuantity(servingWeight, servingQuantityUnit)
+            val packageQuantity = parseQuantity(packageWeight, packageQuantityUnit)
 
             val image =
                 if (thumbnailUrl != null || imageUrl != null) {
@@ -159,16 +158,25 @@ class OpenFoodFactsProductMapper {
                     null
                 }
 
-            return SearchableFoodDto(
-                identity = FoodProductIdentity.OpenFoodFacts(barcode),
-                name = name,
-                nutritionFacts = nutrients,
-                servingQuantity = servingQuantity,
-                packageQuantity = packageQuantity,
-                suggestedQuantity = suggestedQuantity,
-                image = image,
-            )
+            return build(name, nutrients, servingQuantity, packageQuantity, image)
         }
+
+    private fun parseQuantity(weight: Double?, unit: String?): AbsoluteQuantity? {
+        val validWeight = weight?.takeIf { it > 0 } ?: return null
+        val normalizedUnit = unit?.lowercase() ?: return null
+
+        return when (normalizedUnit) {
+            "g" -> AbsoluteQuantity.Weight(Grams(validWeight))
+            "oz",
+            "oz." -> AbsoluteQuantity.Weight(Ounces(validWeight))
+            "ml" -> AbsoluteQuantity.Volume(Milliliters(validWeight))
+            "fl",
+            "fl.oz",
+            "fl. oz",
+            "fl.oz." -> AbsoluteQuantity.Volume(FluidOunces(validWeight))
+            else -> null
+        }
+    }
 }
 
 private fun String?.takeIfNotBlank(): String? = this?.takeIf { it.isNotBlank() }

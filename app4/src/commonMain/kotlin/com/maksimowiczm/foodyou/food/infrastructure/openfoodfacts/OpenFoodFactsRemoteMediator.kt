@@ -49,7 +49,7 @@ class OpenFoodFactsRemoteMediator(
                                 else MediatorResult.Error(it)
                             }
 
-                        val product = mapper.map(response)
+                        val product = mapper.openFoodFactsProductEntity(response)
                         dao.upsertProduct(product)
                         return MediatorResult.Success(endOfPaginationReached = true)
                     }
@@ -66,7 +66,7 @@ class OpenFoodFactsRemoteMediator(
             val response =
                 remote.queryProducts(query = query.query, page = page, pageSize = PAGE_SIZE)
 
-            val entities = response.products.map(mapper::map)
+            val entities = response.products.map(mapper::openFoodFactsProductEntity)
             val pagingKeys =
                 entities.map {
                     OpenFoodFactsPagingKeyEntity(

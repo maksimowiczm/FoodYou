@@ -4,9 +4,9 @@ interface OpenFoodFactsProduct {
     val localizedNames: Map<String, String>
     val brand: String?
     val barcode: String
-    val packageWeight: Float?
+    val packageWeight: Double?
     val packageQuantityUnit: String?
-    val servingWeight: Float?
+    val servingWeight: Double?
     val servingQuantityUnit: String?
     val nutritionFacts: OpenFoodFactsNutrients?
     val url: String?

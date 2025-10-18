@@ -13,7 +13,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.decodeFromJsonElement
-import kotlinx.serialization.json.floatOrNull
+import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -23,9 +23,9 @@ data class OpenFoodFactsProductV1(
     override val brand: String?,
     override val barcode: String,
     override val nutritionFacts: OpenFoodFactsNutrients,
-    override val packageWeight: Float?,
+    override val packageWeight: Double?,
     override val packageQuantityUnit: String?,
-    override val servingWeight: Float?,
+    override val servingWeight: Double?,
     override val servingQuantityUnit: String?,
     override val url: String?,
     override val thumbnailUrl: String?,
@@ -58,12 +58,12 @@ object OpenFoodFactsProductV1Serializer : KSerializer<OpenFoodFactsProductV1> {
             nutritionFacts = json.decodeFromJsonElement(jsonObject["nutriments"]!!),
             packageWeight =
                 jsonObject["product_quantity"]?.jsonPrimitive?.let {
-                    it.floatOrNull ?: it.contentOrNull?.toFloatOrNull()
+                    it.doubleOrNull ?: it.contentOrNull?.toDoubleOrNull()
                 },
             packageQuantityUnit = jsonObject["product_quantity_unit"]?.jsonPrimitive?.contentOrNull,
             servingWeight =
                 jsonObject["serving_quantity"]?.jsonPrimitive?.let {
-                    it.floatOrNull ?: it.contentOrNull?.toFloatOrNull()
+                    it.doubleOrNull ?: it.contentOrNull?.toDoubleOrNull()
                 },
             servingQuantityUnit = jsonObject["serving_quantity_unit"]?.jsonPrimitive?.contentOrNull,
             url = jsonObject["url"]?.jsonPrimitive?.contentOrNull,

@@ -84,4 +84,14 @@ interface OpenFoodFactsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPagingKeys(keys: List<OpenFoodFactsPagingKeyEntity>)
+
+    @Query(
+        """
+        SELECT *
+        FROM OpenFoodFactsProduct
+        WHERE barcode = :barcode
+        LIMIT 1
+        """
+    )
+    fun observe(barcode: String): Flow<OpenFoodFactsProductEntity?>
 }
