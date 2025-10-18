@@ -1,15 +1,17 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodErrorListItem
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItem
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
 import com.maksimowiczm.foodyou.app.ui.common.utility.stringResource
-import com.maksimowiczm.foodyou.app.ui.food.Image
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
+import com.maksimowiczm.foodyou.app.ui.food.Thumbnail
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.Quantity
 import com.maksimowiczm.foodyou.common.expect
@@ -30,7 +32,7 @@ internal fun FoodSearchListItem(
     modifier: Modifier = Modifier,
 ) {
     val nameSelector = LocalFoodNameSelector.current
-    val image = food.image?.let { @Composable { it.Image(shimmer) } }
+    val image = food.image?.let { @Composable { it.Thumbnail(shimmer, Modifier.size(56.dp)) } }
 
     val weight =
         QuantityCalculator.calculateAbsoluteQuantity(food, quantity)

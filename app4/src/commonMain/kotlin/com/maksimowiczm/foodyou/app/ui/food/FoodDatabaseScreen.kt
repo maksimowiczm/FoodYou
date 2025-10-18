@@ -29,6 +29,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefaults
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchApp
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchAppDefaults
+import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 
 @Composable
 fun FoodDatabaseScreen(
@@ -36,6 +37,7 @@ fun FoodDatabaseScreen(
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
+    onFood: (FoodProductIdentity) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
@@ -78,9 +80,7 @@ fun FoodDatabaseScreen(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollConnection),
             content = {
                 FoodSearchApp(
-                    onFoodClick = { model, quantity ->
-                        // TODO
-                    },
+                    onFoodClick = { model, _ -> onFood(model.identity) },
                     onBack = onBack,
                     onUpdateUsdaApiKey = onUpdateUsdaApiKey,
                 )

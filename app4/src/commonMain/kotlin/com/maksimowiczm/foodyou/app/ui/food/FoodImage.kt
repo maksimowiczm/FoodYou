@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BrokenImage
 import androidx.compose.material3.Icon
@@ -14,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
@@ -23,15 +21,28 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 
 @Composable
-fun FoodImage.Image(shimmer: Shimmer) {
+fun FoodImage.Thumbnail(shimmer: Shimmer, modifier: Modifier = Modifier) {
     when (this) {
-        is FoodImage.Remote -> Image(shimmer)
+        is FoodImage.Remote -> ImageFor(shimmer, modifier) { thumbnail }
     }
 }
 
 @Composable
-fun FoodImage.Remote.Image(shimmer: Shimmer) {
-    val painter = rememberAsyncImagePainter(model = thumbnail)
+fun FoodImage.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
+    when (this) {
+        is FoodImage.Remote -> ImageFor(shimmer, modifier) { fullSize }
+    }
+}
+
+@Composable
+private fun FoodImage.Remote.ImageFor(
+    shimmer: Shimmer,
+    modifier: Modifier = Modifier,
+    image: FoodImage.Remote.() -> String?,
+) {
+    val image = remember(image) { image(this) }
+
+    val painter = rememberAsyncImagePainter(model = image)
     val state = painter.state.collectAsStateWithLifecycle().value
 
     val color by
@@ -57,12 +68,9 @@ fun FoodImage.Remote.Image(shimmer: Shimmer) {
 
     Surface(
         modifier =
-            Modifier.size(56.dp)
-                .then(
-                    if (state is AsyncImagePainter.State.Loading)
-                        Modifier.shimmer(shimmer).clip(MaterialTheme.shapes.medium)
-                    else Modifier
-                ),
+            if (state is AsyncImagePainter.State.Loading)
+                modifier.shimmer(shimmer).clip(MaterialTheme.shapes.medium)
+            else modifier,
         shape = MaterialTheme.shapes.medium,
         color = color,
         contentColor = contentColor,

@@ -495,4 +495,6 @@
     <string name="action_switch_profile">Switch profile</string>
     <string name="action_add_profile">Add profile</string>
 
+    <string name="action_refresh">Refresh</string>
+
 </resources>

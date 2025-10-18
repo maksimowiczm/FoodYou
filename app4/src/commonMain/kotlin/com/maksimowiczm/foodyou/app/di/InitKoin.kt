@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.datastore.dataStoreModule
 import com.maksimowiczm.foodyou.app.infrastructure.room.roomModule
 import com.maksimowiczm.foodyou.app.ui.appUiModule
 import com.maksimowiczm.foodyou.app.ui.common.theme.commonThemeModule
+import com.maksimowiczm.foodyou.app.ui.food.details.foodDetailsModule
 import com.maksimowiczm.foodyou.app.ui.home.homeModule
 import com.maksimowiczm.foodyou.app.ui.language.languageModule
 import com.maksimowiczm.foodyou.app.ui.onboarding.onboardingModule
@@ -41,6 +42,7 @@ fun initKoin(config: KoinAppDeclaration? = null): KoinApplication = startKoin {
         languageModule,
         personalizationModule,
         com.maksimowiczm.foodyou.app.ui.food.search.foodSearchModule,
+        foodDetailsModule,
     )
 
     config?.invoke(this)
