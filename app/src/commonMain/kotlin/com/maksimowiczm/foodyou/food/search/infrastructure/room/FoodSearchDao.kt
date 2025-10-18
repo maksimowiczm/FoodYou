@@ -156,7 +156,7 @@ interface FoodSearchDao {
         SELECT ${PRODUCT_FOOD_SEARCH_SQL_SELECT}, NULL AS measurementType, NULL AS measurementValue
         FROM Product p
         WHERE
-            p.barcode = :barcode AND
+            p.barcode LIKE '%' || :barcode || '%' AND
             (:source IS NULL OR p.sourceType = :source)
         ORDER BY headline COLLATE NOCASE ASC
         """
@@ -171,7 +171,7 @@ interface FoodSearchDao {
         SELECT COUNT(*)
         FROM Product p
         WHERE
-            p.barcode = :barcode AND
+            p.barcode LIKE '%' || :barcode || '%' AND
             (:source IS NULL OR p.sourceType = :source)
         """
     )

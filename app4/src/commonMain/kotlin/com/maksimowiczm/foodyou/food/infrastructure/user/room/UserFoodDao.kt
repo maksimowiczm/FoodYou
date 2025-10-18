@@ -113,7 +113,7 @@ interface UserFoodDao {
         FROM UserFood
         WHERE 
             accountId = :accountId AND
-            barcode = :barcode
+            barcode LIKE '%' || :barcode || '%'
         ORDER BY CASE :languageCode
             WHEN 'en-US' THEN name_en
             WHEN 'ca-ES' THEN name_ca
@@ -147,7 +147,7 @@ interface UserFoodDao {
         FROM UserFood
         WHERE 
             accountId = :accountId AND
-            barcode = :barcode
+            barcode LIKE '%' || :barcode || '%'
         """
     )
     fun observeCountByBarcode(barcode: String, accountId: String): Flow<Int>

@@ -62,7 +62,7 @@ interface OpenFoodFactsDao {
         """
         SELECT *
         FROM OpenFoodFactsProduct
-        WHERE barcode = :barcode
+        WHERE barcode LIKE '%' || :barcode || '%'
         LIMIT 1
         """
     )
@@ -72,7 +72,7 @@ interface OpenFoodFactsDao {
         """
         SELECT 1 
         FROM OpenFoodFactsProduct
-        WHERE barcode = :barcode
+        WHERE barcode LIKE '%' || :barcode || '%'
         LIMIT 1
         """
     )
