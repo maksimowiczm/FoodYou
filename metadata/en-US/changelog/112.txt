@@ -1,0 +1,6 @@
+New Features
+- Added automatic column selection when importing CSV files.
+
+Bug fixes
+- Fixed partial matching for barcode searches.
+- Corrected invalid release date in 3.2.2 notes.
