@@ -342,4 +342,30 @@
     <string name="headline_color">Kleur</string>
     <string name="headline_nutrients_colors">Nutriënt kleuren</string>
     <string name="description_nutrients_colors_reset">Nutriënt kleuren instellingen zullen naar standaard waarden worden teruggezet</string>
+    <string name="headline_sponsorship_goals">Doelen</string>
+    <string name="description_sponsorship_goals">Door te sponsoren, help je dit project onafhankelijk en duurzaam te houden zonder afhankelijk te zijn van uitbuitende bedrijfsmodellen. Veel commerciële apps verdienen geld door gebruikersgegevens te verzamelen en te verkopen, advertenties te targeten of gebruikers aan te zetten tot verslavende interactiepatronen. Sponsoring zorgt ervoor dat deze app privacyvriendelijk, transparant en gericht blijft op het leveren van echte waarde, zonder je vertrouwen of welzijn in gevaar te brengen.</string>
+    <string name="description_x_away_from_next_goal">%1$s te gaan voor volgende doel</string>
+    <string name="headline_sponsors">Sponsoren</string>
+    <string name="description_no_sponsors_this_month">Geen sponsoren deze maand</string>
+    <string name="headline_latest" description="Latest, most recent">Nieuwste</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Top</string>
+    <string name="headline_this_month_we_raised">Deze maand hebben we %1$s opgehaald</string>
+    <string name="description_sponsors_privacy">Food You neemt je privacy serieus. Daarom maakt het geen verbinding met externe diensten, tenzij je daarvoor toestemming geeft. Om de nieuwste sponsors te zien, moeten de gegevens worden gedownload van de servers van Food You.</string>
+    <string name="action_allow" description="Allow something">Toestaan</string>
+    <string name="action_next_month">Volgende maand</string>
+    <string name="action_previous_month">Vorige maand</string>
+    <string name="headline_sponsor_methods">Methodes</string>
+    <string name="headline_developer_options">Ontwikkelaars opties</string>
+    <string name="headline_save_database">Database opslaan</string>
+    <string name="description_save_database">Sla een kopie van jouw database op.</string>
+    <string name="headline_replace_database">Database vervangen</string>
+    <string name="description_replace_database">Vervang jouw database met een hiervoor opgeslagen versie</string>
+    <string name="action_replace">Vervang</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Uw database wordt VERVANGEN en alle huidige gegevens gaan VERLOREN. De app wordt opnieuw opgestart nadat de database is vervangen. Mogelijk moet u de app opnieuw openen.</string>
+    <string name="action_sign_in">Inloggen</string>
+    <string name="headline_terms_of_service">Algemene voorwaarden</string>
+    <string name="headline_privacy_policy">Privacy beleid</string>
+    <string name="error_there_was_an_error_while_signing_in">Er is een fout opgetreden tijdens het inloggen</string>
+    <string name="headline_random_theme">Willekeurige thema</string>
+    <string name="description_random_theme">Iedere keer dat je de app start zal er een willekeurig thema worden toegepast</string>
 </resources>

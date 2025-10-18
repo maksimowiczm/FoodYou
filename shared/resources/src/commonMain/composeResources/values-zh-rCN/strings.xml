@@ -5,8 +5,9 @@
     <string name="headline_settings">设置</string>
     <string name="headline_daily_goals">每日目标</string>
     <string name="headline_general">常规</string>
-    <string name="headline_macronutrients">大量营养素</string>
+    <string name="headline_macronutrients">宏量营养素</string>
     <string name="headline_meals">餐</string>
+    <string name="headline_delete_food">删除食品</string>
     <string name="headline_edit_product">编辑产品</string>
     <string name="headline_permission_required">需要权限</string>
     <string name="headline_language">语言</string>
@@ -43,14 +44,17 @@
     <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">资源</string>
     <string name="headline_features">特征</string>
     <string name="weight">重量</string>
-    <string name="unit_energy" description="Energy as calories">能量</string>
+    <string name="unit_energy" description="Energy as calories">热量</string>
     <string name="unit_kcal">千卡</string>
+    <string name="unit_kilojoules">千焦</string>
     <plurals name="unit_gram">
         <item quantity="other">克</item>
     </plurals>
     <plurals name="unit_milliliter">
         <item quantity="other">毫升</item>
     </plurals>
+    <string name="unit_ounce_short">盎司</string>
+    <string name="unit_fluid_ounce_short">液量盎司</string>
     <string name="product_package_weight">包装重量</string>
     <string name="product_package">包装</string>
     <string name="product_serving_weight">份量</string>
@@ -74,8 +78,24 @@
     <string name="nutriment_omega_3">Omega-3 脂肪酸</string>
     <string name="nutriment_omega_6">Omega-6 脂肪酸</string>
     <string name="nutriment_salt">盐</string>
+    <string name="nutriment_fiber">膳食纤维</string>
     <string name="nutriment_cholesterol">胆固醇</string>
     <string name="nutriment_caffeine">咖啡因</string>
+    <string name="nutriment_trans_fats">反式脂肪</string>
+    <string name="nutriment_added_sugars">添加糖</string>
+    <string name="nutriment_soluble_fiber">可溶性膳食纤维</string>
+    <string name="nutriment_insoluble_fiber">不溶性膳食纤维</string>
+    <string name="vitamin_a">维生素 A（视黄醇）</string>
+    <string name="vitamin_b1">维生素 B1（硫胺素）</string>
+    <string name="vitamin_b2">维生素 B2（核黄素）</string>
+    <string name="vitamin_b3">维生素 B3（烟酸）</string>
+    <string name="vitamin_b5">维生素 B5（泛酸）</string>
+    <string name="vitamin_b6">维生素 B6（吡哆醇）</string>
+    <string name="vitamin_b7">维生素 B7（生物素）</string>
+    <string name="vitamin_b9">维生素 B9（叶酸）</string>
+    <string name="vitamin_b12">维生素 B12（钴胺素）</string>
+    <string name="vitamin_c">维生素 C（抗坏血酸）</string>
+    <string name="vitamin_d">维生素 D（钙化醇）</string>
     <string name="vitamin_e">维生素 E</string>
     <string name="vitamin_k">维生素 K</string>
     <string name="mineral_manganese">锰</string>
@@ -133,16 +153,21 @@
     <string name="action_download_product">下载产品</string>
     <string name="action_copy_and_open_bug_report">复制并打开 bug 报告</string>
     <string name="action_show_details">显示详情</string>
+    <string name="action_browse_usda">浏览 FoodData Central (USDA)</string>
     <string name="action_set_key">设置密钥</string>
     <string name="action_obtain_key">获取密钥</string>
     <string name="action_dont_show_again">不再显示</string>
     <string name="neutral_barcode_scanner_camera_request">允许访问您的相机以扫描条形码</string>
-    <string name="neutral_barcode_scanner_camera_request_rationale">您必须允许访问才能扫描条形码</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">您必须允许相机访问才能扫描条形码</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">扫描条形码需要相机权限。请在应用程序设置中允许它。</string>
-    <string name="neutral_no_food_found">未找到食物</string>
+    <string name="neutral_no_food_found">未找到食品</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="other">剩余 %1$d 卡路里</item>
     </plurals>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="other">剩余 %1$d 千焦</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">设置您的每日营养目标</string>
     <string name="neutral_set_your_meal_schedule">设置您的用餐时间表</string>
     <string name="neutral_permanently_delete_meal">永久删除餐食？</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">餐食将被永久删除。与此餐食相关的所有数据都将丢失。</string>
@@ -169,6 +194,10 @@
     <plurals name="negative_exceeded_by_calories">
         <item quantity="other">超过 %1$d 卡路里</item>
     </plurals>
+    <plurals name="negative_exceeded_by_kilojoules">
+        <item quantity="other">超出 %1$d 千焦</item>
+    </plurals>
+    <string name="description_delete_food">食品将被永久删除</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">此条目将从您的日记中删除。您可以随时再次添加它。</string>
     <string name="description_about_setting">了解有关该应用程序的更多信息</string>
     <string name="description_time_based_meals_sorting">启用后，将首先显示当前正在进行的用餐</string>
@@ -180,15 +209,155 @@
     <string name="description_download_product">粘贴食品类商品的链接，并自动获取营养成分和商品详情。</string>
     <string name="description_download_product_hint">您可以粘贴任何文本。将使用第一个 URL。</string>
     <string name="description_show_macronutrients_goals">显示宏量营养素目标</string>
-    <string name="description_please_wait_while_importing_products">导入商品时请稍候</string>
+    <string name="description_please_wait_while_importing_products">请稍候，正在导出产品</string>
+    <string name="description_please_wait_while_exporting_products">请稍候，正在导出产品</string>
     <string name="headline_launcher_icon_by_icons8">启动器图标来自于Icon8</string>
     <string name="description_open_food_facts">一个协作、免费和开放的食品数据库，包含来自世界各地的食品</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">导出产品</string>
     <string name="notification_importing_products">进口商品</string>
-    <string name="description_food_data_central_usda">FoodData Central 是 USDA 的综合食品成分数据源，具有多种不同的数据类型</string>
+    <string name="notification_importing_products_success">产品导入完成</string>
+    <string name="description_food_data_central_usda">FoodData Central 是美国农业部的综合食品成分数据源，具有多种不同的数据类型</string>
+    <string name="error_usda_rate_limit">FoodData Central (USDA) API 速率限制已超额</string>
+    <string name="description_swiss_food_composition_database_short">瑞士食品成分数据库收录了1,100余种常见食品的营养信息</string>
+    <string name="description2_swiss_food_composition_database">瑞士食品成分数据库（Swiss Food Composition Database）收录了 1,100 余种常见食品的营养信息，提供四种语言版本。如需将这些食品导入您的饮食记录，请选择您偏好的语言版本。</string>
     <string name="headline_external_databases">外部数据库</string>
+    <string name="description_external_databases">查看受支持的数据库</string>
     <string name="feature_share_url_with_food_you">与 Food You 共享 URL</string>
     <string name="feature_in_app_download">应用内下载</string>
+    <string name="feature_in_app_search">应用内搜索</string>
     <string name="feature_manual_database_import">手动数据库导入</string>
+    <string name="action_unpack" description="Unpack the recipe ingredients">解包</string>
+    <string name="headline_sponsor">支持</string>
+    <string name="description_sponsor_short">欢迎以任何形式支持</string>
+    <string name="description_sponsor_short_2">助力应用发展</string>
+    <string name="headline_source_code">源代码</string>
+    <string name="description_source_code">在 GitHub 上查看本项目的源代码</string>
+    <string name="action_write_an_email">写邮件联系</string>
+    <string name="headline_contact">联系</string>
+    <string name="description_sponsor_contact">如有赞助相关事宜，欢迎通过电子邮件或GitHub与我联系。</string>
+    <string name="sponsor_bank_or_card">银行账户或信用卡</string>
+    <string name="action_treat_as_liquid">当作液体</string>
+    <string name="description_treat_as_liquid">使用毫升作为测量单位</string>
+    <string name="headline_personalization">个性化</string>
+    <string name="description_personalization">自定义您的使用体验</string>
+    <string name="headline_nutrition_facts">营养信息</string>
+    <string name="description_personalize_nutrition_facts_short">修改营养信息的排列顺序</string>
+    <string name="action_reset_ordering">重置排序</string>
+    <string name="headline_reset_to_default">恢复默认</string>
+    <string name="action_reset" description="Confirm resetting">重置</string>
+    <string name="description_reset_nutrition_facts">重置默认营养信息个性化设置</string>
+    <string name="headline_note">备注</string>
+    <string name="description_add_note">可选备注（如配料、素食状态、过敏原、添加剂）或其他非营养信息</string>
+    <string name="action_try_again">再试一次</string>
+    <string name="description_calories_are_calculated">热量值会根据宏量营养素自动计算。您可根据需要关闭此功能并手动输入数值。酒精含量不计入计算范围。</string>
+    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
+    <string name="neutral_an_error_occurred">发生错误</string>
+    <string name="action_retry">重试</string>
+    <string name="action_import">导入</string>
+    <string name="headline_today" description="Today, date">今天 %1$s</string>
+    <string name="headline_yesterday" description="Yesterday, date">昨天 %1$s</string>
+    <string name="headline_tomorrow" description="Tomorrow, date">明天 %1$s</string>
+    <string name="headline_user" description="User, person who uses the app">用户</string>
+    <string name="description_food_source">指定食物数据来源。您可在此处添加链接</string>
+    <string name="error_food_is_missing_required_fields">食品缺少必填字段</string>
+    <string name="headline_preview_release">预览版发布</string>
+    <string name="description_preview_release">您当前使用的是预览版本。可能遇到功能不完备、不稳定，或者后续变更的情况。</string>
+    <string name="headline_your_food">您的食品</string>
+    <string name="headline_filters">筛选器</string>
+    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">选择配料</string>
+    <string name="headline_edit_recipe">编辑食谱</string>
+    <string name="description_delete_ingredient">将从食谱中删除此配料</string>
+    <string name="neutral_remote_database_error">无法从远程数据库下载产品。您仍可查看之前下载的产品。</string>
+    <string name="headline_before_you_start">开始之前</string>
+    <string name="description_before_you_start">为向您提供自由开源的饮食日记服务，我们始终将您的隐私置于首位。本应用不会收集、存储或分享任何个人信息。您的记录将保存在设备本地，并完全由您掌控。</string>
+    <string name="action_agree_and_continue">我同意，继续</string>
+    <string name="headline_food_database">食品数据库</string>
+    <string name="description_food_database">您可以选择是否使用这些可选的外部服务，这些服务可能有其自身的条款和隐私政策</string>
+    <string name="action_skip">跳过</string>
+    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Terms of Use:https://world.openfoodfacts.org/terms-of-use} 和{Privacy Policy:https://world.openfoodfacts.org/privacy}</string>
+    <string name="usda_privacy_policy">{Privacy Policy:https://www.usda.gov/privacy-policy}</string>
+    <string name="headline_almost_done">快搞定了！</string>
+    <string name="headline_preparing_your_food_diary">正在准备您的饮食数据</string>
+    <string name="headline_please_wait">请稍候</string>
+    <string name="headline_created">创建的</string>
+    <string name="headline_imported">导入的</string>
+    <string name="headline_downloaded">下载的</string>
+    <string name="headline_edited">编辑的</string>
+    <string name="headline_history">历史</string>
+    <string name="headline_anonymous">匿名</string>
+    <string name="headline_recent">最近</string>
+    <string name="headline_database">数据库</string>
+    <string name="description_manage_database">管理您的数据库</string>
+    <string name="action_done">完成</string>
+    <string name="neutral_measurement_added">收到！您的测量数据已添加</string>
+    <string name="headline_imported_from_food_you_2">从 Food You 2 导入</string>
+    <string name="action_set_goals">设定目标</string>
+    <string name="headline_pick_the_days">选择日期</string>
+    <string name="action_set_separate_goals">为每天单独设定目标</string>
+    <string name="headline_percentages">百分比</string>
+    <string name="action_import_csv_food_products">导入 CSV 格式的食品信息</string>
+    <string name="description_import_csv_food_products">从 CSV 文件导入食品信息</string>
+    <string name="description_import_csv_food_products_hint">我们需要搞清楚各列对应的内容。请告诉我们你文件中包含产品名称、品牌等信息的对应列。</string>
+    <string name="description_import_csv_food_products_hint_2">所有营养成分值必须以千卡/克或千卡/100克为单位标注</string>
+    <string name="action_export_csv_food_products">导出 CSV 格式的食品信息</string>
+    <string name="description_export_csv_food_products">导出食品信息到 CSV 文件</string>
+    <string name="neutral_no_column">无列</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="other">导入了 %1$d 食品产品</item>
+    </plurals>
+    <string name="headline_energy_unit">热量单位</string>
+    <string name="description_energy_unit">选择热量单位</string>
+    <plurals name="neutral_exported_x_food_products">
+        <item quantity="other">导出了 %1$d 食品产品</item>
+    </plurals>
+    <string name="headline_auto_calculate_energy">自动计算热量</string>
+    <string name="headline_manual_energy_input">手动输入热量</string>
+    <string name="headline_quick_add">快捷添加</string>
+    <string name="description_quick_add">快捷添加功能无需搜索具体食品即可记录。当您已知食品热量，或者想简单估算时尤为快捷。</string>
+    <string name="action_open_poll">打开投票</string>
+    <string name="headline_colors">颜色</string>
+    <string name="description_colors">自定义应用的颜色</string>
+    <string name="headline_custom_palette">自定义配色方案</string>
+    <string name="description_custom_palette">设定您自己的配色方案</string>
+    <string name="headline_dynamic_colors">动态色彩</string>
+    <string name="description_dynamic_colors">应用系统颜色</string>
+    <string name="headline_seed_color">主题色</string>
+    <string name="headline_palette_style">图案风格</string>
+    <string name="headline_contrast">高对比度</string>
+    <string name="headline_amoled">纯黑</string>
+    <string name="headline_light">浅色</string>
+    <string name="headline_dark">深色</string>
+    <string name="headline_appearance">外观</string>
+    <string name="headline_theme">主题</string>
+    <string name="headline_pick_a_color">选一个颜色</string>
+    <string name="headline_color">颜色</string>
+    <string name="headline_nutrients_colors">营养成分颜色</string>
+    <string name="description_nutrients_colors_reset">营养成分颜色设置将重置为默认值</string>
+    <string name="headline_sponsorship_goals">目标</string>
+    <string name="description_sponsorship_goals">通过赞助，您将助力本项目保持独立性与可持续性，无需依赖剥削性的商业模式。许多商业应用通过收集并出售用户数据、投放定向广告或诱导用户形成成瘾性使用模式来牟利。赞助机制确保本应用始终尊重隐私、保持透明，专注于提供真实价值，绝不损害您的信任与福祉。</string>
+    <string name="description_x_away_from_next_goal">距下个目标还有 %1$s</string>
+    <string name="headline_sponsors">赞助者</string>
+    <string name="description_no_sponsors_this_month">本月无赞助</string>
+    <string name="headline_latest" description="Latest, most recent">最近</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">最多</string>
+    <string name="headline_this_month_we_raised">本月我们筹集到 %1$s</string>
+    <string name="description_sponsors_privacy">Food You 高度重视您的隐私。因此除非您允许，否则它不连接任何外部服务。要查看最新的赞助信息，需要连接 Food You 服务器获取数据。</string>
+    <string name="action_allow" description="Allow something">允许</string>
+    <string name="action_next_month">下一月</string>
+    <string name="action_previous_month">前一月</string>
+    <string name="headline_sponsor_methods">方式</string>
+    <string name="headline_developer_options">开发者选项</string>
+    <string name="headline_save_database">保存数据库</string>
+    <string name="description_save_database">保存一份数据库副本</string>
+    <string name="headline_replace_database">替换数据库</string>
+    <string name="description_replace_database">用您先前的数据库副本替换现有</string>
+    <string name="action_replace">替换</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">您的数据库将被 替换 ，当前数据将 全部丢失！ 应用将在数据库替换后重启。您可能需要手动操作才会重新打开。</string>
+    <string name="action_sign_in">登录</string>
+    <string name="headline_terms_of_service">使用条款</string>
+    <string name="headline_privacy_policy">隐私政策</string>
+    <string name="error_there_was_an_error_while_signing_in">登录时发生错误</string>
+    <string name="headline_random_theme">随机主题</string>
+    <string name="description_random_theme">每次启动应用将使用一个随机主题</string>
 </resources>

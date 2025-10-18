@@ -295,7 +295,7 @@
     <string name="action_skip">Pomiń</string>
     <string name="open_food_facts_terms_of_use_and_privacy_policy">{Zasady korzystania:https://world.openfoodfacts.org/terms-of-use} and {Polityka prywatności:https://world.openfoodfacts.org/privacy}</string>
     <string name="usda_privacy_policy">{Polityka prywatności:https://www.usda.gov/privacy-policy}</string>
-    <string name="headline_almost_done">Prawie gotowe!</string>
+    <string name="headline_almost_done">Prawie gotowe</string>
     <string name="headline_preparing_your_food_diary">Przygotowywanie twojego dziennika żywieniowego</string>
     <string name="headline_please_wait">Proszę czekać</string>
     <string name="headline_created">Stworzony</string>
