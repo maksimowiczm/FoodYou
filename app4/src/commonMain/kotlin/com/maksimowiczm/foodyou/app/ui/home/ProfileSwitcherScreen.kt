@@ -3,15 +3,20 @@ package com.maksimowiczm.foodyou.app.ui.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,8 +36,8 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,61 +45,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.saveable.rememberBlockingDataStore
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ProfileSwitcherScreen(
-    onBack: () -> Unit,
-    onFoodDatabase: () -> Unit,
-    onPersonalization: () -> Unit,
-    onDataBackupAndExport: () -> Unit,
-    onLanguage: () -> Unit,
-    onPrivacy: () -> Unit,
-    onAbout: () -> Unit,
-    onAddProfile: () -> Unit,
-    onEditProfile: (ProfileUiState) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val viewModel: ProfileViewModel = koinViewModel()
-
-    val profiles by viewModel.profiles.collectAsStateWithLifecycle()
-    val selectedProfileId by viewModel.selectedProfile.collectAsStateWithLifecycle()
-
-    val selectedProfile =
-        remember(profiles, selectedProfileId) { profiles.find { it.id == selectedProfileId } }
-
-    if (selectedProfile != null) {
-        ProfileSwitcherScreen(
-            onBack = onBack,
-            onFoodDatabase = onFoodDatabase,
-            onPersonalization = onPersonalization,
-            onDataBackupAndExport = onDataBackupAndExport,
-            onLanguage = onLanguage,
-            onPrivacy = onPrivacy,
-            onAbout = onAbout,
-            onAddProfile = onAddProfile,
-            onSelectProfile = viewModel::selectProfile,
-            onEditProfile = onEditProfile,
-            profiles = profiles,
-            selectedProfile = selectedProfile,
-            modifier = modifier,
-        )
-    }
-}
-
-@Composable
-private fun ProfileSwitcherScreen(
-    onBack: () -> Unit,
     onFoodDatabase: () -> Unit,
     onPersonalization: () -> Unit,
     onDataBackupAndExport: () -> Unit,
@@ -107,25 +66,15 @@ private fun ProfileSwitcherScreen(
     profiles: List<ProfileUiState>,
     selectedProfile: ProfileUiState,
     modifier: Modifier = Modifier,
+    windowInsets: WindowInsets =
+        ScaffoldDefaults.contentWindowInsets.only(
+            WindowInsetsSides.Vertical + WindowInsetsSides.End
+        ),
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            HomeTopBar(
-                profile = selectedProfile,
-                scrollBehavior = scrollBehavior,
-                navigationIcon = { ArrowBackIconButton(onBack) },
-            )
-        },
-    ) { paddingValues ->
+    Scaffold(modifier = modifier, contentWindowInsets = windowInsets) { paddingValues ->
         LazyColumn(
-            modifier =
-                Modifier.fillMaxSize()
-                    .padding(horizontal = 16.dp)
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues.add(vertical = 8.dp),
+            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+            contentPadding = paddingValues,
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
@@ -237,11 +186,21 @@ private fun ProfileSwitcher(
         SettingsListItem(
             title = { Text(stringResource(Res.string.action_switch_profile)) },
             trailingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.KeyboardArrowDown,
-                    contentDescription = null,
-                    modifier = Modifier.graphicsLayer { rotationZ = iconRotationState },
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    AnimatedVisibility(visible = !expanded, enter = fadeIn(), exit = fadeOut()) {
+                        Text(
+                            text = selectedProfile.name,
+                            modifier = Modifier.padding(end = 16.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Icon(
+                        imageVector = Icons.Outlined.KeyboardArrowDown,
+                        contentDescription = null,
+                        modifier = Modifier.graphicsLayer { rotationZ = iconRotationState },
+                    )
+                }
             },
             onClick = { expanded = !expanded },
             shape =
