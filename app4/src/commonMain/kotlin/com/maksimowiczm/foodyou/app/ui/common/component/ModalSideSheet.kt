@@ -1,0 +1,143 @@
+package com.maksimowiczm.foodyou.app.ui.common.component
+
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.PredictiveBackHandler
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastRoundToInt
+import androidx.compose.ui.util.lerp
+import kotlin.math.abs
+import kotlin.math.min
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.collectLatest
+
+@Composable
+fun ModalSideSheet(
+    content: @Composable () -> Unit,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    sheetState: SideSheetState = rememberSideSheetState(),
+    sheetContent: @Composable () -> Unit,
+) {
+    val density = LocalDensity.current
+    val direction = LocalLayoutDirection.current
+    val directionMultiplier =
+        when (direction) {
+            LayoutDirection.Ltr -> -1
+            LayoutDirection.Rtl -> 1
+        }
+
+    val predictiveBackProgress = remember { Animatable(0f) }
+
+    // Side sheet detaches from the top and bottom edges of the screen to signal
+    // it will close
+    // The side sheet and its content always scales in the direction of the
+    // user’s gesture.
+    PredictiveBackHandler(enabled = sheetState.progress > 0f) { flow ->
+        try {
+            flow.collectLatest { event ->
+                when (event.swipeEdge) {
+                    0 -> predictiveBackProgress.snapTo(event.progress)
+                    1 -> predictiveBackProgress.snapTo(-event.progress)
+                }
+            }
+            sheetState.close()
+            predictiveBackProgress.snapTo(0f)
+        } catch (_: CancellationException) {
+            predictiveBackProgress.snapTo(0f)
+        }
+    }
+
+    val maxWidthPx =
+        min(
+            with(density) { 400.dp.roundToPx() },
+            (LocalWindowInfo.current.containerSize.width * 0.9f).fastRoundToInt(),
+        )
+
+    Box(modifier) {
+        content()
+
+        if (sheetState.progress > 0f) {
+            Spacer(
+                Modifier.fillMaxSize()
+                    .graphicsLayer { alpha = lerp(0f, .5f, sheetState.progress) }
+                    .pointerInput(Unit) { detectTapGestures { onDismissRequest() } }
+                    .background(MaterialTheme.colorScheme.scrim)
+            )
+        }
+
+        Surface(
+            Modifier.align(Alignment.CenterEnd)
+                .fillMaxHeight(1f - abs(predictiveBackProgress.value) * .05f)
+                .widthIn(max = with(density) { (maxWidthPx + 100.dp.roundToPx()).toDp() })
+                .offset { IntOffset(x = maxWidthPx + 100.dp.roundToPx(), y = 0) }
+                .graphicsLayer {
+                    val backEffect =
+                        lerp(0f, 0.025f, abs(predictiveBackProgress.value)) *
+                            -directionMultiplier *
+                            if (predictiveBackProgress.value < 0f) 1f else -1f
+
+                    translationX =
+                        lerp(
+                            0f,
+                            directionMultiplier * maxWidthPx.toFloat(),
+                            sheetState.progress + backEffect,
+                        )
+
+                    clip = true
+                    shape = RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp)
+                }
+        ) {
+            Box(Modifier.padding(end = 100.dp)) { sheetContent() }
+        }
+    }
+}
+
+@Composable
+fun rememberSideSheetState(isOpen: Boolean = false): SideSheetState {
+    var isOpen by rememberSaveable(isOpen) { mutableStateOf(isOpen) }
+    val animatable = remember { Animatable(if (isOpen) 1f else 0f) }
+
+    LaunchedEffect(animatable.value) { isOpen = animatable.value != 0f }
+
+    val openSpec = MaterialTheme.motionScheme.fastSpatialSpec<Float>()
+    val closeSpec = MaterialTheme.motionScheme.fastSpatialSpec<Float>()
+
+    return remember(animatable, openSpec, closeSpec) {
+        SideSheetState(animatable, openSpec, closeSpec)
+    }
+}
+
+class SideSheetState(
+    private val animatable: Animatable<Float, AnimationVector1D>,
+    private val openSpec: AnimationSpec<Float>,
+    private val closeSpec: AnimationSpec<Float>,
+) {
+    val progress by derivedStateOf { animatable.value }
+
+    suspend fun open(animationSpec: AnimationSpec<Float> = closeSpec) {
+        animatable.animateTo(1f, animationSpec)
+    }
+
+    suspend fun close(animationSpec: AnimationSpec<Float> = openSpec) {
+        animatable.animateTo(0f, animationSpec)
+    }
+}
