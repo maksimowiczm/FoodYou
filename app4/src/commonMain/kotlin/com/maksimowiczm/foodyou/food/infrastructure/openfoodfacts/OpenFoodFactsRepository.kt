@@ -52,6 +52,8 @@ class OpenFoodFactsRepository(
                     dao.getPagingSourceByBarcode(searchFoodParams.query.barcode)
 
                 is SearchQuery.Text -> dao.getPagingSourceByQuery(searchFoodParams.query.query)
+                is SearchQuery.OpenFoodFactsUrl ->
+                    dao.getPagingSourceByBarcode(searchFoodParams.query.barcode)
             }
         }
 
@@ -77,6 +79,7 @@ class OpenFoodFactsRepository(
             is SearchQuery.Blank -> dao.observeCount()
             is SearchQuery.Barcode -> dao.observeCountByBarcode(parameters.query.barcode)
             is SearchQuery.Text -> dao.observeCountByQuery(parameters.query.query)
+            is SearchQuery.OpenFoodFactsUrl -> dao.observeCountByBarcode(parameters.query.barcode)
         }
     }
 

@@ -19,6 +19,14 @@ private constructor(val profileId: ProfileId, history: List<SearchHistory>) {
         get() = _history.toList()
 
     fun recordSearchQuery(query: SearchQuery.NotBlank, clock: Clock) {
+
+        // Filter out non-text queries
+        when (query) {
+            is SearchQuery.Barcode -> return
+            is SearchQuery.OpenFoodFactsUrl -> return
+            is SearchQuery.Text -> Unit
+        }
+
         _history.removeAll { it.query == query }
         _history.add(0, SearchHistory(query, clock.now()))
         if (_history.size > MAX_HISTORY_SIZE) {

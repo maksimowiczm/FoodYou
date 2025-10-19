@@ -44,6 +44,13 @@ class UserFoodRepository(private val dao: UserFoodDao, private val nameSelector:
                         language.tag,
                         searchFoodParams.accountId.value,
                     )
+
+                is SearchQuery.OpenFoodFactsUrl ->
+                    dao.getPagingSourceByBarcode(
+                        searchFoodParams.query.barcode,
+                        language.tag,
+                        searchFoodParams.accountId.value,
+                    )
             }
         }
 
@@ -62,6 +69,9 @@ class UserFoodRepository(private val dao: UserFoodDao, private val nameSelector:
 
                 is SearchQuery.Text ->
                     dao.observeCountByQuery(parameters.query.query, parameters.accountId.value)
+
+                is SearchQuery.OpenFoodFactsUrl ->
+                    dao.observeCountByBarcode(parameters.query.barcode, parameters.accountId.value)
             }
 
         return countFlow

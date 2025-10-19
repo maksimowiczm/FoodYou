@@ -41,24 +41,36 @@ class OpenFoodFactsRemoteMediator(
                         return MediatorResult.Success(endOfPaginationReached = false)
 
                     LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
-                    LoadType.APPEND if (query is SearchQuery.Barcode) -> {
-                        val response =
-                            remote.getProduct(barcode = query.barcode).getOrElse {
-                                return if (it is FoodDatabaseError.ProductNotFound)
-                                    MediatorResult.Success(endOfPaginationReached = true)
-                                else MediatorResult.Error(it)
+
+                    LoadType.APPEND ->
+                        when (query) {
+                            is SearchQuery.Barcode,
+                            is SearchQuery.OpenFoodFactsUrl -> {
+                                val barcode =
+                                    when (query) {
+                                        is SearchQuery.Barcode -> query.barcode
+                                        is SearchQuery.OpenFoodFactsUrl -> query.barcode
+                                        else -> error("Unreachable")
+                                    }
+
+                                val response =
+                                    remote.getProduct(barcode).getOrElse {
+                                        return if (it is FoodDatabaseError.ProductNotFound)
+                                            MediatorResult.Success(endOfPaginationReached = true)
+                                        else MediatorResult.Error(it)
+                                    }
+
+                                val product = mapper.openFoodFactsProductEntity(response)
+                                dao.upsertProduct(product)
+                                return MediatorResult.Success(endOfPaginationReached = true)
                             }
 
-                        val product = mapper.openFoodFactsProductEntity(response)
-                        dao.upsertProduct(product)
-                        return MediatorResult.Success(endOfPaginationReached = true)
-                    }
-
-                    LoadType.APPEND -> {
-                        val count = dao.getPagingKeyCountByQuery(query.query)
-                        val nextPage = (count / PAGE_SIZE) + 1
-                        nextPage
-                    }
+                            is SearchQuery.Text -> {
+                                val count = dao.getPagingKeyCountByQuery(query.query)
+                                val nextPage = (count / PAGE_SIZE) + 1
+                                nextPage
+                            }
+                        }
                 }
 
             logger.d { "Loading page $page" }
