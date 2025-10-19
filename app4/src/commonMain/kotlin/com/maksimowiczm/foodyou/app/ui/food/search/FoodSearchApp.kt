@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -57,17 +58,19 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun FoodSearchApp(
     onFoodClick: (SearchableFoodDto, Quantity) -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
+    query: String?,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
     //    excludedRecipe: FoodId.Recipe? = null,
 ) {
     //    val viewModel: FoodSearchViewModel = koinViewModel { parametersOf(excludedRecipe) }
-    val viewModel: FoodSearchViewModel = koinViewModel()
+    val viewModel: FoodSearchViewModel = koinViewModel { parametersOf(query) }
 
     FoodSearchApp(
         uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
@@ -77,6 +80,8 @@ fun FoodSearchApp(
         onUpdateUsdaApiKey = onUpdateUsdaApiKey,
         onBack = onBack,
         modifier = modifier,
+        appState =
+            rememberFoodSearchAppState(searchTextFieldState = rememberTextFieldState(query ?: "")),
     )
 }
 

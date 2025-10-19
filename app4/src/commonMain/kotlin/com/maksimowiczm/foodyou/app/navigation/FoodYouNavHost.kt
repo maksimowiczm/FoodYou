@@ -6,13 +6,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.About
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.FoodDatabase
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.FoodDetails
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Home
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Language
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.NutritionFactsPersonalization
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoutes.Personalization
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDetails
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Language
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.NutritionFactsPersonalization
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Personalization
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsScreen
@@ -31,7 +31,7 @@ fun FoodYouNavHost(
     NavHost(modifier = modifier, navController = navController, startDestination = Home) {
         forwardBackwardComposable<Home> {
             HomeScreen(
-                onFoodDatabase = { navController.navigateSingleTop(FoodDatabase) },
+                onFoodDatabase = { navController.navigateSingleTop(FoodDatabase(null)) },
                 onPersonalization = { navController.navigateSingleTop(Personalization) },
                 onDataBackupAndExport = { /* TODO */ },
                 onLanguage = { navController.navigateSingleTop(Language) },
@@ -63,8 +63,12 @@ fun FoodYouNavHost(
             )
         }
         forwardBackwardComposable<FoodDatabase> {
+            val (query) = it.toRoute<FoodDatabase>()
+
             FoodDatabaseScreen(
-                onBack = { navController.popBackStackInclusive<FoodDatabase>() },
+                onBack = {
+                    navController.navigate(Home) { popUpTo<FoodDatabase> { inclusive = true } }
+                },
                 onCreateProduct = {
                     // TODO
                 },
@@ -75,6 +79,7 @@ fun FoodYouNavHost(
                     // TODO
                 },
                 onFood = { identity -> navController.navigateSingleTop(FoodDetails(identity)) },
+                query = query,
                 animatedVisibilityScope = this,
             )
         }
@@ -92,22 +97,22 @@ fun FoodYouNavHost(
     }
 }
 
-private object FoodYouNavHostRoutes {
+sealed interface FoodYouNavHostRoute {
 
-    @Serializable data object Home
+    @Serializable data object Home : FoodYouNavHostRoute
 
-    @Serializable data object About
+    @Serializable data object About : FoodYouNavHostRoute
 
-    @Serializable data object Language
+    @Serializable data object Language : FoodYouNavHostRoute
 
-    @Serializable data object Personalization
+    @Serializable data object Personalization : FoodYouNavHostRoute
 
-    @Serializable data object NutritionFactsPersonalization
+    @Serializable data object NutritionFactsPersonalization : FoodYouNavHostRoute
 
-    @Serializable data object FoodDatabase
+    @Serializable data class FoodDatabase(val query: String?) : FoodYouNavHostRoute
 
     @Serializable
-    data class FoodDetails(val type: IdentityType, val extra: String) {
+    data class FoodDetails(val type: IdentityType, val extra: String) : FoodYouNavHostRoute {
         constructor(
             identity: FoodProductIdentity
         ) : this(

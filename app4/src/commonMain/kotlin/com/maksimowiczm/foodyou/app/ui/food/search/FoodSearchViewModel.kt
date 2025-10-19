@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 internal class FoodSearchViewModel(
+    private val query: String?,
     //    private val excludedRecipeId: FoodId.Recipe?,
     private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
     private val searchHistoryRepository: FoodSearchHistoryRepository,
@@ -42,7 +43,9 @@ internal class FoodSearchViewModel(
 
     // Use shared flow to allow emitting same value multiple times
     private val searchQuery =
-        MutableSharedFlow<SearchQuery>(replay = 1).apply { runBlocking { emit(SearchQuery.Blank) } }
+        MutableSharedFlow<SearchQuery>(replay = 1).apply {
+            runBlocking { emit(searchQueryParser.parse(query)) }
+        }
 
     init {
         viewModelScope.launch {
