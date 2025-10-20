@@ -1,3 +1,6 @@
 package com.maksimowiczm.foodyou.food.search.domain
 
-class FoodSearchPreferences(var allowOpenFoodFacts: Boolean, var allowFoodDataCentralUSDA: Boolean)
+data class FoodSearchPreferences(
+    val allowOpenFoodFacts: Boolean,
+    val allowFoodDataCentralUSDA: Boolean,
+)

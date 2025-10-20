@@ -29,9 +29,14 @@ class CreatePrimaryAccountUseCase(
             Profile.new(name = uiState.profileName, avatar = uiState.avatar.toProfileAvatar())
         val account = Account.create(primaryProfile = profile)
 
-        val searchPreferences = foodSearchPreferencesRepository.observe().first()
-        searchPreferences.allowOpenFoodFacts = uiState.allowOpenFoodFacts
-        searchPreferences.allowFoodDataCentralUSDA = uiState.allowFoodDataCentral
+        val searchPreferences =
+            foodSearchPreferencesRepository
+                .observe()
+                .first()
+                .copy(
+                    allowOpenFoodFacts = uiState.allowOpenFoodFacts,
+                    allowFoodDataCentralUSDA = uiState.allowFoodDataCentral,
+                )
 
         accountRepository.save(account)
         deviceRepository.save(device)
