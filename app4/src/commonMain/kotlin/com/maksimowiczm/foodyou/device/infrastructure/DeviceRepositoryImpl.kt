@@ -42,6 +42,7 @@ private suspend fun Preferences.toDevice(
     return Device(
         name = deviceName,
         themeSettings = toThemeSettings(),
+        nutrientsColors = toNutrientsColors(),
         privacySettings = toPrivacySettings(),
         language =
             when (languageTag) {
@@ -57,6 +58,7 @@ private fun MutablePreferences.applyDevice(device: Device): MutablePreferences =
     this[OtherKeys.hideScreen] = device.hideScreen
     applyThemeSettings(device.themeSettings)
     applyPrivacySettings(device.privacySettings)
+    applyNutrientsColors(device.nutrientsColors)
 }
 
 private object OtherKeys {

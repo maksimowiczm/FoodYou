@@ -12,25 +12,41 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import com.maksimowiczm.foodyou.device.domain.NutrientsColors
 import com.maksimowiczm.foodyou.device.domain.Theme
 import com.maksimowiczm.foodyou.device.domain.ThemeSettings
 import com.materialkolor.rememberDynamicColorScheme
 
 @Composable
-internal actual fun FoodYouTheme(themeSettings: ThemeSettings?, content: @Composable (() -> Unit)) {
+internal actual fun FoodYouTheme(
+    themeSettings: ThemeSettings?,
+    nutrientsColors: NutrientsColors?,
+    content: @Composable (() -> Unit),
+) {
     if (themeSettings == null) {
-        FoodYouTheme(isDark = isSystemInDarkTheme(), theme = Theme.Default, content = content)
+        FoodYouTheme(
+            isDark = isSystemInDarkTheme(),
+            theme = Theme.Default,
+            nutrientsColors = nutrientsColors,
+            content = content,
+        )
     } else {
         FoodYouTheme(
             isDark = themeSettings.isDark(),
             theme = themeSettings.theme,
+            nutrientsColors = nutrientsColors,
             content = content,
         )
     }
 }
 
 @Composable
-private fun FoodYouTheme(isDark: Boolean, theme: Theme, content: @Composable () -> Unit) {
+private fun FoodYouTheme(
+    isDark: Boolean,
+    theme: Theme,
+    nutrientsColors: NutrientsColors?,
+    content: @Composable () -> Unit,
+) {
     val view = LocalView.current
 
     LaunchedEffect(isDark) {
@@ -82,7 +98,9 @@ private fun FoodYouTheme(isDark: Boolean, theme: Theme, content: @Composable () 
 
     val nutrientsPalette = if (isDark) DarkNutrientsPalette else LightNutrientsPalette
 
-    CompositionLocalProvider(LocalNutrientsPalette provides nutrientsPalette) {
+    CompositionLocalProvider(
+        LocalNutrientsPalette provides nutrientsPalette.applyColors(nutrientsColors)
+    ) {
         MaterialTheme(colorScheme = colorScheme, content = content)
     }
 }

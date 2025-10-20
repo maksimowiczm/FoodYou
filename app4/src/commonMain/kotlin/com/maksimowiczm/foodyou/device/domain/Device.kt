@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.common.domain.Language
 class Device(
     name: String,
     themeSettings: ThemeSettings,
+    nutrientsColors: NutrientsColors,
     privacySettings: PrivacySettings,
     language: Language?,
     hideScreen: Boolean,
@@ -13,6 +14,9 @@ class Device(
         private set
 
     var themeSettings: ThemeSettings = themeSettings
+        private set
+
+    var nutrientsColors: NutrientsColors = nutrientsColors
         private set
 
     var privacySettings: PrivacySettings = privacySettings
@@ -46,5 +50,25 @@ class Device(
 
     fun updateHideScreen(hideScreen: Boolean) {
         this.hideScreen = hideScreen
+    }
+
+    fun updateTheme(theme: Theme) {
+        themeSettings = themeSettings.copy(theme = theme, randomizeOnLaunch = false)
+    }
+
+    fun updateRandomizeOnLaunch(randomize: Boolean) {
+        themeSettings = themeSettings.copy(randomizeOnLaunch = randomize)
+    }
+
+    fun updateThemeOption(themeOption: ThemeOption) {
+        themeSettings = themeSettings.copy(themeOption = themeOption)
+    }
+
+    fun updateNutrientsColors(nutrientsColors: NutrientsColors) {
+        this.nutrientsColors = nutrientsColors
+    }
+
+    fun resetNutrientsColors() {
+        this.nutrientsColors = NutrientsColors(proteins = null, carbohydrates = null, fats = null)
     }
 }

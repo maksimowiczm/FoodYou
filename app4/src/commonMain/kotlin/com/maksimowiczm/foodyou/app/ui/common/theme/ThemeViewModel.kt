@@ -13,4 +13,10 @@ class ThemeViewModel(deviceRepository: DeviceRepository) : ViewModel() {
             .observe()
             .map { it.themeSettings }
             .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = null)
+
+    val nutrientsColors =
+        deviceRepository
+            .observe()
+            .map { it.nutrientsColors }
+            .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = null)
 }

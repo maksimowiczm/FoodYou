@@ -10,3 +10,9 @@ interface DeviceRepository {
 
     suspend fun save(device: Device)
 }
+
+suspend fun DeviceRepository.update(transform: (Device) -> Unit) {
+    val device = load()
+    transform(device)
+    save(device)
+}
