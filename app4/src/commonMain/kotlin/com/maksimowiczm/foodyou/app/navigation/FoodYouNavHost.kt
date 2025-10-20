@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Colors
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
@@ -18,6 +19,7 @@ import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
+import com.maksimowiczm.foodyou.app.ui.personalization.ColorsScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
@@ -54,7 +56,7 @@ fun FoodYouNavHost(
                 onNutritionFacts = {
                     navController.navigateSingleTop(NutritionFactsPersonalization)
                 },
-                onColors = { /* TODO */ },
+                onColors = { navController.navigateSingleTop(Colors) },
             )
         }
         forwardBackwardComposable<NutritionFactsPersonalization> {
@@ -93,6 +95,9 @@ fun FoodYouNavHost(
                     // TODO
                 },
             )
+        }
+        forwardBackwardComposable<Colors> {
+            ColorsScreen(onBack = { navController.popBackStackInclusive<Colors>() })
         }
     }
 }
@@ -145,4 +150,6 @@ sealed interface FoodYouNavHostRoute {
             FoodDataCentral,
         }
     }
+
+    @Serializable data object Colors : FoodYouNavHostRoute
 }

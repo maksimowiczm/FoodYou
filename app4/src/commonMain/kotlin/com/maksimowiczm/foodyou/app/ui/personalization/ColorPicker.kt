@@ -92,10 +92,31 @@ object ColorPickerDefaults {
 }
 
 @Composable
-fun rememberColorPickerState(
-    initialPosition: Float = ColorPickerDefaults.INITIAL_POSITION
-): ColorPickerState {
-    val positionState = rememberSaveable { mutableStateOf(initialPosition) }
+fun rememberColorPickerState(color: Color? = null): ColorPickerState {
+    val initialPosition =
+        remember(color) {
+            if (color != null) {
+                var closestPosition = 0f
+                var closestDistance = Float.MAX_VALUE
+                val steps = 1000
+                for (i in 0..steps) {
+                    val position = i / steps.toFloat()
+                    val gradientColor = interpolateGradient(ColorPickerDefaults.gradient, position)
+                    val distance =
+                        (gradientColor.red - color.red).let { it * it } +
+                            (gradientColor.green - color.green).let { it * it } +
+                            (gradientColor.blue - color.blue).let { it * it }
+                    if (distance < closestDistance) {
+                        closestDistance = distance
+                        closestPosition = position
+                    }
+                }
+                closestPosition
+            } else {
+                ColorPickerDefaults.INITIAL_POSITION
+            }
+        }
+    val positionState = rememberSaveable(initialPosition) { mutableStateOf(initialPosition) }
     return remember(positionState) { ColorPickerState(positionState) }
 }
 

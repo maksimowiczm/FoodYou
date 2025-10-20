@@ -6,4 +6,5 @@ import org.koin.dsl.module
 val personalizationModule = module {
     viewModelOf(::PersonalizationViewModel)
     viewModelOf(::PersonalizeNutritionFactsViewModel)
+    viewModelOf(::ColorsViewModel)
 }
