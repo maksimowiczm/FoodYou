@@ -109,14 +109,14 @@ private fun FoodDatabaseScreen(
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
-            item { Spacer(Modifier.height(16.dp)) }
+            item { Spacer(Modifier.height(8.dp)) }
             item {
                 OpenFoodFactsCard(
                     selected = uiState.allowOpenFoodFacts,
                     onSelectedChange = onAllowOpenFoodFactsChange,
                 )
             }
-            item { Spacer(Modifier.height(16.dp)) }
+            item { Spacer(Modifier.height(8.dp)) }
             item {
                 UsdaCard(
                     selected = uiState.allowFoodDataCentral,
