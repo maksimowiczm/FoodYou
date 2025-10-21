@@ -172,7 +172,14 @@ private fun FoodSearchApp(
                 Spacer(Modifier.height(8.dp))
                 FoodSearchFilters(
                     uiState = uiState,
-                    onSource = onSourceChange,
+                    onSource = {
+                        onSourceChange(it)
+
+                        if (it == uiState.filter.source) {
+                            val listState = appState.listStates.state(it)
+                            coroutineScope.launch { listState.animateScrollToItem(0) }
+                        }
+                    },
                     modifier = Modifier.height(32.dp + 8.dp + 32.dp).fillMaxWidth(),
                 )
             }
@@ -217,7 +224,11 @@ private fun FoodSearchApp(
             }
         }
 
-        LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = paddingValues) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = paddingValues,
+            state = appState.listStates.state(uiState.filter.source),
+        ) {
             if (pages != null) {
                 items(
                     count = pages.itemCount,
@@ -319,3 +330,11 @@ object FoodSearchAppDefaults {
         }
     }
 }
+
+private fun ListStates.state(source: FoodFilter.Source) =
+    when (source) {
+        FoodFilter.Source.Recent -> recent
+        FoodFilter.Source.YourFood -> yourFood
+        FoodFilter.Source.OpenFoodFacts -> openFoodFacts
+        FoodFilter.Source.USDA -> usda
+    }

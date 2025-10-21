@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.SearchBarState
@@ -16,11 +18,14 @@ internal fun rememberFoodSearchAppState(
     val showBarcodeScanner =
         rememberSaveable(showBarcodeScanner) { mutableStateOf(showBarcodeScanner) }
 
-    return remember(searchBarState, searchTextFieldState, showBarcodeScanner) {
+    val listStates = rememberListStates()
+
+    return remember(searchBarState, searchTextFieldState, showBarcodeScanner, listStates) {
         FoodSearchAppState(
             searchBarState = searchBarState,
             searchTextFieldState = searchTextFieldState,
             showBarcodeScannerState = showBarcodeScanner,
+            listStates = listStates,
         )
     }
 }
@@ -30,6 +35,27 @@ internal class FoodSearchAppState(
     val searchBarState: SearchBarState,
     val searchTextFieldState: TextFieldState,
     showBarcodeScannerState: MutableState<Boolean>,
+    val listStates: ListStates,
 ) {
     var showBarcodeScanner by showBarcodeScannerState
+}
+
+@Immutable
+class ListStates(
+    val recent: LazyListState,
+    val yourFood: LazyListState,
+    val openFoodFacts: LazyListState,
+    val usda: LazyListState,
+)
+
+@Composable
+private fun rememberListStates(): ListStates {
+    val recent = rememberLazyListState()
+    val yourFood = rememberLazyListState()
+    val openFoodFacts = rememberLazyListState()
+    val usda = rememberLazyListState()
+
+    return remember(recent, yourFood, openFoodFacts, usda) {
+        ListStates(recent = recent, yourFood = yourFood, openFoodFacts = openFoodFacts, usda = usda)
+    }
 }
