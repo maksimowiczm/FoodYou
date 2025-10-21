@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.app.ui.personalization
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +19,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,6 +41,8 @@ import com.maksimowiczm.foodyou.device.domain.ThemeContrast
 import com.maksimowiczm.foodyou.device.domain.ThemeStyle
 import com.materialkolor.ktx.toHex
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -55,11 +58,11 @@ fun CustomThemePickerDialog(
     val controller = rememberColorPickerController()
     LaunchedEffect(Unit) { initialColor?.let { controller.selectByColor(it, false) } }
 
-    val paletteExpanded = rememberSaveable { mutableStateOf(false) }
+    var paletteExpanded by rememberSaveable { mutableStateOf(false) }
     val paletteStyle = rememberSaveable {
         mutableStateOf(initialTheme?.style ?: ThemeStyle.TonalSpot)
     }
-    val contrastExpanded = rememberSaveable { mutableStateOf(false) }
+    var contrastExpanded by rememberSaveable { mutableStateOf(false) }
     val contrast = rememberSaveable {
         mutableStateOf(initialTheme?.contrast ?: ThemeContrast.Default)
     }
@@ -109,19 +112,17 @@ fun CustomThemePickerDialog(
                         value = paletteStyle.value.name,
                         onValueChange = {},
                         trailingIcon = {
-                            IconButton(onClick = { paletteExpanded.value = true }) {
-                                Icon(Icons.Outlined.ArrowDropDown, null)
-                            }
+                            Icon(Icons.Outlined.ArrowDropDown, null)
                             DropdownMenu(
-                                expanded = paletteExpanded.value,
-                                onDismissRequest = { paletteExpanded.value = false },
+                                expanded = paletteExpanded,
+                                onDismissRequest = { paletteExpanded = false },
                             ) {
                                 ThemeStyle.entries.forEach { style ->
                                     DropdownMenuItem(
                                         text = { Text(style.name) },
                                         onClick = {
                                             paletteStyle.value = style
-                                            paletteExpanded.value = false
+                                            paletteExpanded = false
                                         },
                                     )
                                 }
@@ -129,24 +130,31 @@ fun CustomThemePickerDialog(
                         },
                         readOnly = true,
                         label = { Text(stringResource(Res.string.headline_palette_style)) },
+                        interactionSource =
+                            remember { MutableInteractionSource() }
+                                .apply {
+                                    LaunchedEffect(Unit) {
+                                        interactions
+                                            .filter { it is PressInteraction.Release }
+                                            .collectLatest { paletteExpanded = true }
+                                    }
+                                },
                     )
                     TextField(
                         value = contrast.value.name,
                         onValueChange = {},
                         trailingIcon = {
-                            IconButton(onClick = { contrastExpanded.value = true }) {
-                                Icon(Icons.Outlined.ArrowDropDown, null)
-                            }
+                            Icon(Icons.Outlined.ArrowDropDown, null)
                             DropdownMenu(
-                                expanded = contrastExpanded.value,
-                                onDismissRequest = { contrastExpanded.value = false },
+                                expanded = contrastExpanded,
+                                onDismissRequest = { contrastExpanded = false },
                             ) {
                                 ThemeContrast.entries.forEach { contrastOption ->
                                     DropdownMenuItem(
                                         text = { Text(contrastOption.name) },
                                         onClick = {
                                             contrast.value = contrastOption
-                                            contrastExpanded.value = false
+                                            contrastExpanded = false
                                         },
                                     )
                                 }
@@ -154,6 +162,15 @@ fun CustomThemePickerDialog(
                         },
                         readOnly = true,
                         label = { Text(stringResource(Res.string.headline_contrast)) },
+                        interactionSource =
+                            remember { MutableInteractionSource() }
+                                .apply {
+                                    LaunchedEffect(Unit) {
+                                        interactions
+                                            .filter { it is PressInteraction.Release }
+                                            .collectLatest { contrastExpanded = true }
+                                    }
+                                },
                     )
                 }
                 Row(
