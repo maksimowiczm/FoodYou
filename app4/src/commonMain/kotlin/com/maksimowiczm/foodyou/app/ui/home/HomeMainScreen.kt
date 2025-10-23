@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.headline_welcome_user_message
 import org.jetbrains.compose.resources.stringResource
@@ -38,10 +39,13 @@ fun HomeMainScreen(
                     ) { profile ->
                         if (profile != null) {
                             Text(
-                                stringResource(
-                                    Res.string.headline_welcome_user_message,
-                                    profile.name,
-                                )
+                                text =
+                                    stringResource(
+                                        Res.string.headline_welcome_user_message,
+                                        profile.name,
+                                    ),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
                             )
                         }
                     }

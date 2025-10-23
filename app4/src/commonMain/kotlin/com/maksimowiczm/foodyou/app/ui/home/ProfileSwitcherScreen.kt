@@ -45,6 +45,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.maksimowiczm.foodyou.app.ui.common.saveable.rememberBlockingDataStore
@@ -193,6 +194,8 @@ private fun ProfileSwitcher(
                             modifier = Modifier.padding(end = 16.dp),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                     Icon(
@@ -222,7 +225,9 @@ private fun ProfileSwitcher(
                                 modifier = Modifier.size(IconButtonDefaults.extraSmallIconSize),
                             )
                         },
-                        title = { Text(it.name) },
+                        title = {
+                            Text(text = it.name, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                        },
                         onClick = {
                             if (it != selectedProfile) onSelectProfile(it) else onEditProfile(it)
                         },
