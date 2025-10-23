@@ -106,7 +106,6 @@ internal class UpdateFoodDiaryEntryViewModel(
         viewModelScope.launch {
             unpackDiaryEntryError
                 .unpack(id = entryId, measurement = measurement, mealId = mealId, date = date)
-                .onSuccess { _uiEvents.send(UpdateEntryEvent.Saved) }
                 .onError {
                     // Explode
                     error("Failed to unpack diary entry with id $entryId, $it")
@@ -121,7 +120,7 @@ internal class UpdateFoodDiaryEntryViewModel(
 // metric and imperial measurements. This is why they are wrapped in Flow, so they can be
 // easily converted to the appropriate measurement system later.
 
-val DiaryFood.possibleMeasurementTypes: Flow<List<MeasurementType>>
+private val DiaryFood.possibleMeasurementTypes: Flow<List<MeasurementType>>
     get() =
         flowOf(
             MeasurementType.entries.filter { type ->
@@ -136,7 +135,7 @@ val DiaryFood.possibleMeasurementTypes: Flow<List<MeasurementType>>
             }
         )
 
-val DiaryFood.suggestions: Flow<List<Measurement>>
+private val DiaryFood.suggestions: Flow<List<Measurement>>
     get() =
         possibleMeasurementTypes.map { list ->
             list.map {

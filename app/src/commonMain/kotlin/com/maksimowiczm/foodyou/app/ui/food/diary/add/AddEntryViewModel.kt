@@ -197,12 +197,13 @@ internal class AddEntryViewModel(
                         date = date,
                         food = diaryFood,
                     )
-                    .onSuccess { _uiEventBus.send(AddEntryEvent.EntryAdded) }
                     .onError {
                         // Explode
                         error("Failed to create diary entry for food with ID ${food.id}")
                     }
             }
+
+            _uiEventBus.send(AddEntryEvent.EntryAdded)
         }
     }
 }
