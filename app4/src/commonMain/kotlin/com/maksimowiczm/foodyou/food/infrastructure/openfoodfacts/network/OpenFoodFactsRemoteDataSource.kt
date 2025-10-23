@@ -38,8 +38,6 @@ class OpenFoodFactsRemoteDataSource(
                 return Result.failure(FoodDatabaseError.OpenFoodFacts.RateLimitExceeded)
             }
 
-            rateLimiter.recordProductRequest()
-
             val response =
                 client.get(url) {
                     userAgent(networkConfig.userAgent)
@@ -66,6 +64,8 @@ class OpenFoodFactsRemoteDataSource(
                 is FoodDatabaseError -> throw e
                 else -> throw FoodDatabaseError.Unknown(e.message)
             }
+        } finally {
+            rateLimiter.recordProductRequest()
         }
     }
 
@@ -81,10 +81,14 @@ class OpenFoodFactsRemoteDataSource(
                 throw FoodDatabaseError.OpenFoodFacts.RateLimitExceeded
             }
 
-            rateLimiter.recordSearchRequest()
-
             client
                 .get("$API_URL/cgi/search.pl?search_simple=1&json=1") {
+                    userAgent(networkConfig.userAgent)
+                    timeout {
+                        requestTimeoutMillis = TIMEOUT
+                        connectTimeoutMillis = TIMEOUT
+                        socketTimeoutMillis = TIMEOUT
+                    }
                     parameter("search_terms", query)
                     parameter("countries", countries)
                     parameter("page", page)
@@ -99,6 +103,8 @@ class OpenFoodFactsRemoteDataSource(
                 is FoodDatabaseError -> throw e
                 else -> throw FoodDatabaseError.Unknown(e.message)
             }
+        } finally {
+            rateLimiter.recordSearchRequest()
         }
 
     private companion object {

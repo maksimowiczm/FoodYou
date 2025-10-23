@@ -22,8 +22,10 @@ private constructor(val profileId: ProfileId, history: List<SearchHistory>) {
 
         // Filter out non-text queries
         when (query) {
-            is SearchQuery.Barcode -> return
-            is SearchQuery.OpenFoodFactsUrl -> return
+            is SearchQuery.Barcode,
+            is SearchQuery.OpenFoodFactsUrl,
+            is SearchQuery.FoodDataCentralUrl -> return
+
             is SearchQuery.Text -> Unit
         }
 

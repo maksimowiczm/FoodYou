@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.infrastructure.FoodDataCentralSettingsRepositoryImpl
 import com.maksimowiczm.foodyou.food.infrastructure.FoodProductRepositoryImpl
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.openFoodFactsModule
+import com.maksimowiczm.foodyou.food.infrastructure.usda.foodDataCentralModule
 import com.maksimowiczm.foodyou.food.infrastructure.user.userFoodModule
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
@@ -16,6 +17,7 @@ import org.koin.dsl.module
 val foodModule = module {
     openFoodFactsModule()
     userFoodModule()
+    foodDataCentralModule()
     foodNameSelector().bind<FoodNameSelector>()
     factoryOf(::FoodProductRepositoryImpl).bind<FoodProductRepository>()
     factoryOf(::FoodDataCentralSettingsRepositoryImpl).bind<FoodDataCentralSettingsRepository>()

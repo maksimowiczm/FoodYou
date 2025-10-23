@@ -7,19 +7,20 @@ import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.OpenFoodFactsRepository
+import com.maksimowiczm.foodyou.food.infrastructure.usda.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.food.infrastructure.user.UserFoodRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
 class FoodProductRepositoryImpl(
     private val userFoodRepository: UserFoodRepository,
     private val openFoodFactsRepository: OpenFoodFactsRepository,
+    private val foodDataCentralRepository: FoodDataCentralRepository,
 ) : FoodProductRepository {
     override suspend fun observe(
         queryParameters: QueryParameters
     ): Flow<FoodProductRepository.FoodStatus> =
         when (queryParameters) {
-            is QueryParameters.FoodDataCentral -> flowOf(FoodProductRepository.FoodStatus.NotFound)
+            is QueryParameters.FoodDataCentral -> foodDataCentralRepository.observe(queryParameters)
             is QueryParameters.Local -> userFoodRepository.observe(queryParameters)
             is QueryParameters.OpenFoodFacts -> openFoodFactsRepository.observe(queryParameters)
         }
@@ -30,7 +31,5 @@ class FoodProductRepositoryImpl(
 
     override suspend fun refresh(
         identity: FoodProductIdentity.FoodDataCentral
-    ): Result<FoodProductDto, FoodDatabaseError> {
-        TODO("Not yet implemented")
-    }
+    ): Result<FoodProductDto, FoodDatabaseError> = foodDataCentralRepository.refresh(identity)
 }

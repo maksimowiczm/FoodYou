@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.food.infrastructure.user
 
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadState.NotLoading
+import androidx.paging.LoadStates
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -13,6 +15,7 @@ import com.maksimowiczm.foodyou.food.search.domain.SearchParameters
 import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
 import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class UserFoodRepository(private val dao: UserFoodDao, private val nameSelector: FoodNameSelector) {
@@ -24,6 +27,22 @@ class UserFoodRepository(private val dao: UserFoodDao, private val nameSelector:
         pageSize: Int,
     ): Flow<PagingData<SearchableFoodDto>> {
         val language = nameSelector.select()
+
+        when (searchFoodParams.query) {
+            SearchQuery.Blank,
+            is SearchQuery.Barcode,
+            is SearchQuery.Text -> Unit
+
+            is SearchQuery.FoodDataCentralUrl,
+            is SearchQuery.OpenFoodFactsUrl -> {
+                return flowOf(
+                    PagingData.empty(
+                        sourceLoadStates =
+                            LoadStates(NotLoading(true), NotLoading(true), NotLoading(true))
+                    )
+                )
+            }
+        }
 
         val config = PagingConfig(pageSize = pageSize)
         val factory = {
@@ -45,12 +64,8 @@ class UserFoodRepository(private val dao: UserFoodDao, private val nameSelector:
                         searchFoodParams.accountId.value,
                     )
 
-                is SearchQuery.OpenFoodFactsUrl ->
-                    dao.getPagingSourceByBarcode(
-                        searchFoodParams.query.barcode,
-                        language.tag,
-                        searchFoodParams.accountId.value,
-                    )
+                is SearchQuery.OpenFoodFactsUrl,
+                is SearchQuery.FoodDataCentralUrl -> error("Unreachable")
             }
         }
 
@@ -70,8 +85,8 @@ class UserFoodRepository(private val dao: UserFoodDao, private val nameSelector:
                 is SearchQuery.Text ->
                     dao.observeCountByQuery(parameters.query.query, parameters.accountId.value)
 
-                is SearchQuery.OpenFoodFactsUrl ->
-                    dao.observeCountByBarcode(parameters.query.barcode, parameters.accountId.value)
+                is SearchQuery.OpenFoodFactsUrl,
+                is SearchQuery.FoodDataCentralUrl -> flowOf(0)
             }
 
         return countFlow

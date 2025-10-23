@@ -163,7 +163,12 @@ internal class FoodSearchViewModel(
             .flatMapLatest { it }
 
     private val usdaSearchParams =
-        searchQuery.map { query -> SearchParameters.FoodDataCentral(query = query) }
+        searchQuery.map { query ->
+            SearchParameters.FoodDataCentral(
+                query = query,
+                orderBy = SearchParameters.FoodDataCentral.OrderBy.NameAscending,
+            )
+        }
 
     private val usdaPages =
         usdaSearchParams

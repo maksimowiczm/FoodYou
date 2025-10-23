@@ -2,11 +2,10 @@ package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room
 
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model.OpenFoodFactsNutrients
 
-@Entity(tableName = "OpenFoodFactsProduct", indices = [Index(value = ["brand"])])
+@Entity(tableName = "OpenFoodFactsProduct")
 data class OpenFoodFactsProductEntity(
     @PrimaryKey val barcode: String,
     val names: String,

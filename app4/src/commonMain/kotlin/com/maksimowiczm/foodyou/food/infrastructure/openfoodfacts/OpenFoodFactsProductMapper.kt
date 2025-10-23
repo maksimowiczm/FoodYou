@@ -40,10 +40,11 @@ class OpenFoodFactsProductMapper {
         }
 
     fun searchableFoodDto(entity: OpenFoodFactsProductEntity): SearchableFoodDto =
-        buildFoodDto(entity) { name, nutrients, servingQuantity, packageQuantity, image ->
+        buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity, image ->
             SearchableFoodDto(
                 identity = FoodProductIdentity.OpenFoodFacts(entity.barcode),
                 name = name,
+                brand = brand,
                 nutritionFacts = nutrients,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
@@ -56,11 +57,11 @@ class OpenFoodFactsProductMapper {
         }
 
     fun foodProductDto(entity: OpenFoodFactsProductEntity): FoodProductDto =
-        buildFoodDto(entity) { name, nutrients, servingQuantity, packageQuantity, image ->
+        buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity, image ->
             FoodProductDto(
                 identity = FoodProductIdentity.OpenFoodFacts(entity.barcode),
                 name = name,
-                brand = entity.brand.takeIfNotBlank()?.let { FoodBrand(it) },
+                brand = brand,
                 barcode = entity.barcode.takeIfNotBlank()?.let { Barcode(it) },
                 note = null,
                 image = image,
@@ -74,7 +75,14 @@ class OpenFoodFactsProductMapper {
     private inline fun <T> buildFoodDto(
         entity: OpenFoodFactsProductEntity,
         build:
-            (FoodName, NutritionFacts, AbsoluteQuantity?, AbsoluteQuantity?, FoodImage.Remote?) -> T,
+            (
+                FoodName,
+                FoodBrand?,
+                NutritionFacts,
+                AbsoluteQuantity?,
+                AbsoluteQuantity?,
+                FoodImage.Remote?,
+            ) -> T,
     ): T =
         with(entity) {
             val nameMap = Json.decodeFromString<Map<String, String>>(names)
@@ -158,7 +166,9 @@ class OpenFoodFactsProductMapper {
                     null
                 }
 
-            return build(name, nutrients, servingQuantity, packageQuantity, image)
+            val brand = brand.takeIfNotBlank()?.let { FoodBrand(it) }
+
+            return build(name, brand, nutrients, servingQuantity, packageQuantity, image)
         }
 
     private fun parseQuantity(weight: Double?, unit: String?): AbsoluteQuantity? {
@@ -169,11 +179,13 @@ class OpenFoodFactsProductMapper {
             "g" -> AbsoluteQuantity.Weight(Grams(validWeight))
             "oz",
             "oz." -> AbsoluteQuantity.Weight(Ounces(validWeight))
+
             "ml" -> AbsoluteQuantity.Volume(Milliliters(validWeight))
             "fl",
             "fl.oz",
             "fl. oz",
             "fl.oz." -> AbsoluteQuantity.Volume(FluidOunces(validWeight))
+
             else -> null
         }
     }

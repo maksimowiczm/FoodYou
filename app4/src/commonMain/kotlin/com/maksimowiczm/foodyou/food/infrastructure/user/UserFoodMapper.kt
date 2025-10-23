@@ -25,11 +25,11 @@ import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
 
 class UserFoodMapper {
     fun foodProductDto(entity: UserFoodEntity): FoodProductDto =
-        buildFoodDto(entity) { name, nutrients, servingQuantity, packageQuantity ->
+        buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity ->
             FoodProductDto(
                 identity = FoodProductIdentity.Local(entity.id),
                 name = name,
-                brand = entity.brand?.let { FoodBrand(it) },
+                brand = brand,
                 barcode = entity.barcode?.let { Barcode(it) },
                 note = entity.note?.let { FoodNote(it) },
                 image = null,
@@ -41,7 +41,7 @@ class UserFoodMapper {
         }
 
     fun searchableFoodDto(entity: UserFoodEntity): SearchableFoodDto =
-        buildFoodDto(entity) { name, nutrients, servingQuantity, packageQuantity ->
+        buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity ->
             val suggestedQuantity =
                 servingQuantity?.let { ServingQuantity(1.0) }
                     ?: packageQuantity?.let { PackageQuantity(1.0) }
@@ -53,6 +53,7 @@ class UserFoodMapper {
             SearchableFoodDto(
                 identity = FoodProductIdentity.Local(entity.id),
                 name = name,
+                brand = brand,
                 nutritionFacts = nutrients,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
@@ -63,7 +64,7 @@ class UserFoodMapper {
 
     private inline fun <T> buildFoodDto(
         entity: UserFoodEntity,
-        build: (FoodName, NutritionFacts, AbsoluteQuantity?, AbsoluteQuantity?) -> T,
+        build: (FoodName, FoodBrand?, NutritionFacts, AbsoluteQuantity?, AbsoluteQuantity?) -> T,
     ): T =
         with(entity) {
             val name =
@@ -137,7 +138,9 @@ class UserFoodMapper {
             val servingQuantity = servingSize?.toQuantity()
             val packageQuantity = packageSize?.toQuantity()
 
-            return build(name, nutrients, servingQuantity, packageQuantity)
+            val brand = brand?.let { FoodBrand(it) }
+
+            return build(name, brand, nutrients, servingQuantity, packageQuantity)
         }
 
     private fun QuantityEntity.toQuantity(): AbsoluteQuantity =

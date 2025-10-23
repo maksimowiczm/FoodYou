@@ -27,5 +27,10 @@ sealed interface SearchParameters {
     }
 
     /** Search in FoodData Central API */
-    data class FoodDataCentral(override val query: SearchQuery) : SearchParameters
+    data class FoodDataCentral(override val query: SearchQuery, val orderBy: OrderBy) :
+        SearchParameters {
+        enum class OrderBy {
+            NameAscending
+        }
+    }
 }

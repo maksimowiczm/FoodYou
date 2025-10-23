@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts
+package com.maksimowiczm.foodyou.food.infrastructure.usda
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState.NotLoading
@@ -11,14 +11,15 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.food.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository.FoodStatus
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.OpenFoodFactsRemoteDataSource
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsDao
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsDatabase
+import com.maksimowiczm.foodyou.food.infrastructure.usda.network.FoodDataCentralRemoteDataSource
+import com.maksimowiczm.foodyou.food.infrastructure.usda.room.FoodDataCentralDao
+import com.maksimowiczm.foodyou.food.infrastructure.usda.room.FoodDataCentralDatabase
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.food.search.domain.SearchParameters
 import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
@@ -32,23 +33,24 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class OpenFoodFactsRepository(
-    private val networkDataSource: OpenFoodFactsRemoteDataSource,
+class FoodDataCentralRepository(
+    private val networkDataSource: FoodDataCentralRemoteDataSource,
     private val searchPreferencesRepository: FoodSearchPreferencesRepository,
-    private val database: OpenFoodFactsDatabase,
-    private val dao: OpenFoodFactsDao,
+    private val settingsRepository: FoodDataCentralSettingsRepository,
+    private val database: FoodDataCentralDatabase,
+    private val dao: FoodDataCentralDao,
     private val logger: Logger,
 ) {
-    private val mapper = OpenFoodFactsProductMapper()
+    private val mapper = FoodDataCentralProductMapper()
 
     @OptIn(ExperimentalPagingApi::class)
     fun search(
-        params: SearchParameters.OpenFoodFacts,
+        params: SearchParameters.FoodDataCentral,
         pageSize: Int,
     ): Flow<PagingData<SearchableFoodDto>> {
         val config = PagingConfig(pageSize = pageSize)
 
-        if (params.query is SearchQuery.FoodDataCentralUrl) {
+        if (params.query is SearchQuery.OpenFoodFactsUrl) {
             return flowOf(
                 PagingData.empty(
                     sourceLoadStates =
@@ -61,53 +63,52 @@ class OpenFoodFactsRepository(
             when (params.query) {
                 SearchQuery.Blank -> dao.getPagingSource()
                 is SearchQuery.Barcode -> dao.getPagingSourceByBarcode(params.query.barcode)
-
                 is SearchQuery.Text -> dao.getPagingSourceByQuery(params.query.query)
-                is SearchQuery.OpenFoodFactsUrl ->
-                    dao.getPagingSourceByBarcode(params.query.barcode)
-
-                is SearchQuery.FoodDataCentralUrl -> error("Unreachable")
+                is SearchQuery.OpenFoodFactsUrl -> error("Unreachable")
+                is SearchQuery.FoodDataCentralUrl -> dao.getPagingSourceByFdcId(params.query.fdcId)
             }
         }
 
         return searchPreferencesRepository.observe().flatMapLatest { prefs ->
             val remoteMediator =
-                if (prefs.allowOpenFoodFacts && params.query is SearchQuery.NotBlank) {
-                    OpenFoodFactsRemoteMediator(
+                if (prefs.allowFoodDataCentralUSDA && params.query is SearchQuery.NotBlank) {
+                    FoodDataCentralRemoteMediator(
                         query = params.query,
                         database = database,
                         remote = networkDataSource,
+                        apiKey = settingsRepository.load().apiKey,
                         logger = logger,
                     )
                 } else null
 
-            Pager(config = config, pagingSourceFactory = factory, remoteMediator = remoteMediator)
+            Pager(config = config, remoteMediator = remoteMediator, pagingSourceFactory = factory)
                 .flow
-                .map { data -> data.map(mapper::searchableFoodDto) }
+                .map { pagingData -> pagingData.map { entity -> mapper.searchableFoodDto(entity) } }
         }
     }
 
-    fun count(parameters: SearchParameters.OpenFoodFacts): Flow<Int> {
+    fun count(parameters: SearchParameters.FoodDataCentral): Flow<Int> {
         return when (parameters.query) {
             is SearchQuery.Blank -> dao.observeCount()
             is SearchQuery.Barcode -> dao.observeCountByBarcode(parameters.query.barcode)
             is SearchQuery.Text -> dao.observeCountByQuery(parameters.query.query)
-            is SearchQuery.OpenFoodFactsUrl -> dao.observeCountByBarcode(parameters.query.barcode)
-            is SearchQuery.FoodDataCentralUrl -> flowOf(0)
+            is SearchQuery.OpenFoodFactsUrl -> flowOf(0)
+            is SearchQuery.FoodDataCentralUrl -> dao.observeCountByFdcId(parameters.query.fdcId)
         }
     }
 
-    fun observe(parameters: QueryParameters.OpenFoodFacts): Flow<FoodStatus> = channelFlow {
+    fun observe(parameters: QueryParameters.FoodDataCentral): Flow<FoodStatus> = channelFlow {
         send(FoodStatus.Loading(null))
 
-        val barcode = parameters.identity.barcode
+        val fdcId = parameters.identity.fdcId
 
-        val localProduct = dao.observe(barcode).first()
+        val localProduct = dao.observe(fdcId).first()
 
         if (localProduct == null) {
             try {
-                val openFoodFactsProduct = networkDataSource.getProduct(barcode).getOrThrow()
-                val entity = mapper.openFoodFactsProductEntity(openFoodFactsProduct)
+                val apiKey = settingsRepository.load().apiKey
+                val openFoodFactsProduct = networkDataSource.getProduct(fdcId, apiKey).getOrThrow()
+                val entity = mapper.foodDataCentralProductEntity(openFoodFactsProduct)
                 dao.upsertProduct(entity)
                 send(FoodStatus.Available(mapper.foodProductDto(entity)))
             } catch (e: FoodDatabaseError) {
@@ -120,7 +121,7 @@ class OpenFoodFactsRepository(
             send(FoodStatus.Available(mapper.foodProductDto(localProduct)))
         }
 
-        dao.observe(barcode).drop(1).collectLatest {
+        dao.observe(fdcId).drop(1).collectLatest {
             when (it) {
                 null -> send(FoodStatus.NotFound)
                 else -> send(FoodStatus.Available(mapper.foodProductDto(it)))
@@ -129,13 +130,13 @@ class OpenFoodFactsRepository(
     }
 
     suspend fun refresh(
-        identity: FoodProductIdentity.OpenFoodFacts
+        identity: FoodProductIdentity.FoodDataCentral
     ): Result<FoodProductDto, FoodDatabaseError> {
-        val barcode = identity.barcode
+        val fdcId = identity.fdcId
 
         return try {
-            val remote = networkDataSource.getProduct(barcode).getOrThrow()
-            val entity = mapper.openFoodFactsProductEntity(remote)
+            val remote = networkDataSource.getProduct(id = fdcId, apiKey = "DEMO_KEY").getOrThrow()
+            val entity = mapper.foodDataCentralProductEntity(remote)
             dao.upsertProduct(entity)
             Ok(mapper.foodProductDto(entity))
         } catch (e: FoodDatabaseError) {

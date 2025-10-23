@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts
+package com.maksimowiczm.foodyou.food.infrastructure.usda
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -7,33 +7,32 @@ import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.infrastructure.room.immediateTransaction
 import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.OpenFoodFactsRemoteDataSource
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsDatabase
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsPagingKeyEntity
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsProductEntity
+import com.maksimowiczm.foodyou.food.infrastructure.usda.network.FoodDataCentralRemoteDataSource
+import com.maksimowiczm.foodyou.food.infrastructure.usda.room.FoodDataCentralDatabase
+import com.maksimowiczm.foodyou.food.infrastructure.usda.room.FoodDataCentralPagingKeyEntity
+import com.maksimowiczm.foodyou.food.infrastructure.usda.room.FoodDataCentralProductEntity
 import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
 import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
 
-// TODO
-//  Fix issue with downloading first pages multiple times
 @OptIn(ExperimentalPagingApi::class)
-class OpenFoodFactsRemoteMediator(
+class FoodDataCentralRemoteMediator(
     private val query: SearchQuery.NotBlank,
-    private val database: OpenFoodFactsDatabase,
-    private val remote: OpenFoodFactsRemoteDataSource,
+    private val database: FoodDataCentralDatabase,
+    private val remote: FoodDataCentralRemoteDataSource,
+    private val apiKey: String?,
     logger: Logger,
-) : RemoteMediator<Int, OpenFoodFactsProductEntity>() {
+) : RemoteMediator<Int, FoodDataCentralProductEntity>() {
     private val logger = logger.withTag(TAG)
     private val dao = database.dao
-    private val mapper = OpenFoodFactsProductMapper()
+    private val mapper = FoodDataCentralProductMapper()
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, OpenFoodFactsProductEntity>,
+        state: PagingState<Int, FoodDataCentralProductEntity>,
     ): MediatorResult {
         try {
             val page =
@@ -45,55 +44,50 @@ class OpenFoodFactsRemoteMediator(
 
                     LoadType.APPEND ->
                         when (query) {
-                            is SearchQuery.Barcode,
-                            is SearchQuery.OpenFoodFactsUrl -> {
-                                val barcode =
-                                    when (query) {
-                                        is SearchQuery.Barcode -> query.barcode
-                                        is SearchQuery.OpenFoodFactsUrl -> query.barcode
-                                        else -> error("Unreachable")
-                                    }
-
-                                val existingProduct = dao.observeCountByBarcode(barcode).first()
-                                if (existingProduct > 0) {
-                                    return MediatorResult.Success(endOfPaginationReached = true)
-                                }
-
-                                val response =
-                                    remote.getProduct(barcode).getOrElse {
-                                        return if (it is FoodDatabaseError.ProductNotFound)
-                                            MediatorResult.Success(endOfPaginationReached = true)
-                                        else MediatorResult.Error(it)
-                                    }
-
-                                val product = mapper.openFoodFactsProductEntity(response)
-                                dao.upsertProduct(product)
-                                return MediatorResult.Success(endOfPaginationReached = true)
-                            }
-
-                            is SearchQuery.Text -> {
+                            is SearchQuery.Text,
+                            is SearchQuery.Barcode -> {
                                 val count = dao.getPagingKeyCountByQuery(query.query)
                                 val nextPage = (count / PAGE_SIZE) + 1
                                 nextPage
                             }
 
-                            is SearchQuery.FoodDataCentralUrl ->
+                            is SearchQuery.OpenFoodFactsUrl ->
                                 return MediatorResult.Success(endOfPaginationReached = true)
+
+                            is SearchQuery.FoodDataCentralUrl -> {
+                                val existingProduct = dao.observeCountByFdcId(query.fdcId).first()
+                                if (existingProduct > 0) {
+                                    return MediatorResult.Success(endOfPaginationReached = true)
+                                }
+
+                                val response =
+                                    remote.getProduct(query.fdcId, apiKey).getOrElse {
+                                        return if (it is FoodDatabaseError.ProductNotFound)
+                                            MediatorResult.Success(endOfPaginationReached = true)
+                                        else MediatorResult.Error(it)
+                                    }
+
+                                val product = mapper.foodDataCentralProductEntity(response)
+                                dao.upsertProduct(product)
+                                return MediatorResult.Success(endOfPaginationReached = true)
+                            }
                         }
                 }
 
             logger.d { "Loading page $page" }
 
             val response =
-                remote.queryProducts(query = query.query, page = page, pageSize = PAGE_SIZE)
+                remote.queryProducts(
+                    query = query.query,
+                    page = page,
+                    apiKey = apiKey,
+                    pageSize = PAGE_SIZE,
+                )
 
-            val entities = response.products.map(mapper::openFoodFactsProductEntity)
+            val entities = response.foods.map(mapper::foodDataCentralProductEntity)
             val pagingKeys =
                 entities.map {
-                    OpenFoodFactsPagingKeyEntity(
-                        queryString = query.query,
-                        productBarcode = it.barcode,
-                    )
+                    FoodDataCentralPagingKeyEntity(queryString = query.query, fdcId = it.fdcId)
                 }
 
             database.immediateTransaction {
@@ -101,7 +95,7 @@ class OpenFoodFactsRemoteMediator(
                 dao.insertPagingKeys(pagingKeys)
             }
 
-            val skipped = response.products.size - entities.size
+            val skipped = response.foods.size - entities.size
             val endOfPaginationReached = entities.size + skipped < PAGE_SIZE
 
             return if (skipped == PAGE_SIZE) {
@@ -118,7 +112,7 @@ class OpenFoodFactsRemoteMediator(
     }
 
     private companion object {
-        const val TAG = "OpenFoodFactsRemoteMediator"
-        const val PAGE_SIZE = 50
+        private const val TAG = "FoodDataCentralRemoteMediator"
+        private const val PAGE_SIZE = 200
     }
 }

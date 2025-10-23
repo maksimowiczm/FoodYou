@@ -38,7 +38,7 @@ internal fun FoodSearchListItem(
         QuantityCalculator.calculateAbsoluteQuantity(food, quantity)
             .onError {
                 return FoodErrorListItem(
-                    headline = nameSelector.select(food.name),
+                    headline = food.localizedName(nameSelector),
                     image = image,
                     errorMessage = stringResource(Res.string.error_measurement_error),
                     modifier = modifier,
@@ -68,7 +68,7 @@ internal fun FoodSearchListItem(
             measurementString == null
     ) {
         return FoodErrorListItem(
-            headline = nameSelector.select(food.name),
+            headline = food.localizedName(nameSelector),
             image = image,
             modifier = modifier,
             onClick = onClick,
@@ -77,7 +77,7 @@ internal fun FoodSearchListItem(
     }
 
     FoodSearchListItem(
-        headline = nameSelector.select(food.name),
+        headline = food.localizedName(nameSelector),
         proteins = proteins,
         carbohydrates = carbohydrates,
         fats = fats,

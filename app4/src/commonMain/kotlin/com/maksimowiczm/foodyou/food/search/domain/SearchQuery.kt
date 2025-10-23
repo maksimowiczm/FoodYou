@@ -30,4 +30,17 @@ sealed interface SearchQuery {
                 "https://\\w+\\.openfoodfacts\\.org/product/\\d+(?<barcode>:/\\S+)?".toRegex()
         }
     }
+
+    data class FoodDataCentralUrl(val url: String) : NotBlank {
+        override val query: String = url
+
+        val fdcId: Int =
+            url.substringAfterLast("/food-details/").substringBefore("/").toIntOrNull()
+                ?: error("Invalid FoodDataCentral URL: $url")
+
+        companion object {
+            val regex =
+                "https://fdc\\.nal\\.usda\\.gov/food-details/(?<fdcId>\\d+)(/nutrients)?".toRegex()
+        }
+    }
 }

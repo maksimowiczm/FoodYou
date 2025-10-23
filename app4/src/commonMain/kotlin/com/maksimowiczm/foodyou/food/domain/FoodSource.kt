@@ -11,6 +11,8 @@ sealed interface FoodSource {
      */
     @JvmInline value class OpenFoodFacts(val url: String) : FoodSource
 
+    @JvmInline value class FoodDataCentral(val url: String) : FoodSource
+
     /**
      * Food added by the user manually
      *
