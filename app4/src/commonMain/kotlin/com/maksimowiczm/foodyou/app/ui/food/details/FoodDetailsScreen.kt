@@ -52,7 +52,6 @@ import com.maksimowiczm.foodyou.app.ui.common.saveable.rememberBlockingDataStore
 import com.maksimowiczm.foodyou.app.ui.food.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.app.ui.food.Image
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
-import com.maksimowiczm.foodyou.food.domain.FoodImage
 import com.maksimowiczm.foodyou.food.domain.FoodNote
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodSource
@@ -95,20 +94,16 @@ private fun FoodDetailsScreen(
 ) {
     val nameSelector = LocalFoodNameSelector.current
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val foodName =
-        when (uiState) {
-            is FoodDetailsUiState.WithData -> uiState.foodName
-            is FoodDetailsUiState.Error -> null
-            is FoodDetailsUiState.NotFound -> null
-        }
 
     Scaffold(
         modifier = modifier,
         topBar = {
             LargeFlexibleTopAppBar(
                 title = {
-                    if (foodName != null) {
-                        Text(nameSelector.select(foodName))
+                    val headline = (uiState as? FoodDetailsUiState.WithData)?.headline(nameSelector)
+
+                    if (headline != null) {
+                        Text(headline)
                     } else {
                         Spacer(
                             Modifier.shimmer()
@@ -122,11 +117,9 @@ private fun FoodDetailsScreen(
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 actions = {
                     when (val identity = uiState.identity) {
-                        is FoodProductIdentity.FoodDataCentral -> TODO()
+                        is FoodProductIdentity.FoodDataCentral -> RefreshMenu(onRefresh = onRefresh)
                         is FoodProductIdentity.Local -> LocalMenu(onEdit = { onEdit(identity) })
-
-                        is FoodProductIdentity.OpenFoodFacts ->
-                            OpenFoodFactsMenu(onRefresh = onRefresh)
+                        is FoodProductIdentity.OpenFoodFacts -> RefreshMenu(onRefresh = onRefresh)
                     }
                 },
                 colors =
@@ -161,7 +154,7 @@ private fun FoodDetailsScreen(
 @Composable
 private fun FoodDetailsContent(
     isLoading: Boolean,
-    image: FoodImage?,
+    image: FoodImageUiState,
     nutritionFacts: NutritionFacts?,
     note: FoodNote?,
     source: FoodSource?,
@@ -186,23 +179,26 @@ private fun FoodDetailsContent(
 
         LazyColumn(contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp)) {
             item {
-                if (image != null) {
-                    image.Image(
-                        shimmer = rememberShimmer(ShimmerBounds.View),
-                        modifier =
-                            Modifier.fillMaxWidth()
+                when (image) {
+                    FoodImageUiState.Loading ->
+                        Spacer(
+                            Modifier.shimmer()
+                                .fillMaxWidth()
                                 .aspectRatio(16f / 9f)
-                                .padding(horizontal = 32.dp),
-                    )
-                } else {
-                    Spacer(
-                        Modifier.shimmer()
-                            .fillMaxWidth()
-                            .aspectRatio(16f / 9f)
-                            .padding(horizontal = 32.dp)
-                            .clip(MaterialTheme.shapes.medium)
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                    )
+                                .padding(horizontal = 32.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(MaterialTheme.colorScheme.secondaryContainer)
+                        )
+
+                    FoodImageUiState.NoImage -> Unit
+                    is FoodImageUiState.WithImage ->
+                        image.image.Image(
+                            shimmer = rememberShimmer(ShimmerBounds.View),
+                            modifier =
+                                Modifier.fillMaxWidth()
+                                    .aspectRatio(16f / 9f)
+                                    .padding(horizontal = 32.dp),
+                        )
                 }
             }
             item { Spacer(Modifier.height(8.dp)) }
@@ -249,6 +245,17 @@ private fun FoodDetailsContent(
                         HorizontalDivider(Modifier.fillMaxWidth().padding(horizontal = 16.dp))
                         Spacer(Modifier.height(16.dp))
                         OpenFoodFactsSource(
+                            url = source.url,
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        )
+                    }
+
+                is FoodSource.FoodDataCentral ->
+                    item {
+                        Spacer(Modifier.height(16.dp))
+                        HorizontalDivider(Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+                        Spacer(Modifier.height(16.dp))
+                        FoodDataCentralSource(
                             url = source.url,
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                         )
@@ -361,7 +368,7 @@ private fun LocalMenu(onEdit: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun OpenFoodFactsMenu(onRefresh: () -> Unit, modifier: Modifier = Modifier) {
+private fun RefreshMenu(onRefresh: () -> Unit, modifier: Modifier = Modifier) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier) {

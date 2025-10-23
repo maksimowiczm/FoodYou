@@ -71,30 +71,46 @@ class FoodDetailsViewModel(
         foodProduct
             .map {
                 when (it) {
-                    is FoodStatus.Available ->
+                    is FoodStatus.Available -> {
+                        val image =
+                            when {
+                                it.food.image != null -> FoodImageUiState.WithImage(it.food.image)
+                                else -> FoodImageUiState.NoImage
+                            }
+
                         FoodDetailsUiState.WithData(
                             identity = identity,
                             isLoading = false,
                             foodName = it.food.name,
-                            image = it.food.image,
+                            brand = it.food.brand?.value,
+                            image = image,
                             nutritionFacts = it.food.nutritionFacts,
                             note = it.food.note,
                             source = it.food.source,
                         )
+                    }
 
                     is FoodStatus.Error ->
                         FoodDetailsUiState.Error(identity = identity, message = it.error.message)
 
-                    is FoodStatus.Loading ->
+                    is FoodStatus.Loading -> {
+                        val image =
+                            when {
+                                it.food?.image != null -> FoodImageUiState.WithImage(it.food.image)
+                                else -> FoodImageUiState.Loading
+                            }
+
                         FoodDetailsUiState.WithData(
                             identity = identity,
                             isLoading = true,
                             foodName = it.food?.name,
-                            image = it.food?.image,
+                            brand = it.food?.brand?.value,
+                            image = image,
                             nutritionFacts = it.food?.nutritionFacts,
                             note = it.food?.note,
                             source = it.food?.source,
                         )
+                    }
 
                     FoodStatus.NotFound -> FoodDetailsUiState.NotFound(identity = identity)
                 }
@@ -105,6 +121,7 @@ class FoodDetailsViewModel(
                         isLoading = true,
                         identity = uiState.identity,
                         foodName = uiState.foodName,
+                        brand = uiState.brand,
                         image = uiState.image,
                         nutritionFacts = uiState.nutritionFacts,
                         note = uiState.note,
@@ -122,7 +139,8 @@ class FoodDetailsViewModel(
                         isLoading = true,
                         identity = identity,
                         foodName = null,
-                        image = null,
+                        brand = null,
+                        image = FoodImageUiState.Loading,
                         nutritionFacts = null,
                         note = null,
                         source = null,
