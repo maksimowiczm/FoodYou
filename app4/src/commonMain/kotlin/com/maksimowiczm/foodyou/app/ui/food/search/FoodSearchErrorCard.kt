@@ -27,7 +27,6 @@ import org.jetbrains.compose.resources.stringResource
 internal fun FoodSearchErrorCard(
     error: FoodDatabaseError,
     onRetry: () -> Unit,
-    onUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (error) {
@@ -43,12 +42,7 @@ internal fun FoodSearchErrorCard(
         is FoodDatabaseError.FoodDataCentral.ApiKeyUnauthorized,
         is FoodDatabaseError.FoodDataCentral.ApiKeyUnverified,
         is FoodDatabaseError.FoodDataCentral.RateLimitExceeded ->
-            //            DownloadProductUsdaErrorCard(
-            //                error = error,
-            //                onUpdateApiKey = onUsdaApiKey,
-            //                modifier = modifier,
-            //            )
-            TODO()
+            FoodDataCentralErrorCard(error = error, modifier = modifier)
     }
 }
 

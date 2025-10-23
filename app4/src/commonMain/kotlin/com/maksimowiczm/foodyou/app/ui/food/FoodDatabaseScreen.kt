@@ -36,7 +36,6 @@ fun FoodDatabaseScreen(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
-    onUpdateUsdaApiKey: () -> Unit,
     onFood: (FoodProductIdentity) -> Unit,
     query: String?,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -84,7 +83,6 @@ fun FoodDatabaseScreen(
                     onFoodClick = { model, _ -> onFood(model.identity) },
                     onBack = onBack,
                     query = query,
-                    onUpdateUsdaApiKey = onUpdateUsdaApiKey,
                 )
             },
         )

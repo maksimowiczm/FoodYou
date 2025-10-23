@@ -63,7 +63,6 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun FoodSearchApp(
     onFoodClick: (SearchableFoodDto, Quantity) -> Unit,
-    onUpdateUsdaApiKey: () -> Unit,
     query: String?,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
@@ -77,7 +76,6 @@ fun FoodSearchApp(
         onSearch = viewModel::search,
         onSourceChange = viewModel::changeSource,
         onFoodClick = onFoodClick,
-        onUpdateUsdaApiKey = onUpdateUsdaApiKey,
         onBack = onBack,
         modifier = modifier,
         appState =
@@ -91,7 +89,6 @@ private fun FoodSearchApp(
     onSearch: (String?) -> Unit,
     onSourceChange: (FoodFilter.Source) -> Unit,
     onFoodClick: (SearchableFoodDto, Quantity) -> Unit,
-    onUpdateUsdaApiKey: () -> Unit,
     onBack: (() -> Unit)?,
     modifier: Modifier = Modifier,
     appState: FoodSearchAppState = rememberFoodSearchAppState(),
@@ -192,7 +189,6 @@ private fun FoodSearchApp(
                     FoodSearchErrorCard(
                         error = ex,
                         onRetry = pages::retry,
-                        onUsdaApiKey = onUpdateUsdaApiKey,
                         modifier =
                             Modifier.fillMaxWidth().padding(top = 8.dp).padding(horizontal = 16.dp),
                     )

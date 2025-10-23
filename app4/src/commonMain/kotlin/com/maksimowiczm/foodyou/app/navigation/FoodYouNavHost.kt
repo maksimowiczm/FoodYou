@@ -79,9 +79,6 @@ fun FoodYouNavHost(
                 onCreateRecipe = {
                     // TODO
                 },
-                onUpdateUsdaApiKey = {
-                    // TODO
-                },
                 onFood = { identity -> navController.navigateSingleTop(FoodDetails(identity)) },
                 query = query,
                 animatedVisibilityScope = this,
