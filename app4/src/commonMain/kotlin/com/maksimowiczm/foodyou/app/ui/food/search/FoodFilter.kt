@@ -13,10 +13,10 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Immutable
-internal data class FoodFilter(val source: Source) {
+internal data class FoodFilter(val source: Source = DefaultFilter) {
 
     companion object {
-        val DefaultFilter = Source.Recent
+        val DefaultFilter = Source.YourFood
     }
 
     val filterCount: Int

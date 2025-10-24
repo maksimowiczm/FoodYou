@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
@@ -47,18 +48,7 @@ internal class FoodSearchViewModel(
             runBlocking { emit(searchQueryParser.parse(query)) }
         }
 
-    init {
-        viewModelScope.launch {
-            searchQuery.filterIsInstance<SearchQuery.NotBlank>().collect {
-                val profileId = accountManager.observePrimaryProfileId().first()
-                val history = searchHistoryRepository.observe(profileId).first()
-                history.recordSearchQuery(it, clock)
-                searchHistoryRepository.save(history)
-            }
-        }
-    }
-
-    private val filter = MutableStateFlow(FoodFilter(FoodFilter.Source.OpenFoodFacts))
+    private val filter = MutableStateFlow(FoodFilter())
 
     fun search(query: String?) {
         viewModelScope.launch {
@@ -237,6 +227,7 @@ internal class FoodSearchViewModel(
 
     init {
         searchQuery
+            .filterIsInstance<SearchQuery.NotBlank>()
             .flatMapLatest { query ->
                 val switchFlow =
                     combine(filter, uiState) { currentFilter, uiState ->
@@ -277,6 +268,26 @@ internal class FoodSearchViewModel(
                 val now = Clock.System.now().toEpochMilliseconds()
                 val deadline = now + 100L
                 switchFlow.takeWhile { Clock.System.now().toEpochMilliseconds() < deadline }
+            }
+            .launchIn(viewModelScope)
+
+        searchQuery
+            .filterIsInstance<SearchQuery.NotBlank>()
+            .onEach {
+                val profileId = accountManager.observePrimaryProfileId().first()
+                val history = searchHistoryRepository.observe(profileId).first()
+                history.recordSearchQuery(it, clock)
+                searchHistoryRepository.save(history)
+            }
+            .launchIn(viewModelScope)
+
+        searchQuery
+            .onEach {
+                when (it) {
+                    is SearchQuery.FoodDataCentralUrl -> changeSource(FoodFilter.Source.USDA)
+                    is SearchQuery.OpenFoodFactsUrl -> changeSource(FoodFilter.Source.OpenFoodFacts)
+                    else -> Unit
+                }
             }
             .launchIn(viewModelScope)
     }
