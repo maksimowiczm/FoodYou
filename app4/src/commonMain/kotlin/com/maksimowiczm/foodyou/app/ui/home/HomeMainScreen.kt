@@ -2,6 +2,12 @@ package com.maksimowiczm.foodyou.app.ui.home
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,27 +27,37 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.LinearGradientShader
+import androidx.compose.ui.graphics.Shader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.now
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeMainScreen(
     navController: NavController,
@@ -54,7 +70,6 @@ fun HomeMainScreen(
     val order =
         remember(savedHomeOrder) { savedHomeOrder.mapNotNull { homeCardComposablesMap[it] } }
 
-    val transition = updateTransition(selectedProfile)
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val homeState =
         rememberHomeState(navController = navController, initialSelectedDate = LocalDate.now())
@@ -62,65 +77,16 @@ fun HomeMainScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = {
-                    transition.Crossfade {
-                        if (selectedProfile != null) {
-                            val welcomeMessage =
-                                stringResource(
-                                    Res.string.headline_welcome_user_message,
-                                    selectedProfile.name,
-                                )
-
-                            val colors =
-                                listOf(
-                                    MaterialTheme.colorScheme.primary,
-                                    MaterialTheme.colorScheme.secondary,
-                                    MaterialTheme.colorScheme.tertiary,
-                                )
-
-                            Text(
-                                text = animateTextByCharacter(welcomeMessage),
-                                style =
-                                    LocalTextStyle.current.copy(
-                                        brush = Brush.linearGradient(colors = colors)
-                                    ),
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
-                },
-                modifier = modifier,
-                actions = {
-                    transition.Crossfade {
-                        if (selectedProfile == null) {
-                            Box(
-                                Modifier.shimmer()
-                                    .size(48.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                            )
-                        } else {
-                            FilledTonalIconButton(
-                                onClick = onProfile,
-                                shapes = IconButtonDefaults.shapes(),
-                            ) {
-                                Icon(
-                                    imageVector = selectedProfile.avatar.toImageVector(),
-                                    contentDescription = null,
-                                )
-                            }
-                        }
-                    }
-                },
+            TopBar(
+                selectedProfile = selectedProfile,
+                onProfile = onProfile,
                 scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues,
+            contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
             order.forEach { feature ->
                 item(key = feature.feature) {
@@ -141,25 +107,127 @@ fun HomeMainScreen(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun TopBar(
+    selectedProfile: ProfileUiState?,
+    onProfile: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+    modifier: Modifier = Modifier,
+) {
+    val transition = updateTransition(selectedProfile)
+
+    TopAppBar(
+        title = {
+            transition.Crossfade {
+                if (it != null) {
+                    val welcomeMessage =
+                        stringResource(Res.string.headline_welcome_user_message, it.name)
+
+                    val colorScheme = MaterialTheme.colorScheme
+                    val colors =
+                        remember(colorScheme) {
+                            listOf(colorScheme.primary, colorScheme.secondary, colorScheme.tertiary)
+                        }
+
+                    val infiniteTransition = rememberInfiniteTransition()
+                    val offset =
+                        infiniteTransition.animateFloat(
+                            initialValue = 0f,
+                            targetValue = 1f,
+                            animationSpec =
+                                infiniteRepeatable(
+                                    animation =
+                                        tween(durationMillis = 10_000, easing = LinearEasing),
+                                    repeatMode = RepeatMode.Reverse,
+                                ),
+                        )
+                    val brush =
+                        remember(offset) {
+                            object : ShaderBrush() {
+                                override fun createShader(size: Size): Shader {
+                                    val widthOffset = size.width * offset.value
+                                    val heightOffset = size.height * offset.value
+                                    return LinearGradientShader(
+                                        colors = colors,
+                                        from = Offset(widthOffset, heightOffset),
+                                        to =
+                                            Offset(
+                                                widthOffset + size.width,
+                                                heightOffset + size.height,
+                                            ),
+                                        tileMode = TileMode.Mirror,
+                                    )
+                                }
+                            }
+                        }
+
+                    Text(
+                        text = animateTextByCharacter(welcomeMessage),
+                        style = LocalTextStyle.current.copy(brush = brush),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+        },
+        modifier = modifier,
+        actions = {
+            transition.Crossfade {
+                if (selectedProfile == null) {
+                    Box(
+                        Modifier.shimmer()
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                    )
+                } else {
+                    FilledTonalIconButton(
+                        onClick = onProfile,
+                        shapes = IconButtonDefaults.shapes(),
+                    ) {
+                        Icon(
+                            imageVector = selectedProfile.avatar.toImageVector(),
+                            contentDescription = null,
+                        )
+                    }
+                }
+            }
+        },
+        scrollBehavior = scrollBehavior,
+    )
+}
+
 @Composable
 private fun animateTextByCharacter(
     targetString: String,
     delayDuration: Duration = 20.milliseconds,
 ): String {
-    var displayedString by rememberSaveable(targetString) { mutableStateOf("") }
     var hasAnimated by rememberSaveable(targetString) { mutableStateOf(false) }
 
-    LaunchedEffect(targetString) {
-        if (hasAnimated) return@LaunchedEffect
+    if (hasAnimated) {
+        return targetString
+    }
 
-        val iterator = targetString.iterator()
-        displayedString = ""
-        while (iterator.hasNext()) {
-            displayedString += iterator.nextChar()
-            delay(delayDuration)
+    var displayedString by remember(targetString) { mutableStateOf("") }
+
+    DisposableEffect(targetString) {
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            val iterator = targetString.iterator()
+            displayedString = ""
+            while (iterator.hasNext()) {
+                displayedString += iterator.nextChar()
+                delay(delayDuration)
+            }
+
+            hasAnimated = true
         }
 
-        hasAnimated = true
+        onDispose {
+            hasAnimated = true
+            coroutineScope.cancel()
+        }
     }
 
     return displayedString
