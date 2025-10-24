@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Colors
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.HomePersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Language
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.NutritionFactsPersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Personalization
@@ -18,7 +19,9 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsScreen
+import com.maksimowiczm.foodyou.app.ui.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
+import com.maksimowiczm.foodyou.app.ui.home.homeCardComposables
 import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.ColorsScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
@@ -33,8 +36,11 @@ fun FoodYouNavHost(
     navController: NavHostController = rememberNavController(),
 ) {
     NavHost(modifier = modifier, navController = navController, startDestination = Home) {
+        homeCardComposables.forEach { feature -> with(feature) { navigationGraph(navController) } }
+
         forwardBackwardComposable<Home> {
             HomeScreen(
+                navController = navController,
                 onFoodDatabase = { navController.navigateSingleTop(FoodDatabase(null)) },
                 onPersonalization = { navController.navigateSingleTop(Personalization) },
                 onDataBackupAndExport = { /* TODO */ },
@@ -43,6 +49,12 @@ fun FoodYouNavHost(
                 onAbout = { navController.navigateSingleTop(About) },
                 onAddProfile = { /* TODO */ },
                 onEditProfile = { /* TODO */ },
+            )
+        }
+        forwardBackwardComposable<HomePersonalization> {
+            HomePersonalizationScreen(
+                onBack = { navController.popBackStackInclusive<HomePersonalization>() },
+                navController = navController,
             )
         }
         forwardBackwardComposable<About> {
@@ -54,7 +66,7 @@ fun FoodYouNavHost(
         forwardBackwardComposable<Personalization> {
             PersonalizationScreen(
                 onBack = { navController.popBackStackInclusive<Personalization>() },
-                onHome = { /* TODO */ },
+                onHome = { navController.navigateSingleTop(HomePersonalization) },
                 onNutritionFacts = {
                     navController.navigateSingleTop(NutritionFactsPersonalization)
                 },
@@ -107,6 +119,8 @@ fun FoodYouNavHost(
 sealed interface FoodYouNavHostRoute {
 
     @Serializable data object Home : FoodYouNavHostRoute
+
+    @Serializable data object HomePersonalization : FoodYouNavHostRoute
 
     @Serializable data object About : FoodYouNavHostRoute
 

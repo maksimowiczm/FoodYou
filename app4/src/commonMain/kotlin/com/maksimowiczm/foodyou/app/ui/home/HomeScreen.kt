@@ -1,7 +1,9 @@
 package com.maksimowiczm.foodyou.app.ui.home
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.maksimowiczm.foodyou.app.ui.common.component.ModalSideSheet
 import com.maksimowiczm.foodyou.app.ui.common.component.rememberSideSheetState
 import kotlinx.coroutines.launch
@@ -9,6 +11,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen(
+    navController: NavController,
     onFoodDatabase: () -> Unit,
     onPersonalization: () -> Unit,
     onDataBackupAndExport: () -> Unit,
@@ -17,6 +20,7 @@ fun HomeScreen(
     onAbout: () -> Unit,
     onAddProfile: () -> Unit,
     onEditProfile: (ProfileUiState) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -31,11 +35,13 @@ fun HomeScreen(
     ModalSideSheet(
         content = {
             HomeMainScreen(
+                navController = navController,
                 selectedProfile = selectedProfile,
                 onProfile = { scope.launch { sheetState.open() } },
             )
         },
         onDismissRequest = { scope.launch { sheetState.close() } },
+        modifier = modifier,
         sheetState = sheetState,
     ) {
         ProfileSwitcherScreen(
@@ -46,7 +52,10 @@ fun HomeScreen(
             onPrivacy = onPrivacy,
             onAbout = onAbout,
             onAddProfile = onAddProfile,
-            onSelectProfile = viewModel::selectProfile,
+            onSelectProfile = {
+                viewModel.selectProfile(it)
+                scope.launch { sheetState.close() }
+            },
             onEditProfile = onEditProfile,
             profiles = profiles,
             selectedProfile = selectedProfile ?: return@ModalSideSheet,
