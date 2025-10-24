@@ -9,14 +9,20 @@ import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.timeout
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
+@OptIn(FlowPreview::class)
 class AppViewModel(
     private val accountRepository: AccountRepository,
     private val observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
@@ -26,17 +32,36 @@ class AppViewModel(
             .observe()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
-                initialValue = runBlocking { observePrimaryAccountUseCase.observe().first() },
+                started = SharingStarted.Lazily,
+                initialValue =
+                    runBlocking {
+                        observePrimaryAccountUseCase
+                            .observe()
+                            .map<Account, Account?> { it }
+                            .timeout(1.seconds)
+                            .catch {
+                                when (it) {
+                                    is TimeoutCancellationException -> emit(null)
+                                    else -> throw it
+                                }
+                            }
+                            .first()
+                    },
             )
 
-    val onboardingFinished: StateFlow<Boolean?> =
+    val appPage: StateFlow<AppPage> =
         primaryAccount
-            .map { account -> account?.settings?.onboardingFinished ?: false }
+            .map { account ->
+                if (account == null || !account.settings.onboardingFinished) {
+                    AppPage.Onboarding
+                } else {
+                    AppPage.Main
+                }
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
-                initialValue = null,
+                initialValue = AppPage.Splash,
             )
 
     val nutrientsOrder: StateFlow<List<NutrientsOrder>> =
