@@ -9,7 +9,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHost
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
-import com.maksimowiczm.foodyou.app.navigation.navigateSingleTop
 import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatterProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.NutrientsOrderProvider
@@ -40,9 +39,11 @@ fun FoodYouApp(userQuery: String?) {
                         AppPage.Main -> {
                             val navController = rememberNavController()
 
-                            LaunchedEffect(navController) {
+                            LaunchedEffect(navController, userQuery) {
                                 if (userQuery != null) {
-                                    navController.navigateSingleTop(FoodDatabase(userQuery))
+                                    navController.navigate(FoodDatabase(userQuery)) {
+                                        popUpTo<FoodDatabase> { inclusive = true }
+                                    }
                                 }
                             }
 

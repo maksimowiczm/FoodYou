@@ -82,9 +82,7 @@ fun FoodYouNavHost(
             val (query) = it.toRoute<FoodDatabase>()
 
             FoodDatabaseScreen(
-                onBack = {
-                    navController.navigate(Home) { popUpTo<FoodDatabase> { inclusive = true } }
-                },
+                onBack = { navController.popBackStackInclusive<FoodDatabase>() },
                 onCreateProduct = {
                     // TODO
                 },
