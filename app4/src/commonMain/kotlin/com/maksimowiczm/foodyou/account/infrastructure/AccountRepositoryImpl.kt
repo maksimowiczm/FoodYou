@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.account.infrastructure
 import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.AccountSettings
+import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDao
@@ -77,8 +78,21 @@ private fun ProfileEntity.toDomain(): Profile {
         } catch (_: IllegalArgumentException) {
             Profile.Avatar.PERSON
         }
+    val homeFeaturesOrder =
+        this.homeFeaturesOrder.split(",").mapNotNull {
+            try {
+                HomeCard.entries[it.toInt()]
+            } catch (_: IndexOutOfBoundsException) {
+                null
+            }
+        }
 
-    return Profile(id = ProfileId(this.id), name = this.name, avatar = avatar)
+    return Profile(
+        id = ProfileId(this.id),
+        name = this.name,
+        avatar = avatar,
+        homeCardsOrder = homeFeaturesOrder,
+    )
 }
 
 private fun Profile.Avatar.toEntity(): String = "predefined:$name"
@@ -89,5 +103,6 @@ private fun Profile.toEntity(localAccountId: String): ProfileEntity {
         localAccountId = localAccountId,
         name = this.name,
         avatar = this.avatar.toEntity(),
+        homeFeaturesOrder = this.homeCardsOrder.joinToString(",") { it.ordinal.toString() },
     )
 }

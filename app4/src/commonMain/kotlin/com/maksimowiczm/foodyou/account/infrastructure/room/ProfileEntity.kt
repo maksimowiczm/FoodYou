@@ -8,4 +8,5 @@ data class ProfileEntity(
     val localAccountId: String,
     val name: String,
     val avatar: String,
+    val homeFeaturesOrder: String,
 )

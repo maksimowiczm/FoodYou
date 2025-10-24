@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.account.domain
 
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlin.uuid.Uuid
 
 class Account
@@ -44,5 +45,14 @@ private constructor(
 
     fun updateSettings(transform: (AccountSettings) -> AccountSettings) {
         settings = transform(settings)
+    }
+
+    /** Updates a profile with the given [id] by applying the [transform] function. */
+    fun updateProfile(id: ProfileId, transform: (Profile) -> Profile) {
+        val index = _profiles.indexOfFirst { it.id == id }
+        if (index == -1) error("Profile with id $id not found")
+
+        val updatedProfile = transform(_profiles[index])
+        _profiles[index] = updatedProfile
     }
 }
