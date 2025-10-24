@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.app.ui.common.utility.AndroidClipboardManager
 import com.maksimowiczm.foodyou.app.ui.common.utility.AndroidDateFormatter
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClipboardManagerProvider
+import com.maksimowiczm.foodyou.app.ui.common.utility.ClockProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.DateFormatterProvider
 import com.maksimowiczm.foodyou.app.ui.food.FoodNameSelectorProvider
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
@@ -17,6 +18,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.defaultLocale
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
 import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import foodyou.app.generated.resources.*
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -27,6 +29,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     private val systemDetails: SystemDetails by inject()
     private val deviceRepository: DeviceRepository by inject()
     private val foodNameSelector: FoodNameSelector by inject()
+    private val clock: Clock by inject()
 
     fun setContent(content: @Composable () -> Unit) {
         enableEdgeToEdge()
@@ -41,7 +44,9 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
             setContent {
                 ClipboardManagerProvider(clipboardManager) {
                     DateFormatterProvider(dateFormatter) {
-                        FoodNameSelectorProvider(foodNameSelector) { content() }
+                        ClockProvider(clock) {
+                            FoodNameSelectorProvider(foodNameSelector) { content() }
+                        }
                     }
                 }
             }
