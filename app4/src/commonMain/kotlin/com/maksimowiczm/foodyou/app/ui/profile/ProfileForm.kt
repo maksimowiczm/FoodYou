@@ -4,13 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.TextFieldLineLimits
@@ -31,7 +28,7 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ProfileFormScreen(
+fun ProfileForm(
     uiState: ProfileUiState,
     onSetAvatar: (UiProfileAvatar) -> Unit,
     autoFocusName: Boolean,
@@ -84,12 +81,12 @@ fun ProfileFormScreen(
             )
             OutlinedTextField(
                 state = uiState.nameTextState,
+                modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+                enabled = !uiState.isLocked,
                 placeholder = { Text(stringResource(Res.string.headline_profile_name)) },
                 lineLimits = TextFieldLineLimits.SingleLine,
-                modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
             )
         }
-        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.ime))
     }
 }
 

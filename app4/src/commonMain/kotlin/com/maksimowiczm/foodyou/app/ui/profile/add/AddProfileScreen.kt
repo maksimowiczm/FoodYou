@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.profile.add
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -19,7 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
-import com.maksimowiczm.foodyou.app.ui.profile.ProfileFormScreen
+import com.maksimowiczm.foodyou.app.ui.profile.ProfileForm
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -65,7 +66,7 @@ fun AddProfileScreen(
                         onClick = viewModel::create,
                         shapes = ButtonDefaults.shapesFor(buttonHeight),
                         modifier = Modifier.height(buttonHeight),
-                        enabled = uiState.isValid,
+                        enabled = uiState.isValid && !uiState.isLocked,
                         contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
                     ) {
                         Text(
@@ -83,11 +84,14 @@ fun AddProfileScreen(
         },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier =
+                Modifier.fillMaxSize()
+                    .imePadding()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues,
         ) {
             item {
-                ProfileFormScreen(
+                ProfileForm(
                     uiState = uiState,
                     onSetAvatar = viewModel::setAvatar,
                     autoFocusName = true,
