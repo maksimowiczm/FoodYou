@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -35,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
@@ -155,11 +157,20 @@ private fun AddProfileScreen(
             Spacer(Modifier.height(32.dp))
             Spacer(Modifier.weight(1f))
             Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.ime))
+            Text(
+                text = stringResource(Res.string.description_not_sure_yet),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(Modifier.height(8.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 val fabHeight = 56.dp
                 Button(
                     onClick = onContinue,
                     shapes = ButtonDefaults.shapesFor(fabHeight),
+                    modifier = Modifier.widthIn(min = 250.dp),
                     enabled = uiState.isProfileValid,
                     contentPadding = ButtonDefaults.contentPaddingFor(fabHeight),
                 ) {

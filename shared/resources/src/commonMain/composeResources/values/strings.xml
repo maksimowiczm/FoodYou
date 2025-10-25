@@ -497,4 +497,6 @@
 
     <string name="action_refresh">Refresh</string>
 
+    <string name="description_not_sure_yet">Not sure yet? You can change it anytime</string>
+
 </resources>
