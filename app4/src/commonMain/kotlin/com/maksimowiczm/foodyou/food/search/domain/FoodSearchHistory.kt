@@ -11,7 +11,7 @@ private constructor(val profileId: ProfileId, history: List<SearchHistory>) {
         fun of(profileId: ProfileId, history: List<SearchHistory>) =
             FoodSearchHistory(profileId, history)
 
-        private const val MAX_HISTORY_SIZE = 20
+        const val MAX_HISTORY_SIZE = 20
     }
 
     private val _history: MutableList<SearchHistory> = history.toMutableList()
