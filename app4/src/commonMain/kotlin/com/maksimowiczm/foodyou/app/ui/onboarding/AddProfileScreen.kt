@@ -105,6 +105,12 @@ private fun AddProfileScreen(
                     .consumeWindowInsets(paddingValues)
                     .verticalScroll(rememberScrollState())
         ) {
+            Text(
+                text = stringResource(Res.string.onboarding_privacy_tip),
+                modifier = Modifier.padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Spacer(Modifier.height(32.dp))
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = stringResource(Res.string.headline_profile_picture),
@@ -148,12 +154,6 @@ private fun AddProfileScreen(
                         },
                 )
             }
-            Spacer(Modifier.height(32.dp))
-            Text(
-                text = stringResource(Res.string.onboarding_privacy_tip),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                style = MaterialTheme.typography.bodyMedium,
-            )
             Spacer(Modifier.height(32.dp))
             Spacer(Modifier.weight(1f))
             Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.ime))
