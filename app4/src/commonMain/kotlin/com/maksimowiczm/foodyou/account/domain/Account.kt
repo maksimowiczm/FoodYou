@@ -63,4 +63,13 @@ private constructor(
 
         _profiles.add(profile)
     }
+
+    fun removeProfile(id: ProfileId) {
+        require(_profiles.size > 1) { "Cannot remove the last profile from the account" }
+
+        val index = _profiles.indexOfFirst { it.id == id }
+        require(index != -1) { "Profile with id $id not found" }
+
+        _profiles.removeAt(index)
+    }
 }
