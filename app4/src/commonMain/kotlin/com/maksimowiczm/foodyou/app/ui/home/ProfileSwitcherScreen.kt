@@ -26,12 +26,14 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.LocalDining
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -216,26 +218,51 @@ private fun ProfileSwitcher(
         )
         AnimatedVisibility(visible = expanded) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                profiles.forEach {
+                profiles.forEach { profile ->
                     SettingsListItem(
                         leadingIcon = {
                             Icon(
-                                imageVector = it.avatar.toImageVector(),
+                                imageVector = profile.avatar.toImageVector(),
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.extraSmallIconSize),
                             )
                         },
+                        trailingIcon = {
+                            if (profile == selectedProfile) {
+                                IconButton(
+                                    onClick = { onEditProfile(profile) },
+                                    shapes = IconButtonDefaults.shapes(),
+                                    modifier =
+                                        Modifier.size(
+                                            IconButtonDefaults.extraSmallContainerSize(
+                                                IconButtonDefaults.IconButtonWidthOption.Uniform
+                                            )
+                                        ),
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.MoreVert,
+                                        contentDescription = stringResource(Res.string.action_edit),
+                                        modifier =
+                                            Modifier.size(IconButtonDefaults.extraSmallIconSize),
+                                    )
+                                }
+                            }
+                        },
                         title = {
-                            Text(text = it.name, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                            Text(
+                                text = profile.name,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
                         },
-                        onClick = {
-                            if (it != selectedProfile) onSelectProfile(it) else onEditProfile(it)
-                        },
+                        onClick = { onSelectProfile(profile) },
                         containerColor =
-                            if (it == selectedProfile) MaterialTheme.colorScheme.primaryContainer
+                            if (profile == selectedProfile)
+                                MaterialTheme.colorScheme.primaryContainer
                             else MaterialTheme.colorScheme.surfaceContainer,
                         contentColor =
-                            if (it == selectedProfile) MaterialTheme.colorScheme.onPrimaryContainer
+                            if (profile == selectedProfile)
+                                MaterialTheme.colorScheme.onPrimaryContainer
                             else MaterialTheme.colorScheme.onSurface,
                     )
                 }
