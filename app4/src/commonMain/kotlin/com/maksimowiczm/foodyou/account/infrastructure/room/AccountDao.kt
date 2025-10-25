@@ -41,6 +41,9 @@ abstract class AccountDao {
 
     @Upsert protected abstract suspend fun upsertSettings(settingsEntity: SettingsEntity)
 
+    @Query("DELETE FROM AccountProfile WHERE localAccountId = :accountId")
+    protected abstract suspend fun deleteProfiles(accountId: String)
+
     @Transaction
     open suspend fun upsertAccountWithDetails(
         accountEntity: AccountEntity,
@@ -48,6 +51,7 @@ abstract class AccountDao {
         settingsEntity: SettingsEntity,
     ) {
         upsertAccount(accountEntity)
+        deleteProfiles(accountEntity.id)
         profileEntities.forEach { upsertProfile(it) }
         upsertSettings(settingsEntity)
     }
