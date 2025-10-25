@@ -6,6 +6,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.maksimowiczm.foodyou.app.ui.common.component.ModalSideSheet
 import com.maksimowiczm.foodyou.app.ui.common.component.rememberSideSheetState
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -19,7 +20,7 @@ fun HomeScreen(
     onPrivacy: () -> Unit,
     onAbout: () -> Unit,
     onAddProfile: () -> Unit,
-    onEditProfile: (ProfileUiState) -> Unit,
+    onEditProfile: (ProfileId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -56,7 +57,7 @@ fun HomeScreen(
                 viewModel.selectProfile(it)
                 scope.launch { sheetState.close() }
             },
-            onEditProfile = onEditProfile,
+            onEditProfile = { onEditProfile(it.id) },
             profiles = profiles,
             selectedProfile = selectedProfile ?: return@ModalSideSheet,
         )

@@ -9,6 +9,7 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Colors
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProfile
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
@@ -28,7 +29,9 @@ import com.maksimowiczm.foodyou.app.ui.personalization.ColorsScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.app.ui.privacy.PrivacyScreen
-import com.maksimowiczm.foodyou.app.ui.profile.AddProfileScreen
+import com.maksimowiczm.foodyou.app.ui.profile.add.AddProfileScreen
+import com.maksimowiczm.foodyou.app.ui.profile.edit.EditProfileScreen
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import kotlinx.serialization.Serializable
 
@@ -50,7 +53,7 @@ fun FoodYouNavHost(
                 onPrivacy = { navController.navigateSingleTop(Privacy) },
                 onAbout = { navController.navigateSingleTop(About) },
                 onAddProfile = { navController.navigateSingleTop(CreateProfile) },
-                onEditProfile = { /* TODO */ },
+                onEditProfile = { navController.navigateSingleTop(EditProfile.from(it)) },
             )
         }
         forwardBackwardComposable<HomePersonalization> {
@@ -119,6 +122,15 @@ fun FoodYouNavHost(
                 onCreate = { navController.popBackStackInclusive<CreateProfile>() },
             )
         }
+        forwardBackwardComposable<EditProfile> {
+            val route = it.toRoute<EditProfile>()
+
+            EditProfileScreen(
+                profileId = route.profileId,
+                onBack = { navController.popBackStackInclusive<EditProfile>() },
+                onEdit = { navController.popBackStackInclusive<EditProfile>() },
+            )
+        }
     }
 }
 
@@ -178,4 +190,14 @@ sealed interface FoodYouNavHostRoute {
     @Serializable data object Privacy : FoodYouNavHostRoute
 
     @Serializable data object CreateProfile : FoodYouNavHostRoute
+
+    @Serializable
+    data class EditProfile(val id: String) : FoodYouNavHostRoute {
+        companion object {
+            fun from(profileId: ProfileId): EditProfile = EditProfile(profileId.value)
+        }
+
+        val profileId: ProfileId
+            get() = ProfileId(id)
+    }
 }

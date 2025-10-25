@@ -30,3 +30,11 @@ fun UiProfileAvatar.toProfileAvatar(): Profile.Avatar =
         UiProfileAvatar.MAN -> Profile.Avatar.MAN
         UiProfileAvatar.ENGINEER -> Profile.Avatar.ENGINEER
     }
+
+fun Profile.Avatar.toUiProfileAvatar(): UiProfileAvatar =
+    when (this) {
+        Profile.Avatar.PERSON -> UiProfileAvatar.PERSON
+        Profile.Avatar.WOMAN -> UiProfileAvatar.WOMAN
+        Profile.Avatar.MAN -> UiProfileAvatar.MAN
+        Profile.Avatar.ENGINEER -> UiProfileAvatar.ENGINEER
+    }

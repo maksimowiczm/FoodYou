@@ -3,12 +3,7 @@ package com.maksimowiczm.foodyou.account.domain
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlin.uuid.Uuid
 
-class Profile(
-    val id: ProfileId,
-    val name: String,
-    val avatar: Avatar,
-    homeCardsOrder: List<HomeCard>,
-) {
+class Profile(val id: ProfileId, name: String, avatar: Avatar, homeCardsOrder: List<HomeCard>) {
     companion object {
         fun new(name: String, avatar: Avatar): Profile {
             val id = Uuid.random()
@@ -21,6 +16,12 @@ class Profile(
         }
     }
 
+    var name: String = name
+        private set
+
+    var avatar: Avatar = avatar
+        private set
+
     private val _homeCardsOrder = homeCardsOrder.toMutableList()
     val homeCardsOrder: List<HomeCard>
         get() = _homeCardsOrder.toList()
@@ -32,6 +33,14 @@ class Profile(
 
         _homeCardsOrder.clear()
         _homeCardsOrder.addAll(newOrder)
+    }
+
+    fun updateName(newName: String) {
+        name = newName
+    }
+
+    fun updateAvatar(newAvatar: Avatar) {
+        avatar = newAvatar
     }
 
     enum class Avatar {

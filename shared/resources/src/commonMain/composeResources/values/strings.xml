@@ -501,4 +501,6 @@
 
     <string name="question_discard_profile">Discard profile?</string>
 
+    <string name="headline_edit_profile">Edit profile</string>
+
 </resources>
