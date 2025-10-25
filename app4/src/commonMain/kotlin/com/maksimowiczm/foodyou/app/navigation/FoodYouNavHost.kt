@@ -129,6 +129,7 @@ fun FoodYouNavHost(
                 profileId = route.profileId,
                 onBack = { navController.popBackStackInclusive<EditProfile>() },
                 onEdit = { navController.popBackStackInclusive<EditProfile>() },
+                onDelete = { navController.popBackStackInclusive<EditProfile>() },
             )
         }
     }

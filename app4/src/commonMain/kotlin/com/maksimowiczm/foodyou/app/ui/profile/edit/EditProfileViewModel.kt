@@ -13,10 +13,13 @@ import com.maksimowiczm.foodyou.app.ui.profile.ProfileUiState
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class EditProfileViewModel(
@@ -29,6 +32,16 @@ class EditProfileViewModel(
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+
+    val canDelete: StateFlow<Boolean> =
+        observePrimaryAccountUseCase
+            .observe()
+            .map { it.profiles.size > 1 }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2000),
+                initialValue = false,
+            )
 
     private val _uiEventBus = Channel<EditProfileEvent>()
     val uiEvents = _uiEventBus.receiveAsFlow()
@@ -81,6 +94,26 @@ class EditProfileViewModel(
             accountRepository.save(account)
 
             _uiEventBus.send(EditProfileEvent.Edited)
+        }
+    }
+
+    fun delete() {
+        val state = _uiState.value
+        if (state.isLocked) {
+            logger.w { "Delete profile called while already locked" }
+            return
+        }
+
+        _uiState.value = state.copy(isLocked = true)
+
+        viewModelScope.launch {
+            val account = observePrimaryAccountUseCase.observe().first()
+
+            account.removeProfile(profileId)
+
+            accountRepository.save(account)
+
+            _uiEventBus.send(EditProfileEvent.Deleted)
         }
     }
 

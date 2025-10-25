@@ -503,4 +503,8 @@
 
     <string name="headline_edit_profile">Edit profile</string>
 
+    <string name="action_delete_profile">Delete profile</string>
+    <string name="headline_delete_profile">Delete profile</string>
+    <string name="description_delete_profile">This profile will be permanently deleted. All data associated with it will be lost forever.</string>
+
 </resources>
