@@ -96,6 +96,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.kotlin.reflect)
+
             implementation(projects.shared.resources)
             implementation(projects.shared.barcodescanner)
 

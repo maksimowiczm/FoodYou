@@ -21,13 +21,13 @@ sealed interface SearchQuery {
         override val query: String = url
 
         val barcode: String =
-            url.substringAfterLast("/product/").substringBefore(":/").takeIf {
+            url.substringAfterLast("/product/").substringBefore("/").takeIf {
                 it.all(Char::isDigit)
             } ?: error("Invalid OpenFoodFacts URL: $url")
 
         companion object {
             val regex =
-                "https://\\w+\\.openfoodfacts\\.org/product/\\d+(?<barcode>:/\\S+)?".toRegex()
+                "https://\\w+\\.openfoodfacts\\.org/product/(?<barcode>\\d+)(?:/.+)?".toRegex()
         }
     }
 
