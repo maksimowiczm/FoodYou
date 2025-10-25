@@ -50,15 +50,15 @@ private constructor(
     /** Updates a profile with the given [id] by applying the [transform] function. */
     fun updateProfile(id: ProfileId, transform: (Profile) -> Profile) {
         val index = _profiles.indexOfFirst { it.id == id }
-        if (index == -1) error("Profile with id $id not found")
+        require(index != -1) { "Profile with id $id not found" }
 
         val updatedProfile = transform(_profiles[index])
         _profiles[index] = updatedProfile
     }
 
     fun addProfile(profile: Profile) {
-        if (_profiles.any { it.id == profile.id }) {
-            error("Profile with id ${profile.id} already exists")
+        require(!_profiles.any { it.id == profile.id }) {
+            "Profile with id ${profile.id} already exists"
         }
 
         _profiles.add(profile)

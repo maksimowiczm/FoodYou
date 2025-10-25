@@ -25,6 +25,6 @@ class ProfileTest {
 
         val invalidOrder = profile.homeCardsOrder.drop(1) // Remove one card to make it invalid
 
-        assertFailsWith<IllegalStateException> { profile.updateHomeCardsOrder(invalidOrder) }
+        assertFailsWith<IllegalArgumentException> { profile.updateHomeCardsOrder(invalidOrder) }
     }
 }

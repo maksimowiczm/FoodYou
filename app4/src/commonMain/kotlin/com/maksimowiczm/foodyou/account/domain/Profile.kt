@@ -27,9 +27,7 @@ class Profile(val id: ProfileId, name: String, avatar: Avatar, homeCardsOrder: L
         get() = _homeCardsOrder.toList()
 
     fun updateHomeCardsOrder(newOrder: List<HomeCard>) {
-        if (!newOrder.containsAll(HomeCard.entries)) {
-            error("New order must contain the same features as the current order")
-        }
+        require(newOrder.containsAll(HomeCard.entries)) { "New order must contain all home cards" }
 
         _homeCardsOrder.clear()
         _homeCardsOrder.addAll(newOrder)
