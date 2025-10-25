@@ -10,58 +10,9 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.gmazzo.buildconfig)
 }
 
 room { schemaDirectory("$projectDir/schemas") }
-
-buildConfig {
-    packageName("com.maksimowiczm.foodyou.app")
-    className("BuildConfig")
-
-    val versionName = libs.versions.version.name.get()
-    buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
-
-    val termsOfUseUri = "https://TODO"
-    buildConfigField("String", "TERMS_OF_USE_URI", "\"$termsOfUseUri\"")
-
-    val privacyPolicyUri = "https://TODO"
-    buildConfigField("String", "PRIVACY_POLICY_URI", "\"$privacyPolicyUri\"")
-
-    val openFoodFactsTermsOfUseUri = "https://world.openfoodfacts.org/terms-of-use"
-    buildConfigField(
-        "String",
-        "OPEN_FOOD_FACTS_TERMS_OF_USE_URI",
-        "\"$openFoodFactsTermsOfUseUri\"",
-    )
-    val openFoodFactsPrivacyPolicyUri = "https://world.openfoodfacts.org/privacy"
-    buildConfigField(
-        "String",
-        "OPEN_FOOD_FACTS_PRIVACY_POLICY_URI",
-        "\"$openFoodFactsPrivacyPolicyUri\"",
-    )
-
-    val foodDataCentralPrivacyPolicyUri = "https://www.usda.gov/privacy-policy"
-    buildConfigField(
-        "String",
-        "FOOD_DATA_CENTRAL_PRIVACY_POLICY_URI",
-        "\"$foodDataCentralPrivacyPolicyUri\"",
-    )
-
-    val sourceCodeUri = "https://github.com/maksimowiczm/FoodYou"
-    buildConfigField("String", "SOURCE_CODE_URI", "\"$sourceCodeUri\"")
-
-    val featureRequestUri = "https://github.com/maksimowiczm/FoodYou/issues"
-    buildConfigField("String", "FEATURE_REQUEST_URI", "\"$featureRequestUri\"")
-
-    val feedbackEmail = "maksimowicz.dev@gmail.com"
-    val feedbackEmailUri =
-        "mailto:$feedbackEmail?subject=Food You Feedback&body=Food You Version: $versionName\\n"
-    buildConfigField("String", "FEEDBACK_EMAIL_URI", "\"$feedbackEmailUri\"")
-
-    val crowdin = "https://crowdin.com/project/food-you"
-    buildConfigField("String", "CROWDIN_URI", "\"$crowdin\"")
-}
 
 kotlin {
     sourceSets.all {

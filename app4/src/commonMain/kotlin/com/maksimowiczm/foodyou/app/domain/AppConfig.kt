@@ -30,4 +30,7 @@ interface AppConfig {
 
     /** URI to the translation platform. */
     val translateUri: String
+
+    /** URI to the changelog page. */
+    val changelogUri: String
 }

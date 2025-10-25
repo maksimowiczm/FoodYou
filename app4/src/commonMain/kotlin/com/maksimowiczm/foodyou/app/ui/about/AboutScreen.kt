@@ -32,7 +32,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -54,12 +53,6 @@ import org.koin.compose.koinInject
 fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val appConfig: AppConfig = koinInject()
     val uriHandler = LocalUriHandler.current
-
-    var showChangelog by rememberSaveable { mutableStateOf(false) }
-    if (showChangelog) {
-        // TODO
-        //  Show changelog dialog
-    }
 
     val scrollState = rememberScrollState()
     val systemTopBarHeight = WindowInsets.systemBars.getTop(LocalDensity.current)
@@ -117,7 +110,7 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             Spacer(Modifier.height(64.dp))
             AboutButtons(
                 onSourceCode = { uriHandler.openUri(appConfig.sourceCodeUri) },
-                onChangelog = { showChangelog = true },
+                onChangelog = { uriHandler.openUri(appConfig.changelogUri) },
                 onIdea = { uriHandler.openUri(appConfig.featureRequestUri) },
                 onEmail = { uriHandler.openUri(appConfig.emailContactUri) },
             )
