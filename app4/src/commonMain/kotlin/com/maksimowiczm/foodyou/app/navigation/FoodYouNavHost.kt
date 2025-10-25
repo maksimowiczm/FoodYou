@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Colors
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
@@ -27,6 +28,7 @@ import com.maksimowiczm.foodyou.app.ui.personalization.ColorsScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.app.ui.privacy.PrivacyScreen
+import com.maksimowiczm.foodyou.app.ui.profile.AddProfileScreen
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import kotlinx.serialization.Serializable
 
@@ -47,7 +49,7 @@ fun FoodYouNavHost(
                 onLanguage = { navController.navigateSingleTop(Language) },
                 onPrivacy = { navController.navigateSingleTop(Privacy) },
                 onAbout = { navController.navigateSingleTop(About) },
-                onAddProfile = { /* TODO */ },
+                onAddProfile = { navController.navigateSingleTop(CreateProfile) },
                 onEditProfile = { /* TODO */ },
             )
         }
@@ -111,6 +113,12 @@ fun FoodYouNavHost(
         forwardBackwardComposable<Privacy> {
             PrivacyScreen(onBack = { navController.popBackStackInclusive<Privacy>() })
         }
+        forwardBackwardComposable<CreateProfile> {
+            AddProfileScreen(
+                onBack = { navController.popBackStackInclusive<CreateProfile>() },
+                onCreate = { navController.popBackStackInclusive<CreateProfile>() },
+            )
+        }
     }
 }
 
@@ -168,4 +176,6 @@ sealed interface FoodYouNavHostRoute {
     @Serializable data object Colors : FoodYouNavHostRoute
 
     @Serializable data object Privacy : FoodYouNavHostRoute
+
+    @Serializable data object CreateProfile : FoodYouNavHostRoute
 }

@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
-import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
+import com.maksimowiczm.foodyou.app.ui.common.component.toProfileAvatar
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferencesRepository
@@ -47,11 +47,3 @@ class CreatePrimaryAccountUseCase(
         return account.localAccountId
     }
 }
-
-private fun UiProfileAvatar.toProfileAvatar(): Profile.Avatar =
-    when (this) {
-        UiProfileAvatar.PERSON -> Profile.Avatar.PERSON
-        UiProfileAvatar.WOMAN -> Profile.Avatar.WOMAN
-        UiProfileAvatar.MAN -> Profile.Avatar.MAN
-        UiProfileAvatar.ENGINEER -> Profile.Avatar.ENGINEER
-    }

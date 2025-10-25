@@ -55,4 +55,12 @@ private constructor(
         val updatedProfile = transform(_profiles[index])
         _profiles[index] = updatedProfile
     }
+
+    fun addProfile(profile: Profile) {
+        if (_profiles.any { it.id == profile.id }) {
+            error("Profile with id ${profile.id} already exists")
+        }
+
+        _profiles.add(profile)
+    }
 }

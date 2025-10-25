@@ -499,4 +499,6 @@
 
     <string name="description_not_sure_yet">Not sure yet? You can change it anytime</string>
 
+    <string name="question_discard_profile">Discard profile?</string>
+
 </resources>
