@@ -4,8 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.domain.AccountManager
-import com.maksimowiczm.foodyou.account.domain.Profile
-import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
+import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -25,13 +24,7 @@ class ProfileViewModel(
                     ProfileUiState(
                         id = profile.id,
                         name = profile.name,
-                        avatar =
-                            when (profile.avatar) {
-                                Profile.Avatar.PERSON -> UiProfileAvatar.PERSON
-                                Profile.Avatar.WOMAN -> UiProfileAvatar.WOMAN
-                                Profile.Avatar.MAN -> UiProfileAvatar.MAN
-                                Profile.Avatar.ENGINEER -> UiProfileAvatar.ENGINEER
-                            },
+                        avatar = ProfileAvatarMapper.toUiModel(profile.avatar),
                     )
                 }
             }

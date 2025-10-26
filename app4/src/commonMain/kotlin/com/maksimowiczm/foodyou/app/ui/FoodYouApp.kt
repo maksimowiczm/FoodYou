@@ -7,12 +7,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
+import coil3.ImageLoader
+import coil3.compose.setSingletonImageLoaderFactory
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHost
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatterProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.app.ui.onboarding.Onboarding
+import io.github.vinceglb.filekit.coil.addPlatformFileSupport
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -22,6 +25,10 @@ fun FoodYouApp(userQuery: String?) {
     val nutrientsOrder = appViewModel.nutrientsOrder.collectAsStateWithLifecycle().value
     val energyFormatter = appViewModel.energyFormatter.collectAsStateWithLifecycle().value
     val appPage by appViewModel.appPage.collectAsStateWithLifecycle()
+
+    setSingletonImageLoaderFactory { context ->
+        ImageLoader.Builder(context).components { addPlatformFileSupport() }.build()
+    }
 
     NutrientsOrderProvider(nutrientsOrder) {
         EnergyFormatterProvider(energyFormatter) {

@@ -18,6 +18,8 @@ import com.maksimowiczm.foodyou.common.infrastructure.defaultLocale
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
 import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import foodyou.app.generated.resources.*
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.init
 import kotlin.time.Clock
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
@@ -33,6 +35,8 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
 
     fun setContent(content: @Composable () -> Unit) {
         enableEdgeToEdge()
+
+        FileKit.init(this)
 
         val clipboardManager =
             AndroidClipboardManager(this) {

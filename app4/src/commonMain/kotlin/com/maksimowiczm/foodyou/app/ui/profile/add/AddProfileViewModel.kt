@@ -7,8 +7,8 @@ import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
+import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
-import com.maksimowiczm.foodyou.app.ui.common.component.toProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.profile.ProfileUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,7 +52,7 @@ class AddProfileViewModel(
             val profile =
                 Profile.new(
                     name = state.nameTextState.text.toString(),
-                    avatar = state.avatar.toProfileAvatar(),
+                    avatar = ProfileAvatarMapper.toModel(state.avatar),
                 )
 
             account.addProfile(profile)

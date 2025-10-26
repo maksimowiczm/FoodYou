@@ -6,9 +6,8 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
-import com.maksimowiczm.foodyou.app.ui.common.component.toProfileAvatar
-import com.maksimowiczm.foodyou.app.ui.common.component.toUiProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.profile.ProfileUiState
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlinx.coroutines.channels.Channel
@@ -56,9 +55,9 @@ class EditProfileViewModel(
                 _uiState.value =
                     ProfileUiState(
                         nameTextState = TextFieldState(profile.name),
-                        avatar = profile.avatar.toUiProfileAvatar(),
+                        avatar = ProfileAvatarMapper.toUiModel(profile.avatar),
                         defaultName = profile.name,
-                        defaultAvatar = profile.avatar.toUiProfileAvatar(),
+                        defaultAvatar = ProfileAvatarMapper.toUiModel(profile.avatar),
                     )
             } else {
                 error(
@@ -87,7 +86,7 @@ class EditProfileViewModel(
             account.updateProfile(profileId) {
                 it.apply {
                     updateName(state.nameTextState.text.toString())
-                    updateAvatar(state.avatar.toProfileAvatar())
+                    updateAvatar(ProfileAvatarMapper.toModel(state.avatar))
                 }
             }
 

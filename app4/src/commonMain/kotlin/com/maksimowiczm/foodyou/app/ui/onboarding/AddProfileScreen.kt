@@ -18,8 +18,11 @@ import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AddAPhoto
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconToggleButton
@@ -33,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -41,9 +45,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
+import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar.Predefined.Type
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import foodyou.app.generated.resources.*
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.openFilePicker
+import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -75,6 +85,8 @@ private fun AddProfileScreen(
     onContinue: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
+
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val focusRequester = remember { FocusRequester() }
 
@@ -122,12 +134,42 @@ private fun AddProfileScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp),
                 ) {
-                    items(items = UiProfileAvatar.entries) { avatar ->
-                        AvatarItem(
-                            avatar = avatar,
-                            isSelected = uiState.avatar == avatar,
-                            onSelect = { onSetAvatar(avatar) },
-                        )
+                    items(items = Type.entries.map { it.toAvatar() }) { avatar ->
+                        FilledIconToggleButton(
+                            checked = uiState.avatar == avatar,
+                            onCheckedChange = { if (it) onSetAvatar(avatar) },
+                            shapes = IconButtonDefaults.toggleableShapes(),
+                            modifier = modifier.size(56.dp),
+                        ) {
+                            avatar.Avatar(Modifier.size(24.dp).clip(CircleShape))
+                        }
+                    }
+                    item {
+                        FilledIconToggleButton(
+                            checked = uiState.avatar is UiProfileAvatar.Photo,
+                            onCheckedChange = {
+                                scope.launch {
+                                    val image = FileKit.openFilePicker(type = FileKitType.Image)
+                                    if (image != null) {
+                                        onSetAvatar(UiProfileAvatar.Photo(image.path))
+                                    }
+                                }
+                            },
+                            shapes = IconButtonDefaults.toggleableShapes(),
+                            modifier = modifier.size(56.dp),
+                        ) {
+                            when (uiState.avatar) {
+                                is UiProfileAvatar.Photo ->
+                                    uiState.avatar.Avatar(Modifier.size(40.dp).clip(CircleShape))
+
+                                else ->
+                                    Icon(
+                                        imageVector = Icons.Outlined.AddAPhoto,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(IconButtonDefaults.mediumIconSize),
+                                    )
+                            }
+                        }
                     }
                 }
             }
@@ -182,27 +224,6 @@ private fun AddProfileScreen(
             }
             Spacer(Modifier.height(16.dp))
         }
-    }
-}
-
-@Composable
-private fun AvatarItem(
-    avatar: UiProfileAvatar,
-    isSelected: Boolean,
-    onSelect: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    FilledIconToggleButton(
-        checked = isSelected,
-        onCheckedChange = { onSelect() },
-        shapes = IconButtonDefaults.toggleableShapes(),
-        modifier = modifier.size(56.dp),
-    ) {
-        Icon(
-            imageVector = avatar.toImageVector(),
-            contentDescription = null,
-            modifier = Modifier.size(IconButtonDefaults.mediumIconSize),
-        )
     }
 }
 

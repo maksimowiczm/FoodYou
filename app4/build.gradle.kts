@@ -94,6 +94,10 @@ kotlin {
             implementation(libs.coil.network.ktor3)
 
             implementation(libs.colorpicker.compose)
+
+            implementation(libs.filekit.coil)
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs.compose)
         }
 
         commonTest.dependencies { implementation(libs.kotlin.test) }

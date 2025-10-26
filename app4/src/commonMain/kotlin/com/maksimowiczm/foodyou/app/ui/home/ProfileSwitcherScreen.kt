@@ -1,25 +1,30 @@
 package com.maksimowiczm.foodyou.app.ui.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -50,6 +55,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.common.saveable.rememberBlockingDataStore
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -170,6 +176,7 @@ fun ProfileSwitcherScreen(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun ProfileSwitcher(
     profiles: List<ProfileUiState>,
@@ -183,29 +190,44 @@ private fun ProfileSwitcher(
         rememberBlockingDataStore(key = booleanPreferencesKey(":ui:home:expandProfileSwitcher")) {
             mutableStateOf(true)
         }
+    val transition = updateTransition(expanded)
     val iconRotationState by animateFloatAsState(if (expanded) 0f else 180f)
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         SettingsListItem(
-            title = { Text(stringResource(Res.string.action_switch_profile)) },
-            trailingIcon = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    AnimatedVisibility(visible = !expanded, enter = fadeIn(), exit = fadeOut()) {
-                        Text(
-                            text = selectedProfile.name,
-                            modifier = Modifier.padding(end = 16.dp),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                        )
+            title = {
+                transition.Crossfade {
+                    if (it) {
+                        Box(
+                            modifier = Modifier.height(48.dp),
+                            contentAlignment = Alignment.CenterStart,
+                        ) {
+                            Text(stringResource(Res.string.action_switch_profile))
+                        }
+                    } else {
+                        Row(
+                            modifier = Modifier.height(48.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            selectedProfile.avatar.Avatar(
+                                Modifier.size(IconButtonDefaults.mediumIconSize).clip(CircleShape)
+                            )
+                            Text(
+                                text = selectedProfile.name,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
                     }
-                    Icon(
-                        imageVector = Icons.Outlined.KeyboardArrowDown,
-                        contentDescription = null,
-                        modifier = Modifier.graphicsLayer { rotationZ = iconRotationState },
-                    )
                 }
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.KeyboardArrowDown,
+                    contentDescription = null,
+                    modifier = Modifier.graphicsLayer { rotationZ = iconRotationState },
+                )
             },
             onClick = { expanded = !expanded },
             shape =
@@ -219,13 +241,33 @@ private fun ProfileSwitcher(
         AnimatedVisibility(visible = expanded) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 profiles.forEach { profile ->
+                    val interactionSource = remember { MutableInteractionSource() }
+
                     SettingsListItem(
-                        leadingIcon = {
-                            Icon(
-                                imageVector = profile.avatar.toImageVector(),
-                                contentDescription = null,
-                                modifier = Modifier.size(IconButtonDefaults.extraSmallIconSize),
+                        title = {
+                            Text(
+                                text = profile.name,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
                             )
+                        },
+                        leadingIcon = {
+                            when (profile.avatar) {
+                                is UiProfileAvatar.Photo -> {
+                                    val pressed by interactionSource.collectIsPressedAsState()
+                                    val corner by animateDpAsState(if (pressed) 4.dp else 12.dp)
+
+                                    profile.avatar.Avatar(
+                                        Modifier.size(IconButtonDefaults.mediumIconSize)
+                                            .clip(RoundedCornerShape(corner))
+                                    )
+                                }
+
+                                is UiProfileAvatar.Predefined ->
+                                    profile.avatar.Avatar(
+                                        Modifier.size(IconButtonDefaults.mediumIconSize)
+                                    )
+                            }
                         },
                         trailingIcon = {
                             if (profile == selectedProfile) {
@@ -248,13 +290,6 @@ private fun ProfileSwitcher(
                                 }
                             }
                         },
-                        title = {
-                            Text(
-                                text = profile.name,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        },
                         onClick = { onSelectProfile(profile) },
                         containerColor =
                             if (profile == selectedProfile)
@@ -264,6 +299,7 @@ private fun ProfileSwitcher(
                             if (profile == selectedProfile)
                                 MaterialTheme.colorScheme.onPrimaryContainer
                             else MaterialTheme.colorScheme.onSurface,
+                        interactionSource = interactionSource,
                     )
                 }
                 SettingsListItem(
@@ -304,10 +340,11 @@ private fun SettingsListItem(
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.small,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
-    modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     Button(
         onClick = onClick,
@@ -320,6 +357,7 @@ private fun SettingsListItem(
                 contentColor = contentColor,
             ),
         contentPadding = PaddingValues(horizontal = 16.dp),
+        interactionSource = interactionSource,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
@@ -328,9 +366,8 @@ private fun SettingsListItem(
         ) {
             leadingIcon?.invoke()
             CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.labelLarge) {
-                title()
+                Box(modifier = Modifier.weight(1f)) { title() }
             }
-            Spacer(Modifier.weight(1f))
             trailingIcon?.invoke()
         }
     }

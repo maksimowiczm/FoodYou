@@ -41,10 +41,27 @@ class Profile(val id: ProfileId, name: String, avatar: Avatar, homeCardsOrder: L
         avatar = newAvatar
     }
 
-    enum class Avatar {
-        PERSON,
-        WOMAN,
-        MAN,
-        ENGINEER,
+    sealed interface Avatar {
+        data class Photo(val uri: String) : Avatar
+
+        sealed interface Predefined : Avatar {
+            val name: String
+
+            data object Person : Predefined {
+                override val name: String = "Person"
+            }
+
+            data object Woman : Predefined {
+                override val name: String = "Woman"
+            }
+
+            data object Man : Predefined {
+                override val name: String = "Man"
+            }
+
+            data object Engineer : Predefined {
+                override val name: String = "Engineer"
+            }
+        }
     }
 }

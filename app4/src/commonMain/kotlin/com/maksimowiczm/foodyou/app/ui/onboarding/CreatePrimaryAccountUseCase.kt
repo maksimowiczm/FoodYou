@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
-import com.maksimowiczm.foodyou.app.ui.common.component.toProfileAvatar
+import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferencesRepository
@@ -26,7 +26,10 @@ class CreatePrimaryAccountUseCase(
         }
 
         val profile =
-            Profile.new(name = uiState.profileName, avatar = uiState.avatar.toProfileAvatar())
+            Profile.new(
+                name = uiState.profileName,
+                avatar = ProfileAvatarMapper.toModel(uiState.avatar),
+            )
         val account = Account.create(primaryProfile = profile)
 
         val searchPreferences =

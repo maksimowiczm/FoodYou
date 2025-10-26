@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.now
 import com.valentinilk.shimmer.shimmer
@@ -134,11 +134,11 @@ private fun TopBar(
                     val offset =
                         infiniteTransition.animateFloat(
                             initialValue = 0f,
-                            targetValue = 1f,
+                            targetValue = 2f,
                             animationSpec =
                                 infiniteRepeatable(
                                     animation =
-                                        tween(durationMillis = 10_000, easing = LinearEasing),
+                                        tween(durationMillis = 20_000, easing = LinearEasing),
                                     repeatMode = RepeatMode.Reverse,
                                 ),
                         )
@@ -177,19 +177,28 @@ private fun TopBar(
                 if (selectedProfile == null) {
                     Box(
                         Modifier.shimmer()
-                            .size(48.dp)
+                            .size(40.dp)
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                     )
                 } else {
-                    FilledTonalIconButton(
-                        onClick = onProfile,
-                        shapes = IconButtonDefaults.shapes(),
-                    ) {
-                        Icon(
-                            imageVector = selectedProfile.avatar.toImageVector(),
-                            contentDescription = null,
-                        )
+                    when (val avatar = selectedProfile.avatar) {
+                        is UiProfileAvatar.Photo -> {
+                            FilledTonalIconButton(
+                                onClick = onProfile,
+                                shapes = IconButtonDefaults.shapes(),
+                            ) {
+                                avatar.Avatar(Modifier.size(40.dp))
+                            }
+                        }
+
+                        is UiProfileAvatar.Predefined ->
+                            FilledTonalIconButton(
+                                onClick = onProfile,
+                                shapes = IconButtonDefaults.shapes(),
+                            ) {
+                                avatar.Avatar(Modifier.size(24.dp))
+                            }
                     }
                 }
             }
