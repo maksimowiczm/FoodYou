@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.account.di
 
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
+import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCaseImpl
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.infrastructure.AccountManagerImpl
@@ -18,5 +19,5 @@ val accountModule = module {
 
     singleOf(::AccountManagerImpl).bind<AccountManager>()
 
-    factoryOf(::ObservePrimaryAccountUseCase)
+    factoryOf(::ObservePrimaryAccountUseCaseImpl).bind<ObservePrimaryAccountUseCase>()
 }

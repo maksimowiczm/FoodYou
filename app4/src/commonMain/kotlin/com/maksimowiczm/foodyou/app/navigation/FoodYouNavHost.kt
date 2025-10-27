@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Colors
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
@@ -29,6 +30,7 @@ import com.maksimowiczm.foodyou.app.ui.personalization.ColorsScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.app.ui.privacy.PrivacyScreen
+import com.maksimowiczm.foodyou.app.ui.product.create.CreateProductScreen
 import com.maksimowiczm.foodyou.app.ui.profile.add.AddProfileScreen
 import com.maksimowiczm.foodyou.app.ui.profile.edit.EditProfileScreen
 import com.maksimowiczm.foodyou.common.domain.ProfileId
@@ -88,9 +90,7 @@ fun FoodYouNavHost(
 
             FoodDatabaseScreen(
                 onBack = { navController.popBackStackInclusive<FoodDatabase>() },
-                onCreateProduct = {
-                    // TODO
-                },
+                onCreateProduct = { navController.navigateSingleTop(CreateProduct) },
                 onCreateRecipe = {
                     // TODO
                 },
@@ -130,6 +130,16 @@ fun FoodYouNavHost(
                 onBack = { navController.popBackStackInclusive<EditProfile>() },
                 onEdit = { navController.popBackStackInclusive<EditProfile>() },
                 onDelete = { navController.popBackStackInclusive<EditProfile>() },
+            )
+        }
+        forwardBackwardComposable<CreateProduct> {
+            CreateProductScreen(
+                onBack = { navController.popBackStackInclusive<CreateProduct>() },
+                onCreate = { id ->
+                    navController.navigate(FoodDetails(id)) {
+                        popUpTo<CreateProduct> { inclusive = true }
+                    }
+                },
             )
         }
     }
@@ -201,4 +211,6 @@ sealed interface FoodYouNavHostRoute {
         val profileId: ProfileId
             get() = ProfileId(id)
     }
+
+    @Serializable data object CreateProduct : FoodYouNavHostRoute
 }

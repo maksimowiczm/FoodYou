@@ -212,6 +212,7 @@
     <string name="error_unknown_error">Unknown error</string>
     <string name="error_measurement_error">Measurement error, please check the serving and package weight</string>
     <string name="error_api_key_is_invalid">API key is invalid</string>
+    <string name="error_not_a_barcode">Not a barcode</string>
 
     <string name="positive_goal_reached">Goal reached</string>
     <string name="positive_ok">OK</string>
@@ -322,7 +323,7 @@
     <string name="headline_tomorrow" description="Tomorrow, date">Tomorrow, %1$s</string>
 
     <string name="headline_user" description="User, person who uses the app">User</string>
-    <string name="description_food_source">Specify where the food data comes from. You can include a link here</string>
+    <string name="description_food_source">Specify where the food data comes from</string>
 
     <string name="error_food_is_missing_required_fields">Food is missing required fields</string>
 

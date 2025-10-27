@@ -100,7 +100,10 @@ kotlin {
             implementation(libs.filekit.dialogs.compose)
         }
 
-        commonTest.dependencies { implementation(libs.kotlin.test) }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+        }
 
         androidMain.dependencies {
             implementation(compose.preview)
