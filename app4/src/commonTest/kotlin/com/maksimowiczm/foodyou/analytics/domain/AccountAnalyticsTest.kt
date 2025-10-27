@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
+import com.maksimowiczm.foodyou.account.domain.testLocalAccountId
 import com.maksimowiczm.foodyou.common.clock.testClock
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -10,7 +10,7 @@ import kotlin.time.Instant
 class AccountAnalyticsTest {
     @Test
     fun recordAppLaunch_once() {
-        val analytics = AccountAnalytics.of(LocalAccountId("test-account"))
+        val analytics = AccountAnalytics.of(testLocalAccountId())
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
         val clock = testClock(now)
@@ -27,7 +27,7 @@ class AccountAnalyticsTest {
 
     @Test
     fun recordAppLaunch_multipleTimes() {
-        val analytics = AccountAnalytics.of(LocalAccountId("test-account"))
+        val analytics = AccountAnalytics.of(testLocalAccountId())
         val versionNameV1 = "4.0.0"
         val versionNameV2 = "4.1.0"
         val now1 = Instant.fromEpochSeconds(1_600_000_000)
@@ -49,7 +49,7 @@ class AccountAnalyticsTest {
 
     @Test
     fun recordAppLaunch_raisesEvents() {
-        val analytics = AccountAnalytics.of(LocalAccountId("test-account"))
+        val analytics = AccountAnalytics.of(testLocalAccountId())
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
         val clock = testClock(now)
@@ -65,7 +65,7 @@ class AccountAnalyticsTest {
 
     @Test
     fun applyAppLaunchedEvent() {
-        val analytics = AccountAnalytics.of(LocalAccountId("test-account"))
+        val analytics = AccountAnalytics.of(testLocalAccountId())
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
         val event =
@@ -82,7 +82,7 @@ class AccountAnalyticsTest {
 
     @Test
     fun applyFirstAppLaunchRecordedEvent() {
-        val analytics = AccountAnalytics.of(LocalAccountId("test-account"))
+        val analytics = AccountAnalytics.of(testLocalAccountId())
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
         val event =
@@ -100,7 +100,7 @@ class AccountAnalyticsTest {
 
     @Test
     fun applyAppVersionChangedEvent() {
-        val analytics = AccountAnalytics.of(LocalAccountId("test-account"))
+        val analytics = AccountAnalytics.of(testLocalAccountId())
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
         val event =

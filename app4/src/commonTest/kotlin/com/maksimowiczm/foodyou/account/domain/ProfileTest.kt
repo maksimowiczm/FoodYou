@@ -7,7 +7,7 @@ import kotlin.test.assertFailsWith
 class ProfileTest {
     @Test
     fun updateHomeCardsOrder_withAllCards_updatesOrder() {
-        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.PERSON)
+        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.Predefined.Person)
 
         val newOrder = profile.homeCardsOrder.reversed()
         profile.updateHomeCardsOrder(newOrder)
@@ -21,7 +21,7 @@ class ProfileTest {
 
     @Test
     fun updateHomeCardsOrder_withMissingCard_throwsError() {
-        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.PERSON)
+        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.Predefined.Person)
 
         val invalidOrder = profile.homeCardsOrder.drop(1) // Remove one card to make it invalid
 

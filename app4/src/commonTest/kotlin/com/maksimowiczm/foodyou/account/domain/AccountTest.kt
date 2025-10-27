@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.account.domain
 
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,7 +10,7 @@ class AccountTest {
     fun create_account_with_no_profiles_fails() {
         assertFailsWith<IllegalArgumentException> {
             Account.of(
-                localAccountId = LocalAccountId("test-id"),
+                localAccountId = testLocalAccountId(),
                 settings = AccountSettings.default,
                 profiles = emptyList(),
             )
@@ -20,11 +19,11 @@ class AccountTest {
 
     @Test
     fun create_account_with_profiles_succeeds() {
-        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.PERSON)
+        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.Predefined.Person)
 
         val account =
             Account.of(
-                localAccountId = LocalAccountId("test-id"),
+                localAccountId = testLocalAccountId(),
                 settings = AccountSettings.default,
                 profiles = listOf(profile),
             )
@@ -35,11 +34,11 @@ class AccountTest {
 
     @Test
     fun addProfile_duplicate_profile_fails() {
-        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.PERSON)
+        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.Predefined.Person)
 
         val account =
             Account.of(
-                localAccountId = LocalAccountId("test-id"),
+                localAccountId = testLocalAccountId(),
                 settings = AccountSettings.default,
                 profiles = listOf(profile),
             )
@@ -49,11 +48,11 @@ class AccountTest {
 
     @Test
     fun updateProfile_nonexistent_profile_fails() {
-        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.PERSON)
+        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.Predefined.Person)
 
         val account =
             Account.of(
-                localAccountId = LocalAccountId("test-id"),
+                localAccountId = testLocalAccountId(),
                 settings = AccountSettings.default,
                 profiles = listOf(profile),
             )
@@ -67,11 +66,11 @@ class AccountTest {
 
     @Test
     fun removeProfile_last_profile_fails() {
-        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.PERSON)
+        val profile = Profile.new(name = "Test User", avatar = Profile.Avatar.Predefined.Person)
 
         val account =
             Account.of(
-                localAccountId = LocalAccountId("test-id"),
+                localAccountId = testLocalAccountId(),
                 settings = AccountSettings.default,
                 profiles = listOf(profile),
             )
@@ -81,12 +80,12 @@ class AccountTest {
 
     @Test
     fun removeProfile_nonexistent_profile_fails() {
-        val profile1 = Profile.new(name = "User One", avatar = Profile.Avatar.PERSON)
-        val profile2 = Profile.new(name = "User Two", avatar = Profile.Avatar.PERSON)
+        val profile1 = Profile.new(name = "User One", avatar = Profile.Avatar.Predefined.Person)
+        val profile2 = Profile.new(name = "User Two", avatar = Profile.Avatar.Predefined.Person)
 
         val account =
             Account.of(
-                localAccountId = LocalAccountId("test-id"),
+                localAccountId = testLocalAccountId(),
                 settings = AccountSettings.default,
                 profiles = listOf(profile1, profile2),
             )
@@ -98,12 +97,12 @@ class AccountTest {
 
     @Test
     fun removeProfile_existing_profile_succeeds() {
-        val profile1 = Profile.new(name = "User One", avatar = Profile.Avatar.PERSON)
-        val profile2 = Profile.new(name = "User Two", avatar = Profile.Avatar.PERSON)
+        val profile1 = Profile.new(name = "User One", avatar = Profile.Avatar.Predefined.Person)
+        val profile2 = Profile.new(name = "User Two", avatar = Profile.Avatar.Predefined.Person)
 
         val account =
             Account.of(
-                localAccountId = LocalAccountId("test-id"),
+                localAccountId = testLocalAccountId(),
                 settings = AccountSettings.default,
                 profiles = listOf(profile1, profile2),
             )
