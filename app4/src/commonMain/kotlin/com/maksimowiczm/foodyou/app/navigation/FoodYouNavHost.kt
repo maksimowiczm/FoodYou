@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Colors
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProfile
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDetails
@@ -31,6 +32,7 @@ import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.app.ui.privacy.PrivacyScreen
 import com.maksimowiczm.foodyou.app.ui.product.create.CreateProductScreen
+import com.maksimowiczm.foodyou.app.ui.product.edit.EditProductScreen
 import com.maksimowiczm.foodyou.app.ui.profile.add.AddProfileScreen
 import com.maksimowiczm.foodyou.app.ui.profile.edit.EditProfileScreen
 import com.maksimowiczm.foodyou.common.domain.ProfileId
@@ -106,7 +108,9 @@ fun FoodYouNavHost(
                 identity = route.identity,
                 onBack = { navController.popBackStackInclusive<FoodDetails>() },
                 onEdit = {
-                    // TODO
+                    navController.navigateSingleTop(
+                        EditProduct.from(route.identity as FoodProductIdentity.Local)
+                    )
                 },
             )
         }
@@ -140,6 +144,13 @@ fun FoodYouNavHost(
                         popUpTo<CreateProduct> { inclusive = true }
                     }
                 },
+            )
+        }
+        forwardBackwardComposable<EditProduct> {
+            EditProductScreen(
+                identity = it.toRoute<EditProduct>().identity,
+                onBack = { navController.popBackStackInclusive<EditProduct>() },
+                onEdit = { navController.popBackStackInclusive<EditProduct>() },
             )
         }
     }
@@ -213,4 +224,14 @@ sealed interface FoodYouNavHostRoute {
     }
 
     @Serializable data object CreateProduct : FoodYouNavHostRoute
+
+    @Serializable
+    data class EditProduct(val id: String) : FoodYouNavHostRoute {
+        companion object {
+            fun from(identity: FoodProductIdentity.Local): EditProduct = EditProduct(identity.id)
+        }
+
+        val identity: FoodProductIdentity.Local
+            get() = FoodProductIdentity.Local(id)
+    }
 }

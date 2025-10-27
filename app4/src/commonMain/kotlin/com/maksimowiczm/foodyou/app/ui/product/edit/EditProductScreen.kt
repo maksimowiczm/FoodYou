@@ -1,0 +1,140 @@
+package com.maksimowiczm.foodyou.app.ui.product.edit
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
+import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.product.ProductForm
+import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
+import com.valentinilk.shimmer.shimmer
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.action_save
+import foodyou.app.generated.resources.headline_edit_product
+import foodyou.app.generated.resources.headline_please_wait
+import foodyou.app.generated.resources.question_discard_product
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+
+@Composable
+fun EditProductScreen(
+    identity: FoodProductIdentity.Local,
+    onBack: () -> Unit,
+    onEdit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+    val viewModel: EditProductViewModel = koinViewModel { parametersOf(identity) }
+
+    LaunchedCollectWithLifecycle(viewModel.uiEvents) {
+        when (it) {
+            EditProductEvent.Edited -> onEdit()
+        }
+    }
+
+    val formState by viewModel.productFormState.collectAsStateWithLifecycle()
+    val isLocked by viewModel.isLocked.collectAsStateWithLifecycle()
+
+    var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
+    if (showDiscardDialog) {
+        DiscardChangesDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack) {
+            Text(stringResource(Res.string.question_discard_product))
+        }
+    }
+
+    BackHandler(!isLocked && formState.isModified) { showDiscardDialog = true }
+    val pleaseWaitStr = stringResource(Res.string.headline_please_wait)
+    BackHandler(isLocked) {
+        scope.launch { snackbarHostState.showSnackbar(message = pleaseWaitStr) }
+    }
+
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(Res.string.headline_edit_product)) },
+                navigationIcon = {
+                    ArrowBackIconButton(
+                        onClick = {
+                            if (formState.isModified) showDiscardDialog = true else onBack()
+                        },
+                        enabled = !isLocked,
+                    )
+                },
+                actions = {
+                    val buttonHeight = ButtonDefaults.ExtraSmallContainerHeight
+                    Button(
+                        onClick = viewModel::save,
+                        shapes = ButtonDefaults.shapesFor(buttonHeight),
+                        modifier =
+                            Modifier.height(buttonHeight)
+                                .then(if (isLocked) Modifier.shimmer() else Modifier),
+                        enabled = formState.isValid && !isLocked,
+                        contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.action_save),
+                            style = ButtonDefaults.textStyleFor(buttonHeight),
+                        )
+                    }
+                },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                    ),
+                scrollBehavior = scrollBehavior,
+            )
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { paddingValues ->
+        LazyColumn(
+            modifier =
+                Modifier.imePadding()
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues.add(vertical = 8.dp),
+        ) {
+            item {
+                ProductForm(
+                    state = formState,
+                    setImageUri = viewModel::setImage,
+                    setValuesPer = viewModel::setValuesPer,
+                    setServingUnit = viewModel::setServingUnit,
+                    setPackageUnit = viewModel::setPackageUnit,
+                    isLocked = isLocked,
+                )
+            }
+        }
+    }
+}
