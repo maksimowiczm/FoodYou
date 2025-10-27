@@ -47,7 +47,9 @@ import foodyou.app.generated.resources.*
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -60,8 +62,14 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun CalendarCard(homeState: HomeState, modifier: Modifier = Modifier) {
     val clock = LocalClock.current
-    val today by clock.observe().collectAsStateWithLifecycle(clock.now())
-    val date = remember(today) { today.toLocalDateTime(TimeZone.currentSystemDefault()).date }
+    val date by
+        clock
+            .observe()
+            .map { it.toLocalDateTime(TimeZone.currentSystemDefault()).date }
+            .distinctUntilChanged()
+            .collectAsStateWithLifecycle(
+                clock.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+            )
 
     val dateFormatter = LocalDateFormatter.current
 
