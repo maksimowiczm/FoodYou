@@ -12,6 +12,7 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import com.maksimowiczm.foodyou.common.infrastructure.filekit.directory
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
@@ -20,7 +21,6 @@ import io.github.vinceglb.filekit.createDirectories
 import io.github.vinceglb.filekit.delete
 import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.exists
-import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.list
 import io.github.vinceglb.filekit.nameWithoutExtension
 import io.github.vinceglb.filekit.path
@@ -54,8 +54,7 @@ class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountReposit
     override suspend fun save(account: Account) = coroutineScope {
         val accountEntity = AccountEntity(id = account.localAccountId.value)
 
-        // Cleanup deleted profiles' avatar photos
-        PlatformFile(FileKit.filesDir, "avatar")
+        (account.directory() / "avatar")
             .apply { createDirectories() }
             .list()
             .forEach { file ->
@@ -66,7 +65,7 @@ class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountReposit
             }
 
         val profileEntities =
-            account.profiles.map { async { it.toEntity(account.localAccountId.value) } }.awaitAll()
+            account.profiles.map { async { it.toEntity(account.localAccountId) } }.awaitAll()
         val settingsEntity = account.settings.toEntity(account.localAccountId.value)
 
         accountDao.upsertAccountWithDetails(
@@ -141,7 +140,7 @@ private fun ProfileEntity.toDomain(): Profile {
     )
 }
 
-private suspend fun Profile.Avatar.toEntity(id: ProfileId): String =
+private suspend fun Profile.Avatar.toEntity(accountId: LocalAccountId, id: ProfileId): String =
     when (this) {
         is Profile.Avatar.Photo -> {
             val source = PlatformFile(uri)
@@ -150,10 +149,12 @@ private suspend fun Profile.Avatar.toEntity(id: ProfileId): String =
             }
             val bytes = source.readBytes()
 
-            val directory = PlatformFile(FileKit.filesDir, "avatar")
-            if (!directory.exists()) {
-                directory.createDirectories()
-            }
+            val directory =
+                (accountId.directory() / "avatar").apply {
+                    if (!exists()) {
+                        createDirectories()
+                    }
+                }
 
             val compressed =
                 FileKit.compressImage(bytes = bytes, quality = 85, imageFormat = ImageFormat.JPEG)
@@ -165,18 +166,21 @@ private suspend fun Profile.Avatar.toEntity(id: ProfileId): String =
 
         is Profile.Avatar.Predefined -> {
             // Try to remove any existing photo file if switching to predefined avatar
-            val file = FileKit.filesDir / "avatar" / "${id.value}.jpg"
-            if (file.exists()) file.delete()
+            (accountId.directory() / "avatar").apply {
+                if (!exists()) {
+                    createDirectories()
+                }
+            }
 
             "predefined:$name"
         }
     }
 
-private suspend fun Profile.toEntity(localAccountId: String): ProfileEntity =
+private suspend fun Profile.toEntity(localAccountId: LocalAccountId): ProfileEntity =
     ProfileEntity(
         id = id.value,
-        localAccountId = localAccountId,
+        localAccountId = localAccountId.value,
         name = name,
-        avatar = avatar.toEntity(id),
+        avatar = avatar.toEntity(localAccountId, id),
         homeFeaturesOrder = homeCardsOrder.joinToString(",") { it.ordinal.toString() },
     )
