@@ -8,11 +8,11 @@ import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.food.infrastructure.usda.FoodDataCentralRepository
-import com.maksimowiczm.foodyou.food.infrastructure.user.UserFoodRepository
+import com.maksimowiczm.foodyou.food.infrastructure.user.UserFoodRepositoryImpl
 import kotlinx.coroutines.flow.Flow
 
 class FoodProductRepositoryImpl(
-    private val userFoodRepository: UserFoodRepository,
+    private val userFoodRepository: UserFoodRepositoryImpl,
     private val openFoodFactsRepository: OpenFoodFactsRepository,
     private val foodDataCentralRepository: FoodDataCentralRepository,
 ) : FoodProductRepository {
