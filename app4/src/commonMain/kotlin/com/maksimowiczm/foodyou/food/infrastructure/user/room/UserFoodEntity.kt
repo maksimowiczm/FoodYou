@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.food.infrastructure.user.room
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.maksimowiczm.foodyou.food.infrastructure.common.NutrientsEntity
 
 @Entity(tableName = "UserFood")
 data class UserFoodEntity(

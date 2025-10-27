@@ -5,9 +5,9 @@ import androidx.room.TypeConverter
 class QuantityEntityConverter {
     @TypeConverter fun fromQuantityType(value: QuantityType): Int = value.ordinal
 
-    @TypeConverter fun toQuantityType(value: Int) = QuantityType.entries[value]
+    @TypeConverter fun toQuantityType(value: Int): QuantityType = QuantityType.entries[value]
 
-    @TypeConverter fun fromUnit(value: Unit): Int = value.ordinal
+    @TypeConverter fun fromUnit(value: MeasurementUnit): Int = value.ordinal
 
-    @TypeConverter fun toUnit(value: Int) = Unit.entries[value]
+    @TypeConverter fun toUnit(value: Int): MeasurementUnit = MeasurementUnit.entries[value]
 }

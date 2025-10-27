@@ -13,16 +13,17 @@ import com.maksimowiczm.foodyou.food.domain.FoodName
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodSource
-import com.maksimowiczm.foodyou.food.domain.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.food.domain.NutritionFacts
+import com.maksimowiczm.foodyou.food.infrastructure.common.NutrientsEntity
+import com.maksimowiczm.foodyou.food.infrastructure.common.NutrientsMapper
 import com.maksimowiczm.foodyou.food.infrastructure.usda.network.model.Food
 import com.maksimowiczm.foodyou.food.infrastructure.usda.network.model.FoodNutrient
 import com.maksimowiczm.foodyou.food.infrastructure.usda.network.model.Nutrient
 import com.maksimowiczm.foodyou.food.infrastructure.usda.room.FoodDataCentralProductEntity
-import com.maksimowiczm.foodyou.food.infrastructure.usda.room.NutrientsEntity
 import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
 
 class FoodDataCentralProductMapper {
+    private val nutrientsMapper = NutrientsMapper()
+
     fun foodDataCentralProductEntity(network: Food): FoodDataCentralProductEntity =
         with(network) {
             val energy =
@@ -37,10 +38,15 @@ class FoodDataCentralProductMapper {
                     transFats = getNutrient(Nutrient.TRANS_FAT)?.normalize(),
                     monounsaturatedFats = getNutrient(Nutrient.MONOUNSATURATED_FAT)?.normalize(),
                     polyunsaturatedFats = getNutrient(Nutrient.POLYUNSATURATED_FAT)?.normalize(),
+                    omega3 = null,
+                    omega6 = null,
                     carbohydrates = getNutrient(Nutrient.CARBOHYDRATE)?.normalize(),
                     sugars = getNutrient(Nutrient.SUGARS)?.normalize(),
                     addedSugars = getNutrient(Nutrient.ADDED_SUGARS)?.normalize(),
                     dietaryFiber = getNutrient(Nutrient.FIBER)?.normalize(),
+                    solubleFiber = null,
+                    insolubleFiber = null,
+                    salt = null,
                     cholesterol = getNutrient(Nutrient.CHOLESTEROL)?.normalize(),
                     caffeine = getNutrient(Nutrient.CAFFEINE)?.normalize(),
                     manganese = getNutrient(Nutrient.MANGANESE)?.normalize(),
@@ -53,6 +59,8 @@ class FoodDataCentralProductMapper {
                     iron = getNutrient(Nutrient.IRON)?.normalize(),
                     phosphorus = getNutrient(Nutrient.PHOSPHORUS)?.normalize(),
                     selenium = getNutrient(Nutrient.SELENIUM)?.normalize(),
+                    iodine = null,
+                    chromium = null,
                     vitaminA = getNutrient(Nutrient.VITAMIN_A)?.normalize(),
                     vitaminB1 = getNutrient(Nutrient.VITAMIN_B1)?.normalize(),
                     vitaminB2 = getNutrient(Nutrient.VITAMIN_B2)?.normalize(),
@@ -91,7 +99,7 @@ class FoodDataCentralProductMapper {
                 name = FoodName(english = description, fallback = description),
                 brand = brandOwner?.let { FoodBrand(it) },
                 image = null,
-                nutritionFacts = nutrients.toNutritionFacts(),
+                nutritionFacts = nutrientsMapper.toNutritionFats(entity.nutrients),
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
                 suggestedQuantity =
@@ -114,59 +122,12 @@ class FoodDataCentralProductMapper {
                     FoodSource.FoodDataCentral(
                         "https://fdc.nal.usda.gov/food-details/$fdcId/nutrients"
                     ),
-                nutritionFacts = nutrients.toNutritionFacts(),
+                nutritionFacts = nutrientsMapper.toNutritionFats(entity.nutrients),
                 servingQuantity = parseServing(servingSize, servingSizeUnit),
                 packageQuantity = parsePackage(packageWeight),
             )
         }
 }
-
-private fun NutrientsEntity.toNutritionFacts(): NutritionFacts =
-    NutritionFacts.requireAll(
-        proteins = proteins.toNutrientValue(),
-        carbohydrates = carbohydrates.toNutrientValue(),
-        energy = energy.toNutrientValue(),
-        fats = fats.toNutrientValue(),
-        saturatedFats = saturatedFats.toNutrientValue(),
-        transFats = transFats.toNutrientValue(),
-        monounsaturatedFats = monounsaturatedFats.toNutrientValue(),
-        polyunsaturatedFats = polyunsaturatedFats.toNutrientValue(),
-        omega3 = null.toNutrientValue(),
-        omega6 = null.toNutrientValue(),
-        sugars = sugars.toNutrientValue(),
-        addedSugars = addedSugars.toNutrientValue(),
-        dietaryFiber = dietaryFiber.toNutrientValue(),
-        solubleFiber = null.toNutrientValue(),
-        insolubleFiber = null.toNutrientValue(),
-        salt = null.toNutrientValue(),
-        cholesterol = cholesterol.toNutrientValue(),
-        caffeine = caffeine.toNutrientValue(),
-        vitaminA = vitaminA.toNutrientValue(),
-        vitaminB1 = vitaminB1.toNutrientValue(),
-        vitaminB2 = vitaminB2.toNutrientValue(),
-        vitaminB3 = vitaminB3.toNutrientValue(),
-        vitaminB5 = vitaminB5.toNutrientValue(),
-        vitaminB6 = vitaminB6.toNutrientValue(),
-        vitaminB7 = vitaminB7.toNutrientValue(),
-        vitaminB9 = vitaminB9.toNutrientValue(),
-        vitaminB12 = vitaminB12.toNutrientValue(),
-        vitaminC = vitaminC.toNutrientValue(),
-        vitaminD = vitaminD.toNutrientValue(),
-        vitaminE = vitaminE.toNutrientValue(),
-        vitaminK = vitaminK.toNutrientValue(),
-        manganese = manganese.toNutrientValue(),
-        magnesium = magnesium.toNutrientValue(),
-        potassium = potassium.toNutrientValue(),
-        calcium = calcium.toNutrientValue(),
-        copper = copper.toNutrientValue(),
-        zinc = zinc.toNutrientValue(),
-        sodium = sodium.toNutrientValue(),
-        iron = iron.toNutrientValue(),
-        phosphorus = phosphorus.toNutrientValue(),
-        selenium = selenium.toNutrientValue(),
-        iodine = null.toNutrientValue(),
-        chromium = null.toNutrientValue(),
-    )
 
 private fun parseServing(weight: Double?, unit: String?): AbsoluteQuantity? {
     val weight = weight ?: return null

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.usda.room
+package com.maksimowiczm.foodyou.food.infrastructure.common
 
 data class NutrientsEntity(
     val energy: Double?,
@@ -8,10 +8,15 @@ data class NutrientsEntity(
     val transFats: Double?,
     val monounsaturatedFats: Double?,
     val polyunsaturatedFats: Double?,
+    val omega3: Double?,
+    val omega6: Double?,
     val carbohydrates: Double?,
     val sugars: Double?,
     val addedSugars: Double?,
     val dietaryFiber: Double?,
+    val solubleFiber: Double?,
+    val insolubleFiber: Double?,
+    val salt: Double?,
     val cholesterol: Double?,
     val caffeine: Double?,
     val manganese: Double?,
@@ -24,6 +29,8 @@ data class NutrientsEntity(
     val iron: Double?,
     val phosphorus: Double?,
     val selenium: Double?,
+    val iodine: Double?,
+    val chromium: Double?,
     val vitaminA: Double?,
     val vitaminB1: Double?,
     val vitaminB2: Double?,
