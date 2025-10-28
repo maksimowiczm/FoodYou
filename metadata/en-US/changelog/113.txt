@@ -1,0 +1,5 @@
+Changes
+- Preserve search scroll position when switching between food sources.
+
+Bug fixes
+- Fixed unpacking recipes.
