@@ -124,11 +124,11 @@ fun InteractiveLogo(
     val offset by
         infiniteTransition.animateFloat(
             initialValue = 0f,
-            targetValue = 1f,
+            targetValue = 1000f,
             animationSpec =
                 InfiniteRepeatableSpec(
-                    animation = tween(durationMillis = 20_000, easing = LinearEasing),
-                    repeatMode = RepeatMode.Reverse,
+                    animation = tween(durationMillis = 20_000 * 1000, easing = LinearEasing),
+                    repeatMode = RepeatMode.Restart,
                 ),
         )
 

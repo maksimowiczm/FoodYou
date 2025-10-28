@@ -1,10 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import coil3.ImageLoader
@@ -35,10 +32,7 @@ fun FoodYouApp(userQuery: String?) {
             FoodYouTheme {
                 Surface {
                     when (appPage) {
-                        AppPage.Splash -> {
-                            // TODO
-                            Spacer(Modifier.fillMaxSize())
-                        }
+                        AppPage.Splash -> SplashScreen()
 
                         AppPage.Onboarding ->
                             Onboarding(onFinish = appViewModel::onFinishOnboarding)
