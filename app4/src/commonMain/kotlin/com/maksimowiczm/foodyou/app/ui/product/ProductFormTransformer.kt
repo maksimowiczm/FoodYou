@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.product
 
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
-import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.Grams
@@ -14,7 +13,6 @@ import com.maksimowiczm.foodyou.food.domain.FoodName
 import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.domain.FoodNote
 import com.maksimowiczm.foodyou.food.domain.FoodSource
-import com.maksimowiczm.foodyou.food.domain.NutrientValue
 import com.maksimowiczm.foodyou.food.domain.NutritionFacts
 import kotlinx.coroutines.flow.first
 
@@ -103,16 +101,8 @@ class ProductFormTransformer(
                 }
             }
 
-        // Energy MUST be in kilocalories internally
-        val kcal =
-            when (energyFormat) {
-                EnergyFormat.Kilocalories -> form.energy.value
-                EnergyFormat.Kilojoules -> form.energy.value?.let { it / 4.184 }
-            }
-        requireNotNull(kcal) { "Energy is required" }
-
         val nutritionFacts =
-            form.toNutritionFacts(multiplier = multiplier, energy = NutrientValue.Complete(kcal))
+            form.toNutritionFacts(multiplier = multiplier, energyFormat = energyFormat)
 
         val servingQuantity =
             form.servingQuantity.value?.let {

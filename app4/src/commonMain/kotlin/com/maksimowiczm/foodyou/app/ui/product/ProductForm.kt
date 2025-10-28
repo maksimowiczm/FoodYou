@@ -504,38 +504,21 @@ private fun Macronutrients(
             when (it) {
                 NutrientsOrder.Proteins ->
                     state.proteins.TextField(
-                        label = {
-                            Text(
-                                requiredStringResource(
-                                    stringResource(Res.string.nutriment_proteins)
-                                )
-                            )
-                        },
-                        supportingText = { Text(requiredStringResource()) },
+                        label = { Text(stringResource(Res.string.nutriment_proteins)) },
                         suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                         isLocked = isLocked,
                     )
 
                 NutrientsOrder.Fats ->
                     state.fats.TextField(
-                        label = {
-                            Text(requiredStringResource(stringResource(Res.string.nutriment_fats)))
-                        },
-                        supportingText = { Text(requiredStringResource()) },
+                        label = { Text(stringResource(Res.string.nutriment_fats)) },
                         suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                         isLocked = isLocked,
                     )
 
                 NutrientsOrder.Carbohydrates ->
                     state.carbohydrates.TextField(
-                        label = {
-                            Text(
-                                requiredStringResource(
-                                    stringResource(Res.string.nutriment_carbohydrates)
-                                )
-                            )
-                        },
-                        supportingText = { Text(requiredStringResource()) },
+                        label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
                         suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                         isLocked = isLocked,
                     )
@@ -546,8 +529,7 @@ private fun Macronutrients(
             }
         }
         state.energy.TextField(
-            label = { Text(requiredStringResource(stringResource(Res.string.unit_energy))) },
-            supportingText = { Text(requiredStringResource()) },
+            label = { Text(stringResource(Res.string.unit_energy)) },
             suffix = { Text(LocalEnergyFormatter.current.suffix()) },
             isLocked = isLocked,
         )

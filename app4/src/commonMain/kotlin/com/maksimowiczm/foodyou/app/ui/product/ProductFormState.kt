@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.product
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.*
+import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.form.Parser
 import com.maksimowiczm.foodyou.app.ui.common.form.nonBlankStringValidator
@@ -10,7 +11,6 @@ import com.maksimowiczm.foodyou.app.ui.common.form.nullableDoubleParser
 import com.maksimowiczm.foodyou.app.ui.common.form.nullableStringParser
 import com.maksimowiczm.foodyou.app.ui.common.form.numericStringValidator
 import com.maksimowiczm.foodyou.app.ui.common.form.stringParser
-import com.maksimowiczm.foodyou.food.domain.NutrientValue
 import com.maksimowiczm.foodyou.food.domain.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.food.domain.NutritionFacts
 import foodyou.app.generated.resources.*
@@ -87,13 +87,13 @@ data class ProductFormState(
     val defaultNote: String? = null,
     val source: FormField<String?, Unit> = FormField(parser = nullableStringParser()),
     val defaultSource: String? = null,
-    val proteins: FormField<Double?, FormFieldError> = requiredField(),
+    val proteins: FormField<Double?, FormFieldError> = optionalField(),
     val defaultProteins: Double? = null,
-    val fats: FormField<Double?, FormFieldError> = requiredField(),
+    val fats: FormField<Double?, FormFieldError> = optionalField(),
     val defaultFats: Double? = null,
-    val carbohydrates: FormField<Double?, FormFieldError> = requiredField(),
+    val carbohydrates: FormField<Double?, FormFieldError> = optionalField(),
     val defaultCarbohydrates: Double? = null,
-    val energy: FormField<Double?, FormFieldError> = requiredField(),
+    val energy: FormField<Double?, FormFieldError> = optionalField(),
     val defaultEnergy: Double? = null,
     val saturatedFats: FormField<Double?, FormFieldError> = optionalField(),
     val defaultSaturatedFats: Double? = null,
@@ -277,12 +277,22 @@ data class ProductFormState(
     }
 }
 
-fun ProductFormState.toNutritionFacts(multiplier: Double, energy: NutrientValue): NutritionFacts =
-    NutritionFacts.requireAll(
+fun ProductFormState.toNutritionFacts(
+    multiplier: Double,
+    energyFormat: EnergyFormat,
+): NutritionFacts {
+    // Energy MUST be in kilocalories internally
+    val kcal =
+        when (energyFormat) {
+            EnergyFormat.Kilocalories -> energy.value
+            EnergyFormat.Kilojoules -> energy.value?.let { it / 4.184 }
+        }
+
+    return NutritionFacts.requireAll(
         proteins = proteins.value?.multiplier(multiplier).toNutrientValue(),
         carbohydrates = carbohydrates.value?.multiplier(multiplier).toNutrientValue(),
         fats = fats.value?.multiplier(multiplier).toNutrientValue(),
-        energy = energy.value?.multiplier(multiplier).toNutrientValue(),
+        energy = kcal?.multiplier(multiplier).toNutrientValue(),
         saturatedFats = saturatedFats.value?.multiplier(multiplier).toNutrientValue(),
         transFats = transFats.value?.multiplier(multiplier).toNutrientValue(),
         monounsaturatedFats = monounsaturatedFats.value?.multiplier(multiplier).toNutrientValue(),
@@ -327,5 +337,6 @@ fun ProductFormState.toNutritionFacts(multiplier: Double, energy: NutrientValue)
         iodine = (iodineMicro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
         chromium = (chromiumMicro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
     )
+}
 
 private fun Double.multiplier(multiplier: Double): Double? = times(multiplier)
