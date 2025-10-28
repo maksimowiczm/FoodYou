@@ -66,9 +66,7 @@ fun FoodSearchApp(
     query: String?,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
-    //    excludedRecipe: FoodId.Recipe? = null,
 ) {
-    //    val viewModel: FoodSearchViewModel = koinViewModel { parametersOf(excludedRecipe) }
     val viewModel: FoodSearchViewModel = koinViewModel { parametersOf(query) }
 
     FoodSearchApp(
@@ -256,6 +254,8 @@ private fun FoodSearchApp(
 }
 
 object FoodSearchAppDefaults {
+
+    // FAB menu with options to create a recipe or product
     @Composable
     fun FloatingActionButton(
         fabExpanded: Boolean,

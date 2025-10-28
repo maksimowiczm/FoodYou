@@ -2,16 +2,13 @@ package com.maksimowiczm.foodyou.app.ui.food
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.add
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.animateFloatingActionButton
@@ -28,14 +25,14 @@ import com.maksimowiczm.foodyou.app.ui.common.component.Scrim
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefaults
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchApp
-import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchAppDefaults
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun FoodDatabaseScreen(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
-    onCreateRecipe: () -> Unit,
     onFood: (FoodProductIdentity) -> Unit,
     query: String?,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -49,25 +46,25 @@ fun FoodDatabaseScreen(
     val topBarHeight = LocalDensity.current.run { (56 * 3).dp.toPx() }
 
     Box(modifier) {
-        val fabInsets =
-            WindowInsets.systemBars
-                .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-        FoodSearchAppDefaults.FloatingActionButton(
-            fabExpanded = fabExpanded,
-            onFabExpandedChange = { fabExpanded = it },
-            onCreateRecipe = onCreateRecipe,
-            onCreateProduct = onCreateProduct,
-            modifier =
-                Modifier.zIndex(100f)
-                    .align(Alignment.BottomEnd)
-                    .windowInsetsPadding(fabInsets)
-                    .consumeWindowInsets(fabInsets)
-                    .animateFloatingActionButton(
-                        visible = !animatedVisibilityScope.transition.isRunning,
-                        alignment = Alignment.BottomEnd,
-                    ),
-        )
+        //        val fabInsets =
+        //            WindowInsets.systemBars
+        //                .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+        //                .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+        //        FoodSearchAppDefaults.FloatingActionButton(
+        //            fabExpanded = fabExpanded,
+        //            onFabExpandedChange = { fabExpanded = it },
+        //            onCreateRecipe = onCreateRecipe,
+        //            onCreateProduct = onCreateProduct,
+        //            modifier =
+        //                Modifier.zIndex(100f)
+        //                    .align(Alignment.BottomEnd)
+        //                    .windowInsetsPadding(fabInsets)
+        //                    .consumeWindowInsets(fabInsets)
+        //                    .animateFloatingActionButton(
+        //                        visible = !animatedVisibilityScope.transition.isRunning,
+        //                        alignment = Alignment.BottomEnd,
+        //                    ),
+        //        )
         Scrim(
             visible = fabExpanded,
             onDismiss = { fabExpanded = false },
@@ -75,7 +72,21 @@ fun FoodDatabaseScreen(
         )
         Scaffold(
             floatingActionButton = {
-                Box(modifier = Modifier.windowInsetsPadding(fabInsets).height(56.dp))
+                // Box(modifier = Modifier.windowInsetsPadding(fabInsets).height(56.dp))
+                FloatingActionButton(
+                    onClick = onCreateProduct,
+                    modifier =
+                        Modifier.animateFloatingActionButton(
+                            visible = !animatedVisibilityScope.transition.isRunning,
+                            alignment = Alignment.BottomEnd,
+                        ),
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Add,
+                        contentDescription = stringResource(Res.string.action_add),
+                        modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
+                    )
+                }
             },
             modifier = Modifier.fillMaxSize().nestedScroll(scrollConnection),
             content = {

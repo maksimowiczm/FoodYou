@@ -93,9 +93,6 @@ fun FoodYouNavHost(
             FoodDatabaseScreen(
                 onBack = { navController.popBackStackInclusive<FoodDatabase>() },
                 onCreateProduct = { navController.navigateSingleTop(CreateProduct) },
-                onCreateRecipe = {
-                    // TODO
-                },
                 onFood = { identity -> navController.navigateSingleTop(FoodDetails(identity)) },
                 query = query,
                 animatedVisibilityScope = this,
