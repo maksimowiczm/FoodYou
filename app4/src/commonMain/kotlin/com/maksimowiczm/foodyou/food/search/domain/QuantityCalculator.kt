@@ -9,14 +9,16 @@ import com.maksimowiczm.foodyou.common.domain.Quantity
 import com.maksimowiczm.foodyou.common.domain.ServingQuantity
 
 object QuantityCalculator {
-    fun calculateAbsoluteQuantity(
-        food: SearchableFoodDto,
-        quantity: Quantity,
-    ): Result<AbsoluteQuantity, Error> {
-        return when (quantity) {
-            is AbsoluteQuantity -> Ok(quantity)
-            is PackageQuantity -> calculateAbsoluteQuantity(food, quantity)
-            is ServingQuantity -> calculateAbsoluteQuantity(food, quantity)
+
+    /**
+     * Tries to convert [Quantity] to [AbsoluteQuantity] based on the food's serving or package
+     * quantity.
+     */
+    fun calculateAbsoluteQuantity(food: SearchableFoodDto): Result<AbsoluteQuantity, Error> {
+        return when (food.suggestedQuantity) {
+            is AbsoluteQuantity -> Ok(food.suggestedQuantity)
+            is PackageQuantity -> calculateAbsoluteQuantity(food, food.suggestedQuantity)
+            is ServingQuantity -> calculateAbsoluteQuantity(food, food.suggestedQuantity)
         }
     }
 

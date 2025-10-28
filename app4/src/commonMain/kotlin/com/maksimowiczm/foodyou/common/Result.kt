@@ -66,6 +66,12 @@ fun <R, E> Result<R, E>.expect(message: String): R =
         is Error -> error(message)
     }
 
+inline fun <R, E, R1> Result<R, E>.fold(onSuccess: (R) -> R1, onError: (E) -> R1): R1 =
+    when (this) {
+        is Success -> onSuccess(data)
+        is Error -> onError(error)
+    }
+
 @Suppress("FunctionName") fun <R, E> Ok(data: R): Result<R, E> = Success(data)
 
 @Suppress("FunctionName") fun <E> Ok(): Result<Unit, E> = Success(Unit)

@@ -237,7 +237,6 @@ private fun FoodSearchApp(
                         else ->
                             FoodSearchListItem(
                                 food = food,
-                                quantity = food.suggestedQuantity,
                                 onClick = { onFoodClick(food, food.suggestedQuantity) },
                                 shimmer = shimmer,
                             )
