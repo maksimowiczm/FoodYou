@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_3_5,
                 v_3_3_4,
                 v_3_3_3,
                 v_3_3_1,
@@ -43,6 +44,14 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_3_5 =
+        Version(
+            version = "3.3.5",
+            date = LocalDate(2025, 10, 28),
+            changes = listOf("Preserve search scroll position when switching between food sources"),
+            bugFixes = listOf("Fixed unpacking recipes"),
+        )
 
     val v_3_3_4 =
         Version(
