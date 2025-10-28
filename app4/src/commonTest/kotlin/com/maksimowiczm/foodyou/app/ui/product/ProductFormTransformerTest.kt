@@ -84,6 +84,7 @@ class ProductFormTransformerTest {
         assertEquals(5.0, result.nutritionFacts.fats.value)
         assertNull(result.servingQuantity)
         assertNull(result.packageQuantity)
+        assertEquals(false, result.isLiquid)
     }
 
     @Test
@@ -223,6 +224,7 @@ class ProductFormTransformerTest {
         assertEquals(20.0, result.nutritionFacts.carbohydrates.value)
         assertEquals(5.0, result.nutritionFacts.fats.value)
         assertEquals(200.0, result.nutritionFacts.energy.value)
+        assertEquals(false, result.isLiquid)
     }
 
     @Test
@@ -246,6 +248,7 @@ class ProductFormTransformerTest {
         assertEquals(20.0, result.nutritionFacts.carbohydrates.value)
         assertEquals(5.0, result.nutritionFacts.fats.value)
         assertEquals(200.0, result.nutritionFacts.energy.value)
+        assertEquals(true, result.isLiquid)
     }
 
     @Test
@@ -268,6 +271,7 @@ class ProductFormTransformerTest {
         assertEquals(20.0, result.nutritionFacts.carbohydrates.value)
         assertEquals(5.0, result.nutritionFacts.fats.value)
         assertEquals(200.0, result.nutritionFacts.energy.value)
+        assertEquals(false, result.isLiquid)
     }
 
     @Test
@@ -299,6 +303,7 @@ class ProductFormTransformerTest {
         advanceUntilIdle()
 
         assertEquals(AbsoluteQuantity.Weight(Grams(150.0)), result.servingQuantity)
+        assertEquals(false, result.isLiquid)
     }
 
     @Test
@@ -312,6 +317,7 @@ class ProductFormTransformerTest {
         advanceUntilIdle()
 
         assertEquals(AbsoluteQuantity.Volume(Milliliters(250.0)), result.servingQuantity)
+        assertEquals(true, result.isLiquid)
     }
 
     @Test
@@ -325,6 +331,21 @@ class ProductFormTransformerTest {
         advanceUntilIdle()
 
         assertEquals(AbsoluteQuantity.Weight(Grams(500.0)), result.packageQuantity)
+        assertEquals(false, result.isLiquid)
+    }
+
+    @Test
+    fun `should store package quantity in milliliters`() = runTest {
+        val transformer = createProductFormTransformer()
+        val form = ProductFormState(packageUnit = QuantityUnit.Milliliter)
+        form.fillRequiredFields()
+        form.packageQuantity.textFieldState.setTextAndPlaceCursorAtEnd("750")
+
+        val result = transformer.validate(form)
+        advanceUntilIdle()
+
+        assertEquals(AbsoluteQuantity.Volume(Milliliters(750.0)), result.packageQuantity)
+        assertEquals(true, result.isLiquid)
     }
 
     @Test
@@ -341,6 +362,7 @@ class ProductFormTransformerTest {
         advanceUntilIdle()
 
         assertEquals(10.0, result.nutritionFacts.proteins.value!!, 0.1)
+        assertEquals(false, result.isLiquid)
     }
 
     @Test
@@ -358,6 +380,7 @@ class ProductFormTransformerTest {
         advanceUntilIdle()
 
         assertEquals(10.0, result.nutritionFacts.proteins.value!!, 0.1)
+        assertEquals(true, result.isLiquid)
     }
 
     @Test
@@ -393,5 +416,6 @@ class ProductFormTransformerTest {
         assertEquals("Source", result.source?.value)
         assertEquals(AbsoluteQuantity.Weight(Grams(100.0)), result.servingQuantity)
         assertEquals(AbsoluteQuantity.Weight(Grams(500.0)), result.packageQuantity)
+        assertEquals(false, result.isLiquid)
     }
 }

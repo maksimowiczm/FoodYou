@@ -31,6 +31,7 @@ class ProductFormTransformer(
         val nutritionFacts: NutritionFacts,
         val servingQuantity: AbsoluteQuantity?,
         val packageQuantity: AbsoluteQuantity?,
+        val isLiquid: Boolean,
     )
 
     suspend fun validate(form: ProductFormState): Result {
@@ -133,6 +134,32 @@ class ProductFormTransformer(
                 }
             }
 
+        val possibleIsLiquid =
+            when (form.valuesPer) {
+                ValuesPer.Grams100 -> false
+                ValuesPer.Milliliters100 -> true
+                ValuesPer.Serving,
+                ValuesPer.Package -> null
+            }
+
+        val isLiquid =
+            when (form.servingUnit) {
+                QuantityUnit.Gram if (form.servingQuantity.value != null) -> false
+                QuantityUnit.Ounce if (form.servingQuantity.value != null) -> false
+                QuantityUnit.Milliliter if (form.servingQuantity.value != null) -> true
+                QuantityUnit.FluidOunce if (form.servingQuantity.value != null) -> true
+                else -> null
+            }
+                ?: when (form.packageUnit) {
+                    QuantityUnit.Gram if (form.packageQuantity.value != null) -> false
+                    QuantityUnit.Ounce if (form.packageQuantity.value != null) -> false
+                    QuantityUnit.Milliliter if (form.packageQuantity.value != null) -> true
+                    QuantityUnit.FluidOunce if (form.packageQuantity.value != null) -> true
+                    else -> null
+                }
+                ?: possibleIsLiquid
+                ?: false
+
         return Result(
             foodName = foodName,
             brand = brand,
@@ -142,6 +169,7 @@ class ProductFormTransformer(
             nutritionFacts = nutritionFacts,
             servingQuantity = servingQuantity,
             packageQuantity = packageQuantity,
+            isLiquid = isLiquid,
         )
     }
 }
