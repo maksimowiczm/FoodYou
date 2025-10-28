@@ -49,8 +49,8 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
         Version(
             version = "3.3.5",
             date = LocalDate(2025, 10, 28),
-            changes = listOf("Preserve search scroll position when switching between food sources"),
-            bugFixes = listOf("Fixed unpacking recipes"),
+            changes = listOf("Preserve search scroll position when switching between food sources."),
+            bugFixes = listOf("Fixed unpacking recipes."),
         )
 
     val v_3_3_4 =
