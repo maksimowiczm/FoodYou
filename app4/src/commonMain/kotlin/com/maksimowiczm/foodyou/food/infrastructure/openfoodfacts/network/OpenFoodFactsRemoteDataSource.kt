@@ -110,6 +110,6 @@ class OpenFoodFactsRemoteDataSource(
     private companion object {
         const val API_URL = "https://world.openfoodfacts.org"
         private const val TAG = "OpenFoodFactsRemoteDataSource"
-        private const val TIMEOUT = 10_000L
+        private const val TIMEOUT = 30_000L
     }
 }
