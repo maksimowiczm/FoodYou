@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalView
 import com.maksimowiczm.foodyou.device.domain.NutrientsColors
 import com.maksimowiczm.foodyou.device.domain.Theme
 import com.maksimowiczm.foodyou.device.domain.ThemeSettings
+import com.materialkolor.ktx.animateColorScheme
 import com.materialkolor.rememberDynamicColorScheme
 
 @Composable
@@ -96,11 +97,17 @@ private fun FoodYouTheme(
             else -> rememberDynamicColorScheme(seedColor = MaterialDeepPurple, isDark = isDark)
         }
 
+    val animatedColorScheme =
+        animateColorScheme(
+            colorScheme = colorScheme,
+            animationSpec = { MaterialTheme.motionScheme.slowEffectsSpec() },
+        )
+
     val nutrientsPalette = if (isDark) DarkNutrientsPalette else LightNutrientsPalette
 
     CompositionLocalProvider(
         LocalNutrientsPalette provides nutrientsPalette.applyColors(nutrientsColors)
     ) {
-        MaterialTheme(colorScheme = colorScheme, content = content)
+        MaterialTheme(colorScheme = animatedColorScheme, content = content)
     }
 }
