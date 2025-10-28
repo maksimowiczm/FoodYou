@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.common.component.FoodDataCentralErrorCard
 import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

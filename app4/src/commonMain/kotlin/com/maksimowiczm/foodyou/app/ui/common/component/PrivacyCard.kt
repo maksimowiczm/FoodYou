@@ -12,24 +12,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Key
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.domain.AppConfig
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.description_food_data_central_usda
-import foodyou.app.generated.resources.description_open_food_facts
-import foodyou.app.generated.resources.headline_food_data_central_usda
-import foodyou.app.generated.resources.headline_open_food_facts
-import foodyou.app.generated.resources.openfoodfacts_logo
-import foodyou.app.generated.resources.usda_logo
+import com.maksimowiczm.foodyou.app.ui.food.search.UpdateUsdaApiKeyDialog
+import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -123,6 +124,13 @@ fun UsdaPrivacyCard(
     privacyPolicyUri: String = koinInject<AppConfig>().foodDataCentralPrivacyPolicyUri,
 ) {
     val uriHandler = LocalUriHandler.current
+    var showApiKeyDialog by rememberSaveable { mutableStateOf(false) }
+    if (showApiKeyDialog) {
+        UpdateUsdaApiKeyDialog(
+            onDismissRequest = { showApiKeyDialog = false },
+            onSave = { showApiKeyDialog = false },
+        )
+    }
 
     PrivacyCard(
         title = {
@@ -161,6 +169,17 @@ fun UsdaPrivacyCard(
             Spacer(Modifier.height(8.dp))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 PrivacyPolicyChip(onClick = { uriHandler.openUri(privacyPolicyUri) })
+                AssistChip(
+                    onClick = { showApiKeyDialog = true },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Key,
+                            contentDescription = null,
+                            modifier = Modifier.size(AssistChipDefaults.IconSize),
+                        )
+                    },
+                    label = { Text(stringResource(Res.string.headline_api_key)) },
+                )
             }
         }
     }
