@@ -40,7 +40,14 @@ class OpenFoodFactsProductMapper {
         }
 
     fun searchableFoodDto(entity: OpenFoodFactsProductEntity): SearchableFoodDto =
-        buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity, image ->
+        buildFoodDto(entity) {
+            name,
+            brand,
+            nutrients,
+            servingQuantity,
+            packageQuantity,
+            image,
+            isLiquid ->
             SearchableFoodDto(
                 identity = FoodProductIdentity.OpenFoodFacts(entity.barcode),
                 name = name,
@@ -51,13 +58,22 @@ class OpenFoodFactsProductMapper {
                 suggestedQuantity =
                     servingQuantity?.let { ServingQuantity(1.0) }
                         ?: packageQuantity?.let { PackageQuantity(1.0) }
-                        ?: AbsoluteQuantity.Weight(Grams(100.0)),
+                        ?: if (isLiquid) AbsoluteQuantity.Volume(Milliliters(250.0))
+                        else AbsoluteQuantity.Weight(Grams(100.0)),
                 image = image,
+                isLiquid = isLiquid,
             )
         }
 
     fun foodProductDto(entity: OpenFoodFactsProductEntity): FoodProductDto =
-        buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity, image ->
+        buildFoodDto(entity) {
+            name,
+            brand,
+            nutrients,
+            servingQuantity,
+            packageQuantity,
+            image,
+            isLiquid ->
             FoodProductDto(
                 identity = FoodProductIdentity.OpenFoodFacts(entity.barcode),
                 name = name,
@@ -69,6 +85,7 @@ class OpenFoodFactsProductMapper {
                 nutritionFacts = nutrients,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
+                isLiquid = isLiquid,
             )
         }
 
@@ -82,6 +99,7 @@ class OpenFoodFactsProductMapper {
                 AbsoluteQuantity?,
                 AbsoluteQuantity?,
                 FoodImage.Remote?,
+                isLiquid: Boolean,
             ) -> T,
     ): T =
         with(entity) {
@@ -168,7 +186,14 @@ class OpenFoodFactsProductMapper {
 
             val brand = brand.takeIfNotBlank()?.let { FoodBrand(it) }
 
-            return build(name, brand, nutrients, servingQuantity, packageQuantity, image)
+            val isLiquid =
+                when {
+                    servingQuantity is AbsoluteQuantity.Volume -> true
+                    packageQuantity is AbsoluteQuantity.Volume -> true
+                    else -> false
+                }
+
+            return build(name, brand, nutrients, servingQuantity, packageQuantity, image, isLiquid)
         }
 
     private fun parseQuantity(weight: Double?, unit: String?): AbsoluteQuantity? {

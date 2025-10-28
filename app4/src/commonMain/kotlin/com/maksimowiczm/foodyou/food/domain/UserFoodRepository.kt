@@ -16,6 +16,7 @@ interface UserFoodRepository {
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
         accountId: LocalAccountId,
+        isLiquid: Boolean,
     ): FoodProductIdentity.Local
 
     suspend fun edit(
@@ -30,6 +31,7 @@ interface UserFoodRepository {
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
         accountId: LocalAccountId,
+        isLiquid: Boolean,
     )
 
     fun observe(

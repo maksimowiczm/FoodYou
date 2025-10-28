@@ -29,7 +29,7 @@ class UserFoodMapper {
     private val nutrientsMapper = NutrientsMapper()
 
     fun foodProductDto(entity: UserFoodEntity): FoodProductDto =
-        buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity ->
+        buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity, isLiquid ->
             FoodProductDto(
                 identity = FoodProductIdentity.Local(entity.id),
                 name = name,
@@ -41,15 +41,17 @@ class UserFoodMapper {
                 nutritionFacts = nutrients,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
+                isLiquid = isLiquid,
             )
         }
 
     fun searchableFoodDto(entity: UserFoodEntity): SearchableFoodDto =
-        buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity ->
+        buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity, isLiquid ->
             val suggestedQuantity =
                 servingQuantity?.let { ServingQuantity(1.0) }
                     ?: packageQuantity?.let { PackageQuantity(1.0) }
-                    ?: AbsoluteQuantity.Weight(Grams(100.0))
+                    ?: if (isLiquid) AbsoluteQuantity.Volume(Milliliters(250.0))
+                    else AbsoluteQuantity.Weight(Grams(100.0))
 
             val image = entity.photoPath?.let { FoodImage.Local(it) }
 
@@ -62,12 +64,21 @@ class UserFoodMapper {
                 packageQuantity = packageQuantity,
                 suggestedQuantity = suggestedQuantity,
                 image = image,
+                isLiquid = isLiquid,
             )
         }
 
     private inline fun <T> buildFoodDto(
         entity: UserFoodEntity,
-        build: (FoodName, FoodBrand?, NutritionFacts, AbsoluteQuantity?, AbsoluteQuantity?) -> T,
+        build:
+            (
+                FoodName,
+                FoodBrand?,
+                NutritionFacts,
+                AbsoluteQuantity?,
+                AbsoluteQuantity?,
+                isLiquid: Boolean,
+            ) -> T,
     ): T =
         with(entity) {
             val name =
@@ -98,7 +109,7 @@ class UserFoodMapper {
 
             val brand = brand?.let { FoodBrand(it) }
 
-            return build(name, brand, nutrients, servingQuantity, packageQuantity)
+            return build(name, brand, nutrients, servingQuantity, packageQuantity, isLiquid)
         }
 
     fun toEntity(
@@ -113,6 +124,7 @@ class UserFoodMapper {
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
         accountId: LocalAccountId,
+        isLiquid: Boolean,
     ): UserFoodEntity {
         val servingSize = servingQuantity?.let { toQuantityEntity(it) }
         val packageSize = packageQuantity?.let { toQuantityEntity(it) }
@@ -143,12 +155,13 @@ class UserFoodMapper {
             brand = brand?.value,
             barcode = barcode?.value,
             note = note?.value,
-            photoPath = imagePath,
             source = source?.value,
+            photoPath = imagePath,
+            accountId = accountId.value,
             nutrients = nutrientsMapper.toNutrientsEntity(nutritionFacts),
             packageSize = packageSize,
             servingSize = servingSize,
-            accountId = accountId.value,
+            isLiquid = isLiquid,
         )
     }
 

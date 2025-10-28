@@ -348,7 +348,8 @@ class EditProductViewModel(
                 nutritionFacts,
                 servingQuantity,
                 packageQuantity,
-            ) = productFormTransformer.validate(form)
+                isLiquid) =
+                productFormTransformer.validate(form)
 
             val accountId = observePrimaryAccountUseCase.observe().first().localAccountId
 
@@ -364,6 +365,7 @@ class EditProductViewModel(
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
                 accountId = accountId,
+                isLiquid = isLiquid,
             )
 
             eventBus.send(EditProductEvent.Edited)

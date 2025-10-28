@@ -17,6 +17,7 @@ data class SearchableFoodDto(
     val nutritionFacts: NutritionFacts,
     val servingQuantity: AbsoluteQuantity?,
     val packageQuantity: AbsoluteQuantity?,
+    val isLiquid: Boolean,
     val suggestedQuantity: Quantity,
 ) {
     fun localizedName(foodNameSelector: FoodNameSelector): String {

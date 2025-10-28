@@ -93,6 +93,12 @@ class FoodDataCentralProductMapper {
         with(entity) {
             val servingQuantity = parseServing(servingSize, servingSizeUnit)
             val packageQuantity = parsePackage(packageWeight)
+            val isLiquid =
+                when {
+                    servingQuantity is AbsoluteQuantity.Volume -> true
+                    packageQuantity is AbsoluteQuantity.Volume -> true
+                    else -> false
+                }
 
             SearchableFoodDto(
                 identity = FoodProductIdentity.FoodDataCentral(fdcId),
@@ -105,12 +111,23 @@ class FoodDataCentralProductMapper {
                 suggestedQuantity =
                     servingQuantity?.let { ServingQuantity(1.0) }
                         ?: packageQuantity?.let { PackageQuantity(1.0) }
-                        ?: AbsoluteQuantity.Weight(Grams(100.0)),
+                        ?: if (isLiquid) AbsoluteQuantity.Volume(Milliliters(250.0))
+                        else AbsoluteQuantity.Weight(Grams(100.0)),
+                isLiquid = isLiquid,
             )
         }
 
     fun foodProductDto(entity: FoodDataCentralProductEntity): FoodProductDto =
         with(entity) {
+            val servingQuantity = parseServing(servingSize, servingSizeUnit)
+            val packageQuantity = parsePackage(packageWeight)
+            val isLiquid =
+                when {
+                    servingQuantity is AbsoluteQuantity.Volume -> true
+                    packageQuantity is AbsoluteQuantity.Volume -> true
+                    else -> false
+                }
+
             FoodProductDto(
                 identity = FoodProductIdentity.FoodDataCentral(fdcId),
                 name = FoodName(english = description, fallback = description),
@@ -123,8 +140,9 @@ class FoodDataCentralProductMapper {
                         "https://fdc.nal.usda.gov/food-details/$fdcId/nutrients"
                     ),
                 nutritionFacts = nutrientsMapper.toNutritionFats(entity.nutrients),
-                servingQuantity = parseServing(servingSize, servingSizeUnit),
-                packageQuantity = parsePackage(packageWeight),
+                servingQuantity = servingQuantity,
+                packageQuantity = packageQuantity,
+                isLiquid = isLiquid,
             )
         }
 }

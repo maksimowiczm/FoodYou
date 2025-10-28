@@ -13,4 +13,5 @@ class FoodProductDto(
     val nutritionFacts: NutritionFacts,
     val servingQuantity: AbsoluteQuantity?,
     val packageQuantity: AbsoluteQuantity?,
+    val isLiquid: Boolean,
 )

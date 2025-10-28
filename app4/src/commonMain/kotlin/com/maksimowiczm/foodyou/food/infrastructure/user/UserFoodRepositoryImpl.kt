@@ -144,6 +144,7 @@ class UserFoodRepositoryImpl(
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
         accountId: LocalAccountId,
+        isLiquid: Boolean,
     ): FoodProductIdentity.Local {
         val id = Uuid.random().toString()
 
@@ -182,6 +183,7 @@ class UserFoodRepositoryImpl(
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
                 accountId = accountId,
+                isLiquid = isLiquid,
             )
 
         dao.upsert(entity)
@@ -201,6 +203,7 @@ class UserFoodRepositoryImpl(
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
         accountId: LocalAccountId,
+        isLiquid: Boolean,
     ) {
         val existingEntity = dao.observe(identity.id, accountId.value).first()
 
@@ -255,6 +258,7 @@ class UserFoodRepositoryImpl(
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
                 accountId = accountId,
+                isLiquid = isLiquid,
             )
 
         dao.upsert(updatedEntity)

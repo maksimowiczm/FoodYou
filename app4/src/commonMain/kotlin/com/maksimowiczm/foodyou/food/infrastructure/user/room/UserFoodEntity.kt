@@ -18,4 +18,5 @@ data class UserFoodEntity(
     @Embedded val nutrients: NutrientsEntity,
     @Embedded(prefix = "package_") val packageSize: QuantityEntity?,
     @Embedded(prefix = "serving_") val servingSize: QuantityEntity?,
+    val isLiquid: Boolean,
 )

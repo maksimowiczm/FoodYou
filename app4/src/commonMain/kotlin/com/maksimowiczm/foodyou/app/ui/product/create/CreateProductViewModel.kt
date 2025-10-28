@@ -51,6 +51,7 @@ class CreateProductViewModel(
                 nutritionFacts,
                 servingQuantity,
                 packageQuantity,
+                isLiquid,
             ) = productFormTransformer.validate(form)
 
             val accountId = observePrimaryAccountUseCase.observe().first().localAccountId
@@ -67,6 +68,7 @@ class CreateProductViewModel(
                     servingQuantity = servingQuantity,
                     packageQuantity = packageQuantity,
                     accountId = accountId,
+                    isLiquid = isLiquid,
                 )
 
             eventBus.send(CreateProductEvent.Created(id))
