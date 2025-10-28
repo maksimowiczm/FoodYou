@@ -91,8 +91,6 @@ Looking for alternatives or similar tools?
 
 ## 📜 License
 
-> Everything after commit `bd829fc` is licensed under GPLv3.
-
 ```
 Copyright (C) 2024-2025 Mateusz Maksimowicz
 
