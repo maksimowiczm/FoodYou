@@ -510,4 +510,11 @@
 
     <string name="action_today" description="Set date to today">Today</string>
 
+    <string name="action_fill_in_details">Fill in details</string>
+    <string name="action_skip_for_now">Skip for now</string>
+
+    <string name="headline_add_more_details">Add more details</string>
+    <string name="description_add_more_details_product_form">Filling in proteins, fats, carbohydrates, and energy values helps provide more accurate nutritional insights</string>
+
+
 </resources>

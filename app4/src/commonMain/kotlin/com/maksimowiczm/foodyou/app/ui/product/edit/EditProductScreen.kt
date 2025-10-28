@@ -23,6 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,6 +31,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.product.FillSuggestedFieldsDialog
 import com.maksimowiczm.foodyou.app.ui.product.ProductForm
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.valentinilk.shimmer.shimmer
@@ -78,6 +80,22 @@ fun EditProductScreen(
         scope.launch { snackbarHostState.showSnackbar(message = pleaseWaitStr) }
     }
 
+    val focusRequester = remember { FocusRequester() }
+    var showFillSuggestedFieldsDialog by rememberSaveable { mutableStateOf(false) }
+    if (showFillSuggestedFieldsDialog) {
+        FillSuggestedFieldsDialog(
+            onDismissRequest = { showFillSuggestedFieldsDialog = false },
+            onConfirm = {
+                showFillSuggestedFieldsDialog = false
+                focusRequester.requestFocus()
+            },
+            onSkip = {
+                showFillSuggestedFieldsDialog = false
+                viewModel.save()
+            },
+        )
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -94,7 +112,18 @@ fun EditProductScreen(
                 actions = {
                     val buttonHeight = ButtonDefaults.ExtraSmallContainerHeight
                     Button(
-                        onClick = viewModel::save,
+                        onClick = {
+                            if (
+                                formState.proteins.value == null ||
+                                    formState.fats.value == null ||
+                                    formState.carbohydrates.value == null ||
+                                    formState.energy.value == null
+                            ) {
+                                showFillSuggestedFieldsDialog = true
+                            } else {
+                                viewModel.save()
+                            }
+                        },
                         shapes = ButtonDefaults.shapesFor(buttonHeight),
                         modifier =
                             Modifier.height(buttonHeight)
@@ -133,6 +162,7 @@ fun EditProductScreen(
                     setServingUnit = viewModel::setServingUnit,
                     setPackageUnit = viewModel::setPackageUnit,
                     isLocked = isLocked,
+                    macroFocusRequester = focusRequester,
                 )
             }
         }

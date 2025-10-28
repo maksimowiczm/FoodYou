@@ -40,10 +40,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldLabelScope
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -76,6 +77,7 @@ fun ProductForm(
     setValuesPer: (ValuesPer) -> Unit,
     setServingUnit: (QuantityUnit) -> Unit,
     setPackageUnit: (QuantityUnit) -> Unit,
+    macroFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
     val order = LocalNutrientsOrder.current
@@ -89,7 +91,7 @@ fun ProductForm(
             setPackageUnit = setPackageUnit,
             isLocked = isLocked,
         )
-        Macronutrients(state, isLocked)
+        Macronutrients(state, isLocked, Modifier.focusRequester(macroFocusRequester))
         order.forEachIndexed { i, it ->
             val lastKeyboardAction = if (i == order.lastIndex) ImeAction.Done else ImeAction.Next
 
