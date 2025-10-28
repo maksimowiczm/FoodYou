@@ -17,79 +17,74 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.until
 
-// 2106 seems reasonable for now
-private const val DIARY_DAYS_COUNT = 50_000
-
 @Composable
-internal fun rememberCalendarState(
-    namesOfDayOfWeek: List<String>,
-    zeroDay: LocalDate,
-    referenceDate: LocalDate,
-    selectedDate: LocalDate = referenceDate,
-): CalendarState {
-    val lazyListState =
+fun rememberCalendarCardState(
+    referenceDate: LocalDate = LocalDate.now(),
+    selectedDate: LocalDate = LocalDate.now(),
+): CalendarCardState {
+    val zeroDay = LocalDate.fromEpochDays(0)
+
+    val listState =
         rememberLazyListState(
             initialFirstVisibleItemIndex =
                 (zeroDay.until(selectedDate, DateTimeUnit.DAY) - 2).toInt()
         )
 
-    return remember(namesOfDayOfWeek, zeroDay, referenceDate, selectedDate) {
-        CalendarState(
-            namesOfDayOfWeek = namesOfDayOfWeek,
-            lazyListCount = DIARY_DAYS_COUNT,
-            lazyListState = lazyListState,
-            zeroDate = zeroDay,
-            initialSelectedDate = selectedDate,
-            initialReferenceDate = referenceDate,
-        )
+    val selectedEpochState = remember(selectedDate) { mutableStateOf(selectedDate.toEpochDays()) }
+
+    return remember(listState, selectedEpochState, referenceDate) {
+        CalendarCardState(listState, selectedEpochState, referenceDate)
     }
 }
 
 @Stable
-internal class CalendarState(
-    val namesOfDayOfWeek: List<String>,
-    val lazyListCount: Int,
-    val lazyListState: LazyListState,
-    val zeroDate: LocalDate,
-    initialSelectedDate: LocalDate = LocalDate.now(),
-    initialReferenceDate: LocalDate = initialSelectedDate,
+class CalendarCardState(
+    val listState: LazyListState,
+    selectedEpochState: MutableState<Long>,
+    val referenceDate: LocalDate,
+    val daysCount: Int = DIARY_DAYS_COUNT,
 ) {
-    val referenceDate: LocalDate = initialReferenceDate
-    private val referenceDateVisible
-        get() =
-            lazyListState.layoutInfo.visibleItemsInfo.any {
-                zeroDate.plus(it.index.days) == referenceDate
-            }
+    private var selectedEpoch by selectedEpochState
+
+    val selectedDate by derivedStateOf { LocalDate.fromEpochDays(selectedEpoch) }
 
     val firstVisibleDate by derivedStateOf {
-        lazyListState.layoutInfo.visibleItemsInfo.firstOrNull()?.let {
-            zeroDate.plus(it.index.days)
-        }
+        val firstVisibleIndex = listState.firstVisibleItemIndex
+        LocalDate.fromEpochDays(firstVisibleIndex)
     }
 
-    private val selectedDateVisible
-        get() =
-            lazyListState.layoutInfo.visibleItemsInfo.any {
-                zeroDate.plus(it.index.days) == selectedDate
-            }
+    val referenceDateVisible by derivedStateOf {
+        listState.layoutInfo.visibleItemsInfo.any { zeroDate.plus(it.index.days) == referenceDate }
+    }
 
-    var selectedDate by mutableStateOf(initialSelectedDate)
-        private set
+    val selectedDateVisible by derivedStateOf {
+        listState.layoutInfo.visibleItemsInfo.any { zeroDate.plus(it.index.days) == selectedDate }
+    }
 
-    suspend fun onDateSelect(date: LocalDate, scroll: Boolean) {
-        selectedDate = date
+    /** Selects the given [date]. */
+    fun selectDate(date: LocalDate) {
+        selectedEpoch = date.toEpochDays()
+    }
 
-        if (scroll) {
-            lazyListState.scrollToItem(
-                index = zeroDate.until(date, DateTimeUnit.DAY).toInt(),
-                scrollOffset = -lazyListState.layoutInfo.viewportEndOffset / 2,
-            )
-        }
+    private fun LocalDate.index(): Int = toEpochDays().toInt()
+
+    suspend fun animateScrollTo(date: LocalDate) {
+        listState.animateScrollToItem(
+            index = date.index(),
+            scrollOffset = -listState.layoutInfo.viewportEndOffset / 2,
+        )
+    }
+
+    suspend fun snapScrollTo(date: LocalDate) {
+        listState.scrollToItem(
+            index = date.index(),
+            scrollOffset = -listState.layoutInfo.viewportEndOffset / 2,
+        )
     }
 
     @Composable
     fun rememberDatePickerState(): DatePickerState {
-        val lastDate = zeroDate.plus(lazyListCount.toLong() - 1, DateTimeUnit.DAY)
+        val lastDate = zeroDate.plus(daysCount.toLong() - 1, DateTimeUnit.DAY)
         val yearRange = zeroDate.year..lastDate.year
 
         val initialSelectedDateMillis =
@@ -105,9 +100,9 @@ internal class CalendarState(
                 if (referenceDateVisible) {
                         referenceDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
                     } else {
-                        firstVisibleDate?.atStartOfDayIn(TimeZone.UTC)?.toEpochMilliseconds()
+                        firstVisibleDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
                     }
-                    ?.takeIf { it >= 0 } ?: 0
+                    .takeIf { it >= 0 } ?: 0
             }
 
         return androidx.compose.material3.rememberDatePickerState(
@@ -127,5 +122,11 @@ internal class CalendarState(
                     override fun isSelectableYear(year: Int) = year in yearRange
                 },
         )
+    }
+
+    companion object {
+        // 2106 seems reasonable for now
+        private const val DIARY_DAYS_COUNT = 50_000
+        private val zeroDate: LocalDate = LocalDate.fromEpochDays(0)
     }
 }

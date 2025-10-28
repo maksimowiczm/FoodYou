@@ -508,4 +508,6 @@
     <string name="headline_delete_profile">Delete profile</string>
     <string name="description_delete_profile">This profile will be permanently deleted. All data associated with it will be lost forever.</string>
 
+    <string name="action_today" description="Set date to today">Today</string>
+
 </resources>

@@ -4,6 +4,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,4 +37,7 @@ object FoodYouHomeCardDefaults {
 
     val color: Color
         @Composable get() = MaterialTheme.colorScheme.surfaceContainerLow
+
+    val contentColor: Color
+        @Composable get() = contentColorFor(color)
 }
