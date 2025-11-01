@@ -49,11 +49,7 @@ class EditProductViewModel(
 
     init {
         viewModelScope.launch {
-            val account = observePrimaryAccountUseCase.observe().first()
-            val product =
-                userFoodRepository
-                    .observe(identity = identity, accountId = account.localAccountId)
-                    .first()
+            val product = userFoodRepository.observe(identity = identity).first()
 
             requireNotNull(product) { "Product not found: $identity" }
 

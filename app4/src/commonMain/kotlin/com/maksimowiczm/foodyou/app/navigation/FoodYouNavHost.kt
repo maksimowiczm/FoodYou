@@ -35,6 +35,7 @@ import com.maksimowiczm.foodyou.app.ui.product.create.CreateProductScreen
 import com.maksimowiczm.foodyou.app.ui.product.edit.EditProductScreen
 import com.maksimowiczm.foodyou.app.ui.profile.add.AddProfileScreen
 import com.maksimowiczm.foodyou.app.ui.profile.edit.EditProfileScreen
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import kotlinx.serialization.Serializable
@@ -170,7 +171,8 @@ sealed interface FoodYouNavHostRoute {
     @Serializable data class FoodDatabase(val query: String?) : FoodYouNavHostRoute
 
     @Serializable
-    data class FoodDetails(val type: IdentityType, val extra: String) : FoodYouNavHostRoute {
+    data class FoodDetails(val type: IdentityType, val extra: String, val extra1: String?) :
+        FoodYouNavHostRoute {
         constructor(
             identity: FoodProductIdentity
         ) : this(
@@ -186,12 +188,18 @@ sealed interface FoodYouNavHostRoute {
                     is FoodProductIdentity.OpenFoodFacts -> identity.barcode
                     is FoodProductIdentity.FoodDataCentral -> identity.fdcId.toString()
                 },
+            extra1 =
+                when (identity) {
+                    is FoodProductIdentity.Local -> identity.accountId.value
+                    is FoodProductIdentity.OpenFoodFacts -> null
+                    is FoodProductIdentity.FoodDataCentral -> null
+                },
         )
 
         val identity: FoodProductIdentity
             get() =
                 when (type) {
-                    IdentityType.Local -> FoodProductIdentity.Local(extra)
+                    IdentityType.Local -> FoodProductIdentity.Local(extra, LocalAccountId(extra1!!))
                     IdentityType.OpenFoodFacts -> FoodProductIdentity.OpenFoodFacts(extra)
                     IdentityType.FoodDataCentral ->
                         FoodProductIdentity.FoodDataCentral(extra.toInt())
@@ -223,12 +231,13 @@ sealed interface FoodYouNavHostRoute {
     @Serializable data object CreateProduct : FoodYouNavHostRoute
 
     @Serializable
-    data class EditProduct(val id: String) : FoodYouNavHostRoute {
+    data class EditProduct(val id: String, val accountId: String) : FoodYouNavHostRoute {
         companion object {
-            fun from(identity: FoodProductIdentity.Local): EditProduct = EditProduct(identity.id)
+            fun from(identity: FoodProductIdentity.Local): EditProduct =
+                EditProduct(identity.id, identity.accountId.value)
         }
 
         val identity: FoodProductIdentity.Local
-            get() = FoodProductIdentity.Local(id)
+            get() = FoodProductIdentity.Local(id, LocalAccountId(accountId))
     }
 }

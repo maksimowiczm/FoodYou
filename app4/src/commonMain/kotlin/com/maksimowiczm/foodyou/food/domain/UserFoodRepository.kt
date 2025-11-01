@@ -34,8 +34,5 @@ interface UserFoodRepository {
         isLiquid: Boolean,
     )
 
-    fun observe(
-        identity: FoodProductIdentity.Local,
-        accountId: LocalAccountId,
-    ): Flow<FoodProductDto?>
+    fun observe(identity: FoodProductIdentity.Local): Flow<FoodProductDto?>
 }

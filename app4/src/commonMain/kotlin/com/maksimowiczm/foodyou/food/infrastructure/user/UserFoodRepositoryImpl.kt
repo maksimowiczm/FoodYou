@@ -188,7 +188,7 @@ class UserFoodRepositoryImpl(
 
         dao.upsert(entity)
 
-        return FoodProductIdentity.Local(entity.id)
+        return FoodProductIdentity.Local(entity.id, LocalAccountId(entity.accountId))
     }
 
     override suspend fun edit(
@@ -264,11 +264,8 @@ class UserFoodRepositoryImpl(
         dao.upsert(updatedEntity)
     }
 
-    override fun observe(
-        identity: FoodProductIdentity.Local,
-        accountId: LocalAccountId,
-    ): Flow<FoodProductDto?> =
-        dao.observe(identity.id, accountId.value).map { entity ->
+    override fun observe(identity: FoodProductIdentity.Local): Flow<FoodProductDto?> =
+        dao.observe(identity.id, identity.accountId.value).map { entity ->
             entity?.let(mapper::foodProductDto)
         }
 }
