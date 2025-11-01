@@ -268,4 +268,21 @@ class UserFoodRepositoryImpl(
         dao.observe(identity.id, identity.accountId.value).map { entity ->
             entity?.let(mapper::foodProductDto)
         }
+
+    override suspend fun delete(identity: FoodProductIdentity.Local) {
+        val existingEntity = dao.observe(identity.id, identity.accountId.value).first()
+
+        requireNotNull(existingEntity) {
+            "Cannot delete non-existing food product with id: ${identity.id}"
+        }
+
+        dao.delete(existingEntity)
+
+        existingEntity.photoPath?.let { existingPath ->
+            val existingFile = PlatformFile(existingPath)
+            if (existingFile.exists()) {
+                existingFile.delete()
+            }
+        }
+    }
 }

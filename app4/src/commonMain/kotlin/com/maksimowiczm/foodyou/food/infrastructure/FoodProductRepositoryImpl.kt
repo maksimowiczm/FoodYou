@@ -32,4 +32,8 @@ class FoodProductRepositoryImpl(
     override suspend fun refresh(
         identity: FoodProductIdentity.FoodDataCentral
     ): Result<FoodProductDto, FoodDatabaseError> = foodDataCentralRepository.refresh(identity)
+
+    override suspend fun delete(identity: FoodProductIdentity.Local) {
+        userFoodRepository.delete(identity)
+    }
 }

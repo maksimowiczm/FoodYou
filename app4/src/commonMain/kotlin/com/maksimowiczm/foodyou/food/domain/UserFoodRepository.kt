@@ -35,4 +35,6 @@ interface UserFoodRepository {
     )
 
     fun observe(identity: FoodProductIdentity.Local): Flow<FoodProductDto?>
+
+    suspend fun delete(identity: FoodProductIdentity.Local)
 }

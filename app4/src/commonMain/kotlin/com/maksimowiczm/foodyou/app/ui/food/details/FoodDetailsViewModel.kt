@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository.FoodStatus
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -29,10 +31,14 @@ class FoodDetailsViewModel(
 ) : ViewModel() {
     private val logger = logger.withTag("FoodDetailsViewModel")
 
+    private val eventChannel = Channel<FoodDetailsUiEvent>()
+    val uiEvents = eventChannel.receiveAsFlow()
+
     private val queryParameters: StateFlow<QueryParameters?> =
         when (identity) {
             is FoodProductIdentity.FoodDataCentral ->
                 flowOf(QueryParameters.FoodDataCentral(identity))
+
             is FoodProductIdentity.Local -> {
                 combine(
                     accountManager.observePrimaryAccountId().filterNotNull(),
@@ -45,6 +51,7 @@ class FoodDetailsViewModel(
                     )
                 }
             }
+
             is FoodProductIdentity.OpenFoodFacts -> flowOf(QueryParameters.OpenFoodFacts(identity))
         }.stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = null)
 
@@ -166,6 +173,17 @@ class FoodDetailsViewModel(
                     isRefreshing.value = false
                 }
             }
+        }
+    }
+
+    fun delete() {
+        require(identity is FoodProductIdentity.Local) {
+            "Delete is only supported for local food products"
+        }
+
+        viewModelScope.launch {
+            foodProductRepository.delete(identity)
+            eventChannel.send(FoodDetailsUiEvent.Deleted)
         }
     }
 }

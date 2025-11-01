@@ -17,10 +17,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -33,6 +37,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,6 +51,7 @@ import androidx.compose.ui.zIndex
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.common.saveable.rememberBlockingDataStore
@@ -75,10 +81,17 @@ fun FoodDetailsScreen(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedCollectWithLifecycle(viewModel.uiEvents) {
+        when (it) {
+            FoodDetailsUiEvent.Deleted -> onBack()
+        }
+    }
+
     FoodDetailsScreen(
         onBack = onBack,
         onRefresh = viewModel::refresh,
         onEdit = onEdit,
+        onDelete = { viewModel.delete() },
         uiState = uiState,
         modifier = modifier,
     )
@@ -89,6 +102,7 @@ private fun FoodDetailsScreen(
     onBack: () -> Unit,
     onRefresh: () -> Unit,
     onEdit: (FoodProductIdentity.Local) -> Unit,
+    onDelete: (FoodProductIdentity.Local) -> Unit,
     uiState: FoodDetailsUiState,
     modifier: Modifier = Modifier,
 ) {
@@ -118,7 +132,12 @@ private fun FoodDetailsScreen(
                 actions = {
                     when (val identity = uiState.identity) {
                         is FoodProductIdentity.FoodDataCentral -> RefreshMenu(onRefresh = onRefresh)
-                        is FoodProductIdentity.Local -> LocalMenu(onEdit = { onEdit(identity) })
+                        is FoodProductIdentity.Local ->
+                            LocalMenu(
+                                onEdit = { onEdit(identity) },
+                                onDelete = { onDelete(identity) },
+                            )
+
                         is FoodProductIdentity.OpenFoodFacts -> RefreshMenu(onRefresh = onRefresh)
                     }
                 },
@@ -135,7 +154,7 @@ private fun FoodDetailsScreen(
             // TODO
             //  These aren't really possible if we are accessing it from food list, leave it for now
             is FoodDetailsUiState.Error -> TODO()
-            is FoodDetailsUiState.NotFound -> TODO()
+            is FoodDetailsUiState.NotFound -> Unit
 
             is FoodDetailsUiState.WithData ->
                 FoodDetailsContent(
@@ -345,8 +364,38 @@ private fun Note(note: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun LocalMenu(onEdit: () -> Unit, modifier: Modifier = Modifier) {
+private fun LocalMenu(onEdit: () -> Unit, onDelete: () -> Unit, modifier: Modifier = Modifier) {
     var expanded by rememberSaveable { mutableStateOf(false) }
+
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text(stringResource(Res.string.headline_delete_food)) },
+            text = { Text(stringResource(Res.string.description_delete_food)) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDeleteDialog = false
+                        onDelete()
+                    },
+                    shapes = ButtonDefaults.shapes(),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                        ),
+                ) {
+                    Text(text = stringResource(Res.string.action_delete))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(text = stringResource(Res.string.action_cancel))
+                }
+            },
+        )
+    }
 
     Box(modifier) {
         IconButton(onClick = { expanded = true }, shapes = IconButtonDefaults.shapes()) {
@@ -361,6 +410,16 @@ private fun LocalMenu(onEdit: () -> Unit, modifier: Modifier = Modifier) {
                 onClick = {
                     expanded = false
                     onEdit()
+                },
+            )
+            DropdownMenuItem(
+                text = { Text(stringResource(Res.string.action_delete)) },
+                leadingIcon = {
+                    Icon(imageVector = Icons.Outlined.Delete, contentDescription = null)
+                },
+                onClick = {
+                    expanded = false
+                    showDeleteDialog = true
                 },
             )
         }

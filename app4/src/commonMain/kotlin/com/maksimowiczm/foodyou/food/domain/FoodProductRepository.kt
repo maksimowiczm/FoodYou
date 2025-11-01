@@ -21,6 +21,9 @@ interface FoodProductRepository {
         identity: FoodProductIdentity.FoodDataCentral
     ): Result<FoodProductDto, FoodDatabaseError>
 
+    /** Deletes a local food product by its identity. */
+    suspend fun delete(identity: FoodProductIdentity.Local)
+
     sealed interface FoodStatus {
         /**
          * Indicates that the food product is currently being loaded. If partial data is available,
