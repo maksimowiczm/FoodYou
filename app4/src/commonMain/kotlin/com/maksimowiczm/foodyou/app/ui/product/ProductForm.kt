@@ -52,6 +52,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.component.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
@@ -61,9 +63,11 @@ import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.coil.securelyAccessFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
+import io.github.vinceglb.filekit.lastModified
 import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -276,6 +280,21 @@ private fun PhotoPicker(
         }
     } else {
         val file = remember(imageUri) { PlatformFile(imageUri) }
+        val platformContext = LocalPlatformContext.current
+        val model =
+            remember(platformContext, imageUri) {
+                val file = PlatformFile(imageUri)
+                // This is to force Coil to reload the image when the file is modified, it kind of
+                // leaks from infrastructure to UI layer
+                val cacheKey = "${file.absolutePath()}_${file.lastModified()}"
+
+                ImageRequest.Builder(platformContext)
+                    .data(imageUri)
+                    .memoryCacheKey(cacheKey)
+                    .diskCacheKey(cacheKey)
+                    .build()
+            }
+
         Surface(
             modifier = modifier.fillMaxWidth().heightIn(min = 80.dp),
             shape = MaterialTheme.shapes.large,
@@ -283,7 +302,7 @@ private fun PhotoPicker(
         ) {
             Box {
                 AsyncImage(
-                    model = file,
+                    model = model,
                     contentDescription = null,
                     modifier =
                         Modifier.align(Alignment.Center)
