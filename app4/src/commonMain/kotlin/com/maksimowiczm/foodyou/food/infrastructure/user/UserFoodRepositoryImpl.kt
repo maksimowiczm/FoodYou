@@ -37,7 +37,6 @@ import io.github.vinceglb.filekit.exists
 import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
-import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -146,38 +145,16 @@ class UserFoodRepositoryImpl(
         accountId: LocalAccountId,
         isLiquid: Boolean,
     ): FoodProductIdentity.Local {
-        val id = Uuid.random().toString()
-
         val foodDirectory = accountId.directory() / "food"
         foodDirectory.createDirectories()
 
-        val imagePath: String? =
-            if (imageUri != null) {
-                val sourceFile = PlatformFile(imageUri)
-                require(sourceFile.exists()) { "Image file does not exist at path: $imageUri" }
-                val bytes = sourceFile.readBytes()
-
-                val compressed =
-                    FileKit.compressImage(
-                        bytes = bytes,
-                        quality = 85,
-                        imageFormat = ImageFormat.JPEG,
-                    )
-
-                val dest = (foodDirectory / "$id.jpg").apply { write(compressed) }
-                dest.path
-            } else {
-                null
-            }
-
         val entity =
             mapper.toEntity(
-                id = id,
                 name = name,
                 brand = brand,
                 barcode = barcode,
                 note = note,
-                imagePath = imagePath,
+                imagePath = null,
                 source = source,
                 nutritionFacts = nutritionFacts,
                 servingQuantity = servingQuantity,
@@ -186,9 +163,33 @@ class UserFoodRepositoryImpl(
                 isLiquid = isLiquid,
             )
 
-        dao.upsert(entity)
+        val id =
+            dao.insert(entity) { id ->
+                val photoPath =
+                    if (imageUri != null) {
+                        val sourceFile = PlatformFile(imageUri)
+                        require(sourceFile.exists()) {
+                            "Image file does not exist at path: $imageUri"
+                        }
+                        val bytes = sourceFile.readBytes()
 
-        return FoodProductIdentity.Local(entity.id, LocalAccountId(entity.accountId))
+                        val compressed =
+                            FileKit.compressImage(
+                                bytes = bytes,
+                                quality = 85,
+                                imageFormat = ImageFormat.JPEG,
+                            )
+
+                        val dest = (foodDirectory / "$id.jpg").apply { write(compressed) }
+                        dest.path
+                    } else {
+                        null
+                    }
+
+                entity.copy(photoPath = photoPath)
+            }
+
+        return FoodProductIdentity.Local(id, LocalAccountId(entity.accountId))
     }
 
     override suspend fun edit(
@@ -261,7 +262,7 @@ class UserFoodRepositoryImpl(
                 isLiquid = isLiquid,
             )
 
-        dao.upsert(updatedEntity)
+        dao.update(updatedEntity)
     }
 
     override fun observe(identity: FoodProductIdentity.Local): Flow<FoodProductDto?> =
@@ -277,12 +278,6 @@ class UserFoodRepositoryImpl(
         }
 
         dao.delete(existingEntity)
-
-        existingEntity.photoPath?.let { existingPath ->
-            val existingFile = PlatformFile(existingPath)
-            if (existingFile.exists()) {
-                existingFile.delete()
-            }
-        }
+        PlatformFile("${existingEntity.id}.jpg").delete(mustExist = false)
     }
 }

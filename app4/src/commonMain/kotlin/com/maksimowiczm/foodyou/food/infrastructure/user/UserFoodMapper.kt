@@ -113,7 +113,7 @@ class UserFoodMapper {
         }
 
     fun toEntity(
-        id: String,
+        id: Long = 0,
         name: FoodName,
         brand: FoodBrand?,
         barcode: Barcode?,

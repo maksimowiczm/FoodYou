@@ -3,15 +3,31 @@ package com.maksimowiczm.foodyou.food.infrastructure.user.room
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Upsert
+import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface UserFoodDao {
-    @Upsert suspend fun upsert(userFoodEntity: UserFoodEntity)
+abstract class UserFoodDao {
+    @Insert protected abstract fun insert(userFoodEntity: UserFoodEntity): Long
 
-    @Delete suspend fun delete(userFoodEntity: UserFoodEntity)
+    /** Insert with callback which will run in transaction. */
+    @Transaction
+    open suspend fun insert(
+        userFoodEntity: UserFoodEntity,
+        onInsert: suspend (id: Long) -> UserFoodEntity,
+    ): Long {
+        val id = insert(userFoodEntity)
+        val transformed = onInsert(id)
+        update(transformed.copy(id = id))
+        return id
+    }
+
+    @Update abstract suspend fun update(userFoodEntity: UserFoodEntity)
+
+    @Delete abstract suspend fun delete(userFoodEntity: UserFoodEntity)
 
     @Query(
         """
@@ -23,7 +39,7 @@ interface UserFoodDao {
         LIMIT 1
         """
     )
-    fun observe(id: String, accountId: String): Flow<UserFoodEntity?>
+    abstract fun observe(id: Long, accountId: String): Flow<UserFoodEntity?>
 
     @Query(
         """
@@ -51,7 +67,10 @@ interface UserFoodDao {
         END ASC, name_en
         """
     )
-    fun getPagingSource(languageCode: String, accountId: String): PagingSource<Int, UserFoodEntity>
+    abstract fun getPagingSource(
+        languageCode: String,
+        accountId: String,
+    ): PagingSource<Int, UserFoodEntity>
 
     @Query(
         """
@@ -60,7 +79,7 @@ interface UserFoodDao {
         WHERE accountId = :accountId
         """
     )
-    fun observeCount(accountId: String): Flow<Int>
+    abstract fun observeCount(accountId: String): Flow<Int>
 
     @Query(
         """
@@ -68,7 +87,7 @@ interface UserFoodDao {
         FROM UserFood uf JOIN UserFoodFts fts ON uf.id = fts.rowid
         WHERE 
             uf.accountId = :accountId AND
-            UserFoodFts MATCH :query
+            UserFoodFts MATCH :query || '*'
         ORDER BY CASE :languageCode
             WHEN 'en-US' THEN uf.name_en
             WHEN 'ca-ES' THEN uf.name_ca
@@ -90,7 +109,7 @@ interface UserFoodDao {
         END ASC, uf.name_en
         """
     )
-    fun getPagingSourceByQuery(
+    abstract fun getPagingSourceByQuery(
         query: String,
         languageCode: String,
         accountId: String,
@@ -102,10 +121,10 @@ interface UserFoodDao {
         FROM UserFood uf JOIN UserFoodFts fts ON uf.id = fts.rowid
         WHERE 
             uf.accountId = :accountId AND
-            UserFoodFts MATCH :query
+            UserFoodFts MATCH :query || '*'
         """
     )
-    fun observeCountByQuery(query: String, accountId: String): Flow<Int>
+    abstract fun observeCountByQuery(query: String, accountId: String): Flow<Int>
 
     @Query(
         """
@@ -135,7 +154,7 @@ interface UserFoodDao {
         END ASC, name_en
         """
     )
-    fun getPagingSourceByBarcode(
+    abstract fun getPagingSourceByBarcode(
         barcode: String,
         languageCode: String,
         accountId: String,
@@ -150,5 +169,5 @@ interface UserFoodDao {
             barcode LIKE '%' || :barcode || '%'
         """
     )
-    fun observeCountByBarcode(barcode: String, accountId: String): Flow<Int>
+    abstract fun observeCountByBarcode(barcode: String, accountId: String): Flow<Int>
 }

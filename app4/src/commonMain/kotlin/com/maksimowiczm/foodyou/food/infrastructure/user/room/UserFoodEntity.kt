@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.food.infrastructure.common.NutrientsEntity
 
 @Entity(tableName = "UserFood")
 data class UserFoodEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey(autoGenerate = true) val id: Long,
     @Embedded(prefix = "name_") val name: FoodNameEntity,
     val brand: String?,
     val barcode: String?,
