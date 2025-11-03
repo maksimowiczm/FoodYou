@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.app.ui.food.details
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -66,6 +68,7 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -428,23 +431,24 @@ private fun LocalMenu(onEdit: () -> Unit, onDelete: () -> Unit, modifier: Modifi
 
 @Composable
 private fun RefreshMenu(onRefresh: () -> Unit, modifier: Modifier = Modifier) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
+    val animatable = remember { Animatable(0f) }
+    val scope = rememberCoroutineScope()
 
-    Box(modifier) {
-        IconButton(onClick = { expanded = true }, shapes = IconButtonDefaults.shapes()) {
-            Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = null)
-        }
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            DropdownMenuItem(
-                text = { Text(stringResource(Res.string.action_refresh)) },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Outlined.Refresh, contentDescription = null)
-                },
-                onClick = {
-                    expanded = false
-                    onRefresh()
-                },
-            )
-        }
+    IconButton(
+        onClick = {
+            scope.launch {
+                animatable.snapTo(0f)
+                animatable.animateTo(360f, tween(500))
+            }
+            onRefresh()
+        },
+        shapes = IconButtonDefaults.shapes(),
+        modifier = modifier,
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Refresh,
+            contentDescription = stringResource(Res.string.action_refresh),
+            modifier = Modifier.graphicsLayer { rotationZ = animatable.value },
+        )
     }
 }
