@@ -269,7 +269,10 @@ private fun PhotoPicker(
         ) {
             Icon(imageVector = Icons.Outlined.AddAPhoto, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text(text = "Add a photo", style = MaterialTheme.typography.titleMedium)
+            Text(
+                text = stringResource(Res.string.action_add_a_photo),
+                style = MaterialTheme.typography.titleMedium,
+            )
         }
     } else {
         val file = remember(imageUri) { PlatformFile(imageUri) }
@@ -317,7 +320,8 @@ private fun PhotoPicker(
                         Box(Modifier.size(40.dp)) {
                             Icon(
                                 imageVector = Icons.Outlined.Close,
-                                contentDescription = "Remove photo",
+                                contentDescription =
+                                    stringResource(Res.string.action_remove_a_photo),
                                 modifier = Modifier.align(Alignment.Center).size(24.dp),
                             )
                         }
@@ -352,7 +356,7 @@ private fun ValuesPerPicker(
                 style = MaterialTheme.typography.bodyLarge,
             )
             Text(
-                text = "Select the quantity your nutrition values are based on",
+                text = stringResource(Res.string.description_values_per),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

@@ -517,4 +517,9 @@
     <string name="description_add_more_details_product_form">Filling in proteins, fats, carbohydrates, and energy values helps provide more accurate nutritional insights</string>
 
 
+    <string name="action_add_a_photo">Add a photo</string>
+    <string name="action_remove_a_photo">Remove a photo</string>
+
+    <string name="description_values_per">Select the quantity your nutrition values are based on</string>
+
 </resources>
