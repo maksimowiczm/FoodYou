@@ -9,5 +9,7 @@ interface AccountRepository {
 
     suspend fun load(localAccountId: LocalAccountId): Account? = observe(localAccountId).first()
 
+    suspend fun loadAll(): List<Account>
+
     suspend fun save(account: Account)
 }

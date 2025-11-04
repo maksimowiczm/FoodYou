@@ -8,7 +8,9 @@ import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDatabase
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.EnergyFormatConverter
+import com.maksimowiczm.foodyou.account.infrastructure.room.FoodIdentityTypeConverter
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
+import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.FoodSearchDatabase
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.SearchHistoryEntity
@@ -18,13 +20,14 @@ import com.maksimowiczm.foodyou.food.search.infrastructure.room.SearchHistoryEnt
         [
             AccountEntity::class,
             ProfileEntity::class,
+            ProfileFavoriteFoodEntity::class,
             SettingsEntity::class,
             SearchHistoryEntity::class,
         ],
     version = AppDatabase.VERSION,
     exportSchema = false,
 )
-@TypeConverters(EnergyFormatConverter::class)
+@TypeConverters(EnergyFormatConverter::class, FoodIdentityTypeConverter::class)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase(), AccountDatabase, FoodSearchDatabase {
     companion object {
