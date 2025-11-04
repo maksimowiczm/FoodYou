@@ -16,7 +16,6 @@ import com.maksimowiczm.foodyou.common.domain.Grams
 import com.maksimowiczm.foodyou.common.domain.Milliliters
 import com.maksimowiczm.foodyou.common.fold
 import com.maksimowiczm.foodyou.food.search.domain.QuantityCalculator
-import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
@@ -24,7 +23,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FoodSearchListItem(
-    food: SearchableFoodDto,
+    food: FoodSearchUiModel.Loaded,
     onClick: () -> Unit,
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
@@ -34,10 +33,14 @@ internal fun FoodSearchListItem(
 
     // Calculate quantity for 100 ml or 100 g
     val absoluteQuantity =
-        QuantityCalculator.calculateAbsoluteQuantity(food)
+        QuantityCalculator.calculateAbsoluteQuantity(
+                food.suggestedQuantity,
+                food.packageQuantity,
+                food.servingQuantity,
+            )
             .fold(
                 onSuccess = { it },
-                onError = { error ->
+                onError = {
                     if (food.isLiquid) AbsoluteQuantity.Volume(Milliliters(100.0))
                     else AbsoluteQuantity.Weight(Grams(100.0))
                 },

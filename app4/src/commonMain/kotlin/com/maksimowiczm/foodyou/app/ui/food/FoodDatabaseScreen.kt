@@ -91,7 +91,7 @@ fun FoodDatabaseScreen(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollConnection),
             content = {
                 FoodSearchApp(
-                    onFoodClick = { model, _ -> onFood(model.identity) },
+                    onFoodClick = { model -> onFood(model.identity) },
                     onBack = onBack,
                     query = query,
                 )

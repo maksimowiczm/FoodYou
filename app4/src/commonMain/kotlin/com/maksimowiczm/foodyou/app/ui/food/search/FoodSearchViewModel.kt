@@ -110,16 +110,12 @@ internal class FoodSearchViewModel(
             .flatMapLatest { params ->
                 searchableFoodRepository.search(parameters = params, pageSize = 30)
             }
+            .map { data -> data.map { FoodSearchUiModel.Loaded(it) } }
             .cachedIn(viewModelScope)
     private val localState =
         localSearchParams.flatMapLatest { params ->
             searchableFoodRepository.count(params).map { count ->
-                FoodSourceUiState(
-                    remoteEnabled = RemoteStatus.LocalOnly,
-                    pages = localPages,
-                    count = count,
-                    alwaysShowFilter = true,
-                )
+                FoodSourceUiState(pages = localPages, count = count, alwaysShowFilter = true)
             }
         }
 
@@ -136,6 +132,7 @@ internal class FoodSearchViewModel(
             .flatMapLatest { params ->
                 searchableFoodRepository.search(parameters = params, pageSize = 30)
             }
+            .map { data -> data.map { FoodSearchUiModel.Loaded(it) } }
             .cachedIn(viewModelScope)
 
     private val openFoodFactsState =
@@ -144,7 +141,7 @@ internal class FoodSearchViewModel(
 
                 count.map { count ->
                     FoodSourceUiState(
-                        remoteEnabled = prefs.allowOpenFoodFacts.toRemoteStatus(),
+                        alwaysShowFilter = prefs.allowOpenFoodFacts,
                         pages = openFoodFactsPages,
                         count = count,
                     )
@@ -165,6 +162,7 @@ internal class FoodSearchViewModel(
             .flatMapLatest { params ->
                 searchableFoodRepository.search(parameters = params, pageSize = 30)
             }
+            .map { data -> data.map { FoodSearchUiModel.Loaded(it) } }
             .cachedIn(viewModelScope)
 
     private val usdaState =
@@ -173,7 +171,7 @@ internal class FoodSearchViewModel(
 
                 count.map { count ->
                     FoodSourceUiState(
-                        remoteEnabled = prefs.allowFoodDataCentralUSDA.toRemoteStatus(),
+                        alwaysShowFilter = prefs.allowFoodDataCentralUSDA,
                         pages = usdaPages,
                         count = count,
                     )
@@ -228,7 +226,7 @@ internal class FoodSearchViewModel(
     init {
         searchQuery
             .filterIsInstance<SearchQuery.NotBlank>()
-            .flatMapLatest { query ->
+            .flatMapLatest {
                 val switchFlow =
                     combine(filter, uiState) { currentFilter, uiState ->
                         if (

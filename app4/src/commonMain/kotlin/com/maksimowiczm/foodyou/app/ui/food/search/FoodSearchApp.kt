@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -48,9 +46,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.component.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.error
-import com.maksimowiczm.foodyou.common.domain.Quantity
 import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
-import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -62,7 +58,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun FoodSearchApp(
-    onFoodClick: (SearchableFoodDto, Quantity) -> Unit,
+    onFoodClick: (FoodSearchUiModel) -> Unit,
     query: String?,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
@@ -86,7 +82,7 @@ private fun FoodSearchApp(
     uiState: FoodSearchUiState,
     onSearch: (String?) -> Unit,
     onSourceChange: (FoodFilter.Source) -> Unit,
-    onFoodClick: (SearchableFoodDto, Quantity) -> Unit,
+    onFoodClick: (FoodSearchUiModel) -> Unit,
     onBack: (() -> Unit)?,
     modifier: Modifier = Modifier,
     appState: FoodSearchAppState = rememberFoodSearchAppState(),
@@ -134,9 +130,6 @@ private fun FoodSearchApp(
     )
 
     Scaffold(modifier) { paddingValues ->
-        // Fix for searchbar issues on Android SDK 27 and below
-        Box(Modifier.focusable().size(1.dp))
-
         var topContentHeight by remember { mutableIntStateOf(0) }
 
         Column(
@@ -228,14 +221,13 @@ private fun FoodSearchApp(
                     count = pages.itemCount,
                     key = pages.itemKey { (it.identity to uiState.filter.source).toString() },
                 ) { i ->
-                    val food = pages[i]
-
-                    when (food) {
+                    when (val food = pages[i]) {
                         null -> FoodListItemSkeleton(shimmer)
-                        else ->
+                        is FoodSearchUiModel.Loading -> FoodListItemSkeleton(shimmer)
+                        is FoodSearchUiModel.Loaded ->
                             FoodSearchListItem(
                                 food = food,
-                                onClick = { onFoodClick(food, food.suggestedQuantity) },
+                                onClick = { onFoodClick(food) },
                                 shimmer = shimmer,
                             )
                     }
@@ -332,4 +324,5 @@ private fun ListStates.state(source: FoodFilter.Source) =
         FoodFilter.Source.YourFood -> yourFood
         FoodFilter.Source.OpenFoodFacts -> openFoodFacts
         FoodFilter.Source.USDA -> usda
+        FoodFilter.Source.Favorite -> favorite
     }

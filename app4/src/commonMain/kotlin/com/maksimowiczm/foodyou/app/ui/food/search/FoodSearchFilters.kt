@@ -84,7 +84,7 @@ internal fun FoodSearchFilters(
                             modifier = Modifier.size(FilterChipDefaults.IconSize),
                         )
                     } else {
-                        if (state.remoteEnabled != RemoteStatus.LocalOnly && isLoading) {
+                        if (isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(FilterChipDefaults.IconSize),
                                 strokeWidth = 2.dp,

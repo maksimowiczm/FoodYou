@@ -14,28 +14,28 @@ object QuantityCalculator {
      * Tries to convert [Quantity] to [AbsoluteQuantity] based on the food's serving or package
      * quantity.
      */
-    fun calculateAbsoluteQuantity(food: SearchableFoodDto): Result<AbsoluteQuantity, Error> {
-        return when (food.suggestedQuantity) {
-            is AbsoluteQuantity -> Ok(food.suggestedQuantity)
-            is PackageQuantity -> calculateAbsoluteQuantity(food, food.suggestedQuantity)
-            is ServingQuantity -> calculateAbsoluteQuantity(food, food.suggestedQuantity)
-        }
-    }
-
     fun calculateAbsoluteQuantity(
-        food: SearchableFoodDto,
-        quantity: PackageQuantity,
-    ): Result<AbsoluteQuantity, Error.NoPackageQuantity> {
-        val packageQuantity = food.packageQuantity ?: return Err(Error.NoPackageQuantity)
-        return Ok(scale(packageQuantity, quantity.packages))
-    }
+        suggestedQuantity: Quantity,
+        packageQuantity: AbsoluteQuantity?,
+        servingQuantity: AbsoluteQuantity?,
+    ): Result<AbsoluteQuantity, Error> {
+        val scaled =
+            when (suggestedQuantity) {
+                is AbsoluteQuantity -> suggestedQuantity
+                is PackageQuantity ->
+                    scale(
+                        packageQuantity ?: return Err(Error.NoPackageQuantity),
+                        suggestedQuantity.packages,
+                    )
 
-    fun calculateAbsoluteQuantity(
-        food: SearchableFoodDto,
-        quantity: ServingQuantity,
-    ): Result<AbsoluteQuantity, Error.NoServingQuantity> {
-        val servingQuantity = food.servingQuantity ?: return Err(Error.NoServingQuantity)
-        return Ok(scale(servingQuantity, quantity.servings))
+                is ServingQuantity ->
+                    scale(
+                        servingQuantity ?: return Err(Error.NoServingQuantity),
+                        suggestedQuantity.servings,
+                    )
+            }
+
+        return Ok(scaled)
     }
 
     fun calculateAbsoluteQuantity(
