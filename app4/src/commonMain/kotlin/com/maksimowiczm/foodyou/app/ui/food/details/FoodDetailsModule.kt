@@ -6,11 +6,6 @@ import org.koin.dsl.module
 
 val foodDetailsModule = module {
     viewModel { (identity: FoodProductIdentity) ->
-        FoodDetailsViewModel(
-            identity = identity,
-            foodProductRepository = get(),
-            accountManager = get(),
-            logger = get(),
-        )
+        FoodDetailsViewModel(identity = identity, get(), get(), get(), get(), get())
     }
 }

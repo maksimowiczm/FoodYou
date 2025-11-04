@@ -98,7 +98,7 @@ class FoodDataCentralRepository(
     }
 
     fun observe(parameters: QueryParameters.FoodDataCentral): Flow<FoodStatus> = channelFlow {
-        send(FoodStatus.Loading(null))
+        send(FoodStatus.Loading(parameters.identity, null))
 
         val fdcId = parameters.identity.fdcId
 
@@ -113,8 +113,9 @@ class FoodDataCentralRepository(
                 send(FoodStatus.Available(mapper.foodProductDto(entity)))
             } catch (e: FoodDatabaseError) {
                 when (e) {
-                    is FoodDatabaseError.ProductNotFound -> send(FoodStatus.NotFound)
-                    else -> send(FoodStatus.Error(null, e))
+                    is FoodDatabaseError.ProductNotFound ->
+                        send(FoodStatus.NotFound(parameters.identity))
+                    else -> send(FoodStatus.Error(parameters.identity, null, e))
                 }
             }
         } else {
@@ -123,7 +124,7 @@ class FoodDataCentralRepository(
 
         dao.observe(fdcId).drop(1).collectLatest {
             when (it) {
-                null -> send(FoodStatus.NotFound)
+                null -> send(FoodStatus.NotFound(parameters.identity))
                 else -> send(FoodStatus.Available(mapper.foodProductDto(it)))
             }
         }

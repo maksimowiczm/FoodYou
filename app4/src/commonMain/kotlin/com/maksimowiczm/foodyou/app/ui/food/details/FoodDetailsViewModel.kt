@@ -3,8 +3,11 @@ package com.maksimowiczm.foodyou.app.ui.food.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.domain.AccountManager
+import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.common.onError
+import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository.FoodStatus
@@ -77,67 +80,33 @@ class FoodDetailsViewModel(
 
     val uiState =
         foodProduct
-            .map {
-                when (it) {
-                    is FoodStatus.Available -> {
-                        val image =
-                            when {
-                                it.food.image != null -> FoodImageUiState.WithImage(it.food.image)
-                                else -> FoodImageUiState.NoImage
-                            }
+            .map { status ->
+                when (status) {
+                    is FoodStatus.Available ->
+                        status.food.toUiState(identity = identity, isLoading = false)
 
-                        FoodDetailsUiState.WithData(
-                            identity = identity,
-                            isLoading = false,
-                            foodName = it.food.name,
-                            brand = it.food.brand?.value,
-                            image = image,
-                            nutritionFacts = it.food.nutritionFacts,
-                            note = it.food.note,
-                            source = it.food.source,
-                        )
-                    }
+                    is FoodStatus.Loading ->
+                        status.food?.toUiState(identity = identity, isLoading = true)
+                            ?: FoodDetailsUiState.WithData.loading(identity)
 
                     is FoodStatus.Error ->
-                        FoodDetailsUiState.Error(identity = identity, message = it.error.message)
-
-                    is FoodStatus.Loading -> {
-                        val image =
-                            when {
-                                it.food?.image != null -> FoodImageUiState.WithImage(it.food.image)
-                                else -> FoodImageUiState.Loading
-                            }
-
-                        FoodDetailsUiState.WithData(
+                        FoodDetailsUiState.Error(
                             identity = identity,
-                            isLoading = true,
-                            foodName = it.food?.name,
-                            brand = it.food?.brand?.value,
-                            image = image,
-                            nutritionFacts = it.food?.nutritionFacts,
-                            note = it.food?.note,
-                            source = it.food?.source,
+                            message = status.error.message,
                         )
-                    }
 
-                    FoodStatus.NotFound -> FoodDetailsUiState.NotFound(identity = identity)
+                    is FoodStatus.NotFound -> FoodDetailsUiState.NotFound(identity = identity)
                 }
             }
             .combine(isRefreshing) { uiState, refreshing ->
-                if (refreshing && uiState is FoodDetailsUiState.WithData) {
-                    FoodDetailsUiState.WithData(
-                        isLoading = true,
-                        identity = uiState.identity,
-                        foodName = uiState.foodName,
-                        brand = uiState.brand,
-                        image = uiState.image,
-                        nutritionFacts = uiState.nutritionFacts,
-                        note = uiState.note,
-                        source = uiState.source,
-                    )
-                } else {
-                    uiState
-                }
+                if (refreshing && uiState is FoodDetailsUiState.WithData)
+                    uiState.copy(isLoading = true)
+                else uiState
+            }
+            .combine(profile.filterNotNull()) { uiState, profile ->
+                if (uiState is FoodDetailsUiState.WithData)
+                    uiState.copy(isFavorite = profile.isFavorite(identity))
+                else uiState
             }
             .stateIn(
                 scope = viewModelScope,
@@ -152,6 +121,7 @@ class FoodDetailsViewModel(
                         nutritionFacts = null,
                         note = null,
                         source = null,
+                        isFavorite = false,
                     ),
             )
 
@@ -194,4 +164,36 @@ class FoodDetailsViewModel(
             eventChannel.send(FoodDetailsUiEvent.Deleted)
         }
     }
+
+    fun setFavorite(isFavorite: Boolean) {
+        viewModelScope.launch {
+            val account = account()
+            val profileId = accountManager.observePrimaryProfileId().first()
+
+            account.updateProfile(profileId) {
+                it.apply {
+                    if (isFavorite) {
+                        addFavoriteFood(identity)
+                    } else {
+                        removeFavoriteFood(identity)
+                    }
+                }
+            }
+
+            accountRepository.save(account)
+        }
+    }
 }
+
+private fun FoodProductDto.toUiState(identity: FoodProductIdentity, isLoading: Boolean) =
+    FoodDetailsUiState.WithData(
+        identity = identity,
+        isLoading = isLoading,
+        foodName = name,
+        brand = brand?.value,
+        image = image?.let { FoodImageUiState.WithImage(it) } ?: FoodImageUiState.NoImage,
+        nutritionFacts = nutritionFacts,
+        note = note,
+        source = source,
+        isFavorite = false,
+    )

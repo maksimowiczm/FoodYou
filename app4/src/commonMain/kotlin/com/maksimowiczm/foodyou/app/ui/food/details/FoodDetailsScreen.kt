@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Refresh
@@ -35,6 +37,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearWavyProgressIndicator
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -95,6 +98,7 @@ fun FoodDetailsScreen(
         onRefresh = viewModel::refresh,
         onEdit = onEdit,
         onDelete = { viewModel.delete() },
+        onSetFavorite = viewModel::setFavorite,
         uiState = uiState,
         modifier = modifier,
     )
@@ -106,6 +110,7 @@ private fun FoodDetailsScreen(
     onRefresh: () -> Unit,
     onEdit: (FoodProductIdentity.Local) -> Unit,
     onDelete: (FoodProductIdentity.Local) -> Unit,
+    onSetFavorite: (Boolean) -> Unit,
     uiState: FoodDetailsUiState,
     modifier: Modifier = Modifier,
 ) {
@@ -133,6 +138,16 @@ private fun FoodDetailsScreen(
                 },
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 actions = {
+                    val favorite =
+                        when (uiState) {
+                            is FoodDetailsUiState.Error,
+                            is FoodDetailsUiState.NotFound -> false
+
+                            is FoodDetailsUiState.WithData -> uiState.isFavorite
+                        }
+
+                    FavoriteIcon(favorite = favorite, onChange = onSetFavorite)
+
                     when (val identity = uiState.identity) {
                         is FoodProductIdentity.FoodDataCentral -> RefreshMenu(onRefresh = onRefresh)
                         is FoodProductIdentity.Local ->
@@ -449,6 +464,45 @@ private fun RefreshMenu(onRefresh: () -> Unit, modifier: Modifier = Modifier) {
             imageVector = Icons.Outlined.Refresh,
             contentDescription = stringResource(Res.string.action_refresh),
             modifier = Modifier.graphicsLayer { rotationZ = animatable.value },
+        )
+    }
+}
+
+@Composable
+private fun FavoriteIcon(
+    favorite: Boolean,
+    onChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scope = rememberCoroutineScope()
+    val animatable = remember { Animatable(1f) }
+    val motionScheme = MaterialTheme.motionScheme
+
+    val vector = if (favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
+    val tint = if (favorite) MaterialTheme.colorScheme.primary else LocalContentColor.current
+
+    IconButton(
+        onClick = {
+            onChange(!favorite)
+            if (!favorite) {
+                scope.launch {
+                    animatable.animateTo(1.25f, motionScheme.fastSpatialSpec())
+                    animatable.animateTo(1f, motionScheme.slowSpatialSpec())
+                }
+            }
+        },
+        shapes = IconButtonDefaults.shapes(),
+        modifier = modifier,
+    ) {
+        Icon(
+            imageVector = vector,
+            contentDescription = null,
+            tint = tint,
+            modifier =
+                Modifier.graphicsLayer {
+                    scaleX = animatable.value
+                    scaleY = animatable.value
+                },
         )
     }
 }

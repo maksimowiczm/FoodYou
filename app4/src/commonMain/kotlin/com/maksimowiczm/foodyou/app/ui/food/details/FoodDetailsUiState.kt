@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.food.details
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.food.domain.FoodImage
 import com.maksimowiczm.foodyou.food.domain.FoodName
 import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
@@ -23,6 +23,7 @@ sealed interface FoodDetailsUiState {
         val nutritionFacts: NutritionFacts?,
         val note: FoodNote?,
         val source: FoodSource?,
+        val isFavorite: Boolean,
     ) : FoodDetailsUiState {
         private var headlineCache: String? = null
 
@@ -38,9 +39,25 @@ sealed interface FoodDetailsUiState {
 
             return headlineCache
         }
+
+        companion object {
+            fun loading(identity: FoodProductIdentity) =
+                WithData(
+                    identity = identity,
+                    isLoading = true,
+                    foodName = null,
+                    brand = null,
+                    image = FoodImageUiState.Loading,
+                    nutritionFacts = null,
+                    note = null,
+                    source = null,
+                    isFavorite = false,
+                )
+        }
     }
 
-    @Immutable data class NotFound(override val identity: FoodProductIdentity) : FoodDetailsUiState
+    @Immutable
+    data class NotFound(override val identity: FoodProductIdentity) : FoodDetailsUiState
 
     @Immutable
     data class Error(override val identity: FoodProductIdentity, val message: String?) :
@@ -49,9 +66,12 @@ sealed interface FoodDetailsUiState {
 
 @Immutable
 sealed interface FoodImageUiState {
-    @Immutable data object Loading : FoodImageUiState
+    @Immutable
+    data object Loading : FoodImageUiState
 
-    @Immutable data object NoImage : FoodImageUiState
+    @Immutable
+    data object NoImage : FoodImageUiState
 
-    @Immutable data class WithImage(val image: FoodImage) : FoodImageUiState
+    @Immutable
+    data class WithImage(val image: FoodImage) : FoodImageUiState
 }

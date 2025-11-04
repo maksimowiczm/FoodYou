@@ -98,7 +98,7 @@ class OpenFoodFactsRepository(
     }
 
     fun observe(parameters: QueryParameters.OpenFoodFacts): Flow<FoodStatus> = channelFlow {
-        send(FoodStatus.Loading(null))
+        send(FoodStatus.Loading(parameters.identity, null))
 
         val barcode = parameters.identity.barcode
 
@@ -112,8 +112,9 @@ class OpenFoodFactsRepository(
                 send(FoodStatus.Available(mapper.foodProductDto(entity)))
             } catch (e: FoodDatabaseError) {
                 when (e) {
-                    is FoodDatabaseError.ProductNotFound -> send(FoodStatus.NotFound)
-                    else -> send(FoodStatus.Error(null, e))
+                    is FoodDatabaseError.ProductNotFound ->
+                        send(FoodStatus.NotFound(parameters.identity))
+                    else -> send(FoodStatus.Error(parameters.identity, null, e))
                 }
             }
         } else {
@@ -122,7 +123,7 @@ class OpenFoodFactsRepository(
 
         dao.observe(barcode).drop(1).collectLatest {
             when (it) {
-                null -> send(FoodStatus.NotFound)
+                null -> send(FoodStatus.NotFound(parameters.identity))
                 else -> send(FoodStatus.Available(mapper.foodProductDto(it)))
             }
         }

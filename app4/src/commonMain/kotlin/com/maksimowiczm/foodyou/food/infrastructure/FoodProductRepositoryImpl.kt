@@ -20,9 +20,7 @@ class FoodProductRepositoryImpl(
     private val foodDataCentralRepository: FoodDataCentralRepository,
     private val integrationEventBus: EventBus<IntegrationEvent>,
 ) : FoodProductRepository {
-    override suspend fun observe(
-        queryParameters: QueryParameters
-    ): Flow<FoodProductRepository.FoodStatus> =
+    override fun observe(queryParameters: QueryParameters): Flow<FoodProductRepository.FoodStatus> =
         when (queryParameters) {
             is QueryParameters.FoodDataCentral -> foodDataCentralRepository.observe(queryParameters)
             is QueryParameters.Local -> userFoodRepository.observe(queryParameters)
