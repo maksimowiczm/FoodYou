@@ -13,11 +13,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -26,43 +24,49 @@ import kotlinx.coroutines.launch
 class FoodDetailsViewModel(
     private val identity: FoodProductIdentity,
     private val foodProductRepository: FoodProductRepository,
-    accountManager: AccountManager,
+    observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
+    private val accountManager: AccountManager,
+    private val accountRepository: AccountRepository,
     logger: Logger,
 ) : ViewModel() {
     private val logger = logger.withTag("FoodDetailsViewModel")
 
+    private val account =
+        observePrimaryAccountUseCase
+            .observe()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
+
+    private suspend fun account() = account.filterNotNull().first()
+
+    private val profile =
+        combine(account, accountManager.observePrimaryProfileId()) { account, profileId ->
+                account?.profiles?.find { it.id == profileId }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
+
     private val eventChannel = Channel<FoodDetailsUiEvent>()
     val uiEvents = eventChannel.receiveAsFlow()
 
-    private val queryParameters: StateFlow<QueryParameters?> =
+    private val queryParameters: QueryParameters =
         when (identity) {
-            is FoodProductIdentity.FoodDataCentral ->
-                flowOf(QueryParameters.FoodDataCentral(identity))
+            is FoodProductIdentity.FoodDataCentral -> QueryParameters.FoodDataCentral(identity)
 
-            is FoodProductIdentity.Local -> {
-                combine(
-                    accountManager.observePrimaryAccountId().filterNotNull(),
-                    accountManager.observePrimaryProfileId(),
-                ) { accountId, profileId ->
-                    QueryParameters.Local(
-                        identity = identity,
-                        accountId = accountId,
-                        profileId = profileId,
-                    )
-                }
-            }
+            is FoodProductIdentity.Local -> QueryParameters.Local(identity)
 
-            is FoodProductIdentity.OpenFoodFacts -> flowOf(QueryParameters.OpenFoodFacts(identity))
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = null,
-        )
+            is FoodProductIdentity.OpenFoodFacts -> QueryParameters.OpenFoodFacts(identity)
+        }
 
     private val foodProduct =
-        queryParameters
-            .filterNotNull()
-            .flatMapLatest { params -> foodProductRepository.observe(params) }
+        foodProductRepository
+            .observe(queryParameters)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),

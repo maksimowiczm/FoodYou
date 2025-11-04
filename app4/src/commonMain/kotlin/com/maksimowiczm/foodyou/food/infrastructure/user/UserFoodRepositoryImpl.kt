@@ -120,13 +120,13 @@ class UserFoodRepositoryImpl(
     }
 
     fun observe(queryParameters: QueryParameters.Local): Flow<FoodProductRepository.FoodStatus> {
-        val (id, accountId, _) = queryParameters
+        val (id, accountId) = queryParameters.identity
 
-        return dao.observe(id.id, accountId.value)
+        return dao.observe(id, accountId.value)
             .map { entity -> entity?.let(mapper::foodProductDto) }
             .map {
                 when (it) {
-                    null -> FoodProductRepository.FoodStatus.NotFound
+                    null -> FoodProductRepository.FoodStatus.NotFound(queryParameters.identity)
                     else -> FoodProductRepository.FoodStatus.Available(it)
                 }
             }
