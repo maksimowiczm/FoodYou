@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.food.di
 
+import com.maksimowiczm.foodyou.common.event.di.integrationEventBus
+import com.maksimowiczm.foodyou.food.application.ObserveFoodsUseCase
 import com.maksimowiczm.foodyou.food.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
@@ -19,7 +21,8 @@ val foodModule = module {
     userFoodModule()
     foodDataCentralModule()
     foodNameSelector().bind<FoodNameSelector>()
-    factoryOf(::FoodProductRepositoryImpl).bind<FoodProductRepository>()
+    factory { FoodProductRepositoryImpl(get(), get(), get(), integrationEventBus()) }
+        .bind<FoodProductRepository>()
     factoryOf(::FoodDataCentralSettingsRepositoryImpl).bind<FoodDataCentralSettingsRepository>()
 }
 

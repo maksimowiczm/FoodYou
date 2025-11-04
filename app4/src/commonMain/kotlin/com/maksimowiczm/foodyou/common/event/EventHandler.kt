@@ -1,5 +1,5 @@
 package com.maksimowiczm.foodyou.common.event
 
-interface EventHandler<E : DomainEvent> {
+interface EventHandler<E> {
     suspend fun handle(event: E)
 }
