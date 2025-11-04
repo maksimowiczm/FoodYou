@@ -7,12 +7,15 @@ val foodSearchModule = module {
     viewModel { (query: String?) ->
         FoodSearchViewModel(
             query = query,
-            foodSearchPreferencesRepository = get(),
-            searchHistoryRepository = get(),
-            searchableFoodRepository = get(),
-            clock = get(),
-            searchQueryParser = get(),
-            accountManager = get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
         )
     }
 }

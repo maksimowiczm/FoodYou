@@ -24,6 +24,8 @@ val foodModule = module {
     factory { FoodProductRepositoryImpl(get(), get(), get(), integrationEventBus()) }
         .bind<FoodProductRepository>()
     factoryOf(::FoodDataCentralSettingsRepositoryImpl).bind<FoodDataCentralSettingsRepository>()
+
+    factoryOf(::ObserveFoodsUseCase)
 }
 
 expect fun Module.foodNameSelector(): KoinDefinition<out FoodNameSelector>

@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.app.ui.food.search
 import androidx.compose.runtime.*
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
 import kotlinx.coroutines.flow.Flow
 
 @Immutable

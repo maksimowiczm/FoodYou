@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.food.search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
@@ -13,10 +14,10 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Immutable
-internal data class FoodFilter(val source: Source = DefaultFilter) {
+data class FoodFilter(val source: Source = DefaultFilter) {
 
     companion object {
-        val DefaultFilter = Source.YourFood
+        val DefaultFilter = Source.Favorite
     }
 
     val filterCount: Int
@@ -31,14 +32,22 @@ internal data class FoodFilter(val source: Source = DefaultFilter) {
         }
 
     enum class Source {
+        Favorite,
         Recent,
         YourFood,
         OpenFoodFacts,
         USDA;
 
         @Composable
-        fun Icon(modifier: Modifier = Modifier.Companion) =
+        fun Icon(modifier: Modifier = Modifier) =
             when (this) {
+                Favorite ->
+                    androidx.compose.material3.Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = null,
+                        modifier = modifier,
+                    )
+
                 Recent ->
                     androidx.compose.material3.Icon(
                         imageVector = Icons.Filled.History,
@@ -71,6 +80,7 @@ internal data class FoodFilter(val source: Source = DefaultFilter) {
         @Composable
         fun stringResource(): String =
             when (this) {
+                Favorite -> stringResource(Res.string.headline_favorite)
                 Recent -> stringResource(Res.string.headline_recent)
                 YourFood -> stringResource(Res.string.headline_your_food)
                 OpenFoodFacts -> stringResource(Res.string.headline_open_food_facts)

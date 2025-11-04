@@ -69,4 +69,8 @@ data class FoodName(
             Language.Arabic -> arabic
             Language.ChineseSimplified -> chineseSimplified
         }
+
+    fun contains(text: String): Boolean {
+        return list.any { it?.contains(text, ignoreCase = true) == true }
+    }
 }
