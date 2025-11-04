@@ -32,7 +32,7 @@ class AppViewModel(
             .observe()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(2_000),
                 initialValue =
                     runBlocking {
                         observePrimaryAccountUseCase

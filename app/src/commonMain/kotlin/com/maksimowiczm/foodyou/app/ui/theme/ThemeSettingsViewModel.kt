@@ -20,12 +20,20 @@ internal class ThemeSettingsViewModel(
     val themeSettings =
         themeRepository
             .observe()
-            .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = null)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
 
     val nutrientsColors =
         nutrientsColorsRepository
             .observe()
-            .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = null)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
 
     fun updateNutrientsColors(nutrientsColors: NutrientsColors) {
         viewModelScope.launch { nutrientsColorsRepository.update { nutrientsColors } }

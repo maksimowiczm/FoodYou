@@ -53,7 +53,11 @@ class FoodDetailsViewModel(
             }
 
             is FoodProductIdentity.OpenFoodFacts -> flowOf(QueryParameters.OpenFoodFacts(identity))
-        }.stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = null)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = null,
+        )
 
     private val foodProduct =
         queryParameters
@@ -61,8 +65,8 @@ class FoodDetailsViewModel(
             .flatMapLatest { params -> foodProductRepository.observe(params) }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
-                initialValue = FoodStatus.Loading(null),
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = FoodStatus.Loading(identity, null),
             )
 
     private val isRefreshing = MutableStateFlow(false)
