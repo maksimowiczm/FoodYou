@@ -1,21 +1,42 @@
 package com.maksimowiczm.foodyou.app.ui.privacy
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.domain.AppConfig
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.OpenFoodFactsPrivacyCard
+import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCard
+import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
+import com.maksimowiczm.foodyou.app.ui.common.component.TermsOfUseChip
 import com.maksimowiczm.foodyou.app.ui.common.component.UsdaPrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -30,8 +51,8 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
         modifier = modifier,
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text("Privacy") },
-                subtitle = { Text("Control your personal information") },
+                title = { Text(stringResource(Res.string.headline_privacy)) },
+                subtitle = { Text(stringResource(Res.string.description_privacy)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 scrollBehavior = scrollBehavior,
             )
@@ -42,6 +63,12 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             contentPadding = paddingValues.add(vertical = 8.dp, horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            item {
+                FoodYouPrivacyCard(
+                    selected = privacySettings.foodYouServicesAllowed,
+                    onSelectedChange = { viewModel.setPrivacySettings(foodYouServicesAllowed = it) },
+                )
+            }
             item {
                 OpenFoodFactsPrivacyCard(
                     selected = foodSearchPreferences.allowOpenFoodFacts,
@@ -57,6 +84,63 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                         viewModel.setFoodSearchPreferences(allowFoodDataCentralUSDA = it)
                     },
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FoodYouPrivacyCard(
+    selected: Boolean,
+    onSelectedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    termsOfUseUri: String = koinInject<AppConfig>().termsOfUseUri,
+    privacyPolicyUri: String = koinInject<AppConfig>().privacyPolicyUri,
+) {
+    val uriHandler = LocalUriHandler.current
+
+    PrivacyCard(
+        title = {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_sushi),
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp),
+                    )
+                }
+                Text(
+                    text = stringResource(Res.string.app_name),
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.weight(1f),
+                )
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Checkbox(checked = selected, onCheckedChange = null)
+                }
+            }
+        },
+        modifier = modifier,
+        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
+        onClick = { onSelectedChange(!selected) },
+    ) {
+        Column {
+            Text(
+                text = stringResource(Res.string.description_food_you_services),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = stringResource(Res.string.onboarding_privacy_tip),
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(Modifier.height(8.dp))
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                TermsOfUseChip(onClick = { uriHandler.openUri(termsOfUseUri) })
+                PrivacyPolicyChip(onClick = { uriHandler.openUri(privacyPolicyUri) })
             }
         }
     }

@@ -523,4 +523,8 @@
 
     <string name="description_values_per">Select the quantity your nutrition values are based on</string>
 
+    <string name="description_privacy">Control your personal information</string>
+
+    <string name="description_food_you_services">Connecting to Food You services unlocks extra features and tools that enhance your experience</string>
+
 </resources>

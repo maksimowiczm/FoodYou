@@ -18,6 +18,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,10 +47,12 @@ fun PrivacyCard(
 ) {
     val inner =
         @Composable {
-            Column(Modifier.padding(contentPadding)) {
-                title()
-                Spacer(Modifier.height(8.dp))
-                content()
+            CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
+                Column(Modifier.padding(contentPadding)) {
+                    title()
+                    Spacer(Modifier.height(8.dp))
+                    content()
+                }
             }
         }
 
@@ -104,7 +107,6 @@ fun OpenFoodFactsPrivacyCard(
         Column {
             Text(
                 text = stringResource(Res.string.description_open_food_facts),
-                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(8.dp))
@@ -163,7 +165,6 @@ fun UsdaPrivacyCard(
         Column {
             Text(
                 text = stringResource(Res.string.description_food_data_central_usda),
-                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(8.dp))
