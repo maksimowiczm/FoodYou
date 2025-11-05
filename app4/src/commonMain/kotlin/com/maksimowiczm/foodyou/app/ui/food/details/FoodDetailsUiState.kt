@@ -56,8 +56,7 @@ sealed interface FoodDetailsUiState {
         }
     }
 
-    @Immutable
-    data class NotFound(override val identity: FoodProductIdentity) : FoodDetailsUiState
+    @Immutable data class NotFound(override val identity: FoodProductIdentity) : FoodDetailsUiState
 
     @Immutable
     data class Error(override val identity: FoodProductIdentity, val message: String?) :
@@ -66,12 +65,9 @@ sealed interface FoodDetailsUiState {
 
 @Immutable
 sealed interface FoodImageUiState {
-    @Immutable
-    data object Loading : FoodImageUiState
+    @Immutable data object Loading : FoodImageUiState
 
-    @Immutable
-    data object NoImage : FoodImageUiState
+    @Immutable data object NoImage : FoodImageUiState
 
-    @Immutable
-    data class WithImage(val image: FoodImage) : FoodImageUiState
+    @Immutable data class WithImage(val image: FoodImage) : FoodImageUiState
 }
