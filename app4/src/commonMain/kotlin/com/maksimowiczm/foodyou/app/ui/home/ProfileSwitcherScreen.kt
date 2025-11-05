@@ -56,6 +56,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
+import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.saveable.rememberBlockingDataStore
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -83,7 +84,7 @@ fun ProfileSwitcherScreen(
     Scaffold(modifier = modifier, contentWindowInsets = windowInsets) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-            contentPadding = paddingValues,
+            contentPadding = paddingValues.add(vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
