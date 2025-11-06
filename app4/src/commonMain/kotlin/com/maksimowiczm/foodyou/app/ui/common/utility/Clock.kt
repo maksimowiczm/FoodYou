@@ -1,8 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.common.utility
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.*
 import kotlin.time.Clock
 
 val LocalClock = staticCompositionLocalOf<Clock> { Clock.System }

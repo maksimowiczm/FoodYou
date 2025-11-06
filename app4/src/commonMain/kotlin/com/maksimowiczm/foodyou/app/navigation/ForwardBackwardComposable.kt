@@ -17,7 +17,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import kotlin.jvm.JvmSuppressWildcards
 import kotlin.reflect.KType
-import kotlin.text.toInt
 
 /**
  * A composable that animates forward and backward navigation with shared axis X transitions.
