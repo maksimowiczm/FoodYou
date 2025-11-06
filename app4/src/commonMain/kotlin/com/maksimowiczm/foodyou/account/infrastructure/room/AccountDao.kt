@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class AccountDao {
     @Upsert protected abstract suspend fun upsertAccount(accountEntity: AccountEntity)
 
-    @Upsert protected abstract suspend fun upsertProfile(profileEntity: ProfileEntity)
+    @Insert protected abstract suspend fun insertProfile(profileEntity: ProfileEntity)
 
     @Upsert protected abstract suspend fun upsertSettings(settingsEntity: SettingsEntity)
 
@@ -35,7 +35,7 @@ abstract class AccountDao {
     ) {
         upsertAccount(accountEntity)
         deleteProfiles(accountEntity.id)
-        profileEntities.forEach { upsertProfile(it) }
+        profileEntities.forEach { insertProfile(it) }
         upsertSettings(settingsEntity)
         deleteFavoriteFoods(accountEntity.id)
         insertFavoriteFoods(profileFavoriteFoodEntities)

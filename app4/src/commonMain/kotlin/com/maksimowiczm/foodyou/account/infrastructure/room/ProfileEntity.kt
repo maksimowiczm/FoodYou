@@ -16,7 +16,7 @@ import androidx.room.Index
                 onDelete = ForeignKey.CASCADE,
             )
         ],
-    indices = [Index("accountId", unique = true)],
+    indices = [Index("accountId")],
 )
 data class ProfileEntity(
     val id: String,

@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.profile.ProfileUiState
+import com.maksimowiczm.foodyou.common.fold
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -59,9 +60,12 @@ class AddProfileViewModel(
 
             accountRepository.save(account)
 
-            accountManager.setPrimaryProfileId(profile.id)
-
-            _uiEventBus.send(AddProfileEvent.Created(profile.id))
+            accountManager
+                .setPrimaryProfileId(profile.id)
+                .fold(
+                    onSuccess = { _uiEventBus.send(AddProfileEvent.Created(profile.id)) },
+                    onError = { error("Failed to set primary profile: $it") },
+                )
         }
     }
 
