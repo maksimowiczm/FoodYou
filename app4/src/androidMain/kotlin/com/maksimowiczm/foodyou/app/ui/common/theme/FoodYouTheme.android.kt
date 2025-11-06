@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.common.theme
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.view.View
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
@@ -97,11 +98,17 @@ private fun FoodYouTheme(
             else -> rememberDynamicColorScheme(seedColor = MaterialDeepPurple, isDark = isDark)
         }
 
+    val context = LocalContext.current
+    val isDebuggable =
+        remember(context) { context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 }
+
     val animatedColorScheme =
-        animateColorScheme(
-            colorScheme = colorScheme,
-            animationSpec = { MaterialTheme.motionScheme.slowEffectsSpec() },
-        )
+        if (isDebuggable) colorScheme // Prevent Logger from being bloated with materialkolor
+        else
+            animateColorScheme(
+                colorScheme = colorScheme,
+                animationSpec = { MaterialTheme.motionScheme.slowEffectsSpec() },
+            )
 
     val nutrientsPalette = if (isDark) DarkNutrientsPalette else LightNutrientsPalette
 
