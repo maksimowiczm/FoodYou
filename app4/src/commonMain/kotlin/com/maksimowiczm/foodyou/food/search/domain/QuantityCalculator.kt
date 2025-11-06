@@ -15,24 +15,18 @@ object QuantityCalculator {
      * quantity.
      */
     fun calculateAbsoluteQuantity(
-        suggestedQuantity: Quantity,
+        quantity: Quantity,
         packageQuantity: AbsoluteQuantity?,
         servingQuantity: AbsoluteQuantity?,
     ): Result<AbsoluteQuantity, Error> {
         val scaled =
-            when (suggestedQuantity) {
-                is AbsoluteQuantity -> suggestedQuantity
+            when (quantity) {
+                is AbsoluteQuantity -> quantity
                 is PackageQuantity ->
-                    scale(
-                        packageQuantity ?: return Err(Error.NoPackageQuantity),
-                        suggestedQuantity.packages,
-                    )
+                    scale(packageQuantity ?: return Err(Error.NoPackageQuantity), quantity.packages)
 
                 is ServingQuantity ->
-                    scale(
-                        servingQuantity ?: return Err(Error.NoServingQuantity),
-                        suggestedQuantity.servings,
-                    )
+                    scale(servingQuantity ?: return Err(Error.NoServingQuantity), quantity.servings)
             }
 
         return Ok(scaled)
