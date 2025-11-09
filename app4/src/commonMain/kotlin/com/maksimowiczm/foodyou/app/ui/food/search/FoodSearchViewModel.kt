@@ -137,7 +137,7 @@ internal class FoodSearchViewModel(
                                 list.filter {
                                     when (it) {
                                         is FoodSearchUiModel.Loaded ->
-                                            it.barcode?.value?.contains(query.barcode) ?: false
+                                            it.barcode?.contains(query.barcode) ?: false
 
                                         is FoodSearchUiModel.Loading -> true
                                     }

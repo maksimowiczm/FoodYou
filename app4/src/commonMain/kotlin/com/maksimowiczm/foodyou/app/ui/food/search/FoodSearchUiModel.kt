@@ -4,28 +4,26 @@ import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.Grams
 import com.maksimowiczm.foodyou.common.domain.Quantity
-import com.maksimowiczm.foodyou.food.domain.Barcode
-import com.maksimowiczm.foodyou.food.domain.FoodBrand
+import com.maksimowiczm.foodyou.food.domain.FoodIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodImage
 import com.maksimowiczm.foodyou.food.domain.FoodName
 import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
-import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
 
 @Immutable
 sealed interface FoodSearchUiModel {
-    val identity: FoodProductIdentity
+    val identity: FoodIdentity
 
-    @Immutable data class Loading(override val identity: FoodProductIdentity) : FoodSearchUiModel
+    @Immutable data class Loading(override val identity: FoodIdentity) : FoodSearchUiModel
 
     @Immutable
     data class Loaded(
-        override val identity: FoodProductIdentity,
+        override val identity: FoodIdentity,
         val name: FoodName,
-        val brand: FoodBrand?,
-        val barcode: Barcode?,
+        val brand: String?,
+        val barcode: String?,
         val image: FoodImage?,
         val nutritionFacts: NutritionFacts,
         val servingQuantity: AbsoluteQuantity?,
@@ -34,7 +32,7 @@ sealed interface FoodSearchUiModel {
         val suggestedQuantity: Quantity,
     ) : FoodSearchUiModel {
         fun localizedName(foodNameSelector: FoodNameSelector): String {
-            val brandSuffix = brand?.let { " (${it.value})" } ?: ""
+            val brandSuffix = brand?.let { " ($it)" } ?: ""
             return foodNameSelector.select(name) + brandSuffix
         }
 
@@ -43,7 +41,7 @@ sealed interface FoodSearchUiModel {
         ) : this(
             identity = searchableFoodDto.identity,
             name = searchableFoodDto.name,
-            brand = searchableFoodDto.brand,
+            brand = searchableFoodDto.brand?.value,
             barcode = null,
             image = searchableFoodDto.image,
             nutritionFacts = searchableFoodDto.nutritionFacts,
@@ -58,8 +56,8 @@ sealed interface FoodSearchUiModel {
         ) : this(
             identity = foodProductDto.identity,
             name = foodProductDto.name,
-            brand = foodProductDto.brand,
-            barcode = foodProductDto.barcode,
+            brand = foodProductDto.brand?.value,
+            barcode = foodProductDto.barcode?.value,
             image = foodProductDto.image,
             nutritionFacts = foodProductDto.nutritionFacts,
             servingQuantity = foodProductDto.servingQuantity,
@@ -86,7 +84,7 @@ sealed interface FoodSearchUiModel {
 
                 val result = nameA.compareTo(nameB, ignoreCase = true)
                 if (result == 0 && a.brand != null && b.brand != null)
-                    a.brand.value.compareTo(b.brand.value, ignoreCase = true)
+                    a.brand.compareTo(b.brand, ignoreCase = true)
                 else result
             }
     }

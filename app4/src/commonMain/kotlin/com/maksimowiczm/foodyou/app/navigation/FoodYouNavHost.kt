@@ -38,6 +38,7 @@ import com.maksimowiczm.foodyou.app.ui.profile.edit.EditProfileScreen
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
+import com.maksimowiczm.foodyou.food.domain.LocalFoodRecipeIdentity
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -94,7 +95,14 @@ fun FoodYouNavHost(
             FoodDatabaseScreen(
                 onBack = { navController.popBackStackInclusive<FoodDatabase>() },
                 onCreateProduct = { navController.navigateSingleTop(CreateProduct) },
-                onFood = { identity -> navController.navigateSingleTop(FoodDetails(identity)) },
+                onFood = { identity ->
+                    when (identity) {
+                        is FoodProductIdentity ->
+                            navController.navigateSingleTop(FoodDetails(identity))
+
+                        is LocalFoodRecipeIdentity -> TODO()
+                    }
+                },
                 query = query,
                 animatedVisibilityScope = this,
             )
@@ -201,6 +209,7 @@ sealed interface FoodYouNavHostRoute {
                 when (type) {
                     IdentityType.Local ->
                         FoodProductIdentity.Local(extra.toLong(), LocalAccountId(extra1!!))
+
                     IdentityType.OpenFoodFacts -> FoodProductIdentity.OpenFoodFacts(extra)
                     IdentityType.FoodDataCentral ->
                         FoodProductIdentity.FoodDataCentral(extra.toInt())

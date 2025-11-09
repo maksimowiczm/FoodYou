@@ -25,7 +25,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.Scrim
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefaults
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchApp
-import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
+import com.maksimowiczm.foodyou.food.domain.FoodIdentity
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -33,7 +33,7 @@ import org.jetbrains.compose.resources.stringResource
 fun FoodDatabaseScreen(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
-    onFood: (FoodProductIdentity) -> Unit,
+    onFood: (FoodIdentity) -> Unit,
     query: String?,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
