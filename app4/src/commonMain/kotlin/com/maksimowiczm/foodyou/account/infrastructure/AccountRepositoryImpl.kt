@@ -171,9 +171,9 @@ private fun ProfileEntity.toDomain(favoriteFoods: List<ProfileFavoriteFoodEntity
 
 private fun ProfileFavoriteFoodEntity.toDomain(accountId: LocalAccountId): FoodProductIdentity =
     when (this.identityType) {
-        FoodIdentityType.LocalProduct -> FoodProductIdentity.Local(this.extra.toLong(), accountId)
-        FoodIdentityType.OpenFoodFacts -> FoodProductIdentity.OpenFoodFacts(this.extra)
-        FoodIdentityType.FoodDataCentral -> FoodProductIdentity.FoodDataCentral(this.extra.toInt())
+        FoodIdentityType.LocalProduct -> FoodProductIdentity.Local(extra, accountId)
+        FoodIdentityType.OpenFoodFacts -> FoodProductIdentity.OpenFoodFacts(extra)
+        FoodIdentityType.FoodDataCentral -> FoodProductIdentity.FoodDataCentral(extra.toInt())
     }
 
 private suspend fun Profile.Avatar.toEntity(accountId: LocalAccountId, id: ProfileId): String =
@@ -239,7 +239,7 @@ private fun Profile.toFavoriteFoodEntity(
                     profileId = id.value,
                     accountId = localAccountId.value,
                     identityType = FoodIdentityType.LocalProduct,
-                    extra = identity.id.toString(),
+                    extra = identity.id,
                 )
 
             is FoodProductIdentity.OpenFoodFacts ->

@@ -5,25 +5,12 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class UserFoodDao {
-    @Insert protected abstract fun insert(userFoodEntity: UserFoodEntity): Long
-
-    /** Insert with callback which will run in transaction. */
-    @Transaction
-    open suspend fun insert(
-        userFoodEntity: UserFoodEntity,
-        onInsert: suspend (id: Long) -> UserFoodEntity,
-    ): Long {
-        val id = insert(userFoodEntity)
-        val transformed = onInsert(id)
-        update(transformed.copy(id = id))
-        return id
-    }
+    @Insert abstract suspend fun insert(userFoodEntity: UserFoodEntity): Long
 
     @Update abstract suspend fun update(userFoodEntity: UserFoodEntity)
 
@@ -35,11 +22,11 @@ abstract class UserFoodDao {
         FROM UserFood
         WHERE 
             accountId = :accountId AND
-            id = :id
+            uuid = :uuid
         LIMIT 1
         """
     )
-    abstract fun observe(id: Long, accountId: String): Flow<UserFoodEntity?>
+    abstract fun observe(uuid: String, accountId: String): Flow<UserFoodEntity?>
 
     @Query(
         """
@@ -84,7 +71,7 @@ abstract class UserFoodDao {
     @Query(
         """
         SELECT uf.*
-        FROM UserFood uf JOIN UserFoodFts fts ON uf.id = fts.rowid
+        FROM UserFood uf JOIN UserFoodFts fts ON uf.sqliteId = fts.rowid
         WHERE 
             uf.accountId = :accountId AND
             UserFoodFts MATCH :query || '*'
@@ -118,7 +105,7 @@ abstract class UserFoodDao {
     @Query(
         """
         SELECT COUNT(*)
-        FROM UserFood uf JOIN UserFoodFts fts ON uf.id = fts.rowid
+        FROM UserFood uf JOIN UserFoodFts fts ON uf.sqliteId = fts.rowid
         WHERE 
             uf.accountId = :accountId AND
             UserFoodFts MATCH :query || '*'

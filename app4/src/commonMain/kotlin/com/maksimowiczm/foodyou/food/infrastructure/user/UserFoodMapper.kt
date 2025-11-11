@@ -31,7 +31,7 @@ class UserFoodMapper {
     fun foodProductDto(entity: UserFoodEntity): FoodProductDto =
         buildFoodDto(entity) { name, brand, nutrients, servingQuantity, packageQuantity, isLiquid ->
             FoodProductDto(
-                identity = FoodProductIdentity.Local(entity.id, LocalAccountId(entity.accountId)),
+                identity = FoodProductIdentity.Local(entity.uuid, LocalAccountId(entity.accountId)),
                 name = name,
                 brand = brand,
                 barcode = entity.barcode?.let { Barcode(it) },
@@ -56,7 +56,7 @@ class UserFoodMapper {
             val image = entity.photoPath?.let { FoodImage.Local(it) }
 
             SearchableFoodDto(
-                identity = FoodProductIdentity.Local(entity.id, LocalAccountId(entity.accountId)),
+                identity = FoodProductIdentity.Local(entity.uuid, LocalAccountId(entity.accountId)),
                 name = name,
                 brand = brand,
                 nutritionFacts = nutrients,
@@ -114,6 +114,7 @@ class UserFoodMapper {
 
     fun toEntity(
         id: Long = 0,
+        uuid: String,
         name: FoodName,
         brand: FoodBrand?,
         barcode: Barcode?,
@@ -150,7 +151,8 @@ class UserFoodMapper {
             )
 
         return UserFoodEntity(
-            id = id,
+            sqliteId = id,
+            uuid = uuid,
             name = foodName,
             brand = brand?.value,
             barcode = barcode?.value,
