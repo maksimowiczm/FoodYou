@@ -21,7 +21,7 @@ import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.domain.FoodSource
 import com.maksimowiczm.foodyou.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
-import com.maksimowiczm.foodyou.food.domain.UserFoodRepository
+import com.maksimowiczm.foodyou.food.domain.UserFoodProductRepository
 import com.maksimowiczm.foodyou.food.infrastructure.user.room.UserFoodDao
 import com.maksimowiczm.foodyou.food.search.domain.SearchParameters
 import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
@@ -42,10 +42,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class UserFoodRepositoryImpl(
+class UserFoodProductRepositoryImpl(
     private val dao: UserFoodDao,
     private val nameSelector: FoodNameSelector,
-) : UserFoodRepository {
+) : UserFoodProductRepository {
     private val mapper = UserFoodMapper()
 
     @OptIn(ExperimentalPagingApi::class)

@@ -22,7 +22,7 @@ import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodSource
 import com.maksimowiczm.foodyou.food.domain.NutrientValue
-import com.maksimowiczm.foodyou.food.domain.UserFoodRepository
+import com.maksimowiczm.foodyou.food.domain.UserFoodProductRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 
 class EditProductViewModel(
     private val observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
-    private val userFoodRepository: UserFoodRepository,
+    private val userFoodProductRepository: UserFoodProductRepository,
     private val foodNameSelector: FoodNameSelector,
     private val productFormTransformer: ProductFormTransformer,
     private val identity: FoodProductIdentity.Local,
@@ -49,7 +49,7 @@ class EditProductViewModel(
 
     init {
         viewModelScope.launch {
-            val product = userFoodRepository.observe(identity = identity).first()
+            val product = userFoodProductRepository.observe(identity = identity).first()
 
             requireNotNull(product) { "Product not found: $identity" }
 
@@ -349,7 +349,7 @@ class EditProductViewModel(
 
             val accountId = observePrimaryAccountUseCase.observe().first().localAccountId
 
-            userFoodRepository.edit(
+            userFoodProductRepository.edit(
                 identity = identity,
                 name = foodName,
                 brand = brand,

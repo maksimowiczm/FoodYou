@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import kotlinx.coroutines.flow.Flow
 
-interface UserFoodRepository {
+interface UserFoodProductRepository {
     suspend fun create(
         name: FoodName,
         brand: FoodBrand?,

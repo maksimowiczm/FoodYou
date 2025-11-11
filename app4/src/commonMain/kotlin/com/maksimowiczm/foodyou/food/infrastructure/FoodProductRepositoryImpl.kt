@@ -11,11 +11,11 @@ import com.maksimowiczm.foodyou.food.domain.LocalFoodDeletedEvent
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.food.infrastructure.usda.FoodDataCentralRepository
-import com.maksimowiczm.foodyou.food.infrastructure.user.UserFoodRepositoryImpl
+import com.maksimowiczm.foodyou.food.infrastructure.user.UserFoodProductRepositoryImpl
 import kotlinx.coroutines.flow.Flow
 
 class FoodProductRepositoryImpl(
-    private val userFoodRepository: UserFoodRepositoryImpl,
+    private val userFoodRepository: UserFoodProductRepositoryImpl,
     private val openFoodFactsRepository: OpenFoodFactsRepository,
     private val foodDataCentralRepository: FoodDataCentralRepository,
     private val integrationEventBus: EventBus<IntegrationEvent>,

@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.food.infrastructure.user
 
-import com.maksimowiczm.foodyou.food.domain.UserFoodRepository
+import com.maksimowiczm.foodyou.food.domain.UserFoodProductRepository
 import com.maksimowiczm.foodyou.food.infrastructure.user.room.UserFoodDatabase
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -15,5 +15,5 @@ fun Module.userFoodModule() {
     single { userFoodDatabase() }
     factory { get<UserFoodDatabase>().dao }
 
-    factoryOf(::UserFoodRepositoryImpl).bind<UserFoodRepository>()
+    factoryOf(::UserFoodProductRepositoryImpl).bind<UserFoodProductRepository>()
 }
