@@ -112,7 +112,7 @@ class FoodDataCentralRepository(
                         networkDataSource.getProduct(fdcId, apiKey).getOrThrow()
                     val entity = mapper.foodDataCentralProductEntity(openFoodFactsProduct)
                     dao.upsertProduct(entity)
-                    send(FoodStatus.Available(parameters.identity, mapper.foodProductDto(entity)))
+                    send(FoodStatus.Available(mapper.foodProductDto(entity)))
                 } catch (e: FoodDatabaseError) {
                     when (e) {
                         is FoodDatabaseError.ProductNotFound ->
@@ -122,14 +122,13 @@ class FoodDataCentralRepository(
                     }
                 }
             } else {
-                send(FoodStatus.Available(parameters.identity, mapper.foodProductDto(localProduct)))
+                send(FoodStatus.Available(mapper.foodProductDto(localProduct)))
             }
 
             dao.observe(fdcId).drop(1).collectLatest {
                 when (it) {
                     null -> send(FoodStatus.NotFound(parameters.identity))
-                    else ->
-                        send(FoodStatus.Available(parameters.identity, mapper.foodProductDto(it)))
+                    else -> send(FoodStatus.Available(mapper.foodProductDto(it)))
                 }
             }
         }

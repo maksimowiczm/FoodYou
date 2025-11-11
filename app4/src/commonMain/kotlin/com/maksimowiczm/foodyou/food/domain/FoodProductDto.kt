@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.food.domain
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
 
 class FoodProductDto(
-    val identity: FoodProductIdentity,
+    override val identity: FoodProductIdentity,
     val name: FoodName,
     val brand: FoodBrand?,
     val barcode: Barcode?,
@@ -14,4 +14,4 @@ class FoodProductDto(
     val servingQuantity: AbsoluteQuantity?,
     val packageQuantity: AbsoluteQuantity?,
     val isLiquid: Boolean,
-)
+) : Food

@@ -120,7 +120,6 @@ internal class FoodSearchViewModel(
                             when (it) {
                                 is FoodStatus.Available -> FoodSearchUiModel.Loaded(it.food)
                                 is FoodStatus.Loading -> FoodSearchUiModel.Loading(it.identity)
-
                                 is FoodStatus.Error,
                                 is FoodStatus.NotFound -> null
                             }

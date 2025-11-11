@@ -128,7 +128,7 @@ class UserFoodProductRepositoryImpl(
             .map {
                 when (it) {
                     null -> FoodStatus.NotFound(parameters.identity)
-                    else -> FoodStatus.Available(parameters.identity, it)
+                    else -> FoodStatus.Available(it)
                 }
             }
     }

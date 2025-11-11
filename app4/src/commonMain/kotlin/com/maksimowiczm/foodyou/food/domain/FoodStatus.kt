@@ -1,25 +1,27 @@
 package com.maksimowiczm.foodyou.food.domain
 
-sealed interface FoodStatus<T> {
+sealed interface FoodStatus<out F : Food> {
     val identity: FoodIdentity
 
     /**
      * Indicates that the food product is currently being loaded. If partial data is available, it
      * is included.
      */
-    data class Loading<T>(override val identity: FoodIdentity, val food: T?) : FoodStatus<T>
+    data class Loading<F : Food>(override val identity: FoodIdentity, val food: F?) : FoodStatus<F>
 
-    data class NotFound<T>(override val identity: FoodIdentity) : FoodStatus<T>
+    data class NotFound<F : Food>(override val identity: FoodIdentity) : FoodStatus<F>
 
-    data class Available<T>(override val identity: FoodIdentity, val food: T) : FoodStatus<T>
+    data class Available<F : Food>(val food: F) : FoodStatus<F> {
+        override val identity: FoodIdentity = food.identity
+    }
 
     /**
      * Indicates that an error occurred while loading the food product. If partial data is
      * available, it is included.
      */
-    data class Error<T>(
+    data class Error<F : Food>(
         override val identity: FoodIdentity,
-        val food: T?,
+        val food: F?,
         val error: FoodDatabaseError,
-    ) : FoodStatus<T>
+    ) : FoodStatus<F>
 }
