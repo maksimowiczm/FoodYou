@@ -25,6 +25,8 @@ interface UserFoodRecipeRepository {
         ingredients: List<Pair<FoodIdentity, Quantity>>,
     )
 
+    // Recipe ingredients might be not downloaded. Use FoodStatus? Same as FoodProductRepository, or
+    // use food status for each ingredient?
     fun observe(identity: LocalFoodRecipeIdentity): Flow<FoodRecipeDto?>
 
     suspend fun delete(identity: LocalFoodRecipeIdentity)
