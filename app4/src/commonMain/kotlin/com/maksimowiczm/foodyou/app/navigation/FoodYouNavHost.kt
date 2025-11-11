@@ -192,7 +192,7 @@ sealed interface FoodYouNavHostRoute {
                 },
             extra =
                 when (identity) {
-                    is FoodProductIdentity.Local -> identity.id.toString()
+                    is FoodProductIdentity.Local -> identity.id
                     is FoodProductIdentity.OpenFoodFacts -> identity.barcode
                     is FoodProductIdentity.FoodDataCentral -> identity.fdcId.toString()
                 },
@@ -207,9 +207,7 @@ sealed interface FoodYouNavHostRoute {
         val identity: FoodProductIdentity
             get() =
                 when (type) {
-                    IdentityType.Local ->
-                        FoodProductIdentity.Local(extra.toLong(), LocalAccountId(extra1!!))
-
+                    IdentityType.Local -> FoodProductIdentity.Local(extra, LocalAccountId(extra1!!))
                     IdentityType.OpenFoodFacts -> FoodProductIdentity.OpenFoodFacts(extra)
                     IdentityType.FoodDataCentral ->
                         FoodProductIdentity.FoodDataCentral(extra.toInt())
@@ -241,7 +239,7 @@ sealed interface FoodYouNavHostRoute {
     @Serializable data object CreateProduct : FoodYouNavHostRoute
 
     @Serializable
-    data class EditProduct(val id: Long, val accountId: String) : FoodYouNavHostRoute {
+    data class EditProduct(val id: String, val accountId: String) : FoodYouNavHostRoute {
         companion object {
             fun from(identity: FoodProductIdentity.Local): EditProduct =
                 EditProduct(identity.id, identity.accountId.value)

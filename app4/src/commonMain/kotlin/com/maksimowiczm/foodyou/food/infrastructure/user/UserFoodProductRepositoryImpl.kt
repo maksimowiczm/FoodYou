@@ -37,6 +37,7 @@ import io.github.vinceglb.filekit.exists
 import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -148,13 +149,35 @@ class UserFoodProductRepositoryImpl(
         val foodDirectory = accountId.directory() / "food"
         foodDirectory.createDirectories()
 
+        val uuid = Uuid.random().toString()
+
+        val photoPath =
+            if (imageUri != null) {
+                val sourceFile = PlatformFile(imageUri)
+                require(sourceFile.exists()) { "Image file does not exist at path: $imageUri" }
+                val bytes = sourceFile.readBytes()
+
+                val compressed =
+                    FileKit.compressImage(
+                        bytes = bytes,
+                        quality = 85,
+                        imageFormat = ImageFormat.JPEG,
+                    )
+
+                val dest = (foodDirectory / "$uuid.jpg").apply { write(compressed) }
+                dest.path
+            } else {
+                null
+            }
+
         val entity =
             mapper.toEntity(
+                uuid = uuid,
                 name = name,
                 brand = brand,
                 barcode = barcode,
                 note = note,
-                imagePath = null,
+                imagePath = photoPath,
                 source = source,
                 nutritionFacts = nutritionFacts,
                 servingQuantity = servingQuantity,
@@ -163,33 +186,9 @@ class UserFoodProductRepositoryImpl(
                 isLiquid = isLiquid,
             )
 
-        val id =
-            dao.insert(entity) { id ->
-                val photoPath =
-                    if (imageUri != null) {
-                        val sourceFile = PlatformFile(imageUri)
-                        require(sourceFile.exists()) {
-                            "Image file does not exist at path: $imageUri"
-                        }
-                        val bytes = sourceFile.readBytes()
+        dao.insert(entity)
 
-                        val compressed =
-                            FileKit.compressImage(
-                                bytes = bytes,
-                                quality = 85,
-                                imageFormat = ImageFormat.JPEG,
-                            )
-
-                        val dest = (foodDirectory / "$id.jpg").apply { write(compressed) }
-                        dest.path
-                    } else {
-                        null
-                    }
-
-                entity.copy(photoPath = photoPath)
-            }
-
-        return FoodProductIdentity.Local(id, LocalAccountId(entity.accountId))
+        return FoodProductIdentity.Local(uuid, LocalAccountId(entity.accountId))
     }
 
     override suspend fun edit(
@@ -212,7 +211,7 @@ class UserFoodProductRepositoryImpl(
             "Cannot edit non-existing food product with id: ${identity.id}"
         }
 
-        val id = identity.id
+        val uuid = identity.id
         val foodDirectory = accountId.directory() / "food"
         foodDirectory.createDirectories()
 
@@ -230,7 +229,7 @@ class UserFoodProductRepositoryImpl(
                             imageFormat = ImageFormat.JPEG,
                         )
 
-                    val dest = (foodDirectory / "$id.jpg").apply { write(compressed) }
+                    val dest = (foodDirectory / "$uuid.jpg").apply { write(compressed) }
 
                     dest.path
                 } else {
@@ -248,7 +247,8 @@ class UserFoodProductRepositoryImpl(
 
         val updatedEntity =
             mapper.toEntity(
-                id = identity.id,
+                id = existingEntity.sqliteId,
+                uuid = uuid,
                 name = name,
                 brand = brand,
                 barcode = barcode,
@@ -278,6 +278,6 @@ class UserFoodProductRepositoryImpl(
         }
 
         dao.delete(existingEntity)
-        PlatformFile("${existingEntity.id}.jpg").delete(mustExist = false)
+        PlatformFile("${existingEntity.uuid}.jpg").delete(mustExist = false)
     }
 }
