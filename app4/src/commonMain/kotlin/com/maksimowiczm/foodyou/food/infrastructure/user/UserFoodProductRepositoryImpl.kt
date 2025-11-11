@@ -17,8 +17,8 @@ import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.domain.FoodNote
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.domain.FoodSource
+import com.maksimowiczm.foodyou.food.domain.FoodStatus
 import com.maksimowiczm.foodyou.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import com.maksimowiczm.foodyou.food.domain.UserFoodProductRepository
@@ -119,15 +119,15 @@ class UserFoodProductRepositoryImpl(
         return countFlow
     }
 
-    fun observe(queryParameters: QueryParameters.Local): Flow<FoodProductRepository.FoodStatus> {
-        val (id, accountId) = queryParameters.identity
+    fun observe(parameters: QueryParameters.Local): Flow<FoodStatus<FoodProductDto>> {
+        val (id, accountId) = parameters.identity
 
         return dao.observe(id, accountId.value)
             .map { entity -> entity?.let(mapper::foodProductDto) }
             .map {
                 when (it) {
-                    null -> FoodProductRepository.FoodStatus.NotFound(queryParameters.identity)
-                    else -> FoodProductRepository.FoodStatus.Available(it)
+                    null -> FoodStatus.NotFound(parameters.identity)
+                    else -> FoodStatus.Available(parameters.identity, it)
                 }
             }
     }

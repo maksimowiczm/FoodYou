@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
-import com.maksimowiczm.foodyou.food.domain.FoodProductRepository.FoodStatus
+import com.maksimowiczm.foodyou.food.domain.FoodStatus
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay

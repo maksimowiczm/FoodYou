@@ -14,7 +14,7 @@ import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.domain.FoodProductRepository.FoodStatus
+import com.maksimowiczm.foodyou.food.domain.FoodStatus
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsDao
@@ -97,37 +97,39 @@ class OpenFoodFactsRepository(
         }
     }
 
-    fun observe(parameters: QueryParameters.OpenFoodFacts): Flow<FoodStatus> = channelFlow {
-        send(FoodStatus.Loading(parameters.identity, null))
+    fun observe(parameters: QueryParameters.OpenFoodFacts): Flow<FoodStatus<FoodProductDto>> =
+        channelFlow {
+            send(FoodStatus.Loading(parameters.identity, null))
 
-        val barcode = parameters.identity.barcode
+            val barcode = parameters.identity.barcode
 
-        val localProduct = dao.observe(barcode).first()
+            val localProduct = dao.observe(barcode).first()
 
-        if (localProduct == null) {
-            try {
-                val openFoodFactsProduct = networkDataSource.getProduct(barcode).getOrThrow()
-                val entity = mapper.openFoodFactsProductEntity(openFoodFactsProduct)
-                dao.upsertProduct(entity)
-                send(FoodStatus.Available(mapper.foodProductDto(entity)))
-            } catch (e: FoodDatabaseError) {
-                when (e) {
-                    is FoodDatabaseError.ProductNotFound ->
-                        send(FoodStatus.NotFound(parameters.identity))
-                    else -> send(FoodStatus.Error(parameters.identity, null, e))
+            if (localProduct == null) {
+                try {
+                    val openFoodFactsProduct = networkDataSource.getProduct(barcode).getOrThrow()
+                    val entity = mapper.openFoodFactsProductEntity(openFoodFactsProduct)
+                    dao.upsertProduct(entity)
+                    send(FoodStatus.Available(parameters.identity, mapper.foodProductDto(entity)))
+                } catch (e: FoodDatabaseError) {
+                    when (e) {
+                        is FoodDatabaseError.ProductNotFound ->
+                            send(FoodStatus.NotFound(parameters.identity))
+                        else -> send(FoodStatus.Error(parameters.identity, null, e))
+                    }
+                }
+            } else {
+                send(FoodStatus.Available(parameters.identity, mapper.foodProductDto(localProduct)))
+            }
+
+            dao.observe(barcode).drop(1).collectLatest {
+                when (it) {
+                    null -> send(FoodStatus.NotFound(parameters.identity))
+                    else ->
+                        send(FoodStatus.Available(parameters.identity, mapper.foodProductDto(it)))
                 }
             }
-        } else {
-            send(FoodStatus.Available(mapper.foodProductDto(localProduct)))
         }
-
-        dao.observe(barcode).drop(1).collectLatest {
-            when (it) {
-                null -> send(FoodStatus.NotFound(parameters.identity))
-                else -> send(FoodStatus.Available(mapper.foodProductDto(it)))
-            }
-        }
-    }
 
     suspend fun refresh(
         identity: FoodProductIdentity.OpenFoodFacts

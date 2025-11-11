@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
+import com.maksimowiczm.foodyou.food.domain.FoodStatus
 import com.maksimowiczm.foodyou.food.domain.LocalFoodDeletedEvent
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.OpenFoodFactsRepository
@@ -20,7 +21,7 @@ class FoodProductRepositoryImpl(
     private val foodDataCentralRepository: FoodDataCentralRepository,
     private val integrationEventBus: EventBus<IntegrationEvent>,
 ) : FoodProductRepository {
-    override fun observe(queryParameters: QueryParameters): Flow<FoodProductRepository.FoodStatus> =
+    override fun observe(queryParameters: QueryParameters): Flow<FoodStatus<FoodProductDto>> =
         when (queryParameters) {
             is QueryParameters.FoodDataCentral -> foodDataCentralRepository.observe(queryParameters)
             is QueryParameters.Local -> userFoodRepository.observe(queryParameters)

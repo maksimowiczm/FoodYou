@@ -13,7 +13,7 @@ import com.maksimowiczm.foodyou.account.domain.observePrimaryProfile
 import com.maksimowiczm.foodyou.food.application.ObserveFoodsUseCase
 import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
+import com.maksimowiczm.foodyou.food.domain.FoodStatus
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchHistoryRepository
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.food.search.domain.SearchParameters
@@ -118,13 +118,11 @@ internal class FoodSearchViewModel(
                     observeFoodsUseCase.observe(*list.toTypedArray()).map { list ->
                         list.mapNotNull {
                             when (it) {
-                                is FoodProductRepository.FoodStatus.Available ->
-                                    FoodSearchUiModel.Loaded(it.food)
-                                is FoodProductRepository.FoodStatus.Loading ->
-                                    FoodSearchUiModel.Loading(it.identity)
+                                is FoodStatus.Available -> FoodSearchUiModel.Loaded(it.food)
+                                is FoodStatus.Loading -> FoodSearchUiModel.Loading(it.identity)
 
-                                is FoodProductRepository.FoodStatus.Error,
-                                is FoodProductRepository.FoodStatus.NotFound -> null
+                                is FoodStatus.Error,
+                                is FoodStatus.NotFound -> null
                             }
                         }
                     }

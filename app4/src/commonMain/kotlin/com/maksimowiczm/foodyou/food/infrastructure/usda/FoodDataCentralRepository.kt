@@ -15,7 +15,7 @@ import com.maksimowiczm.foodyou.food.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.domain.FoodProductRepository.FoodStatus
+import com.maksimowiczm.foodyou.food.domain.FoodStatus
 import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import com.maksimowiczm.foodyou.food.infrastructure.usda.network.FoodDataCentralRemoteDataSource
 import com.maksimowiczm.foodyou.food.infrastructure.usda.room.FoodDataCentralDao
@@ -97,38 +97,42 @@ class FoodDataCentralRepository(
         }
     }
 
-    fun observe(parameters: QueryParameters.FoodDataCentral): Flow<FoodStatus> = channelFlow {
-        send(FoodStatus.Loading(parameters.identity, null))
+    fun observe(parameters: QueryParameters.FoodDataCentral): Flow<FoodStatus<FoodProductDto>> =
+        channelFlow {
+            send(FoodStatus.Loading(parameters.identity, null))
 
-        val fdcId = parameters.identity.fdcId
+            val fdcId = parameters.identity.fdcId
 
-        val localProduct = dao.observe(fdcId).first()
+            val localProduct = dao.observe(fdcId).first()
 
-        if (localProduct == null) {
-            try {
-                val apiKey = settingsRepository.load().apiKey
-                val openFoodFactsProduct = networkDataSource.getProduct(fdcId, apiKey).getOrThrow()
-                val entity = mapper.foodDataCentralProductEntity(openFoodFactsProduct)
-                dao.upsertProduct(entity)
-                send(FoodStatus.Available(mapper.foodProductDto(entity)))
-            } catch (e: FoodDatabaseError) {
-                when (e) {
-                    is FoodDatabaseError.ProductNotFound ->
-                        send(FoodStatus.NotFound(parameters.identity))
-                    else -> send(FoodStatus.Error(parameters.identity, null, e))
+            if (localProduct == null) {
+                try {
+                    val apiKey = settingsRepository.load().apiKey
+                    val openFoodFactsProduct =
+                        networkDataSource.getProduct(fdcId, apiKey).getOrThrow()
+                    val entity = mapper.foodDataCentralProductEntity(openFoodFactsProduct)
+                    dao.upsertProduct(entity)
+                    send(FoodStatus.Available(parameters.identity, mapper.foodProductDto(entity)))
+                } catch (e: FoodDatabaseError) {
+                    when (e) {
+                        is FoodDatabaseError.ProductNotFound ->
+                            send(FoodStatus.NotFound(parameters.identity))
+
+                        else -> send(FoodStatus.Error(parameters.identity, null, e))
+                    }
+                }
+            } else {
+                send(FoodStatus.Available(parameters.identity, mapper.foodProductDto(localProduct)))
+            }
+
+            dao.observe(fdcId).drop(1).collectLatest {
+                when (it) {
+                    null -> send(FoodStatus.NotFound(parameters.identity))
+                    else ->
+                        send(FoodStatus.Available(parameters.identity, mapper.foodProductDto(it)))
                 }
             }
-        } else {
-            send(FoodStatus.Available(mapper.foodProductDto(localProduct)))
         }
-
-        dao.observe(fdcId).drop(1).collectLatest {
-            when (it) {
-                null -> send(FoodStatus.NotFound(parameters.identity))
-                else -> send(FoodStatus.Available(mapper.foodProductDto(it)))
-            }
-        }
-    }
 
     suspend fun refresh(
         identity: FoodProductIdentity.FoodDataCentral
