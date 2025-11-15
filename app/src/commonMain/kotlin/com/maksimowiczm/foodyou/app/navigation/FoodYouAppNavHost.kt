@@ -45,7 +45,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 @Composable
-fun FoodYouAppNavHost(onDeveloperOptions: () -> Unit, modifier: Modifier = Modifier) {
+fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
 
     NavHost(modifier = modifier, navController = navController, startDestination = Home) {
@@ -128,7 +128,7 @@ fun FoodYouAppNavHost(onDeveloperOptions: () -> Unit, modifier: Modifier = Modif
                 onExternalDatabases = { navController.navigateSingleTop(ExternalDatabases) },
                 onImportCsvProducts = { navController.navigateSingleTop(ImportCsvProducts) },
                 onExportCsvProducts = { navController.navigateSingleTop(ExportCsvProducts) },
-                onDeveloperOptions = onDeveloperOptions,
+                onDatabaseBackup = onDatabaseBackup,
             )
         }
         forwardBackwardComposable<ExternalDatabases> {

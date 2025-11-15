@@ -11,7 +11,7 @@ class MainActivity : FoodYouAbstractActivity() {
 
         setContent {
             FoodYouApp(
-                onDeveloperOptions = {
+                onDatabaseBackup = {
                     val intent =
                         Intent(this, DeveloperActivity::class.java).apply {
                             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

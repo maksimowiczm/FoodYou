@@ -50,6 +50,7 @@ import kotlinx.datetime.LocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
+// This is not developer activity anymore but a database backup activity
 class DeveloperActivity : FoodYouAbstractActivity() {
     private val processId = Process.myPid()
 
@@ -86,14 +87,14 @@ private fun Activity.DeveloperScreen(onReplaced: () -> Unit) {
             ) {
                 CircularWavyProgressIndicator()
                 Spacer(Modifier.height(16.dp))
-                Text("Replacing database, please wait...")
+                Text(stringResource(Res.string.description_replacing_database))
             }
         }
     } else {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(stringResource(Res.string.headline_developer_options)) },
+                    title = { Text(stringResource(Res.string.headline_database_backup)) },
                     navigationIcon = { ArrowBackIconButton(onClick = { finish() }) },
                 )
             }

@@ -527,4 +527,7 @@
 
     <string name="description_food_you_services">Connecting to Food You services unlocks extra features and tools that enhance your experience</string>
 
+    <string name="headline_database_backup">Database backup</string>
+    <string name="description_replacing_database">Replacing database, please wait...</string>
+
 </resources>
