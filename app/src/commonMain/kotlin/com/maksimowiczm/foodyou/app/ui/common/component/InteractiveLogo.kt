@@ -10,13 +10,11 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ripple
@@ -24,30 +22,44 @@ import androidx.compose.material3.toPath
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.graphics.Matrix
-import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.Shader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.RoundedPolygon
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun InteractiveLogo(
     modifier: Modifier = Modifier,
-    iconColor: Color = MaterialTheme.colorScheme.onTertiaryContainer,
-    backgroundColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
+    iconFraction: Float = 0.4f,
+    iconColor: Color = MaterialTheme.colorScheme.surface,
+    backgroundGradientColors: List<Color> =
+        listOf(
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.colorScheme.secondary,
+            MaterialTheme.colorScheme.tertiary,
+        ),
     animationSpec: InfiniteRepeatableSpec<Float> =
         InfiniteRepeatableSpec(
-            animation = tween(easing = LinearEasing, durationMillis = 2 * 60 * 1000),
+            animation =
+                tween(
+                    easing = LinearEasing,
+                    durationMillis = 5.minutes.inWholeMilliseconds.toInt(),
+                ),
             repeatMode = RepeatMode.Restart,
         ),
 ) {
@@ -108,32 +120,69 @@ fun InteractiveLogo(
     }
 
     val motionScheme = MaterialTheme.motionScheme
-    val interactionSource = remember { MutableInteractionSource() }
+
+    val offset by
+        infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 1000f,
+            animationSpec =
+                InfiniteRepeatableSpec(
+                    animation = tween(durationMillis = 20_000 * 1000, easing = LinearEasing),
+                    repeatMode = RepeatMode.Restart,
+                ),
+        )
+
+    val iconPainter = painterResource(Res.drawable.ic_sushi)
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        Box(modifier = Modifier.size(350.dp), contentAlignment = Alignment.Center) {
-            Box(
-                modifier =
-                    Modifier.fillMaxSize()
-                        .graphicsLayer {
-                            rotationZ = rotation
-                            clip = true
-                            shape = MorphShape(morph = morph, percentage = progress.value % 1f)
-                        }
-                        .background(backgroundColor)
-                        .clickable(interactionSource = interactionSource, indication = ripple()) {
-                            coroutineScope.launch {
-                                progress.increment(motionScheme.slowSpatialSpec())
+        // This is hacky way to clip the canvas to a morphing shape because it can't be done
+        // directly in draw scope because of ripple effect. Instead we use graphicsLayer to clip and
+        // rotate the whole canvas. To keep the icon upright we rotate it back in the draw scope.
+        Canvas(
+            Modifier.fillMaxSize(.95f)
+                .graphicsLayer {
+                    clip = true
+                    shape = GenericShape { size, _ ->
+                        val path =
+                            morph.toPath(progress.value % 1f).apply {
+                                transform(Matrix().apply { scale(size.width, size.height) })
                             }
-                        },
-                content = {},
-            )
-            Icon(
-                painter = painterResource(Res.drawable.ic_sushi),
-                contentDescription = null,
-                modifier = Modifier.size(150.dp),
-                tint = iconColor,
-            )
+
+                        addPath(path)
+                    }
+                    rotationZ = rotation
+                }
+                .clickable(interactionSource = null, indication = ripple(bounded = true)) {
+                    coroutineScope.launch { progress.increment(motionScheme.slowSpatialSpec()) }
+                }
+        ) {
+            val brush =
+                object : ShaderBrush() {
+                    override fun createShader(size: Size): Shader {
+                        val widthOffset = size.width * offset
+                        val heightOffset = size.height * offset
+                        return LinearGradientShader(
+                            colors = backgroundGradientColors,
+                            from = Offset(widthOffset, heightOffset),
+                            to = Offset(widthOffset + size.width, heightOffset + size.height),
+                            tileMode = TileMode.Mirror,
+                        )
+                    }
+                }
+
+            drawRect(brush)
+
+            val iconSize = Size(size.width * iconFraction, size.height * iconFraction)
+            rotate(degrees = -rotation, pivot = Offset(size.width / 2f, size.height / 2f)) {
+                translate(
+                    left = (size.width - iconSize.width) / 2f,
+                    top = (size.height - iconSize.height) / 2f,
+                ) {
+                    with(iconPainter) {
+                        draw(size = iconSize, colorFilter = ColorFilter.tint(iconColor))
+                    }
+                }
+            }
         }
     }
 }
@@ -166,22 +215,4 @@ private fun rememberWrapAroundCounter(
         }
 
     return counter
-}
-
-private class MorphShape(private val morph: Morph, private val percentage: Float) : Shape {
-
-    private val matrix = Matrix()
-
-    override fun createOutline(
-        size: Size,
-        layoutDirection: LayoutDirection,
-        density: Density,
-    ): Outline {
-        matrix.scale(size.width, size.height)
-
-        val path = morph.toPath(progress = percentage)
-        path.transform(matrix)
-
-        return Outline.Generic(path)
-    }
 }

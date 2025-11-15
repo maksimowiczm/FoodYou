@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -120,7 +122,12 @@ private fun AboutScreen(
             modifier =
                 Modifier.verticalScroll(rememberScrollState()).safeDrawingPadding().fillMaxSize()
         ) {
-            InteractiveLogo(Modifier.fillMaxWidth())
+            InteractiveLogo(
+                Modifier.padding(horizontal = 32.dp)
+                    .widthIn(max = 350.dp)
+                    .aspectRatio(1f)
+                    .fillMaxWidth()
+            )
             Spacer(Modifier.height(16.dp))
             LogoLabel(
                 currentVersion = currentVersion,
