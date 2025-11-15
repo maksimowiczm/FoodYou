@@ -17,6 +17,7 @@ import com.maksimowiczm.foodyou.food.infrastructure.common.NutrientsEntity
 )
 /**
  * @sqliteId Primary key for SQLite database, it is useful for FTS search.
+ *
  * @uuid UUID of the food.
  */
 data class UserFoodEntity(
