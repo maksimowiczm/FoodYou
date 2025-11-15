@@ -1,14 +1,17 @@
 package com.maksimowiczm.foodyou.app.ui.theme
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material3.AlertDialog
@@ -16,11 +19,10 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldLabelScope
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -30,26 +32,37 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.colorpicker.compose.BrightnessSlider
+import com.github.skydoves.colorpicker.compose.HsvColorPicker
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.maksimowiczm.foodyou.common.compose.utility.LocalClipboardManager
 import com.maksimowiczm.foodyou.theme.Theme
 import com.maksimowiczm.foodyou.theme.ThemeContrast
 import com.maksimowiczm.foodyou.theme.ThemeStyle
+import com.materialkolor.ktx.toHex
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun CustomThemePickerDialog(
+fun CustomThemePickerDialog(
     initialTheme: Theme.Custom?,
     onConfirm: (Theme.Custom) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val color = remember { mutableStateOf(initialTheme?.seedColor?.let { Color(it) }) }
+    val clipboardManager = LocalClipboardManager.current
 
-    val paletteExpanded = rememberSaveable { mutableStateOf(false) }
+    val initialColor = initialTheme?.seedColor?.let { Color(it) }
+    val controller = rememberColorPickerController()
+    LaunchedEffect(Unit) { initialColor?.let { controller.selectByColor(it, false) } }
+
+    var paletteExpanded by rememberSaveable { mutableStateOf(false) }
     val paletteStyle = rememberSaveable {
         mutableStateOf(initialTheme?.style ?: ThemeStyle.TonalSpot)
     }
-    val contrastExpanded = rememberSaveable { mutableStateOf(false) }
+    var contrastExpanded by rememberSaveable { mutableStateOf(false) }
     val contrast = rememberSaveable {
         mutableStateOf(initialTheme?.contrast ?: ThemeContrast.Default)
     }
@@ -57,37 +70,59 @@ internal fun CustomThemePickerDialog(
 
     val content =
         @Composable {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
                 Text(stringResource(Res.string.description_custom_palette))
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    ColorPickerTextField(
-                        label = { Text(stringResource(Res.string.headline_seed_color)) },
-                        placeholder = { Text("#FF6750A4") },
-                        initialColor = initialTheme?.seedColor?.let(::Color),
-                        onColorChange = { color.value = it },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        HsvColorPicker(
+                            modifier = Modifier.fillMaxWidth().aspectRatio(1f),
+                            controller = controller,
+                        )
+                        BrightnessSlider(
+                            modifier = Modifier.fillMaxWidth().height(32.dp),
+                            controller = controller,
+                        )
+                        Text(
+                            text = controller.selectedColor.value.toHex(),
+                            color = controller.selectedColor.value,
+                            style = MaterialTheme.typography.labelLargeEmphasized,
+                            modifier =
+                                Modifier.clickable(
+                                    interactionSource = null,
+                                    indication = null,
+                                    onClick = {
+                                        clipboardManager.copy(
+                                            "Color",
+                                            controller.selectedColor.value.toHex(),
+                                        )
+                                    },
+                                ),
+                        )
+                    }
                     TextField(
                         value = paletteStyle.value.name,
                         onValueChange = {},
                         trailingIcon = {
-                            IconButton(onClick = { paletteExpanded.value = true }) {
-                                Icon(Icons.Outlined.ArrowDropDown, null)
-                            }
+                            Icon(Icons.Outlined.ArrowDropDown, null)
                             DropdownMenu(
-                                expanded = paletteExpanded.value,
-                                onDismissRequest = { paletteExpanded.value = false },
+                                expanded = paletteExpanded,
+                                onDismissRequest = { paletteExpanded = false },
                             ) {
                                 ThemeStyle.entries.forEach { style ->
                                     DropdownMenuItem(
                                         text = { Text(style.name) },
                                         onClick = {
                                             paletteStyle.value = style
-                                            paletteExpanded.value = false
+                                            paletteExpanded = false
                                         },
                                     )
                                 }
@@ -95,24 +130,31 @@ internal fun CustomThemePickerDialog(
                         },
                         readOnly = true,
                         label = { Text(stringResource(Res.string.headline_palette_style)) },
+                        interactionSource =
+                            remember { MutableInteractionSource() }
+                                .apply {
+                                    LaunchedEffect(Unit) {
+                                        interactions
+                                            .filter { it is PressInteraction.Release }
+                                            .collectLatest { paletteExpanded = true }
+                                    }
+                                },
                     )
                     TextField(
                         value = contrast.value.name,
                         onValueChange = {},
                         trailingIcon = {
-                            IconButton(onClick = { contrastExpanded.value = true }) {
-                                Icon(Icons.Outlined.ArrowDropDown, null)
-                            }
+                            Icon(Icons.Outlined.ArrowDropDown, null)
                             DropdownMenu(
-                                expanded = contrastExpanded.value,
-                                onDismissRequest = { contrastExpanded.value = false },
+                                expanded = contrastExpanded,
+                                onDismissRequest = { contrastExpanded = false },
                             ) {
                                 ThemeContrast.entries.forEach { contrastOption ->
                                     DropdownMenuItem(
                                         text = { Text(contrastOption.name) },
                                         onClick = {
                                             contrast.value = contrastOption
-                                            contrastExpanded.value = false
+                                            contrastExpanded = false
                                         },
                                     )
                                 }
@@ -120,6 +162,15 @@ internal fun CustomThemePickerDialog(
                         },
                         readOnly = true,
                         label = { Text(stringResource(Res.string.headline_contrast)) },
+                        interactionSource =
+                            remember { MutableInteractionSource() }
+                                .apply {
+                                    LaunchedEffect(Unit) {
+                                        interactions
+                                            .filter { it is PressInteraction.Release }
+                                            .collectLatest { contrastExpanded = true }
+                                    }
+                                },
                     )
                 }
                 Row(
@@ -144,19 +195,15 @@ internal fun CustomThemePickerDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    val color = color.value
-                    if (color != null) {
-                        onConfirm(
-                            Theme.Custom(
-                                seedColor = color.value,
-                                style = paletteStyle.value,
-                                contrast = contrast.value,
-                                isAmoled = isAmoled.value,
-                            )
+                    onConfirm(
+                        Theme.Custom(
+                            seedColor = controller.selectedColor.value.value,
+                            style = paletteStyle.value,
+                            contrast = contrast.value,
+                            isAmoled = isAmoled.value,
                         )
-                    }
-                },
-                enabled = color.value != null,
+                    )
+                }
             ) {
                 Text(stringResource(Res.string.action_confirm))
             }
@@ -169,89 +216,59 @@ internal fun CustomThemePickerDialog(
 }
 
 @Composable
-internal fun ColorPickerDialog(
+fun ColorPickerDialog(
     initialColor: Color?,
     onConfirm: (Color) -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var color by remember { mutableStateOf(initialColor) }
+    val clipboardManager = LocalClipboardManager.current
 
-    val content =
-        @Composable {
-            ColorPickerTextField(
-                label = { Text(stringResource(Res.string.headline_color)) },
-                placeholder = { Text("#FF6750A4") },
-                initialColor = initialColor,
-                onColorChange = { color = it },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+    val controller = rememberColorPickerController()
+    LaunchedEffect(Unit) { initialColor?.let { controller.selectByColor(it, false) } }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = { Text(stringResource(Res.string.headline_pick_a_color)) },
-        text = content,
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    val color = color
-                    if (color != null) {
-                        onConfirm(color)
-                    }
-                },
-                enabled = color != null,
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                HsvColorPicker(
+                    modifier = Modifier.fillMaxWidth().aspectRatio(1f),
+                    controller = controller,
+                )
+                BrightnessSlider(
+                    modifier = Modifier.fillMaxWidth().height(32.dp),
+                    controller = controller,
+                )
+                Text(
+                    text = controller.selectedColor.value.toHex(),
+                    color = controller.selectedColor.value,
+                    style = MaterialTheme.typography.labelLargeEmphasized,
+                    modifier =
+                        Modifier.clickable(
+                            interactionSource = null,
+                            indication = null,
+                            onClick = {
+                                clipboardManager.copy(
+                                    "Color",
+                                    controller.selectedColor.value.toHex(),
+                                )
+                            },
+                        ),
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm(controller.selectedColor.value) }) {
                 Text(stringResource(Res.string.action_confirm))
             }
         },
         dismissButton = {
             TextButton(onDismissRequest) { Text(stringResource(Res.string.action_cancel)) }
         },
-        modifier = modifier,
-    )
-}
-
-@Composable
-internal fun ColorPickerTextField(
-    label: @Composable TextFieldLabelScope.() -> Unit,
-    placeholder: @Composable () -> Unit,
-    initialColor: Color?,
-    onColorChange: (Color?) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val colorState =
-        rememberTextFieldState(
-            initialColor?.value?.toString(16)?.substring(0, 8)?.uppercase() ?: ""
-        )
-    val parsedColor =
-        remember {
-                derivedStateOf {
-                    if (colorState.text.length != 8) return@derivedStateOf null
-
-                    runCatching {
-                            val long = colorState.text.toString().removePrefix("#").toLong(16)
-                            Color(long)
-                        }
-                        .getOrNull()
-                }
-            }
-            .value
-
-    LaunchedEffect(parsedColor) { onColorChange(parsedColor) }
-
-    val isValid = parsedColor != null && colorState.text.length == 8
-
-    TextField(
-        state = colorState,
-        label = label,
-        placeholder = placeholder,
-        trailingIcon = {
-            if (parsedColor != null) {
-                Canvas(Modifier.size(24.dp)) { drawCircle(parsedColor) }
-            }
-        },
-        isError = !isValid && colorState.text.isNotEmpty(),
         modifier = modifier,
     )
 }

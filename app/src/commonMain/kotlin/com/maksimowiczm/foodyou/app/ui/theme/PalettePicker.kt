@@ -15,6 +15,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,20 +41,35 @@ import kotlin.math.absoluteValue
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun PalettePicker(
+fun PalettePicker(
     isDark: Boolean,
     selectedTheme: Theme,
     onThemeChange: (Theme.Custom) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = rememberThemes()
+    val colors = listOf<Theme.Custom?>(null) + rememberThemes()
     val chunks = remember(colors) { colors.chunked(5) }
     val initialPage = remember {
-        chunks.indexOfFirst { chunk -> chunk.contains(selectedTheme) }.coerceAtLeast(0)
+        chunks
+            .indexOfFirst { chunk -> chunk.contains(selectedTheme as? Theme.Custom) }
+            .coerceAtLeast(0)
     }
+    val isPresetSelected = colors.contains(selectedTheme as? Theme.Custom)
 
     val pagerState = rememberPagerState(initialPage = initialPage) { chunks.size }
     val coroutineScope = rememberCoroutineScope()
+
+    var showCustomColorDialog by rememberSaveable { mutableStateOf(false) }
+    if (showCustomColorDialog) {
+        CustomThemePickerDialog(
+            initialTheme = selectedTheme as? Theme.Custom,
+            onConfirm = {
+                onThemeChange(it)
+                showCustomColorDialog = false
+            },
+            onDismiss = { showCustomColorDialog = false },
+        )
+    }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
@@ -65,11 +82,18 @@ internal fun PalettePicker(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             ) {
                 chunks[page].forEach { theme ->
-                    PalettePickerItem(
-                        colorScheme = theme.rememberColorScheme(isDark),
-                        selected = theme == selectedTheme,
-                        onSelect = { onThemeChange(theme) },
-                    )
+                    if (theme == null) {
+                        PalettePickerItem(
+                            selected = !isPresetSelected,
+                            onSelect = { showCustomColorDialog = true },
+                        )
+                    } else {
+                        PalettePickerItem(
+                            colorScheme = theme.rememberColorScheme(isDark),
+                            selected = theme == selectedTheme,
+                            onSelect = { onThemeChange(theme) },
+                        )
+                    }
                 }
             }
         }
@@ -80,6 +104,35 @@ internal fun PalettePicker(
                 coroutineScope.launch { pagerState.animateScrollToPage(page) }
             },
         )
+    }
+}
+
+@Composable
+private fun PalettePickerItem(
+    selected: Boolean,
+    onSelect: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    ToggleButton(
+        checked = selected,
+        onCheckedChange = { onSelect() },
+        modifier = modifier.size(56.dp).semantics { role = Role.RadioButton },
+        shapes = ToggleButtonDefaults.shapesFor(56.dp),
+        colors =
+            ToggleButtonDefaults.toggleButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                checkedContainerColor = MaterialTheme.colorScheme.inversePrimary,
+                checkedContentColor = MaterialTheme.colorScheme.primary,
+            ),
+        contentPadding = PaddingValues(0.dp),
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = Icons.Outlined.Colorize,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+            )
+        }
     }
 }
 
