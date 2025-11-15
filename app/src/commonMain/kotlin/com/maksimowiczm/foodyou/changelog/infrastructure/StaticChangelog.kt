@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_4_0,
                 v_3_3_5,
                 v_3_3_4,
                 v_3_3_3,
@@ -44,6 +45,24 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_4_0 =
+        Version(
+            version = "3.4.0",
+            date = LocalDate(2025, 11, 15),
+            newFeatures = listOf("Added a color picker for customizable themes."),
+            changes =
+                listOf(
+                    "Renamed Database Developer Options to Database Backup and Restore.",
+                    "Updated the About screen design.",
+                    "Updated the design of the external food databases management screen.",
+                    "Increased the Open Food Facts request timeout to 60 seconds.",
+                ),
+            bugFixes =
+                listOf(
+                    "Fixed an issue where the barcode scanner was focusing at infinity on some devices."
+                ),
+        )
 
     val v_3_3_5 =
         Version(
