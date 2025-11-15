@@ -13,4 +13,7 @@ internal class FoodYouConfig : AppConfig {
     override val featureRequestUrl: String = BuildConfig.GITHUB_ISSUES_URL
     override val termsOfServiceUrl: String = BuildConfig.TERMS_OF_SERVICE_URL
     override val privacyPolicyUrl: String = BuildConfig.PRIVACY_POLICY_URL
+    override val openFoodFactsTermsOfUseUri: String = "https://world.openfoodfacts.org/terms-of-use"
+    override val openFoodFactsPrivacyPolicyUri: String = "https://world.openfoodfacts.org/privacy"
+    override val foodDataCentralPrivacyPolicyUri: String = "https://www.usda.gov/privacy-policy"
 }
