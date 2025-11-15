@@ -100,7 +100,7 @@ internal class OpenFoodFactsRemoteDataSource(
 
     private companion object {
         private const val TAG = "OpenFoodFactsRemoteDataSource"
-        private const val TIMEOUT = 10_000L
+        private const val TIMEOUT = 60_000L
     }
 }
 
