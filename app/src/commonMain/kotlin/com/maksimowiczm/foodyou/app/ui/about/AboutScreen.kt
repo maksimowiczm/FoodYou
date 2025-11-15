@@ -153,7 +153,7 @@ private fun AboutButtons(
         ) {
             Icon(
                 imageVector = Icons.Outlined.Code,
-                contentDescription = null,
+                contentDescription = stringResource(Res.string.headline_source_code),
                 modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
             )
         }
@@ -165,7 +165,7 @@ private fun AboutButtons(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
-                contentDescription = null,
+                contentDescription = stringResource(Res.string.headline_changelog),
                 modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
             )
         }
@@ -177,7 +177,7 @@ private fun AboutButtons(
         ) {
             Icon(
                 imageVector = Icons.Outlined.Lightbulb,
-                contentDescription = null,
+                contentDescription = stringResource(Res.string.action_feature_request_on_github),
                 modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
             )
         }
@@ -189,7 +189,7 @@ private fun AboutButtons(
         ) {
             Icon(
                 imageVector = Icons.Outlined.Mail,
-                contentDescription = null,
+                contentDescription = stringResource(Res.string.action_write_an_email),
                 modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
             )
         }
