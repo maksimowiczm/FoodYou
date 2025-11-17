@@ -55,6 +55,7 @@
         <item quantity="one">Milliliter</item>
         <item quantity="other">Milliliter</item>
     </plurals>
+    <string name="unit_ounce_short">oz</string>
     <string name="product_package_weight">Paketgewicht</string>
     <string name="product_package">Paket</string>
     <string name="product_serving_weight">Serviergewicht</string>
@@ -83,6 +84,7 @@
     <string name="nutriment_caffeine">Koffein</string>
     <string name="nutriment_trans_fats">Transfette</string>
     <string name="nutriment_added_sugars">Hinzugefügte Zucker</string>
+    <string name="nutriment_soluble_fiber">Soluble fiber</string>
     <string name="nutriment_insoluble_fiber">Unlösliche Ballaststoffe</string>
     <string name="vitamin_a">Vitamin A (Retinol)</string>
     <string name="vitamin_b1">Vitamin B1 (Thamin)</string>
@@ -133,8 +135,6 @@
     <string name="action_disable_camera_flash">Kamerablitz deaktivieren</string>
     <string name="action_prevent_screen_capture">Bildschirmaufnahme verhindern</string>
     <string name="action_go_to_today">Gehe zu heute</string>
-    <string name="action_bug_report_on_github">Fehlerbericht auf GitHub</string>
-    <string name="action_feature_request_on_github">Funktionsanfrage auf GitHub</string>
     <string name="action_show_calendar">Kalender anzeigen</string>
     <string name="action_reorder">Neu sortieren</string>
     <string name="action_move_up" description="reorder list item up">Nach Oben</string>
@@ -163,6 +163,10 @@
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d verbleibende Kalorien</item>
         <item quantity="other">%1$d verbleibende Kalorien</item>
+    </plurals>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">%1$d verbleibende Kilojoule</item>
+        <item quantity="other">%1$d verbleibende Kilojoule</item>
     </plurals>
     <string name="neutral_set_your_daily_goals">Lege deine täglichen Ernährungsziele fest</string>
     <string name="neutral_set_your_meal_schedule">Lege deinen Essensplan fest</string>
@@ -199,7 +203,6 @@
     <string name="description_action_ignore_all_day_meals">Ganztägige Mahlzeiten am Ende der Liste anzeigen</string>
     <string name="description_incomplete_nutrition_data">Einige der verwendeten Produkte haben diesen Wert nicht, daher könnte der angezeigte Wert ungenau sein</string>
     <string name="description_translation_warning">Die Übersetzungen werden von Freiwilligen erstellt. Sie können nicht perfekt sein oder fehlen. Falls du Fehler findest, zögere nicht dabei mitzuhelfen, sie zu verbessern.</string>
-    <string name="description_changelog">Zeige Neuigkeiten der App an</string>
     <string name="description_home_settings">Passe deine Startseite an</string>
     <string name="description_download_product">Füge einen Link zu einem Lebensmittel, und rufe automatisch Nährwertangaben und Produkt Informationen ab.</string>
     <string name="description_download_product_hint">Du kannst beliebig Text einfügen. Die erste URL wird verwendet.</string>

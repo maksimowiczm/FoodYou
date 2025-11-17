@@ -136,8 +136,6 @@
     <string name="action_disable_camera_flash">Camera flits uitschakelen</string>
     <string name="action_prevent_screen_capture">Schermopname blokkeren</string>
     <string name="action_go_to_today">Ga naar vandaag</string>
-    <string name="action_bug_report_on_github">Rapporteer een probleem op GitHub</string>
-    <string name="action_feature_request_on_github">Verzoek een functie op GitHub</string>
     <string name="action_show_calendar">Open kalender</string>
     <string name="action_reorder">Rangschikken</string>
     <string name="action_move_up" description="reorder list item up">Omhoog verplaatsen</string>
@@ -210,7 +208,6 @@
     <string name="description_action_ignore_all_day_meals">Maaltijden zonder begin- of eindtijd worden aan het einde van de lijst weergegeven</string>
     <string name="description_incomplete_nutrition_data">Sommige van de producten, die gebruikt worden, hebben deze waarde niet, het totaal kan dus afwijken van de werkelijkheid</string>
     <string name="description_translation_warning">Vertalingen worden gemaakt door vrijwilligers. Het kan voorkomen dat een vertaling niet klopt of ontbreekt. Wil je helpen met de vertaling van FoodYou? Dan stellen we dat zeer op prijs.</string>
-    <string name="description_changelog">Bekijk wat nieuw is in de app</string>
     <string name="description_home_settings">Pas je voorpagina aan</string>
     <string name="description_download_product">Vul een link naar een product in en haal automatisch voedingswaarde-informatie op.</string>
     <string name="description_download_product_hint">Alle tekst wordt geaccepteerd, de eerste URL zal worden gebruikt.</string>
@@ -229,16 +226,10 @@
     <string name="description2_swiss_food_composition_database">De Swiss Food Composition Database bevat voedingsinformatie van meer dan 1100 algemene voedingsproducten. De database is beschikbaar in vier talen. Om deze producten in uw voedingsdagboek te importeren, selecteert u uw voorkeurstaal.</string>
     <string name="headline_external_databases">Externe Databases</string>
     <string name="description_external_databases">Bekijk ondersteunde databases</string>
-    <string name="feature_share_url_with_food_you">Deel URL met Food You</string>
-    <string name="feature_in_app_download">In-app download</string>
-    <string name="feature_in_app_search">In-app zoeken</string>
     <string name="feature_manual_database_import">Handmatige database import</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Uitpakken</string>
     <string name="headline_sponsor">Sponsor</string>
-    <string name="description_sponsor_short">Bijdragen in welke vorm dan ook zijn welkom</string>
     <string name="description_sponsor_short_2">Ondersteun de groei van deze app</string>
-    <string name="headline_source_code">Bron code</string>
-    <string name="description_source_code">Bekijk de bron code van het project op GitHub</string>
     <string name="action_write_an_email">Schrijf een e-mail</string>
     <string name="headline_contact">Contact</string>
     <string name="description_sponsor_contact">Als je vragen hebt over sponsoring, voel je vrij om contact met me op te nemen via e-mail of GitHub.</string>
@@ -281,8 +272,6 @@
     <string name="headline_food_database">Voedingsdatabase</string>
     <string name="description_food_database">Je kan kiezen of je deze optionele externe diensten wil gebruiken, welke hun eigen voorwaarden en privacybeleid kunnen hebben</string>
     <string name="action_skip">Overslaan</string>
-    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Gebruiksvoorwaarden:https://world.openfoodfacts.org/terms-of-use} en {Privacy Beleid:https://world.openfoodfacts.org/privacy}</string>
-    <string name="usda_privacy_policy">{Privacy Beleid:https://www.usda.gov/privacy-policy}</string>
     <string name="headline_almost_done">Bijna klaar!</string>
     <string name="headline_preparing_your_food_diary">Jouw voedingsdagboek voorbereiden</string>
     <string name="headline_please_wait">Even wachten, alsjeblieft</string>
@@ -330,7 +319,6 @@
     <string name="description_custom_palette">Jouw eigen palet instellen</string>
     <string name="headline_dynamic_colors">Dynamische kleuren</string>
     <string name="description_dynamic_colors">Kleuren toepassen van systeem</string>
-    <string name="headline_seed_color">Zaadkleur</string>
     <string name="headline_palette_style">Palet stijl</string>
     <string name="headline_contrast">Contrast</string>
     <string name="headline_amoled">AMOLED</string>
@@ -339,7 +327,6 @@
     <string name="headline_appearance">Uiterlijk</string>
     <string name="headline_theme">Thema</string>
     <string name="headline_pick_a_color">Kies een kleur</string>
-    <string name="headline_color">Kleur</string>
     <string name="headline_nutrients_colors">Nutriënt kleuren</string>
     <string name="description_nutrients_colors_reset">Nutriënt kleuren instellingen zullen naar standaard waarden worden teruggezet</string>
     <string name="headline_sponsorship_goals">Doelen</string>
@@ -355,7 +342,6 @@
     <string name="action_next_month">Volgende maand</string>
     <string name="action_previous_month">Vorige maand</string>
     <string name="headline_sponsor_methods">Methodes</string>
-    <string name="headline_developer_options">Ontwikkelaars opties</string>
     <string name="headline_save_database">Database opslaan</string>
     <string name="description_save_database">Sla een kopie van jouw database op.</string>
     <string name="headline_replace_database">Database vervangen</string>
@@ -368,4 +354,18 @@
     <string name="error_there_was_an_error_while_signing_in">Er is een fout opgetreden tijdens het inloggen</string>
     <string name="headline_random_theme">Willekeurige thema</string>
     <string name="description_random_theme">Iedere keer dat je de app start zal er een willekeurig thema worden toegepast</string>
+    <string name="headline_terms_of_use">Algemene voorwaarden</string>
+    <string name="onboarding_privacy_tip">Deze app is open-source en gemaakt voor jou. We respecteren jouw privacy, jouw informatie blijft privé</string>
+    <string name="onboarding_allow_food_you_services">Sta toe om te verbinden met Food You diensten</string>
+    <string name="headline_add_profile">Profiel toevoegen</string>
+    <string name="headline_how_do_you_want_to_be_called">Hoe wil je genoemd worden?</string>
+    <string name="headline_profile_name">Profiel naam</string>
+    <string name="headline_profile_picture">Profiel foto</string>
+    <string name="action_continue">Doorgaan</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Hoi, %1$s!</string>
+    <string name="headline_data_backup_and_export">Gegevens backup &amp; export.</string>
+    <string name="headline_privacy">Privacy</string>
+    <string name="action_switch_profile">Profiel wisselen</string>
+    <string name="action_add_profile">Profiel toevoegen</string>
+    <string name="action_refresh">Verversen</string>
 </resources>

@@ -110,8 +110,6 @@
     <string name="action_disable_camera_flash">Vaku letiltása</string>
     <string name="action_prevent_screen_capture">Megakadályozza a képernyőfelvételt</string>
     <string name="action_go_to_today">Irány a mai nap</string>
-    <string name="action_bug_report_on_github">Hiba jelentése GitHub-on</string>
-    <string name="action_feature_request_on_github">Funkció kérése a GitHub-on</string>
     <string name="action_show_calendar">Naptár megjelenítése</string>
     <string name="action_reorder">Átrendezés</string>
     <string name="action_move_up" description="reorder list item up">Mozgatás fel</string>
@@ -165,7 +163,6 @@
     <string name="description_action_ignore_all_day_meals">Az egész napos étkezés, mely a nap bármely szakaszában fogyasztható ételeket jelenti, a lista végére kerül</string>
     <string name="description_incomplete_nutrition_data">Néhány használt termék híján van az értékeknek, ezért az itt látható érték pontatlan lehet</string>
     <string name="description_translation_warning">A fordításokat önkéntesek végzik. Lehet, hogy nem tökéletes és néhány fordítás hiányozhat. Ha hibát találsz, kérlek, segíts tökéletesíteni őket.</string>
-    <string name="description_changelog">Nézd meg az applikáció újdonságait</string>
     <string name="description_home_settings">Kezdőlapod testreszabása</string>
     <string name="description_download_product">Illeszd be egy élelmiszer linkjét, és automatikusan betöltjük a tápértékeket és a termék adatait.</string>
     <string name="description_download_product_hint">Bármilyen szöveget beilleszthetsz. Az első URL kerül felhasználásra.</string>

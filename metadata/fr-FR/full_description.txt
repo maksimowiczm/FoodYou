@@ -1,15 +1,15 @@
-<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
+<b>Food You</b> est un puissant outil open source de suivi nutritionnel conçu dans un style moderne "Material You". Il vous aide à suivre non seulement les calories, mais aussi votre apport nutritionnel global, grâce à des données alimentaires fiables et une interface flexible et modulaire.
 
-<b>Caractéristiques :</b>
+<b>Fonctionnalités :</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
-    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
-    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
-    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
-    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
-    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
+    <li><b>Material You Design :</b> Thèmes dynamiques qui s'adaptent à votre appareil pour une expérience visuelle fluide.</li>
+    <li><b>Bases de données alimentaires complètes :</b> Accédez aux données nutritionnelles d'Open Food Facts, d'USDA FoodCentral et de la base de données suisse des valeurs nutritives.</li>
+    <li><b>Suivi nutritionnel complet :</b> Surveillez les calories, les macronutriments, les vitamines, les minéraux et plus encore.</li>
+    <li><b>Création de recette :</b> Combinez des aliments pour créer des recettes personnalisés avec calcul automatique des valeurs nutritionnelles.</li>
+    <li><b>Objectifs journaliers :</b> Définissez et suivez des objectifs nutritionnels personnalisés.</li>
+    <li><b>Écran d'accueil modulaire :</b> Personnalisez votre écran d'accueil avec des présentations adaptées à vos besoins.</li>
 </ul>
 
-Start tracking your nutrition today with Food You — clean, complete, and fully yours.
+Commencez dès aujourd'hui à suivre votre alimentation avec Food You — une application claire, complète et entièrement personnalisée.
 
-Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Icône du lanceur créée par <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
