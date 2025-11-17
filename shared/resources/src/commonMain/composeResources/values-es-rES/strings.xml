@@ -116,8 +116,6 @@
     <string name="action_disable_camera_flash">Deshabilita el flash</string>
     <string name="action_prevent_screen_capture">Prevenir capturas de pantalla</string>
     <string name="action_go_to_today">Ir a hoy</string>
-    <string name="action_bug_report_on_github">Informar error en GitHub</string>
-    <string name="action_feature_request_on_github">Solicitar funciones en GitHub</string>
     <string name="action_show_calendar">Mostrar calendario</string>
     <string name="action_reorder">Reordenar</string>
     <string name="action_move_up" description="reorder list item up">Mover arriba</string>
@@ -179,7 +177,6 @@
     <string name="description_action_ignore_all_day_meals">Las comidas de todo el día aparecerán al final de la lista</string>
     <string name="description_incomplete_nutrition_data">Algunos de los productos utilizados carecen de este valor, por lo que es posible que el valor mostrado no sea exacto</string>
     <string name="description_translation_warning">Las traducciones han sido creadas por voluntarios. Puede que no sean perfectas y que falten algunas traducciones. Si observas algún error, no dudes en ayudar a mejorarlas.</string>
-    <string name="description_changelog">Novedades de la aplicación</string>
     <string name="description_home_settings">Personaliza tu página de inicio</string>
     <string name="description_download_product">Pega un enlace a un alimento y obtenga automáticamente información nutricional y detalles del producto.</string>
     <string name="description_download_product_hint">Puede pegar cualquier texto. Se utilizará el primer enlace.</string>
@@ -192,14 +189,9 @@
     <string name="notification_importing_products">Importando productos</string>
     <string name="description_food_data_central_usda">FoodData Central es la fuente completa de datos sobre la composición de los alimentos del USDA, con múltiples tipos de datos distintos</string>
     <string name="headline_external_databases">Bases de datos externas</string>
-    <string name="feature_share_url_with_food_you">Compartir enlace con Food You</string>
-    <string name="feature_in_app_download">Descarga desde la aplicación</string>
     <string name="feature_manual_database_import">Importación manual de bases de datos</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Desempaqueta</string>
     <string name="headline_sponsor">Patrocinador</string>
-    <string name="description_sponsor_short">Se aceptan contribuciones de cualquier tipo</string>
-    <string name="headline_source_code">Código fuente</string>
-    <string name="description_source_code">Ver el código fuente del proyecto en GitHub</string>
     <string name="action_write_an_email">Escribir un correo electrónico</string>
     <string name="headline_contact">Contacto</string>
     <string name="description_sponsor_contact">Si tienes alguna petición relacionada con el patrocinio, no dudes en ponerte en contacto conmigo por correo electrónico o GitHub.</string>

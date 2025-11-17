@@ -112,8 +112,6 @@
     <string name="action_disable_camera_flash">Slå kamerabiltz fra</string>
     <string name="action_prevent_screen_capture">Forhindr skærmoptagelse</string>
     <string name="action_go_to_today">Gå til i dag</string>
-    <string name="action_bug_report_on_github">Fejlanmeldelse på GitHub</string>
-    <string name="action_feature_request_on_github">Funktionsanmodning på GitHub</string>
     <string name="action_show_calendar">Vis kalender</string>
     <string name="action_reorder">Gensortér</string>
     <string name="action_move_up" description="reorder list item up">Flyt op</string>
@@ -171,7 +169,6 @@
     <string name="description_action_ignore_all_day_meals">Heldagsmåltider vise til slut på listen</string>
     <string name="description_incomplete_nutrition_data">Nogle af de brugte produkter mangler denne værdi, hvorfor den viste værdi muligvis ikke retvisende</string>
     <string name="description_translation_warning">Oversættelser er foretaget af frivillige. De er måske ikke perfekte, og nogle oversættelser kan mangle. Opdages fejl, så tøv ikke med at forbedre dem.</string>
-    <string name="description_changelog">Se, hvad der er nyt i appen</string>
     <string name="description_home_settings">Tilpas startsiden</string>
     <string name="description_download_product">Indsæt link til et fødevareprodukt og hent automatisk ernæringsfakta samt produktdetaljer.</string>
     <string name="description_download_product_hint">Enhver tekst kan indsættes. Første URL anvendes.</string>

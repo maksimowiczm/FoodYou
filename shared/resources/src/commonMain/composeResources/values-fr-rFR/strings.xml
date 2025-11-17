@@ -136,8 +136,6 @@
     <string name="action_disable_camera_flash">Désactiver le flash de l'appareil photo</string>
     <string name="action_prevent_screen_capture">Empêcher la capture d'écran</string>
     <string name="action_go_to_today">Aller à aujourd'hui</string>
-    <string name="action_bug_report_on_github">Rapport de bug sur GitHub</string>
-    <string name="action_feature_request_on_github">Demande de fonctionnalité sur GitHub</string>
     <string name="action_show_calendar">Afficher le calendrier</string>
     <string name="action_reorder">Réorganiser</string>
     <string name="action_move_up" description="reorder list item up">Déplacer vers le haut</string>
@@ -210,7 +208,6 @@
     <string name="description_action_ignore_all_day_meals">Les repas de toute la journée seront affichés à la fin de la liste</string>
     <string name="description_incomplete_nutrition_data">Certains produits utilisés n'ont pas cette valeur ; la valeur affichée pourrait donc être inexacte</string>
     <string name="description_translation_warning">Les traductions sont réalisées par des bénévoles. Elles peuvent contenir des erreurs ou être incomplètes. Si vous remarquez des erreurs, n'hésitez pas à contribuer à leur amélioration.</string>
-    <string name="description_changelog">Voir les nouveautés de l'application</string>
     <string name="description_home_settings">Personnalisez votre page d'accueil</string>
     <string name="description_download_product">Collez un lien vers un produit alimentaire et récupérez automatiquement les informations nutritionnelles et les détails du produit.</string>
     <string name="description_download_product_hint">Vous pouvez coller n'importe quel texte. La première adresse sera utilisée.</string>
@@ -229,16 +226,10 @@
     <string name="description2_swiss_food_composition_database">La Base de données Suisse des valeurs nutritives contient des informations nutritionnelles sur plus de 1100 produits alimentaires courants. Elle est disponible en quatre langues. Pour importer ces produits dans votre journal alimentaire, veuillez sélectionner vos langues préférées.</string>
     <string name="headline_external_databases">Bases de données externes</string>
     <string name="description_external_databases">Consultez les bases de données prises en charge</string>
-    <string name="feature_share_url_with_food_you">Partager l'adresse avec Food You</string>
-    <string name="feature_in_app_download">Téléchargement dans l'application</string>
-    <string name="feature_in_app_search">Recherche dans l'application</string>
     <string name="feature_manual_database_import">Importation manuelle de la base de donnée</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Décompression</string>
     <string name="headline_sponsor">Soutenir le projet</string>
-    <string name="description_sponsor_short">Les contributions sous toutes leurs formes sont les bienvenues</string>
     <string name="description_sponsor_short_2">Soutenez le développement de l'application</string>
-    <string name="headline_source_code">Code source</string>
-    <string name="description_source_code">Consultez le code source du projet sur GitHub</string>
     <string name="action_write_an_email">Écrire un e-mail</string>
     <string name="headline_contact">Contact</string>
     <string name="description_sponsor_contact">Si vous avez des demandes concernant le parrainage, n'hésitez pas à me contacter par e-mail ou via GitHub.</string>
@@ -281,8 +272,6 @@
     <string name="headline_food_database">Base de données alimentaire</string>
     <string name="description_food_database">Vous pouvez choisir d'utiliser ou non ces services externes facultatifs, qui peuvent avoir leurs propres conditions générales et politiques de confidentialité</string>
     <string name="action_skip">Ignorer</string>
-    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Conditions d'utilisation : https://world.openfoodfacts.org/terms-of-use} et {Politique de confidentialité : https://world.openfoodfacts.org/privacy}</string>
-    <string name="usda_privacy_policy">{Politique de confidentialité : https://www.usda.gov/privacy-policy}</string>
     <string name="headline_almost_done">C'est presque fini !</string>
     <string name="headline_preparing_your_food_diary">Préparer votre journal alimentaire</string>
     <string name="headline_please_wait">Veuillez patienter</string>
@@ -330,7 +319,6 @@
     <string name="description_custom_palette">Configurez votre propre palette</string>
     <string name="headline_dynamic_colors">Couleurs dynamiques</string>
     <string name="description_dynamic_colors">Appliquer les couleurs du système</string>
-    <string name="headline_seed_color">Base de couleur</string>
     <string name="headline_palette_style">Style de palette</string>
     <string name="headline_contrast">Contraste</string>
     <string name="headline_amoled">AMOLED</string>
@@ -339,7 +327,6 @@
     <string name="headline_appearance">Apparence</string>
     <string name="headline_theme">Thème</string>
     <string name="headline_pick_a_color">Choisissez une couleur</string>
-    <string name="headline_color">Couleur</string>
     <string name="headline_nutrients_colors">Couleurs des nutriments</string>
     <string name="description_nutrients_colors_reset">Les paramètres de couleurs des nutriments seront réinitialisés aux valeurs par défaut</string>
     <string name="headline_sponsorship_goals">Objectifs</string>
@@ -355,4 +342,14 @@
     <string name="action_next_month">Mois suivant</string>
     <string name="action_previous_month">Mois précédent</string>
     <string name="headline_sponsor_methods">Possibilités de contribution</string>
+    <string name="description_save_database">Enregistrez une copie de votre base de données</string>
+    <string name="description_replace_database">Remplacez votre base de données par une copie précédemment enregistrée</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Votre base de données sera REMPLACÉE et toutes les données actuelles seront PERDUES. L'application redémarrera après le remplacement de la base de données. Vous devrez peut-être rouvrir l'application.</string>
+    <string name="headline_privacy_policy">Politique de confidentialité</string>
+    <string name="headline_terms_of_use">Conditions d'utilisation</string>
+    <string name="onboarding_allow_food_you_services">Autoriser la connexion aux services Food You</string>
+    <string name="headline_add_profile">Ajouter un profil</string>
+    <string name="headline_how_do_you_want_to_be_called">Comment souhaitez-vous être appelé ?</string>
+    <string name="headline_profile_name">Nom du profil</string>
+    <string name="action_add_profile">Ajouter un profil</string>
 </resources>

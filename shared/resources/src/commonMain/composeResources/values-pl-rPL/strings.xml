@@ -140,7 +140,6 @@
     <string name="action_disable_camera_flash">Wyłącz lampę błyskową</string>
     <string name="action_prevent_screen_capture">Zabezpiecz przed przechwytywaniem ekranu</string>
     <string name="action_go_to_today">Przejdź do dzisiaj</string>
-    <string name="action_bug_report_on_github">Zgłoś błąd na GitHubie</string>
     <string name="action_feature_request_on_github">Zgłoś sugestię na GitHubie</string>
     <string name="action_show_calendar">Pokaż kalendarz</string>
     <string name="action_reorder">Zmień kolejność</string>
@@ -201,6 +200,7 @@
     <string name="error_unknown_error">Nieznany błąd</string>
     <string name="error_measurement_error">Błąd pomiaru, proszę sprawdzić wagę porcji i opakowania</string>
     <string name="error_api_key_is_invalid">Klucz API jest nieprawidłowy</string>
+    <string name="error_not_a_barcode">To nie jest kod kreskowy</string>
     <string name="positive_goal_reached">Cel osiągnięty</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
@@ -222,7 +222,6 @@
     <string name="description_action_ignore_all_day_meals">Całodzienne posiłki będą wyświetlane na końcu listy</string>
     <string name="description_incomplete_nutrition_data">Niektóre z używanych produktów nie mają tej wartości, dlatego wyświetlana wartość może być niedokładna</string>
     <string name="description_translation_warning">Tłumaczenia są tworzone przez wolontariuszy. Mogą nie być idealne, a niektóre tłumaczenia mogą być niekompletne. Jeśli zauważysz jakiekolwiek błędy, nie wahaj się pomóc w ich poprawie.</string>
-    <string name="description_changelog">Zobacz co nowego w aplikacji</string>
     <string name="description_home_settings">Dostosuj swoją stronę główną</string>
     <string name="description_download_product">Wklej link do produktu spożywczego i pobierz informacje o wartościach odżywczych i szczegółach produktu.</string>
     <string name="description_download_product_hint">Możesz wkleić dowolny tekst. Pierwszy adres URL zostanie użyty.</string>
@@ -241,16 +240,11 @@
     <string name="description2_swiss_food_composition_database">Baza danych Swiss Food Composition Database zawiera informacje o wartościach odżywczych dla ponad 1100 produktów spożywczych. Jest dostępna w czterech językach. Aby zaimportować te produkty do dziennika żywności, wybierz preferowane języki.</string>
     <string name="headline_external_databases">Zewnętrzne bazy danych</string>
     <string name="description_external_databases">Sprawdź obsługiwane bazy danych</string>
-    <string name="feature_share_url_with_food_you">Udostępnij adres URL do Food You</string>
-    <string name="feature_in_app_download">Pobieranie w aplikacji</string>
-    <string name="feature_in_app_search">Wyszukiwanie w aplikacji</string>
     <string name="feature_manual_database_import">Ręczny import bazy danych</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Rozpakuj</string>
     <string name="headline_sponsor">Sponsoruj</string>
-    <string name="description_sponsor_short">Wszelkie formy wsparcia są mile widziane</string>
     <string name="description_sponsor_short_2">Wspieraj rozwój aplikacji</string>
     <string name="headline_source_code">Kod źródłowy</string>
-    <string name="description_source_code">Zobacz kod źródłowy projektu na GitHub</string>
     <string name="action_write_an_email">Napisz e-mail</string>
     <string name="headline_contact">Kontakt</string>
     <string name="description_sponsor_contact">Jeśli masz jakieś pytania dotyczące sponsorowania, możesz się ze mną skontaktować przez e-mail lub GitHub.</string>
@@ -293,8 +287,6 @@
     <string name="headline_food_database">Baza danych żywności</string>
     <string name="description_food_database">Możesz wybrać, czy chcesz korzystać z tych opcjonalnych usług zewnętrznych, które mogą mieć własne warunki i zasady ochrony prywatności</string>
     <string name="action_skip">Pomiń</string>
-    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Zasady korzystania:https://world.openfoodfacts.org/terms-of-use} and {Polityka prywatności:https://world.openfoodfacts.org/privacy}</string>
-    <string name="usda_privacy_policy">{Polityka prywatności:https://www.usda.gov/privacy-policy}</string>
     <string name="headline_almost_done">Prawie gotowe</string>
     <string name="headline_preparing_your_food_diary">Przygotowywanie twojego dziennika żywieniowego</string>
     <string name="headline_please_wait">Proszę czekać</string>
@@ -346,7 +338,6 @@
     <string name="description_custom_palette">Skonfiguruj własną paletę</string>
     <string name="headline_dynamic_colors">Dynamiczne kolory</string>
     <string name="description_dynamic_colors">Zastosuj kolory z systemu</string>
-    <string name="headline_seed_color">Kolor główny</string>
     <string name="headline_palette_style">Styl palety</string>
     <string name="headline_contrast">Kontrast</string>
     <string name="headline_amoled">AMOLED</string>
@@ -355,7 +346,6 @@
     <string name="headline_appearance">Wygląd</string>
     <string name="headline_theme">Motyw</string>
     <string name="headline_pick_a_color">Wybierz kolor</string>
-    <string name="headline_color">Kolor</string>
     <string name="headline_nutrients_colors">Kolory składników odżywczych</string>
     <string name="description_nutrients_colors_reset">Ustawienia kolorów składników odżywczych zostaną zresetowane do wartości domyślnych</string>
     <string name="headline_sponsorship_goals">Cele</string>
@@ -371,7 +361,6 @@
     <string name="action_next_month">Następny miesiąc</string>
     <string name="action_previous_month">Poprzedni miesiąc</string>
     <string name="headline_sponsor_methods">Metody</string>
-    <string name="headline_developer_options">Opcje programisty</string>
     <string name="headline_save_database">Zapisz bazę danych</string>
     <string name="description_save_database">Zapisz kopię swojej bazy danych</string>
     <string name="headline_replace_database">Zastąp bazę danych</string>
@@ -384,4 +373,38 @@
     <string name="error_there_was_an_error_while_signing_in">Wystąpił błąd podczas logowania</string>
     <string name="headline_random_theme">Losowy motyw</string>
     <string name="description_random_theme">Przy każdym uruchomieniu aplikacji zostanie zastosowany losowy motyw</string>
+    <string name="headline_terms_of_use">Warunki użytkowania</string>
+    <string name="onboarding_privacy_tip">Ta aplikacja jest otwartoźródłowa i stworzona z myślą o Tobie. Szanujemy Twoją prywatność, Twoje dane pozostają prywatne.</string>
+    <string name="onboarding_allow_food_you_services">Zezwól na połączenie z usługami Food You</string>
+    <string name="headline_add_profile">Dodaj profil</string>
+    <string name="headline_how_do_you_want_to_be_called">Jak chcesz być nazywany?</string>
+    <string name="headline_profile_name">Nazwa profilu</string>
+    <string name="headline_profile_picture">Zdjęcie profilowe</string>
+    <string name="action_continue">Kontynuuj</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Cześć, %1$s!</string>
+    <string name="headline_data_backup_and_export">Kopia zapasowa i eksport danych</string>
+    <string name="headline_privacy">Prywatność</string>
+    <string name="action_switch_profile">Zmień profil</string>
+    <string name="action_add_profile">Dodaj profil</string>
+    <string name="action_refresh">Odśwież</string>
+    <string name="description_not_sure_yet">Jeszcze nie jesteś pewien? Możesz to zmienić w każdej chwili.</string>
+    <string name="question_discard_profile">Odrzucić profil?</string>
+    <string name="headline_edit_profile">Edytuj profil</string>
+    <string name="action_delete_profile">Usuń profil</string>
+    <string name="headline_delete_profile">Usuń profil</string>
+    <string name="description_delete_profile">Ten profil zostanie trwale usunięty. Wszystkie powiązane z nim dane zostaną utracone na zawsze.</string>
+    <string name="action_today" description="Set date to today">Dzisiaj</string>
+    <string name="action_fill_in_details">Uzupełnij szczegóły</string>
+    <string name="action_skip_for_now">Pomiń na teraz</string>
+    <string name="headline_add_more_details">Uzupełnij szczegóły</string>
+    <string name="description_add_more_details_product_form">Uzupełnienie białek, tłuszczów, węglowodanów i wartości energetycznych pomaga zapewnić bardziej precyzyjne informacje żywieniowe.</string>
+    <string name="headline_favorite">Ulubione</string>
+    <string name="action_add_a_photo">Dodaj zdjęcie</string>
+    <string name="action_remove_a_photo">Usuń zdjęcie</string>
+    <string name="description_values_per">Wybierz ilość, na której bazują Twoje wartości odżywcze</string>
+    <string name="description_privacy">Kontroluj swoje dane osobowe</string>
+    <string name="description_food_you_services">Połączenie z usługami Food You odblokowuje dodatkowe funkcje i narzędzia, które wzbogacają Twoje doświadczenie</string>
+    <string name="headline_database_backup">Kopia zapasowa bazy danych</string>
+    <string name="description_replacing_database">Zastępowanie bazy danych, proszę czekać...</string>
+    <string name="headline_experimental">Eksperymentalne</string>
 </resources>

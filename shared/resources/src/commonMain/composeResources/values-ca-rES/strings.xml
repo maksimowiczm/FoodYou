@@ -116,8 +116,6 @@
     <string name="action_disable_camera_flash">Deshabilita el flash</string>
     <string name="action_prevent_screen_capture">Prevenir captures de pantalla</string>
     <string name="action_go_to_today">Ves a avui</string>
-    <string name="action_bug_report_on_github">Informar error a GitHub</string>
-    <string name="action_feature_request_on_github">Sol·licitar funcions a GitHub</string>
     <string name="action_show_calendar">Mostrar calendari</string>
     <string name="action_reorder">Reordenar</string>
     <string name="action_move_up" description="reorder list item up">Moure amunt</string>
@@ -179,7 +177,6 @@
     <string name="description_action_ignore_all_day_meals">Els àpats de tot el dia es mostraran al final de la llista</string>
     <string name="description_incomplete_nutrition_data">Alguns dels productes utilitzats no tenen aquest valor; per tant, el valor mostrat pot no ser precís</string>
     <string name="description_translation_warning">Les traduccions són creades per voluntaris. Pot ser que no siguin perfectes i que faltin algunes traduccions. Si notes algun error no dubtis a ajudar a millorar-los.</string>
-    <string name="description_changelog">Novetats de l'aplicació</string>
     <string name="description_home_settings">Personalitza la teva pantalla d'inici</string>
     <string name="description_download_product">Enganxa un enllaç a un aliment i recupera automàticament l'informació nutricional i els detalls del producte.</string>
     <string name="description_download_product_hint">Pots enganxar qualsevol text. S'utilitzarà el primer enllaç.</string>
@@ -192,14 +189,9 @@
     <string name="notification_importing_products">Important productes</string>
     <string name="description_food_data_central_usda">FoodData Central és la font completa de dades sobre la composició dels aliments del USDA, amb múltiples tipus de dades distintes</string>
     <string name="headline_external_databases">Bases de dades externes</string>
-    <string name="feature_share_url_with_food_you">Comparteix l'enllaç amb Food You</string>
-    <string name="feature_in_app_download">Descarregues dins de l'app</string>
     <string name="feature_manual_database_import">Importació manual de la base de dades</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Desempaqueta</string>
     <string name="headline_sponsor">Patrocinador</string>
-    <string name="description_sponsor_short">Les contribucions en qualsevol forma són benvingudes</string>
-    <string name="headline_source_code">Codi font</string>
-    <string name="description_source_code">Mostra el codi font del projecte a GitHub</string>
     <string name="action_write_an_email">Escriure un correu electrònic</string>
     <string name="headline_contact">Contacte</string>
     <string name="description_sponsor_contact">Si teniu alguna sol·licitud de patrocini, no dubteu a posar-vos en contacte amb mi a través del correu electrònic o GitHub.</string>

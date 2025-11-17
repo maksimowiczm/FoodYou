@@ -136,8 +136,6 @@
     <string name="action_disable_camera_flash">Disattiva il flash della fotocamera</string>
     <string name="action_prevent_screen_capture">Impedisci l'acquisizione dello schermo</string>
     <string name="action_go_to_today">Vai a oggi</string>
-    <string name="action_bug_report_on_github">Segnala un bug su GitHub</string>
-    <string name="action_feature_request_on_github">Richiedi funzionalità su GitHub</string>
     <string name="action_show_calendar">Mostra calendario</string>
     <string name="action_reorder">Riordina</string>
     <string name="action_move_up" description="reorder list item up">Sposta su</string>
@@ -210,7 +208,6 @@
     <string name="description_action_ignore_all_day_meals">I pasti di tutto il giorno verranno mostrati alla fine della lista</string>
     <string name="description_incomplete_nutrition_data">Alcuni dei prodotti utilizzati non dispongono di questo valore; pertanto, il valore visualizzato potrebbe non essere accurato</string>
     <string name="description_translation_warning">Le traduzioni sono create da volontari. Potrebbero non essere perfette e alcune traduzioni potrebbero mancare. Se noti degli errori, non esitare a contribuire per migliorarle.</string>
-    <string name="description_changelog">Scopri le novità dell'app</string>
     <string name="description_home_settings">Personalizza la tua pagina home</string>
     <string name="description_download_product">Incolla un link a un prodotto alimentare e recupera automaticamente i dati nutrizionali e i dettagli del prodotto.</string>
     <string name="description_download_product_hint">Puoi incollare qualsiasi testo. Verrà utilizzato il primo URL.</string>
@@ -229,16 +226,10 @@
     <string name="description2_swiss_food_composition_database">La Banca Dati Svizzera dei Valori Nutritivi include informazioni nutrizionali per oltre 1.100 prodotti alimentari in generale. È disponibile in quattro lingue. Per importare questi prodotti nel tuo diario alimentare, seleziona le tue lingue preferite.</string>
     <string name="headline_external_databases">Database esterni</string>
     <string name="description_external_databases">Vedi i database supportati</string>
-    <string name="feature_share_url_with_food_you">Condividi URL con Food You</string>
-    <string name="feature_in_app_download">Download in-app</string>
-    <string name="feature_in_app_search">Ricerca in-app</string>
     <string name="feature_manual_database_import">Importazione manuale del database</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Estrai</string>
     <string name="headline_sponsor">Sostieni</string>
-    <string name="description_sponsor_short">Sono benvenuti contributi di qualsiasi tipo</string>
     <string name="description_sponsor_short_2">Supporta la crescita dell'app</string>
-    <string name="headline_source_code">Codice sorgente</string>
-    <string name="description_source_code">Visualizza il codice sorgente del progetto su GitHub</string>
     <string name="action_write_an_email">Scrivi una email</string>
     <string name="headline_contact">Contatti</string>
     <string name="description_sponsor_contact">Se hai richieste sulle donazioni, non esitare a contattarmi via e-mail o GitHub.</string>
@@ -281,8 +272,6 @@
     <string name="headline_food_database">Database cibo</string>
     <string name="description_food_database">Puoi scegliere se usare questi servizi esterni opzionali, che potrebbero avere i propri termini e politiche sulla privacy</string>
     <string name="action_skip">Salta</string>
-    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Termini d'Uso:https://world.openfoodfacts.org/terms-of-use} e {Politica sulla Privacy:https://world.openfoodfacts.org/privacy}</string>
-    <string name="usda_privacy_policy">{Politica sulla Privacy:https://www.usda.gov/privacy-policy}</string>
     <string name="headline_almost_done">Quasi fatto!</string>
     <string name="headline_preparing_your_food_diary">Preparazione del diario alimentare</string>
     <string name="headline_please_wait">Attendi</string>
@@ -330,4 +319,12 @@
     <string name="description_custom_palette">Imposta il tuo schema colori personale</string>
     <string name="headline_dynamic_colors">Colori dinamici</string>
     <string name="description_dynamic_colors">Applica i colori di sistema</string>
+    <string name="headline_light">Chiaro</string>
+    <string name="headline_dark">Scuro</string>
+    <string name="headline_appearance">Aspetto</string>
+    <string name="headline_theme">Tema</string>
+    <string name="headline_pick_a_color">Scegli un colore</string>
+    <string name="headline_nutrients_colors">Colori dei nutrienti</string>
+    <string name="description_nutrients_colors_reset">Le impostazioni dei colori dei nutrienti verranno ripristinate ai valori predefiniti</string>
+    <string name="headline_sponsorship_goals">Obiettivi</string>
 </resources>
