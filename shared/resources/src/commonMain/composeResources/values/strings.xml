@@ -516,4 +516,5 @@
     <string name="headline_database_backup">Database backup</string>
     <string name="description_replacing_database">Replacing database, please wait...</string>
 
+    <string name="headline_experimental">Experimental</string>
 </resources>
