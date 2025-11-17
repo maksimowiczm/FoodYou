@@ -53,7 +53,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
             newFeatures = listOf("Added a color picker for customizable themes."),
             changes =
                 listOf(
-                    "Renamed Database Developer Options to Database Backup and Restore.",
+                    "Renamed Database Developer Options to Database Backup and Restore and marked it as experimental.",
                     "Updated the About screen design.",
                     "Updated the design of the external food databases management screen.",
                     "Increased the Open Food Facts request timeout to 60 seconds.",
