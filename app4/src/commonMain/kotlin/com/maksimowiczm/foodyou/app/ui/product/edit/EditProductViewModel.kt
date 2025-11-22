@@ -191,6 +191,8 @@ class EditProductViewModel(
                         defaultImageUri = image,
                         servingUnit = servingUnit,
                         packageUnit = packageUnit,
+                        valuesPer =
+                            if (product.isLiquid) ValuesPer.Milliliters100 else ValuesPer.Grams100,
                     )
                     .apply {
                         this.name.textFieldState.setTextAndPlaceCursorAtEnd(name)
