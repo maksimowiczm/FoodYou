@@ -1,12 +1,30 @@
 package com.maksimowiczm.foodyou.food.domain
 
-class FoodRecipeDto(
+import com.maksimowiczm.foodyou.common.domain.Quantity
+
+/**
+ * A representation of a food recipe with its ingredients represented only by their identities and
+ * quantities.
+ */
+class LazyFoodRecipeDto(
     override val identity: LocalFoodRecipeIdentity,
     val name: FoodName,
     val note: FoodNote?,
     val image: FoodImage?,
     val source: FoodSource?,
-    val isLiquid: Boolean,
     val servings: Int,
-    val ingredients: List<FoodRecipeIngredientDto>,
+    val ingredients: List<Pair<FoodIdentity, Quantity>>,
+) : Food
+
+/**
+ * A simple representation of a food recipe, without its ingredients.
+ */
+class SimpleFoodRecipeDto(
+    override val identity: FoodIdentity,
+    val name: FoodName,
+    val note: FoodNote?,
+    val image: FoodImage?,
+    val source: FoodSource?,
+    val servings: Int,
+    val nutritionFacts: NutritionFacts,
 ) : Food

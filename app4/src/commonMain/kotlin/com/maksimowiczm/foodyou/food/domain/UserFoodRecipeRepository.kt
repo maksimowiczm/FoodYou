@@ -9,7 +9,6 @@ interface UserFoodRecipeRepository {
         note: FoodNote?,
         image: FoodImage?,
         source: FoodSource?,
-        isLiquid: Boolean,
         servings: Int,
         ingredients: List<Pair<FoodIdentity, Quantity>>,
     ): LocalFoodRecipeIdentity
@@ -20,14 +19,13 @@ interface UserFoodRecipeRepository {
         note: FoodNote?,
         image: FoodImage?,
         source: FoodSource?,
-        isLiquid: Boolean,
         servings: Int,
         ingredients: List<Pair<FoodIdentity, Quantity>>,
     )
 
-    // Recipe ingredients might be not downloaded. Use FoodStatus? Same as FoodProductRepository, or
-    // use food status for each ingredient?
-    fun observe(identity: LocalFoodRecipeIdentity): Flow<FoodRecipeDto?>
+    fun observeLazy(identity: LocalFoodRecipeIdentity): Flow<LazyFoodRecipeDto?>
+
+    fun observeSimple(identity: LocalFoodRecipeIdentity): Flow<FoodStatus<SimpleFoodRecipeDto>>
 
     suspend fun delete(identity: LocalFoodRecipeIdentity)
 }
