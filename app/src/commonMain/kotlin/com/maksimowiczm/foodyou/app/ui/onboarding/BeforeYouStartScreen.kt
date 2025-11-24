@@ -2,10 +2,11 @@ package com.maksimowiczm.foodyou.app.ui.onboarding
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -59,7 +60,14 @@ internal fun BeforeYouStartScreen(onAgree: () -> Unit, modifier: Modifier = Modi
                         .add(bottom = 72.dp) // Button height + padding
                         .add(vertical = 8.dp),
             ) {
-                item { InteractiveLogo(Modifier.fillMaxWidth()) }
+                item {
+                    InteractiveLogo(
+                        Modifier.padding(horizontal = 64.dp)
+                            .widthIn(max = 350.dp)
+                            .aspectRatio(1f)
+                            .fillMaxSize()
+                    )
+                }
 
                 item {
                     Text(

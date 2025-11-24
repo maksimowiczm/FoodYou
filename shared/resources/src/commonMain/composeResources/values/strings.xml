@@ -152,7 +152,6 @@
     <string name="action_disable_camera_flash">Disable camera flash</string>
     <string name="action_prevent_screen_capture">Prevent screen capture</string>
     <string name="action_go_to_today">Go to today</string>
-    <string name="action_bug_report_on_github">Bug report on GitHub</string>
     <string name="action_feature_request_on_github">Feature request on GitHub</string>
     <string name="action_show_calendar">Show calendar</string>
     <string name="action_reorder">Reorder</string>
@@ -233,7 +232,6 @@
     <string name="description_action_ignore_all_day_meals">All-day meals will be displayed at the end of the list</string>
     <string name="description_incomplete_nutrition_data">Some of the used products lack this value; therefore, the displayed value might not be accurate</string>
     <string name="description_translation_warning">Translations are created by volunteers. They may not be perfect and some translations may be missing. If you notice any mistakes don't hesitate to help improving them.</string>
-    <string name="description_changelog">See what's new in the app</string>
     <string name="description_home_settings">Customize your home page</string>
     <string name="description_download_product">Paste a link to a food product, and automatically fetch nutrition facts and product details.</string>
     <string name="description_download_product_hint">You can paste any text. First URL will be used.</string>
@@ -274,18 +272,13 @@
     <string name="headline_external_databases">External databases</string>
     <string name="description_external_databases">Check out supported databases</string>
 
-    <string name="feature_share_url_with_food_you">Share URL with Food You</string>
-    <string name="feature_in_app_download">In-app download</string>
-    <string name="feature_in_app_search">In-app search</string>
     <string name="feature_manual_database_import">Manual database import</string>
 
     <string name="action_unpack" description="Unpack the recipe ingredients">Unpack</string>
 
     <string name="headline_sponsor">Sponsor</string>
-    <string name="description_sponsor_short">Contributions in any form are welcome</string>
     <string name="description_sponsor_short_2">Support the app's growth</string>
     <string name="headline_source_code">Source code</string>
-    <string name="description_source_code">View the project’s source code on GitHub</string>
     <string name="action_write_an_email">Write an email</string>
     <string name="headline_contact">Contact</string>
     <string name="description_sponsor_contact">If you have any requests regarding sponsoring, feel free to contact me via email or GitHub.</string>
@@ -348,9 +341,6 @@
     <string name="headline_food_database">Food database</string>
     <string name="description_food_database">You can choose whether to use these optional external services, which might have their own terms and privacy policies</string>
     <string name="action_skip">Skip</string>
-
-    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Terms of Use:https://world.openfoodfacts.org/terms-of-use} and {Privacy Policy:https://world.openfoodfacts.org/privacy}</string>
-    <string name="usda_privacy_policy">{Privacy Policy:https://www.usda.gov/privacy-policy}</string>
 
     <string name="headline_almost_done">Almost done</string>
     <string name="headline_preparing_your_food_diary">Preparing your food diary</string>
@@ -420,7 +410,6 @@
     <string name="headline_dynamic_colors">Dynamic colors</string>
     <string name="description_dynamic_colors">Apply colors from system</string>
 
-    <string name="headline_seed_color">Seed color</string>
     <string name="headline_palette_style">Palette style</string>
 
     <string name="headline_contrast">Contrast</string>
@@ -433,7 +422,6 @@
     <string name="headline_theme">Theme</string>
 
     <string name="headline_pick_a_color">Pick a color</string>
-    <string name="headline_color">Color</string>
 
     <string name="headline_nutrients_colors">Nutrients colors</string>
     <string name="description_nutrients_colors_reset">Nutrients colors settings will be reset to default values</string>
@@ -457,8 +445,6 @@
     <string name="action_previous_month">Previous month</string>
 
     <string name="headline_sponsor_methods">Methods</string>
-
-    <string name="headline_developer_options">Developer options</string>
 
     <string name="headline_save_database">Save database</string>
     <string name="description_save_database">Save a copy of your database</string>
@@ -527,4 +513,8 @@
 
     <string name="description_food_you_services">Connecting to Food You services unlocks extra features and tools that enhance your experience</string>
 
+    <string name="headline_database_backup">Database backup</string>
+    <string name="description_replacing_database">Replacing database, please wait...</string>
+
+    <string name="headline_experimental">Experimental</string>
 </resources>

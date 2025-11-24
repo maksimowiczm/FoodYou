@@ -17,7 +17,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun AdditionalSettings(
+fun AdditionalSettings(
     themeSettings: ThemeSettings,
     onRandomizeTheme: (Boolean) -> Unit,
     onUpdateTheme: (Theme) -> Unit,
@@ -39,7 +39,7 @@ internal fun AdditionalSettings(
 }
 
 @Composable
-internal expect fun ColumnScope.PlatformAdditionalSettings(
+expect fun ColumnScope.PlatformAdditionalSettings(
     themeSettings: ThemeSettings,
     onUpdateTheme: (Theme) -> Unit,
 )

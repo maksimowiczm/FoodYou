@@ -131,6 +131,8 @@ kotlin {
             implementation(libs.reorderable)
 
             implementation(libs.compose.shimmer)
+
+            implementation(libs.colorpicker.compose)
         }
 
         commonTest.dependencies {

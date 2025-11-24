@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.app.ui.database.master
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.CloudDownload
-import androidx.compose.material.icons.outlined.DataObject
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
@@ -26,7 +26,7 @@ fun DatabaseSettingsScreen(
     onExternalDatabases: () -> Unit,
     onImportCsvProducts: () -> Unit,
     onExportCsvProducts: () -> Unit,
-    onDeveloperOptions: () -> Unit,
+    onDatabaseBackup: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -48,7 +48,7 @@ fun DatabaseSettingsScreen(
             item { ExternalDatabasesSettingsListItem(onExternalDatabases) }
             item { ImportCsvProductsSettingsListItem(onImportCsvProducts) }
             item { ExportCsvProductsSettingsListItem(onExportCsvProducts) }
-            item { DeveloperSettingsListItem(onDeveloperOptions) }
+            item { DatabaseBackup(onDatabaseBackup) }
         }
     }
 }
@@ -91,10 +91,10 @@ private fun ExportCsvProductsSettingsListItem(onClick: () -> Unit, modifier: Mod
 }
 
 @Composable
-private fun DeveloperSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun DatabaseBackup(onClick: () -> Unit, modifier: Modifier = Modifier) {
     SettingsListItem(
-        icon = { Icon(Icons.Outlined.DataObject, null) },
-        label = { Text(stringResource(Res.string.headline_developer_options)) },
+        icon = { Icon(Icons.Outlined.Archive, null) },
+        label = { Text(stringResource(Res.string.headline_database_backup)) },
         onClick = onClick,
         modifier = modifier,
     )

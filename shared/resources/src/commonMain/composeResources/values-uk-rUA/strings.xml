@@ -139,8 +139,6 @@
     <string name="action_disable_camera_flash">Відключити спалах камери</string>
     <string name="action_prevent_screen_capture">Заборонити знімок екрану</string>
     <string name="action_go_to_today">Перейти до сьогодні</string>
-    <string name="action_bug_report_on_github">Повідомити про помилку на GitHub</string>
-    <string name="action_feature_request_on_github">Запросити функцію на GitHub</string>
     <string name="action_show_calendar">Показати календар</string>
     <string name="action_reorder">Змінити порядок</string>
     <string name="action_move_up" description="reorder list item up">Вгору</string>
@@ -213,7 +211,6 @@
     <string name="description_action_ignore_all_day_meals">Страви без визначеного часу будуть показуватися наприкінці списку</string>
     <string name="description_incomplete_nutrition_data">У деяких з використаних продуктів відсутнє це значення; через це, показане значення може бути неточним</string>
     <string name="description_translation_warning">Переклади створені волонтерами. Вони можуть бути неточними або відсутніми в деяких місцях. Якщо ви бачите помилки, допоможіть нам виправити їх.</string>
-    <string name="description_changelog">Подивитися що нового в додатку</string>
     <string name="description_home_settings">Налаштуйте свій головний екран</string>
     <string name="description_download_product">Вставте посилання на продукт, щоб автоматично отримати дані про його харчову цінність та деталі.</string>
     <string name="description_download_product_hint">Ви можете вставити будь-який текст. Буде використано першу URL-адресу.</string>
@@ -227,16 +224,10 @@
     <string name="description_food_data_central_usda">FoodData Central — це всеосяжне джерело даних про склад харчових продуктів від USDA з кількома різними типами даних</string>
     <string name="error_usda_rate_limit">Перевищено ліміт API FoodData Central (USDA)</string>
     <string name="headline_external_databases">Зовнішні бази даних</string>
-    <string name="feature_share_url_with_food_you">Поділитися URL-адресою з Food You</string>
-    <string name="feature_in_app_download">Завантаження в додатку</string>
-    <string name="feature_in_app_search">Пошук у застосунку</string>
     <string name="feature_manual_database_import">Ручний імпорт бази даних</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Розпакувати</string>
     <string name="headline_sponsor">Підтримати проєкт</string>
-    <string name="description_sponsor_short">Будь-які внески вітаються</string>
     <string name="description_sponsor_short_2">Підтримати розвиток застосунку</string>
-    <string name="headline_source_code">Вихідний код</string>
-    <string name="description_source_code">Переглянути вихідний код проєкту на GitHub</string>
     <string name="action_write_an_email">Написати листа</string>
     <string name="headline_contact">Контакти</string>
     <string name="description_sponsor_contact">З питань спонсорства зв'яжіться зі мною електронною поштою або через GitHub.</string>
@@ -269,8 +260,6 @@
     <string name="action_agree_and_continue">Погодитися та продовжити</string>
     <string name="description_food_database">Ви можете вирішити чи будете ви користуватися цими опціональними зовнішніми сервісами, в яких можуть бути свої умови та політики конфіденційності</string>
     <string name="action_skip">Пропустити</string>
-    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Умови використання:https://world.openfoodfacts.org/terms-of-use} та {Політика конфіденційності:https://world.openfoodfacts.org/privacy}</string>
-    <string name="usda_privacy_policy">{Політика конфіденційності:https://www.usda.gov/privacy-policy}</string>
     <string name="headline_please_wait">Зачекайте, будь ласка</string>
     <string name="headline_created">Створено</string>
     <string name="headline_imported">Імпортовано</string>

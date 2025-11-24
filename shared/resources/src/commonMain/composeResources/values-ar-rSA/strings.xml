@@ -83,8 +83,6 @@
     <string name="action_disable_camera_flash">تعطيل فلاش الكاميرا</string>
     <string name="action_prevent_screen_capture">منع التقاط الشاشة</string>
     <string name="action_go_to_today">اذهب لليوم</string>
-    <string name="action_bug_report_on_github">تقرير الأخطاء على GitHub</string>
-    <string name="action_feature_request_on_github">طلب ميزة على GitHub</string>
     <string name="action_show_calendar">عرض التقويم</string>
     <string name="action_reorder">إعادة ترتيب</string>
     <string name="action_move_up" description="reorder list item up">انقل للأعلى</string>

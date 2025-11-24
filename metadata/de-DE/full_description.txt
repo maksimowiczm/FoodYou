@@ -6,10 +6,10 @@
     <li><b>Umfassende Lebensmittel Datenbank:</b> Greife auf Ernährungsdaten von Open Food Facts, USDA Food Central und der Swiss Food Composition Datenbank zu.</li>
     <li><b>Vollumfassendes Ernährungstracking:</b> Überwache Kalorien, Makronährstoffe, Vitamine, Mineralien und mehr.</li>
     <li><b>Rezept Erstellung:</b> Kombiniere Lebensmittel in benutzerdefinierte Rezepte mit automatischer Nährwertberechnung.</li>
-    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
+    <li><b>Tägliche Ziele:</b> Setze und verfolge persönliche Ernährungsziele.
     <li><b>Modularer Homescreen:</b> Personalisiere deinen Homescreen mit auf deine Bedürfnisse zugeschnittene Karten.</li>
 </ul>
 
 Beginne heute deine Ernährung mit Food You zu tracken - clean, vollständig und ganz deines.
 
-Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Launcher Symbol erstellt von <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

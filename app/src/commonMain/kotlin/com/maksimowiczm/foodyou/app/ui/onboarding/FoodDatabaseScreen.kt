@@ -1,25 +1,21 @@
 package com.maksimowiczm.foodyou.app.ui.onboarding
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -31,19 +27,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withLink
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.component.OpenFoodFactsPrivacyCard
+import com.maksimowiczm.foodyou.app.ui.common.component.UsdaPrivacyCard
 import com.maksimowiczm.foodyou.common.compose.extension.add
 import com.maksimowiczm.foodyou.importexport.swissfoodcompositiondatabase.domain.SwissFoodCompositionDatabaseRepository.Language
 import foodyou.app.generated.resources.*
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -93,7 +84,7 @@ internal fun FoodDatabaseScreen(
                 }
 
                 item {
-                    OpenFoodFactsCard(
+                    OpenFoodFactsPrivacyCard(
                         selected = state.useOpenFoodFacts,
                         onSelectedChange = { state.useOpenFoodFacts = it },
                         modifier = Modifier.fillMaxWidth(),
@@ -101,7 +92,7 @@ internal fun FoodDatabaseScreen(
                 }
 
                 item {
-                    UsdaCard(
+                    UsdaPrivacyCard(
                         selected = state.useUsda,
                         onSelectedChange = { state.useUsda = it },
                         modifier = Modifier.fillMaxWidth(),
@@ -170,141 +161,6 @@ private fun DatabaseCard(
 }
 
 @Composable
-private fun OpenFoodFactsCard(
-    selected: Boolean,
-    onSelectedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val iterator =
-        stringResource(Res.string.open_food_facts_terms_of_use_and_privacy_policy).iterator()
-    val tos =
-        remember(iterator) {
-            buildAnnotatedString {
-                while (iterator.hasNext()) {
-                    val char = iterator.nextChar()
-
-                    if (char != '{') {
-                        append(char)
-                        continue
-                    }
-
-                    val label = iterator.readUntil(':')
-                    val link = iterator.readUntil('}')
-
-                    withLink(LinkAnnotation.Url(link)) {
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(label) }
-                    }
-                }
-            }
-        }
-
-    DatabaseCard(
-        title = {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                    Image(
-                        painter = painterResource(Res.drawable.openfoodfacts_logo),
-                        contentDescription = null,
-                        modifier = Modifier.size(32.dp),
-                    )
-                }
-                Text(
-                    text = stringResource(Res.string.headline_open_food_facts),
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f),
-                )
-                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                    Checkbox(checked = selected, onCheckedChange = null)
-                }
-            }
-        },
-        modifier = modifier,
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
-        onClick = { onSelectedChange(!selected) },
-    ) {
-        Column {
-            Text(
-                text = stringResource(Res.string.description_open_food_facts),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(text = tos, style = MaterialTheme.typography.bodySmall)
-        }
-    }
-}
-
-@Composable
-private fun UsdaCard(
-    selected: Boolean,
-    onSelectedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val iterator = stringResource(Res.string.usda_privacy_policy).iterator()
-    val tos =
-        remember(iterator) {
-            buildAnnotatedString {
-                while (iterator.hasNext()) {
-                    val char = iterator.nextChar()
-
-                    if (char != '{') {
-                        append(char)
-                        continue
-                    }
-
-                    val label = iterator.readUntil(':')
-                    val link = iterator.readUntil('}')
-
-                    withLink(LinkAnnotation.Url(link)) {
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(label) }
-                    }
-                }
-            }
-        }
-
-    DatabaseCard(
-        title = {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                    Image(
-                        painter = painterResource(Res.drawable.usda_logo),
-                        contentDescription = null,
-                        modifier = Modifier.size(32.dp),
-                    )
-                }
-                Text(
-                    text = stringResource(Res.string.headline_food_data_central_usda),
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f),
-                )
-                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                    Checkbox(checked = selected, onCheckedChange = null)
-                }
-            }
-        },
-        modifier = modifier,
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
-        onClick = { onSelectedChange(!selected) },
-    ) {
-        Column {
-            Text(
-                text = stringResource(Res.string.description_food_data_central_usda),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(text = tos, style = MaterialTheme.typography.bodySmall)
-        }
-    }
-}
-
-@Composable
 private fun SwissFoodCompositionDatabase(
     languages: Set<Language>,
     onLanguageChange: (Set<Language>) -> Unit,
@@ -322,7 +178,7 @@ private fun SwissFoodCompositionDatabase(
         Column {
             Text(
                 text = stringResource(Res.string.description2_swiss_food_composition_database),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(8.dp))
@@ -423,13 +279,5 @@ private fun LanguageButton(
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
-    }
-}
-
-private fun CharIterator.readUntil(delimiter: Char): String = buildString {
-    while (hasNext()) {
-        val ch = nextChar()
-        if (ch == delimiter) break
-        append(ch)
     }
 }

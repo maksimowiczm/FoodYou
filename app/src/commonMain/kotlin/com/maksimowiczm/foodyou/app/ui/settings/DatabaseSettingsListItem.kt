@@ -21,7 +21,7 @@ internal fun DatabaseSettingsListItem(
 ) {
     SettingsListItem(
         icon = { Icon(painterResource(Res.drawable.ic_database), null) },
-        label = { Text(stringResource(Res.string.headline_database)) },
+        label = { Text(stringResource(Res.string.headline_data_backup_and_export)) },
         supportingContent = { Text(stringResource(Res.string.description_manage_database)) },
         onClick = onClick,
         modifier = modifier,

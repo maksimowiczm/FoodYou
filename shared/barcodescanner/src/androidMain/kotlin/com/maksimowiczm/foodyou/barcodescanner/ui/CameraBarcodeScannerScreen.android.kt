@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.safeGesturesPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -47,7 +49,7 @@ import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 actual fun CameraBarcodeScannerScreen(
     onBarcodeScan: (String) -> Unit,
@@ -85,10 +87,8 @@ actual fun CameraBarcodeScannerScreen(
     val hapticFeedback = LocalHapticFeedback.current
 
     Box(modifier = modifier) {
-        Box(
-            modifier = Modifier.Companion.safeGesturesPadding().align(Alignment.TopEnd).zIndex(1f)
-        ) {
-            FilledIconButton(onClick = onClose) {
+        Box(modifier = Modifier.safeGesturesPadding().align(Alignment.TopEnd).zIndex(1f)) {
+            FilledIconButton(onClick = onClose, shapes = IconButtonDefaults.shapes()) {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = stringResource(Res.string.action_close),
@@ -128,7 +128,7 @@ private fun RequestCameraPermissionScreen(
 
     Surface(modifier = modifier, onClick = onRequest) {
         Column(
-            modifier = Modifier.Companion.fillMaxSize().safeContentPadding(),
+            modifier = Modifier.fillMaxSize().safeContentPadding(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -137,7 +137,7 @@ private fun RequestCameraPermissionScreen(
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyLarge,
             )
-            Spacer(Modifier.Companion.height(16.dp))
+            Spacer(Modifier.height(16.dp))
             Text(
                 text = stringResource(Res.string.action_tap_to_allow_access),
                 textAlign = TextAlign.Center,

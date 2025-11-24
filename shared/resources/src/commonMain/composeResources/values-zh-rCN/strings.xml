@@ -134,8 +134,6 @@
     <string name="action_disable_camera_flash">关闭闪光灯</string>
     <string name="action_prevent_screen_capture">禁止截图</string>
     <string name="action_go_to_today">回到今天</string>
-    <string name="action_bug_report_on_github">去 GitHub 上 Bug 报告</string>
-    <string name="action_feature_request_on_github">去 GitHub 上请求功能</string>
     <string name="action_show_calendar">显示日历</string>
     <string name="action_reorder">重新安排</string>
     <string name="action_move_up" description="reorder list item up">上移</string>
@@ -204,7 +202,6 @@
     <string name="description_action_ignore_all_day_meals">全天餐点将显示在列表末尾</string>
     <string name="description_incomplete_nutrition_data">一些二手产品缺乏这种价值;因此，显示的值可能不准确</string>
     <string name="description_translation_warning">翻译由志愿者创建。它们可能并不完美，并且可能缺少一些翻译。如果您发现任何错误，请随时帮助改进它们。</string>
-    <string name="description_changelog">查看应用程序中的新增功能</string>
     <string name="description_home_settings">自定义您的主页</string>
     <string name="description_download_product">粘贴食品类商品的链接，并自动获取营养成分和商品详情。</string>
     <string name="description_download_product_hint">您可以粘贴任何文本。将使用第一个 URL。</string>
@@ -223,19 +220,13 @@
     <string name="description2_swiss_food_composition_database">瑞士食品成分数据库（Swiss Food Composition Database）收录了 1,100 余种常见食品的营养信息，提供四种语言版本。如需将这些食品导入您的饮食记录，请选择您偏好的语言版本。</string>
     <string name="headline_external_databases">外部数据库</string>
     <string name="description_external_databases">查看受支持的数据库</string>
-    <string name="feature_share_url_with_food_you">与 Food You 共享 URL</string>
-    <string name="feature_in_app_download">应用内下载</string>
-    <string name="feature_in_app_search">应用内搜索</string>
     <string name="feature_manual_database_import">手动数据库导入</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">解包</string>
     <string name="headline_sponsor">支持</string>
-    <string name="description_sponsor_short">欢迎以任何形式支持</string>
     <string name="description_sponsor_short_2">助力应用发展</string>
-    <string name="headline_source_code">源代码</string>
-    <string name="description_source_code">在 GitHub 上查看本项目的源代码</string>
     <string name="action_write_an_email">写邮件联系</string>
     <string name="headline_contact">联系</string>
-    <string name="description_sponsor_contact">如有赞助相关事宜，欢迎通过电子邮件或GitHub与我联系。</string>
+    <string name="description_sponsor_contact">如有赞助相关事宜，欢迎通过电子邮件或 GitHub 与我联系。</string>
     <string name="sponsor_bank_or_card">银行账户或信用卡</string>
     <string name="action_treat_as_liquid">当作液体</string>
     <string name="description_treat_as_liquid">使用毫升作为测量单位</string>
@@ -275,8 +266,6 @@
     <string name="headline_food_database">食品数据库</string>
     <string name="description_food_database">您可以选择是否使用这些可选的外部服务，这些服务可能有其自身的条款和隐私政策</string>
     <string name="action_skip">跳过</string>
-    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Terms of Use:https://world.openfoodfacts.org/terms-of-use} 和{Privacy Policy:https://world.openfoodfacts.org/privacy}</string>
-    <string name="usda_privacy_policy">{Privacy Policy:https://www.usda.gov/privacy-policy}</string>
     <string name="headline_almost_done">快搞定了！</string>
     <string name="headline_preparing_your_food_diary">正在准备您的饮食数据</string>
     <string name="headline_please_wait">请稍候</string>
@@ -322,7 +311,6 @@
     <string name="description_custom_palette">设定您自己的配色方案</string>
     <string name="headline_dynamic_colors">动态色彩</string>
     <string name="description_dynamic_colors">应用系统颜色</string>
-    <string name="headline_seed_color">主题色</string>
     <string name="headline_palette_style">图案风格</string>
     <string name="headline_contrast">高对比度</string>
     <string name="headline_amoled">纯黑</string>
@@ -331,7 +319,6 @@
     <string name="headline_appearance">外观</string>
     <string name="headline_theme">主题</string>
     <string name="headline_pick_a_color">选一个颜色</string>
-    <string name="headline_color">颜色</string>
     <string name="headline_nutrients_colors">营养成分颜色</string>
     <string name="description_nutrients_colors_reset">营养成分颜色设置将重置为默认值</string>
     <string name="headline_sponsorship_goals">目标</string>
@@ -347,7 +334,6 @@
     <string name="action_next_month">下一月</string>
     <string name="action_previous_month">前一月</string>
     <string name="headline_sponsor_methods">方式</string>
-    <string name="headline_developer_options">开发者选项</string>
     <string name="headline_save_database">保存数据库</string>
     <string name="description_save_database">保存一份数据库副本</string>
     <string name="headline_replace_database">替换数据库</string>

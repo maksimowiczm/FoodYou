@@ -9,27 +9,34 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Science
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -39,6 +46,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.DATABASE_NAME
 import com.maksimowiczm.foodyou.app.infrastructure.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.common.compose.utility.LocalClipboardManager
 import com.maksimowiczm.foodyou.common.extension.now
 import foodyou.app.generated.resources.*
 import java.io.InputStream
@@ -50,6 +58,7 @@ import kotlinx.datetime.LocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
+// This is not developer activity anymore but a database backup activity
 class DeveloperActivity : FoodYouAbstractActivity() {
     private val processId = Process.myPid()
 
@@ -86,30 +95,66 @@ private fun Activity.DeveloperScreen(onReplaced: () -> Unit) {
             ) {
                 CircularWavyProgressIndicator()
                 Spacer(Modifier.height(16.dp))
-                Text("Replacing database, please wait...")
+                Text(stringResource(Res.string.description_replacing_database))
             }
         }
     } else {
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(stringResource(Res.string.headline_developer_options)) },
+                    title = { Text(stringResource(Res.string.headline_database_backup)) },
                     navigationIcon = { ArrowBackIconButton(onClick = { finish() }) },
+                    scrollBehavior = scrollBehavior,
                 )
             }
         ) { paddingValues ->
-            Column(
+            LazyColumn(
                 modifier =
-                    Modifier.padding(paddingValues)
-                        .consumeWindowInsets(paddingValues)
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
+                    Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+                contentPadding = paddingValues,
             ) {
-                SaveDatabaseListItem()
-                ReplaceDatabaseListItem(
-                    onLock = { isReplacingDatabase = true },
-                    onFinish = onReplaced,
-                )
+                item {
+                    val clipboard = LocalClipboardManager.current
+                    val text =
+                        "Backup and restore is experimental. Only food data and diary entries are saved. User settings and daily nutrient goals are not backed up."
+
+                    Surface(
+                        onClick = { clipboard.copy("text", text) },
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        shape = MaterialTheme.shapes.medium,
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxSize().padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Science,
+                                    contentDescription = null,
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(Res.string.headline_experimental),
+                                    style = MaterialTheme.typography.titleMedium,
+                                )
+                            }
+                            // Don't translate it because if something changes in the future,
+                            // translations may be misleading.
+                            Text(text = text, style = MaterialTheme.typography.bodyMedium)
+                        }
+                    }
+                }
+                item { SaveDatabaseListItem() }
+                item {
+                    ReplaceDatabaseListItem(
+                        onLock = { isReplacingDatabase = true },
+                        onFinish = onReplaced,
+                    )
+                }
             }
         }
     }

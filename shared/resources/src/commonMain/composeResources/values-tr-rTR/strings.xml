@@ -136,8 +136,6 @@
     <string name="action_disable_camera_flash">Kamera flaşını kapat</string>
     <string name="action_prevent_screen_capture">Ekran görüntüsünü engelle</string>
     <string name="action_go_to_today">Bugüne git</string>
-    <string name="action_bug_report_on_github">GitHub'da hata bildir</string>
-    <string name="action_feature_request_on_github">GitHub'da özellik iste</string>
     <string name="action_show_calendar">Takvimi göster</string>
     <string name="action_reorder">Yeniden sırala</string>
     <string name="action_move_up" description="reorder list item up">Yukarı taşı</string>
@@ -210,7 +208,6 @@
     <string name="description_action_ignore_all_day_meals">Tüm gün öğünleri listenin sonunda görüntülenecek</string>
     <string name="description_incomplete_nutrition_data">Kullanılan bazı ürünlerde bu değer eksik; bu nedenle görüntülenen değer doğru olmayabilir</string>
     <string name="description_translation_warning">Çeviriler gönüllüler tarafından yapılmaktadır. Mükemmel olmayabilirler ve bazı çeviriler eksik olabilir. Herhangi bir hata fark ederseniz, onları geliştirmeye yardımcı olmaktan çekinmeyin.</string>
-    <string name="description_changelog">Uygulamadaki yenilikleri görün</string>
     <string name="description_home_settings">Ana sayfanızı özelleştirin</string>
     <string name="description_download_product">Bir gıda ürününe bağlantı yapıştırın ve besin değerlerini ve ürün ayrıntılarını otomatik olarak alın.</string>
     <string name="description_download_product_hint">Herhangi bir metin yapıştırabilirsiniz. İlk URL kullanılacaktır.</string>
@@ -229,16 +226,10 @@
     <string name="description2_swiss_food_composition_database">İsviçre Gıda Bileşimi Veritabanı, 1.100'den fazla genel gıda ürünü için besin bilgileri içerir. Dört dilde mevcuttur. Bu ürünleri yemek günlüğünüze aktarmak için lütfen tercih ettiğiniz dilleri seçin.</string>
     <string name="headline_external_databases">Harici veritabanları</string>
     <string name="description_external_databases">Desteklenen veritabanlarına göz atın</string>
-    <string name="feature_share_url_with_food_you">URL'yi Food You ile paylaş</string>
-    <string name="feature_in_app_download">Uygulama içi indirme</string>
-    <string name="feature_in_app_search">Uygulama içi arama</string>
     <string name="feature_manual_database_import">Manuel veritabanı içe aktarma</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Malzemelere ayır</string>
     <string name="headline_sponsor">Sponsor ol</string>
-    <string name="description_sponsor_short">Her türlü katkıya açığız</string>
     <string name="description_sponsor_short_2">Uygulamanın gelişimini destekleyin</string>
-    <string name="headline_source_code">Kaynak kodu</string>
-    <string name="description_source_code">Projenin kaynak kodunu GitHub'da görüntüleyin</string>
     <string name="action_write_an_email">E-posta yaz</string>
     <string name="headline_contact">İletişim</string>
     <string name="description_sponsor_contact">Sponsorlukla ilgili herhangi bir talebiniz varsa, e-posta veya GitHub aracılığıyla benimle iletişime geçmekten çekinmeyin.</string>
@@ -281,9 +272,7 @@
     <string name="headline_food_database">Gıda veritabanı</string>
     <string name="description_food_database">Kendi şartları ve gizlilik politikaları olabilecek bu isteğe bağlı harici hizmetleri kullanıp kullanmamayı seçebilirsiniz</string>
     <string name="action_skip">Atla</string>
-    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Kullanım Koşulları:https://world.openfoodfacts.org/terms-of-use} ve {Gizlilik Politikası:https://world.openfoodfacts.org/privacy}</string>
-    <string name="usda_privacy_policy">{Gizlilik Politikası:https://www.usda.gov/privacy-policy}</string>
-    <string name="headline_almost_done">Neredeyse bitti!</string>
+    <string name="headline_almost_done">Neredeyse bitti</string>
     <string name="headline_preparing_your_food_diary">Yemek günlüğünüz hazırlanıyor</string>
     <string name="headline_please_wait">Lütfen bekleyin</string>
     <string name="headline_created">Oluşturuldu</string>
@@ -330,7 +319,6 @@
     <string name="description_custom_palette">Kendi paletinizi oluşturun</string>
     <string name="headline_dynamic_colors">Dinamik renkler</string>
     <string name="description_dynamic_colors">Sistemden renkleri uygula</string>
-    <string name="headline_seed_color">Tohum rengi</string>
     <string name="headline_palette_style">Palet stili</string>
     <string name="headline_contrast">Kontrast</string>
     <string name="headline_amoled">AMOLED</string>
@@ -339,7 +327,6 @@
     <string name="headline_appearance">Görünüm</string>
     <string name="headline_theme">Tema</string>
     <string name="headline_pick_a_color">Bir renk seçin</string>
-    <string name="headline_color">Renk</string>
     <string name="headline_nutrients_colors">Besin renkleri</string>
     <string name="description_nutrients_colors_reset">Besin renkleri ayarları varsayılan değerlere sıfırlanacak</string>
     <string name="headline_sponsorship_goals">Hedefler</string>
@@ -355,7 +342,6 @@
     <string name="action_next_month">Gelecek ay</string>
     <string name="action_previous_month">Önceki ay</string>
     <string name="headline_sponsor_methods">Yöntemler</string>
-    <string name="headline_developer_options">Geliştirici seçenekleri</string>
     <string name="headline_save_database">Veritabanını kaydet</string>
     <string name="description_save_database">Veritabanınızın bir kopyasını kaydedin</string>
     <string name="headline_replace_database">Veritabanını değiştir</string>
@@ -368,4 +354,18 @@
     <string name="error_there_was_an_error_while_signing_in">Oturum açarken bir hata oluştu</string>
     <string name="headline_random_theme">Rastgele tema</string>
     <string name="description_random_theme">Uygulama her başlatıldığında rastgele bir tema uygulanacaktır</string>
+    <string name="headline_terms_of_use">Kullanım koşulları</string>
+    <string name="onboarding_privacy_tip">Bu uygulama açık kaynaklıdır ve sizin için geliştirilmiştir. Gizliliğinize saygı duyuyoruz, bilgileriniz gizli kalır.</string>
+    <string name="onboarding_allow_food_you_services">Food You servislerine bağlanmaya izin ver</string>
+    <string name="headline_add_profile">Profil ekle</string>
+    <string name="headline_how_do_you_want_to_be_called">Size nasıl hitap edilmesini istersiniz?</string>
+    <string name="headline_profile_name">Profil adı</string>
+    <string name="headline_profile_picture">Profil resmi</string>
+    <string name="action_continue">Devam et</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Merhaba, %1$s!</string>
+    <string name="headline_data_backup_and_export">Veri yedekleme &amp; dışa aktarma</string>
+    <string name="headline_privacy">Gizlilik</string>
+    <string name="action_switch_profile">Profili değiştir</string>
+    <string name="action_add_profile">Profil ekle</string>
+    <string name="action_refresh">Yenile</string>
 </resources>

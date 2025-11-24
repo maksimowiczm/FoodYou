@@ -140,8 +140,6 @@
     <string name="action_disable_camera_flash">Выключить вспышку</string>
     <string name="action_prevent_screen_capture">Запретить захват экрана</string>
     <string name="action_go_to_today">Перейти к сегодняшнему дню</string>
-    <string name="action_bug_report_on_github">Сообщить об ошибке на GitHub</string>
-    <string name="action_feature_request_on_github">Предложить идею на GitHub</string>
     <string name="action_show_calendar">Показать календарь</string>
     <string name="action_reorder">Изменить порядок</string>
     <string name="action_move_up" description="reorder list item up">Вверх</string>
@@ -222,7 +220,6 @@
     <string name="description_action_ignore_all_day_meals">Приёмы пищи за весь день будут отображаться в конце списка</string>
     <string name="description_incomplete_nutrition_data">Некоторые из использованных продуктов не имеют этого значения; поэтому отображаемое значение может быть неточным</string>
     <string name="description_translation_warning">Переводы создаются добровольцами. Они могут быть неидеальными, а некоторые переводы могут отсутствовать. Если вы заметите какие-либо ошибки, не стесняйтесь помочь в их исправлении.</string>
-    <string name="description_changelog">Посмотрите, что нового в приложении</string>
     <string name="description_home_settings">Настройте вашу главную страницу</string>
     <string name="description_download_product">Вставьте ссылку на продукт и автоматически получите информацию о питательных веществах и подробную информацию о продукте.</string>
     <string name="description_download_product_hint">Вы можете вставить любой текст. Будет использован первый URL-адрес.</string>
@@ -241,16 +238,10 @@
     <string name="description2_swiss_food_composition_database">Швейцарская база данных состава продуктов питания включает информацию о пищевой ценности более 1100 распространенных продуктов. Она доступна на четырех языках. Чтобы импортировать эти продукты в свой дневник питания, пожалуйста, выберите предпочитаемые языки.</string>
     <string name="headline_external_databases">Внешние базы данных</string>
     <string name="description_external_databases">Проверьте поддерживаемые базы данных</string>
-    <string name="feature_share_url_with_food_you">Поделиться URL-адресом с Food You</string>
-    <string name="feature_in_app_download">Встроенная загрузка</string>
-    <string name="feature_in_app_search">Встроенный поиск</string>
     <string name="feature_manual_database_import">Ручной импорт базы данных</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Распаковать</string>
     <string name="headline_sponsor">Спонсор</string>
-    <string name="description_sponsor_short">Вклад в любой форме приветствуются</string>
     <string name="description_sponsor_short_2">Поддержите приложение в развитии</string>
-    <string name="headline_source_code">Исходный код</string>
-    <string name="description_source_code">Посмотреть исходный код проекта на GitHub</string>
     <string name="action_write_an_email">Написать email</string>
     <string name="headline_contact">Связаться</string>
     <string name="description_sponsor_contact">Если у вас есть какие-либо запросы по поводу спонсорства, свяжитесь со мной по электронной почте или через GitHub.</string>
@@ -293,8 +284,6 @@
     <string name="headline_food_database">База продуктов питания</string>
     <string name="description_food_database">Вы можете выбрать, использовать ли эти необязательные внешние сервисы, которые могут иметь свои собственные условия и политику конфиденциальности</string>
     <string name="action_skip">Пропустить</string>
-    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Условия использования:https://world.openfoodfacts.org/terms-of-use} и {Политика конфиденциальности:https://world.openfoodfacts.org/privacy}</string>
-    <string name="usda_privacy_policy">{Политика конфиденциальности:https://www.usda.gov/privacy-policy}</string>
     <string name="headline_almost_done">Почти готово!</string>
     <string name="headline_preparing_your_food_diary">Подготовка вашего дневника питания</string>
     <string name="headline_please_wait">Пожалуйста, подождите</string>
@@ -346,7 +335,6 @@
     <string name="description_custom_palette">Задайте свою собственную палитру</string>
     <string name="headline_dynamic_colors">Динамические цвета</string>
     <string name="description_dynamic_colors">Применить цвета из системы</string>
-    <string name="headline_seed_color">Базовый цвет</string>
     <string name="headline_palette_style">Стиль палитры</string>
     <string name="headline_contrast">Контраст</string>
     <string name="headline_amoled">AMOLED</string>
@@ -355,7 +343,6 @@
     <string name="headline_appearance">Внешний вид</string>
     <string name="headline_theme">Тема</string>
     <string name="headline_pick_a_color">Выбрать цвет</string>
-    <string name="headline_color">Цвет</string>
     <string name="headline_nutrients_colors">Цвета нутриентов</string>
     <string name="description_nutrients_colors_reset">Настройки цветов нутриентов будут сброшены до значений по умолчанию</string>
     <string name="headline_sponsorship_goals">Цели</string>
@@ -371,7 +358,6 @@
     <string name="action_next_month">Следующий месяц</string>
     <string name="action_previous_month">Предыдущий месяц</string>
     <string name="headline_sponsor_methods">Методы</string>
-    <string name="headline_developer_options">Параметры разработчика</string>
     <string name="headline_save_database">Сохранить базу данных</string>
     <string name="description_save_database">Сохраните копию вашей базы данных</string>
     <string name="headline_replace_database">Заменить базу данных</string>

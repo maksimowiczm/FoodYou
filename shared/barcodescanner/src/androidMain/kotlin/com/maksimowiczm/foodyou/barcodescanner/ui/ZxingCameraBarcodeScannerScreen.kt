@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.safeGesturesPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -19,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,10 +40,12 @@ import com.google.zxing.client.android.R as zxingR
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import com.journeyapps.barcodescanner.camera.CameraSettings
 import com.maksimowiczm.foodyou.barcodescanner.R
 import com.maksimowiczm.foodyou.barcodescanner.databinding.CameraBarcodeLayoutBinding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -77,6 +81,21 @@ fun ZxingCameraBarcodeScannerScreen(
 
         onDispose { barcodeView?.pause() }
     }
+
+    val resetFocus: suspend () -> Unit =
+        remember(barcodeView) {
+            {
+                val view = barcodeView
+                if (view != null) {
+                    view.cameraSettings =
+                        CameraSettings().apply { focusMode = CameraSettings.FocusMode.CONTINUOUS }
+                    delay(5_000)
+                    view.cameraSettings =
+                        CameraSettings().apply { focusMode = CameraSettings.FocusMode.AUTO }
+                }
+            }
+        }
+    LaunchedEffect(resetFocus) { resetFocus() }
 
     Box(modifier) {
         AndroidView(
@@ -119,28 +138,23 @@ fun ZxingCameraBarcodeScannerScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun FlashlightButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val background by
         animateColorAsState(
-            if (enabled) {
-                MaterialTheme.colorScheme.primary
-            } else {
-                MaterialTheme.colorScheme.surface
-            }
+            if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
         )
     val content by
         animateColorAsState(
-            if (enabled) {
-                MaterialTheme.colorScheme.onPrimary
-            } else {
-                MaterialTheme.colorScheme.onSurface
-            }
+            if (enabled) MaterialTheme.colorScheme.onPrimary
+            else MaterialTheme.colorScheme.onSurface
         )
 
     FilledIconButton(
-        modifier = modifier,
         onClick = onClick,
+        shapes = IconButtonDefaults.shapes(),
+        modifier = modifier,
         colors =
             IconButtonDefaults.filledIconButtonColors(
                 containerColor = background,
@@ -148,18 +162,10 @@ private fun FlashlightButton(enabled: Boolean, onClick: () -> Unit, modifier: Mo
             ),
     ) {
         Icon(
-            imageVector =
-                if (enabled) {
-                    Icons.Default.FlashOn
-                } else {
-                    Icons.Default.FlashOff
-                },
+            imageVector = if (enabled) Icons.Default.FlashOn else Icons.Default.FlashOff,
             contentDescription =
-                if (enabled) {
-                    stringResource(Res.string.action_disable_camera_flash)
-                } else {
-                    stringResource(Res.string.action_enable_camera_flash)
-                },
+                if (enabled) stringResource(Res.string.action_disable_camera_flash)
+                else stringResource(Res.string.action_enable_camera_flash),
         )
     }
 }
