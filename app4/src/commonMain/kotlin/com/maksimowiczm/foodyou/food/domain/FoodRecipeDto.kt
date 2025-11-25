@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.food.domain
 
+import com.maksimowiczm.foodyou.common.domain.Grams
 import com.maksimowiczm.foodyou.common.domain.Quantity
 
 /**
@@ -13,18 +14,14 @@ class LazyFoodRecipeDto(
     val image: FoodImage?,
     val source: FoodSource?,
     val servings: Int,
+    val finalWeight: Grams,
     val ingredients: List<Pair<FoodIdentity, Quantity>>,
 ) : Food
 
-/**
- * A simple representation of a food recipe, without its ingredients.
- */
+/** A simple representation of a food recipe, without its ingredients. */
 class SimpleFoodRecipeDto(
     override val identity: FoodIdentity,
     val name: FoodName,
-    val note: FoodNote?,
     val image: FoodImage?,
-    val source: FoodSource?,
-    val servings: Int,
     val nutritionFacts: NutritionFacts,
 ) : Food
