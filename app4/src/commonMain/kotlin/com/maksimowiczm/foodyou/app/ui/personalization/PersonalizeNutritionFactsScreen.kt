@@ -132,7 +132,7 @@ private fun PersonalizeNutritionFactsScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
             state = lazyListState,
-            contentPadding = paddingValues.add(vertical = 8.dp),
+            contentPadding = paddingValues.add(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(items = localOrder, key = { it.name }) {
@@ -141,7 +141,7 @@ private fun PersonalizeNutritionFactsScreen(
                         item = it,
                         isDragging = isDragging,
                         modifier =
-                            Modifier.fillMaxWidth().padding(horizontal = 16.dp).semantics {
+                            Modifier.fillMaxWidth().semantics {
                                 customActions =
                                     listOf(
                                         CustomAccessibilityAction(

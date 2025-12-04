@@ -55,6 +55,12 @@ fun PaddingValues.add(horizontal: Dp = 0.dp, vertical: Dp = 0.dp): PaddingValues
 }
 
 @Composable
+fun PaddingValues.add(all: Dp): PaddingValues {
+    val paddingValues = PaddingValues(all = all)
+    return add(paddingValues)
+}
+
+@Composable
 fun PaddingValues.horizontal(): PaddingValues =
     PaddingValues(
         start = calculateStartPadding(LocalLayoutDirection.current),
