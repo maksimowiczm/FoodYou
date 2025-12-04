@@ -14,6 +14,8 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
 import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 
 internal class USDARemoteDataSource(
     private val client: HttpClient,
@@ -32,17 +34,17 @@ internal class USDARemoteDataSource(
                     parameter("api_key", apiKey ?: "DEMO_KEY")
                 }
 
-            if (response.status == HttpStatusCode.Companion.NotFound) {
+            if (response.status == HttpStatusCode.NotFound) {
                 logger.d(TAG) { "Product not found for code: $id" }
                 return Result.failure(RemoteFoodException.ProductNotFoundException())
             }
 
-            if (response.status == HttpStatusCode.Companion.TooManyRequests) {
+            if (response.status == HttpStatusCode.TooManyRequests) {
                 logger.w(TAG) { "USDA API rate limit exceeded for code: $id" }
                 return Result.failure(RemoteFoodException.USDA.RateLimitException())
             }
 
-            if (response.status == HttpStatusCode.Companion.Forbidden) {
+            if (response.status == HttpStatusCode.Forbidden) {
                 val error = response.getError()
                 logger.e(TAG) { "USDA API error for code: $id - ${error.message}" }
                 return Result.failure(error)
@@ -52,10 +54,10 @@ internal class USDARemoteDataSource(
 
             return Result.success(product)
         } catch (e: Exception) {
-            when (e) {
-                is CancellationException -> throw e
-                is RemoteFoodException -> throw e
-                else -> throw RemoteFoodException.Unknown(e.message)
+            currentCoroutineContext().ensureActive()
+            return when (e) {
+                is RemoteFoodException -> Result.failure(e)
+                else -> Result.failure(RemoteFoodException.Unknown(e.message))
             }
         }
     }
@@ -82,11 +84,11 @@ internal class USDARemoteDataSource(
                     parameter("sortOrder", "asc")
                 }
 
-            if (response.status == HttpStatusCode.Companion.TooManyRequests) {
+            if (response.status == HttpStatusCode.TooManyRequests) {
                 throw RemoteFoodException.USDA.RateLimitException()
             }
 
-            if (response.status == HttpStatusCode.Companion.Forbidden) {
+            if (response.status == HttpStatusCode.Forbidden) {
                 val error = response.getError()
                 throw error
             }

@@ -15,6 +15,8 @@ import io.ktor.client.request.parameter
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
 import io.ktor.utils.io.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 
 internal class OpenFoodFactsRemoteDataSource(
     private val client: HttpClient,
@@ -58,10 +60,10 @@ internal class OpenFoodFactsRemoteDataSource(
 
             return Result.success(product).map { it.product }
         } catch (e: Exception) {
-            when (e) {
-                is kotlin.coroutines.cancellation.CancellationException -> throw e
-                is RemoteFoodException -> throw e
-                else -> throw RemoteFoodException.Unknown(e.message)
+            currentCoroutineContext().ensureActive()
+            return when (e) {
+                is RemoteFoodException -> Result.failure(e)
+                else -> Result.failure(RemoteFoodException.Unknown(e.message))
             }
         }
     }

@@ -14,6 +14,8 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
 import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 
 class FoodDataCentralRemoteDataSource(
     private val client: HttpClient,
@@ -60,10 +62,10 @@ class FoodDataCentralRemoteDataSource(
 
             return Result.success(product)
         } catch (e: Exception) {
-            when (e) {
-                is CancellationException -> throw e
-                is FoodDatabaseError -> throw e
-                else -> throw FoodDatabaseError.Unknown(e.message)
+            currentCoroutineContext().ensureActive()
+            return when (e) {
+                is FoodDatabaseError -> Result.failure(e)
+                else -> Result.failure(FoodDatabaseError.Unknown(e.message))
             }
         } finally {
             rateLimiter.recordRequest()

@@ -59,10 +59,9 @@ class OpenFoodFactsRemoteDataSource(
             return Result.success(product).map { it.product }
         } catch (e: Exception) {
             currentCoroutineContext().ensureActive()
-
-            when (e) {
-                is FoodDatabaseError -> throw e
-                else -> throw FoodDatabaseError.Unknown(e.message)
+            return when (e) {
+                is FoodDatabaseError -> Result.failure(e)
+                else -> Result.failure(FoodDatabaseError.Unknown(e.message))
             }
         } finally {
             rateLimiter.recordProductRequest()
