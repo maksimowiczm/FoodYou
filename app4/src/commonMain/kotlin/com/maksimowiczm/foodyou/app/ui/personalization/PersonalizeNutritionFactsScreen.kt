@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -177,7 +178,7 @@ private fun ReorderableCollectionItemScope.ListItem(
         shadowElevation = elevation,
         tonalElevation = elevation,
     ) {
-        Row(modifier = Modifier.padding(16.dp)) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(text = item.stringResource(), style = MaterialTheme.typography.bodyMedium)
             Spacer(Modifier.weight(1f))
             DragHandle(Modifier.hapticDraggableHandle())
