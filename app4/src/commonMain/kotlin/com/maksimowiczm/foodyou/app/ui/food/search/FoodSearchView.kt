@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -13,7 +12,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.NorthWest
@@ -21,17 +20,19 @@ import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import foodyou.app.generated.resources.*
@@ -81,7 +82,7 @@ internal fun FoodSearchView(
                             DatabaseFilterIconButton(
                                 selected = uiState.filter.source == source,
                                 onClick = { onSource(source) },
-                                logo = { source.Icon() },
+                                logo = { source.Icon(it) },
                                 label = {
                                     Text(
                                         text = source.stringResource(),
@@ -129,7 +130,7 @@ private fun FoodSearchItem(search: String, onFill: () -> Unit, modifier: Modifie
 private fun DatabaseFilterIconButton(
     selected: Boolean,
     onClick: () -> Unit,
-    logo: @Composable () -> Unit,
+    logo: @Composable (Modifier) -> Unit,
     label: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -137,54 +138,48 @@ private fun DatabaseFilterIconButton(
 
     val containerColor by
         animateColorAsState(
-            targetValue =
-                if (selected) {
-                    MaterialTheme.colorScheme.primaryContainer
-                } else {
-                    MaterialTheme.colorScheme.surfaceVariant
-                }
+            if (selected) MaterialTheme.colorScheme.primaryContainer
+            else MaterialTheme.colorScheme.surfaceVariant
         )
     val contentColor by
         animateColorAsState(
-            targetValue =
-                if (selected) {
-                    MaterialTheme.colorScheme.onPrimaryContainer
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                }
+            if (selected) MaterialTheme.colorScheme.onPrimaryContainer
+            else MaterialTheme.colorScheme.onSurfaceVariant
         )
 
     val labelColor by
         animateColorAsState(
-            targetValue =
-                if (selected) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                }
+            if (selected) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurfaceVariant
         )
 
     Column(
         modifier =
             modifier
-                .clickable(
+                .selectable(
+                    selected = selected,
                     onClick = onClick,
-                    indication = null,
+                    role = Role.RadioButton,
                     interactionSource = interactionSource,
+                    indication = null,
                 )
                 .widthIn(min = 64.dp, max = 96.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Surface(
+        IconButton(
             onClick = onClick,
-            modifier = Modifier.size(48.dp),
-            shape = CircleShape,
-            color = containerColor,
-            contentColor = contentColor,
+            shapes = IconButtonDefaults.shapes(),
+            modifier =
+                Modifier.size(IconButtonDefaults.mediumContainerSize()).clearAndSetSemantics {},
             interactionSource = interactionSource,
+            colors =
+                IconButtonDefaults.iconButtonColors(
+                    containerColor = containerColor,
+                    contentColor = contentColor,
+                ),
         ) {
-            Box(modifier = Modifier.padding(12.dp), contentAlignment = Alignment.Center) { logo() }
+            logo(Modifier.size(IconButtonDefaults.mediumIconSize))
         }
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.labelMedium,
