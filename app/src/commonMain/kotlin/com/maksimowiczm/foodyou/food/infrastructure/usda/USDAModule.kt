@@ -11,15 +11,15 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 
 internal fun Module.USDAModule() {
-    single(named(USDARemoteDataSource::class.qualifiedName!!)) {
+    single(named(UsdaFdcDataSource::class.qualifiedName!!)) {
         HttpClient {
             install(HttpTimeout)
             install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
     }
     factory {
-        USDARemoteDataSource(
-            client = get(named(USDARemoteDataSource::class.qualifiedName!!)),
+        UsdaFdcDataSource(
+            client = get(named(UsdaFdcDataSource::class.qualifiedName!!)),
             get(),
             get(),
         )
@@ -32,5 +32,5 @@ internal fun Module.USDAModule() {
             logger = get(),
         )
     }
-    factoryOf(::USDAProductMapper)
+    factoryOf(::UsdaFdcMapper)
 }

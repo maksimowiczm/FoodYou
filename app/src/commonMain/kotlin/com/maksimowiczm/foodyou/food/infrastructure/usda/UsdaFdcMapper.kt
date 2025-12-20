@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.usda2
+package com.maksimowiczm.foodyou.food.infrastructure.usda
 
 import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.food.NutrientsHelper
@@ -6,9 +6,9 @@ import com.maksimowiczm.foodyou.food.domain.entity.RemoteNutritionFacts
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteProduct
 import com.maksimowiczm.foodyou.food.infrastructure.network.UnitType
 import com.maksimowiczm.foodyou.food.infrastructure.network.multiplier
-import com.maksimowiczm.foodyou.food.infrastructure.usda2.model.AbridgedFoodItem
-import com.maksimowiczm.foodyou.food.infrastructure.usda2.model.AbridgedFoodNutrient
-import com.maksimowiczm.foodyou.food.infrastructure.usda2.model.SearchResultFood
+import com.maksimowiczm.foodyou.food.infrastructure.usda.model.AbridgedFoodItem
+import com.maksimowiczm.foodyou.food.infrastructure.usda.model.AbridgedFoodNutrient
+import com.maksimowiczm.foodyou.food.infrastructure.usda.model.SearchResultFood
 
 internal class UsdaFdcMapper {
     fun toRemoteProduct(food: AbridgedFoodItem): RemoteProduct {
@@ -157,6 +157,7 @@ internal class UsdaFdcMapper {
 
     /** Normalize nutrient value to grams. Converts from mg or µg to grams if needed. */
     private fun AbridgedFoodNutrient.normalize(): Double? {
+        val unitName = this.unitName ?: return null
         val amount = this.amount ?: return null
         val from = UnitType.fromString(unitName) ?: return null
         return amount * multiplier(UnitType.GRAMS, from)

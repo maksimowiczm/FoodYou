@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.usda2
+package com.maksimowiczm.foodyou.food.infrastructure.usda
 
 internal object UsdaNutrientId {
     // Macronutrients

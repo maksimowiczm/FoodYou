@@ -1,10 +1,10 @@
-package com.maksimowiczm.foodyou.food.infrastructure.usda2
+package com.maksimowiczm.foodyou.food.infrastructure.usda
 
 import com.maksimowiczm.foodyou.common.config.NetworkConfig
 import com.maksimowiczm.foodyou.common.log.Logger
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
-import com.maksimowiczm.foodyou.food.infrastructure.usda2.model.AbridgedFoodItem
-import com.maksimowiczm.foodyou.food.infrastructure.usda2.model.SearchResult
+import com.maksimowiczm.foodyou.food.infrastructure.usda.model.AbridgedFoodItem
+import com.maksimowiczm.foodyou.food.infrastructure.usda.model.SearchResult
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -21,13 +21,13 @@ class UsdaFdcDataSource(
     private val client: HttpClient,
     private val networkConfig: NetworkConfig,
     private val logger: Logger,
-    private val apiKey: String? = null,
 ) {
 
     suspend fun getFood(
         fdcId: String,
-        format: String?,
-        nutrients: List<Int>?,
+        format: String = "abridged",
+        nutrients: List<Int>? = null,
+        apiKey: String? = null,
     ): Result<AbridgedFoodItem> {
         return try {
             val url = "${networkConfig.usdaApiUrl}/fdc/v1/food/$fdcId"
@@ -36,7 +36,7 @@ class UsdaFdcDataSource(
                 client.get(url) {
                     userAgent(networkConfig.userAgent)
                     parameter("api_key", apiKey ?: "DEMO_KEY")
-                    format?.let { parameter("format", it) }
+                    parameter("format", format)
                     nutrients?.let { parameter("nutrients", it.joinToString(",")) }
                 }
 
@@ -49,12 +49,13 @@ class UsdaFdcDataSource(
 
     suspend fun getFoodsSearch(
         query: String,
-        dataType: List<String>?,
-        pageSize: Int?,
-        pageNumber: Int?,
-        sortBy: String?,
-        sortOrder: String?,
-        brandOwner: String?,
+        dataType: List<String>? = null,
+        pageSize: Int? = null,
+        pageNumber: Int? = null,
+        sortBy: String? = null,
+        sortOrder: String? = null,
+        brandOwner: String? = null,
+        apiKey: String? = null,
     ): Result<SearchResult> {
         return try {
             val url = "${networkConfig.usdaApiUrl}/fdc/v1/foods/search"
@@ -87,24 +88,29 @@ class UsdaFdcDataSource(
             HttpStatusCode.OK -> {
                 Result.success(onSuccess())
             }
+
             HttpStatusCode.NotFound -> {
                 logger.d(TAG) { "Product not found" }
                 Result.failure(RemoteFoodException.ProductNotFoundException())
             }
+
             HttpStatusCode.TooManyRequests -> {
                 logger.w(TAG) { "USDA API rate limit exceeded" }
                 Result.failure(RemoteFoodException.USDA.RateLimitException())
             }
+
             HttpStatusCode.Forbidden -> {
                 val error = response.getError()
                 logger.e(TAG) { "USDA API error: ${error.message}" }
                 Result.failure(error)
             }
+
             HttpStatusCode.BadRequest -> {
                 val body = response.bodyAsText()
                 logger.e(TAG) { "Bad request: $body" }
                 Result.failure(RemoteFoodException.Unknown("Bad request parameter"))
             }
+
             else -> {
                 logger.e(TAG) { "Unexpected response: ${response.status}" }
                 Result.failure(
@@ -135,6 +141,7 @@ class UsdaFdcDataSource(
                 logger.e(TAG) { "$method failed for $context: ${e.message}" }
                 Result.failure(e)
             }
+
             else -> {
                 logger.e(TAG) { "$method failed for $context: ${e.message}" }
                 Result.failure(RemoteFoodException.Unknown(e.message))

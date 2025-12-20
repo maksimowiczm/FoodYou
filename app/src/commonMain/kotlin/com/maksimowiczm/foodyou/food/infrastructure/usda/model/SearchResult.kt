@@ -1,14 +1,14 @@
-package com.maksimowiczm.foodyou.food.infrastructure.usda2.model
+package com.maksimowiczm.foodyou.food.infrastructure.usda.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchResult(
-    @SerialName("foodSearchCriteria") val foodSearchCriteria: FoodSearchCriteria? = null,
+    @SerialName("foodSearchCriteria") val foodSearchCriteria: FoodSearchCriteria,
     @SerialName("totalHits") val totalHits: Int,
-    @SerialName("currentPage") val currentPage: Int? = null,
-    @SerialName("totalPages") val totalPages: Int? = null,
+    @SerialName("currentPage") val currentPage: Int,
+    @SerialName("totalPages") val totalPages: Int,
     @SerialName("foods") val foods: List<SearchResultFood> = emptyList(),
 )
 

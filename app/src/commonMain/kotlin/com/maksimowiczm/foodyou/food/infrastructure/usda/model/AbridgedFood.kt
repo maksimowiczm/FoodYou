@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.usda2.model
+package com.maksimowiczm.foodyou.food.infrastructure.usda.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -18,10 +18,10 @@ data class AbridgedFoodItem(
 
 @Serializable
 data class AbridgedFoodNutrient(
-    @SerialName("number") val number: Int,
+    @SerialName("number") val number: Int? = null,
     @SerialName("name") val name: String? = null,
     @SerialName("amount") val amount: Double? = null,
-    @SerialName("unitName") val unitName: String,
+    @SerialName("unitName") val unitName: String? = null,
     @SerialName("derivationCode") val derivationCode: String? = null,
     @SerialName("derivationDescription") val derivationDescription: String? = null,
 )

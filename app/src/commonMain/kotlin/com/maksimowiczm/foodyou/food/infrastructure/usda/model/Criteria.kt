@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.usda2.model
+package com.maksimowiczm.foodyou.food.infrastructure.usda.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
