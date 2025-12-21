@@ -17,8 +17,9 @@ data class SearchResultFood(
     @SerialName("fdcId") val fdcId: Int,
     @SerialName("description") val description: String,
     @SerialName("dataType") val dataType: String? = null,
-    @SerialName("foodCode") val foodCode: String? = null,
-    @SerialName("foodNutrients") val foodNutrients: List<AbridgedFoodNutrient> = emptyList(),
+    // Food code in search response is a number but in find by id response it's a string 🫠
+    @SerialName("foodCode") val foodCode: Int? = null,
+    @SerialName("foodNutrients") val foodNutrients: List<SearchResultFoodNutrient> = emptyList(),
     @SerialName("publicationDate") val publicationDate: String? = null,
     @SerialName("scientificName") val scientificName: String? = null,
     @SerialName("brandOwner") val brandOwner: String? = null,
@@ -29,3 +30,15 @@ data class SearchResultFood(
     @SerialName("allHighlightFields") val allHighlightFields: String? = null,
     @SerialName("score") val score: Double? = null,
 )
+
+@Serializable
+data class SearchResultFoodNutrient(
+    @SerialName("nutrientNumber") val nutrientNumber: String? = null,
+    @SerialName("name") val name: String? = null,
+    @SerialName("value") val amount: Double? = null,
+    @SerialName("unitName") val unitName: String? = null,
+    @SerialName("derivationCode") val derivationCode: String? = null,
+    @SerialName("derivationDescription") val derivationDescription: String? = null,
+) {
+    val number: Int? by lazy { nutrientNumber?.toIntOrNull() }
+}
