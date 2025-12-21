@@ -12,6 +12,9 @@ import com.maksimowiczm.foodyou.food.infrastructure.usda.model.SearchResultFood
 import com.maksimowiczm.foodyou.food.infrastructure.usda.model.SearchResultFoodNutrient
 import kotlin.jvm.JvmName
 
+private val allowedServingUnits by lazy { setOf("g", "GRM", "ml", "MLT") }
+private val liquidServingUnits by lazy { setOf("ml", "MLT") }
+
 internal class UsdaFdcMapper {
     fun toRemoteProduct(food: AbridgedFoodItem): RemoteProduct {
         return with(food) {
@@ -73,6 +76,15 @@ internal class UsdaFdcMapper {
                         null
                     }
 
+            val servingWeight =
+                if (allowedServingUnits.contains(servingSizeUnit)) {
+                    servingSize
+                } else {
+                    null
+                }
+
+            val isLiquid = liquidServingUnits.contains(servingSizeUnit)
+
             val source =
                 FoodSource(
                     type = FoodSource.Type.USDA,
@@ -86,9 +98,9 @@ internal class UsdaFdcMapper {
                 nutritionFacts =
                     createNutritionFacts(foodNutrients, energy, proteins, carbohydrates, fats),
                 packageWeight = null,
-                servingWeight = null, // SearchResultFood doesn't include serving size
+                servingWeight = servingWeight,
                 source = source,
-                isLiquid = false, // Cannot determine from search result data
+                isLiquid = isLiquid,
             )
         }
     }

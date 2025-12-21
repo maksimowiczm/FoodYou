@@ -20,6 +20,8 @@ data class SearchResultFood(
     @SerialName("foodNutrients") val foodNutrients: List<SearchResultFoodNutrient> = emptyList(),
     @SerialName("brandOwner") val brandOwner: String? = null,
     @SerialName("gtinUpc") val gtinUpc: String? = null,
+    @SerialName("servingSizeUnit") val servingSizeUnit: String? = null,
+    @SerialName("servingSize") val servingSize: Double? = null,
 )
 
 @Serializable
