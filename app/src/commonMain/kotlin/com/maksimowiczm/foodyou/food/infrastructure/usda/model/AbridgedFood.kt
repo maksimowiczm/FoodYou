@@ -19,6 +19,7 @@ data class AbridgedFoodItem(
 
 @Serializable
 data class AbridgedFoodNutrient(
+    // Different dataTypes return different types nutrient number 🫠
     @Serializable(with = IntSerializer::class) @SerialName("number") val number: Int? = null,
     @SerialName("name") val name: String? = null,
     @SerialName("amount") val amount: Double? = null,
