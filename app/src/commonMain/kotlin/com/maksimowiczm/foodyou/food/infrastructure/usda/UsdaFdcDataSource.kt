@@ -150,6 +150,6 @@ class UsdaFdcDataSource(
     }
 
     private companion object {
-        private const val TAG = "UsdaFdcApi"
+        private const val TAG = "UsdaFdcDataSource"
     }
 }
