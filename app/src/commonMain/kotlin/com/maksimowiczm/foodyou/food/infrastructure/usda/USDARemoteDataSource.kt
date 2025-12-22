@@ -130,7 +130,7 @@ class USDARemoteDataSource(
                 RemoteFoodException.USDA.ApiKeyUnauthorizedException()
             body.contains("API_KEY_UNVERIFIED") ->
                 RemoteFoodException.USDA.ApiKeyUnverifiedException()
-            else -> Exception("Unknown USDA API error: $body")
+            else -> RemoteFoodException.Unknown("Unknown USDA API error: $body")
         }
     }
 
