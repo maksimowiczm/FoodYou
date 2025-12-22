@@ -29,6 +29,6 @@ data class AbridgedFoodNutrient(
 private object IntSerializer : JsonTransformingSerializer<Int?>(serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement =
         if (element is JsonPrimitive && element.isString)
-            JsonPrimitive(element.content.toIntOrNull())
+            element.content.toIntOrNull()?.let { JsonPrimitive(it) } ?: element
         else element
 }
