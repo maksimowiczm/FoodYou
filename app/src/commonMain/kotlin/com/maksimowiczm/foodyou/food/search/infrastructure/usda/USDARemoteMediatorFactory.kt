@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.common.log.Logger
 import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
 import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
 import com.maksimowiczm.foodyou.food.infrastructure.network.RemoteProductMapper
-import com.maksimowiczm.foodyou.food.infrastructure.usda.USDAProductMapper
+import com.maksimowiczm.foodyou.food.infrastructure.usda.USDAMapper
 import com.maksimowiczm.foodyou.food.infrastructure.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferences
 import com.maksimowiczm.foodyou.food.search.domain.ProductRemoteMediatorFactory
@@ -25,7 +25,7 @@ internal class USDARemoteMediatorFactory(
     private val historyRepository: FoodHistoryRepository,
     private val remoteDataSource: USDARemoteDataSource,
     private val pagingKeyDao: USDAPagingKeyDao,
-    private val usdaMapper: USDAProductMapper,
+    private val usdaMapper: USDAMapper,
     private val remoteMapper: RemoteProductMapper,
     private val dateProvider: DateProvider,
     private val logger: Logger,

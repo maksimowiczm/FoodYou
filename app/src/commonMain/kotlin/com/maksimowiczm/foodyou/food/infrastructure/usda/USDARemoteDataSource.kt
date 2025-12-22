@@ -3,122 +3,153 @@ package com.maksimowiczm.foodyou.food.infrastructure.usda
 import com.maksimowiczm.foodyou.common.config.NetworkConfig
 import com.maksimowiczm.foodyou.common.log.Logger
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
-import com.maksimowiczm.foodyou.food.infrastructure.usda.model.DetailedFood
-import com.maksimowiczm.foodyou.food.infrastructure.usda.model.UsdaFoodPageResponse
-import com.maksimowiczm.foodyou.food.infrastructure.usda.model.UsdaFoodPageResponseImpl
+import com.maksimowiczm.foodyou.food.infrastructure.usda.model.AbridgedFoodItem
+import com.maksimowiczm.foodyou.food.infrastructure.usda.model.SearchResult
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 
-internal class USDARemoteDataSource(
+class USDARemoteDataSource(
     private val client: HttpClient,
     private val networkConfig: NetworkConfig,
     private val logger: Logger,
 ) {
-    suspend fun getProduct(id: String, apiKey: String?): Result<DetailedFood> {
-        try {
-            val url = "${networkConfig.usdaApiUrl}/fdc/v1/food/$id"
+
+    suspend fun getFood(
+        fdcId: String,
+        format: String = "abridged",
+        nutrients: List<Int>? = null,
+        apiKey: String? = null,
+    ): Result<AbridgedFoodItem> {
+        return try {
+            val url = "${networkConfig.usdaApiUrl}/fdc/v1/food/$fdcId"
 
             val response =
                 client.get(url) {
                     userAgent(networkConfig.userAgent)
-
-                    parameter("format", "full")
                     parameter("api_key", apiKey ?: "DEMO_KEY")
+                    parameter("format", format)
+                    nutrients?.let { parameter("nutrients", it.joinToString(",")) }
                 }
 
-            if (response.status == HttpStatusCode.NotFound) {
-                logger.d(TAG) { "Product not found for code: $id" }
-                return Result.failure(RemoteFoodException.ProductNotFoundException())
-            }
-
-            if (response.status == HttpStatusCode.TooManyRequests) {
-                logger.w(TAG) { "USDA API rate limit exceeded for code: $id" }
-                return Result.failure(RemoteFoodException.USDA.RateLimitException())
-            }
-
-            if (response.status == HttpStatusCode.Forbidden) {
-                val error = response.getError()
-                logger.e(TAG) { "USDA API error for code: $id - ${error.message}" }
-                return Result.failure(error)
-            }
-
-            val product = response.body<DetailedFood>()
-
-            return Result.success(product)
+            handleResponse(response) { response.body<AbridgedFoodItem>() }
         } catch (e: Exception) {
             currentCoroutineContext().ensureActive()
-            return when (e) {
-                is RemoteFoodException -> Result.failure(e)
-                else -> Result.failure(RemoteFoodException.Unknown(e.message))
-            }
+            handleException(e, "getFood", fdcId)
         }
     }
 
-    suspend fun queryProducts(
+    suspend fun getFoodsSearch(
         query: String,
-        page: Int?,
-        pageSize: Int,
-        apiKey: String?,
-    ): UsdaFoodPageResponse =
-        try {
+        dataType: List<String>? = null,
+        pageSize: Int? = null,
+        pageNumber: Int? = null,
+        sortBy: String? = null,
+        sortOrder: String? = null,
+        brandOwner: String? = null,
+        apiKey: String? = null,
+    ): Result<SearchResult> {
+        return try {
             val url = "${networkConfig.usdaApiUrl}/fdc/v1/foods/search"
 
             val response =
                 client.get(url) {
                     userAgent(networkConfig.userAgent)
-
-                    parameter("query", query)
-                    parameter("dataType", "Branded,Foundation")
-                    parameter("pageSize", pageSize)
-                    parameter("pageNumber", page)
                     parameter("api_key", apiKey ?: "DEMO_KEY")
-                    parameter("sortBy", "dataType.keyword")
-                    parameter("sortOrder", "asc")
+                    parameter("query", query)
+                    dataType?.let { parameter("dataType", it.joinToString(",")) }
+                    pageSize?.let { parameter("pageSize", it) }
+                    pageNumber?.let { parameter("pageNumber", it) }
+                    sortBy?.let { parameter("sortBy", it) }
+                    sortOrder?.let { parameter("sortOrder", it) }
+                    brandOwner?.let { parameter("brandOwner", it) }
                 }
 
-            if (response.status == HttpStatusCode.TooManyRequests) {
-                throw RemoteFoodException.USDA.RateLimitException()
-            }
-
-            if (response.status == HttpStatusCode.Forbidden) {
-                val error = response.getError()
-                throw error
-            }
-
-            response.body<UsdaFoodPageResponseImpl>()
+            handleResponse(response) { response.body<SearchResult>() }
         } catch (e: Exception) {
-            when (e) {
-                is CancellationException -> throw e
-                is RemoteFoodException -> throw e
-                else -> throw RemoteFoodException.Unknown(e.message)
+            currentCoroutineContext().ensureActive()
+            handleException(e, "getFoodsSearch", query)
+        }
+    }
+
+    private suspend fun <T> handleResponse(
+        response: HttpResponse,
+        onSuccess: suspend () -> T,
+    ): Result<T> {
+        return when (response.status) {
+            HttpStatusCode.OK -> {
+                Result.success(onSuccess())
+            }
+
+            HttpStatusCode.NotFound -> {
+                logger.d(TAG) { "Product not found" }
+                Result.failure(RemoteFoodException.ProductNotFoundException())
+            }
+
+            HttpStatusCode.TooManyRequests -> {
+                logger.w(TAG) { "USDA API rate limit exceeded" }
+                Result.failure(RemoteFoodException.USDA.RateLimitException())
+            }
+
+            HttpStatusCode.Forbidden -> {
+                val error = response.getError()
+                logger.e(TAG) { "USDA API error: ${error.message}" }
+                Result.failure(error)
+            }
+
+            HttpStatusCode.BadRequest -> {
+                val body = response.bodyAsText()
+                logger.e(TAG) { "Bad request: $body" }
+                Result.failure(RemoteFoodException.Unknown("Bad request parameter"))
+            }
+
+            else -> {
+                logger.e(TAG) { "Unexpected response: ${response.status}" }
+                Result.failure(
+                    RemoteFoodException.Unknown("Unexpected response: ${response.status}")
+                )
             }
         }
+    }
 
-    private suspend fun HttpResponse.getError(): Exception =
-        with(body<String>()) {
-            return when {
-                contains("API_KEY_MISSING") -> RemoteFoodException.USDA.ApiKeyIsMissingException()
-                contains("API_KEY_INVALID") -> RemoteFoodException.USDA.ApiKeyInvalidException()
-                contains("API_KEY_DISABLED") -> RemoteFoodException.USDA.ApiKeyDisabledException()
-                contains("API_KEY_UNAUTHORIZED") ->
-                    RemoteFoodException.USDA.ApiKeyUnauthorizedException()
+    private suspend fun HttpResponse.getError(): Exception {
+        val body = bodyAsText()
+        return when {
+            body.contains("API_KEY_MISSING") -> RemoteFoodException.USDA.ApiKeyIsMissingException()
+            body.contains("API_KEY_INVALID") -> RemoteFoodException.USDA.ApiKeyInvalidException()
+            body.contains("API_KEY_DISABLED") -> RemoteFoodException.USDA.ApiKeyDisabledException()
+            body.contains("API_KEY_UNAUTHORIZED") ->
+                RemoteFoodException.USDA.ApiKeyUnauthorizedException()
+            body.contains("API_KEY_UNVERIFIED") ->
+                RemoteFoodException.USDA.ApiKeyUnverifiedException()
+            else -> RemoteFoodException.Unknown("Unknown USDA API error: $body")
+        }
+    }
 
-                contains("API_KEY_UNVERIFIED") ->
-                    RemoteFoodException.USDA.ApiKeyUnverifiedException()
+    private fun <T> handleException(e: Exception, method: String, context: String): Result<T> {
+        return when (e) {
+            is CancellationException -> throw e
+            is RemoteFoodException -> {
+                logger.e(TAG) { "$method failed for $context: ${e.message}" }
+                Result.failure(e)
+            }
 
-                else -> Exception("Unknown USDA API error: $this")
+            else -> {
+                logger.e(TAG) { "$method failed for $context: ${e.message}" }
+                Result.failure(RemoteFoodException.Unknown(e.message))
             }
         }
+    }
 
     private companion object {
-        private const val TAG = "USDARemoteDataSourceImpl"
+        private const val TAG = "UsdaFdcDataSource"
     }
 }

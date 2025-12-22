@@ -6,7 +6,7 @@ import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferences
 
 internal class USDAFacade(
     private val dataSource: USDARemoteDataSource,
-    private val mapper: USDAProductMapper,
+    private val mapper: USDAMapper,
     private val preferencesRepository: UserPreferencesRepository<FoodSearchPreferences>,
     private val logger: Logger,
 ) {

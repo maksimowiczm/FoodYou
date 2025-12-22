@@ -32,5 +32,5 @@ internal fun Module.USDAModule() {
             logger = get(),
         )
     }
-    factoryOf(::USDAProductMapper)
+    factoryOf(::USDAMapper)
 }

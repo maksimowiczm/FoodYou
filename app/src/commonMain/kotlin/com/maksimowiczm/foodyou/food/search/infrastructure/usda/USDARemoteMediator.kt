@@ -12,9 +12,9 @@ import com.maksimowiczm.foodyou.food.domain.entity.Product
 import com.maksimowiczm.foodyou.food.domain.repository.FoodHistoryRepository
 import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
 import com.maksimowiczm.foodyou.food.infrastructure.network.RemoteProductMapper
-import com.maksimowiczm.foodyou.food.infrastructure.usda.USDAProductMapper
+import com.maksimowiczm.foodyou.food.infrastructure.usda.USDAMapper
 import com.maksimowiczm.foodyou.food.infrastructure.usda.USDARemoteDataSource
-import com.maksimowiczm.foodyou.food.infrastructure.usda.model.Food
+import com.maksimowiczm.foodyou.food.infrastructure.usda.model.SearchResultFood
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.USDAPagingKeyDao
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.USDAPagingKeyEntity
 import kotlin.time.Instant
@@ -28,7 +28,7 @@ internal class USDARemoteMediator<K : Any, T : Any>(
     private val historyRepository: FoodHistoryRepository,
     private val remoteDataSource: USDARemoteDataSource,
     private val pagingKeyDao: USDAPagingKeyDao,
-    private val productMapper: USDAProductMapper,
+    private val productMapper: USDAMapper,
     private val remoteMapper: RemoteProductMapper,
     private val dateProvider: DateProvider,
     private val logger: Logger,
@@ -55,12 +55,14 @@ internal class USDARemoteMediator<K : Any, T : Any>(
                 }
 
             val response =
-                remoteDataSource.queryProducts(
-                    query = query,
-                    page = page,
-                    pageSize = PAGE_SIZE,
-                    apiKey = apiKey,
-                )
+                remoteDataSource
+                    .getFoodsSearch(
+                        query = query,
+                        pageNumber = page,
+                        pageSize = PAGE_SIZE,
+                        apiKey = apiKey,
+                    )
+                    .getOrThrow()
 
             val fetchedCount = ((response.currentPage - 1) * PAGE_SIZE) + response.foods.size
 
@@ -77,7 +79,7 @@ internal class USDARemoteMediator<K : Any, T : Any>(
                     remoteProduct.toDomainProduct().also {
                         if (it == null) {
                             logger.d(TAG) {
-                                "Failed to convert product: (name=${remoteProduct.description}, code = ${remoteProduct.barcode})"
+                                "Failed to convert product: (name=${remoteProduct.description}, gtinUpc = ${remoteProduct.gtinUpc})"
                             }
                         }
                     }
@@ -103,7 +105,7 @@ internal class USDARemoteMediator<K : Any, T : Any>(
         }
     }
 
-    private fun Food.toDomainProduct(): Product? =
+    private fun SearchResultFood.toDomainProduct(): Product? =
         runCatching { this.let(productMapper::toRemoteProduct).let(remoteMapper::toModel) }
             .getOrNull()
 

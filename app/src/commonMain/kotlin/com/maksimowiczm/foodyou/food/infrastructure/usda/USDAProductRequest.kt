@@ -13,14 +13,14 @@ import kotlinx.coroutines.flow.first
 internal class USDAProductRequest(
     private val dataSource: USDARemoteDataSource,
     private val id: String,
-    private val mapper: USDAProductMapper,
+    private val mapper: USDAMapper,
     private val preferencesRepository: UserPreferencesRepository<FoodSearchPreferences>,
 ) : RemoteProductRequest {
     private suspend fun apiKey() = preferencesRepository.observe().first().usda.apiKey
 
     override suspend fun execute(): Result<RemoteProduct, RemoteFoodException> =
         dataSource
-            .getProduct(id, apiKey())
+            .getFood(id, apiKey = apiKey())
             .map(mapper::toRemoteProduct)
             .fold(onSuccess = ::Ok, onFailure = { Err(RemoteFoodException.fromThrowable(it)) })
 }
