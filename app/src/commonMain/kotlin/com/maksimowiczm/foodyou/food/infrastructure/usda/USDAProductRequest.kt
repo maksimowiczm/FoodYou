@@ -11,9 +11,9 @@ import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferences
 import kotlinx.coroutines.flow.first
 
 internal class USDAProductRequest(
-    private val dataSource: UsdaFdcDataSource,
+    private val dataSource: USDARemoteDataSource,
     private val id: String,
-    private val mapper: UsdaFdcMapper,
+    private val mapper: USDAMapper,
     private val preferencesRepository: UserPreferencesRepository<FoodSearchPreferences>,
 ) : RemoteProductRequest {
     private suspend fun apiKey() = preferencesRepository.observe().first().usda.apiKey

@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.food.infrastructure.usda
 
-internal object UsdaNutrientId {
+internal object USDANutrientId {
     // Macronutrients
     const val PROTEIN = 203
     const val CARBOHYDRATE = 205

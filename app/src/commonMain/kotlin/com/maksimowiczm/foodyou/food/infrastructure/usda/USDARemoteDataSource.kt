@@ -17,7 +17,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 
-class UsdaFdcDataSource(
+class USDARemoteDataSource(
     private val client: HttpClient,
     private val networkConfig: NetworkConfig,
     private val logger: Logger,
