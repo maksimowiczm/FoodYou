@@ -39,6 +39,7 @@ object CalendarHomeCard : HomeCardComposable {
     override fun HomeCardPersonalizationCard(
         paddingValues: PaddingValues,
         containerColor: Color,
+        contentColor: Color,
         shadowElevation: Dp,
         navController: NavController,
         modifier: Modifier,
@@ -47,6 +48,7 @@ object CalendarHomeCard : HomeCardComposable {
         Surface(
             modifier = modifier,
             color = containerColor,
+            contentColor = contentColor,
             shadowElevation = shadowElevation,
             shape = CardDefaults.shape,
         ) {

@@ -25,6 +25,7 @@ interface HomeCardComposable {
     fun HomeCardPersonalizationCard(
         paddingValues: PaddingValues,
         containerColor: Color,
+        contentColor: Color,
         shadowElevation: Dp,
         navController: NavController,
         modifier: Modifier = Modifier,

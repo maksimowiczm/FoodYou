@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.personalization
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -194,17 +196,22 @@ private fun ReorderableCollectionItemScope.ListItem(
     modifier: Modifier = Modifier,
 ) {
     val elevation by animateDpAsState(if (isDragging) 16.dp else 0.dp)
+    val containerColor by
+        animateColorAsState(
+            if (isDragging) MaterialTheme.colorScheme.surfaceContainerHighest
+            else MaterialTheme.colorScheme.surfaceContainer
+        )
 
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = containerColor,
         contentColor = MaterialTheme.colorScheme.onSurface,
         shadowElevation = elevation,
         tonalElevation = elevation,
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
-            Text(text = item.stringResource(), style = MaterialTheme.typography.bodyMedium)
+            Text(text = item.stringResource(), style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.weight(1f))
             DragHandle(Modifier.hapticDraggableHandle())
         }

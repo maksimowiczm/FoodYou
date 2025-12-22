@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.home
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -147,10 +149,16 @@ private fun HomePersonalizationScreen(
                 ReorderableItem(state = reorderableLazyListState, key = card.feature) { isDragging
                     ->
                     val elevation by animateDpAsState(if (isDragging) 8.dp else 0.dp)
+                    val containerColor by
+                        animateColorAsState(
+                            if (isDragging) MaterialTheme.colorScheme.surfaceContainerHighest
+                            else MaterialTheme.colorScheme.surfaceContainer
+                        )
 
                     card.HomeCardPersonalizationCard(
                         paddingValues = PaddingValues(8.dp),
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        containerColor = containerColor,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
                         shadowElevation = elevation,
                         navController = navController,
                         modifier =

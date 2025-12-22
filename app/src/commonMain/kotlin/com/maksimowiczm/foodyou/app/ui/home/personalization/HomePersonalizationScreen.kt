@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -21,7 +20,6 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Restaurant
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
@@ -53,7 +51,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
-import sh.calvin.reorderable.ReorderableLazyListState
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
@@ -103,6 +100,7 @@ private fun HomePersonalizationScreen(
                 }
         }
 
+    val moveUpString = stringResource(Res.string.action_move_up)
     val moveUp: (HomeCard) -> Boolean = {
         val index = localOrder.indexOf(it)
         if (index > 0) {
@@ -113,6 +111,7 @@ private fun HomePersonalizationScreen(
         }
     }
 
+    val moveDownString = stringResource(Res.string.action_move_down)
     val moveDown: (HomeCard) -> Boolean = {
         val index = localOrder.indexOf(it)
         if (index < localOrder.size - 1) {
@@ -154,18 +153,34 @@ private fun HomePersonalizationScreen(
             contentPadding = paddingValues,
         ) {
             items(items = localOrder, key = { it.name }) { card ->
-                MyCard(
-                    card = card,
-                    draggableState = reorderableLazyListState,
-                    moveUp = { moveUp(card) },
-                    moveDown = { moveDown(card) },
-                ) {
-                    with(it) {
-                        when (card) {
-                            HomeCard.Calendar -> CalendarCardContent()
-                            HomeCard.Goals -> GoalsCardContent(onMore = onGoals)
-
-                            HomeCard.Meals -> MealsCardContent(onMore = onMeals)
+                ReorderableItem(
+                    state = reorderableLazyListState,
+                    key = card.name,
+                    modifier = modifier,
+                ) { isDragging ->
+                    MyCard(
+                        isDragging = isDragging,
+                        modifier =
+                            Modifier.semantics {
+                                customActions =
+                                    listOf(
+                                        CustomAccessibilityAction(
+                                            label = moveUpString,
+                                            action = { moveUp(card) },
+                                        ),
+                                        CustomAccessibilityAction(
+                                            label = moveDownString,
+                                            action = { moveDown(card) },
+                                        ),
+                                    )
+                            },
+                    ) {
+                        with(it) {
+                            when (card) {
+                                HomeCard.Calendar -> CalendarCardContent()
+                                HomeCard.Goals -> GoalsCardContent(onMore = onGoals)
+                                HomeCard.Meals -> MealsCardContent(onMore = onMeals)
+                            }
                         }
                     }
                 }
@@ -175,45 +190,28 @@ private fun HomePersonalizationScreen(
 }
 
 @Composable
-private fun LazyItemScope.MyCard(
-    card: HomeCard,
-    draggableState: ReorderableLazyListState,
-    moveUp: () -> Boolean,
-    moveDown: () -> Boolean,
+private fun ReorderableCollectionItemScope.MyCard(
+    isDragging: Boolean,
     modifier: Modifier = Modifier,
     content: @Composable ReorderableCollectionItemScope.(RowScope) -> Unit,
 ) {
-    val moveUpString = stringResource(Res.string.action_move_up)
-    val moveDownString = stringResource(Res.string.action_move_down)
+    val elevation by animateDpAsState(if (isDragging) 16.dp else 0.dp)
+    val containerColor by
+        animateColorAsState(
+            if (isDragging) MaterialTheme.colorScheme.surfaceContainerHighest
+            else MaterialTheme.colorScheme.surfaceContainer
+        )
 
-    ReorderableItem(state = draggableState, key = card.name, modifier = modifier) { isDragging ->
-        val elevation by animateDpAsState(if (isDragging) 16.dp else 0.dp)
-        val containerColor by
-            animateColorAsState(
-                if (isDragging) {
-                    MaterialTheme.colorScheme.surfaceContainerHighest
-                } else {
-                    MaterialTheme.colorScheme.surfaceContainer
-                }
-            )
-
-        Surface(
-            modifier =
-                Modifier.semantics {
-                    customActions =
-                        listOf(
-                            CustomAccessibilityAction(label = moveUpString, action = moveUp),
-                            CustomAccessibilityAction(label = moveDownString, action = moveDown),
-                        )
-                },
-            color = containerColor,
-            shadowElevation = elevation,
-            tonalElevation = elevation,
-            shape = CardDefaults.shape,
-        ) {
-            Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                content(this)
-            }
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        color = containerColor,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        shadowElevation = elevation,
+        tonalElevation = elevation,
+    ) {
+        Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            content(this)
         }
     }
 }
