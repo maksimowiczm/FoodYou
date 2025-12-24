@@ -57,9 +57,9 @@
     </plurals>
     <string name="unit_ounce_short">Once</string>
     <string name="unit_fluid_ounce_short">Once liquide</string>
-    <string name="product_package_weight">Poids de l'emballage</string>
+    <string name="product_package_weight">Masse de l'emballage</string>
     <string name="product_package">Paquet</string>
-    <string name="product_serving_weight">Poids de la portion</string>
+    <string name="product_serving_weight">Masse de la portion</string>
     <string name="product_serving">Portion</string>
     <string name="product_name">Nom</string>
     <string name="product_brand">Marque</string>
@@ -113,7 +113,7 @@
     <string name="mineral_iodine">Iode</string>
     <string name="mineral_chromium">Chrome</string>
     <string name="action_search">Rechercher</string>
-    <string name="action_scan_barcode">Scanner un code barre</string>
+    <string name="action_scan_barcode">Scanner un code-barre</string>
     <string name="action_add">Ajouter</string>
     <string name="action_go_back">Retour</string>
     <string name="action_tap_to_allow_access">Appuyez pour autoriser l'accès</string>
@@ -136,6 +136,7 @@
     <string name="action_disable_camera_flash">Désactiver le flash de l'appareil photo</string>
     <string name="action_prevent_screen_capture">Empêcher la capture d'écran</string>
     <string name="action_go_to_today">Aller à aujourd'hui</string>
+    <string name="action_feature_request_on_github">Demande de fonctionnalité sur GitHub</string>
     <string name="action_show_calendar">Afficher le calendrier</string>
     <string name="action_reorder">Réorganiser</string>
     <string name="action_move_up" description="reorder list item up">Déplacer vers le haut</string>
@@ -174,7 +175,7 @@
     <string name="neutral_permanently_delete_meal">Supprimer définitivement le repas ?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Le repas sera supprimé définitivement. Toutes les données associées seront perdues.</string>
     <string name="neutral_required">Requis</string>
-    <string name="neutral_help_translating_the_app">Contribuer à la traduction de l'app</string>
+    <string name="neutral_help_translating_the_app">Contribuer à la traduction de l'application</string>
     <string name="neutral_copied">Info copiée dans le presse-papiers</string>
     <string name="neutral_product_created">Produit(s) créé(s)</string>
     <string name="question_discard_product">Abandonner le produit ?</string>
@@ -191,6 +192,7 @@
     <string name="error_unknown_error">Erreur inconnue</string>
     <string name="error_measurement_error">Erreur de mesure, veuillez vérifier la portion et la masse sur l'emballage</string>
     <string name="error_api_key_is_invalid">La clé API n'est pas valide</string>
+    <string name="error_not_a_barcode">Ce n'est pas un code-barres</string>
     <string name="positive_goal_reached">Objectif atteint</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
@@ -230,6 +232,7 @@
     <string name="action_unpack" description="Unpack the recipe ingredients">Décompression</string>
     <string name="headline_sponsor">Soutenir le projet</string>
     <string name="description_sponsor_short_2">Soutenez le développement de l'application</string>
+    <string name="headline_source_code">Code source</string>
     <string name="action_write_an_email">Écrire un e-mail</string>
     <string name="headline_contact">Contact</string>
     <string name="description_sponsor_contact">Si vous avez des demandes concernant le parrainage, n'hésitez pas à me contacter par e-mail ou via GitHub.</string>
@@ -342,14 +345,50 @@
     <string name="action_next_month">Mois suivant</string>
     <string name="action_previous_month">Mois précédent</string>
     <string name="headline_sponsor_methods">Possibilités de contribution</string>
+    <string name="headline_save_database">Enregistrer la base de données</string>
     <string name="description_save_database">Enregistrez une copie de votre base de données</string>
+    <string name="headline_replace_database">Remplacer la base de données</string>
     <string name="description_replace_database">Remplacez votre base de données par une copie précédemment enregistrée</string>
+    <string name="action_replace">Remplacer</string>
     <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Votre base de données sera REMPLACÉE et toutes les données actuelles seront PERDUES. L'application redémarrera après le remplacement de la base de données. Vous devrez peut-être rouvrir l'application.</string>
+    <string name="action_sign_in">Se connecter</string>
+    <string name="headline_terms_of_service">Conditions d'utilisation</string>
     <string name="headline_privacy_policy">Politique de confidentialité</string>
+    <string name="error_there_was_an_error_while_signing_in">Une erreur s'est produite lors de la connexion</string>
+    <string name="headline_random_theme">Thème aléatoire</string>
+    <string name="description_random_theme">Un thème aléatoire sera appliqué à chaque démarrage de l'application</string>
     <string name="headline_terms_of_use">Conditions d'utilisation</string>
+    <string name="onboarding_privacy_tip">Cette application est open source et conçue pour vous. Nous respectons votre vie privée, vos informations restent confidentielles.</string>
     <string name="onboarding_allow_food_you_services">Autoriser la connexion aux services Food You</string>
     <string name="headline_add_profile">Ajouter un profil</string>
     <string name="headline_how_do_you_want_to_be_called">Comment souhaitez-vous être appelé ?</string>
     <string name="headline_profile_name">Nom du profil</string>
+    <string name="headline_profile_picture">Photo de profil</string>
+    <string name="action_continue">Continuer</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Salut, %1$s !</string>
+    <string name="headline_data_backup_and_export">Sauvegarde &amp; exportation des données</string>
+    <string name="headline_privacy">Confidentialité</string>
+    <string name="action_switch_profile">Changer de profil</string>
     <string name="action_add_profile">Ajouter un profil</string>
+    <string name="action_refresh">Actualiser</string>
+    <string name="description_not_sure_yet">Vous n'êtes pas encore sûr ? Vous pouvez le modifier à tout moment</string>
+    <string name="question_discard_profile">Abandonner le profil ?</string>
+    <string name="headline_edit_profile">Modifier le profil</string>
+    <string name="action_delete_profile">Supprimer le profil</string>
+    <string name="headline_delete_profile">Supprimer le profil</string>
+    <string name="description_delete_profile">Ce profil sera définitivement supprimé. Toutes les données qui y sont associées seront perdues à jamais.</string>
+    <string name="action_today" description="Set date to today">Aujourd'hui</string>
+    <string name="action_fill_in_details">Remplissez les détails</string>
+    <string name="action_skip_for_now">Ignorer pour l'instant</string>
+    <string name="headline_add_more_details">Ajouter plus de détails</string>
+    <string name="description_add_more_details_product_form">Indiquer les teneurs en protéines, lipides, glucides et calories permet d'obtenir des informations nutritionnelles plus précises</string>
+    <string name="headline_favorite">Favoris</string>
+    <string name="action_add_a_photo">Ajouter une photo</string>
+    <string name="action_remove_a_photo">Supprimer une photo</string>
+    <string name="description_values_per">Sélectionnez la quantité sur laquelle vos valeurs nutritionnelles sont basées</string>
+    <string name="description_privacy">Contrôlez vos informations personnelles</string>
+    <string name="description_food_you_services">La connexion aux services Food You vous donne accès à des fonctionnalités et des outils supplémentaires qui améliorent votre expérience</string>
+    <string name="headline_database_backup">Sauvegarde de la base de données</string>
+    <string name="description_replacing_database">Remplacement de la base de données, veuillez patienter...</string>
+    <string name="headline_experimental">Expérimental</string>
 </resources>

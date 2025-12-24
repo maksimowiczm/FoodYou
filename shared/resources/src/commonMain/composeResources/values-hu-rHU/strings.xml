@@ -7,6 +7,7 @@
     <string name="headline_general">Általános</string>
     <string name="headline_macronutrients">Tápanyagok</string>
     <string name="headline_meals">Étkezések</string>
+    <string name="headline_delete_food">Étel törlése</string>
     <string name="headline_edit_product">Termék szerkesztése</string>
     <string name="headline_permission_required">Engedély szükséges</string>
     <string name="headline_language">Nyelv</string>
@@ -37,9 +38,15 @@
     <string name="headline_vitamins">Vitaminok</string>
     <string name="headline_minerals">Ásványok</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">Támogatott linkek</string>
+    <string name="headline_something_went_wrong">Upsz, valami történt</string>
+    <string name="headline_daily_goals_settings">Napi célok beállítása</string>
+    <string name="headline_api_key">API kulcs</string>
+    <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Forrás</string>
+    <string name="headline_features">Funkciók</string>
     <string name="weight">Tömeg</string>
     <string name="unit_energy" description="Energy as calories">Energia</string>
     <string name="unit_kcal">kcal</string>
+    <string name="unit_kilojoules">kJ</string>
     <plurals name="unit_gram">
         <item quantity="one">gramm</item>
         <item quantity="other">gramm</item>
@@ -48,6 +55,8 @@
         <item quantity="one">mililiter</item>
         <item quantity="other">mililiter</item>
     </plurals>
+    <string name="unit_ounce_short">oz</string>
+    <string name="unit_fluid_ounce_short">fl oz</string>
     <string name="product_package_weight">Csomag tömege</string>
     <string name="product_package">Csomag</string>
     <string name="product_serving_weight">Adag tömege</string>
@@ -71,8 +80,24 @@
     <string name="nutriment_omega_3">Omega-3 zsírsavak</string>
     <string name="nutriment_omega_6">Omega-6 zsírsavak</string>
     <string name="nutriment_salt">Só</string>
+    <string name="nutriment_fiber">Rosttartalom</string>
     <string name="nutriment_cholesterol">Koleszterin</string>
     <string name="nutriment_caffeine">Koffein</string>
+    <string name="nutriment_trans_fats">Transzzsírok</string>
+    <string name="nutriment_added_sugars">Hozzáadott cukrok</string>
+    <string name="nutriment_soluble_fiber">Oldható rostok</string>
+    <string name="nutriment_insoluble_fiber">Oldhatatlan rostok</string>
+    <string name="vitamin_a">Vitamin A (Retinol)</string>
+    <string name="vitamin_b1">Vitamin B1 (Tiamin)</string>
+    <string name="vitamin_b2">Vitamin B2 (Riboflavin)</string>
+    <string name="vitamin_b3">Vitamin B3 (Niacin)</string>
+    <string name="vitamin_b5">Vitamin B5 (Pantoténsav)</string>
+    <string name="vitamin_b6">Vitamin B6 (Piridoxál-foszfát)</string>
+    <string name="vitamin_b7">Vitamin B7 (Biotin)</string>
+    <string name="vitamin_b9">Vitamin B9 (Folsav)</string>
+    <string name="vitamin_b12">Vitamin B12 (kobalamin)</string>
+    <string name="vitamin_c">C-vitamin (Aszkorbinsav)</string>
+    <string name="vitamin_d">Vitamin D (kolekalciferol)</string>
     <string name="vitamin_e">E-vitamin</string>
     <string name="vitamin_k">K-vitamin</string>
     <string name="mineral_manganese">Mangán</string>
@@ -86,6 +111,7 @@
     <string name="mineral_phosphorus">Foszfor</string>
     <string name="mineral_selenium">Szelén</string>
     <string name="mineral_iodine">Jód</string>
+    <string name="mineral_chromium">Króm</string>
     <string name="action_search">Keresés</string>
     <string name="action_scan_barcode">QR-kód beolvasása</string>
     <string name="action_add">Hozzáadás</string>
@@ -110,6 +136,7 @@
     <string name="action_disable_camera_flash">Vaku letiltása</string>
     <string name="action_prevent_screen_capture">Megakadályozza a képernyőfelvételt</string>
     <string name="action_go_to_today">Irány a mai nap</string>
+    <string name="action_feature_request_on_github">Funkciókérés a GitHubon</string>
     <string name="action_show_calendar">Naptár megjelenítése</string>
     <string name="action_reorder">Átrendezés</string>
     <string name="action_move_up" description="reorder list item up">Mozgatás fel</string>
@@ -125,13 +152,25 @@
     <string name="action_choose_other_date">Másik dátum választása</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Továbbiak megjelenítése</string>
     <string name="action_download_product">Termék letöltése</string>
+    <string name="action_copy_and_open_bug_report">Másolás és hibanapló megnyitása</string>
+    <string name="action_show_details">Részletek megjelenítése</string>
+    <string name="action_browse_usda">FoodData Central (USDA) böngészése</string>
+    <string name="action_set_key">Kulcs beállítása</string>
+    <string name="action_obtain_key">Kulcs beszerzése</string>
+    <string name="action_dont_show_again">Ne mutasd többet</string>
     <string name="neutral_barcode_scanner_camera_request">Kamera hozzáférés engedélyezése a kód beolvasásához</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Azért kell engedélyezni, hogy be lehessen olvasni a QR-kódot</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">A vonalkód beolvasásához szükség van a kamera engedélyeztetésére. Kérlek, engedélyezd ezt az alkalmazás beállításokban.</string>
+    <string name="neutral_no_food_found">Nem talált</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d kalória maradt</item>
         <item quantity="other">%1$d kalória maradt</item>
     </plurals>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">%1$d kilojoule maradt</item>
+        <item quantity="other">%1$d kilojoule maradt</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Napi céljaid beállítása</string>
     <string name="neutral_set_your_meal_schedule">Állítsd be az étkezési időrendjeid</string>
     <string name="neutral_permanently_delete_meal">Véglegesen törlöd az étkezést?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Az étkezés véglegesen törlődik. Az ehhez tartozó összes adat el fog veszni.</string>
@@ -151,12 +190,20 @@
     <string name="error_failed_to_download_product">A termék letöltése sikertelen</string>
     <string name="error_product_not_found">A termék nem található</string>
     <string name="error_unknown_error">Ismeretlen hiba</string>
+    <string name="error_measurement_error">Mérési hiba, kérlek ellenőrizd az adag és a csomag méretét</string>
+    <string name="error_api_key_is_invalid">Az API kulcs helytelen</string>
+    <string name="error_not_a_barcode">Nem egy konalkód</string>
     <string name="positive_goal_reached">Cél elérve</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
         <item quantity="one">%1$d kalóriával túllépted a keretet</item>
         <item quantity="other">%1$d kalóriával túllépted a keretet</item>
     </plurals>
+    <plurals name="negative_exceeded_by_kilojoules">
+        <item quantity="one">%1$d kilojoule-lal túllépted a keretet</item>
+        <item quantity="other">%1$d kilojoule-lal túllépted a keretet</item>
+    </plurals>
+    <string name="description_delete_food">Az étel örökre elveszik</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Ez a bejegyzés törlésre kerül a naplódból. Bármikor újra hozzáadhatod.</string>
     <string name="description_about_setting">Tudj meg többet az applikációról</string>
     <string name="description_time_based_meals_sorting">Ha be van kapcsolva, az éppen aktuális étkezések jelennek meg elsőként</string>
@@ -164,8 +211,184 @@
     <string name="description_incomplete_nutrition_data">Néhány használt termék híján van az értékeknek, ezért az itt látható érték pontatlan lehet</string>
     <string name="description_translation_warning">A fordításokat önkéntesek végzik. Lehet, hogy nem tökéletes és néhány fordítás hiányozhat. Ha hibát találsz, kérlek, segíts tökéletesíteni őket.</string>
     <string name="description_home_settings">Kezdőlapod testreszabása</string>
-    <string name="description_download_product">Illeszd be egy élelmiszer linkjét, és automatikusan betöltjük a tápértékeket és a termék adatait.</string>
+    <string name="description_download_product">Illeszd be egy élelmiszer linkjét, és automatikusan betöltjük a tápanyagokat és a termék adatait.</string>
     <string name="description_download_product_hint">Bármilyen szöveget beilleszthetsz. Az első URL kerül felhasználásra.</string>
+    <string name="description_show_macronutrients_goals">Tápanyag-célok megjelenítése</string>
+    <string name="description_please_wait_while_importing_products">Kérem várjon míg az importálás befejeződik</string>
+    <string name="description_please_wait_while_exporting_products">Kérem várjon míg az exportálás befejeződik</string>
     <string name="headline_launcher_icon_by_icons8">Az indítási ikon az Icons8-ról származik</string>
+    <string name="description_open_food_facts">Egy kollaboratív, ingyenes és nyílt adatbázis, ételekkel a világ minden tájáról</string>
     <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">Termékek exportálása</string>
+    <string name="notification_importing_products">Termékek importálása</string>
+    <string name="notification_importing_products_success">Termékek importálása sikeres</string>
+    <string name="description_food_data_central_usda">A FoodData Central az USDA átfogó táplálkozás-összetételi adatforrása több különálló adattípussal</string>
+    <string name="error_usda_rate_limit">FoodData Central (USDA) API sebességkorlátja túllépve</string>
+    <string name="description_swiss_food_composition_database_short">A Svájci Élelmiszer-összetétel Adatbázis több mint 1100 általános élelmiszer termék tápanyagtartalmát tartalmazza.</string>
+    <string name="description2_swiss_food_composition_database">A Svájci Élelmiszer-összetétel Adatbázis több mint 1100 általános élelmiszer termék tápanyagtartalmát tartalmazza. Négy nyelven érhető el. Ha ezeket a termékeket szeretné bevinni az élelmiszernaplójába, kérjük, válassza ki az előnyben részesített nyelveket.</string>
+    <string name="headline_external_databases">Külső adatbázisok</string>
+    <string name="description_external_databases">Támogatott adatbázisok megtekintése</string>
+    <string name="feature_manual_database_import">Manuális adatbázis importálása</string>
+    <string name="action_unpack" description="Unpack the recipe ingredients">Kicsomagolás</string>
+    <string name="headline_sponsor">Szponzor</string>
+    <string name="description_sponsor_short_2">Támogasd az applikációt</string>
+    <string name="headline_source_code">Forráskód</string>
+    <string name="action_write_an_email">Írj emailt</string>
+    <string name="headline_contact">Elérhetőség</string>
+    <string name="description_sponsor_contact">Ha bármilyen kérdése van a szponzorációval kapcsolatban, értesítsen emailben vagy GitHubon.</string>
+    <string name="sponsor_bank_or_card">Bankkártya vagy hitelkártya</string>
+    <string name="action_treat_as_liquid">Folyadékként kezelendő</string>
+    <string name="description_treat_as_liquid">Milliliterek használata méréskor</string>
+    <string name="headline_personalization">Testreszabás</string>
+    <string name="description_personalization">Élmény testreszabása</string>
+    <string name="headline_nutrition_facts">Táplálkozási értékek</string>
+    <string name="description_personalize_nutrition_facts_short">Tápanyagtáblázat átrendezése</string>
+    <string name="action_reset_ordering">Rendezés visszaállítása</string>
+    <string name="headline_reset_to_default">Alapértelmezett visszaállítása</string>
+    <string name="action_reset" description="Confirm resetting">Visszaállítás</string>
+    <string name="description_reset_nutrition_facts">Táplálkozási értékek testreszabásának visszaállítása</string>
+    <string name="headline_note">Megjegyzések</string>
+    <string name="description_add_note">Opcionális megjegyzések (pl. összetevők, vegán státusz, allergének, adalékanyagok) vagy bármely egyéb nem tápanyagokkal kapcsolatos részletek</string>
+    <string name="action_try_again">Próbáld újra</string>
+    <string name="description_calories_are_calculated">Az energia automatikusan ki van számolva a tápanyagokból. Kikapcsolhatod ezt a funkciót, és beállíthatod magad az értéket. Az alkohol nincs figyelembe véve.</string>
+    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
+    <string name="neutral_an_error_occurred">Problémába ütköztünk</string>
+    <string name="action_retry">Újra</string>
+    <string name="action_import">Importálás</string>
+    <string name="headline_today" description="Today, date">Ma, %1$s</string>
+    <string name="headline_yesterday" description="Yesterday, date">Tegnap, %1$s</string>
+    <string name="headline_tomorrow" description="Tomorrow, date">Holnap, %1$s</string>
+    <string name="headline_user" description="User, person who uses the app">Felhasználó</string>
+    <string name="description_food_source">Étel forrásának megadása</string>
+    <string name="error_food_is_missing_required_fields">Az étel kötelező mezői még üresek</string>
+    <string name="headline_preview_release">Előzetes kiadás</string>
+    <string name="description_preview_release">Jelenleg egy előzetes kiadást használsz. Lehet befejezetlen, instabil, vagy még a jövőben változhat.</string>
+    <string name="headline_your_food">A te ételed</string>
+    <string name="headline_filters">Szűrők</string>
+    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">Hozzávaló kiválasztása</string>
+    <string name="headline_edit_recipe">Recept módosítása</string>
+    <string name="description_delete_ingredient">A hozzávaló el lesz távolítva a receptből</string>
+    <string name="neutral_remote_database_error">Képtelenek voltunk a termék letöltésére az adatbázisból. Az eddig letöltött termékeket még megtekintheted.</string>
+    <string name="headline_before_you_start">Mielőtt belekezdesz</string>
+    <string name="description_before_you_start">Azért, hogy egy ingyenes és nyílt forráskódú ételnaplót adhassuk, a személyes adataidat előbbre tesszük mindennél. Ez az applikáció nem gyűjti, tárolja és nem osztja meg másokkal az adataidat. Az összes adat az eszközödön van elmentve, és a te kezelésed alatt áll.</string>
+    <string name="action_agree_and_continue">Beleegyezés &amp; Folytatás</string>
+    <string name="headline_food_database">Étel adatbázis</string>
+    <string name="description_food_database">Dönthetsz úgy, hogy igénybe veszed ezeket a nem kötelező külső szolgáltatásokat, amelyek saját felhasználási feltételeikkel és adatvédelmi irányelveikkel rendelkezhetnek</string>
+    <string name="action_skip">Kihagyás</string>
+    <string name="headline_almost_done">Lassan kész</string>
+    <string name="headline_preparing_your_food_diary">Az ételnaplód elkészítése</string>
+    <string name="headline_please_wait">Kérem várjon</string>
+    <string name="headline_created">Létrehozva</string>
+    <string name="headline_imported">Importálva</string>
+    <string name="headline_downloaded">Letöltve</string>
+    <string name="headline_edited">Módosítva</string>
+    <string name="headline_history">Előzmények</string>
+    <string name="headline_anonymous">Anoním</string>
+    <string name="headline_recent">Legutóbbi</string>
+    <string name="headline_database">Adatbázis</string>
+    <string name="description_manage_database">Adatbázis kezelése</string>
+    <string name="action_done">Kész</string>
+    <string name="neutral_measurement_added">Megvan! Hozzáadtuk a méréseidet</string>
+    <string name="headline_imported_from_food_you_2">A Food You 2-ből importálva</string>
+    <string name="action_set_goals">Célok beállítása</string>
+    <string name="headline_pick_the_days">Napok kiválasztása</string>
+    <string name="action_set_separate_goals">Naponta változó célok beállítása</string>
+    <string name="headline_percentages">Százalékok</string>
+    <string name="action_import_csv_food_products">Termékek importálása CSV fájlból</string>
+    <string name="description_import_csv_food_products">Termékek importálása CSV fájlból</string>
+    <string name="description_import_csv_food_products_hint">Tudnunk kell mi micsoda. Melyik oszlop mit jelez a fájlodban? (név, márka, stb.).</string>
+    <string name="description_import_csv_food_products_hint_2">A tápanyagértékeket 100 grammonként, grammban vagy kcal-ban kell megadni</string>
+    <string name="action_export_csv_food_products">Termékek exportálása CSV fájlba</string>
+    <string name="description_export_csv_food_products">Termékek exportálása CSV fájlba</string>
+    <string name="neutral_no_column">Nincs oszlop</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="one">%1$d beimportálva</item>
+        <item quantity="other">%1$d beimportálva</item>
+    </plurals>
+    <string name="headline_energy_unit">Energiaegység</string>
+    <string name="description_energy_unit">Válassza ki a tetszőleges energiaegységet</string>
+    <plurals name="neutral_exported_x_food_products">
+        <item quantity="one">%1$d exportálva</item>
+        <item quantity="other">%1$d exportálva</item>
+    </plurals>
+    <string name="headline_auto_calculate_energy">Energia automatikus kiszámítása</string>
+    <string name="headline_manual_energy_input">Energia manuális beírása</string>
+    <string name="headline_quick_add">Gyors hozzáadás</string>
+    <string name="description_quick_add">A Gyors hozzáadással könnyedén jegyezhetsz fel ételeket, a kikeresésük nélkül. Ez egy gyors módja a feljegyzésnek, ha ismered az adott étel kalóriamértékét, vagy csak lusti vagy.</string>
+    <string name="action_open_poll">Szavazás megnyitása</string>
+    <string name="headline_colors">Színek</string>
+    <string name="description_colors">Szabd testre az applikáció színeit</string>
+    <string name="headline_custom_palette">Saját színpaletta</string>
+    <string name="description_custom_palette">Saját színpaletta beállítása</string>
+    <string name="headline_dynamic_colors">Dinamikus színbeállítás</string>
+    <string name="description_dynamic_colors">A rendszer színsémájának használata</string>
+    <string name="headline_palette_style">Paletta stílusa</string>
+    <string name="headline_contrast">Kontraszt</string>
+    <string name="headline_amoled">AMOLED</string>
+    <string name="headline_light">Fényes</string>
+    <string name="headline_dark">Sötét</string>
+    <string name="headline_appearance">Kinézet</string>
+    <string name="headline_theme">Téma</string>
+    <string name="headline_pick_a_color">Szín kiválasztása</string>
+    <string name="headline_nutrients_colors">Tápértékek színei</string>
+    <string name="description_nutrients_colors_reset">Tápanyagok színei alapértelmezettre visszaállítása</string>
+    <string name="headline_sponsorship_goals">Célok</string>
+    <string name="description_sponsorship_goals">Szponzorációkkal segítheted ennek a projektnek a független és fenntartható fejlődését, egy kizsákmányoláson alapuló üzleti modell bevezetése helyett. Sok népszerű applikáció úgy szerez pénzt, hogy összegyűjti és eladja a felhasználói adatait, és célzott reklámokkal vagy előfizetésekkel bombázza azokat. Egy szponzoráció biztosítja, hogy ez az alkalmazás a felhasználók magánéletének tiszteletben tartása mellett marad, átlátható lesz, és a valódi értéknyújtásra összpontosít anélkül, hogy veszélyeztetné bárki adatait.</string>
+    <string name="description_x_away_from_next_goal">%1$s távol a következő célig</string>
+    <string name="headline_sponsors">Szponzoraink</string>
+    <string name="description_no_sponsors_this_month">Nincsenek szponzoraink ebben a hónapban</string>
+    <string name="headline_latest" description="Latest, most recent">Legutóbbi</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Legnagyobb</string>
+    <string name="headline_this_month_we_raised">Ebben a hónapban %1$s-t szereztünk</string>
+    <string name="description_sponsors_privacy">A Food You komolyan veszi a magánéletedet. Ezért nem csatlakozik külső szolgáltatásokhoz, amíg te azt nem engedélyezed. Ahhoz, hogy megtekinthesd legutóbbi szponzorainkat, az adatokat a Food You szervereiről kell letöltenünk.</string>
+    <string name="action_allow" description="Allow something">Engedélyezés</string>
+    <string name="action_next_month">Következő hónap</string>
+    <string name="action_previous_month">Előző hónap</string>
+    <string name="headline_sponsor_methods">Módszerek</string>
+    <string name="headline_save_database">Adatbázis mentése</string>
+    <string name="description_save_database">Ments le egy másolatot az adatbázisodról</string>
+    <string name="headline_replace_database">Adatbázis kicserélése</string>
+    <string name="description_replace_database">Adatbázis kicserélése egy korábbi másolattal</string>
+    <string name="action_replace">Kicserélés</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Az adatbázis KI LESZ CSERÉLVE, és az összes eddigi adatod EL FOG VESZNI. Az app újra fog indulni, miután az adatok átíródnak. Lehet hogy újra meg kell nyitnod az appot.</string>
+    <string name="action_sign_in">Bejelentkezés</string>
+    <string name="headline_terms_of_service">Felhasználási feltételek</string>
+    <string name="headline_privacy_policy">Adatkezelési tájékoztató</string>
+    <string name="error_there_was_an_error_while_signing_in">Problémába ütköztünk a bejelentkezés során</string>
+    <string name="headline_random_theme">Random téma</string>
+    <string name="description_random_theme">Egy random téma lesz beállítva minden alakalommal amikor az app újraindul</string>
+    <string name="headline_terms_of_use">Felhasználási feltételek</string>
+    <string name="onboarding_privacy_tip">Ez az app nyílt forráskódú és neked épült. Az információd biztonságban marad.</string>
+    <string name="onboarding_allow_food_you_services">A Food You szolgáltatásaihoz való csatlakozás engedélyezése</string>
+    <string name="headline_add_profile">Profil hozzáadása</string>
+    <string name="headline_how_do_you_want_to_be_called">Hogyan nevezhetünk?</string>
+    <string name="headline_profile_name">Profilnév</string>
+    <string name="headline_profile_picture">Profilkép</string>
+    <string name="action_continue">Folytatás</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Szia, %1$s!</string>
+    <string name="headline_data_backup_and_export">Adatok biztonsági mentése &amp; exportálás</string>
+    <string name="headline_privacy">Adatvédelem</string>
+    <string name="action_switch_profile">Profilváltás</string>
+    <string name="action_add_profile">Profil hozzáadása</string>
+    <string name="action_refresh">Frissítés</string>
+    <string name="description_not_sure_yet">Nem vagy biztos benne? Megváltoztathatod bármikor</string>
+    <string name="question_discard_profile">Profil elvetése?</string>
+    <string name="headline_edit_profile">Profil szerkesztése</string>
+    <string name="action_delete_profile">Profil törlése</string>
+    <string name="headline_delete_profile">Profil törlése</string>
+    <string name="description_delete_profile">Ez a profil örökre törlődni fog. Az összes adat ami kötődik hozzá törlődni fog.</string>
+    <string name="action_today" description="Set date to today">Ma</string>
+    <string name="action_fill_in_details">Részletek kitöltése</string>
+    <string name="action_skip_for_now">Átugrás ideiglenesen</string>
+    <string name="headline_add_more_details">Több részlet megadása</string>
+    <string name="description_add_more_details_product_form">A fehérjék, zsírok, szénhidrátok és más energiaértékek kitöltése segíti a pontosabb áttekintést</string>
+    <string name="headline_favorite">Kedvenc</string>
+    <string name="action_add_a_photo">Fotó hozzáadása</string>
+    <string name="action_remove_a_photo">Fotó eltávolítása</string>
+    <string name="description_values_per">Válaszd ki, hogy a tápanyagok mely mennyiségre vonatkoznak</string>
+    <string name="description_privacy">A személyes információk szabályozása</string>
+    <string name="description_food_you_services">A Food You szolgáltatásokhoz való csatlakozás extra funkciókat és eszközöket tár fel, amelyek fokozzák az élményt</string>
+    <string name="headline_database_backup">Adatbázis biztonsági mentése</string>
+    <string name="description_replacing_database">Adatbázis kicserélése, kérem várjon...</string>
+    <string name="headline_experimental">Kísérleti</string>
 </resources>

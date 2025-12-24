@@ -136,6 +136,7 @@
     <string name="action_disable_camera_flash">Kamera flaşını kapat</string>
     <string name="action_prevent_screen_capture">Ekran görüntüsünü engelle</string>
     <string name="action_go_to_today">Bugüne git</string>
+    <string name="action_feature_request_on_github">GitHub'da özellik isteği</string>
     <string name="action_show_calendar">Takvimi göster</string>
     <string name="action_reorder">Yeniden sırala</string>
     <string name="action_move_up" description="reorder list item up">Yukarı taşı</string>
@@ -191,6 +192,7 @@
     <string name="error_unknown_error">Bilinmeyen hata</string>
     <string name="error_measurement_error">Ölçüm hatası, lütfen porsiyon ve paket ağırlığını kontrol edin</string>
     <string name="error_api_key_is_invalid">API anahtarı geçersiz</string>
+    <string name="error_not_a_barcode">Barkod değil</string>
     <string name="positive_goal_reached">Hedefe ulaşıldı</string>
     <string name="positive_ok">Tamam</string>
     <plurals name="negative_exceeded_by_calories">
@@ -230,6 +232,7 @@
     <string name="action_unpack" description="Unpack the recipe ingredients">Malzemelere ayır</string>
     <string name="headline_sponsor">Sponsor ol</string>
     <string name="description_sponsor_short_2">Uygulamanın gelişimini destekleyin</string>
+    <string name="headline_source_code">Kaynak kodu</string>
     <string name="action_write_an_email">E-posta yaz</string>
     <string name="headline_contact">İletişim</string>
     <string name="description_sponsor_contact">Sponsorlukla ilgili herhangi bir talebiniz varsa, e-posta veya GitHub aracılığıyla benimle iletişime geçmekten çekinmeyin.</string>
@@ -256,7 +259,7 @@
     <string name="headline_yesterday" description="Yesterday, date">Dün, %1$s</string>
     <string name="headline_tomorrow" description="Tomorrow, date">Yarın, %1$s</string>
     <string name="headline_user" description="User, person who uses the app">Kullanıcı</string>
-    <string name="description_food_source">Yiyecek verilerinin nereden geldiğini belirtin. Buraya bir bağlantı ekleyebilirsiniz</string>
+    <string name="description_food_source">Gıda verisinin nereden geldiğini belirtin</string>
     <string name="error_food_is_missing_required_fields">Yiyecekte gerekli alanlar eksik</string>
     <string name="headline_preview_release">Önizleme sürümü</string>
     <string name="description_preview_release">Şu anda bir önizleme sürümü kullanıyorsunuz. Eksik, kararsız veya değişikliğe tabi olabilir.</string>
@@ -368,4 +371,24 @@
     <string name="action_switch_profile">Profili değiştir</string>
     <string name="action_add_profile">Profil ekle</string>
     <string name="action_refresh">Yenile</string>
+    <string name="description_not_sure_yet">Henüz emin değil misiniz? İstediğiniz zaman değiştirebilirsiniz</string>
+    <string name="question_discard_profile">Profil silinsin mi?</string>
+    <string name="headline_edit_profile">Profili düzenle</string>
+    <string name="action_delete_profile">Profili sil</string>
+    <string name="headline_delete_profile">Profili sil</string>
+    <string name="description_delete_profile">Bu profil kalıcı olarak silinecek. İlişkili tüm veriler sonsuza dek kaybolacak.</string>
+    <string name="action_today" description="Set date to today">Bugün</string>
+    <string name="action_fill_in_details">Ayrıntıları doldur</string>
+    <string name="action_skip_for_now">Şimdilik atla</string>
+    <string name="headline_add_more_details">Daha fazla ayrıntı ekle</string>
+    <string name="description_add_more_details_product_form">Protein, yağ, karbonhidrat ve enerji değerlerini doldurmak, daha doğru beslenme bilgileri sağlamaya yardımcı olur</string>
+    <string name="headline_favorite">Favori</string>
+    <string name="action_add_a_photo">Fotoğraf ekle</string>
+    <string name="action_remove_a_photo">Fotoğrafı kaldır</string>
+    <string name="description_values_per">Besin değerlerinizin dayandığı miktarı seçin</string>
+    <string name="description_privacy">Kişisel bilgilerinizi kontrol edin</string>
+    <string name="description_food_you_services">Food You servislerine bağlanmak, deneyiminizi geliştiren ek özelliklerin ve araçların kilidini açar</string>
+    <string name="headline_database_backup">Veritabanı yedeği</string>
+    <string name="description_replacing_database">Veritabanı değiştiriliyor, lütfen bekleyin...</string>
+    <string name="headline_experimental">Deneysel</string>
 </resources>

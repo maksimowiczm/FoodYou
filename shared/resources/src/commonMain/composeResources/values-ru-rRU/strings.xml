@@ -370,4 +370,13 @@
     <string name="error_there_was_an_error_while_signing_in">Произошла ошибка при входе</string>
     <string name="headline_random_theme">Случайная тема</string>
     <string name="description_random_theme">При каждом запуске приложения будет применяться случайная тема</string>
+    <string name="headline_terms_of_use">Условия использования</string>
+    <string name="headline_add_profile">Добавить профиль</string>
+    <string name="headline_profile_name">Название профиля</string>
+    <string name="headline_profile_picture">Фото профиля</string>
+    <string name="action_continue">Продолжить</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Привет, %1$s!</string>
+    <string name="action_add_profile">Добавить профиль</string>
+    <string name="action_refresh">Обновить</string>
+    <string name="action_today" description="Set date to today">Сегодня</string>
 </resources>

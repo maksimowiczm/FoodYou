@@ -1,15 +1,15 @@
-<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
+A <b>Food You</b> egy sokszínű, nyílt-forráskódú tápértékkövető, modern Material You külsővel. Nemcsak a kalóriáidat méri, hanem az egész tépérték-beviteledet leköveti - megbízható adatokkal lát el egy rugalmas, testreszabható felületen.
 
-<b>Jellemzők:</b>
+<b>Funkciók:</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
-    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
-    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
-    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
-    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
-    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
+    <li><b>Material You dizájn:</b> A dinamikus téma segítségével a te eszközödhöz igazodik.</li>
+    <li><b>Átfogó élelmiszer-adatbázisok:</b> A tápértékadatokat az Open Food Facts, a USDA FoodCentral és a Svájci Élelmiszer-összetétel Adatbázis biztosítja.</li>
+    <li><b>Teljes körű tápértékadat-követés:</b> Kövesd kalóriáidat, makróidat, vitaminjaidat és ásványi anyagaidat.</li>
+    <li><b>Receptek:</b> Keverd össze a már meglévő termékeidet alapanyagként receptekbe, és az app rögtön kiszámolja a tápanyagértékét.</li>
+    <li><b>Napi célok:</b> Állítsd be, és kövesd céljaidat.</li>
+    <li><b>Személyre szabható kezdőképernyő:</b> Tedd sajátoddá a képernyőn látható kártyákat, ahogy neked jól esik.</li>
 </ul>
 
-Start tracking your nutrition today with Food You — clean, complete, and fully yours.
+Kezdd el a tápanyagaidat mérni a Food You segítségével - Letisztult, teljes, és a tied.
 
-Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Az ikont készítette az <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

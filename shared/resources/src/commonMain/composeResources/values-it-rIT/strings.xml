@@ -136,6 +136,7 @@
     <string name="action_disable_camera_flash">Disattiva il flash della fotocamera</string>
     <string name="action_prevent_screen_capture">Impedisci l'acquisizione dello schermo</string>
     <string name="action_go_to_today">Vai a oggi</string>
+    <string name="action_feature_request_on_github">Richiedi funzionalità su GitHub</string>
     <string name="action_show_calendar">Mostra calendario</string>
     <string name="action_reorder">Riordina</string>
     <string name="action_move_up" description="reorder list item up">Sposta su</string>
@@ -191,6 +192,7 @@
     <string name="error_unknown_error">Errore sconosciuto</string>
     <string name="error_measurement_error">Errore nella misurazione, controlla la porzione e il peso della confezione</string>
     <string name="error_api_key_is_invalid">La chiave API non è valida</string>
+    <string name="error_not_a_barcode">Non è un codice a barre</string>
     <string name="positive_goal_reached">Obiettivo raggiunto</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
@@ -222,6 +224,7 @@
     <string name="notification_importing_products_success">Importazione prodotti completata</string>
     <string name="description_food_data_central_usda">FoodData Central è la fonte completa di dati sulla composizione degli alimenti dell'USDA, con diversi tipi di dati distinti</string>
     <string name="error_usda_rate_limit">Il limite di richieste API per FoodData Central (USDA) è stato superato</string>
+    <string name="error_usda_not_verified">La chiave API fornita non è stata ancora verificata. Controlla la tua e-mail per verificare la chiave API.</string>
     <string name="description_swiss_food_composition_database_short">La Banca Dati Svizzera dei Valori Nutritivi include informazioni nutrizionali per oltre 1.100 prodotti alimentari generali</string>
     <string name="description2_swiss_food_composition_database">La Banca Dati Svizzera dei Valori Nutritivi include informazioni nutrizionali per oltre 1.100 prodotti alimentari in generale. È disponibile in quattro lingue. Per importare questi prodotti nel tuo diario alimentare, seleziona le tue lingue preferite.</string>
     <string name="headline_external_databases">Database esterni</string>
@@ -230,6 +233,7 @@
     <string name="action_unpack" description="Unpack the recipe ingredients">Estrai</string>
     <string name="headline_sponsor">Sostieni</string>
     <string name="description_sponsor_short_2">Supporta la crescita dell'app</string>
+    <string name="headline_source_code">Codice sorgente</string>
     <string name="action_write_an_email">Scrivi una email</string>
     <string name="headline_contact">Contatti</string>
     <string name="description_sponsor_contact">Se hai richieste sulle donazioni, non esitare a contattarmi via e-mail o GitHub.</string>
@@ -319,6 +323,9 @@
     <string name="description_custom_palette">Imposta il tuo schema colori personale</string>
     <string name="headline_dynamic_colors">Colori dinamici</string>
     <string name="description_dynamic_colors">Applica i colori di sistema</string>
+    <string name="headline_palette_style">Stile palette</string>
+    <string name="headline_contrast">Contrasto</string>
+    <string name="headline_amoled">AMOLED</string>
     <string name="headline_light">Chiaro</string>
     <string name="headline_dark">Scuro</string>
     <string name="headline_appearance">Aspetto</string>
@@ -327,4 +334,62 @@
     <string name="headline_nutrients_colors">Colori dei nutrienti</string>
     <string name="description_nutrients_colors_reset">Le impostazioni dei colori dei nutrienti verranno ripristinate ai valori predefiniti</string>
     <string name="headline_sponsorship_goals">Obiettivi</string>
+    <string name="description_sponsorship_goals">Sponsorizzando, aiuti a mantenere questo progetto indipendente e sostenibile senza fare affidamento su modelli di business che sfruttano gli utenti. Molte app commerciali guadagnano raccogliendo e vendendo i dati degli utenti, mostrando annunci pubblicitari mirati o spingendo gli utenti verso schemi di coinvolgimento che creano dipendenza. La sponsorizzazione assicura che questa app rimanga rispettosa della privacy, trasparente e focalizzata sulla fornitura di valore reale senza compromettere la tua fiducia o il tuo benessere.</string>
+    <string name="description_x_away_from_next_goal">%1$s al prossimo obiettivo</string>
+    <string name="headline_sponsors">Sostenitori</string>
+    <string name="description_no_sponsors_this_month">Nessuno sponsor questo mese</string>
+    <string name="headline_latest" description="Latest, most recent">Ultimo</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Migliore</string>
+    <string name="headline_this_month_we_raised">Questo mese abbiamo raccolto %1$s</string>
+    <string name="description_sponsors_privacy">Food You tratta la tua privacy molto seriamente. È per questo che non si connette a nessuno servizio esterno almeno che non lo consenta tu. Per vedere gli ultimi sostenitori, i dati devono essere scaricati dai server di Food You.</string>
+    <string name="action_allow" description="Allow something">Consenti</string>
+    <string name="action_next_month">Mese prossimo</string>
+    <string name="action_previous_month">Mese precedente</string>
+    <string name="headline_sponsor_methods">Metodi</string>
+    <string name="headline_save_database">Salva database</string>
+    <string name="description_save_database">Salva una copia del tuo database</string>
+    <string name="headline_replace_database">Sostituisci il database</string>
+    <string name="description_replace_database">Sostituisci il tuo database con una copia salvata in precedenza</string>
+    <string name="action_replace">Sostituisci</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Il tuo database verrà SOSTITUITO, e tutti i dati attuali verranno PERSI. L'app si riavvierà dopo che il database è sostituito. Potresti dover riaprire l'app.</string>
+    <string name="action_sign_in">Accedi</string>
+    <string name="headline_terms_of_service">Termini di servizio</string>
+    <string name="headline_privacy_policy">Informativa sulla privacy</string>
+    <string name="error_there_was_an_error_while_signing_in">Errore durante l'accesso</string>
+    <string name="headline_random_theme">Tema casuale</string>
+    <string name="description_random_theme">Verrà applicato un tema casuale ogni volta che viene avviata l'applicazione</string>
+    <string name="headline_terms_of_use">Termini di utilizzo</string>
+    <string name="onboarding_privacy_tip">Questa app è open-source e costruita per te. Rispettiamo la tua privacy, le tue informazioni rimango private.</string>
+    <string name="onboarding_allow_food_you_services">Consenti la connessione ai servizi di Food You</string>
+    <string name="headline_add_profile">Aggiungi profilo</string>
+    <string name="headline_how_do_you_want_to_be_called">Come vuoi essere chiamato?</string>
+    <string name="headline_profile_name">Nome profilo</string>
+    <string name="headline_profile_picture">Immagine profilo</string>
+    <string name="action_continue">Continua</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Ciao, %1$s!</string>
+    <string name="headline_data_backup_and_export">Backup dati ed esportazione</string>
+    <string name="headline_privacy">Privacy</string>
+    <string name="action_switch_profile">Cambia profilo</string>
+    <string name="action_add_profile">Aggiungi profilo</string>
+    <string name="action_refresh">Aggiorna</string>
+    <string name="description_not_sure_yet">Non sei ancora sicuro? Puoi cambiarlo in qualsiasi momento</string>
+    <string name="question_discard_profile">Scartare il profilo?</string>
+    <string name="headline_edit_profile">Modifica profilo</string>
+    <string name="action_delete_profile">Elimina profilo</string>
+    <string name="headline_delete_profile">Elimina profilo</string>
+    <string name="description_delete_profile">Questo profilo verrà eliminato definitivamente. Tutti i dai associati verranno persi per sempre.</string>
+    <string name="action_today" description="Set date to today">Oggi</string>
+    <string name="action_fill_in_details">Inserisci i dettagli</string>
+    <string name="action_skip_for_now">Salta per ora</string>
+    <string name="headline_add_more_details">Aggiungi più dettagli</string>
+    <string name="description_add_more_details_product_form">L'inserimento di proteine, grassi, carboidrati e valori energetici aiuta a fornire risultati nutrizionali più accurati</string>
+    <string name="headline_favorite">Preferiti</string>
+    <string name="action_add_a_photo">Aggiungi una foto</string>
+    <string name="action_remove_a_photo">Rimuovi una foto</string>
+    <string name="description_values_per">Seleziona la quantità su cui si basano i tuoi valori nutrizionali</string>
+    <string name="description_privacy">Gestisci le tue informazioni personali</string>
+    <string name="description_food_you_services">La connessione ai servizi di Food You sblocca funzionalità e strumenti aggiuntivi che migliorano la tua esperienza</string>
+    <string name="headline_database_backup">Backup del database</string>
+    <string name="description_replacing_database">Sostituzione del database in corso, attendere…</string>
+    <string name="headline_experimental">Sperimentale</string>
 </resources>
