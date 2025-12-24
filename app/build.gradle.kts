@@ -21,44 +21,6 @@ buildConfig {
 
     val versionName = libs.versions.version.name.get()
     buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
-
-    val feedbackEmail = "maksimowicz.dev@gmail.com"
-    buildConfigField("String", "FEEDBACK_EMAIL", "\"$feedbackEmail\"")
-
-    val feedbackEmailUri =
-        "mailto:$feedbackEmail?subject=Food You Feedback&body=Food You Version: $versionName\\n"
-    buildConfigField("String", "FEEDBACK_EMAIL_URI", "\"$feedbackEmailUri\"")
-
-    val githubUrl = "https://github.com/maksimowiczm/FoodYou"
-    val githubIssues = "$githubUrl/issues"
-    buildConfigField("String", "GITHUB_URL", "\"$githubUrl\"")
-    buildConfigField("String", "GITHUB_ISSUES_URL", "\"$githubIssues\"")
-
-    val crowdin = "https://crowdin.com/project/food-you"
-    buildConfigField("String", "CROWDIN_URL", "\"$crowdin\"")
-
-    val termsOfService = "TODO"
-    buildConfigField("String", "TERMS_OF_SERVICE_URL", "\"$termsOfService\"")
-    val privacyPolicy = "TODO"
-    buildConfigField("String", "PRIVACY_POLICY_URL", "\"$privacyPolicy\"")
-
-    // -- OPEN FOOD FACTS --
-    sourceSets.getByName("main") {
-        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org\"")
-    }
-    sourceSets.getByName("test") {
-        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.net\"")
-    }
-
-    // -- USDA --
-    buildConfigField("String", "USDA_URL", "\"https://api.nal.usda.gov\"")
-
-    // -- Food You Sponsors github repository --
-    buildConfigField(
-        "String",
-        "GITHUB_SPONSORS_REPOSITORY_URL",
-        "\"https://maksimowiczm.github.io/FoodYou-sponsors\"",
-    )
 }
 
 kotlin {

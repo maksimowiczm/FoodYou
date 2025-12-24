@@ -2,18 +2,20 @@ package com.maksimowiczm.foodyou.app.infrastructure
 
 import com.maksimowiczm.foodyou.app.BuildConfig
 import com.maksimowiczm.foodyou.common.config.AppConfig
+import com.maksimowiczm.foodyou.common.config.NetworkConfig
 
-internal class FoodYouConfig : AppConfig {
-    override val contactEmail: String = BuildConfig.FEEDBACK_EMAIL
-    override val contactEmailUri: String = BuildConfig.FEEDBACK_EMAIL_URI
+internal class FoodYouConfig : AppConfig, NetworkConfig {
     override val versionName: String = BuildConfig.VERSION_NAME
-    override val translationUrl: String = BuildConfig.CROWDIN_URL
-    override val sourceCodeUrl: String = BuildConfig.GITHUB_URL
-    override val issueTrackerUrl: String = BuildConfig.GITHUB_ISSUES_URL
-    override val featureRequestUrl: String = BuildConfig.GITHUB_ISSUES_URL
-    override val termsOfServiceUrl: String = BuildConfig.TERMS_OF_SERVICE_URL
-    override val privacyPolicyUrl: String = BuildConfig.PRIVACY_POLICY_URL
+    override val contactEmailUri: String =
+        "mailto:maksimowicz.dev@gmail.com?subject=Food You Feedback&body=Food You Version: $versionName\n"
+    override val translationUri: String = "https://foodyou.maksimowiczm.com/translate"
+    override val sourceCodeUri: String = "https://github.com/maksimowiczm/FoodYou"
+    override val issueTrackerUri: String = "https://github.com/maksimowiczm/FoodYou/issues"
+    override val termsOfServiceUri: String = "https://TODO"
+    override val privacyPolicyUri: String = "https://TODO"
     override val openFoodFactsTermsOfUseUri: String = "https://world.openfoodfacts.org/terms-of-use"
     override val openFoodFactsPrivacyPolicyUri: String = "https://world.openfoodfacts.org/privacy"
     override val foodDataCentralPrivacyPolicyUri: String = "https://www.usda.gov/privacy-policy"
+
+    override val userAgent: String = "Food You/$versionName (maksimowicz.dev@gmail.com)"
 }

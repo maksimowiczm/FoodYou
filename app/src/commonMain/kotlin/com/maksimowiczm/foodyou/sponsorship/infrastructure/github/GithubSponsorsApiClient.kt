@@ -19,7 +19,7 @@ internal class GithubSponsorsApiClient(
         if (rateLimiter.canMakeRequest()) rateLimiter.recordRequest()
         else error("Rate limit exceeded")
 
-        val baseUrl = config.githubSponsorsRepositoryUrl
+        val baseUrl = API_URL
         val month = yearMonth.month.ordinal + 1
         val path = "${yearMonth.year}/$month.json"
         val url = "${baseUrl}/$path"
@@ -27,5 +27,9 @@ internal class GithubSponsorsApiClient(
         val response = httpClient.get(url) { userAgent(config.userAgent) }
 
         return response.body<List<NetworkSponsorship>>()
+    }
+
+    private companion object {
+        private const val API_URL = "https://maksimowiczm.github.io/FoodYou-sponsors"
     }
 }

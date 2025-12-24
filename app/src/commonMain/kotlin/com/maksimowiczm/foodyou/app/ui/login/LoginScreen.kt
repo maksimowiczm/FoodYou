@@ -103,8 +103,8 @@ fun LoginScreen(onBack: () -> Unit, onLoginSuccess: () -> Unit, modifier: Modifi
                 onLogin()
             }
         },
-        onTermsOfService = { uriHandler.openUri(appConfig.termsOfServiceUrl) },
-        onPrivacyPolicy = { uriHandler.openUri(appConfig.privacyPolicyUrl) },
+        onTermsOfService = { uriHandler.openUri(appConfig.termsOfServiceUri) },
+        onPrivacyPolicy = { uriHandler.openUri(appConfig.privacyPolicyUri) },
         modifier = modifier,
     )
 }

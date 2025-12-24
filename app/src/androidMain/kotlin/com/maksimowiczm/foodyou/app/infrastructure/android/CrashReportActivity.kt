@@ -18,7 +18,7 @@ class CrashReportActivity : FoodYouAbstractActivity() {
             FoodYouTheme {
                 CrashReportScreen(
                     message = errorMessage,
-                    issueTrackerUrl = appConfig.issueTrackerUrl,
+                    issueTrackerUrl = appConfig.issueTrackerUri,
                 )
             }
         }

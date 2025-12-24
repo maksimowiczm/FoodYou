@@ -39,7 +39,7 @@ fun LanguageScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     LanguageScreen(
         onBack = onBack,
         onLanguageSelect = viewModel::selectTranslation,
-        onHelpTranslate = { uriHandler.openUri(appConfig.translationUrl) },
+        onHelpTranslate = { uriHandler.openUri(appConfig.translationUri) },
         selectedTranslation = selectedTranslation,
         translations = translations,
         modifier = modifier,

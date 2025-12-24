@@ -30,7 +30,7 @@ class USDARemoteDataSource(
         apiKey: String? = null,
     ): Result<AbridgedFoodItem> {
         return try {
-            val url = "${networkConfig.usdaApiUrl}/fdc/v1/food/$fdcId"
+            val url = "${API_URL}/fdc/v1/food/$fdcId"
 
             val response =
                 client.get(url) {
@@ -58,7 +58,7 @@ class USDARemoteDataSource(
         apiKey: String? = null,
     ): Result<SearchResult> {
         return try {
-            val url = "${networkConfig.usdaApiUrl}/fdc/v1/foods/search"
+            val url = "${API_URL}/fdc/v1/foods/search"
 
             val response =
                 client.get(url) {
@@ -150,6 +150,7 @@ class USDARemoteDataSource(
     }
 
     private companion object {
+        private const val API_URL = "https://api.nal.usda.gov"
         private const val TAG = "UsdaFdcDataSource"
     }
 }

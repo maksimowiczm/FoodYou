@@ -116,9 +116,9 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             )
             Spacer(Modifier.height(64.dp))
             AboutButtons(
-                onSourceCode = { uriHandler.openUri(appConfig.sourceCodeUrl) },
+                onSourceCode = { uriHandler.openUri(appConfig.sourceCodeUri) },
                 onChangelog = { showChangelog = true },
-                onIdea = { uriHandler.openUri(appConfig.issueTrackerUrl) },
+                onIdea = { uriHandler.openUri(appConfig.issueTrackerUri) },
                 onEmail = { uriHandler.openUri(appConfig.contactEmailUri) },
             )
             Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
