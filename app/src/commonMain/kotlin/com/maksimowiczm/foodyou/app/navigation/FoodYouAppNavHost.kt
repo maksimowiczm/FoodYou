@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiK
 import com.maksimowiczm.foodyou.app.ui.database.importcsvproducts.ImportCsvProductsScreen
 import com.maksimowiczm.foodyou.app.ui.database.master.DatabaseSettingsScreen
 import com.maksimowiczm.foodyou.app.ui.database.swissfoodcompositiondatabase.SwissFoodCompositionDatabaseScreen
+import com.maksimowiczm.foodyou.app.ui.database.tbca.TBCAScreen
 import com.maksimowiczm.foodyou.app.ui.food.diary.add.AddEntryScreen
 import com.maksimowiczm.foodyou.app.ui.food.diary.quickadd.CreateQuickAddScreen
 import com.maksimowiczm.foodyou.app.ui.food.diary.quickadd.UpdateQuickAddScreen
@@ -129,17 +130,25 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
             )
         }
         forwardBackwardComposable<ExternalDatabases> {
-            ExternalDatabasesScreen(
-                onBack = { navController.popBackStackInclusive<ExternalDatabases>() },
-                onSwissFoodCompositionDatabase = {
-                    navController.navigateSingleTop(SwissFoodCompositionDatabase)
-                },
-            )
+          ExternalDatabasesScreen(
+            onBack = { navController.popBackStackInclusive<ExternalDatabases>() },
+            onSwissFoodCompositionDatabase = {
+              navController.navigateSingleTop(SwissFoodCompositionDatabase)
+            },
+            onTBCA = {
+              navController.navigateSingleTop(TBCA)
+            },
+          )
         }
         forwardBackwardComposable<SwissFoodCompositionDatabase> {
             SwissFoodCompositionDatabaseScreen(
                 onBack = { navController.popBackStackInclusive<SwissFoodCompositionDatabase>() }
             )
+        }
+        forwardBackwardComposable<TBCA> {
+          TBCAScreen(
+            onBack = { navController.popBackStackInclusive<TBCA>() }
+          )
         }
         forwardBackwardComposable<ImportCsvProducts> {
             ImportCsvProductsScreen(
@@ -385,6 +394,8 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
 @Serializable private object ExternalDatabases
 
 @Serializable private object SwissFoodCompositionDatabase
+
+@Serializable private object TBCA
 
 @Serializable private object UsdaApiKey
 
