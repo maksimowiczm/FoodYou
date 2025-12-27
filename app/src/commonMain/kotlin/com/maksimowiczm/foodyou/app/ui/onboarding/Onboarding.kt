@@ -13,7 +13,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
     val navController: NavHostController = rememberNavController()
-    val state: OnboardingState = rememberOnboardingState()
     val viewModel: OnboardingViewModel = koinViewModel()
 
     val latestOnFinish by rememberUpdatedState(onFinish)
@@ -26,27 +25,13 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
     NavHost(navController = navController, startDestination = BeforeYouStart, modifier = modifier) {
         forwardBackwardComposable<BeforeYouStart> {
             BeforeYouStartScreen(
-                onAgree = { navController.navigate(FoodDatabase) { launchSingleTop = true } }
-            )
-        }
-        forwardBackwardComposable<FoodDatabase> {
-            FoodDatabaseScreen(
-                onBack = { navController.popBackStack<FoodDatabase>(true) },
-                onSkip = {
-                    viewModel.finish(state)
-                    navController.navigate(AlmostDone) {
-                        launchSingleTop = true
-                        popUpTo(BeforeYouStart) { inclusive = true }
-                    }
-                },
                 onAgree = {
-                    viewModel.finish(state)
+                    viewModel.finish() // Start TBCA import and finish onboarding
                     navController.navigate(AlmostDone) {
                         launchSingleTop = true
                         popUpTo(BeforeYouStart) { inclusive = true }
                     }
-                },
-                state = state,
+                }
             )
         }
         forwardBackwardComposable<AlmostDone> { AlmostDoneScreen() }
@@ -54,7 +39,5 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Serializable private data object BeforeYouStart
-
-@Serializable private data object FoodDatabase
 
 @Serializable private data object AlmostDone

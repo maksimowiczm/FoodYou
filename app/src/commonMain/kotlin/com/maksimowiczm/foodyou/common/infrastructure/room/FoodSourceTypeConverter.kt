@@ -9,9 +9,13 @@ internal class FoodSourceTypeConverter {
         when (value) {
             FoodSourceType.User -> FoodSourceTypeSQLConstants.USER
             FoodSourceType.OpenFoodFacts -> FoodSourceTypeSQLConstants.OPEN_FOOD_FACTS
+<<<<<<< Updated upstream
             FoodSourceType.USDA -> FoodSourceTypeSQLConstants.USDA
             FoodSourceType.SwissFoodCompositionDatabase ->
                 FoodSourceTypeSQLConstants.SWISS_FOOD_COMPOSITION_DATABASE
+=======
+            FoodSourceType.TBCA -> FoodSourceTypeSQLConstants.TBCA
+>>>>>>> Stashed changes
         }
 
     @TypeConverter
@@ -19,9 +23,17 @@ internal class FoodSourceTypeConverter {
         when (value) {
             FoodSourceTypeSQLConstants.USER -> FoodSourceType.User
             FoodSourceTypeSQLConstants.OPEN_FOOD_FACTS -> FoodSourceType.OpenFoodFacts
+<<<<<<< Updated upstream
             FoodSourceTypeSQLConstants.USDA -> FoodSourceType.USDA
             FoodSourceTypeSQLConstants.SWISS_FOOD_COMPOSITION_DATABASE ->
                 FoodSourceType.SwissFoodCompositionDatabase
+=======
+            FoodSourceTypeSQLConstants.TBCA -> FoodSourceType.TBCA
+            // Legacy values for backwards compatibility (if old data exists in DB)
+            FoodSourceTypeSQLConstants.USDA,
+            FoodSourceTypeSQLConstants.SWISS_FOOD_COMPOSITION_DATABASE,
+            FoodSourceTypeSQLConstants.TACO -> FoodSourceType.User // Convert old sources to User
+>>>>>>> Stashed changes
             else -> error("Unknown food source type value: $value")
         }
 }

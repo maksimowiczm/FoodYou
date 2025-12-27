@@ -12,7 +12,11 @@ import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.ExternalDataba
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiKeyDialog
 import com.maksimowiczm.foodyou.app.ui.database.importcsvproducts.ImportCsvProductsScreen
 import com.maksimowiczm.foodyou.app.ui.database.master.DatabaseSettingsScreen
+<<<<<<< Updated upstream
 import com.maksimowiczm.foodyou.app.ui.database.swissfoodcompositiondatabase.SwissFoodCompositionDatabaseScreen
+=======
+import com.maksimowiczm.foodyou.app.ui.database.tbca.TBCAScreen
+>>>>>>> Stashed changes
 import com.maksimowiczm.foodyou.app.ui.food.diary.add.AddEntryScreen
 import com.maksimowiczm.foodyou.app.ui.food.diary.quickadd.CreateQuickAddScreen
 import com.maksimowiczm.foodyou.app.ui.food.diary.quickadd.UpdateQuickAddScreen
@@ -129,6 +133,7 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
             )
         }
         forwardBackwardComposable<ExternalDatabases> {
+<<<<<<< Updated upstream
             ExternalDatabasesScreen(
                 onBack = { navController.popBackStackInclusive<ExternalDatabases>() },
                 onSwissFoodCompositionDatabase = {
@@ -140,6 +145,19 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
             SwissFoodCompositionDatabaseScreen(
                 onBack = { navController.popBackStackInclusive<SwissFoodCompositionDatabase>() }
             )
+=======
+          ExternalDatabasesScreen(
+            onBack = { navController.popBackStackInclusive<ExternalDatabases>() },
+            onTBCA = {
+              navController.navigateSingleTop(TBCA)
+            },
+          )
+        }
+        forwardBackwardComposable<TBCA> {
+          TBCAScreen(
+            onBack = { navController.popBackStackInclusive<TBCA>() }
+          )
+>>>>>>> Stashed changes
         }
         forwardBackwardComposable<ImportCsvProducts> {
             ImportCsvProductsScreen(
@@ -384,7 +402,11 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
 
 @Serializable private object ExternalDatabases
 
+<<<<<<< Updated upstream
 @Serializable private object SwissFoodCompositionDatabase
+=======
+@Serializable private object TBCA
+>>>>>>> Stashed changes
 
 @Serializable private object UsdaApiKey
 

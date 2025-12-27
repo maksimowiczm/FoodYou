@@ -4,7 +4,11 @@ data class FoodSource(val type: Type, val url: String? = null) {
     enum class Type {
         User,
         OpenFoodFacts,
+<<<<<<< Updated upstream
         USDA,
         SwissFoodCompositionDatabase,
+=======
+        TBCA
+>>>>>>> Stashed changes
     }
 }

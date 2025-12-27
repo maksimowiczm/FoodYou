@@ -7,8 +7,8 @@ import org.koin.core.module.dsl.viewModel
 fun Module.onboarding() {
     viewModel {
         OnboardingViewModel(
-            importSwissUseCase = get(),
             foodSearchPreferencesRepository = userPreferencesRepository(),
+            importTBCAUseCase = get(),
         )
     }
 }

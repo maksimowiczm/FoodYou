@@ -31,6 +31,7 @@ fun FoodSource.Type.Icon(modifier: Modifier = Modifier) {
                 modifier = modifier.size(24.dp),
             )
 
+<<<<<<< Updated upstream
         FoodSource.Type.USDA ->
             Image(
                 painter = painterResource(Res.drawable.usda_logo),
@@ -39,6 +40,9 @@ fun FoodSource.Type.Icon(modifier: Modifier = Modifier) {
             )
 
         FoodSource.Type.SwissFoodCompositionDatabase -> Text("CH", modifier)
+=======
+        FoodSource.Type.TBCA -> Text("BR", modifier)
+>>>>>>> Stashed changes
     }
 }
 
@@ -47,7 +51,11 @@ fun FoodSource.Type.stringResource(): String =
     when (this) {
         FoodSource.Type.User -> stringResource(Res.string.headline_user)
         FoodSource.Type.OpenFoodFacts -> stringResource(Res.string.headline_open_food_facts)
+<<<<<<< Updated upstream
         FoodSource.Type.USDA -> stringResource(Res.string.headline_food_data_central_usda)
         FoodSource.Type.SwissFoodCompositionDatabase ->
             stringResource(Res.string.headline_swiss_food_composition_database)
+=======
+        FoodSource.Type.TBCA -> stringResource(Res.string.headline_tbca)
+>>>>>>> Stashed changes
     }

@@ -7,7 +7,11 @@ import com.maksimowiczm.foodyou.food.search.foodSearchModule
 import com.maksimowiczm.foodyou.fooddiary.foodDiaryModule
 import com.maksimowiczm.foodyou.goals.goalsModule
 import com.maksimowiczm.foodyou.importexport.importExportModule
+<<<<<<< Updated upstream
 import com.maksimowiczm.foodyou.importexport.swissfoodcompositiondatabase.importExportSwissFoodCompositionDatabaseModule
+=======
+import com.maksimowiczm.foodyou.importexport.tbca.importExportTBCAModule
+>>>>>>> Stashed changes
 import com.maksimowiczm.foodyou.poll.pollModule
 import com.maksimowiczm.foodyou.settings.settingsModule
 import com.maksimowiczm.foodyou.sponsorship.sponsorshipModule
@@ -29,7 +33,11 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
             foodDiaryModule,
             goalsModule,
             importExportModule,
+<<<<<<< Updated upstream
             importExportSwissFoodCompositionDatabaseModule,
+=======
+            importExportTBCAModule,
+>>>>>>> Stashed changes
             pollModule,
             settingsModule,
             sponsorshipModule,

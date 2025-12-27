@@ -13,7 +13,6 @@ import com.maksimowiczm.foodyou.food.infrastructure.repository.RoomFoodMeasureme
 import com.maksimowiczm.foodyou.food.infrastructure.repository.RoomProductRepository
 import com.maksimowiczm.foodyou.food.infrastructure.repository.RoomRecipeRepository
 import com.maksimowiczm.foodyou.food.infrastructure.room.FoodDatabase
-import com.maksimowiczm.foodyou.food.infrastructure.usda.USDAModule
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.scope.Scope
@@ -33,7 +32,6 @@ fun Module.foodInfrastructureModule() {
     factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
     factoryOf(::RemoteProductMapper)
 
-    USDAModule()
     openFoodFactsModule()
 }
 
