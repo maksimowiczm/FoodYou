@@ -34,7 +34,8 @@ internal data class FoodFilter(val source: Source = DefaultFilter) {
         YourFood,
         OpenFoodFacts,
         USDA,
-        SwissFoodCompositionDatabase;
+        SwissFoodCompositionDatabase,
+        TBCA;
 
         @Composable
         fun Icon(modifier: Modifier = Modifier.Companion) =
@@ -56,6 +57,7 @@ internal data class FoodFilter(val source: Source = DefaultFilter) {
                 OpenFoodFacts -> FoodSource.Type.OpenFoodFacts.Icon(modifier)
                 USDA -> FoodSource.Type.USDA.Icon(modifier)
                 SwissFoodCompositionDatabase -> FoodSource.Type.SwissFoodCompositionDatabase.Icon()
+                TBCA -> FoodSource.Type.TBCA.Icon(modifier)
             }
 
         @Composable
@@ -67,6 +69,7 @@ internal data class FoodFilter(val source: Source = DefaultFilter) {
                 USDA -> FoodSource.Type.USDA.stringResource()
                 SwissFoodCompositionDatabase ->
                     stringResource(Res.string.headline_swiss_food_composition_database)
+                TBCA -> stringResource(Res.string.headline_tbca)
             }
     }
 }

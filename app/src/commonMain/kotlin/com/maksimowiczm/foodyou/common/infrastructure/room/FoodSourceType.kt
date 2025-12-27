@@ -7,6 +7,8 @@ enum class FoodSourceType {
     OpenFoodFacts,
     USDA,
     SwissFoodCompositionDatabase,
+    TACO,
+    TBCA,
 }
 
 fun FoodSourceType.toDomain(): FoodSource.Type =
@@ -15,6 +17,8 @@ fun FoodSourceType.toDomain(): FoodSource.Type =
         FoodSourceType.OpenFoodFacts -> FoodSource.Type.OpenFoodFacts
         FoodSourceType.USDA -> FoodSource.Type.USDA
         FoodSourceType.SwissFoodCompositionDatabase -> FoodSource.Type.SwissFoodCompositionDatabase
+        FoodSourceType.TACO -> FoodSource.Type.TACO
+        FoodSourceType.TBCA -> FoodSource.Type.TBCA
     }
 
 fun FoodSource.Type.toEntity(): FoodSourceType =
@@ -23,4 +27,6 @@ fun FoodSource.Type.toEntity(): FoodSourceType =
         FoodSource.Type.OpenFoodFacts -> FoodSourceType.OpenFoodFacts
         FoodSource.Type.USDA -> FoodSourceType.USDA
         FoodSource.Type.SwissFoodCompositionDatabase -> FoodSourceType.SwissFoodCompositionDatabase
+        FoodSource.Type.TACO -> FoodSourceType.TACO
+        FoodSource.Type.TBCA -> FoodSourceType.TBCA
     }

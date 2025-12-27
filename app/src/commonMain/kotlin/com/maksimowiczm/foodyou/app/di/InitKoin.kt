@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.fooddiary.foodDiaryModule
 import com.maksimowiczm.foodyou.goals.goalsModule
 import com.maksimowiczm.foodyou.importexport.importExportModule
 import com.maksimowiczm.foodyou.importexport.swissfoodcompositiondatabase.importExportSwissFoodCompositionDatabaseModule
+import com.maksimowiczm.foodyou.importexport.tbca.importExportTBCAModule
 import com.maksimowiczm.foodyou.poll.pollModule
 import com.maksimowiczm.foodyou.settings.settingsModule
 import com.maksimowiczm.foodyou.sponsorship.sponsorshipModule
@@ -30,6 +31,7 @@ fun initKoin(applicationCoroutineScope: CoroutineScope, config: KoinAppDeclarati
             goalsModule,
             importExportModule,
             importExportSwissFoodCompositionDatabaseModule,
+            importExportTBCAModule,
             pollModule,
             settingsModule,
             sponsorshipModule,

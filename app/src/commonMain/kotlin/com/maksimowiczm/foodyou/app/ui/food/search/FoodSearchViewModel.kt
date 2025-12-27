@@ -129,6 +129,18 @@ internal class FoodSearchViewModel(
             )
         }
 
+    private val tbcaPages =
+        observeFoodPages(FoodSource.Type.TBCA).cachedIn(viewModelScope)
+    private val tbcaState =
+        observeFoodCount(FoodSource.Type.TBCA).map { count ->
+            FoodSourceUiState(
+                remoteEnabled = RemoteStatus.LocalOnly,
+                pages = tbcaPages,
+                count = count,
+            )
+        }
+
+
     private fun observeFoodCount(source: FoodSource.Type) =
         searchQuery.flatMapLatest { query ->
             foodSearchRepository.searchFoodCount(
@@ -160,6 +172,7 @@ internal class FoodSearchViewModel(
                 openFoodFactsState,
                 usdaState,
                 swissState,
+                tbcaState,
                 filter,
                 searchHistory,
             ) {
@@ -168,6 +181,7 @@ internal class FoodSearchViewModel(
                 openFoodFactsState,
                 usdaState,
                 swissState,
+                tbcaState,
                 filter,
                 searchHistory ->
                 FoodSearchUiState(
@@ -178,6 +192,7 @@ internal class FoodSearchViewModel(
                             FoodFilter.Source.OpenFoodFacts to openFoodFactsState,
                             FoodFilter.Source.USDA to usdaState,
                             FoodFilter.Source.SwissFoodCompositionDatabase to swissState,
+                            FoodFilter.Source.TBCA to tbcaState,
                         ),
                     filter = filter,
                     recentSearches = searchHistory.map { it.query },

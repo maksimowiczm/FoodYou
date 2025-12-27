@@ -43,6 +43,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ExternalDatabasesScreen(
     onBack: () -> Unit,
     onSwissFoodCompositionDatabase: () -> Unit,
+    onTBCA: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: ExternalDatabasesViewModel = koinViewModel()
@@ -54,6 +55,7 @@ fun ExternalDatabasesScreen(
         onOpenFoodFactsChange = viewModel::toggleOpenFoodFacts,
         onUsdaChange = viewModel::toggleUsda,
         onSwissFoodCompositionDatabase = onSwissFoodCompositionDatabase,
+        onTBCA = onTBCA,
         modifier = modifier,
     )
 }
@@ -65,6 +67,7 @@ private fun ExternalDatabasesScreen(
     onOpenFoodFactsChange: (Boolean) -> Unit,
     onUsdaChange: (Boolean) -> Unit,
     onSwissFoodCompositionDatabase: () -> Unit,
+    onTBCA: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -111,6 +114,13 @@ private fun ExternalDatabasesScreen(
             item {
                 SwissFoodCompositionDatabase(
                     onClick = onSwissFoodCompositionDatabase,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            item {
+                TBCACard(
+                    onClick = onTBCA,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -213,5 +223,40 @@ private fun ManualImport(modifier: Modifier = Modifier) {
         Icon(imageVector = Icons.Outlined.FileOpen, contentDescription = null)
         Spacer(Modifier.width(16.dp))
         Text(stringResource(Res.string.feature_manual_database_import))
+    }
+}
+
+@Composable
+private fun TBCACard(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    DatabaseCard(
+        title = {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = stringResource(Res.string.headline_tbca),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                        contentDescription = null,
+                    )
+                }
+            }
+        },
+        modifier = modifier,
+        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 16.dp),
+        onClick = onClick,
+    ) {
+        Text(
+            text = stringResource(Res.string.description_tbca_short),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.height(8.dp))
+        FeaturesContainer { ManualImport() }
     }
 }
