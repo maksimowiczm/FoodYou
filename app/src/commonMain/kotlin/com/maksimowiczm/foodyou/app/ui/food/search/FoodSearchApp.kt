@@ -260,4 +260,5 @@ private fun ListStates.state(source: FoodFilter.Source) =
         FoodFilter.Source.OpenFoodFacts -> openFoodFacts
         FoodFilter.Source.USDA -> usda
         FoodFilter.Source.SwissFoodCompositionDatabase -> swiss
+        FoodFilter.Source.TBCA -> tbca
     }
