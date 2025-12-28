@@ -38,33 +38,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ExternalDatabasesScreen(
     onBack: () -> Unit,
-<<<<<<< Updated upstream
-    onSwissFoodCompositionDatabase: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val viewModel: ExternalDatabasesViewModel = koinViewModel()
-    val model by viewModel.foodPreferences.collectAsStateWithLifecycle()
-
-    ExternalDatabasesScreen(
-        onBack = onBack,
-        model = model,
-        onOpenFoodFactsChange = viewModel::toggleOpenFoodFacts,
-        onUsdaChange = viewModel::toggleUsda,
-        onSwissFoodCompositionDatabase = onSwissFoodCompositionDatabase,
-        modifier = modifier,
-    )
-}
-
-@Composable
-private fun ExternalDatabasesScreen(
-    onBack: () -> Unit,
-    model: FoodPreferencesModel,
-    onOpenFoodFactsChange: (Boolean) -> Unit,
-    onUsdaChange: (Boolean) -> Unit,
-    onSwissFoodCompositionDatabase: () -> Unit,
-=======
     onTBCA: () -> Unit,
->>>>>>> Stashed changes
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -99,23 +73,8 @@ private fun ExternalDatabasesScreen(
             }
 
             item {
-<<<<<<< Updated upstream
-                OpenFoodFactsPrivacyCard(
-                    selected = model.useOpenFoodFacts ?: false,
-                    onSelectedChange = onOpenFoodFactsChange,
-                )
-            }
-            item {
-                UsdaPrivacyCard(selected = model.useUsda ?: false, onSelectedChange = onUsdaChange)
-            }
-
-            item {
-                SwissFoodCompositionDatabase(
-                    onClick = onSwissFoodCompositionDatabase,
-=======
                 TBCACard(
                     onClick = onTBCA,
->>>>>>> Stashed changes
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -183,5 +142,40 @@ private fun ManualImport(modifier: Modifier = Modifier) {
         Icon(imageVector = Icons.Outlined.FileOpen, contentDescription = null)
         Spacer(Modifier.width(16.dp))
         Text(stringResource(Res.string.feature_manual_database_import))
+    }
+}
+
+@Composable
+private fun TBCACard(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    DatabaseCard(
+        title = {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = stringResource(Res.string.headline_tbca),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                        contentDescription = null,
+                    )
+                }
+            }
+        },
+        modifier = modifier,
+        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 16.dp),
+        onClick = onClick,
+    ) {
+        Text(
+            text = stringResource(Res.string.description_tbca_short),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.height(8.dp))
+        FeaturesContainer { ManualImport() }
     }
 }

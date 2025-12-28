@@ -265,6 +265,11 @@
     <string name="error_usda_rate_limit">FoodData Central (USDA) API rate limit exceeded</string>
     <string name="error_usda_not_verified">The API key supplied has not been verified yet. Please check your e-mail to verify the API key.</string>
 
+    <!-- TBCA - Brazilian Food Composition Table -->
+    <string name="headline_tbca" translatable="false">TBCA - Brazilian Food Composition Table</string>
+    <string name="description_tbca_short">Brazilian Food Composition Table includes nutritional information for over 5,600 Brazilian foods</string>
+    <string name="description2_tbca">Brazilian Food Composition Table (TBCA) is maintained by the University of São Paulo (USP) and includes detailed nutritional information for over 5,600 foods commonly consumed in Brazil. Import these foods to search for Brazilian products in your food diary.</string>
+
     <string name="headline_swiss_food_composition_database" translatable="false">Swiss Food Composition Database</string>
     <string name="description_swiss_food_composition_database_short">Swiss Food Composition Database includes nutritional information for over 1,100 general food products</string>
     <string name="description2_swiss_food_composition_database">Swiss Food Composition Database includes nutritional information for over 1,100 general food products. It is available in four languages. To import these products into your food diary, please select your preferred languages.</string>

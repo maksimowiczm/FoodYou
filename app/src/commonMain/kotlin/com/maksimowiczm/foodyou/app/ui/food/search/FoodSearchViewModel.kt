@@ -83,36 +83,6 @@ internal class FoodSearchViewModel(
             )
         }
 
-<<<<<<< Updated upstream
-    private val openFoodFactsPages =
-        observeFoodPages(FoodSource.Type.OpenFoodFacts).cachedIn(viewModelScope)
-    private val openFoodFactsState =
-        combine(observeFoodCount(FoodSource.Type.OpenFoodFacts), foodPreferences) { count, prefs ->
-            FoodSourceUiState(
-                remoteEnabled = prefs.isOpenFoodFactsEnabled.toRemoteStatus(),
-                pages = openFoodFactsPages,
-                count = count,
-            )
-        }
-
-    private val usdaPages = observeFoodPages(FoodSource.Type.USDA).cachedIn(viewModelScope)
-    private val usdaState =
-        combine(observeFoodCount(FoodSource.Type.USDA), foodPreferences) { count, prefs ->
-            FoodSourceUiState(
-                remoteEnabled = prefs.isUsdaEnabled.toRemoteStatus(),
-                pages = usdaPages,
-                count = count,
-            )
-        }
-
-    private val swissPages =
-        observeFoodPages(FoodSource.Type.SwissFoodCompositionDatabase).cachedIn(viewModelScope)
-    private val swissState =
-        observeFoodCount(FoodSource.Type.SwissFoodCompositionDatabase).map { count ->
-            FoodSourceUiState(
-                remoteEnabled = RemoteStatus.LocalOnly,
-                pages = swissPages,
-=======
     private val tbcaPages =
         observeFoodPages(FoodSource.Type.TBCA).cachedIn(viewModelScope)
     private val tbcaState =
@@ -120,15 +90,10 @@ internal class FoodSearchViewModel(
             FoodSourceUiState(
                 remoteEnabled = RemoteStatus.LocalOnly,
                 pages = tbcaPages,
->>>>>>> Stashed changes
                 count = count,
             )
         }
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     private fun observeFoodCount(source: FoodSource.Type) =
         searchQuery.flatMapLatest { query ->
             foodSearchRepository.searchFoodCount(
@@ -157,25 +122,13 @@ internal class FoodSearchViewModel(
         combine(
                 recentFoodState,
                 yourFoodState,
-<<<<<<< Updated upstream
-                openFoodFactsState,
-                usdaState,
-                swissState,
-=======
                 tbcaState,
->>>>>>> Stashed changes
                 filter,
                 searchHistory,
             ) {
                 recentFoodState,
                 yourFoodState,
-<<<<<<< Updated upstream
-                openFoodFactsState,
-                usdaState,
-                swissState,
-=======
                 tbcaState,
->>>>>>> Stashed changes
                 filter,
                 searchHistory ->
                 FoodSearchUiState(
@@ -183,13 +136,7 @@ internal class FoodSearchViewModel(
                         mapOf(
                             FoodFilter.Source.Recent to recentFoodState,
                             FoodFilter.Source.YourFood to yourFoodState,
-<<<<<<< Updated upstream
-                            FoodFilter.Source.OpenFoodFacts to openFoodFactsState,
-                            FoodFilter.Source.USDA to usdaState,
-                            FoodFilter.Source.SwissFoodCompositionDatabase to swissState,
-=======
                             FoodFilter.Source.TBCA to tbcaState,
->>>>>>> Stashed changes
                         ),
                     filter = filter,
                     recentSearches = searchHistory.map { it.query },
