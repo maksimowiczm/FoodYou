@@ -17,22 +17,13 @@ internal class DataStoreFoodSearchPreferencesRepository(dataStore: DataStore<Pre
                 FoodSearchPreferences.OpenFoodFacts(
                     enabled = this[FoodPreferencesKeys.UseOpenFoodFacts] ?: false
                 ),
-            usda =
-                FoodSearchPreferences.Usda(
-                    enabled = this[FoodPreferencesKeys.UseUsda] ?: false,
-                    apiKey = this[FoodPreferencesKeys.UsdaApiKey],
-                ),
         )
 
     override fun MutablePreferences.applyUserPreferences(updated: FoodSearchPreferences) {
         this[FoodPreferencesKeys.UseOpenFoodFacts] = updated.openFoodFacts.enabled
-        this[FoodPreferencesKeys.UseUsda] = updated.usda.enabled
-        this[FoodPreferencesKeys.UsdaApiKey] = updated.usda.apiKey
     }
 }
 
 private object FoodPreferencesKeys {
     val UseOpenFoodFacts = booleanPreferencesKey("food:use_open_food_facts")
-    val UseUsda = booleanPreferencesKey("food:use_usda")
-    val UsdaApiKey = stringPreferencesKey("food:usda_api_key")
 }

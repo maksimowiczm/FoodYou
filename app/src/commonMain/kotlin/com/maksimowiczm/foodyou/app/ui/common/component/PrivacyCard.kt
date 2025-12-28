@@ -28,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiKeyDialog
 import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -111,74 +110,6 @@ fun OpenFoodFactsPrivacyCard(
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 TermsOfUseChip(onClick = { uriHandler.openUri(termsOfUseUri) })
                 PrivacyPolicyChip(onClick = { uriHandler.openUri(privacyPolicyUri) })
-            }
-        }
-    }
-}
-
-@Composable
-fun UsdaPrivacyCard(
-    selected: Boolean,
-    onSelectedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    privacyPolicyUri: String = koinInject<AppConfig>().foodDataCentralPrivacyPolicyUri,
-) {
-    val uriHandler = LocalUriHandler.current
-    var showApiKeyDialog by rememberSaveable { mutableStateOf(false) }
-    if (showApiKeyDialog) {
-        UpdateUsdaApiKeyDialog(
-            onDismissRequest = { showApiKeyDialog = false },
-            onSave = { showApiKeyDialog = false },
-        )
-    }
-
-    PrivacyCard(
-        title = {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                    Image(
-                        painter = painterResource(Res.drawable.usda_logo),
-                        contentDescription = null,
-                        modifier = Modifier.size(32.dp),
-                    )
-                }
-                Text(
-                    text = stringResource(Res.string.headline_food_data_central_usda),
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f),
-                )
-                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                    Checkbox(checked = selected, onCheckedChange = null)
-                }
-            }
-        },
-        modifier = modifier,
-        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
-        onClick = { onSelectedChange(!selected) },
-    ) {
-        Column {
-            Text(
-                text = stringResource(Res.string.description_food_data_central_usda),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(8.dp))
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                PrivacyPolicyChip(onClick = { uriHandler.openUri(privacyPolicyUri) })
-                AssistChip(
-                    onClick = { showApiKeyDialog = true },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Key,
-                            contentDescription = null,
-                            modifier = Modifier.size(AssistChipDefaults.IconSize),
-                        )
-                    },
-                    label = { Text(stringResource(Res.string.headline_api_key)) },
-                )
             }
         }
     }

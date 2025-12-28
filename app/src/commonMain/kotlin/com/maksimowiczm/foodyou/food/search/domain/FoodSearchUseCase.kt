@@ -34,11 +34,18 @@ class FoodSearchUseCase(
         }
 
         return foodSearchPreferencesRepository.observe().flatMapLatest { prefs ->
+            // For barcode searches, always use OpenFoodFacts regardless of selected source
+            val effectiveSource = if (query is SearchQuery.Barcode) {
+                FoodSource.Type.OpenFoodFacts
+            } else {
+                source
+            }
+
             foodSearchRepository.search(
                 query = query,
-                source = source,
+                source = effectiveSource,
                 config = PagingConfig(pageSize = PAGE_SIZE),
-                remoteMediatorFactory = prefs.remoteMediatorFactory(source)?.wrap(query),
+                remoteMediatorFactory = prefs.remoteMediatorFactory(effectiveSource)?.wrap(query),
                 excludedRecipeId = excludedRecipeId,
             )
         }
@@ -68,9 +75,6 @@ class FoodSearchUseCase(
         when (source) {
             FoodSource.Type.OpenFoodFacts if this.openFoodFacts.enabled ->
                 foodRemoteMediatorFactoryAggregate.openFoodFactsRemoteMediatorFactory
-
-            FoodSource.Type.USDA if this.usda.enabled ->
-                foodRemoteMediatorFactoryAggregate.usdaRemoteMediatorFactory
             else -> null
         }
 

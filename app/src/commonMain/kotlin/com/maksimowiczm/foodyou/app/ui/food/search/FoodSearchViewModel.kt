@@ -3,15 +3,12 @@ package com.maksimowiczm.foodyou.app.ui.food.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.app.ui.food.search.RemoteStatus.Companion.toRemoteStatus
 import com.maksimowiczm.foodyou.common.domain.date.DateProvider
 import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.search.searchQuery
-import com.maksimowiczm.foodyou.common.domain.userpreferences.UserPreferencesRepository
 import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.food.domain.entity.FoodId
 import com.maksimowiczm.foodyou.food.domain.repository.FoodSearchHistoryRepository
-import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferences
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchRepository
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchUseCase
 import kotlin.contracts.ExperimentalContracts
@@ -22,7 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -34,7 +30,6 @@ import kotlinx.coroutines.runBlocking
 
 internal class FoodSearchViewModel(
     private val excludedRecipeId: FoodId.Recipe?,
-    private val foodSearchPreferencesRepository: UserPreferencesRepository<FoodSearchPreferences>,
     searchHistoryRepository: FoodSearchHistoryRepository,
     private val foodSearchRepository: FoodSearchRepository,
     private val foodSearchUseCase: FoodSearchUseCase,
@@ -54,15 +49,6 @@ internal class FoodSearchViewModel(
     fun changeSource(source: FoodFilter.Source) {
         filter.update { it.copy(source = source) }
     }
-
-    private val foodPreferences =
-        foodSearchPreferencesRepository
-            .observe()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
-                initialValue = runBlocking { foodSearchPreferencesRepository.observe().first() },
-            )
 
     private val recentFoodPages =
         searchQuery.flatMapLatest { query ->
@@ -97,38 +83,6 @@ internal class FoodSearchViewModel(
             )
         }
 
-    private val openFoodFactsPages =
-        observeFoodPages(FoodSource.Type.OpenFoodFacts).cachedIn(viewModelScope)
-    private val openFoodFactsState =
-        combine(observeFoodCount(FoodSource.Type.OpenFoodFacts), foodPreferences) { count, prefs ->
-            FoodSourceUiState(
-                remoteEnabled = prefs.isOpenFoodFactsEnabled.toRemoteStatus(),
-                pages = openFoodFactsPages,
-                count = count,
-            )
-        }
-
-    private val usdaPages = observeFoodPages(FoodSource.Type.USDA).cachedIn(viewModelScope)
-    private val usdaState =
-        combine(observeFoodCount(FoodSource.Type.USDA), foodPreferences) { count, prefs ->
-            FoodSourceUiState(
-                remoteEnabled = prefs.isUsdaEnabled.toRemoteStatus(),
-                pages = usdaPages,
-                count = count,
-            )
-        }
-
-    private val swissPages =
-        observeFoodPages(FoodSource.Type.SwissFoodCompositionDatabase).cachedIn(viewModelScope)
-    private val swissState =
-        observeFoodCount(FoodSource.Type.SwissFoodCompositionDatabase).map { count ->
-            FoodSourceUiState(
-                remoteEnabled = RemoteStatus.LocalOnly,
-                pages = swissPages,
-                count = count,
-            )
-        }
-
     private val tbcaPages =
         observeFoodPages(FoodSource.Type.TBCA).cachedIn(viewModelScope)
     private val tbcaState =
@@ -139,7 +93,6 @@ internal class FoodSearchViewModel(
                 count = count,
             )
         }
-
 
     private fun observeFoodCount(source: FoodSource.Type) =
         searchQuery.flatMapLatest { query ->
@@ -169,18 +122,12 @@ internal class FoodSearchViewModel(
         combine(
                 recentFoodState,
                 yourFoodState,
-                openFoodFactsState,
-                usdaState,
-                swissState,
                 tbcaState,
                 filter,
                 searchHistory,
             ) {
                 recentFoodState,
                 yourFoodState,
-                openFoodFactsState,
-                usdaState,
-                swissState,
                 tbcaState,
                 filter,
                 searchHistory ->
@@ -189,9 +136,6 @@ internal class FoodSearchViewModel(
                         mapOf(
                             FoodFilter.Source.Recent to recentFoodState,
                             FoodFilter.Source.YourFood to yourFoodState,
-                            FoodFilter.Source.OpenFoodFacts to openFoodFactsState,
-                            FoodFilter.Source.USDA to usdaState,
-                            FoodFilter.Source.SwissFoodCompositionDatabase to swissState,
                             FoodFilter.Source.TBCA to tbcaState,
                         ),
                     filter = filter,
@@ -220,7 +164,8 @@ internal class FoodSearchViewModel(
                     combine(filter, uiState) { currentFilter, uiState ->
                         if (
                             (currentFilter.source != FoodFilter.Source.Recent &&
-                                currentFilter.source != FoodFilter.Source.YourFood) ||
+                                currentFilter.source != FoodFilter.Source.YourFood &&
+                                currentFilter.source != FoodFilter.Source.TBCA) ||
                                 uiState.currentSourceCount.positive()
                         ) {
                             return@combine
@@ -238,16 +183,9 @@ internal class FoodSearchViewModel(
                             return@combine
                         }
 
-                        val openFoodFactsCount =
-                            uiState.sources[FoodFilter.Source.OpenFoodFacts]?.count
-                        if (openFoodFactsCount.positive()) {
-                            changeSource(FoodFilter.Source.OpenFoodFacts)
-                            return@combine
-                        }
-
-                        val usdaCount = uiState.sources[FoodFilter.Source.USDA]?.count
-                        if (usdaCount.positive()) {
-                            changeSource(FoodFilter.Source.USDA)
+                        val tbcaCount = uiState.sources[FoodFilter.Source.TBCA]?.count
+                        if (tbcaCount.positive()) {
+                            changeSource(FoodFilter.Source.TBCA)
                             return@combine
                         }
                     }

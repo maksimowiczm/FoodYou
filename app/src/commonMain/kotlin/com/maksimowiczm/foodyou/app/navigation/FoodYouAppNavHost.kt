@@ -9,10 +9,8 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.database.exportcsvproducts.ExportCsvProductsScreen
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.ExternalDatabasesScreen
-import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiKeyDialog
 import com.maksimowiczm.foodyou.app.ui.database.importcsvproducts.ImportCsvProductsScreen
 import com.maksimowiczm.foodyou.app.ui.database.master.DatabaseSettingsScreen
-import com.maksimowiczm.foodyou.app.ui.database.swissfoodcompositiondatabase.SwissFoodCompositionDatabaseScreen
 import com.maksimowiczm.foodyou.app.ui.database.tbca.TBCAScreen
 import com.maksimowiczm.foodyou.app.ui.food.diary.add.AddEntryScreen
 import com.maksimowiczm.foodyou.app.ui.food.diary.quickadd.CreateQuickAddScreen
@@ -132,18 +130,15 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
         forwardBackwardComposable<ExternalDatabases> {
           ExternalDatabasesScreen(
             onBack = { navController.popBackStackInclusive<ExternalDatabases>() },
-            onSwissFoodCompositionDatabase = {
-              navController.navigateSingleTop(SwissFoodCompositionDatabase)
-            },
             onTBCA = {
               navController.navigateSingleTop(TBCA)
             },
           )
         }
-        forwardBackwardComposable<SwissFoodCompositionDatabase> {
-            SwissFoodCompositionDatabaseScreen(
-                onBack = { navController.popBackStackInclusive<SwissFoodCompositionDatabase>() }
-            )
+        forwardBackwardComposable<TBCA> {
+          TBCAScreen(
+            onBack = { navController.popBackStackInclusive<TBCA>() }
+          )
         }
         forwardBackwardComposable<TBCA> {
           TBCAScreen(
@@ -160,12 +155,6 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
             ExportCsvProductsScreen(
                 onBack = { navController.popBackStackInclusive<ExportCsvProducts>() },
                 onFinish = { navController.popBackStackInclusive<ExportCsvProducts>() },
-            )
-        }
-        dialog<UsdaApiKey> {
-            UpdateUsdaApiKeyDialog(
-                onDismissRequest = { navController.popBackStackInclusive<UsdaApiKey>() },
-                onSave = { navController.popBackStackInclusive<UsdaApiKey>() },
             )
         }
         forwardBackwardComposable<FoodDiaryCreateQuickAdd> {
@@ -208,7 +197,6 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                         )
                     )
                 },
-                onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKey) },
                 date = LocalDate.fromEpochDays(date),
                 mealId = mealId,
                 animatedVisibilityScope = this,
@@ -226,7 +214,6 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                     }
                 },
                 onUpdate = { navController.popBackStackInclusive<UpdateRecipe>() },
-                onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKey) },
                 recipeId = FoodId.Recipe(recipeId),
             )
         }
@@ -262,7 +249,6 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                         is FoodId.Recipe -> error("Cannot edit recipe from recipe")
                     }
                 },
-                onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKey) },
             )
         }
         forwardBackwardComposable<FoodDiaryCreateProduct> {
@@ -282,7 +268,6 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                         popUpTo<FoodDiaryCreateProduct> { inclusive = true }
                     }
                 },
-                onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKey) },
             )
         }
         forwardBackwardComposable<FoodDiaryCreateEntry> {
@@ -393,11 +378,7 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
 
 @Serializable private object ExternalDatabases
 
-@Serializable private object SwissFoodCompositionDatabase
-
 @Serializable private object TBCA
-
-@Serializable private object UsdaApiKey
 
 @Serializable private object ImportCsvProducts
 

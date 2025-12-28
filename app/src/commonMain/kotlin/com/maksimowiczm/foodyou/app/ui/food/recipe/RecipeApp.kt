@@ -52,7 +52,6 @@ internal fun RecipeApp(
     onBack: () -> Unit,
     onSave: (RecipeFormState) -> Unit,
     onEditFood: (FoodId) -> Unit,
-    onUpdateUsdaApiKey: () -> Unit,
     state: RecipeFormState,
     topBarTitle: String,
     mainRecipeId: FoodId.Recipe?,
@@ -167,7 +166,6 @@ internal fun RecipeApp(
                             launchSingleTop = true
                         }
                     },
-                    onUpdateUsdaApiKey = onUpdateUsdaApiKey,
                     excludedRecipe = mainRecipeId,
                     modifier =
                         Modifier.fillMaxSize()
