@@ -30,11 +30,25 @@ interface FoodSearchDao {
         WITH ProductsSearch AS (
             SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT
             FROM Product p
+            LEFT JOIN LatestMeasurementSuggestion lms ON p.id = lms.productId
+            LEFT JOIN (
+                SELECT productId, COUNT(*) as usageCount
+                FROM MeasurementSuggestion
+                WHERE productId IS NOT NULL
+                GROUP BY productId
+            ) usage ON p.id = usage.productId
             WHERE :source IS NULL OR p.sourceType = :source
         ),
         RecipesSearch AS (
             SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT
             FROM Recipe r
+            LEFT JOIN LatestMeasurementSuggestion lms ON r.id = lms.recipeId
+            LEFT JOIN (
+                SELECT recipeId, COUNT(*) as usageCount
+                FROM MeasurementSuggestion
+                WHERE recipeId IS NOT NULL
+                GROUP BY recipeId
+            ) usage ON r.id = usage.recipeId
             WHERE
                 -- All recipes are from the user
                 :source = ${FoodSourceTypeSQLConstants.USER} AND
@@ -42,7 +56,7 @@ interface FoodSearchDao {
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
                     FROM RecipeAllIngredientsView rai
-                    WHERE rai.targetRecipeId = r.id 
+                    WHERE rai.targetRecipeId = r.id
                     AND rai.ingredientId = :excludedRecipeId
                 ))
         )
@@ -51,7 +65,12 @@ interface FoodSearchDao {
         UNION ALL
         SELECT *, NULL AS measurementType, NULL AS measurementValue
         FROM RecipesSearch
-        ORDER BY headline COLLATE NOCASE ASC
+        ORDER BY
+            foodType ASC,
+            usageCount DESC,
+            lastUsedSeconds DESC,
+            nameLength ASC,
+            headline COLLATE NOCASE ASC
         """
     )
     fun observeFood(source: FoodSourceType?, excludedRecipeId: Long?): PagingSource<Int, FoodSearch>
@@ -86,13 +105,29 @@ interface FoodSearchDao {
         """
         WITH ProductsSearch AS (
             SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT
-            FROM Product p JOIN ProductFts fts ON p.id = fts.rowid
+            FROM Product p
+            JOIN ProductFts fts ON p.id = fts.rowid
+            LEFT JOIN LatestMeasurementSuggestion lms ON p.id = lms.productId
+            LEFT JOIN (
+                SELECT productId, COUNT(*) as usageCount
+                FROM MeasurementSuggestion
+                WHERE productId IS NOT NULL
+                GROUP BY productId
+            ) usage ON p.id = usage.productId
             WHERE
                 (ProductFts MATCH :query || '*') AND (:source IS NULL OR p.sourceType = :source)
         ),
         RecipesSearch AS (
             SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT
-            FROM Recipe r JOIN RecipeFts fts ON r.id = fts.rowid
+            FROM Recipe r
+            JOIN RecipeFts fts ON r.id = fts.rowid
+            LEFT JOIN LatestMeasurementSuggestion lms ON r.id = lms.recipeId
+            LEFT JOIN (
+                SELECT recipeId, COUNT(*) as usageCount
+                FROM MeasurementSuggestion
+                WHERE recipeId IS NOT NULL
+                GROUP BY recipeId
+            ) usage ON r.id = usage.recipeId
             WHERE
                 -- All recipes are from the user
                 :source = ${FoodSourceTypeSQLConstants.USER} AND
@@ -101,7 +136,7 @@ interface FoodSearchDao {
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
                     FROM RecipeAllIngredientsView rai
-                    WHERE rai.targetRecipeId = r.id 
+                    WHERE rai.targetRecipeId = r.id
                     AND rai.ingredientId = :excludedRecipeId
                 ))
         )
@@ -110,7 +145,12 @@ interface FoodSearchDao {
         UNION ALL
         SELECT *, NULL AS measurementType, NULL AS measurementValue
         FROM RecipesSearch
-        ORDER BY headline COLLATE NOCASE ASC
+        ORDER BY
+            foodType ASC,
+            usageCount DESC,
+            lastUsedSeconds DESC,
+            nameLength ASC,
+            headline COLLATE NOCASE ASC
         """
     )
     fun observeFoodByQuery(
@@ -155,10 +195,22 @@ interface FoodSearchDao {
         """
         SELECT ${PRODUCT_FOOD_SEARCH_SQL_SELECT}, NULL AS measurementType, NULL AS measurementValue
         FROM Product p
+        LEFT JOIN LatestMeasurementSuggestion lms ON p.id = lms.productId
+        LEFT JOIN (
+            SELECT productId, COUNT(*) as usageCount
+            FROM MeasurementSuggestion
+            WHERE productId IS NOT NULL
+            GROUP BY productId
+        ) usage ON p.id = usage.productId
         WHERE
             p.barcode LIKE '%' || :barcode || '%' AND
             (:source IS NULL OR p.sourceType = :source)
-        ORDER BY headline COLLATE NOCASE ASC
+        ORDER BY
+            foodType ASC,
+            usageCount DESC,
+            lastUsedSeconds DESC,
+            nameLength ASC,
+            headline COLLATE NOCASE ASC
         """
     )
     fun observeFoodByBarcode(
@@ -180,29 +232,41 @@ interface FoodSearchDao {
     @Query(
         """
         WITH ProductsSearch AS (
-            SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
-            FROM LatestMeasurementSuggestion s 
-                LEFT JOIN Product p ON s.productId = p.id
+            SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT, lms.type AS measurementType, lms.value AS measurementValue, lms.epochSeconds AS epochSeconds
+            FROM LatestMeasurementSuggestion lms
+                LEFT JOIN Product p ON lms.productId = p.id
                 JOIN ProductFts fts ON p.id = fts.rowid
+                LEFT JOIN (
+                    SELECT productId, COUNT(*) as usageCount
+                    FROM MeasurementSuggestion
+                    WHERE productId IS NOT NULL
+                    GROUP BY productId
+                ) usage ON p.id = usage.productId
             WHERE
-                s.productId IS NOT NULL AND
-                s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+                lms.productId IS NOT NULL AND
+                lms.epochSeconds >= :nowEpochSeconds - 2592000 AND
                 (ProductFts MATCH :query || '*')
         ),
         RecipesSearch AS (
-            SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
-            FROM LatestMeasurementSuggestion s 
-                LEFT JOIN Recipe r ON s.recipeId = r.id
+            SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT, lms.type AS measurementType, lms.value AS measurementValue, lms.epochSeconds AS epochSeconds
+            FROM LatestMeasurementSuggestion lms
+                LEFT JOIN Recipe r ON lms.recipeId = r.id
                 JOIN RecipeFts fts ON r.id = fts.rowid
+                LEFT JOIN (
+                    SELECT recipeId, COUNT(*) as usageCount
+                    FROM MeasurementSuggestion
+                    WHERE recipeId IS NOT NULL
+                    GROUP BY recipeId
+                ) usage ON r.id = usage.recipeId
             WHERE
-                s.recipeId IS NOT NULL AND
-                s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+                lms.recipeId IS NOT NULL AND
+                lms.epochSeconds >= :nowEpochSeconds - 2592000 AND
                 (RecipeFts MATCH :query || '*') AND
                 (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
                     FROM RecipeAllIngredientsView rai
-                    WHERE rai.targetRecipeId = r.id 
+                    WHERE rai.targetRecipeId = r.id
                     AND rai.ingredientId = :excludedRecipeId
                 ))
         ),
@@ -265,23 +329,37 @@ interface FoodSearchDao {
     @Query(
         """
         WITH ProductsSearch AS (
-            SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
-            FROM LatestMeasurementSuggestion s LEFT JOIN Product p ON s.productId = p.id
+            SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT, lms.type AS measurementType, lms.value AS measurementValue, lms.epochSeconds AS epochSeconds
+            FROM LatestMeasurementSuggestion lms
+                LEFT JOIN Product p ON lms.productId = p.id
+                LEFT JOIN (
+                    SELECT productId, COUNT(*) as usageCount
+                    FROM MeasurementSuggestion
+                    WHERE productId IS NOT NULL
+                    GROUP BY productId
+                ) usage ON p.id = usage.productId
             WHERE
-                s.productId IS NOT NULL AND
-                s.epochSeconds >= :nowEpochSeconds - 2592000
+                lms.productId IS NOT NULL AND
+                lms.epochSeconds >= :nowEpochSeconds - 2592000
         ),
         RecipesSearch AS (
-            SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
-            FROM LatestMeasurementSuggestion s LEFT JOIN Recipe r ON s.recipeId = r.id
+            SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT, lms.type AS measurementType, lms.value AS measurementValue, lms.epochSeconds AS epochSeconds
+            FROM LatestMeasurementSuggestion lms
+                LEFT JOIN Recipe r ON lms.recipeId = r.id
+                LEFT JOIN (
+                    SELECT recipeId, COUNT(*) as usageCount
+                    FROM MeasurementSuggestion
+                    WHERE recipeId IS NOT NULL
+                    GROUP BY recipeId
+                ) usage ON r.id = usage.recipeId
             WHERE
-                s.recipeId IS NOT NULL AND
-                s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+                lms.recipeId IS NOT NULL AND
+                lms.epochSeconds >= :nowEpochSeconds - 2592000 AND
                 (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
                 (:excludedRecipeId IS NULL OR NOT EXISTS (
                     SELECT 1
                     FROM RecipeAllIngredientsView rai
-                    WHERE rai.targetRecipeId = r.id 
+                    WHERE rai.targetRecipeId = r.id
                     AND rai.ingredientId = :excludedRecipeId
                 ))
         ),
@@ -333,12 +411,19 @@ interface FoodSearchDao {
     @Query(
         """
         SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT, NULL AS measurementType, NULL AS measurementValue
-        FROM LatestMeasurementSuggestion s LEFT JOIN Product p ON s.productId = p.id
+        FROM LatestMeasurementSuggestion lms
+            LEFT JOIN Product p ON lms.productId = p.id
+            LEFT JOIN (
+                SELECT productId, COUNT(*) as usageCount
+                FROM MeasurementSuggestion
+                WHERE productId IS NOT NULL
+                GROUP BY productId
+            ) usage ON p.id = usage.productId
         WHERE
-            s.productId IS NOT NULL AND
-            s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+            lms.productId IS NOT NULL AND
+            lms.epochSeconds >= :nowEpochSeconds - 2592000 AND
             p.barcode = :barcode
-        ORDER BY s.epochSeconds DESC
+        ORDER BY lms.epochSeconds DESC
         """
     )
     fun observeRecentFoodByBarcode(
@@ -349,10 +434,10 @@ interface FoodSearchDao {
     @Query(
         """
         SELECT COUNT(*)
-        FROM LatestMeasurementSuggestion s LEFT JOIN Product p ON s.productId = p.id
+        FROM LatestMeasurementSuggestion lms LEFT JOIN Product p ON lms.productId = p.id
         WHERE
-            s.productId IS NOT NULL AND
-            s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+            lms.productId IS NOT NULL AND
+            lms.epochSeconds >= :nowEpochSeconds - 2592000 AND
             p.barcode = :barcode
         """
     )
@@ -362,12 +447,19 @@ interface FoodSearchDao {
 // Don't do it twice
 private const val PRODUCT_FOOD_SEARCH_SQL_SELECT =
     """
-p.id AS productId, 
+p.id AS productId,
 NULL AS recipeId,
-CASE 
+CASE
     WHEN p.brand IS NOT NULL THEN p.name || ' (' || p.brand || ')'
     ELSE p.name
 END AS headline,
+0 AS foodType,
+COALESCE(usage.usageCount, 0) AS usageCount,
+COALESCE(lms.epochSeconds, 0) AS lastUsedSeconds,
+LENGTH(CASE
+    WHEN p.brand IS NOT NULL THEN p.name || ' (' || p.brand || ')'
+    ELSE p.name
+END) AS nameLength,
 p.isLiquid,
 p.energy,
 p.proteins,
@@ -421,6 +513,10 @@ private const val RECIPE_FOOD_SEARCH_SQL_SELECT =
 NULL AS productId,
 r.id AS recipeId,
 r.name AS headline,
+1 AS foodType,
+COALESCE(usage.usageCount, 0) AS usageCount,
+COALESCE(lms.epochSeconds, 0) AS lastUsedSeconds,
+LENGTH(r.name) AS nameLength,
 r.isLiquid,
 NULL AS energy,
 NULL AS proteins,
@@ -474,6 +570,10 @@ private const val FOOD_SEARCH_SQL_SELECT =
 productId,
 recipeId,
 headline,
+foodType,
+usageCount,
+lastUsedSeconds,
+nameLength,
 isLiquid,
 energy,
 proteins,
