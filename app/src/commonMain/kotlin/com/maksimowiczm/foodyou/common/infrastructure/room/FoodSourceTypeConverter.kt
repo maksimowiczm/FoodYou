@@ -3,16 +3,11 @@ package com.maksimowiczm.foodyou.common.infrastructure.room
 import androidx.room.TypeConverter
 
 internal class FoodSourceTypeConverter {
-
     @TypeConverter
     fun fromFoodSourceType(value: FoodSourceType): Int =
         when (value) {
             FoodSourceType.User -> FoodSourceTypeSQLConstants.USER
             FoodSourceType.OpenFoodFacts -> FoodSourceTypeSQLConstants.OPEN_FOOD_FACTS
-            FoodSourceType.USDA -> FoodSourceTypeSQLConstants.USDA
-            FoodSourceType.SwissFoodCompositionDatabase ->
-                FoodSourceTypeSQLConstants.SWISS_FOOD_COMPOSITION_DATABASE
-            FoodSourceType.TACO -> FoodSourceTypeSQLConstants.TACO
             FoodSourceType.TBCA -> FoodSourceTypeSQLConstants.TBCA
         }
 
@@ -21,12 +16,11 @@ internal class FoodSourceTypeConverter {
         when (value) {
             FoodSourceTypeSQLConstants.USER -> FoodSourceType.User
             FoodSourceTypeSQLConstants.OPEN_FOOD_FACTS -> FoodSourceType.OpenFoodFacts
-            FoodSourceTypeSQLConstants.USDA -> FoodSourceType.USDA
-            FoodSourceTypeSQLConstants.SWISS_FOOD_COMPOSITION_DATABASE ->
-                FoodSourceType.SwissFoodCompositionDatabase
-            FoodSourceTypeSQLConstants.TACO -> FoodSourceType.TACO
             FoodSourceTypeSQLConstants.TBCA -> FoodSourceType.TBCA
-            else -> error("Unknown food source type value: $value")
+            FoodSourceTypeSQLConstants.USDA,
+            FoodSourceTypeSQLConstants.SWISS_FOOD_COMPOSITION_DATABASE,
+            FoodSourceTypeSQLConstants.TACO -> FoodSourceType.User
+        else -> error("Unknown food source type value: $value")
         }
 }
 

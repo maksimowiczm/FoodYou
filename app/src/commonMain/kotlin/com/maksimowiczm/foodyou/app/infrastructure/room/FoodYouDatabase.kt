@@ -33,7 +33,6 @@ import com.maksimowiczm.foodyou.food.search.infrastructure.room.FoodSearchDataba
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.OpenFoodFactsPagingKeyEntity
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.RecipeAllIngredientsView
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.SearchEntry
-import com.maksimowiczm.foodyou.food.search.infrastructure.room.USDAPagingKeyEntity
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.DiaryProductEntity
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.DiaryRecipeEntity
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.DiaryRecipeIngredientEntity
@@ -52,7 +51,6 @@ import com.maksimowiczm.foodyou.sponsorship.infrastructure.room.SponsorshipEntit
             RecipeEntity::class,
             RecipeIngredientEntity::class,
             OpenFoodFactsPagingKeyEntity::class,
-            USDAPagingKeyEntity::class,
             FoodEventEntity::class,
             SearchEntry::class,
             MealEntity::class,

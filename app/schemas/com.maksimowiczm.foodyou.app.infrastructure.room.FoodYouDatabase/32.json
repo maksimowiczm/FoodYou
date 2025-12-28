@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 32,
-    "identityHash": "ca27fee35bbdfeaaa21e6d7770b95444",
+    "identityHash": "fb60b1ca707dd9e143f8bf001c288b61",
     "entities": [
       {
         "tableName": "Product",
@@ -470,36 +470,6 @@
           "columnNames": [
             "queryString",
             "country"
-          ]
-        }
-      },
-      {
-        "tableName": "USDAPagingKey",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`queryString` TEXT NOT NULL, `fetchedCount` INTEGER NOT NULL, `totalCount` INTEGER NOT NULL, PRIMARY KEY(`queryString`))",
-        "fields": [
-          {
-            "fieldPath": "queryString",
-            "columnName": "queryString",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "fetchedCount",
-            "columnName": "fetchedCount",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "totalCount",
-            "columnName": "totalCount",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "queryString"
           ]
         }
       },
@@ -1753,7 +1723,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ca27fee35bbdfeaaa21e6d7770b95444')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fb60b1ca707dd9e143f8bf001c288b61')"
     ]
   }
 }

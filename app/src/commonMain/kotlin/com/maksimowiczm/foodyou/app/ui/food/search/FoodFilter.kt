@@ -32,9 +32,6 @@ internal data class FoodFilter(val source: Source = DefaultFilter) {
     enum class Source {
         Recent,
         YourFood,
-        OpenFoodFacts,
-        USDA,
-        SwissFoodCompositionDatabase,
         TBCA;
 
         @Composable
@@ -54,9 +51,6 @@ internal data class FoodFilter(val source: Source = DefaultFilter) {
                         modifier = modifier,
                     )
 
-                OpenFoodFacts -> FoodSource.Type.OpenFoodFacts.Icon(modifier)
-                USDA -> FoodSource.Type.USDA.Icon(modifier)
-                SwissFoodCompositionDatabase -> FoodSource.Type.SwissFoodCompositionDatabase.Icon()
                 TBCA -> FoodSource.Type.TBCA.Icon(modifier)
             }
 
@@ -65,10 +59,6 @@ internal data class FoodFilter(val source: Source = DefaultFilter) {
             when (this) {
                 Recent -> stringResource(Res.string.headline_recent)
                 YourFood -> stringResource(Res.string.headline_your_food)
-                OpenFoodFacts -> FoodSource.Type.OpenFoodFacts.stringResource()
-                USDA -> FoodSource.Type.USDA.stringResource()
-                SwissFoodCompositionDatabase ->
-                    stringResource(Res.string.headline_swiss_food_composition_database)
                 TBCA -> stringResource(Res.string.headline_tbca)
             }
     }

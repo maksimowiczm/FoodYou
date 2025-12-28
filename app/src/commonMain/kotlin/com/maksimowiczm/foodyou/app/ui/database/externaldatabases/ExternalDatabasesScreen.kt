@@ -30,43 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.app.ui.common.component.OpenFoodFactsPrivacyCard
-import com.maksimowiczm.foodyou.app.ui.common.component.UsdaPrivacyCard
 import com.maksimowiczm.foodyou.common.compose.extension.add
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ExternalDatabasesScreen(
     onBack: () -> Unit,
-    onSwissFoodCompositionDatabase: () -> Unit,
-    onTBCA: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val viewModel: ExternalDatabasesViewModel = koinViewModel()
-    val model by viewModel.foodPreferences.collectAsStateWithLifecycle()
-
-    ExternalDatabasesScreen(
-        onBack = onBack,
-        model = model,
-        onOpenFoodFactsChange = viewModel::toggleOpenFoodFacts,
-        onUsdaChange = viewModel::toggleUsda,
-        onSwissFoodCompositionDatabase = onSwissFoodCompositionDatabase,
-        onTBCA = onTBCA,
-        modifier = modifier,
-    )
-}
-
-@Composable
-private fun ExternalDatabasesScreen(
-    onBack: () -> Unit,
-    model: FoodPreferencesModel,
-    onOpenFoodFactsChange: (Boolean) -> Unit,
-    onUsdaChange: (Boolean) -> Unit,
-    onSwissFoodCompositionDatabase: () -> Unit,
     onTBCA: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -98,23 +69,6 @@ private fun ExternalDatabasesScreen(
                 Text(
                     text = stringResource(Res.string.description_food_database),
                     style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-
-            item {
-                OpenFoodFactsPrivacyCard(
-                    selected = model.useOpenFoodFacts ?: false,
-                    onSelectedChange = onOpenFoodFactsChange,
-                )
-            }
-            item {
-                UsdaPrivacyCard(selected = model.useUsda ?: false, onSelectedChange = onUsdaChange)
-            }
-
-            item {
-                SwissFoodCompositionDatabase(
-                    onClick = onSwissFoodCompositionDatabase,
-                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
@@ -162,41 +116,6 @@ private fun DatabaseCard(
             contentColor = MaterialTheme.colorScheme.onSurface,
             content = inner,
         )
-    }
-}
-
-@Composable
-private fun SwissFoodCompositionDatabase(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    DatabaseCard(
-        title = {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    text = stringResource(Res.string.headline_swiss_food_composition_database),
-                    style = MaterialTheme.typography.titleSmall,
-                )
-                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
-                        contentDescription = null,
-                    )
-                }
-            }
-        },
-        modifier = modifier,
-        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 16.dp),
-        onClick = onClick,
-    ) {
-        Text(
-            text = stringResource(Res.string.description_swiss_food_composition_database_short),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Spacer(Modifier.height(8.dp))
-        FeaturesContainer { ManualImport() }
     }
 }
 
