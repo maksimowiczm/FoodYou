@@ -25,7 +25,6 @@ buildConfig {
 
 kotlin {
     sourceSets.all {
-        languageSettings.enableLanguageFeature("WhenGuards")
         languageSettings.enableLanguageFeature("ExpectActualClasses")
         languageSettings.enableLanguageFeature("ContextParameters")
     }
