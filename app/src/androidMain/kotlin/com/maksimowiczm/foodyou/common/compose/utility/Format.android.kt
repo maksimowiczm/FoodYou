@@ -6,13 +6,13 @@ actual fun Float.formatClipZeros(format: String) =
     if (this % 1 == 0f) {
         toInt().toString()
     } else {
-        // 1000.000 -> 1000
+        // 1000.000 -> 1000 or 1000,000 -> 1000
         // 1000 -> 1000
-        val text = format.format(Locale.ENGLISH, this)
+        val text = format.format(Locale.getDefault(), this)
 
-        if (text.contains('.')) {
-            // Remove trailing zeros and dot if necessary
-            text.replace(Regex("\\.?0+$"), "")
+        if (text.contains('.') || text.contains(',')) {
+            // Remove trailing zeros and decimal separator if necessary
+            text.replace(Regex("[.,]?0+$"), "")
         } else {
             text
         }
@@ -22,13 +22,13 @@ actual fun Double.formatClipZeros(format: String) =
     if (this % 1 == 0.0) {
         toInt().toString()
     } else {
-        // 1000.000 -> 1000
+        // 1000.000 -> 1000 or 1000,000 -> 1000
         // 1000 -> 1000
-        val text = format.format(Locale.ENGLISH, this)
+        val text = format.format(Locale.getDefault(), this)
 
-        if (text.contains('.')) {
-            // Remove trailing zeros and dot if necessary
-            text.replace(Regex("\\.?0+$"), "")
+        if (text.contains('.') || text.contains(',')) {
+            // Remove trailing zeros and decimal separator if necessary
+            text.replace(Regex("[.,]?0+$"), "")
         } else {
             text
         }
