@@ -17,9 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationEventHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -30,8 +32,11 @@ internal fun ExportingProductsScreen(count: Int, modifier: Modifier = Modifier) 
     val snackbarHostState = remember { SnackbarHostState() }
     val pleaseWaitMessage = stringResource(Res.string.headline_please_wait)
 
-    BackHandler(
-        onBack = { coroutinesScope.launch { snackbarHostState.showSnackbar(pleaseWaitMessage) } }
+    NavigationEventHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        onBackCompleted = {
+            coroutinesScope.launch { snackbarHostState.showSnackbar(pleaseWaitMessage) }
+        },
     )
 
     Scaffold(modifier = modifier, snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {

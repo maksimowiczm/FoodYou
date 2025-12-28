@@ -17,11 +17,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
@@ -62,11 +64,19 @@ fun CreateProductScreen(
         }
     }
 
-    BackHandler(!isLocked && productFormState.isModified) { showDiscardDialog = true }
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = !isLocked && productFormState.isModified,
+        onBackCompleted = { showDiscardDialog = true },
+    )
     val pleaseWaitStr = stringResource(Res.string.headline_please_wait)
-    BackHandler(isLocked) {
-        scope.launch { snackbarHostState.showSnackbar(message = pleaseWaitStr) }
-    }
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = isLocked,
+        onBackCompleted = {
+            scope.launch { snackbarHostState.showSnackbar(message = pleaseWaitStr) }
+        },
+    )
 
     val focusRequester = remember { FocusRequester() }
     var showFillSuggestedFieldsDialog by rememberSaveable { mutableStateOf(false) }

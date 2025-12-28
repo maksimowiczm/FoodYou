@@ -15,10 +15,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationEventHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardDialog
 import com.maksimowiczm.foodyou.app.ui.food.product.ProductForm
@@ -58,7 +60,11 @@ internal fun UpdateProductScreen(
                 showDiscardDialog = true
             }
         }
-        BackHandler(enabled = productForm.isModified) { showDiscardDialog = true }
+        NavigationEventHandler(
+            state = rememberNavigationEventState(NavigationEventInfo.None),
+            isBackEnabled = productForm.isModified,
+            onBackCompleted = { showDiscardDialog = true },
+        )
         if (showDiscardDialog) {
             DiscardDialog(
                 onDismissRequest = { showDiscardDialog = false },

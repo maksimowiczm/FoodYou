@@ -14,9 +14,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
@@ -42,7 +44,11 @@ fun AddProfileScreen(
     }
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
-    BackHandler(enabled = uiState.isModified) { showDiscardDialog = true }
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = uiState.isModified,
+        onBackCompleted = { showDiscardDialog = true },
+    )
     if (showDiscardDialog) {
         DiscardChangesDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack) {
             Text(stringResource(Res.string.question_discard_profile))

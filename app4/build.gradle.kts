@@ -52,16 +52,16 @@ kotlin {
             implementation(projects.shared.resources)
             implementation(projects.shared.barcodescanner)
 
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            // implementation(compose.material3)
+            implementation(libs.jetbrains.compose.runtime)
+            implementation(libs.jetbrains.compose.foundation)
             implementation(libs.jetbrains.compose.material3)
-            implementation(libs.jetbrains.compose.backhandler)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.navigation.compose)
+            implementation(libs.jetbrains.compose.material.icons.extended)
+            implementation(libs.jetbrains.compose.ui)
+            implementation(libs.jetbrains.compose.components.resources)
+            implementation(libs.jetbrains.compose.ui.tooling.preview)
+            implementation(libs.jetbrains.compose.navigationevent.compose)
+
+            implementation(libs.jetbrains.compose.navigation.compose)
 
             implementation(libs.androidx.datastore.preferences.core)
 
@@ -106,7 +106,7 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(compose.preview)
+            implementation(libs.jetbrains.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
             implementation(libs.koin.android)
@@ -175,7 +175,7 @@ android {
 }
 
 dependencies {
-    debugImplementation(compose.uiTooling)
+    debugImplementation(libs.jetbrains.compose.ui.tooling)
 
     listOf(
             "kspCommonMainMetadata",

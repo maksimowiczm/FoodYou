@@ -16,11 +16,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.Scrim
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefaults
@@ -39,7 +41,11 @@ fun FoodDatabaseScreen(
     modifier: Modifier = Modifier,
 ) {
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
-    BackHandler(fabExpanded) { fabExpanded = false }
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = fabExpanded,
+        onBackCompleted = { fabExpanded = true },
+    )
 
     val offset = rememberSaveable { mutableFloatStateOf(0f) }
     val scrollConnection = StatusBarProtectionDefaults.scrollConnection { offset.value -= it.y }

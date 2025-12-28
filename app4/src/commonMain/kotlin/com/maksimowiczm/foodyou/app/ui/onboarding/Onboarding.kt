@@ -2,11 +2,13 @@ package com.maksimowiczm.foodyou.app.ui.onboarding
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.app.navigation.navigateSingleTop
 import com.maksimowiczm.foodyou.app.navigation.popBackStackInclusive
@@ -57,7 +59,10 @@ fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier
             )
         }
         forwardBackwardComposable<AlmostDone> {
-            BackHandler {}
+            NavigationBackHandler(
+                state = rememberNavigationEventState(NavigationEventInfo.None),
+                onBackCompleted = {},
+            )
             AlmostDoneScreen()
         }
     }

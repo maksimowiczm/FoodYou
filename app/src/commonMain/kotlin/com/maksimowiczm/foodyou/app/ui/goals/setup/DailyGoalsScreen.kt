@@ -40,7 +40,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -53,6 +52,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationEventHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardDialog
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
@@ -106,7 +108,11 @@ internal fun DailyGoalsContent(
 ) {
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     val handleOnBack = { if (weeklyState.isModified) showDiscardDialog = true else onBack() }
-    BackHandler(weeklyState.isModified) { showDiscardDialog = true }
+    NavigationEventHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = weeklyState.isModified,
+        onBackCompleted = { showDiscardDialog = true },
+    )
     if (showDiscardDialog) {
         DiscardDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack) {
             Text(stringResource(Res.string.question_discard_changes))

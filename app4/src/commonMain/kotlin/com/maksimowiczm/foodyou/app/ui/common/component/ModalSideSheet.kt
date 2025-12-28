@@ -19,7 +19,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.PredictiveBackHandler
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
@@ -30,10 +29,14 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.util.lerp
+import androidx.navigationevent.NavigationEvent
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.NavigationEventTransitionState
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import kotlin.math.abs
 import kotlin.math.min
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Composable
 fun ModalSideSheet(
@@ -43,6 +46,7 @@ fun ModalSideSheet(
     sheetState: SideSheetState = rememberSideSheetState(),
     sheetContent: @Composable () -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     val density = LocalDensity.current
     val direction = LocalLayoutDirection.current
     val directionMultiplier =
@@ -52,23 +56,26 @@ fun ModalSideSheet(
         }
 
     val predictiveBackProgress = remember { Animatable(0f) }
-
-    // Side sheet detaches from the top and bottom edges of the screen to signal
-    // it will close
-    // The side sheet and its content always scales in the direction of the
-    // user’s gesture.
-    PredictiveBackHandler(enabled = sheetState.progress > 0f) { flow ->
-        try {
-            flow.collectLatest { event ->
-                when (event.swipeEdge) {
-                    0 -> predictiveBackProgress.snapTo(event.progress)
-                    1 -> predictiveBackProgress.snapTo(-event.progress)
-                }
+    val navState = rememberNavigationEventState(NavigationEventInfo.None)
+    NavigationBackHandler(
+        state = navState,
+        isBackEnabled = sheetState.progress > 0f,
+        onBackCancelled = { scope.launch { predictiveBackProgress.snapTo(0f) } },
+        onBackCompleted = {
+            scope.launch {
+                sheetState.close()
+                predictiveBackProgress.snapTo(0f)
             }
-            sheetState.close()
-            predictiveBackProgress.snapTo(0f)
-        } catch (_: CancellationException) {
-            predictiveBackProgress.snapTo(0f)
+        },
+    )
+    LaunchedEffect(navState.transitionState) {
+        val transitionState = navState.transitionState
+        if (transitionState is NavigationEventTransitionState.InProgress) {
+            val event = transitionState.latestEvent
+            when (event.swipeEdge) {
+                NavigationEvent.EDGE_LEFT -> predictiveBackProgress.snapTo(event.progress)
+                NavigationEvent.EDGE_RIGHT -> predictiveBackProgress.snapTo(-event.progress)
+            }
         }
     }
 

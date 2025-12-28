@@ -40,12 +40,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationEventHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.common.compose.extension.add
 import com.maksimowiczm.foodyou.importexport.swissfoodcompositiondatabase.domain.SwissFoodCompositionDatabaseRepository.Language
@@ -94,9 +96,12 @@ private fun SwissFoodCompositionDatabaseScreen(
         }
     }
 
-    BackHandler(
-        enabled = uiState is SwissFoodCompositionDatabaseUiState.Importing,
-        onBack = { coroutinesScope.launch { snackbarHostState.showSnackbar(pleaseWaitMessage) } },
+    NavigationEventHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = uiState is SwissFoodCompositionDatabaseUiState.Importing,
+        onBackCompleted = {
+            coroutinesScope.launch { snackbarHostState.showSnackbar(pleaseWaitMessage) }
+        },
     )
 
     Scaffold(
