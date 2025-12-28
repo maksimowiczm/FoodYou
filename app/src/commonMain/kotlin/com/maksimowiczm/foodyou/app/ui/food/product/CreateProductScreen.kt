@@ -13,7 +13,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CreateProductScreen(
     onBack: () -> Unit,
     onCreate: (FoodId.Product) -> Unit,
-    onUpdateUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
     url: String? = null,
 ) {
@@ -29,7 +28,6 @@ fun CreateProductScreen(
     CreateProductApp(
         onBack = onBack,
         onCreate = viewModel::createProduct,
-        onUpdateUsdaApiKey = onUpdateUsdaApiKey,
         modifier = modifier,
         url = url,
     )

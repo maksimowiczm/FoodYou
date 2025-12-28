@@ -19,7 +19,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.ui.food.component.DownloadProductUsdaErrorCard
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -28,27 +27,20 @@ import org.jetbrains.compose.resources.stringResource
 internal fun FoodSearchErrorCard(
     error: RemoteFoodException,
     onRetry: () -> Unit,
-    onUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (error) {
         is RemoteFoodException.Unknown,
-        is RemoteFoodException.OpenFoodFacts.RateLimit ->
-            FoodSearchErrorCard(message = error.message, onRetry = onRetry, modifier = modifier)
-
-        is RemoteFoodException.ProductNotFoundException -> Unit
-
+        is RemoteFoodException.OpenFoodFacts.RateLimit,
         is RemoteFoodException.USDA.ApiKeyDisabledException,
         is RemoteFoodException.USDA.ApiKeyInvalidException,
         is RemoteFoodException.USDA.ApiKeyIsMissingException,
         is RemoteFoodException.USDA.ApiKeyUnauthorizedException,
         is RemoteFoodException.USDA.ApiKeyUnverifiedException,
         is RemoteFoodException.USDA.RateLimitException ->
-            DownloadProductUsdaErrorCard(
-                error = error,
-                onUpdateApiKey = onUsdaApiKey,
-                modifier = modifier,
-            )
+            FoodSearchErrorCard(message = error.message, onRetry = onRetry, modifier = modifier)
+
+        is RemoteFoodException.ProductNotFoundException -> Unit
     }
 }
 

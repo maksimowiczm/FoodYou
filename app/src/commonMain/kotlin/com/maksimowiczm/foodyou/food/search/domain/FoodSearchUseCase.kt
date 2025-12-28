@@ -68,9 +68,6 @@ class FoodSearchUseCase(
         when (source) {
             FoodSource.Type.OpenFoodFacts if this.openFoodFacts.enabled ->
                 foodRemoteMediatorFactoryAggregate.openFoodFactsRemoteMediatorFactory
-
-            FoodSource.Type.USDA if this.usda.enabled ->
-                foodRemoteMediatorFactoryAggregate.usdaRemoteMediatorFactory
             else -> null
         }
 

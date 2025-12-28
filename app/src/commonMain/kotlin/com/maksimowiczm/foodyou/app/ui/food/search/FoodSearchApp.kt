@@ -53,7 +53,6 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun FoodSearchApp(
     onFoodClick: (FoodSearch, Measurement) -> Unit,
-    onUpdateUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
     excludedRecipe: FoodId.Recipe? = null,
 ) {
@@ -64,7 +63,6 @@ fun FoodSearchApp(
         onSearch = viewModel::search,
         onSourceChange = viewModel::changeSource,
         onFoodClick = onFoodClick,
-        onUpdateUsdaApiKey = onUpdateUsdaApiKey,
         modifier = modifier,
     )
 }
@@ -75,7 +73,6 @@ private fun FoodSearchApp(
     onSearch: (String?) -> Unit,
     onSourceChange: (FoodFilter.Source) -> Unit,
     onFoodClick: (FoodSearch, Measurement) -> Unit,
-    onUpdateUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
     appState: FoodSearchAppState = rememberFoodSearchAppState(),
 ) {
@@ -174,7 +171,6 @@ private fun FoodSearchApp(
                     FoodSearchErrorCard(
                         error = ex,
                         onRetry = pages::retry,
-                        onUsdaApiKey = onUpdateUsdaApiKey,
                         modifier =
                             Modifier.fillMaxWidth().padding(top = 8.dp).padding(horizontal = 16.dp),
                     )
@@ -257,8 +253,5 @@ private fun ListStates.state(source: FoodFilter.Source) =
     when (source) {
         FoodFilter.Source.Recent -> recent
         FoodFilter.Source.YourFood -> yourFood
-        FoodFilter.Source.OpenFoodFacts -> openFoodFacts
-        FoodFilter.Source.USDA -> usda
-        FoodFilter.Source.SwissFoodCompositionDatabase -> swiss
         FoodFilter.Source.TBCA -> tbca
     }

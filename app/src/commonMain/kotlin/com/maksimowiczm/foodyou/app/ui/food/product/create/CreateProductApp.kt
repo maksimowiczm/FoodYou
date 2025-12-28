@@ -27,7 +27,6 @@ import org.koin.core.parameter.parametersOf
 internal fun CreateProductApp(
     onBack: () -> Unit,
     onCreate: (ProductFormState) -> Unit,
-    onUpdateUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
     url: String? = null,
 ) =
@@ -100,7 +99,6 @@ internal fun CreateProductApp(
                     },
                     onOpenFoodFacts = { uriHandler.openUri(openFoodFactsUrl) },
                     onUsda = { uriHandler.openUri(usdaUrl) },
-                    onUpdateUsdaApiKey = onUpdateUsdaApiKey,
                 )
             }
         }

@@ -16,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.ui.food.component.DownloadProductUsdaErrorCard
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import com.maksimowiczm.foodyou.food.domain.usecase.DownloadProductError
 import foodyou.app.generated.resources.*
@@ -25,7 +24,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun DownloadErrorCard(
     error: DownloadProductError,
-    onUpdateUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (error) {
@@ -44,7 +42,6 @@ internal fun DownloadErrorCard(
         is DownloadProductError.RemoteFoodError ->
             DownloadErrorCard(
                 error = error.exception,
-                onUpdateUsdaApiKey = onUpdateUsdaApiKey,
                 modifier = modifier,
             )
     }
@@ -84,7 +81,6 @@ private fun DownloadErrorCard(message: String, modifier: Modifier = Modifier) {
 @Composable
 private fun DownloadErrorCard(
     error: RemoteFoodException,
-    onUpdateUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val text =
@@ -94,12 +90,7 @@ private fun DownloadErrorCard(
             is RemoteFoodException.ProductNotFoundException ->
                 stringResource(Res.string.error_product_not_found)
 
-            is RemoteFoodException.USDA ->
-                return DownloadProductUsdaErrorCard(
-                    error = error,
-                    onUpdateApiKey = onUpdateUsdaApiKey,
-                    modifier = modifier,
-                )
+            is RemoteFoodException.USDA -> error.message
 
             is RemoteFoodException.Unknown -> error.message
         } ?: stringResource(Res.string.error_unknown_error)

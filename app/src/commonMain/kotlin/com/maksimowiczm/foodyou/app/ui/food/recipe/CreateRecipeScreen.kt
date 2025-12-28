@@ -18,7 +18,6 @@ fun CreateRecipeScreen(
     onBack: () -> Unit,
     onCreate: (FoodId.Recipe) -> Unit,
     onEditFood: (FoodId) -> Unit,
-    onUpdateUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel = koinViewModel<CreateRecipeViewModel>()
@@ -66,7 +65,6 @@ fun CreateRecipeScreen(
         },
         onSave = viewModel::create,
         onEditFood = onEditFood,
-        onUpdateUsdaApiKey = onUpdateUsdaApiKey,
         state = formState,
         topBarTitle = stringResource(Res.string.headline_create_recipe),
         mainRecipeId = null,
