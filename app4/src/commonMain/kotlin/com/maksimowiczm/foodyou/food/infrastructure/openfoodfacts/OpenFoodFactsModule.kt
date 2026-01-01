@@ -1,8 +1,10 @@
 package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts
 
+import com.maksimowiczm.foodyou.common.infrastructure.databaseBuilder
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.OpenFoodFactsRateLimiter
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsDatabase
+import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsDatabase.Companion.buildDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -12,15 +14,12 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
-import org.koin.core.scope.Scope
 import org.koin.dsl.onClose
 
-internal const val OPEN_FOOD_FACTS_DATABASE_NAME = "OpenFoodFactsDatabase.db"
+private const val OPEN_FOOD_FACTS_DATABASE_NAME = "OpenFoodFactsDatabase.db"
 
-internal expect fun Scope.openFoodFactsDatabase(): OpenFoodFactsDatabase
-
-fun Module.openFoodFactsModule() {
-    single { openFoodFactsDatabase() }
+internal fun Module.openFoodFactsModule() {
+    single { databaseBuilder<OpenFoodFactsDatabase>(OPEN_FOOD_FACTS_DATABASE_NAME).buildDatabase() }
     factory { get<OpenFoodFactsDatabase>().dao }
 
     single(named("OpenFoodFactsRemoteDataSource")) {
