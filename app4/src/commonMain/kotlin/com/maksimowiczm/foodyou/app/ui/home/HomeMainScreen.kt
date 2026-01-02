@@ -49,9 +49,6 @@ import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -212,32 +209,30 @@ private fun animateTextByCharacter(
     targetString: String,
     delayDuration: Duration = 20.milliseconds,
 ): String {
+    val coroutineScope = rememberCoroutineScope()
     var hasAnimated by rememberSaveable(targetString) { mutableStateOf(false) }
-
-    if (hasAnimated) {
-        return targetString
-    }
-
     var displayedString by remember(targetString) { mutableStateOf("") }
 
     DisposableEffect(targetString) {
-        val coroutineScope = CoroutineScope(Dispatchers.Main)
-        coroutineScope.launch {
-            val iterator = targetString.iterator()
-            displayedString = ""
-            while (iterator.hasNext()) {
-                displayedString += iterator.nextChar()
-                delay(delayDuration)
+        displayedString = ""
+
+        val job =
+            coroutineScope.launch {
+                val builder = StringBuilder()
+                targetString.forEach { char ->
+                    builder.append(char)
+                    displayedString = builder.toString()
+                    delay(delayDuration)
+                }
+
+                hasAnimated = true
             }
 
-            hasAnimated = true
-        }
-
         onDispose {
+            job.cancel()
             hasAnimated = true
-            coroutineScope.cancel()
         }
     }
 
-    return displayedString
+    return if (hasAnimated) targetString else displayedString
 }
