@@ -51,6 +51,10 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                 title = { Text(stringResource(Res.string.headline_privacy)) },
                 subtitle = { Text(stringResource(Res.string.description_privacy)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    ),
                 scrollBehavior = scrollBehavior,
             )
         },

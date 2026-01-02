@@ -129,6 +129,10 @@ private fun PersonalizeNutritionFactsScreen(
                     Text(stringResource(Res.string.description_personalize_nutrition_facts_short))
                 },
                 navigationIcon = { ArrowBackIconButton(onBack) },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    ),
                 scrollBehavior = scrollBehavior,
             )
         },

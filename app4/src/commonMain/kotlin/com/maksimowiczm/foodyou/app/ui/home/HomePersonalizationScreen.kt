@@ -129,6 +129,10 @@ private fun HomePersonalizationScreen(
                 title = { Text(stringResource(Res.string.headline_home_settings)) },
                 subtitle = { Text(stringResource(Res.string.description_home_settings)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    ),
                 scrollBehavior = scrollBehavior,
             )
         },
