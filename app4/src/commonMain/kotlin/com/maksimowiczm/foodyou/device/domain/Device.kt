@@ -6,7 +6,6 @@ class Device(
     name: String,
     themeSettings: ThemeSettings,
     nutrientsColors: NutrientsColors,
-    privacySettings: PrivacySettings,
     language: Language?,
     hideScreen: Boolean,
 ) {
@@ -17,9 +16,6 @@ class Device(
         private set
 
     var nutrientsColors: NutrientsColors = nutrientsColors
-        private set
-
-    var privacySettings: PrivacySettings = privacySettings
         private set
 
     var language: Language? = language
@@ -38,10 +34,6 @@ class Device(
         val newTheme = ThemeSettings.random(colorProvider = colorProvider, isAmoled = isAmoled)
 
         themeSettings = themeSettings.copy(theme = newTheme)
-    }
-
-    fun updatePrivacySettings(transform: (PrivacySettings) -> PrivacySettings) {
-        privacySettings = transform(privacySettings)
     }
 
     fun updateLanguage(language: Language?) {

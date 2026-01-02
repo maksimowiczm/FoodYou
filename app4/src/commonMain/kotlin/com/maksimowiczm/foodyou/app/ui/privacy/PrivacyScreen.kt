@@ -4,14 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +40,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: PrivacyViewModel = koinViewModel()
-    val privacySettings by viewModel.privacySettings.collectAsStateWithLifecycle()
     val foodSearchPreferences by viewModel.foodSearchPreferences.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -63,12 +60,7 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             contentPadding = paddingValues.add(vertical = 8.dp, horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            item {
-                FoodYouPrivacyCard(
-                    selected = privacySettings.foodYouServicesAllowed,
-                    onSelectedChange = { viewModel.setPrivacySettings(foodYouServicesAllowed = it) },
-                )
-            }
+            item { FoodYouPrivacyCard() }
             item {
                 OpenFoodFactsPrivacyCard(
                     selected = foodSearchPreferences.allowOpenFoodFacts,
@@ -91,8 +83,6 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun FoodYouPrivacyCard(
-    selected: Boolean,
-    onSelectedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     termsOfUseUri: String = koinInject<AppConfig>().termsOfUseUri,
     privacyPolicyUri: String = koinInject<AppConfig>().privacyPolicyUri,
@@ -118,21 +108,11 @@ private fun FoodYouPrivacyCard(
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.weight(1f),
                 )
-                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                    Checkbox(checked = selected, onCheckedChange = null)
-                }
             }
         },
         modifier = modifier,
-        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
-        onClick = { onSelectedChange(!selected) },
     ) {
         Column {
-            Text(
-                text = stringResource(Res.string.description_food_you_services),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(8.dp))
             Text(
                 text = stringResource(Res.string.onboarding_privacy_tip),
                 color = MaterialTheme.colorScheme.primary,

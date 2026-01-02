@@ -22,10 +22,6 @@ class OnboardingViewModel(private val createPrimaryAccountUseCase: CreatePrimary
     private val eventBus = Channel<OnboardingEvent>()
     val events = eventBus.receiveAsFlow()
 
-    fun setAllowFoodYouServices(allow: Boolean) {
-        _uiState.value = _uiState.value.copy(allowFoodYouServices = allow)
-    }
-
     fun setProfileName(name: String) {
         _uiState.value = _uiState.value.copy(profileName = name)
     }

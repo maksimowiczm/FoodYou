@@ -39,10 +39,7 @@ fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier
 
     NavHost(navController = navController, startDestination = BeforeYouStart, modifier = modifier) {
         forwardBackwardComposable<BeforeYouStart> {
-            BeforeYouStartScreen(
-                viewModel = viewModel,
-                onContinue = { navController.navigateSingleTop(FoodDatabase) },
-            )
+            BeforeYouStartScreen(onContinue = { navController.navigateSingleTop(FoodDatabase) })
         }
         forwardBackwardComposable<FoodDatabase> {
             FoodDatabaseScreen(

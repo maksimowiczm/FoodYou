@@ -7,24 +7,16 @@ import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
 import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
-import com.maksimowiczm.foodyou.device.domain.DeviceRepository
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferencesRepository
 import kotlinx.coroutines.flow.first
 
 class CreatePrimaryAccountUseCase(
     private val accountRepository: AccountRepository,
-    private val deviceRepository: DeviceRepository,
     private val accountManager: AccountManager,
     private val appLaunchUseCase: AppLaunchUseCase,
     private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
 ) {
     suspend fun execute(uiState: OnboardingUiState): LocalAccountId {
-        val device = deviceRepository.load()
-
-        device.updatePrivacySettings {
-            it.copy(foodYouServicesAllowed = uiState.allowFoodYouServices)
-        }
-
         val profile =
             Profile.new(
                 name = uiState.profileName,
@@ -42,7 +34,6 @@ class CreatePrimaryAccountUseCase(
                 )
 
         accountRepository.save(account)
-        deviceRepository.save(device)
         accountManager.setPrimaryAccountId(account.localAccountId)
         appLaunchUseCase.execute(account.localAccountId)
         foodSearchPreferencesRepository.save(searchPreferences)

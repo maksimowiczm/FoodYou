@@ -12,7 +12,6 @@ fun testDevice(
         ),
     nutrientsColors: NutrientsColors =
         NutrientsColors(proteins = null, carbohydrates = null, fats = null),
-    privacySettings: PrivacySettings = PrivacySettings(foodYouServicesAllowed = true),
     language: Language? = null,
     hideScreen: Boolean = false,
 ): Device =
@@ -20,7 +19,6 @@ fun testDevice(
         name = name,
         themeSettings = themeSettings,
         nutrientsColors = nutrientsColors,
-        privacySettings = privacySettings,
         language = language,
         hideScreen = hideScreen,
     )

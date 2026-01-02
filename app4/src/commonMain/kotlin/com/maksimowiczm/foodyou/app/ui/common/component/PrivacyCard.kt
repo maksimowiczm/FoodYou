@@ -22,10 +22,13 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,7 +45,10 @@ fun PrivacyCard(
     title: @Composable () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(16.dp),
+    contentPadding: PaddingValues = PrivacyCardDefaults.contentPadding,
+    shape: Shape = PrivacyCardDefaults.shape,
+    color: Color = PrivacyCardDefaults.color,
+    contentColor: Color = PrivacyCardDefaults.contentColor,
     content: @Composable () -> Unit,
 ) {
     val inner =
@@ -59,11 +65,54 @@ fun PrivacyCard(
     Surface(
         onClick = onClick,
         modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surfaceContainer,
-        contentColor = MaterialTheme.colorScheme.onSurface,
+        shape = shape,
+        color = color,
+        contentColor = contentColor,
         content = inner,
     )
+}
+
+@Composable
+fun PrivacyCard(
+    title: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PrivacyCardDefaults.contentPadding,
+    shape: Shape = PrivacyCardDefaults.shape,
+    color: Color = PrivacyCardDefaults.color,
+    contentColor: Color = PrivacyCardDefaults.contentColor,
+    content: @Composable () -> Unit,
+) {
+    val inner =
+        @Composable {
+            CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
+                Column(Modifier.padding(contentPadding)) {
+                    title()
+                    Spacer(Modifier.height(8.dp))
+                    content()
+                }
+            }
+        }
+
+    Surface(
+        modifier = modifier,
+        shape = shape,
+        color = color,
+        contentColor = contentColor,
+        content = inner,
+    )
+}
+
+object PrivacyCardDefaults {
+    val contentPadding = PaddingValues(16.dp)
+
+    val shape: Shape
+        @Composable get() = MaterialTheme.shapes.medium
+
+    val color: Color
+        @Composable get() = MaterialTheme.colorScheme.surfaceContainer
+
+    val contentColor: Color
+        @Composable get() = contentColorFor(color)
 }
 
 @Composable
