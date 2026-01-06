@@ -5,8 +5,7 @@ import com.maksimowiczm.foodyou.common.domain.NetworkConfig
 
 class FoodYouConfig : AppConfig, NetworkConfig {
     override val versionName: String = "4.0.0-dev"
-    override val termsOfUseUri: String = "https://TODO"
-    override val privacyPolicyUri: String = "https://TODO"
+    override val privacyPolicyUri: String = "https://foodyou.maksimowiczm.com/privacy-policy"
     override val openFoodFactsTermsOfUseUri: String = "https://world.openfoodfacts.org/terms-of-use"
     override val openFoodFactsPrivacyPolicyUri: String = "https://world.openfoodfacts.org/privacy"
     override val foodDataCentralPrivacyPolicyUri: String = "https://www.usda.gov/privacy-policy"

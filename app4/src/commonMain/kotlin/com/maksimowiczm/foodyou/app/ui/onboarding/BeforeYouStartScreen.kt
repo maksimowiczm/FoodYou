@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.domain.AppConfig
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
-import com.maksimowiczm.foodyou.app.ui.common.component.TermsOfUseChip
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
@@ -42,7 +41,6 @@ fun BeforeYouStartScreen(onContinue: () -> Unit, modifier: Modifier = Modifier) 
 
     BeforeYouStartScreen(
         onContinue = onContinue,
-        onTermsOfUse = { uriHandler.openUri(appConfig.termsOfUseUri) },
         onPrivacyPolicy = { uriHandler.openUri(appConfig.privacyPolicyUri) },
         modifier = modifier,
     )
@@ -51,7 +49,6 @@ fun BeforeYouStartScreen(onContinue: () -> Unit, modifier: Modifier = Modifier) 
 @Composable
 private fun BeforeYouStartScreen(
     onContinue: () -> Unit,
-    onTermsOfUse: () -> Unit,
     onPrivacyPolicy: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -115,7 +112,6 @@ private fun BeforeYouStartScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    TermsOfUseChip(onTermsOfUse)
                     PrivacyPolicyChip(onPrivacyPolicy)
                 }
             }
@@ -133,7 +129,5 @@ private fun BeforeYouStartScreen(
 @Preview
 @Composable
 private fun BeforeYouStartScreenPreview() {
-    PreviewFoodYouTheme {
-        BeforeYouStartScreen(onContinue = {}, onTermsOfUse = {}, onPrivacyPolicy = {})
-    }
+    PreviewFoodYouTheme { BeforeYouStartScreen(onContinue = {}, onPrivacyPolicy = {}) }
 }

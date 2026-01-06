@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.PrivacyTip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -14,11 +17,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.component.SettingsListItem
 import com.maksimowiczm.foodyou.common.compose.extension.add
+import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
 fun SettingsScreen(
@@ -106,6 +113,22 @@ fun SettingsScreen(
             item {
                 LanguageSettingsListItem(
                     onClick = onLanguage,
+                    shape = shape,
+                    color = color,
+                    contentColor = contentColor,
+                )
+            }
+
+            item {
+                val uriHandle = LocalUriHandler.current
+                val appConfig = koinInject<AppConfig>()
+                SettingsListItem(
+                    icon = { Icon(Icons.Outlined.PrivacyTip, null) },
+                    label = { Text(stringResource(Res.string.headline_privacy_policy)) },
+                    supportingContent = {
+                        Text(stringResource(Res.string.description_privacy_policy))
+                    },
+                    onClick = { uriHandle.openUri(appConfig.privacyPolicyUri) },
                     shape = shape,
                     color = color,
                     contentColor = contentColor,

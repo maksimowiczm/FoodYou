@@ -28,7 +28,6 @@ import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.OpenFoodFactsPrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
-import com.maksimowiczm.foodyou.app.ui.common.component.TermsOfUseChip
 import com.maksimowiczm.foodyou.app.ui.common.component.UsdaPrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import foodyou.app.generated.resources.*
@@ -88,7 +87,6 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 private fun FoodYouPrivacyCard(
     modifier: Modifier = Modifier,
-    termsOfUseUri: String = koinInject<AppConfig>().termsOfUseUri,
     privacyPolicyUri: String = koinInject<AppConfig>().privacyPolicyUri,
 ) {
     val uriHandler = LocalUriHandler.current
@@ -123,7 +121,6 @@ private fun FoodYouPrivacyCard(
             )
             Spacer(Modifier.height(8.dp))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                TermsOfUseChip(onClick = { uriHandler.openUri(termsOfUseUri) })
                 PrivacyPolicyChip(onClick = { uriHandler.openUri(privacyPolicyUri) })
             }
         }

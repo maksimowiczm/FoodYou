@@ -1,15 +1,17 @@
 package com.maksimowiczm.foodyou.app.ui.onboarding
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -18,18 +20,38 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
+import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
+import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
 import com.maksimowiczm.foodyou.common.compose.extension.add
+import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
-internal fun BeforeYouStartScreen(onAgree: () -> Unit, modifier: Modifier = Modifier) {
+fun BeforeYouStartScreen(onContinue: () -> Unit, modifier: Modifier = Modifier) {
+    val appConfig: AppConfig = koinInject()
+    val uriHandler = LocalUriHandler.current
+
+    BeforeYouStartScreen(
+        onContinue = onContinue,
+        onPrivacyPolicy = { uriHandler.openUri(appConfig.privacyPolicyUri) },
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun BeforeYouStartScreen(
+    onContinue: () -> Unit,
+    onPrivacyPolicy: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val fabHeight = ButtonDefaults.LargeContainerHeight
 
     Scaffold(
         modifier = modifier,
@@ -41,53 +63,62 @@ internal fun BeforeYouStartScreen(onAgree: () -> Unit, modifier: Modifier = Modi
                         style = MaterialTheme.typography.displaySmall,
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
                 scrollBehavior = scrollBehavior,
             )
         },
-    ) { paddingValues ->
-        Box(
-            modifier =
-                Modifier.fillMaxSize()
-                    .padding(horizontal = 16.dp)
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding =
-                    paddingValues
-                        .add(bottom = 72.dp) // Button height + padding
-                        .add(vertical = 8.dp),
+        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButton = {
+            Button(
+                onClick = onContinue,
+                shapes = ButtonDefaults.shapesFor(fabHeight),
+                contentPadding = ButtonDefaults.contentPaddingFor(fabHeight),
             ) {
-                item {
+                Text(
+                    text = stringResource(Res.string.action_agree_and_continue),
+                    style = ButtonDefaults.textStyleFor(fabHeight),
+                )
+            }
+        },
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues.add(bottom = fabHeight + 16.dp).add(vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+                ) {
                     InteractiveLogo(
-                        Modifier.padding(horizontal = 64.dp)
-                            .widthIn(max = 350.dp)
-                            .aspectRatio(1f)
-                            .fillMaxSize()
+                        modifier =
+                            Modifier.padding(horizontal = 64.dp)
+                                .widthIn(max = 350.dp)
+                                .aspectRatio(1f)
+                                .fillMaxSize()
                     )
-                }
-
-                item {
                     Text(
-                        text = stringResource(Res.string.description_before_you_start),
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = stringResource(Res.string.app_name),
+                        style = brandTypography.brandName,
                     )
                 }
             }
 
-            Button(
-                onClick = onAgree,
-                shapes = ButtonDefaults.shapes(),
-                modifier =
-                    Modifier.padding(bottom = 8.dp)
-                        .padding(bottom = paddingValues.calculateBottomPadding())
-                        .height(56.dp)
-                        .align(Alignment.BottomCenter)
-                        .zIndex(1f),
-            ) {
-                Text(stringResource(Res.string.action_agree_and_continue))
+            item {
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    PrivacyPolicyChip(onPrivacyPolicy)
+                }
+            }
+            item {
+                Text(
+                    text = stringResource(Res.string.onboarding_privacy_tip),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
             }
         }
     }

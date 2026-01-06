@@ -335,7 +335,6 @@
     <string name="neutral_remote_database_error">Couldn't download product from remote database. You can still view your previously downloaded products.</string>
 
     <string name="headline_before_you_start">Before you start</string>
-    <string name="description_before_you_start">To provide you with a free and open-source food diary, we prioritize your privacy above all else. This app does not collect, store, or share any personal information. Your entries are saved locally on your device and remain fully under your control.</string>
     <string name="action_agree_and_continue">Agree &amp; Continue</string>
 
     <string name="headline_food_database">Food database</string>
@@ -464,7 +463,6 @@
 
     <string name="headline_terms_of_use">Terms of use</string>
     <string name="onboarding_privacy_tip">This app is open-source and built for you. We respect your privacy, your information stays private.</string>
-    <string name="onboarding_allow_food_you_services">Allow to connect to Food You services</string>
 
     <string name="headline_add_profile">Add profile</string>
     <string name="headline_how_do_you_want_to_be_called">How do you want to be called?</string>
@@ -511,10 +509,10 @@
 
     <string name="description_privacy">Control your personal information</string>
 
-    <string name="description_food_you_services">Connecting to Food You services unlocks extra features and tools that enhance your experience</string>
-
     <string name="headline_database_backup">Database backup</string>
     <string name="description_replacing_database">Replacing database, please wait...</string>
 
     <string name="headline_experimental">Experimental</string>
+
+    <string name="description_privacy_policy">See how your data is handled</string>
 </resources>

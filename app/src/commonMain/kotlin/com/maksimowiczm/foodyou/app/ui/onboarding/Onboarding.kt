@@ -26,7 +26,7 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
     NavHost(navController = navController, startDestination = BeforeYouStart, modifier = modifier) {
         forwardBackwardComposable<BeforeYouStart> {
             BeforeYouStartScreen(
-                onAgree = { navController.navigate(FoodDatabase) { launchSingleTop = true } }
+                onContinue = { navController.navigate(FoodDatabase) { launchSingleTop = true } }
             )
         }
         forwardBackwardComposable<FoodDatabase> {

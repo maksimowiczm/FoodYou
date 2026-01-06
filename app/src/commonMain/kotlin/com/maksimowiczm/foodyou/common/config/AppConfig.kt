@@ -14,7 +14,6 @@ interface AppConfig {
     val sourceCodeUri: String
     val issueTrackerUri: String
 
-    val termsOfServiceUri: String
     val privacyPolicyUri: String
 
     /** URI to the Open Food Facts Terms of Use document. */
