@@ -58,11 +58,21 @@ internal fun MeasureIngredientScreen(
         return
     }
 
+    // This is stupid that it is here but it's going to be deleted in 4.0.0
+    val selectedMeasurement =
+        remember(measurement) {
+            if (food.weight(measurement) != null) {
+                measurement
+            } else {
+                if (food.isLiquid) Measurement.Milliliter(100.0) else Measurement.Gram(100.0)
+            }
+        }
+
     val measurementPickerState =
         rememberMeasurementPickerState(
             suggestions = suggestions,
             possibleTypes = possibleMeasurements,
-            selectedMeasurement = measurement,
+            selectedMeasurement = selectedMeasurement,
         )
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
