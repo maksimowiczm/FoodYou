@@ -8,7 +8,7 @@ internal class FoodYouConfig : AppConfig, NetworkConfig {
     override val versionName: String = BuildConfig.VERSION_NAME
     override val contactEmailUri: String =
         "mailto:maksimowicz.dev@gmail.com?subject=Food You Feedback&body=Food You Version: $versionName\n"
-    override val translationUri: String = "https://foodyou.maksimowiczm.com/translate"
+    override val translationUri: String = "https://crowdin.com/project/food-you"
     override val sourceCodeUri: String = "https://github.com/maksimowiczm/FoodYou"
     override val issueTrackerUri: String = "https://github.com/maksimowiczm/FoodYou/issues"
     override val termsOfServiceUri: String = "https://TODO"
