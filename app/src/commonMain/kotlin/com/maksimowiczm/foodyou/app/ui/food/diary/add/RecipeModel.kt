@@ -21,6 +21,10 @@ internal data class RecipeModel(
 ) : FoodModel {
     override val servingWeight: Double = totalWeight / servings
 
+    // Ingredients can be in invalid state, eg. ingredient uses serving but ingredient product
+    // doesn't have serving size provided
+    val isValid: Boolean = ingredients.all { it.isValid }
+
     constructor(
         recipe: Recipe
     ) : this(

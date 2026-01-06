@@ -54,13 +54,13 @@ internal fun Ingredients(
                     isLiquid = ingredient.isLiquid,
                 )
 
-            if (
-                proteins == null ||
-                    carbs == null ||
-                    fats == null ||
-                    energy == null ||
-                    measurementString == null
-            ) {
+            if (measurementString == null) {
+                FoodErrorListItem(
+                    headline = ingredient.name,
+                    errorMessage = stringResource(Res.string.error_measurement_error),
+                    contentPadding = horizontal.add(vertical = 8.dp),
+                )
+            } else if (proteins == null || carbs == null || fats == null || energy == null) {
                 FoodErrorListItem(
                     headline = ingredient.name,
                     errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
