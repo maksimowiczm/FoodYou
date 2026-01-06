@@ -18,6 +18,18 @@ internal data class IngredientModel(
     val servingWeight: Double?,
     val isLiquid: Boolean,
 ) {
+    val isValid: Boolean
+        get() =
+            when (measurement) {
+                is Measurement.FluidOunce,
+                is Measurement.Gram,
+                is Measurement.Milliliter,
+                is Measurement.Ounce -> true
+
+                is Measurement.Package -> totalWeight != null
+                is Measurement.Serving -> servingWeight != null
+            }
+
     constructor(
         ingredient: RecipeIngredient
     ) : this(

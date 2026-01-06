@@ -92,8 +92,20 @@ fun AddEntryScreen(
     val possibleTypes = viewModel.possibleMeasurementTypes.collectAsStateWithLifecycle().value
     val measurementSuggestion by viewModel.suggestedMeasurement.collectAsStateWithLifecycle()
 
+    // This is stupid that it is here but it's going to be deleted in 4.0.0
     val selectedMeasurement =
-        remember(measurement, measurementSuggestion) { measurement ?: measurementSuggestion }
+        remember(measurement, measurementSuggestion) {
+            val realMeasurement = measurement ?: measurementSuggestion
+            if (realMeasurement == null) return@remember null
+            if (food == null) return@remember realMeasurement
+
+            try {
+                food.weight(realMeasurement)
+                realMeasurement
+            } catch (_: IllegalStateException) {
+                if (food.isLiquid) Measurement.Milliliter(100.0) else Measurement.Gram(100.0)
+            }
+        }
 
     if (
         food == null ||
@@ -196,7 +208,10 @@ private fun AddEntryScreen(
             Column(
                 modifier =
                     Modifier.animateFloatingActionButton(
-                        visible = !animatedVisibilityScope.transition.isRunning && state.isValid,
+                        visible =
+                            !animatedVisibilityScope.transition.isRunning &&
+                                state.isValid &&
+                                (food !is RecipeModel || food.isValid),
                         alignment = Alignment.BottomEnd,
                     ),
                 horizontalAlignment = Alignment.End,
