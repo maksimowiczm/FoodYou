@@ -46,10 +46,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import com.maksimowiczm.foodyou.common.auth.Session
 import com.maksimowiczm.foodyou.common.auth.SessionRepository
 import com.maksimowiczm.foodyou.common.compose.extension.add
-import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
 import kotlin.time.Instant
 import kotlinx.coroutines.delay
@@ -60,7 +60,7 @@ import org.koin.compose.koinInject
 @Composable
 fun LoginScreen(onBack: () -> Unit, onLoginSuccess: () -> Unit, modifier: Modifier = Modifier) {
     val sessionRepository: SessionRepository = koinInject()
-    val appConfig: AppConfig = koinInject()
+    val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
 
     val session by sessionRepository.observeSession().collectAsStateWithLifecycle(null)

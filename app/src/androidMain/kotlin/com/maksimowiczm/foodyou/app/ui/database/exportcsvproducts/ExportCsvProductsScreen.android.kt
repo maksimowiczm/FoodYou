@@ -7,9 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.SomethingWentWrongScreen
-import com.maksimowiczm.foodyou.common.config.AppConfig
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import java.time.LocalDateTime
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -29,7 +28,7 @@ actual fun ExportCsvProductsScreen(onBack: () -> Unit, onFinish: () -> Unit, mod
             }
         }
 
-    val appConfig: AppConfig = koinInject()
+    val appConfig = LocalAppConfig.current
     val fileName = remember {
         "Food You ${appConfig.versionName}-products-${LocalDateTime.now()}.csv"
     }

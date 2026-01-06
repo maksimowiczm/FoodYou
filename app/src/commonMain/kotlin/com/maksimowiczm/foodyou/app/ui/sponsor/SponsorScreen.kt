@@ -84,13 +84,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import com.maksimowiczm.foodyou.common.compose.component.StatusBarProtection
 import com.maksimowiczm.foodyou.common.compose.component.StatusBarProtectionDefaults
 import com.maksimowiczm.foodyou.common.compose.extension.add
 import com.maksimowiczm.foodyou.common.compose.utility.LocalClipboardManager
 import com.maksimowiczm.foodyou.common.compose.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.common.compose.utility.formatClipZeros
-import com.maksimowiczm.foodyou.common.config.AppConfig
 import com.maksimowiczm.foodyou.common.extension.now
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.AvailableSponsorMethod
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.CryptoSponsorMethod
@@ -102,7 +102,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.yearMonth
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -537,7 +536,7 @@ private fun SponsorCard(
 
 @Composable
 private fun ContactCard(modifier: Modifier = Modifier) {
-    val appConfig = koinInject<AppConfig>()
+    val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
 
     Card(

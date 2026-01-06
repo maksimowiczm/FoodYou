@@ -24,19 +24,18 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.domain.AppConfig
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 fun BeforeYouStartScreen(onContinue: () -> Unit, modifier: Modifier = Modifier) {
-    val appConfig: AppConfig = koinInject()
+    val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
 
     BeforeYouStartScreen(

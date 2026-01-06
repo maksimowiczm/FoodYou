@@ -28,12 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiKeyDialog
-import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 fun PrivacyCard(
@@ -69,8 +68,8 @@ fun OpenFoodFactsPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    termsOfUseUri: String = koinInject<AppConfig>().openFoodFactsTermsOfUseUri,
-    privacyPolicyUri: String = koinInject<AppConfig>().openFoodFactsPrivacyPolicyUri,
+    termsOfUseUri: String = LocalAppConfig.current.openFoodFactsTermsOfUseUri,
+    privacyPolicyUri: String = LocalAppConfig.current.openFoodFactsPrivacyPolicyUri,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -121,7 +120,7 @@ fun UsdaPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    privacyPolicyUri: String = koinInject<AppConfig>().foodDataCentralPrivacyPolicyUri,
+    privacyPolicyUri: String = LocalAppConfig.current.foodDataCentralPrivacyPolicyUri,
 ) {
     val uriHandler = LocalUriHandler.current
     var showApiKeyDialog by rememberSaveable { mutableStateOf(false) }

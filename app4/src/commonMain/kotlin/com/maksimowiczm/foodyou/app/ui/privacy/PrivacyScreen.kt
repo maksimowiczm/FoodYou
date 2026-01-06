@@ -23,17 +23,16 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.domain.AppConfig
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.OpenFoodFactsPrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.component.UsdaPrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -87,7 +86,7 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 private fun FoodYouPrivacyCard(
     modifier: Modifier = Modifier,
-    privacyPolicyUri: String = koinInject<AppConfig>().privacyPolicyUri,
+    privacyPolicyUri: String = LocalAppConfig.current.privacyPolicyUri,
 ) {
     val uriHandler = LocalUriHandler.current
 

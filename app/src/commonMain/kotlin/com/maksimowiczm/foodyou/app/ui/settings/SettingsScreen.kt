@@ -21,11 +21,10 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.SettingsListItem
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import com.maksimowiczm.foodyou.common.compose.extension.add
-import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 fun SettingsScreen(
@@ -121,7 +120,7 @@ fun SettingsScreen(
 
             item {
                 val uriHandle = LocalUriHandler.current
-                val appConfig = koinInject<AppConfig>()
+                val appConfig = LocalAppConfig.current
                 SettingsListItem(
                     icon = { Icon(Icons.Outlined.PrivacyTip, null) },
                     label = { Text(stringResource(Res.string.headline_privacy_policy)) },

@@ -372,7 +372,7 @@
 
     <string name="action_import_csv_food_products">Import CSV food products</string>
     <string name="description_import_csv_food_products">Import food products from CSV file</string>
-    <string name="description_import_csv_food_products_hint">We just need to know what’s what. Tell us which column in your file is the product name, brand, etc.</string>
+    <string name="description_import_csv_food_products_hint">We just need to know what's what. Tell us which column in your file is the product name, brand, etc.</string>
     <string name="description_import_csv_food_products_hint_2">All nutrient values must be given in grams or kcal per 100 g</string>
 
     <string name="action_export_csv_food_products">Export CSV food products</string>
@@ -397,7 +397,7 @@
     <string name="headline_manual_energy_input">Manual energy input</string>
 
     <string name="headline_quick_add">Quick add</string>
-    <string name="description_quick_add">Quick Add lets you log without searching for specific foods. It’s a fast way to record meals when you already know the calorie count or want a simple estimate.</string>
+    <string name="description_quick_add">Quick Add lets you log without searching for specific foods. It's a fast way to record meals when you already know the calorie count or want a simple estimate.</string>
 
     <string name="action_open_poll">Open poll</string>
 
@@ -436,7 +436,7 @@
 
     <string name="headline_this_month_we_raised">This month we raised %1$s</string>
 
-    <string name="description_sponsors_privacy">Food You takes your privacy seriously. That’s why it won’t connect to any external service unless you allow it. To see the latest sponsors, the data must be downloaded from Food You’s servers.</string>
+    <string name="description_sponsors_privacy">Food You takes your privacy seriously. That's why it won't connect to any external services unless you allow it. To see the latest sponsors, the data must be downloaded from GitHub's servers.</string>
 
     <string name="action_allow" description="Allow something">Allow</string>
 

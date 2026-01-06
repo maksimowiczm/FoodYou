@@ -26,15 +26,14 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import com.maksimowiczm.foodyou.common.compose.extension.add
-import com.maksimowiczm.foodyou.common.config.AppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 fun BeforeYouStartScreen(onContinue: () -> Unit, modifier: Modifier = Modifier) {
-    val appConfig: AppConfig = koinInject()
+    val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
 
     BeforeYouStartScreen(

@@ -7,8 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
+import com.maksimowiczm.foodyou.app.domain.AppConfig
 import com.maksimowiczm.foodyou.app.ui.common.utility.AndroidClipboardManager
 import com.maksimowiczm.foodyou.app.ui.common.utility.AndroidDateFormatter
+import com.maksimowiczm.foodyou.app.ui.common.utility.AppConfigProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClockProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.DateFormatterProvider
@@ -32,6 +34,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     private val deviceRepository: DeviceRepository by inject()
     private val foodNameSelector: FoodNameSelector by inject()
     private val clock: Clock by inject()
+    private val appConfig: AppConfig by inject()
 
     fun setContent(content: @Composable () -> Unit) {
         enableEdgeToEdge()
@@ -49,7 +52,9 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
                 ClipboardManagerProvider(clipboardManager) {
                     DateFormatterProvider(dateFormatter) {
                         ClockProvider(clock) {
-                            FoodNameSelectorProvider(foodNameSelector) { content() }
+                            FoodNameSelectorProvider(foodNameSelector) {
+                                AppConfigProvider(appConfig) { content() }
+                            }
                         }
                     }
                 }

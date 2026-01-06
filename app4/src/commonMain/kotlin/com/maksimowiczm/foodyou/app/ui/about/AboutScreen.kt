@@ -40,18 +40,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
-import com.maksimowiczm.foodyou.app.domain.AppConfig
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val appConfig: AppConfig = koinInject()
+    val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
 
     val scrollState = rememberScrollState()
