@@ -117,10 +117,10 @@ internal fun FoodSearchListItem(
         )
 
     if (
-        proteins == null ||
-            carbohydrates == null ||
-            fats == null ||
-            energy == null ||
+        (proteins == null || proteins.isNaN()) ||
+            (carbohydrates == null || carbohydrates.isNaN()) ||
+            (fats == null || fats.isNaN()) ||
+            (energy == null || energy.isNaN()) ||
             measurementString == null
     ) {
         return FoodErrorListItem(
