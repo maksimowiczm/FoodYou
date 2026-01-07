@@ -38,28 +38,28 @@ class ProductFormTransformer(
         val energyFormat = observePrimaryAccountUseCase.observe().first().settings.energyFormat
         val language = foodNameSelector.select()
 
-        requireNotNull(form.name.value) { "Name is required" }
+        val name = form.name.value
+        requireNotNull(name) { "Name is required" }
         val foodName =
             FoodName(
-                english = if (language == Language.English) form.name.value else null,
-                catalan = if (language == Language.Catalan) form.name.value else null,
-                danish = if (language == Language.Danish) form.name.value else null,
-                german = if (language == Language.German) form.name.value else null,
-                spanish = if (language == Language.Spanish) form.name.value else null,
-                french = if (language == Language.French) form.name.value else null,
-                italian = if (language == Language.Italian) form.name.value else null,
-                hungarian = if (language == Language.Hungarian) form.name.value else null,
-                dutch = if (language == Language.Dutch) form.name.value else null,
-                polish = if (language == Language.Polish) form.name.value else null,
-                portugueseBrazil =
-                    if (language == Language.PortugueseBrazil) form.name.value else null,
-                turkish = if (language == Language.Turkish) form.name.value else null,
-                russian = if (language == Language.Russian) form.name.value else null,
-                ukrainian = if (language == Language.Ukrainian) form.name.value else null,
-                arabic = if (language == Language.Arabic) form.name.value else null,
-                chineseSimplified =
-                    if (language == Language.ChineseSimplified) form.name.value else null,
-                fallback = form.name.value!!,
+                english = if (language == Language.English) name else null,
+                catalan = if (language == Language.Catalan) name else null,
+                danish = if (language == Language.Danish) name else null,
+                german = if (language == Language.German) name else null,
+                spanish = if (language == Language.Spanish) name else null,
+                french = if (language == Language.French) name else null,
+                indonesian = if (language == Language.Indonesian) name else null,
+                italian = if (language == Language.Italian) name else null,
+                hungarian = if (language == Language.Hungarian) name else null,
+                dutch = if (language == Language.Dutch) name else null,
+                polish = if (language == Language.Polish) name else null,
+                portugueseBrazil = if (language == Language.PortugueseBrazil) name else null,
+                turkish = if (language == Language.Turkish) name else null,
+                russian = if (language == Language.Russian) name else null,
+                ukrainian = if (language == Language.Ukrainian) name else null,
+                arabic = if (language == Language.Arabic) name else null,
+                chineseSimplified = if (language == Language.ChineseSimplified) name else null,
+                fallback = name,
             )
 
         val brand = form.brand.value?.let { FoodBrand(it) }

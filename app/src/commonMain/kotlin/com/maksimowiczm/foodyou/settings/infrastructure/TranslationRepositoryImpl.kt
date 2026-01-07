@@ -51,7 +51,7 @@ private val languages =
     listOf(
         // If you'd like to be credited for your translations, please add your name here.
         // "language name (Country)" to Translation(
-        //     tag = "language-tag",
+        //     languageTag = "language-tag",
         //      listOf(
         //         Author(
         //             name = "Your Name",
@@ -66,6 +66,7 @@ private val languages =
         Translation("Deutsch (Deutschland)", "de-DE"),
         Translation("Español (España)", "es-ES"),
         Translation("Français (France)", "fr-FR"),
+        Translation("Indonesian (Indonesia)", "id-ID"),
         Translation("Italiano (Italia)", "it-IT"),
         Translation("Magyar (Magyarország)", "hu-HU"),
         Translation("Nederlands (Nederland)", "nl-NL", false, grizzleNL),

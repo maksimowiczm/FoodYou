@@ -12,6 +12,7 @@ enum class Language(val displayName: String, val language: String, val country: 
     German("German", "de", "DE"),
     Spanish("Spanish", "es", "ES"),
     French("French", "fr", "FR"),
+    Indonesian("Indonesian", "id", "ID"),
     Italian("Italian", "it", "IT"),
     Hungarian("Hungarian", "hu", "HU"),
     Dutch("Dutch", "nl", "NL"),

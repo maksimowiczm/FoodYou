@@ -81,6 +81,7 @@ val languages =
         Translation("Deutsch (Deutschland)", Language.German),
         Translation("Español (España)", Language.Spanish),
         Translation("Français (France)", Language.French),
+        Translation("Indonesian (Indonesia)", Language.Indonesian),
         Translation("Italiano (Italia)", Language.Italian),
         Translation("Magyar (Magyarország)", Language.Hungarian),
         Translation("Nederlands (Nederland)", Language.Dutch, false, grizzleNL),

@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">T/A</string>
+    <string name="headline_create_product">Buat produk</string>
+    <string name="headline_settings">Pengaturan</string>
+    <string name="headline_daily_goals">Target harian</string>
+    <string name="headline_general">Umum</string>
+    <string name="headline_macronutrients">Makronutrien</string>
+    <string name="headline_meals">Makanan</string>
+    <string name="headline_delete_food">Hapus makanan</string>
+    <string name="headline_edit_product">Edit produk</string>
+    <string name="headline_permission_required">Izin diperlukan</string>
+    <string name="headline_language">Bahasa</string>
+    <string name="headline_system">Sistem</string>
+    <string name="headline_system_language_settings">Pengaturan bahasa sistem</string>
+    <string name="headline_secure_screen">Amankan layar</string>
+    <string name="headline_about">Tentang</string>
+    <string name="headline_version">Versi</string>
+    <string name="headline_all_day" description="All-day (meal)">Seharian</string>
+    <string name="headline_time_based_ordering">Urutkan berdasarkan waktu</string>
+    <string name="headline_incomplete_products">Produk yang belum selesai</string>
+    <string name="headline_product">Produk</string>
+    <string name="headline_recipe">Resep</string>
+    <string name="headline_create_recipe">Buat resep</string>
+    <string name="headline_ingredients" description="Recipe ingredients">Bahan</string>
+    <string name="headline_summary">Ringkasan</string>
+    <string name="headline_whats_new">Apa yang baru</string>
+    <string name="headline_changelog">Catatan perubahan</string>
+    <string name="headline_installed" description="Installed version of the app">Terpasang</string>
+    <string name="headline_home" description="Home screen">Beranda</string>
+    <string name="headline_home_settings" description="Home screen settings">Pengaturan beranda</string>
+    <string name="headline_calendar">Kalender</string>
+    <string name="headline_meals_settings">Pengaturan makanan</string>
+    <string name="headline_horizontal">Horizontal</string>
+    <string name="headline_vertical">Vertikal</string>
+    <string name="headline_values_per">Nilai per</string>
+    <string name="headline_other">Lainnya</string>
+    <string name="headline_vitamins">Vitamin</string>
+    <string name="headline_minerals">Meneral</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">URL yang didukung</string>
+    <string name="headline_something_went_wrong">Ups! Ada yang salah</string>
+    <string name="headline_daily_goals_settings">Penetapan tujuan harian</string>
+    <string name="headline_api_key">Kunci API</string>
+    <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Sumber</string>
+    <string name="headline_features">Fitur-Fitur</string>
+    <string name="weight">Berat</string>
+    <string name="unit_energy" description="Energy as calories">Energi</string>
+    <string name="unit_kcal">kkal</string>
+    <string name="unit_kilojoules">kJ</string>
+    <plurals name="unit_gram">
+        <item quantity="other">gram</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="other">mililiter</item>
+    </plurals>
+    <string name="unit_ounce_short">ons</string>
+    <string name="unit_fluid_ounce_short">ons cair</string>
+    <string name="product_package_weight">Berat paket</string>
+    <string name="product_package">Paket</string>
+    <string name="product_serving_weight">Berat sajian</string>
+    <string name="product_serving">Porsi</string>
+    <string name="product_name">Nama</string>
+    <string name="product_brand">Merek</string>
+    <string name="product_barcode">Barkode</string>
+    <string name="product_link">Tautan produk</string>
+    <string name="recipe_servings">Porsi</string>
+    <string name="description_recipe_servings">Berapa porsi yang dihasilkan dari resep ini</string>
+    <string name="nutriment_proteins">Protein</string>
+    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_carbohydrates">Karbohidrat</string>
+    <string name="nutriment_carbohydrates_short">C</string>
+    <string name="nutriment_sugars">Gula</string>
+    <string name="nutriment_fats">Lemak</string>
+    <string name="nutriment_fats_short">F</string>
+    <string name="nutriment_saturated_fats">Lemak jenuh</string>
+    <string name="nutriment_polyunsaturated_fats">Lemak tak jenuh ganda</string>
+    <string name="nutriment_monounsaturated_fats">Lemak tak jenuh tunggal</string>
+    <string name="nutriment_omega_3">Asam lemak omega-3</string>
+    <string name="nutriment_omega_6">Asam lemak omega-6</string>
+    <string name="nutriment_salt">Garam</string>
+    <string name="nutriment_fiber">Serat pangan</string>
+    <string name="nutriment_cholesterol">Kolesterol</string>
+    <string name="nutriment_caffeine">Kafein</string>
+    <string name="nutriment_trans_fats">Lemak trans</string>
+    <string name="nutriment_added_sugars">Gula tambahan</string>
+    <string name="nutriment_soluble_fiber">Serat larut</string>
+    <string name="nutriment_insoluble_fiber">Serat tidak larut</string>
+    <string name="vitamin_a">Vitamin A (Retinol)</string>
+    <string name="vitamin_b1">Vitamin B1 (Tiamin)</string>
+    <string name="vitamin_b2">Vitamin B2 (Riboflavin)</string>
+    <string name="vitamin_b3">Vitamin B3 (Niasin)</string>
+    <string name="vitamin_b5">Vitamin B5 (Asam pantotenat)</string>
+    <string name="vitamin_b6">Vitamin B6 (Pyridoxine)</string>
+    <string name="vitamin_b7">Vitamin B7 (Biotin)</string>
+    <string name="vitamin_b9">Vitamin B9 (Asam Folat)</string>
+    <string name="vitamin_b12">Vitamin B12 (Kobalamin)</string>
+    <string name="vitamin_c">Vitamin C (Asam askorbat)</string>
+    <string name="vitamin_d">Vitamin D (Kalsiferol)</string>
+    <string name="vitamin_e">Vitamin E</string>
+    <string name="vitamin_k">Vitamin K</string>
+    <string name="mineral_manganese">Mangan</string>
+    <string name="mineral_magnesium">Magnesium</string>
+    <string name="mineral_potassium">Kalium</string>
+    <string name="mineral_calcium">Kalsium</string>
+    <string name="mineral_copper">Tembaga</string>
+    <string name="mineral_zinc">Seng</string>
+    <string name="mineral_sodium">Sodium</string>
+    <string name="mineral_iron">Besi</string>
+    <string name="mineral_phosphorus">Fosfor</string>
+    <string name="mineral_selenium">Selenium</string>
+    <string name="mineral_iodine">Yodium</string>
+    <string name="mineral_chromium">Kromium</string>
+    <string name="action_search">Cari</string>
+    <string name="action_scan_barcode">Pindai barkode</string>
+    <string name="action_add">Tambah</string>
+    <string name="action_go_back">Kembali</string>
+    <string name="action_tap_to_allow_access">Ketuk untuk mengizinkan akses</string>
+    <string name="action_create">Buat</string>
+    <string name="action_clear">Bersihkan</string>
+    <string name="action_cancel">Batalkan</string>
+    <string name="action_go_to_settings">Pergi ke pengaturan</string>
+    <string name="action_save">Simpan</string>
+    <string name="action_delete">Hapus</string>
+    <string name="action_confirm">Konfirmasi</string>
+    <string name="action_add_meal">Tambah makanan</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_insert_suggested_search">Masukkan saran pencarian</string>
+    <string name="action_edit_entry">Edit entri</string>
+    <string name="action_delete_entry">Hapus entri</string>
+    <string name="action_close">Tutup</string>
+    <string name="action_discard">Batalkan</string>
+    <string name="action_translate">Terjemahkan</string>
+    <string name="action_enable_camera_flash">Aktifkan lampu flash</string>
+    <string name="action_disable_camera_flash">Matikan lampu flash</string>
+    <string name="action_prevent_screen_capture">Mencegah tangkapan layar</string>
+    <string name="action_go_to_today">Pergi ke hari ini</string>
+    <string name="action_feature_request_on_github">Permohonan fitur di GitHub</string>
+    <string name="action_show_calendar">Tampilkan kalender</string>
+    <string name="action_reorder">Susun ulang</string>
+    <string name="action_move_up" description="reorder list item up">Pindah ke atas</string>
+    <string name="action_move_down" description="reorder list item down">Pindah ke bawah</string>
+    <string name="action_use_time_based_ordering">Gunakan urutan berdasar waktu</string>
+    <string name="action_ignore_all_day_meals">Abaikan semua makanan sepanjang hari</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Tambah bahan</string>
+    <string name="action_delete_ingredient">Hapus bahan</string>
+    <string name="action_download">Unduh</string>
+    <string name="action_paste_url">Tempel URL</string>
+    <string name="action_browse_open_food_facts">Telusuri Open Food Facts</string>
+    <string name="action_copy">Salin</string>
+    <string name="action_choose_other_date">Pilih tanggal lain</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Tampilkan lebih banyak</string>
+    <string name="action_download_product">Unduh produk</string>
+    <string name="action_copy_and_open_bug_report">Salin dan buka laporan bug</string>
+    <string name="action_show_details">Tampilkan rincian</string>
+    <string name="action_browse_usda">Telusuri FoodData Central (USDA)</string>
+    <string name="action_set_key">Atur kunci</string>
+    <string name="action_obtain_key">Dapatkan kunci</string>
+    <string name="action_dont_show_again">Jangan tampilkan lagi</string>
+    <string name="neutral_barcode_scanner_camera_request">Izinkan akses ke kamera Anda untuk memindai barkode</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Anda harus mengizinkan akses untuk memindai barkode</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Izin kamera diperlukan untuk memindai barkode. Izinkan izin tersebut di pengaturan aplikasi.</string>
+    <string name="neutral_no_food_found">Tidak ditemukan makanan</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="other">%1$d kalori tersisa</item>
+    </plurals>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="other">%1$d kilojoule tersisa</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Atur tujuan nutrisi harian Anda</string>
+    <string name="neutral_set_your_meal_schedule">Atur jadwal makan Anda</string>
+    <string name="neutral_permanently_delete_meal">Hapus permanen menu?</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Makanan akan dihapus secara permanen. Semua data yang terkait dengan makanan ini akan hilang.</string>
+    <string name="neutral_required">Diperlukan</string>
+    <string name="neutral_help_translating_the_app">Bantu terjemahkan aplikasi</string>
+    <string name="neutral_copied">Informasi telah disalin ke clipboard</string>
+    <string name="neutral_product_created">Produk dibuat</string>
+    <string name="question_discard_product">Buang produk?</string>
+    <string name="question_discard_changes">Buang perubahan?</string>
+    <string name="question_discard_recipe">Buang resep?</string>
+    <string name="error_invalid_number">Nomor tidak valid</string>
+    <string name="error_value_cannot_be_negative">Nilai tidak boleh negatif</string>
+    <string name="error_value_must_be_integer">Nilai harus berupa bilangan bulat</string>
+    <string name="error_value_must_be_positive">Nilai harus positif</string>
+    <string name="error_url_not_found">URL tidak ditemukan</string>
+    <string name="error_url_is_not_supported">URL tidak didukung</string>
+    <string name="error_failed_to_download_product">Gagal mengunduh produk</string>
+    <string name="error_product_not_found">Produk tidak ditemukan</string>
+    <string name="error_unknown_error">Error tidak diketahui</string>
+    <string name="error_measurement_error">Error pengukuran, silakan periksa berat porsi dan kemasan</string>
+    <string name="error_api_key_is_invalid">Kunci API tidak valid</string>
+    <string name="error_not_a_barcode">Bukan barkode</string>
+    <string name="positive_goal_reached">Tujuan tercapai</string>
+    <string name="positive_ok">OK</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="other">Melebihi %1$d kalori</item>
+    </plurals>
+    <plurals name="negative_exceeded_by_kilojoules">
+        <item quantity="other">Melebihi %1$d kilojoule</item>
+    </plurals>
+    <string name="description_delete_food">Makanan akan dihapus secara permanen</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Entri ini akan dihapus dari catatan Anda. Anda dapat menambahkannya lagi kapan saja.</string>
+    <string name="description_about_setting">Pelajari lebih lanjut tentang aplikasi</string>
+    <string name="description_time_based_meals_sorting">Saat diaktifkan, makanan yang sedang berlangsung akan ditampilkan terlebih dahulu</string>
+    <string name="description_action_ignore_all_day_meals">Makanan sepanjang hari akan ditampilkan di akhir daftar</string>
+    <string name="description_incomplete_nutrition_data">Beberapa produk yang digunakan tidak memiliki nilai ini; oleh karena itu, nilai yang ditampilkan mungkin tidak akurat</string>
+    <string name="description_translation_warning">Terjemahan dibuat oleh para relawan. Mungkin tidak selalu sempurna dan beberapa terjemahan bisa saja belum tersedia. Jika Anda menemukan kesalahan, jangan ragu untuk membantu memperbaikinya.</string>
+    <string name="description_home_settings">Kustomisasi halaman utama Anda</string>
+    <string name="description_download_product">Tempelkan tautan produk makanan, dan secara otomatis ambil informasi gizi serta detail produk.</string>
+    <string name="description_download_product_hint">Anda dapat menempelkan teks apa pun. URL pertama akan digunakan.</string>
+    <string name="description_show_macronutrients_goals">Tampilkan target makronutrien</string>
+    <string name="description_please_wait_while_importing_products">Harap tunggu saat produk sedang diimpor</string>
+    <string name="description_please_wait_while_exporting_products">Harap tunggu saat produk sedang diekspor</string>
+    <string name="headline_launcher_icon_by_icons8">Ikon peluncur dibuat oleh Icons8</string>
+    <string name="description_open_food_facts">Basis data produk makanan dari seluruh dunia yang kolaboratif, gratis, dan terbuka</string>
+    <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">Mengekspor produk</string>
+    <string name="notification_importing_products">Mengimpor produk</string>
+    <string name="notification_importing_products_success">Impor produk selesai</string>
+    <string name="description_food_data_central_usda">FoodData Central adalah sumber komprehensif USDA untuk data komposisi makanan dengan berbagai jenis data yang berbeda</string>
+    <string name="error_usda_rate_limit">Batas penggunaan API FoodData Central (USDA) telah terlampaui</string>
+    <string name="description_swiss_food_composition_database_short">Basis Data Komposisi Makanan Swiss mencakup informasi gizi untuk lebih dari 1.100 produk makanan umum</string>
+    <string name="description2_swiss_food_composition_database">Basis Data Komposisi Makanan Swiss mencakup informasi gizi untuk lebih dari 1.100 produk makanan umum. Tersedia dalam empat bahasa. Untuk mengimpor produk-produk ini ke buku harian makanan Anda, silakan pilih bahasa yang Anda inginkan.</string>
+    <string name="headline_external_databases">Database eksternal</string>
+    <string name="description_external_databases">Periksa basis data yang tersedia</string>
+    <string name="feature_manual_database_import">Impor basis data secara manual</string>
+    <string name="action_unpack" description="Unpack the recipe ingredients">Bongkar</string>
+    <string name="headline_sponsor">Sponsor</string>
+    <string name="description_sponsor_short_2">Dukung perkembangan aplikasi</string>
+    <string name="headline_source_code">Sumber kode</string>
+    <string name="action_write_an_email">Tuliskan email</string>
+    <string name="headline_contact">Kontak</string>
+    <string name="description_sponsor_contact">Jika Anda memiliki permintaan terkait sponsor, jangan ragu untuk menghubungi saya melalui email atau GitHub.</string>
+    <string name="sponsor_bank_or_card">Rekening bank atau kartu kredit</string>
+    <string name="action_treat_as_liquid">Hitung sebagai cairan</string>
+    <string name="description_treat_as_liquid">Gunakan mililiter saat mengukur</string>
+    <string name="headline_personalization">Personalisasi</string>
+    <string name="description_personalization">Sesuaikan pengalaman Anda</string>
+    <string name="headline_nutrition_facts">Informasi gizi</string>
+    <string name="description_personalize_nutrition_facts_short">Atur ulang informasi gizi</string>
+    <string name="action_reset_ordering">Reset urutan</string>
+    <string name="headline_reset_to_default">Atur ulang ke default</string>
+    <string name="action_reset" description="Confirm resetting">Reset</string>
+    <string name="description_reset_nutrition_facts">Atur ulang personalisasi informasi gizi ke bawaan</string>
+    <string name="headline_note">Catatan</string>
+    <string name="description_add_note">Catatan opsional (misalnya bahan, status vegan, alergen, aditif) atau detail lain yang bukan nutrisi</string>
+    <string name="action_try_again">Coba lagi</string>
+    <string name="description_calories_are_calculated">Energi secara otomatis dihitung dari makronutrien. Anda dapat menonaktifkan fitur ini dan memasukkan nilai secara manual jika diperlukan. Alkohol tidak termasuk dalam perhitungan.</string>
+    <string name="x_kcal_per_g">%1$s %2$d kkal/g</string>
+    <string name="neutral_an_error_occurred">Terjadi kesalahan</string>
+    <string name="action_retry">Coba lagi</string>
+    <string name="action_import">Impor</string>
+    <string name="headline_today" description="Today, date">Hari ini, %1$s</string>
+    <string name="headline_yesterday" description="Yesterday, date">Kemarin, %1$s</string>
+    <string name="headline_tomorrow" description="Tomorrow, date">Besok, %1$s</string>
+    <string name="headline_user" description="User, person who uses the app">Pengguna</string>
+    <string name="description_food_source">Tentukan dari mana data makanan berasal</string>
+    <string name="error_food_is_missing_required_fields">Data makanan belum lengkap</string>
+    <string name="headline_preview_release">Rilis pratinjau</string>
+    <string name="description_preview_release">Anda saat ini menggunakan versi pratinjau. Versi ini mungkin belum lengkap, tidak stabil, atau dapat berubah sewaktu-waktu.</string>
+    <string name="headline_your_food">Makanan Anda</string>
+    <string name="headline_filters">Filter</string>
+    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">Pilih bahan</string>
+    <string name="headline_edit_recipe">Edit resep</string>
+    <string name="description_delete_ingredient">Bahan akan dihapus dari resep</string>
+    <string name="neutral_remote_database_error">Tidak dapat mengunduh produk dari basis data jarak jauh. Anda masih dapat melihat produk yang telah diunduh sebelumnya.</string>
+    <string name="headline_before_you_start">Sebelum kamu memulai</string>
+    <string name="action_agree_and_continue">Setuju &amp; Lanjutkan</string>
+    <string name="headline_food_database">Basis data makanan</string>
+    <string name="description_food_database">Anda dapat memilih apakah ingin menggunakan layanan eksternal opsional ini, yang mungkin memiliki syarat dan kebijakan privasi masing-masing</string>
+    <string name="action_skip">Lewati</string>
+    <string name="headline_almost_done">Hampir selesai</string>
+    <string name="headline_preparing_your_food_diary">Menyiapkan catatan makanan Anda</string>
+    <string name="headline_please_wait">Harap tunggu</string>
+    <string name="headline_created">Dibuat</string>
+    <string name="headline_imported">Diimpor</string>
+    <string name="headline_downloaded">Diunduh</string>
+    <string name="headline_edited">Diedit</string>
+    <string name="headline_history">Riwayat</string>
+    <string name="headline_anonymous">Anonim</string>
+    <string name="headline_recent">Baru saja</string>
+    <string name="headline_database">Basis data</string>
+    <string name="description_manage_database">Kelola basis data Anda</string>
+    <string name="action_done">Selesai</string>
+    <string name="neutral_measurement_added">Baik! Kami sudah menambahkan pengukuran Anda</string>
+    <string name="headline_imported_from_food_you_2">Diimpor dari Food You 2</string>
+    <string name="action_set_goals">Atur Target</string>
+    <string name="headline_pick_the_days">Pilih hari</string>
+    <string name="action_set_separate_goals">Tetapkan tujuan terpisah untuk setiap hari</string>
+    <string name="headline_percentages">Persentase</string>
+    <string name="action_import_csv_food_products">Impor produk makanan dari CSV</string>
+    <string name="description_import_csv_food_products">Impor produk makanan dari file CSV</string>
+    <string name="description_import_csv_food_products_hint">Kami hanya perlu tahu mana yang mana. Beri tahu kami kolom mana dalam file Anda yang berisi nama produk, merek, dan sebagainya.</string>
+    <string name="description_import_csv_food_products_hint_2">Semua nilai zat gizi harus dicantumkan dalam gram atau kilokalori per 100 gram</string>
+    <string name="action_export_csv_food_products">Ekspor produk makanan ke CSV</string>
+    <string name="description_export_csv_food_products">Ekspor produk makanan ke file CSV</string>
+    <string name="neutral_no_column">Tidak ada kolom</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="other">Telah mengimpor %1$d produk makanan</item>
+    </plurals>
+    <string name="headline_energy_unit">Satuan energi</string>
+    <string name="description_energy_unit">Pilih satuan energi yang diinginkan</string>
+    <plurals name="neutral_exported_x_food_products">
+        <item quantity="other">Telah mengekspor %1$d produk makanan</item>
+    </plurals>
+    <string name="headline_auto_calculate_energy">Hitung energi secara otomatis</string>
+    <string name="headline_manual_energy_input">Memasukkan energi secara manual</string>
+    <string name="headline_quick_add">Tambah cepat</string>
+    <string name="description_quick_add">Tambah Cepat memungkinkan Anda mencatat tanpa harus mencari makanan tertentu. Ini adalah cara cepat untuk merekam makanan ketika Anda sudah tahu jumlah kalorinya atau hanya ingin perkiraan sederhana.</string>
+    <string name="action_open_poll">Buka polling</string>
+    <string name="headline_colors">Warna</string>
+    <string name="description_colors">Sesuaikan warna aplikasi</string>
+    <string name="headline_custom_palette">Palet warna kustom</string>
+    <string name="description_custom_palette">Buat palet Anda sendiri</string>
+    <string name="headline_dynamic_colors">Warna dinamis</string>
+    <string name="description_dynamic_colors">Gunakan warna dari sistem</string>
+    <string name="headline_palette_style">Jenis palet</string>
+    <string name="headline_contrast">Kontras</string>
+    <string name="headline_amoled">AMOLED</string>
+    <string name="headline_light">Terang</string>
+    <string name="headline_dark">Gelap</string>
+    <string name="headline_appearance">Tampilan</string>
+    <string name="headline_theme">Tema</string>
+    <string name="headline_pick_a_color">Pilih warna</string>
+    <string name="headline_nutrients_colors">Warna gizi</string>
+    <string name="description_nutrients_colors_reset">Pengaturan warna gizi akan dikembalikan ke nilai bawaan</string>
+    <string name="headline_sponsorship_goals">Target</string>
+    <string name="description_sponsorship_goals">Dengan menjadi sponsor, Anda membantu menjaga proyek ini tetap independen dan berkelanjutan tanpa bergantung pada model bisnis yang eksploitatif. Banyak aplikasi komersial menghasilkan uang dengan mengumpulkan dan menjual data pengguna, menargetkan iklan, atau mendorong pengguna ke pola keterlibatan yang adiktif. Sponsorship memastikan aplikasi ini tetap ramah privasi, transparan, dan berfokus pada memberikan nilai nyata tanpa mengorbankan kepercayaan maupun kesejahteraan Anda.</string>
+    <string name="description_x_away_from_next_goal">Tinggal %1$s untuk mencapai target berikutnya</string>
+    <string name="headline_sponsors">Sponsor</string>
+    <string name="description_no_sponsors_this_month">Tidak ada sponsor bulan ini</string>
+    <string name="headline_latest" description="Latest, most recent">Terbaru</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Teratas</string>
+    <string name="headline_this_month_we_raised">Bulan ini kami mengumpulkan %1$s</string>
+    <string name="description_sponsors_privacy">Food You sangat menjaga privasi Anda. Karena itu, aplikasi ini tidak akan terhubung ke layanan eksternal kecuali Anda mengizinkannya. Untuk melihat sponsor terbaru, data harus diunduh dari server Food You.</string>
+    <string name="action_allow" description="Allow something">Izinkan</string>
+    <string name="action_next_month">Bulan depan</string>
+    <string name="action_previous_month">Bulan lalu</string>
+    <string name="headline_sponsor_methods">Metode</string>
+    <string name="headline_save_database">Simpan database</string>
+    <string name="description_save_database">Simpan salinan database Anda</string>
+    <string name="headline_replace_database">Timpa database</string>
+    <string name="description_replace_database">Ganti database Anda dengan salinan yang telah disimpan sebelumnya</string>
+    <string name="action_replace">Ganti</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Basis data Anda akan DIGANTI, dan semua data saat ini akan HILANG. Aplikasi akan dimulai ulang setelah basis data diganti. Anda mungkin perlu membuka kembali aplikasi.</string>
+    <string name="action_sign_in">Masuk</string>
+    <string name="headline_terms_of_service">Ketentuan layanan</string>
+    <string name="headline_privacy_policy">Kebijakan privasi</string>
+    <string name="error_there_was_an_error_while_signing_in">Terjadi kesalahan saat masuk</string>
+    <string name="headline_random_theme">Tema acak</string>
+    <string name="description_random_theme">Tema acak akan diterapkan setiap kali aplikasi dimulai</string>
+    <string name="headline_terms_of_use">Persyaratan Penggunaan</string>
+    <string name="onboarding_privacy_tip">Aplikasi ini bersifat open-source dan dibuat untuk Anda. Kami menghargai privasi Anda, informasi Anda tetap pribadi.</string>
+    <string name="headline_add_profile">Buat profil</string>
+    <string name="headline_how_do_you_want_to_be_called">Anda ingin dipanggil apa?</string>
+    <string name="headline_profile_name">Nama profil</string>
+    <string name="headline_profile_picture">Foto Profil</string>
+    <string name="action_continue">Lanjutkan</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Hi, %1$s!</string>
+    <string name="headline_data_backup_and_export">Cadangan data &amp; ekspor</string>
+    <string name="headline_privacy">Privasi</string>
+    <string name="action_switch_profile">Beralih profil</string>
+    <string name="action_add_profile">Tambah profil</string>
+    <string name="action_refresh">Segarkan</string>
+    <string name="description_not_sure_yet">Belum yakin? Anda dapat mengubahnya kapan saja</string>
+    <string name="question_discard_profile">Hapus profil?</string>
+    <string name="headline_edit_profile">Ubah profil</string>
+    <string name="action_delete_profile">Hapus profil</string>
+    <string name="headline_delete_profile">Hapus profil</string>
+    <string name="description_delete_profile">Profil ini akan dihapus secara permanen. Semua data yang terkait dengannya akan hilang selamanya.</string>
+    <string name="action_today" description="Set date to today">Hari Ini</string>
+    <string name="action_fill_in_details">Isi detailnya</string>
+    <string name="action_skip_for_now">Lewati untuk saat ini</string>
+    <string name="headline_add_more_details">Tambahkan lebih banyak detail</string>
+    <string name="description_add_more_details_product_form">Mengisi nilai protein, lemak, karbohidrat, dan energi membantu memberikan wawasan gizi yang lebih akurat</string>
+    <string name="headline_favorite">Favorit</string>
+    <string name="action_add_a_photo">Tambahkan Foto</string>
+    <string name="action_remove_a_photo">Hapus foto</string>
+    <string name="description_values_per">Pilih jumlah yang menjadi dasar nilai gizi Anda</string>
+    <string name="description_privacy">Kendalikan informasi pribadi Anda</string>
+    <string name="headline_database_backup">Cadangkan database</string>
+    <string name="description_replacing_database">Mengganti database, mohon tunggu...</string>
+    <string name="headline_experimental">Eksperimental</string>
+</resources>

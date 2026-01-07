@@ -1,0 +1,15 @@
+<b>Food You</b> adalah aplikasi pelacak nutrisi yang kuat dan open-source, dirancang dengan estetika Material You yang modern. Ini membantu Anda melacak tidak hanya kalori, tetapi juga asupan nutrisi Anda secara keseluruhan — dengan data makanan yang andal dan antarmuka yang fleksibel dan modular.
+
+<b>Fitur:</b>
+<ul>
+    <li><b>Material You Design:</b> Tema dinamis yang menyesuaikan dengan perangkat Anda untuk pengalaman visual yang mulus.</li>
+    <li><b>Database Makanan Lengkap:</b> Akses data gizi dari Open Food Facts, USDA FoodCentral, dan Database Komposisi Makanan Swiss.</li>
+    <li><b>Pelacakan Nutrisi Lengkap:</b> Pantau kalori, makro, vitamin, mineral, dan lainnya.</li>
+    <li><b>Pembuatan Resep:</b> Gabungkan bahan makanan menjadi resep kustom dengan perhitungan nutrisi otomatis.</li>
+    <li><b>Tujuan Harian:</b> Tetapkan dan ikuti target nutrisi yang disesuaikan dengan kebutuhan pribadi.</li>
+    <li><b>Layar Beranda Modular:</b> Sesuaikan layar beranda Anda dengan kartu yang disesuaikan dengan kebutuhan Anda.</li>
+</ul>
+
+Mulai lacak nutrisi Anda hari ini dengan Food You — bersih, lengkap, dan sepenuhnya milik Anda.
+
+Ikon peluncur dibuat oleh <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

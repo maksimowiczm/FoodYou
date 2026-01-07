@@ -9,6 +9,7 @@ data class FoodName(
     val german: String? = null,
     val spanish: String? = null,
     val french: String? = null,
+    val indonesian: String? = null,
     val italian: String? = null,
     val hungarian: String? = null,
     val dutch: String? = null,
@@ -29,6 +30,7 @@ data class FoodName(
             german,
             spanish,
             french,
+            indonesian,
             italian,
             hungarian,
             dutch,
@@ -58,6 +60,7 @@ data class FoodName(
             Language.German -> german
             Language.Spanish -> spanish
             Language.French -> french
+            Language.Indonesian -> indonesian
             Language.Italian -> italian
             Language.Hungarian -> hungarian
             Language.Dutch -> dutch

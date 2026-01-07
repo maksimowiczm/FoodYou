@@ -113,6 +113,7 @@ class OpenFoodFactsProductMapper {
                     german = nameMap["de"].takeIfNotBlank(),
                     spanish = nameMap["es"].takeIfNotBlank(),
                     french = nameMap["fr"].takeIfNotBlank(),
+                    indonesian = nameMap["id"].takeIfNotBlank() ?: nameMap["in"].takeIfNotBlank(),
                     italian = nameMap["it"].takeIfNotBlank(),
                     hungarian = nameMap["hu"].takeIfNotBlank(),
                     dutch = nameMap["nl"].takeIfNotBlank(),
