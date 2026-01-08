@@ -1,0 +1,9 @@
+Changes
+- Added a privacy policy. Food You now has its own website.
+
+Bug fixes
+- Fixed a crash occurring when deleting a product package or serving weight.
+
+Translations
+- Added Indonesian
+- Added Slovenian
