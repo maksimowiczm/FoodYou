@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">N/A</string>
+    <string name="headline_create_product">Ustvari izdelek</string>
+    <string name="headline_settings">Nastavitve</string>
+    <string name="headline_daily_goals">Dnevni cilji</string>
+    <string name="headline_general">Splošno</string>
+    <string name="headline_macronutrients">Makrohranila</string>
+    <string name="headline_meals">Obroki</string>
+    <string name="headline_delete_food">Izbriši hrano</string>
+    <string name="headline_edit_product">Uredi izdelka</string>
+    <string name="headline_permission_required">Potrebno je dovoljenje</string>
+    <string name="headline_language">Jezik</string>
+    <string name="headline_system">Sistem</string>
+    <string name="headline_system_language_settings">Nastavitve sistemskega jezika</string>
+    <string name="headline_secure_screen">Zaščita zaslona</string>
+    <string name="headline_about">O aplikaciji</string>
+    <string name="headline_version">Različica</string>
+    <string name="headline_all_day" description="All-day (meal)">Celodnevni</string>
+    <string name="headline_time_based_ordering">Naročanje na podlagi časa</string>
+    <string name="headline_incomplete_products">Nepopolni izdelki</string>
+    <string name="headline_product">Izdelek</string>
+    <string name="headline_recipe">Recept</string>
+    <string name="headline_create_recipe">Ustvarjanje recepta</string>
+    <string name="headline_ingredients" description="Recipe ingredients">Sestavine</string>
+    <string name="headline_summary">Povzetek</string>
+    <string name="headline_whats_new">Kaj je novega</string>
+    <string name="headline_changelog">Seznam sprememb</string>
+    <string name="headline_installed" description="Installed version of the app">Nameščen</string>
+    <string name="headline_home" description="Home screen">Domov</string>
+    <string name="headline_home_settings" description="Home screen settings">Domače nastavitve</string>
+    <string name="headline_calendar">Koledar</string>
+    <string name="headline_meals_settings">Nastavitve obrokov</string>
+    <string name="headline_horizontal">Vodoravno</string>
+    <string name="headline_vertical">Navpično</string>
+    <string name="headline_values_per">Vrednosti na</string>
+    <string name="headline_other">Drugo</string>
+    <string name="headline_vitamins">Vitamini</string>
+    <string name="headline_minerals">Minerali</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">Podprti naslovi URL</string>
+    <string name="headline_something_went_wrong">Ups! Nekaj je šlo narobe</string>
+    <string name="headline_daily_goals_settings">Nastavitve dnevnih ciljev</string>
+    <string name="headline_api_key">API ključ</string>
+    <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Vir</string>
+    <string name="headline_features">Značilnosti</string>
+    <string name="weight">Teža</string>
+    <string name="unit_energy" description="Energy as calories">Energijska vrednost</string>
+    <string name="unit_kcal">kcal</string>
+    <string name="unit_kilojoules">kJ</string>
+    <plurals name="unit_gram">
+        <item quantity="one">gramov</item>
+        <item quantity="two">gramov</item>
+        <item quantity="few">gramov</item>
+        <item quantity="other">gramov</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">mililiter</item>
+        <item quantity="two">mililitrov</item>
+        <item quantity="few">mililitrov</item>
+        <item quantity="other">mililitrov</item>
+    </plurals>
+    <string name="unit_ounce_short">unča</string>
+    <string name="unit_fluid_ounce_short">tekočinska učna</string>
+    <string name="product_package_weight">Teža pakiranja</string>
+    <string name="product_package">Pakiranje</string>
+    <string name="product_serving_weight">Teža porcije</string>
+    <string name="product_serving">Porcija</string>
+    <string name="product_name">Ime</string>
+    <string name="product_brand">Blagovna znamka</string>
+    <string name="product_barcode">Črtna koda</string>
+    <string name="product_link">Povezava do izdelka</string>
+    <string name="recipe_servings">Porcije</string>
+    <string name="description_recipe_servings">Koliko porcij omogoča ta recept</string>
+    <string name="nutriment_proteins">Beljakovine</string>
+    <string name="nutriment_proteins_short">B</string>
+    <string name="nutriment_carbohydrates">Ogljikovi hidrati</string>
+    <string name="nutriment_carbohydrates_short">OH</string>
+    <string name="nutriment_sugars">Sladkorji</string>
+    <string name="nutriment_fats">Maščobe</string>
+    <string name="nutriment_fats_short">M</string>
+    <string name="nutriment_saturated_fats">Nasičene maščobe</string>
+    <string name="nutriment_polyunsaturated_fats">Večkrat nenasičene maščobe</string>
+    <string name="nutriment_monounsaturated_fats">Enkrat nenasičene maščobe</string>
+    <string name="nutriment_omega_3">Omega-3 maščobne kisline</string>
+    <string name="nutriment_omega_6">Omega-6 maščobne kisline</string>
+    <string name="nutriment_salt">Sol</string>
+    <string name="nutriment_fiber">Prehranske vlaknine</string>
+    <string name="nutriment_cholesterol">Holesterol</string>
+    <string name="nutriment_caffeine">Kofein</string>
+    <string name="nutriment_trans_fats">Transmaščobne kisline</string>
+    <string name="nutriment_added_sugars">Dodani sladkorji</string>
+    <string name="nutriment_soluble_fiber">Topne vlaknine</string>
+    <string name="nutriment_insoluble_fiber">Netopne vlaknine</string>
+    <string name="vitamin_a">Vitamin A (retinol)</string>
+    <string name="vitamin_b1">Vitamin B1 (amin)</string>
+    <string name="vitamin_b2">Vitamin B2 (riboflavin)</string>
+    <string name="vitamin_b3">Vitamin B3 (niacin)</string>
+    <string name="vitamin_b5">Vitamin B5 (pantotenska kislina)</string>
+    <string name="vitamin_b6">Vitamin B6 (piridoksin)</string>
+    <string name="vitamin_b7">Vitamin B7 (biotin)</string>
+    <string name="vitamin_b9">Vitamin B9 (folna kislina)</string>
+    <string name="vitamin_b12">Vitamin B12 (kobalamini)</string>
+    <string name="vitamin_c">Vitamin C (askorbinska kislina)</string>
+    <string name="vitamin_d">Vitamin D</string>
+    <string name="vitamin_e">Vitamin E</string>
+    <string name="vitamin_k">Vitamin K</string>
+    <string name="mineral_manganese">Mangan</string>
+    <string name="mineral_magnesium">Magnezij</string>
+    <string name="mineral_potassium">Kalij</string>
+    <string name="mineral_calcium">Kalcij</string>
+    <string name="mineral_copper">Baker</string>
+    <string name="mineral_zinc">Cink</string>
+    <string name="mineral_sodium">Natrij</string>
+    <string name="mineral_iron">Železo</string>
+    <string name="mineral_phosphorus">Fosfor</string>
+    <string name="mineral_selenium">Selen</string>
+    <string name="mineral_iodine">Jod</string>
+    <string name="mineral_chromium">Krom</string>
+    <string name="action_search">Iskanje</string>
+    <string name="action_scan_barcode">Skeniranje črtne kode</string>
+    <string name="action_add">Dodaj</string>
+    <string name="action_go_back">Pojdi nazaj</string>
+    <string name="action_tap_to_allow_access">Tapnite, če želite dovoliti dostop</string>
+    <string name="action_create">Ustvari</string>
+    <string name="action_clear">Počisti</string>
+    <string name="action_cancel">Prekliči</string>
+    <string name="action_go_to_settings">Pojdite v nastavitve</string>
+    <string name="action_save">Shrani</string>
+    <string name="action_delete">Izbriši</string>
+    <string name="action_confirm">Potrdi</string>
+    <string name="action_add_meal">Dodajte obrok</string>
+    <string name="action_edit">Uredi</string>
+    <string name="action_insert_suggested_search">Vstavite predlagano iskanje</string>
+    <string name="action_edit_entry">Urejanje vnosa</string>
+    <string name="action_delete_entry">Brisanje vnosa</string>
+    <string name="action_close">Zapri</string>
+    <string name="action_discard">Zavrnite</string>
+    <string name="action_translate">Prevesti</string>
+    <string name="action_enable_camera_flash">Omogočite bliskavico fotoaparata</string>
+    <string name="action_disable_camera_flash">Onemogočite bliskavico kamere</string>
+    <string name="action_prevent_screen_capture">Preprečevanje zajemanja zaslona</string>
+    <string name="action_go_to_today">Pojdi na današnji dan</string>
+    <string name="action_feature_request_on_github">Zahtevaj novo funkcionalnost na GitHubu</string>
+    <string name="action_show_calendar">Prikaži koledar</string>
+    <string name="action_reorder">Ponovno sortiraj</string>
+    <string name="action_move_up" description="reorder list item up">Premakni navzgor</string>
+    <string name="action_move_down" description="reorder list item down">Premakni navzdol</string>
+    <string name="action_use_time_based_ordering">Uporabi sortiranje na podlagi časa</string>
+    <string name="action_ignore_all_day_meals">Ignorirajte celodnevne obroke</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Dodajte sestavino</string>
+    <string name="action_delete_ingredient">Izbriši sestavino</string>
+    <string name="action_download">Prenesi</string>
+    <string name="action_paste_url">Prilepi URL povezavo</string>
+    <string name="action_browse_open_food_facts">Brskanje po Open Food Facts</string>
+    <string name="action_copy">Kopiraj</string>
+    <string name="action_choose_other_date">Izberite drug datum</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Pokaži več</string>
+    <string name="action_download_product">Prenos izdelka</string>
+    <string name="action_copy_and_open_bug_report">Kopiraj in odpri poročilo o hrošču</string>
+    <string name="action_show_details">Prikaži podrobnosti</string>
+    <string name="action_browse_usda">Brskanje po FoodData Central (USDA)</string>
+    <string name="action_set_key">Nastavite tipko</string>
+    <string name="action_obtain_key">Pridobitev ključa</string>
+    <string name="action_dont_show_again">Ne prikaži znova</string>
+    <string name="neutral_barcode_scanner_camera_request">Omogočite dostop do kamere za skeniranje črtnih kod</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Za optično branje črtnih kod morate dovoliti dostop.</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Za skeniranje črtnih kod je potrebno dovoljenje uporabe fotoaparata. Dovolite ga v nastavitvah aplikacije.</string>
+    <string name="neutral_no_food_found">Ni bilo najdene hrane</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">%1$d preostala kalorija</item>
+        <item quantity="two">%1$d preostali kaloriji</item>
+        <item quantity="few">%1$d preostale kalorije</item>
+        <item quantity="other">%1$d preostalih kalorij</item>
+    </plurals>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">%1$d preostal kilojoule</item>
+        <item quantity="two">%1$d preostala kilojoula</item>
+        <item quantity="few">%1$d preostali kilojouli</item>
+        <item quantity="other">%1$d preostalih kilojoulov</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Določite svoje dnevne prehranske cilje</string>
+    <string name="neutral_set_your_meal_schedule">Določite urnik obrokov</string>
+    <string name="neutral_permanently_delete_meal">Trajno izbrisati obrok?</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Obrok bo trajno izbrisan. Vsi podatki, povezani s tem obrokom, bodo izgubljeni.</string>
+    <string name="neutral_required">Zahtevano</string>
+    <string name="neutral_help_translating_the_app">Pomagaj pri prevajanju aplikacije</string>
+    <string name="neutral_copied">Informacije kopirane v odložišče</string>
+    <string name="neutral_product_created">Izdelek ustvarjen</string>
+    <string name="question_discard_product">Zavrži izdelek?</string>
+    <string name="question_discard_changes">Zavržite spremembe?</string>
+    <string name="question_discard_recipe">Zavržite recept?</string>
+    <string name="error_invalid_number">Neveljavna številka</string>
+    <string name="error_value_cannot_be_negative">Vrednost ne more biti negativna</string>
+    <string name="error_value_must_be_integer">Vrednost mora biti celo število</string>
+    <string name="error_value_must_be_positive">Vrednost mora biti pozitivna</string>
+    <string name="error_url_not_found">URL ni najden</string>
+    <string name="error_url_is_not_supported">URL ni podprt</string>
+    <string name="error_failed_to_download_product">Ni uspelo prenesti izdelka</string>
+    <string name="error_product_not_found">Izdelek ni najden</string>
+    <string name="error_unknown_error">Neznana napaka</string>
+    <string name="error_measurement_error">Napaka pri merjenju, preverite težo priporočene porcije in pakiranja</string>
+    <string name="error_api_key_is_invalid">API ključ ni veljaven</string>
+    <string name="error_not_a_barcode">Ni črtna koda</string>
+    <string name="positive_goal_reached">Cilj dosežen</string>
+    <string name="positive_ok">OK</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">Preseženo za %1$d kalorijo</item>
+        <item quantity="two">Preseženo za %1$d kaloriji</item>
+        <item quantity="few">Preseženo za %1$d kalorije</item>
+        <item quantity="other">Preseženo za %1$d kalorij</item>
+    </plurals>
+    <plurals name="negative_exceeded_by_kilojoules">
+        <item quantity="one">Preseženo za %1$d kilojoule</item>
+        <item quantity="two">Preseženo za %1$d kilojoula</item>
+        <item quantity="few">Preseženo za %1$d kilojoule</item>
+        <item quantity="other">Preseženo za %1$d kilojoulov</item>
+    </plurals>
+    <string name="description_delete_food">Hrana bo trajno izbrisana</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Ta vnos bo izbrisan iz vašega dnevnika. Kadar koli ga lahko znova dodate.</string>
+    <string name="description_about_setting">Preberite več o aplikaciji</string>
+    <string name="description_time_based_meals_sorting">Če je ta možnost omogočena, se najprej prikažejo obroki, ki trenutno potekajo.</string>
+    <string name="description_action_ignore_all_day_meals">Celodnevni obroki bodo prikazani na koncu seznama.</string>
+    <string name="description_incomplete_nutrition_data">Nekateri uporabljeni izdelki nimajo te vrednosti, zato prikazana vrednost morda ne bo točna.</string>
+    <string name="description_translation_warning">Prevode pripravljajo prostovoljci. Morda niso popolni in nekateri prevodi manjkajo. Če opazite kakšno napako, ne oklevajte in jih pomagajte izboljšati.</string>
+    <string name="description_home_settings">Prilagodite svojo domačo stran</string>
+    <string name="description_download_product">Prilepite povezavo do živilskega izdelka in samodejno pridobite podatke o hranilni vrednosti in podrobnosti o izdelku.</string>
+    <string name="description_download_product_hint">Prilepite lahko poljubno besedilo. Uporabljen bo prvi URL.</string>
+    <string name="description_show_macronutrients_goals">Prikaži cilje makrohranil</string>
+    <string name="description_please_wait_while_importing_products">Počakajte dokler poteka uvoz izdelkov</string>
+    <string name="description_please_wait_while_exporting_products">Počakajte dokler poteka izvoz izdelkov</string>
+    <string name="headline_launcher_icon_by_icons8">Ikona aplikacije od Icons8</string>
+    <string name="description_open_food_facts">Skupna, brezplačna in odprta zbirka podatkov o živilskih izdelkih z vsega sveta</string>
+    <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">Izvažanje izdelkov</string>
+    <string name="notification_importing_products">Uvažanje izdelkov</string>
+    <string name="notification_importing_products_success">Uvoz izdelkov končan</string>
+    <string name="description_food_data_central_usda">FoodData Central je obsežen vir podatkov USDA o sestavi živil z več različnimi vrstami podatkov</string>
+    <string name="error_usda_rate_limit">Omejitev uporabe API za FoodData Central (USDA) je presežena</string>
+    <string name="description_swiss_food_composition_database_short">Swiss Food Composition Database zbirka podatkov o sestavi živil vključuje informacije o hranilni vrednosti več kot 1.100 splošnih živil</string>
+    <string name="description2_swiss_food_composition_database">Swiss Food Composition Database zbirka podatkov o sestavi živil vsebuje informacije o hranilni vrednosti več kot 1.100 splošnih živilskih izdelkov. Na voljo je v štirih jezikih. Če želite te izdelke uvoziti v svoj prehranski dnevnik, izberite želene jezike.</string>
+    <string name="headline_external_databases">Zunanje podatkovne zbirke</string>
+    <string name="description_external_databases">Preverite podprte zbirke podatkov</string>
+    <string name="feature_manual_database_import">Ročni uvoz podatkovne zbirke</string>
+    <string name="action_unpack" description="Unpack the recipe ingredients">Odpakiraj</string>
+    <string name="headline_sponsor">Postani sponzor</string>
+    <string name="description_sponsor_short_2">Podpri rasti aplikacije</string>
+    <string name="headline_source_code">Izvorna koda</string>
+    <string name="action_write_an_email">Napišite e-poštno sporočilo</string>
+    <string name="headline_contact">Kontakt</string>
+    <string name="description_sponsor_contact">Če imate kakršne koli zahteve v zvezi s sponzorstvom, me lahko kontaktirate prek e-pošte ali GitHuba.</string>
+    <string name="sponsor_bank_or_card">Bančni račun ali kreditna kartica</string>
+    <string name="action_treat_as_liquid">Obravnavaj kot tekočino</string>
+    <string name="description_treat_as_liquid">Pri merjenju raje uporabljajte mililitre</string>
+    <string name="headline_personalization">Prilagoditve po meri</string>
+    <string name="description_personalization">Prilagodite svojo izkušnjo</string>
+    <string name="headline_nutrition_facts">Prehranski podatki</string>
+    <string name="description_personalize_nutrition_facts_short">Spremeni vrstni red prehranskih podatkov</string>
+    <string name="action_reset_ordering">Ponastavitev sortiranja</string>
+    <string name="headline_reset_to_default">Ponastavitev na privzeto vrednost</string>
+    <string name="action_reset" description="Confirm resetting">Ponastavitev</string>
+    <string name="description_reset_nutrition_facts">Ponastavitev personalizacije podatkov o hranilni vrednosti na privzeto</string>
+    <string name="headline_note">Opomba</string>
+    <string name="description_add_note">Neobvezne opombe (npr. sestavine, veganski status, alergeni, aditivi) ali druge podrobnosti, ki niso povezane s hranili.</string>
+    <string name="action_try_again">Poskusite znova</string>
+    <string name="description_calories_are_calculated">Energijska vrednost se samodejno izračuna iz makrohranil. Po potrebi lahko to funkcijo onemogočite in vrednost vnesete ročno. Energijska vrednost alkohola ni vključena v izračun.</string>
+    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
+    <string name="neutral_an_error_occurred">Prišlo je do napake</string>
+    <string name="action_retry">Ponovi</string>
+    <string name="action_import">Uvozi</string>
+    <string name="headline_today" description="Today, date">Danes, %1$s.</string>
+    <string name="headline_yesterday" description="Yesterday, date">Včeraj, %1$s</string>
+    <string name="headline_tomorrow" description="Tomorrow, date">Jutri, %1$s</string>
+    <string name="headline_user" description="User, person who uses the app">Uporabnik</string>
+    <string name="description_food_source">Navedite, od kje prihajajo podatki o hrani</string>
+    <string name="error_food_is_missing_required_fields">Pri hrani manjkajo zahtevana polja</string>
+    <string name="headline_preview_release">Različica pred uradno izdajo</string>
+    <string name="description_preview_release">Trenutno uporabljate različico pred uradno izdajo. Lahko je nepopolna, nestabilna ali se lahko spremeni.</string>
+    <string name="headline_your_food">Vaša hrana</string>
+    <string name="headline_filters">Filtri</string>
+    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">Izberite sestavino</string>
+    <string name="headline_edit_recipe">Uredi recept</string>
+    <string name="description_delete_ingredient">Sestavina bo odstranjena iz recepta</string>
+    <string name="neutral_remote_database_error">Izdelka ni bilo mogoče prenesti iz oddaljene zbirke podatkov. Še vedno si lahko ogledate predhodno prenesene izdelke.</string>
+    <string name="headline_before_you_start">Preden začnete</string>
+    <string name="action_agree_and_continue">Potrdi &amp; Nadaljuj</string>
+    <string name="headline_food_database">Podatkovna zbirka o hrani</string>
+    <string name="description_food_database">Izberete lahko, ali želite uporabljati te neobvezne zunanje storitve, ki imajo lahko svoje pogoje in politike zasebnosti</string>
+    <string name="action_skip">Preskoči</string>
+    <string name="headline_almost_done">Skoraj končano</string>
+    <string name="headline_preparing_your_food_diary">Priprava prehranskega dnevnika</string>
+    <string name="headline_please_wait">Prosimo, počakajte.</string>
+    <string name="headline_created">Ustvarjeno</string>
+    <string name="headline_imported">Uvoženo</string>
+    <string name="headline_downloaded">Preneseno</string>
+    <string name="headline_edited">Urejeno</string>
+    <string name="headline_history">Zgodovina</string>
+    <string name="headline_anonymous">Anonimno</string>
+    <string name="headline_recent">Nedavno</string>
+    <string name="headline_database">Podatkovna zbirka</string>
+    <string name="description_manage_database">Upravljanje zbirke podatkov</string>
+    <string name="action_done">Končano</string>
+    <string name="neutral_measurement_added">Razumem! Dodali smo vašo meritev</string>
+    <string name="headline_imported_from_food_you_2">Uvoženo iz Food You 2</string>
+    <string name="action_set_goals">Nastavite cilje</string>
+    <string name="headline_pick_the_days">Izberite dneve</string>
+    <string name="action_set_separate_goals">Postavite ločene cilje za vsak dan</string>
+    <string name="headline_percentages">Odstotki</string>
+    <string name="action_import_csv_food_products">Uvoz živilskih izdelkov iz CSV</string>
+    <string name="description_import_csv_food_products">Uvoz živilskih izdelkov iz datoteke CSV</string>
+    <string name="description_import_csv_food_products_hint">Vedeti moramo le, kaj je kaj. Določite kateri stolpec v vaši datoteki je ime izdelka, blagovna znamka itd.</string>
+    <string name="description_import_csv_food_products_hint_2">Vse hranilne vrednosti morajo biti podane v gramih ali kcal na 100 g</string>
+    <string name="action_export_csv_food_products">Izvoz živilskih izdelkov v CSV</string>
+    <string name="description_export_csv_food_products">Izvoz živilskih izdelkov v datoteko CSV</string>
+    <string name="neutral_no_column">Brez stolpca</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="one">Uvožen %1$d živilski izdelek</item>
+        <item quantity="two">Uvožena %1$d živilska izdelka</item>
+        <item quantity="few">Uvoženi %1$d živilski izdelki</item>
+        <item quantity="other">Uvoženih %1$d živilskih izdelkov</item>
+    </plurals>
+    <string name="headline_energy_unit">Enota energijske vrednosti</string>
+    <string name="description_energy_unit">Izberite želeno enoto energijske vrednosti</string>
+    <plurals name="neutral_exported_x_food_products">
+        <item quantity="one">Izvožen %1$d živilski izdelek</item>
+        <item quantity="two">Izvožena %1$d živilska izdelka</item>
+        <item quantity="few">Izvoženi %1$d živilski izdelki</item>
+        <item quantity="other">Izvoženih %1$d živilskih izdelkov</item>
+    </plurals>
+    <string name="headline_auto_calculate_energy">Samodejno izračunavanje energijske vrednosti</string>
+    <string name="headline_manual_energy_input">Ročni vnos energijske vrednosti</string>
+    <string name="headline_quick_add">Hitri vnos</string>
+    <string name="description_quick_add">Hitri vnos omogoča beleženje brez iskanja določenih živil. To je hiter način beleženja obrokov, kadar že poznate število kalorij ali želite preprosto oceno.</string>
+    <string name="action_open_poll">Odprti anketo</string>
+    <string name="headline_colors">Barve</string>
+    <string name="description_colors">Prilagodite barve aplikacije</string>
+    <string name="headline_custom_palette">Barvna paleta po meri</string>
+    <string name="description_custom_palette">Nastavitev lastne barvne palete</string>
+    <string name="headline_dynamic_colors">Dinamične barve</string>
+    <string name="description_dynamic_colors">Uporaba sistemskih barv</string>
+    <string name="headline_palette_style">Slog barve palete</string>
+    <string name="headline_contrast">Kontrast</string>
+    <string name="headline_amoled">AMOLED</string>
+    <string name="headline_light">Svetla</string>
+    <string name="headline_dark">Temna</string>
+    <string name="headline_appearance">Izgled aplikacije</string>
+    <string name="headline_theme">Tema</string>
+    <string name="headline_pick_a_color">Izberite barvo</string>
+    <string name="headline_nutrients_colors">Barve hranil</string>
+    <string name="description_nutrients_colors_reset">Nastavitve barv hranil bodo ponastavljene na privzete vrednosti</string>
+    <string name="headline_sponsorship_goals">Cilji</string>
+    <string name="description_sponsorship_goals">S sponzoriranjem pomagate ohraniti neodvisnost in trajnost tega projekta, ki se ne zanaša na izkoriščevalske poslovne modele. Številne komercialne aplikacije služijo denar z zbiranjem in prodajo podatkov o uporabnikih, usmerjanjem oglasov ali spodbujanjem uporabnikov k zasvojenim vzorcem sodelovanja. Sponzorstvo zagotavlja, da bo ta aplikacija ostala prijazna do zasebnosti, pregledna in osredotočena na zagotavljanje resnične vrednosti, ne da bi ogrožala vaše zaupanje ali dobro počutje.</string>
+    <string name="description_x_away_from_next_goal">%1$s še do naslednjega cilja</string>
+    <string name="headline_sponsors">Sponzorji</string>
+    <string name="description_no_sponsors_this_month">Ta mesec ni sponzorjev</string>
+    <string name="headline_latest" description="Latest, most recent">Najnovejše</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Največje</string>
+    <string name="headline_this_month_we_raised">Ta mesec smo zbrali %1$s</string>
+    <string name="description_sponsors_privacy">Food You resno jemlje vašo zasebnost. Zato se ne bo povezala z nobeno zunanjo storitvijo, če tega ne dovolite. Če si želite ogledati najnovejše sponzorje, morate podatke prenesti s strežnikov Food You.</string>
+    <string name="action_allow" description="Allow something">Omogočite</string>
+    <string name="action_next_month">Naslednji mesec</string>
+    <string name="action_previous_month">Prejšnji mesec</string>
+    <string name="headline_sponsor_methods">Načini</string>
+    <string name="headline_save_database">Shranjevanje podatkovne zbirke</string>
+    <string name="description_save_database">Shranite kopijo svoje zbirke podatkov</string>
+    <string name="headline_replace_database">Zamenjava podatkovne baze</string>
+    <string name="description_replace_database">Zamenjajte svojo podatkovno zbirko s predhodno shranjeno kopijo</string>
+    <string name="action_replace">Zamenjaj</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Podatkovna zbirka bo ZAMENJENA, vsi trenutni podatki pa bodo IZUBLJENI. Aplikacija se bo po zamenjavi podatkovne baze ponovno zagnala. Morda boste morali aplikacijo ponovno odpreti.</string>
+    <string name="action_sign_in">Prijavite se</string>
+    <string name="headline_terms_of_service">Pogoji uporabe storitev</string>
+    <string name="headline_privacy_policy">Politika zasebnosti</string>
+    <string name="error_there_was_an_error_while_signing_in">Med prijavo je prišlo do napake</string>
+    <string name="headline_random_theme">Naključna tema</string>
+    <string name="description_random_theme">Ob vsakem zagonu aplikacije se uporabi naključna tema</string>
+    <string name="headline_terms_of_use">Pogoji uporabe</string>
+    <string name="onboarding_privacy_tip">Ta aplikacija je odprtokodna in ustvarjena za vas. Spoštujemo vašo zasebnost, vaši podatki ostanejo zasebni</string>
+    <string name="headline_add_profile">Dodajanje profila</string>
+    <string name="headline_how_do_you_want_to_be_called">Kako želite, da vas kličejo?</string>
+    <string name="headline_profile_name">Ime profila</string>
+    <string name="headline_profile_picture">Profilna slika</string>
+    <string name="action_continue">Nadaljuj</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Pozdravljeni, %1$s!</string>
+    <string name="headline_data_backup_and_export">Varnostno kopiranje podatkov &amp; izvoz</string>
+    <string name="headline_privacy">Zasebnost</string>
+    <string name="action_switch_profile">Zamenjaj profil</string>
+    <string name="action_add_profile">Dodaj profil</string>
+    <string name="action_refresh">Osveži</string>
+    <string name="description_not_sure_yet">Še niste prepričani? Kadar koli ga lahko spremenite</string>
+    <string name="question_discard_profile">Zavržite profil?</string>
+    <string name="headline_edit_profile">Urejanje profila</string>
+    <string name="action_delete_profile">Briši profil</string>
+    <string name="headline_delete_profile">Brisanje profila</string>
+    <string name="description_delete_profile">Ta profil bo trajno izbrisan. Vsi z njim povezani podatki bodo za vedno izgubljeni.</string>
+    <string name="action_today" description="Set date to today">Danes</string>
+    <string name="action_fill_in_details">Izpolnite podatke</string>
+    <string name="action_skip_for_now">Za zdaj preskočite</string>
+    <string name="headline_add_more_details">Dodaj več podrobnosti</string>
+    <string name="description_add_more_details_product_form">Z vnosom beljakovin, maščob, ogljikovih hidratov in energijske vrednosti lahko zagotovite natančnejše podatke o hranilni vrednosti</string>
+    <string name="headline_favorite">Najljubši</string>
+    <string name="action_add_a_photo">Dodajte fotografijo</string>
+    <string name="action_remove_a_photo">Odstranite fotografijo</string>
+    <string name="description_values_per">Izberite količino, na kateri temeljijo vaše hranilne vrednosti</string>
+    <string name="description_privacy">Nadzor nad osebnimi podatki</string>
+    <string name="headline_database_backup">Varnostno kopiranje zbirke podatkov</string>
+    <string name="description_replacing_database">Zamenjujem podatkovno bazo, počakajte ...</string>
+    <string name="headline_experimental">Eksperimentalni</string>
+</resources>

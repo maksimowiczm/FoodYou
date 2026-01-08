@@ -54,6 +54,7 @@ private val me = Author("Mateusz Maksimowicz", "https://github.com/maksimowiczm"
 // Someone who helped with the translation
 private val grizzleNL = Author("GrizzleNL", "https://grizzle.nl")
 private val mikropsoft = Author("mikropsoft", "https://github.com/mikropsoft")
+private val DarjanZlobec = Author("Darjan Zlobec", "https://www.rtm.si")
 
 private val EnglishUS =
     Translation(
@@ -87,6 +88,7 @@ val languages =
         Translation("Nederlands (Nederland)", Language.Dutch, false, grizzleNL),
         Translation("Polski (Polska)", Language.Polish, true, me),
         Translation("Português (Brasil)", Language.PortugueseBrazil),
+        Translation("Slovenščina (Slovenija)", Language.Slovenian, false, DarjanZlobec),
         Translation("Türkçe (Türkiye)", Language.Turkish, false, mikropsoft),
         Translation("Русский (Россия)", Language.Russian),
         Translation("Українська (Україна)", Language.Ukrainian),

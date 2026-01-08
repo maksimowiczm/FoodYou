@@ -120,6 +120,7 @@ class OpenFoodFactsProductMapper {
                     polish = nameMap["pl"].takeIfNotBlank(),
                     portugueseBrazil =
                         nameMap["pt_br"].takeIfNotBlank() ?: nameMap["pt"].takeIfNotBlank(),
+                    slovenian = nameMap["sl"].takeIfNotBlank(),
                     turkish = nameMap["tr"].takeIfNotBlank(),
                     russian = nameMap["ru"].takeIfNotBlank(),
                     ukrainian = nameMap["uk"].takeIfNotBlank(),

@@ -54,6 +54,7 @@ class ProductFormTransformer(
                 dutch = if (language == Language.Dutch) name else null,
                 polish = if (language == Language.Polish) name else null,
                 portugueseBrazil = if (language == Language.PortugueseBrazil) name else null,
+                slovenian = if (language == Language.Slovenian) name else null,
                 turkish = if (language == Language.Turkish) name else null,
                 russian = if (language == Language.Russian) name else null,
                 ukrainian = if (language == Language.Ukrainian) name else null,

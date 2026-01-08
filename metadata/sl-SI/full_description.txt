@@ -1,0 +1,15 @@
+<b>Food You</b> je napreden odprtokodni prehranski dnevnik, zgrajen na moderni Material You esetiki. Omogoča ne le štetje kalorij ampak celoten prehanski vnos — iz zanesljivih virov podatkov o hrani ter s prilagodljivim in modernim vmesnikom.
+
+<b>Značilnosti:</b>
+<ul>
+    <li><b>Material You oblikovanje:</b> Dinamično oblikovanje tem, ki se prilagodi vaši napravi za brezhibno vizualno izkušnjo.</li>
+    <li><b>Obsežne podatkovne zbirke hrane:</b> dostopanjte do prehanskih podakov iz zbirk Open Food Facts, USDA FoodCentral in Swiss Food Composition Database.</li>
+    <li><b>Popoln nadzor nad prehranskim vnosom:</b> sledite kalorijam, makrohranilom, vitaminom, mineralom in še več.</li>
+    <li><b>Ustvarite lastne recepte</b> združujte hrano v lastne recepte z avtomatskim preračunavanjem prehranskih vrednosti.</li>
+    <li><b>Dnevni cilji:</b> nastavite in sledite osebnim prehranskim ciljem.</li>
+    <li><b>Prilagodljiv začetni zaslon:</b> prilagodite začetni zaslon z informacijskimi karticami, prilagojenimi vašim zahtevam.</li>
+</ul>
+
+Začnite s sledenjem vaše prehrane že danes z Food You — čist, popoln in popolnoma pod vašim nadzorom.
+
+Ikona aplikacije narejena z <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
