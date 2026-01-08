@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_4_2,
                 v_3_4_1,
                 v_3_4_0,
                 v_3_3_5,
@@ -47,11 +48,24 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_0_0,
             )
 
+    val v_3_4_2 =
+        Version(
+            version = "3.4.2",
+            date = LocalDate(2026, 1, 15),
+            changes = listOf("Added a privacy policy. Food You now has its own website."),
+            bugFixes =
+                listOf(
+                    "Fixed a crash occurring when deleting a product package or serving weight."
+                ),
+            translations = listOf("Added Indonesian", "Added Slovenian"),
+        )
+
     val v_3_4_1 =
         Version(
             version = "3.4.1",
             date = LocalDate(2025, 12, 28),
-            bugFixes = listOf("Fixed crash occurring while downloading from USDA FoodData Central."),
+            bugFixes =
+                listOf("Fixed a crash occurring while downloading from USDA FoodData Central."),
         )
 
     val v_3_4_0 =
