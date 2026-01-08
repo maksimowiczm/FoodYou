@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.food.infrastructure.usda.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.JsonTransformingSerializer
 import kotlinx.serialization.serializer
@@ -29,6 +30,6 @@ data class AbridgedFoodNutrient(
 private object IntSerializer : JsonTransformingSerializer<Int?>(serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement =
         if (element is JsonPrimitive && element.isString)
-            element.content.toIntOrNull()?.let { JsonPrimitive(it) } ?: element
+            element.content.toIntOrNull()?.let { JsonPrimitive(it) } ?: JsonNull
         else element
 }
