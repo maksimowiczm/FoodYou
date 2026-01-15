@@ -19,8 +19,6 @@ kotlin {
 
     val xcfName = "barcodescannerKit"
 
-    iosX64 { binaries.framework { baseName = xcfName } }
-
     iosArm64 { binaries.framework { baseName = xcfName } }
 
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }

@@ -37,7 +37,7 @@ kotlin {
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
-    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "App"
             isStatic = true
@@ -179,7 +179,6 @@ dependencies {
     listOf(
             "kspCommonMainMetadata",
             "kspAndroid",
-            "kspIosX64",
             "kspIosArm64",
             "kspIosSimulatorArm64",
         )
