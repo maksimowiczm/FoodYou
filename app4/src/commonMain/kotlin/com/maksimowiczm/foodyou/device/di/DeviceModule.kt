@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.device.di
 
-import com.maksimowiczm.foodyou.analytics.domain.AppLaunchedEvent
-import com.maksimowiczm.foodyou.common.event.di.eventHandler
+import com.maksimowiczm.foodyou.common.event.di.domainEventHandler
 import com.maksimowiczm.foodyou.device.application.AppLaunchedEventHandler
 import com.maksimowiczm.foodyou.device.domain.ColorProvider
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
@@ -15,9 +14,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val deviceModule = module {
-    eventHandler<AppLaunchedEvent> {
-        AppLaunchedEventHandler(deviceRepository = get(), colorProvider = get())
-    }
+    domainEventHandler { AppLaunchedEventHandler(deviceRepository = get(), colorProvider = get()) }
     factoryOf(::DeviceRepositoryImpl).bind<DeviceRepository>()
     defaultDeviceNameProvider()
     colorProvider()

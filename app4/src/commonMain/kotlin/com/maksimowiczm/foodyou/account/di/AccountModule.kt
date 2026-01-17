@@ -8,8 +8,7 @@ import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.infrastructure.AccountManagerImpl
 import com.maksimowiczm.foodyou.account.infrastructure.AccountRepositoryImpl
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDatabase
-import com.maksimowiczm.foodyou.common.event.di.eventHandler
-import com.maksimowiczm.foodyou.food.domain.LocalFoodDeletedEvent
+import com.maksimowiczm.foodyou.common.event.di.integrationEventHandler
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -24,5 +23,5 @@ val accountModule = module {
 
     factoryOf(::ObservePrimaryAccountUseCaseImpl).bind<ObservePrimaryAccountUseCase>()
 
-    eventHandler<LocalFoodDeletedEvent> { LocalFoodDeletedEventHandler(get()) }
+    integrationEventHandler { LocalFoodDeletedEventHandler(get()) }
 }
