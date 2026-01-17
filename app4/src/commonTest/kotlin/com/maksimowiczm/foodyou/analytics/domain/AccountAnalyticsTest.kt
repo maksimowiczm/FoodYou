@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
-import com.maksimowiczm.foodyou.account.domain.testLocalAccountId
 import com.maksimowiczm.foodyou.common.clock.testClock
+import com.maksimowiczm.foodyou.common.domain.testLocalAccountId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

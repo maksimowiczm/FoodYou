@@ -1,8 +1,7 @@
 package com.maksimowiczm.foodyou.account.domain
 
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
-
-fun testLocalAccountId(id: String = "test-account-id"): LocalAccountId = LocalAccountId(id)
+import com.maksimowiczm.foodyou.common.domain.testLocalAccountId
 
 fun testAccount(
     localAccountId: LocalAccountId = testLocalAccountId(),

@@ -16,11 +16,8 @@ class AppLaunchUseCase(
 ) {
     suspend fun execute(localAccountId: LocalAccountId) {
         val account = accountAnalyticsRepository.load(localAccountId)
-
         account.recordAppLaunch(versionName = appConfig.versionName, clock = clock)
-
         accountAnalyticsRepository.save(account)
-
         eventBus.publish(account.events)
     }
 }
