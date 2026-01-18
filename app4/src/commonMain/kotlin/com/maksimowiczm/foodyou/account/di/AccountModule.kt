@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.account.di
 
-import com.maksimowiczm.foodyou.account.application.LocalFoodDeletedEventHandler
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCaseImpl
+import com.maksimowiczm.foodyou.account.application.RemoveDeletedFoodFromFavoritesHandler
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.infrastructure.AccountManagerImpl
@@ -23,5 +23,5 @@ val accountModule = module {
 
     factoryOf(::ObservePrimaryAccountUseCaseImpl).bind<ObservePrimaryAccountUseCase>()
 
-    integrationEventHandler { LocalFoodDeletedEventHandler(get()) }
+    integrationEventHandler { RemoveDeletedFoodFromFavoritesHandler(get()) }
 }

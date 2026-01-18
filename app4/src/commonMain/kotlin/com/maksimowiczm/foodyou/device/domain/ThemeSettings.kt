@@ -20,7 +20,7 @@ data class ThemeSettings(
 
         private val possibleContrast = arrayOf(ThemeContrast.Default)
 
-        fun random(colorProvider: ColorProvider, isAmoled: Boolean): Theme.Custom =
+        fun random(colorProvider: RandomColorProvider, isAmoled: Boolean): Theme.Custom =
             Theme.Custom(
                 seedColor = colorProvider.random(255),
                 style = possibleStyles.random(),

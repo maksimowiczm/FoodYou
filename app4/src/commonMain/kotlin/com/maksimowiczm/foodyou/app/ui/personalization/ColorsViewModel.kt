@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.app.ui.personalization
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.device.domain.ColorProvider
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository
+import com.maksimowiczm.foodyou.device.domain.RandomColorProvider
 import com.maksimowiczm.foodyou.device.domain.Theme
 import com.maksimowiczm.foodyou.device.domain.ThemeOption
 import com.maksimowiczm.foodyou.device.domain.update
@@ -16,7 +16,7 @@ import kotlinx.coroutines.runBlocking
 
 class ColorsViewModel(
     private val deviceRepository: DeviceRepository,
-    private val colorProvider: ColorProvider,
+    private val colorProvider: RandomColorProvider,
 ) : ViewModel() {
     private val _themeSettings = deviceRepository.observe().map { it.themeSettings }
 

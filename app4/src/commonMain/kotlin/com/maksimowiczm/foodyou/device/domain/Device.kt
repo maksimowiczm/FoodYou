@@ -24,7 +24,7 @@ class Device(
     var hideScreen: Boolean = hideScreen
         private set
 
-    fun randomizeTheme(colorProvider: ColorProvider) {
+    fun randomizeTheme(colorProvider: RandomColorProvider) {
         val isAmoled =
             when (val theme = themeSettings.theme) {
                 is Theme.Custom -> theme.isAmoled

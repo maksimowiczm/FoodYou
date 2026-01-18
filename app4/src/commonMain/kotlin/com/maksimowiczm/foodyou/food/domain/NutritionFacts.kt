@@ -1,5 +1,14 @@
 package com.maksimowiczm.foodyou.food.domain
 
+/**
+ * Comprehensive nutritional information for a food product.
+ *
+ * Contains macronutrients, vitamins, minerals, and other nutritional components. All values are
+ * represented as NutrientValue, which tracks data completeness. Supports arithmetic operations for
+ * calculating combined or scaled nutrition facts.
+ *
+ * By default, all nutrient values are incomplete (null), indicating missing data.
+ */
 data class NutritionFacts(
     val proteins: NutrientValue = NutrientValue.Incomplete(null),
     val carbohydrates: NutrientValue = NutrientValue.Incomplete(null),
@@ -45,6 +54,11 @@ data class NutritionFacts(
     val iodine: NutrientValue = NutrientValue.Incomplete(null),
     val chromium: NutrientValue = NutrientValue.Incomplete(null),
 ) {
+    /**
+     * Scales all nutrient values by the given multiplier.
+     *
+     * Useful for calculating nutrition for different serving sizes.
+     */
     operator fun times(multiplier: Double): NutritionFacts =
         NutritionFacts(
             proteins = proteins * multiplier,
@@ -92,6 +106,11 @@ data class NutritionFacts(
             chromium = chromium * multiplier,
         )
 
+    /**
+     * Scales all nutrient values by dividing by the given divisor.
+     *
+     * Useful for normalizing nutrition to standard serving sizes.
+     */
     operator fun div(divisor: Double): NutritionFacts =
         NutritionFacts(
             proteins = proteins / divisor,
@@ -139,6 +158,12 @@ data class NutritionFacts(
             chromium = chromium / divisor,
         )
 
+    /**
+     * Combines two NutritionFacts by summing corresponding nutrient values.
+     *
+     * Useful for calculating total nutrition from multiple food items. Completeness is preserved
+     * according to NutrientValue addition rules.
+     */
     operator fun plus(other: NutritionFacts): NutritionFacts =
         NutritionFacts(
             proteins = proteins + other.proteins,
@@ -187,59 +212,12 @@ data class NutritionFacts(
         )
 
     companion object {
-
         /**
-         * A [NutritionFacts] instance with all nutrient values set to zero and marked as complete.
+         * Creates a NutritionFacts instance requiring all nutrient values to be explicitly
+         * provided.
+         *
+         * Prevents accidental omission of nutrient values during construction.
          */
-        val zeroCompleted: NutritionFacts
-            get() =
-                NutritionFacts(
-                    proteins = NutrientValue.Complete(0.0),
-                    carbohydrates = NutrientValue.Complete(0.0),
-                    energy = NutrientValue.Complete(0.0),
-                    fats = NutrientValue.Complete(0.0),
-                    saturatedFats = NutrientValue.Complete(0.0),
-                    transFats = NutrientValue.Complete(0.0),
-                    monounsaturatedFats = NutrientValue.Complete(0.0),
-                    polyunsaturatedFats = NutrientValue.Complete(0.0),
-                    omega3 = NutrientValue.Complete(0.0),
-                    omega6 = NutrientValue.Complete(0.0),
-                    sugars = NutrientValue.Complete(0.0),
-                    addedSugars = NutrientValue.Complete(0.0),
-                    dietaryFiber = NutrientValue.Complete(0.0),
-                    solubleFiber = NutrientValue.Complete(0.0),
-                    insolubleFiber = NutrientValue.Complete(0.0),
-                    salt = NutrientValue.Complete(0.0),
-                    cholesterol = NutrientValue.Complete(0.0),
-                    caffeine = NutrientValue.Complete(0.0),
-                    vitaminA = NutrientValue.Complete(0.0),
-                    vitaminB1 = NutrientValue.Complete(0.0),
-                    vitaminB2 = NutrientValue.Complete(0.0),
-                    vitaminB3 = NutrientValue.Complete(0.0),
-                    vitaminB5 = NutrientValue.Complete(0.0),
-                    vitaminB6 = NutrientValue.Complete(0.0),
-                    vitaminB7 = NutrientValue.Complete(0.0),
-                    vitaminB9 = NutrientValue.Complete(0.0),
-                    vitaminB12 = NutrientValue.Complete(0.0),
-                    vitaminC = NutrientValue.Complete(0.0),
-                    vitaminD = NutrientValue.Complete(0.0),
-                    vitaminE = NutrientValue.Complete(0.0),
-                    vitaminK = NutrientValue.Complete(0.0),
-                    manganese = NutrientValue.Complete(0.0),
-                    magnesium = NutrientValue.Complete(0.0),
-                    potassium = NutrientValue.Complete(0.0),
-                    calcium = NutrientValue.Complete(0.0),
-                    copper = NutrientValue.Complete(0.0),
-                    zinc = NutrientValue.Complete(0.0),
-                    sodium = NutrientValue.Complete(0.0),
-                    iron = NutrientValue.Complete(0.0),
-                    phosphorus = NutrientValue.Complete(0.0),
-                    selenium = NutrientValue.Complete(0.0),
-                    iodine = NutrientValue.Complete(0.0),
-                    chromium = NutrientValue.Complete(0.0),
-                )
-
-        /** Creates a [NutritionFacts] instance requiring all nutrient values to be provided. */
         fun requireAll(
             proteins: NutrientValue,
             carbohydrates: NutrientValue,
@@ -333,5 +311,58 @@ data class NutritionFacts(
     }
 }
 
+/**
+ * Sums a collection of NutritionFacts into a single combined instance.
+ *
+ * Useful for calculating total nutrition from multiple food items in a meal.
+ */
 fun Iterable<NutritionFacts>.sum(): NutritionFacts =
-    this@sum.fold(NutritionFacts.zeroCompleted) { acc, nutrients -> acc + nutrients }
+    this@sum.fold(zeroCompleted) { acc, nutrients -> acc + nutrients }
+
+private val zeroCompleted: NutritionFacts
+    get() =
+        NutritionFacts(
+            proteins = NutrientValue.Complete(0.0),
+            carbohydrates = NutrientValue.Complete(0.0),
+            energy = NutrientValue.Complete(0.0),
+            fats = NutrientValue.Complete(0.0),
+            saturatedFats = NutrientValue.Complete(0.0),
+            transFats = NutrientValue.Complete(0.0),
+            monounsaturatedFats = NutrientValue.Complete(0.0),
+            polyunsaturatedFats = NutrientValue.Complete(0.0),
+            omega3 = NutrientValue.Complete(0.0),
+            omega6 = NutrientValue.Complete(0.0),
+            sugars = NutrientValue.Complete(0.0),
+            addedSugars = NutrientValue.Complete(0.0),
+            dietaryFiber = NutrientValue.Complete(0.0),
+            solubleFiber = NutrientValue.Complete(0.0),
+            insolubleFiber = NutrientValue.Complete(0.0),
+            salt = NutrientValue.Complete(0.0),
+            cholesterol = NutrientValue.Complete(0.0),
+            caffeine = NutrientValue.Complete(0.0),
+            vitaminA = NutrientValue.Complete(0.0),
+            vitaminB1 = NutrientValue.Complete(0.0),
+            vitaminB2 = NutrientValue.Complete(0.0),
+            vitaminB3 = NutrientValue.Complete(0.0),
+            vitaminB5 = NutrientValue.Complete(0.0),
+            vitaminB6 = NutrientValue.Complete(0.0),
+            vitaminB7 = NutrientValue.Complete(0.0),
+            vitaminB9 = NutrientValue.Complete(0.0),
+            vitaminB12 = NutrientValue.Complete(0.0),
+            vitaminC = NutrientValue.Complete(0.0),
+            vitaminD = NutrientValue.Complete(0.0),
+            vitaminE = NutrientValue.Complete(0.0),
+            vitaminK = NutrientValue.Complete(0.0),
+            manganese = NutrientValue.Complete(0.0),
+            magnesium = NutrientValue.Complete(0.0),
+            potassium = NutrientValue.Complete(0.0),
+            calcium = NutrientValue.Complete(0.0),
+            copper = NutrientValue.Complete(0.0),
+            zinc = NutrientValue.Complete(0.0),
+            sodium = NutrientValue.Complete(0.0),
+            iron = NutrientValue.Complete(0.0),
+            phosphorus = NutrientValue.Complete(0.0),
+            selenium = NutrientValue.Complete(0.0),
+            iodine = NutrientValue.Complete(0.0),
+            chromium = NutrientValue.Complete(0.0),
+        )

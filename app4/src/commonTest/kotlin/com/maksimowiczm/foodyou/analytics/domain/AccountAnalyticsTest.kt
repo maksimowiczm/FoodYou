@@ -70,7 +70,7 @@ class AccountAnalyticsTest {
         val now = Instant.fromEpochSeconds(1_600_000_000)
         val event =
             AppLaunchedEvent(
-                aggregateId = "test-account",
+                accountOwnerId = "test-account",
                 versionName = versionName,
                 timestamp = now,
             )
@@ -87,7 +87,7 @@ class AccountAnalyticsTest {
         val now = Instant.fromEpochSeconds(1_600_000_000)
         val event =
             FirstAppLaunchRecordedEvent(
-                aggregateId = "test-account",
+                accountOwnerId = "test-account",
                 versionName = versionName,
                 timestamp = now,
             )
@@ -105,7 +105,7 @@ class AccountAnalyticsTest {
         val now = Instant.fromEpochSeconds(1_600_000_000)
         val event =
             AppVersionChangedEvent(
-                aggregateId = "test-account",
+                accountOwnerId = "test-account",
                 newVersionName = versionName,
                 timestamp = now,
             )

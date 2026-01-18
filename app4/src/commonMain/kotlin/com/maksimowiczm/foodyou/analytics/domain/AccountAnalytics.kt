@@ -39,7 +39,7 @@ class AccountAnalytics private constructor(val ownerId: LocalAccountId) :
 
         localEvents.add(
             AppLaunchedEvent(
-                aggregateId = ownerId.value,
+                accountOwnerId = ownerId.value,
                 versionName = versionName,
                 timestamp = now,
             )
@@ -48,7 +48,7 @@ class AccountAnalytics private constructor(val ownerId: LocalAccountId) :
         if (firstLaunchEver == null) {
             localEvents.add(
                 FirstAppLaunchRecordedEvent(
-                    aggregateId = ownerId.value,
+                    accountOwnerId = ownerId.value,
                     versionName = versionName,
                     timestamp = now,
                 )
@@ -58,7 +58,7 @@ class AccountAnalytics private constructor(val ownerId: LocalAccountId) :
         if (currentVersion != versionName) {
             localEvents.add(
                 AppVersionChangedEvent(
-                    aggregateId = ownerId.value,
+                    accountOwnerId = ownerId.value,
                     newVersionName = versionName,
                     timestamp = now,
                 )

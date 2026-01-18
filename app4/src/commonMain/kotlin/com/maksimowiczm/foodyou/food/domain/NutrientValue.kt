@@ -3,10 +3,28 @@ package com.maksimowiczm.foodyou.food.domain
 import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 
+/**
+ * Sealed interface representing a nutrient value with completeness tracking.
+ *
+ * Nutrient values can be complete (fully known) or incomplete (missing or partial data). This type
+ * ensures type-safe arithmetic operations while preserving data quality information throughout
+ * calculations.
+ *
+ * ## Arithmetic Rules
+ * - Complete + Complete = Complete
+ * - Complete + Incomplete = Incomplete
+ * - Incomplete + Incomplete = Incomplete (treats null as 0.0)
+ * - Multiplication and division preserve completeness status
+ */
 sealed interface NutrientValue {
+    /** The numeric value, or null if unknown. */
     val value: Double?
 
-    /** Represents a nutrient value that is known and complete. */
+    /**
+     * Represents a nutrient value that is known and complete.
+     *
+     * @property value The complete numeric value
+     */
     @JvmInline
     value class Complete(override val value: Double) : NutrientValue {
         operator fun plus(other: Complete) = Complete(value + other.value)
@@ -17,8 +35,11 @@ sealed interface NutrientValue {
     }
 
     /**
-     * Represents a nutrient value that is not known or incomplete (e.g. not all ingredients have
-     * complete data).
+     * Represents a nutrient value that is not known or incomplete.
+     *
+     * This occurs when not all ingredients have complete nutritional data.
+     *
+     * @property value The partial numeric value, or null if completely unknown
      */
     @JvmInline
     value class Incomplete(override val value: Double?) : NutrientValue {
@@ -57,32 +78,51 @@ sealed interface NutrientValue {
         }
 
     companion object {
+        /** Creates a complete nutrient value from a non-null Double. */
         fun from(value: Double) = Complete(value)
 
+        /** Creates a nutrient value from a nullable Double. */
         fun from(value: Double?) =
             when (value) {
                 null -> Incomplete(value)
                 else -> Complete(value)
             }
 
+        /** Converts a nullable Double to a NutrientValue. */
         fun Double?.toNutrientValue() = from(this)
 
+        /** Converts a nullable Float to a NutrientValue. */
         fun Float?.toNutrientValue() = from(this?.toDouble())
     }
 }
 
+/**
+ * Type-safe check if the nutrient value is complete.
+ *
+ * Uses a contract to smart-cast the receiver to NutrientValue.Complete.
+ */
 fun NutrientValue.isComplete(): Boolean {
     contract { returns(true) implies (this@isComplete is NutrientValue.Complete) }
 
     return this is NutrientValue.Complete
 }
 
+/**
+ * Type-safe check if the nutrient value is incomplete.
+ *
+ * Uses a contract to smart-cast the receiver to NutrientValue.Incomplete.
+ */
 fun NutrientValue.isIncomplete(): Boolean {
     contract { returns(true) implies (this@isIncomplete is NutrientValue.Incomplete) }
 
     return this is NutrientValue.Incomplete
 }
 
+/**
+ * Sums a list of nutrient values, preserving completeness information.
+ *
+ * @return Complete if all values are complete, otherwise Incomplete
+ */
 fun List<NutrientValue>.sum(): NutrientValue =
     this.fold<NutrientValue, NutrientValue>(NutrientValue.Complete(0.0)) { acc, nutrientValue ->
         acc + nutrientValue
