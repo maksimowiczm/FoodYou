@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.domain.LocalFoodDeletedEvent
-import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.food.infrastructure.usda.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.food.infrastructure.user.UserFoodRepositoryImpl
@@ -20,11 +19,11 @@ class FoodProductRepositoryImpl(
     private val foodDataCentralRepository: FoodDataCentralRepository,
     private val integrationEventBus: EventBus<IntegrationEvent>,
 ) : FoodProductRepository {
-    override fun observe(queryParameters: QueryParameters): Flow<FoodProductRepository.FoodStatus> =
-        when (queryParameters) {
-            is QueryParameters.FoodDataCentral -> foodDataCentralRepository.observe(queryParameters)
-            is QueryParameters.Local -> userFoodRepository.observe(queryParameters)
-            is QueryParameters.OpenFoodFacts -> openFoodFactsRepository.observe(queryParameters)
+    override fun observe(identity: FoodProductIdentity): Flow<FoodProductRepository.FoodStatus> =
+        when (identity) {
+            is FoodProductIdentity.FoodDataCentral -> foodDataCentralRepository.observe(identity)
+            is FoodProductIdentity.Local -> userFoodRepository.observeFoodStatus(identity)
+            is FoodProductIdentity.OpenFoodFacts -> openFoodFactsRepository.observe(identity)
         }
 
     override suspend fun refresh(

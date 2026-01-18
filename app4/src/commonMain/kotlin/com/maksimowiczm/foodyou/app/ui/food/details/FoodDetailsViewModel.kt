@@ -11,7 +11,6 @@ import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository.FoodStatus
-import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,18 +57,9 @@ class FoodDetailsViewModel(
     private val eventChannel = Channel<FoodDetailsUiEvent>()
     val uiEvents = eventChannel.receiveAsFlow()
 
-    private val queryParameters: QueryParameters =
-        when (identity) {
-            is FoodProductIdentity.FoodDataCentral -> QueryParameters.FoodDataCentral(identity)
-
-            is FoodProductIdentity.Local -> QueryParameters.Local(identity)
-
-            is FoodProductIdentity.OpenFoodFacts -> QueryParameters.OpenFoodFacts(identity)
-        }
-
     private val foodProduct =
         foodProductRepository
-            .observe(queryParameters)
+            .observe(identity)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),

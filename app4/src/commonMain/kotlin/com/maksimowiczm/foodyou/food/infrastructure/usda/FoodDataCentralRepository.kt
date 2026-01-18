@@ -16,7 +16,6 @@ import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository.FoodStatus
-import com.maksimowiczm.foodyou.food.domain.QueryParameters
 import com.maksimowiczm.foodyou.food.infrastructure.usda.network.FoodDataCentralRemoteDataSource
 import com.maksimowiczm.foodyou.food.infrastructure.usda.room.FoodDataCentralDao
 import com.maksimowiczm.foodyou.food.infrastructure.usda.room.FoodDataCentralDatabase
@@ -97,10 +96,10 @@ class FoodDataCentralRepository(
         }
     }
 
-    fun observe(parameters: QueryParameters.FoodDataCentral): Flow<FoodStatus> = channelFlow {
-        send(FoodStatus.Loading(parameters.identity, null))
+    fun observe(identity: FoodProductIdentity.FoodDataCentral): Flow<FoodStatus> = channelFlow {
+        send(FoodStatus.Loading(identity, null))
 
-        val fdcId = parameters.identity.fdcId
+        val fdcId = identity.fdcId
 
         val localProduct = dao.observe(fdcId).first()
 
@@ -113,9 +112,9 @@ class FoodDataCentralRepository(
                 send(FoodStatus.Available(mapper.foodProductDto(entity)))
             } catch (e: FoodDatabaseError) {
                 when (e) {
-                    is FoodDatabaseError.ProductNotFound ->
-                        send(FoodStatus.NotFound(parameters.identity))
-                    else -> send(FoodStatus.Error(parameters.identity, null, e))
+                    is FoodDatabaseError.ProductNotFound -> send(FoodStatus.NotFound(identity))
+
+                    else -> send(FoodStatus.Error(identity, null, e))
                 }
             }
         } else {
@@ -124,7 +123,7 @@ class FoodDataCentralRepository(
 
         dao.observe(fdcId).drop(1).collectLatest {
             when (it) {
-                null -> send(FoodStatus.NotFound(parameters.identity))
+                null -> send(FoodStatus.NotFound(identity))
                 else -> send(FoodStatus.Available(mapper.foodProductDto(it)))
             }
         }

@@ -17,7 +17,7 @@ interface FoodProductRepository {
      * @param queryParameters The query parameters identifying the food product
      * @return Flow emitting FoodStatus updates as the product loads or changes
      */
-    fun observe(queryParameters: QueryParameters): Flow<FoodStatus>
+    fun observe(identity: FoodProductIdentity): Flow<FoodStatus>
 
     /**
      * Refreshes a food product from Open Food Facts, fetching the latest data.
