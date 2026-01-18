@@ -19,8 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.app.ui.home.HomeCardComposable
 import com.maksimowiczm.foodyou.app.ui.home.HomeState
@@ -41,7 +39,6 @@ object CalendarHomeCard : HomeCardComposable {
         containerColor: Color,
         contentColor: Color,
         shadowElevation: Dp,
-        navController: NavController,
         modifier: Modifier,
         dragHandle: @Composable (() -> Unit),
     ) {
@@ -63,6 +60,4 @@ object CalendarHomeCard : HomeCardComposable {
             }
         }
     }
-
-    override fun NavGraphBuilder.navigationGraph(navController: NavController) = Unit
 }

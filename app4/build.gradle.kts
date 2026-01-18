@@ -60,7 +60,8 @@ kotlin {
             implementation(libs.jetbrains.compose.ui.tooling.preview)
             implementation(libs.jetbrains.compose.navigationevent.compose)
 
-            implementation(libs.jetbrains.compose.navigation.compose)
+            implementation(libs.jetbrains.compose.navigation3.ui)
+            implementation(libs.jetbrains.lifecycle.viewmodelNavigation3)
 
             implementation(libs.androidx.datastore.preferences.core)
 

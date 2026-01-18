@@ -14,9 +14,11 @@ appcompatVersion = "1.7.1"
 coil = "3.3.0"
 colorpickerCompose = "1.1.3"
 composeMultiplatform = "1.10.0"
+composeMultiplatformLifecycle = "2.10.0-alpha07"
 composeMultiplatformMaterial3 = "1.10.0-alpha05"
 composeNavigation = "2.9.1"
-composeNavigationevent = "1.0.0-rc02"
+composeNavigation3 = "1.0.0-alpha06"
+composeNavigationevent = "1.0.0"
 datastorePreferences = "1.2.0"
 fileKit = "0.12.0"
 gmazzoBuildConfig = "6.0.7"
@@ -68,10 +70,12 @@ jetbrains-compose-material-icons-extended = { module = "org.jetbrains.compose.ma
 jetbrains-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMultiplatformMaterial3" }
 jetbrains-compose-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 jetbrains-compose-navigationevent-compose = { module = "org.jetbrains.androidx.navigationevent:navigationevent-compose", version.ref = "composeNavigationevent" }
+jetbrains-compose-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "composeNavigation3" }
 jetbrains-compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeMultiplatform" }
 jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 jetbrains-compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 jetbrains-compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+jetbrains-lifecycle-viewmodelNavigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "composeMultiplatformLifecycle" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }

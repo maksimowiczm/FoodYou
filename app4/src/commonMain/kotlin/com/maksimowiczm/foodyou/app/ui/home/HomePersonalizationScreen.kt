@@ -30,7 +30,6 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.extension.hapticDraggableHandle
@@ -46,11 +45,7 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
-fun HomePersonalizationScreen(
-    onBack: () -> Unit,
-    navController: NavController,
-    modifier: Modifier = Modifier,
-) {
+fun HomePersonalizationScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: HomeViewModel = koinInject()
     val savedHomeOrder by viewModel.homeOrder.collectAsStateWithLifecycle()
     val order =
@@ -60,7 +55,6 @@ fun HomePersonalizationScreen(
         onBack = onBack,
         order = order,
         onReorder = viewModel::reorder,
-        navController = navController,
         modifier = modifier,
     )
 }
@@ -71,7 +65,6 @@ private fun HomePersonalizationScreen(
     onBack: () -> Unit,
     order: List<HomeCardComposable>,
     onReorder: (List<HomeCard>) -> Unit,
-    navController: NavController,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -164,7 +157,6 @@ private fun HomePersonalizationScreen(
                         containerColor = containerColor,
                         contentColor = MaterialTheme.colorScheme.onSurface,
                         shadowElevation = elevation,
-                        navController = navController,
                         modifier =
                             Modifier.semantics {
                                 customActions =

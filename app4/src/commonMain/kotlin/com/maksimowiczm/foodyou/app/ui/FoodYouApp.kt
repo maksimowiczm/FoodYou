@@ -3,15 +3,16 @@ package com.maksimowiczm.foodyou.app.ui
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.rememberNavController
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHost
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavDisplay
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
+import com.maksimowiczm.foodyou.app.navigation.rememberFoodYouNavBackStack
 import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatterProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.app.ui.onboarding.Onboarding
+import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import io.github.vinceglb.filekit.coil.addPlatformFileSupport
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -38,17 +39,16 @@ fun FoodYouApp(userQuery: String?) {
                             Onboarding(onFinish = appViewModel::onFinishOnboarding)
 
                         AppPage.Main -> {
-                            val navController = rememberNavController()
+                            val backStack = rememberFoodYouNavBackStack()
 
-                            LaunchedEffect(navController, userQuery) {
+                            LaunchedEffect(backStack, userQuery) {
                                 if (userQuery != null) {
-                                    navController.navigate(FoodDatabase(userQuery)) {
-                                        popUpTo<FoodDatabase> { inclusive = true }
-                                    }
+                                    backStack.removeLastIf<FoodDatabase>()
+                                    backStack.add(FoodDatabase(userQuery))
                                 }
                             }
 
-                            FoodYouNavHost(navController = navController)
+                            FoodYouNavDisplay(backStack)
                         }
                     }
                 }

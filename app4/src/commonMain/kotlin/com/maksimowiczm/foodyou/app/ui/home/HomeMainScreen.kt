@@ -41,7 +41,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.now
@@ -57,7 +56,6 @@ import org.koin.compose.koinInject
 
 @Composable
 fun HomeMainScreen(
-    navController: NavController,
     selectedProfile: ProfileUiState?,
     onProfile: () -> Unit,
     modifier: Modifier = Modifier,
@@ -68,8 +66,7 @@ fun HomeMainScreen(
         remember(savedHomeOrder) { savedHomeOrder.mapNotNull { homeCardComposablesMap[it] } }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val homeState =
-        rememberHomeState(navController = navController, initialSelectedDate = LocalDate.now())
+    val homeState = rememberHomeState(initialSelectedDate = LocalDate.now())
 
     Scaffold(
         modifier = modifier,

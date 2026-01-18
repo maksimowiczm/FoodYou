@@ -5,8 +5,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.app.ui.home.calendar.CalendarHomeCard
 
@@ -27,10 +25,7 @@ interface HomeCardComposable {
         containerColor: Color,
         contentColor: Color,
         shadowElevation: Dp,
-        navController: NavController,
         modifier: Modifier = Modifier,
         dragHandle: @Composable (() -> Unit),
     )
-
-    fun NavGraphBuilder.navigationGraph(navController: NavController)
 }
