@@ -11,10 +11,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -41,9 +41,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.now
+import com.maksimowiczm.foodyou.app.ui.home.calendar.CalendarCard
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration
@@ -53,7 +55,9 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import org.koin.core.annotation.KoinInternalApi
 
+@OptIn(KoinInternalApi::class)
 @Composable
 fun HomeMainScreen(
     selectedProfile: ProfileUiState?,
@@ -61,9 +65,7 @@ fun HomeMainScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: HomeViewModel = koinInject()
-    val savedHomeOrder by viewModel.homeOrder.collectAsStateWithLifecycle()
-    val order =
-        remember(savedHomeOrder) { savedHomeOrder.mapNotNull { homeCardComposablesMap[it] } }
+    val homeOrder by viewModel.homeOrder.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val homeState = rememberHomeState(initialSelectedDate = LocalDate.now())
@@ -82,18 +84,15 @@ fun HomeMainScreen(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
-            order.forEach { feature ->
-                item(key = feature.feature) {
-                    feature.HomeCard(
-                        homeState = homeState,
-                        paddingValues = PaddingValues(horizontal = 8.dp),
-                        modifier =
-                            Modifier.animateItem(
-                                fadeInSpec = null,
-                                placementSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-                                fadeOutSpec = null,
-                            ),
-                    )
+            homeOrder.forEach {
+                item(key = it) {
+                    when (it) {
+                        HomeCard.Calendar ->
+                            CalendarCard(
+                                homeState = homeState,
+                                modifier = Modifier.padding(horizontal = 8.dp),
+                            )
+                    }
                     Spacer(Modifier.height(8.dp))
                 }
             }

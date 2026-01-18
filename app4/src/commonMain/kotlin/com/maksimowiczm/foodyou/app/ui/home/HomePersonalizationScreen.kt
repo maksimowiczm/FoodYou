@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.extension.hapticDraggableHandle
+import com.maksimowiczm.foodyou.app.ui.home.calendar.CalendarCardPersonalizationCard
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -47,13 +47,11 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 fun HomePersonalizationScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: HomeViewModel = koinInject()
-    val savedHomeOrder by viewModel.homeOrder.collectAsStateWithLifecycle()
-    val order =
-        remember(savedHomeOrder) { savedHomeOrder.mapNotNull { homeCardComposablesMap[it] } }
+    val homeOrder by viewModel.homeOrder.collectAsStateWithLifecycle()
 
     HomePersonalizationScreen(
         onBack = onBack,
-        order = order,
+        order = homeOrder,
         onReorder = viewModel::reorder,
         modifier = modifier,
     )
@@ -63,7 +61,7 @@ fun HomePersonalizationScreen(onBack: () -> Unit, modifier: Modifier = Modifier)
 @Composable
 private fun HomePersonalizationScreen(
     onBack: () -> Unit,
-    order: List<HomeCardComposable>,
+    order: List<HomeCard>,
     onReorder: (List<HomeCard>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -84,7 +82,7 @@ private fun HomePersonalizationScreen(
                 }
         }
 
-    val moveUp: (HomeCardComposable) -> Boolean = {
+    val moveUp: (HomeCard) -> Boolean = {
         val index = localOrder.indexOf(it)
         if (index > 0) {
             localOrder = localOrder.toMutableList().apply { add(index - 1, removeAt(index)) }
@@ -94,7 +92,7 @@ private fun HomePersonalizationScreen(
         }
     }
 
-    val moveDown: (HomeCardComposable) -> Boolean = {
+    val moveDown: (HomeCard) -> Boolean = {
         val index = localOrder.indexOf(it)
         if (index < localOrder.size - 1) {
             localOrder = localOrder.toMutableList().apply { add(index + 1, removeAt(index)) }
@@ -110,7 +108,7 @@ private fun HomePersonalizationScreen(
             .distinctUntilChanged()
             .filterNot { it.isEmpty() }
             .debounce(50)
-            .collectLatest { order -> latestOnReorder(order.map { it.feature }) }
+            .collectLatest { order -> latestOnReorder(order) }
     }
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -139,12 +137,11 @@ private fun HomePersonalizationScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = paddingValues,
         ) {
-            items(items = localOrder, key = { it.feature }) { card ->
+            items(items = localOrder, key = { it }) { card ->
                 val moveUpString = stringResource(Res.string.action_move_up)
                 val moveDownString = stringResource(Res.string.action_move_down)
 
-                ReorderableItem(state = reorderableLazyListState, key = card.feature) { isDragging
-                    ->
+                ReorderableItem(state = reorderableLazyListState, key = card) { isDragging ->
                     val elevation by animateDpAsState(if (isDragging) 8.dp else 0.dp)
                     val containerColor by
                         animateColorAsState(
@@ -152,27 +149,32 @@ private fun HomePersonalizationScreen(
                             else MaterialTheme.colorScheme.surfaceContainer
                         )
 
-                    card.HomeCardPersonalizationCard(
-                        paddingValues = PaddingValues(8.dp),
-                        containerColor = containerColor,
-                        contentColor = MaterialTheme.colorScheme.onSurface,
-                        shadowElevation = elevation,
-                        modifier =
-                            Modifier.semantics {
-                                customActions =
-                                    listOf(
-                                        CustomAccessibilityAction(
-                                            label = moveUpString,
-                                            action = { moveUp(card) },
-                                        ),
-                                        CustomAccessibilityAction(
-                                            label = moveDownString,
-                                            action = { moveDown(card) },
-                                        ),
-                                    )
-                            },
-                        dragHandle = { DragHandle(modifier = Modifier.hapticDraggableHandle()) },
-                    )
+                    when (card) {
+                        HomeCard.Calendar -> {
+                            CalendarCardPersonalizationCard(
+                                containerColor = containerColor,
+                                contentColor = MaterialTheme.colorScheme.onSurface,
+                                shadowElevation = elevation,
+                                modifier =
+                                    Modifier.semantics {
+                                        customActions =
+                                            listOf(
+                                                CustomAccessibilityAction(
+                                                    label = moveUpString,
+                                                    action = { moveUp(card) },
+                                                ),
+                                                CustomAccessibilityAction(
+                                                    label = moveDownString,
+                                                    action = { moveDown(card) },
+                                                ),
+                                            )
+                                    },
+                                dragHandle = {
+                                    DragHandle(modifier = Modifier.hapticDraggableHandle())
+                                },
+                            )
+                        }
+                    }
                 }
             }
         }
