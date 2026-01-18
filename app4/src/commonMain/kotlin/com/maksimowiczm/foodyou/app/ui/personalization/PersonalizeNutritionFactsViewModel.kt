@@ -30,8 +30,7 @@ class PersonalizeNutritionFactsViewModel(
 
     fun updateOrder(order: List<NutrientsOrder>) {
         viewModelScope.launch {
-            val account =
-                observePrimaryAccountUseCase.observe().first() ?: error("No primary account")
+            val account = observePrimaryAccountUseCase.observe().first()
             account.updateSettings { it.copy(nutrientsOrder = order) }
             accountRepository.save(account)
         }

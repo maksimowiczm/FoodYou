@@ -50,8 +50,7 @@ class PersonalizationViewModel(
 
     fun updateEnergyFormat(energyFormat: EnergyFormat) {
         viewModelScope.launch {
-            val account =
-                observePrimaryAccountUseCase.observe().first() ?: error("No primary account")
+            val account = observePrimaryAccountUseCase.observe().first()
             account.updateSettings { it.copy(energyFormat = energyFormat) }
             accountRepository.save(account)
         }

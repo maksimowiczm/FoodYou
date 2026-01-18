@@ -51,7 +51,6 @@ class OpenFoodFactsRemoteMediator(
                                     when (query) {
                                         is SearchQuery.Barcode -> query.barcode
                                         is SearchQuery.OpenFoodFactsUrl -> query.barcode
-                                        else -> error("Unreachable")
                                     }
 
                                 val existingProduct = dao.observeCountByBarcode(barcode).first()
