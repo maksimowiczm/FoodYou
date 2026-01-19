@@ -19,9 +19,9 @@ val DarkNutrientsPalette =
 
 val LightNutrientsPalette =
     NutrientsPalette(
-        proteinsOnSurfaceContainer = Color(0XFF0D94BA),
-        carbohydratesOnSurfaceContainer = Color(0XFF8A7CDA),
-        fatsOnSurfaceContainer = Color(0XFFA48423),
+        proteinsOnSurfaceContainer = Color(0xFF0A7694),
+        carbohydratesOnSurfaceContainer = Color(0xFF6D5CD1),
+        fatsOnSurfaceContainer = Color(0xFF876C1D),
     )
 
 val LocalNutrientsPalette = staticCompositionLocalOf { NutrientsPalette() }
