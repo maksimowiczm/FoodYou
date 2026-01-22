@@ -230,7 +230,7 @@ private val RoomFoodSearch.suggestedMeasurement
     get() =
         when {
             measurementType != null && measurementValue != null ->
-                Measurement.from(measurementType, measurementValue.toDouble())
+                Measurement.from(measurementType, measurementValue)
 
             recipeId != null || servingWeight != null -> Measurement.Serving(1.0)
             totalWeight != null -> Measurement.Package(1.0)

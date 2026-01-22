@@ -93,7 +93,9 @@ private fun MealSettingsScreen(
     var isReordering by rememberSaveable { mutableStateOf(false) }
     var showForm by rememberSaveable { mutableStateOf(false) }
     val formFocusRequester = remember { FocusRequester() }
-    LaunchedEffect(showForm) { runCatching { formFocusRequester.requestFocus() } }
+    LaunchedEffect(showForm) {
+        val _ = runCatching { formFocusRequester.requestFocus() }
+    }
 
     val lazyListState = rememberLazyListState()
     var mealsOrder by remember(meals) { mutableStateOf(meals) }

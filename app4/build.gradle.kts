@@ -28,6 +28,7 @@ kotlin {
         optIn.add("kotlinx.coroutines.ExperimentalCoroutinesApi")
         optIn.add("kotlin.uuid.ExperimentalUuidApi")
         optIn.add("kotlin.contracts.ExperimentalContracts")
+        freeCompilerArgs.add("-Xreturn-value-checker=check")
     }
 
     androidTarget {

@@ -52,7 +52,7 @@ abstract class MealDao {
     open suspend fun updateMealsRanks(map: Map<Long, Int>) {
         val meals = observeMeals().first()
 
-        meals.map {
+        meals.forEach {
             val updated = it.copy(rank = map[it.id] ?: it.rank)
 
             updateMeal(updated)

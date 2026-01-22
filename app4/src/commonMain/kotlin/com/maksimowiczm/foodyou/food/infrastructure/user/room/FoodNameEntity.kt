@@ -44,6 +44,7 @@ data class FoodNameEntity(
                 chineseSimplified,
             )
             .any { !it.isNullOrBlank() }
+            .also { require(it) { "At least one language must be provided" } }
     }
 
     val fallback: String

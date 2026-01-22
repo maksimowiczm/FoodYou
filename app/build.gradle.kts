@@ -33,8 +33,8 @@ kotlin {
         optIn.add("androidx.compose.ui.ExperimentalComposeUiApi")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
-        optIn.add("kotlin.time.ExperimentalTime")
         optIn.add("kotlinx.coroutines.ExperimentalCoroutinesApi")
+        freeCompilerArgs.add("-Xreturn-value-checker=check")
     }
 
     androidTarget {

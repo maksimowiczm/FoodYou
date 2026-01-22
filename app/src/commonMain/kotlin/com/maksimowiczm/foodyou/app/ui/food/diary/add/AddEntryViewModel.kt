@@ -187,7 +187,7 @@ internal class AddEntryViewModel(
             }
 
             val weight = food.weight(measurement)
-            food.unpack(weight).map { (food, measurement) ->
+            food.unpack(weight).forEach { (food, measurement) ->
                 val diaryFood = food.toDiaryFood()
 
                 createFoodDiaryEntryUseCase

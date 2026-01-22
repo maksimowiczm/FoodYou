@@ -38,7 +38,7 @@ internal fun QuickAddScreen(
 
     LaunchedEffect(Unit) {
         delay(100)
-        runCatching { focusRequester.requestFocus() }
+        val _ = runCatching { focusRequester.requestFocus() }
     }
 
     Scaffold(
