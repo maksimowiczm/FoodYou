@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItem
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
+import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
-import com.maksimowiczm.foodyou.app.ui.common.utility.stringResource
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.Thumbnail
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
@@ -33,43 +33,45 @@ internal fun FoodSearchListItem(
 
     // Calculate quantity for 100 ml or 100 g
     val absoluteQuantity =
-        QuantityCalculator.calculateAbsoluteQuantity(
-                food.suggestedQuantity,
-                food.packageQuantity,
-                food.servingQuantity,
-            )
-            .fold(
-                onSuccess = { it },
-                onError = {
-                    if (food.isLiquid) AbsoluteQuantity.Volume(Milliliters(100.0))
-                    else AbsoluteQuantity.Weight(Grams(100.0))
-                },
-            )
-
-    val factor =
-        when (absoluteQuantity) {
-            is AbsoluteQuantity.Volume -> absoluteQuantity.volume.milliliters / 100.0
-            is AbsoluteQuantity.Weight -> absoluteQuantity.weight.grams / 100.0
+        remember(food) {
+            QuantityCalculator.calculateAbsoluteQuantity(
+                    food.suggestedQuantity,
+                    food.packageQuantity,
+                    food.servingQuantity,
+                )
+                .fold(
+                    onSuccess = { it },
+                    onError = {
+                        if (food.isLiquid) AbsoluteQuantity.Volume(Milliliters(100.0))
+                        else AbsoluteQuantity.Weight(Grams(100.0))
+                    },
+                )
         }
 
-    val measurementFacts = food.nutritionFacts * factor
-    val proteins = measurementFacts.proteins.value
-    val carbohydrates = measurementFacts.carbohydrates.value
-    val fats = measurementFacts.fats.value
-    val energy = measurementFacts.energy.value
+    val measurementFacts =
+        remember(food, absoluteQuantity) {
+            val factor =
+                when (absoluteQuantity) {
+                    is AbsoluteQuantity.Volume -> absoluteQuantity.volume.milliliters / 100.0
+                    is AbsoluteQuantity.Weight -> absoluteQuantity.weight.grams / 100.0
+                }
+
+            food.nutritionFacts * factor
+        }
+
     val measurementString =
-        food.suggestedQuantity.stringResource(food.packageQuantity, food.servingQuantity)
-            ?: absoluteQuantity.stringResource()
+        food.suggestedQuantity
+            .stringResource(food.packageQuantity, food.servingQuantity)
+            .fold(onSuccess = { it }, onError = { absoluteQuantity.stringResource() })
 
     FoodSearchListItem(
         headline = food.localizedName(nameSelector),
-        proteins = proteins,
-        carbohydrates = carbohydrates,
-        fats = fats,
-        energy = energy,
+        proteins = measurementFacts.proteins.value,
+        carbohydrates = measurementFacts.carbohydrates.value,
+        fats = measurementFacts.fats.value,
+        energy = measurementFacts.energy.value,
         quantity = { Text(measurementString) },
         image = image,
-        isRecipe = false,
         onClick = onClick,
         modifier = modifier,
     )
@@ -84,14 +86,13 @@ private fun FoodSearchListItem(
     energy: Double?,
     quantity: @Composable () -> Unit,
     image: @Composable (() -> Unit)?,
-    isRecipe: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val g = stringResource(Res.string.unit_gram_short)
 
     FoodListItem(
-        name = { Text(text = headline) },
+        headline = { Text(text = headline) },
         image = image,
         proteins = {
             val text = proteins?.formatClipZeros() ?: "?"
@@ -112,7 +113,6 @@ private fun FoodSearchListItem(
             Text(text)
         },
         quantity = quantity,
-        isRecipe = isRecipe,
         modifier = modifier,
         onClick = onClick,
     )
