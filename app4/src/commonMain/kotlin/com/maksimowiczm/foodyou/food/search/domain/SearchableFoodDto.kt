@@ -5,7 +5,6 @@ import com.maksimowiczm.foodyou.common.domain.Quantity
 import com.maksimowiczm.foodyou.food.domain.FoodBrand
 import com.maksimowiczm.foodyou.food.domain.FoodImage
 import com.maksimowiczm.foodyou.food.domain.FoodName
-import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.NutritionFacts
 
@@ -19,9 +18,4 @@ data class SearchableFoodDto(
     val packageQuantity: AbsoluteQuantity?,
     val isLiquid: Boolean,
     val suggestedQuantity: Quantity,
-) {
-    fun localizedName(foodNameSelector: FoodNameSelector): String {
-        val brandSuffix = brand?.let { " (${it.value})" } ?: ""
-        return foodNameSelector.select(name) + brandSuffix
-    }
-}
+)
