@@ -6,15 +6,26 @@ import kotlin.test.assertNotSame
 class DeviceTest {
     @Test
     fun randomizeTheme_updatesThemeSettings() {
-        val device = testDevice()
-        val initialThemeSettings = device.themeSettings
+        val initialThemeSettings =
+            ThemeSettings(
+                randomizeOnLaunch = false,
+                themeOption = ThemeOption.System,
+                theme =
+                    Theme.Custom(
+                        seedColor = ULong.MAX_VALUE,
+                        style = ThemeStyle.Expressive,
+                        contrast = ThemeContrast.Default,
+                        isAmoled = false,
+                    ),
+            )
+        val device = testDevice(themeSettings = initialThemeSettings)
 
-        device.randomizeTheme(colorProvider = { 0xFF0000UL })
+        device.randomizeTheme(colorProvider = { 0UL })
 
         assertNotSame(
-            initialThemeSettings,
-            device.themeSettings,
-            "Theme settings should be updated after randomizing theme.",
+            initialThemeSettings.theme,
+            device.themeSettings.theme,
+            "Theme should be updated after randomizing theme.",
         )
     }
 }
