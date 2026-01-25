@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.device.domain
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNotSame
 
 class DeviceTest {
@@ -26,6 +27,25 @@ class DeviceTest {
             initialThemeSettings.theme,
             device.themeSettings.theme,
             "Theme should be updated after randomizing theme.",
+        )
+    }
+
+    @Test
+    fun updateTheme_disableThemeRandomization() {
+        val initialThemeSettings =
+            ThemeSettings(
+                randomizeOnLaunch = true,
+                themeOption = ThemeOption.System,
+                theme = Theme.Default,
+            )
+        val device = testDevice(themeSettings = initialThemeSettings)
+
+        device.updateTheme(Theme.Default)
+
+        assertEquals(
+            false,
+            device.themeSettings.randomizeOnLaunch,
+            "Randomization should be disabled after theme update.",
         )
     }
 }
