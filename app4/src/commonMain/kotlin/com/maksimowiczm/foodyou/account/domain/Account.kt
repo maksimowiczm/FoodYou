@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.account.domain
 
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import kotlin.uuid.Uuid
 
 class Account
@@ -72,9 +71,5 @@ private constructor(
         require(index != -1) { "Profile with id $id not found" }
 
         _profiles.removeAt(index)
-    }
-
-    fun removeLocalFavoriteFood(identity: FoodProductIdentity.Local) {
-        _profiles.forEach { profile -> profile.removeFavoriteFood(identity) }
     }
 }

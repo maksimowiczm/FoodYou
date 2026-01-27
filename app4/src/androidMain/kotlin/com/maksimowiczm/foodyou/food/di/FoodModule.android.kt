@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.food.di
 
-import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
+import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.infrastructure.AndroidFoodNameSelector
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module

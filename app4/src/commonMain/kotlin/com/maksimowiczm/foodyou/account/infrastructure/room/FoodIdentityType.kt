@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.account.infrastructure.room
 
 enum class FoodIdentityType {
-    LocalProduct,
+    //    UserProduct,
     OpenFoodFacts,
     FoodDataCentral,
 }

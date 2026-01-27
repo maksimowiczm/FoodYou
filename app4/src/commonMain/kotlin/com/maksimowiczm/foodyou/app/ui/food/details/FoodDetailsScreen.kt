@@ -63,10 +63,11 @@ import com.maksimowiczm.foodyou.app.ui.common.saveable.rememberBlockingDataStore
 import com.maksimowiczm.foodyou.app.ui.food.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.app.ui.food.Image
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
-import com.maksimowiczm.foodyou.food.domain.FoodNote
+import com.maksimowiczm.foodyou.common.domain.FoodNote
+import com.maksimowiczm.foodyou.common.domain.FoodSource
+import com.maksimowiczm.foodyou.common.domain.NutritionFacts
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.domain.FoodSource
-import com.maksimowiczm.foodyou.food.domain.NutritionFacts
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
@@ -80,7 +81,6 @@ import org.koin.core.parameter.parametersOf
 fun FoodDetailsScreen(
     identity: FoodProductIdentity,
     onBack: () -> Unit,
-    onEdit: (FoodProductIdentity.Local) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel = koinViewModel<FoodDetailsViewModel> { parametersOf(identity) }
@@ -96,8 +96,6 @@ fun FoodDetailsScreen(
     FoodDetailsScreen(
         onBack = onBack,
         onRefresh = viewModel::refresh,
-        onEdit = onEdit,
-        onDelete = { viewModel.delete() },
         onSetFavorite = viewModel::setFavorite,
         uiState = uiState,
         modifier = modifier,
@@ -108,8 +106,6 @@ fun FoodDetailsScreen(
 private fun FoodDetailsScreen(
     onBack: () -> Unit,
     onRefresh: () -> Unit,
-    onEdit: (FoodProductIdentity.Local) -> Unit,
-    onDelete: (FoodProductIdentity.Local) -> Unit,
     onSetFavorite: (Boolean) -> Unit,
     uiState: FoodDetailsUiState,
     modifier: Modifier = Modifier,
@@ -150,11 +146,7 @@ private fun FoodDetailsScreen(
 
                     when (val identity = uiState.identity) {
                         is FoodProductIdentity.FoodDataCentral -> RefreshMenu(onRefresh = onRefresh)
-                        is FoodProductIdentity.Local ->
-                            LocalMenu(
-                                onEdit = { onEdit(identity) },
-                                onDelete = { onDelete(identity) },
-                            )
+                        is UserFoodProductIdentity -> LocalMenu(onEdit = {}, onDelete = {})
 
                         is FoodProductIdentity.OpenFoodFacts -> RefreshMenu(onRefresh = onRefresh)
                     }

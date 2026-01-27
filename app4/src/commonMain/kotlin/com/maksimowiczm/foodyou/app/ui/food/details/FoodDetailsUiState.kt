@@ -1,13 +1,13 @@
 package com.maksimowiczm.foodyou.app.ui.food.details
 
 import androidx.compose.runtime.*
-import com.maksimowiczm.foodyou.food.domain.FoodImage
-import com.maksimowiczm.foodyou.food.domain.FoodName
-import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
-import com.maksimowiczm.foodyou.food.domain.FoodNote
+import com.maksimowiczm.foodyou.common.domain.FoodImage
+import com.maksimowiczm.foodyou.common.domain.FoodName
+import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
+import com.maksimowiczm.foodyou.common.domain.FoodNote
+import com.maksimowiczm.foodyou.common.domain.FoodSource
+import com.maksimowiczm.foodyou.common.domain.NutritionFacts
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.domain.FoodSource
-import com.maksimowiczm.foodyou.food.domain.NutritionFacts
 
 @Immutable
 sealed interface FoodDetailsUiState {

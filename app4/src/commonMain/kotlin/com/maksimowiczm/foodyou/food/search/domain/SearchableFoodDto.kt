@@ -1,12 +1,12 @@
 package com.maksimowiczm.foodyou.food.search.domain
 
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.FoodBrand
+import com.maksimowiczm.foodyou.common.domain.FoodImage
+import com.maksimowiczm.foodyou.common.domain.FoodName
+import com.maksimowiczm.foodyou.common.domain.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.Quantity
-import com.maksimowiczm.foodyou.food.domain.FoodBrand
-import com.maksimowiczm.foodyou.food.domain.FoodImage
-import com.maksimowiczm.foodyou.food.domain.FoodName
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.domain.NutritionFacts
 
 data class SearchableFoodDto(
     val identity: FoodProductIdentity,

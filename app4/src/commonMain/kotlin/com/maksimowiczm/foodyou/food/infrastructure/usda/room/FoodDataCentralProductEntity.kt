@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.maksimowiczm.foodyou.food.infrastructure.common.NutrientsEntity
+import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsEntity
 
 @Entity(tableName = "FoodDataCentralProduct", indices = [Index("gtinUpc")])
 data class FoodDataCentralProductEntity(

@@ -128,9 +128,6 @@ class FoodDetailsViewModel(
                     isRefreshing.value = false
                 }
 
-                is FoodProductIdentity.Local ->
-                    logger.w { "Refresh is not supported for local food products" }
-
                 is FoodProductIdentity.OpenFoodFacts -> {
                     isRefreshing.value = true
                     delay(500)
@@ -141,17 +138,6 @@ class FoodDetailsViewModel(
                     isRefreshing.value = false
                 }
             }
-        }
-    }
-
-    fun delete() {
-        require(identity is FoodProductIdentity.Local) {
-            "Delete is only supported for local food products"
-        }
-
-        viewModelScope.launch {
-            foodProductRepository.delete(identity)
-            eventChannel.send(FoodDetailsUiEvent.Deleted)
         }
     }
 
