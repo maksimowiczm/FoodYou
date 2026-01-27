@@ -19,37 +19,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.ui.common.component.FoodDataCentralErrorCard
-import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FoodSearchErrorCard(
-    error: FoodDatabaseError,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    when (error) {
-        is FoodDatabaseError.Unknown,
-        is OpenFoodFactsApiError.RateLimitExceeded ->
-            FoodSearchErrorCard(message = error.message, onRetry = onRetry, modifier = modifier)
-
-        is FoodDatabaseError.ProductNotFound -> Unit
-
-        is FoodDatabaseError.FoodDataCentral.ApiKeyDisabled,
-        is FoodDatabaseError.FoodDataCentral.ApiKeyInvalid,
-        is FoodDatabaseError.FoodDataCentral.ApiKeyIsMissing,
-        is FoodDatabaseError.FoodDataCentral.ApiKeyUnauthorized,
-        is FoodDatabaseError.FoodDataCentral.ApiKeyUnverified,
-        is FoodDatabaseError.FoodDataCentral.RateLimitExceeded ->
-            FoodDataCentralErrorCard(error = error, modifier = modifier)
-    }
-}
-
-@Composable
-private fun FoodSearchErrorCard(
     message: String?,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,

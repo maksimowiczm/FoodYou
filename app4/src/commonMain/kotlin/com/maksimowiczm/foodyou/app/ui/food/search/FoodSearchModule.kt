@@ -17,7 +17,6 @@ val foodSearchModule = module {
             get(),
             get(),
             get(),
-            get(),
         )
     }
 }

@@ -14,7 +14,6 @@ import com.maksimowiczm.foodyou.app.ui.userfood.QuantityUnit
 import com.maksimowiczm.foodyou.app.ui.userfood.ValuesPer
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.FluidOunces
-import com.maksimowiczm.foodyou.common.domain.FoodImage
 import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.FoodSource
 import com.maksimowiczm.foodyou.common.domain.Grams
@@ -111,7 +110,7 @@ class EditProductViewModel(
                             }
                     }
                 }
-            val image = (product.image as? FoodImage.Local)?.uri
+            val image = product.image?.uri
 
             _productFormState.update {
                 it.copy(

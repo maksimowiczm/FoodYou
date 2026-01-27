@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.account.domain
 
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 
 fun testProfileId(id: String = "test-profile-id"): ProfileId = ProfileId(id)
 

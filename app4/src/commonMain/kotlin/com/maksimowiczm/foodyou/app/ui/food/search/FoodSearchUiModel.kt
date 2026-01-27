@@ -10,9 +10,8 @@ import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.Grams
 import com.maksimowiczm.foodyou.common.domain.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.Quantity
-import com.maksimowiczm.foodyou.food.domain.FoodProductDto
-import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
@@ -25,7 +24,8 @@ sealed interface FoodIdentity {
 
     @Immutable data class UserFood(val identity: UserFoodProductIdentity) : FoodIdentity
 
-    @Immutable data class Other(val identity: FoodProductIdentity) : FoodIdentity
+    @Immutable
+    data class FoodDataCentral(val identity: FoodDataCentralProductIdentity) : FoodIdentity
 }
 
 @Immutable
@@ -51,36 +51,6 @@ sealed interface FoodSearchUiModel {
             val brandSuffix = brand?.let { " (${it.value})" } ?: ""
             return foodNameSelector.select(name) + brandSuffix
         }
-
-        constructor(
-            searchableFoodDto: SearchableFoodDto
-        ) : this(
-            identity = FoodIdentity.Other(searchableFoodDto.identity),
-            name = searchableFoodDto.name,
-            brand = searchableFoodDto.brand,
-            barcode = null,
-            image = searchableFoodDto.image,
-            nutritionFacts = searchableFoodDto.nutritionFacts,
-            servingQuantity = searchableFoodDto.servingQuantity,
-            packageQuantity = searchableFoodDto.packageQuantity,
-            isLiquid = searchableFoodDto.isLiquid,
-            suggestedQuantity = searchableFoodDto.suggestedQuantity,
-        )
-
-        constructor(
-            foodProductDto: FoodProductDto
-        ) : this(
-            identity = FoodIdentity.Other(foodProductDto.identity),
-            name = foodProductDto.name,
-            brand = foodProductDto.brand,
-            barcode = foodProductDto.barcode,
-            image = foodProductDto.image,
-            nutritionFacts = foodProductDto.nutritionFacts,
-            servingQuantity = foodProductDto.servingQuantity,
-            packageQuantity = foodProductDto.packageQuantity,
-            isLiquid = foodProductDto.isLiquid,
-            suggestedQuantity = AbsoluteQuantity.Weight(Grams(100.0)),
-        )
 
         constructor(
             userFoodProduct: UserFoodProduct
@@ -109,6 +79,21 @@ sealed interface FoodSearchUiModel {
             servingQuantity = openFoodFactsProduct.servingQuantity,
             packageQuantity = openFoodFactsProduct.packageQuantity,
             isLiquid = openFoodFactsProduct.isLiquid,
+            suggestedQuantity = AbsoluteQuantity.Weight(Grams(100.0)),
+        )
+
+        constructor(
+            foodDataCentralProduct: FoodDataCentralProduct
+        ) : this(
+            identity = FoodIdentity.FoodDataCentral(foodDataCentralProduct.identity),
+            name = foodDataCentralProduct.name,
+            brand = foodDataCentralProduct.brand,
+            barcode = foodDataCentralProduct.barcode,
+            image = foodDataCentralProduct.image,
+            nutritionFacts = foodDataCentralProduct.nutritionFacts,
+            servingQuantity = foodDataCentralProduct.servingQuantity,
+            packageQuantity = foodDataCentralProduct.packageQuantity,
+            isLiquid = foodDataCentralProduct.isLiquid,
             suggestedQuantity = AbsoluteQuantity.Weight(Grams(100.0)),
         )
     }
