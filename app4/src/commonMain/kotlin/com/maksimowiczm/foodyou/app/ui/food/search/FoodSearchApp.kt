@@ -42,11 +42,12 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.app.ui.common.component.FoodDataCentralErrorCard
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.component.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.error
-import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -172,13 +173,19 @@ private fun FoodSearchApp(
                 )
             }
 
-            val error = pages?.loadState?.error as? FoodDatabaseError
-
-            when (val ex = error) {
+            when (val error = pages?.loadState?.error) {
                 null -> Unit
+
+                is FoodDataCentralApiError ->
+                    FoodDataCentralErrorCard(
+                        error = error,
+                        modifier =
+                            Modifier.fillMaxWidth().padding(top = 8.dp).padding(horizontal = 16.dp),
+                    )
+
                 else ->
                     FoodSearchErrorCard(
-                        error = ex,
+                        message = error.message,
                         onRetry = pages::retry,
                         modifier =
                             Modifier.fillMaxWidth().padding(top = 8.dp).padding(horizontal = 16.dp),

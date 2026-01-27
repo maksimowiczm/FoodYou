@@ -20,27 +20,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.food.search.UpdateUsdaApiKeyDialog
-import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun FoodDataCentralErrorCard(
-    error: FoodDatabaseError.FoodDataCentral,
-    modifier: Modifier = Modifier.Companion,
-) {
+fun FoodDataCentralErrorCard(error: FoodDataCentralApiError, modifier: Modifier = Modifier) {
     val errorText =
         when (error) {
-            is FoodDatabaseError.FoodDataCentral.ApiKeyDisabled,
-            is FoodDatabaseError.FoodDataCentral.ApiKeyInvalid,
-            is FoodDatabaseError.FoodDataCentral.ApiKeyIsMissing,
-            is FoodDatabaseError.FoodDataCentral.ApiKeyUnauthorized ->
+            is FoodDataCentralApiError.ProductNotFound -> return
+
+            is FoodDataCentralApiError.ApiKeyDisabled,
+            is FoodDataCentralApiError.ApiKeyInvalid,
+            is FoodDataCentralApiError.ApiKeyIsMissing,
+            is FoodDataCentralApiError.ApiKeyUnauthorized ->
                 stringResource(Res.string.error_api_key_is_invalid)
 
-            is FoodDatabaseError.FoodDataCentral.ApiKeyUnverified ->
+            is FoodDataCentralApiError.ApiKeyUnverified ->
                 stringResource(Res.string.error_usda_not_verified)
 
-            is FoodDatabaseError.FoodDataCentral.RateLimitExceeded ->
+            is FoodDataCentralApiError.RateLimitExceeded ->
                 stringResource(Res.string.error_usda_rate_limit)
         }
 

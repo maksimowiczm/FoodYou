@@ -18,8 +18,8 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProfile
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDataCentralProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.HomePersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Language
@@ -30,7 +30,6 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserFoodDetails
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
@@ -45,7 +44,7 @@ import com.maksimowiczm.foodyou.app.ui.userfood.edit.EditProductScreen
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
-import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import kotlinx.serialization.Serializable
@@ -122,7 +121,7 @@ fun FoodYouNavDisplay(
                     FoodDatabaseScreen(
                         onBack = { backStack.removeLastIf<FoodDatabase>() },
                         onCreateProduct = { backStack.add(CreateProduct) },
-                        onFood = { identity -> backStack.add(FoodDetails(identity)) },
+                        onFoodDataCentralProduct = {},
                         onOpenFoodFactsProduct = { id ->
                             backStack.add(OpenFoodFactsProductDetails.from(id))
                         },
@@ -131,16 +130,13 @@ fun FoodYouNavDisplay(
                         animatedVisibilityScope = LocalNavAnimatedContentScope.current,
                     )
                 }
-                entry<FoodDetails> { key ->
-                    FoodDetailsScreen(
-                        identity = key.identity,
-                        onBack = { backStack.removeLastIf<FoodDetails>() },
-                    )
-                }
                 entry<UserFoodDetails> {
                     // TODO
                 }
                 entry<OpenFoodFactsProductDetails> {
+                    // TODO
+                }
+                entry<FoodDataCentralProductDetails> {
                     // TODO
                 }
                 entry<Home> {
@@ -192,7 +188,9 @@ fun rememberFoodYouNavBackStack(): NavBackStack<NavKey> {
                 subclass(EditProduct.serializer())
                 subclass(EditProfile.serializer())
                 subclass(FoodDatabase.serializer())
-                subclass(FoodDetails.serializer())
+                subclass(UserFoodDetails.serializer())
+                subclass(OpenFoodFactsProductDetails.serializer())
+                subclass(FoodDataCentralProductDetails.serializer())
                 subclass(Home.serializer())
                 subclass(HomePersonalization.serializer())
                 subclass(Language.serializer())
@@ -260,45 +258,13 @@ sealed interface FoodYouNavHostRoute : NavKey {
     }
 
     @Serializable
-    data class FoodDetails(val type: IdentityType, val extra: String, val extra1: String?) :
-        FoodYouNavHostRoute {
-        constructor(
-            identity: FoodProductIdentity
-        ) : this(
-            type =
-                when (identity) {
-                    // is FoodProductIdentity.Local -> IdentityType.Local
-                    //                    is FoodProductIdentity.OpenFoodFacts ->
-                    // IdentityType.OpenFoodFacts
-                    is FoodProductIdentity.FoodDataCentral -> IdentityType.FoodDataCentral
-                },
-            extra =
-                when (identity) {
-                    // is FoodProductIdentity.Local -> identity.id
-                    //                    is FoodProductIdentity.OpenFoodFacts -> identity.barcode
-                    is FoodProductIdentity.FoodDataCentral -> identity.fdcId.toString()
-                },
-            extra1 =
-                when (identity) {
-                    // is FoodProductIdentity.Local -> identity.accountId.value
-                    //                    is FoodProductIdentity.OpenFoodFacts -> null
-                    is FoodProductIdentity.FoodDataCentral -> null
-                },
-        )
+    data class FoodDataCentralProductDetails(val fdcId: Int) : FoodYouNavHostRoute {
+        val identity: FoodDataCentralProductIdentity
+            get() = FoodDataCentralProductIdentity(fdcId)
 
-        val identity: FoodProductIdentity
-            get() =
-                when (type) {
-                    // IdentityType.Local -> FoodProductIdentity.Local(extra,
-                    // LocalAccountId(extra1!!))
-                    //                    IdentityType.OpenFoodFacts ->
-                    // FoodProductIdentity.OpenFoodFacts(extra)
-                    IdentityType.FoodDataCentral ->
-                        FoodProductIdentity.FoodDataCentral(extra.toInt())
-                }
-
-        enum class IdentityType {
-            FoodDataCentral
+        companion object {
+            fun from(identity: FoodDataCentralProductIdentity) =
+                FoodDataCentralProductDetails(identity.fdcId)
         }
     }
 

@@ -7,15 +7,14 @@ import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.FoodNote
 import com.maksimowiczm.foodyou.common.domain.FoodSource
 import com.maksimowiczm.foodyou.common.domain.NutritionFacts
-import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 
 @Immutable
 sealed interface FoodDetailsUiState {
-    val identity: FoodProductIdentity
+    //    val identity: FoodProductIdentity
 
     @Immutable
     data class WithData(
-        override val identity: FoodProductIdentity,
+        //        override val identity: FoodProductIdentity,
         val isLoading: Boolean,
         val foodName: FoodName?,
         val brand: String?,
@@ -41,26 +40,27 @@ sealed interface FoodDetailsUiState {
         }
 
         companion object {
-            fun loading(identity: FoodProductIdentity) =
-                WithData(
-                    identity = identity,
-                    isLoading = true,
-                    foodName = null,
-                    brand = null,
-                    image = FoodImageUiState.Loading,
-                    nutritionFacts = null,
-                    note = null,
-                    source = null,
-                    isFavorite = false,
-                )
+            //            fun loading(identity: FoodProductIdentity) =
+            //                WithData(
+            //                    identity = identity,
+            //                    isLoading = true,
+            //                    foodName = null,
+            //                    brand = null,
+            //                    image = FoodImageUiState.Loading,
+            //                    nutritionFacts = null,
+            //                    note = null,
+            //                    source = null,
+            //                    isFavorite = false,
+            //                )
         }
     }
 
-    @Immutable data class NotFound(override val identity: FoodProductIdentity) : FoodDetailsUiState
+    //    @Immutable data class NotFound(override val identity: FoodProductIdentity) :
+    // FoodDetailsUiState
 
-    @Immutable
-    data class Error(override val identity: FoodProductIdentity, val message: String?) :
-        FoodDetailsUiState
+    //    @Immutable
+    //    data class Error(override val identity: FoodProductIdentity, val message: String?) :
+    //        FoodDetailsUiState
 }
 
 @Immutable
