@@ -67,6 +67,7 @@ import com.maksimowiczm.foodyou.common.domain.FoodNote
 import com.maksimowiczm.foodyou.common.domain.FoodSource
 import com.maksimowiczm.foodyou.common.domain.NutritionFacts
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
@@ -148,7 +149,7 @@ private fun FoodDetailsScreen(
                         is FoodProductIdentity.FoodDataCentral -> RefreshMenu(onRefresh = onRefresh)
                         is UserFoodProductIdentity -> LocalMenu(onEdit = {}, onDelete = {})
 
-                        is FoodProductIdentity.OpenFoodFacts -> RefreshMenu(onRefresh = onRefresh)
+                        is OpenFoodFactsProductIdentity -> RefreshMenu(onRefresh = onRefresh)
                     }
                 },
                 colors =

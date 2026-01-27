@@ -13,11 +13,16 @@ import com.maksimowiczm.foodyou.common.domain.Quantity
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 
 @Immutable
 sealed interface FoodIdentity {
+
+    @Immutable data class OpenFoodFacts(val identity: OpenFoodFactsProductIdentity) : FoodIdentity
+
     @Immutable data class UserFood(val identity: UserFoodProductIdentity) : FoodIdentity
 
     @Immutable data class Other(val identity: FoodProductIdentity) : FoodIdentity
@@ -89,6 +94,21 @@ sealed interface FoodSearchUiModel {
             servingQuantity = userFoodProduct.servingQuantity,
             packageQuantity = userFoodProduct.packageQuantity,
             isLiquid = userFoodProduct.isLiquid,
+            suggestedQuantity = AbsoluteQuantity.Weight(Grams(100.0)),
+        )
+
+        constructor(
+            openFoodFactsProduct: OpenFoodFactsProduct
+        ) : this(
+            identity = FoodIdentity.OpenFoodFacts(openFoodFactsProduct.identity),
+            name = openFoodFactsProduct.name,
+            brand = openFoodFactsProduct.brand,
+            barcode = openFoodFactsProduct.barcode,
+            image = openFoodFactsProduct.image,
+            nutritionFacts = openFoodFactsProduct.nutritionFacts,
+            servingQuantity = openFoodFactsProduct.servingQuantity,
+            packageQuantity = openFoodFactsProduct.packageQuantity,
+            isLiquid = openFoodFactsProduct.isLiquid,
             suggestedQuantity = AbsoluteQuantity.Weight(Grams(100.0)),
         )
     }

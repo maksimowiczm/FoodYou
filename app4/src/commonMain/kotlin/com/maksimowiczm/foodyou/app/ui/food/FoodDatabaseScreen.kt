@@ -29,6 +29,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefau
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodIdentity
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchApp
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -38,6 +39,7 @@ fun FoodDatabaseScreen(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
     onFood: (FoodProductIdentity) -> Unit,
+    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
     onUserFood: (UserFoodProductIdentity) -> Unit,
     query: String?,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -103,6 +105,8 @@ fun FoodDatabaseScreen(
                     onFoodClick = { model ->
                         when (val identity = model.identity) {
                             is FoodIdentity.Other -> onFood(identity.identity)
+                            is FoodIdentity.OpenFoodFacts ->
+                                onOpenFoodFactsProduct(identity.identity)
                             is FoodIdentity.UserFood -> onUserFood(identity.identity)
                         }
                     },

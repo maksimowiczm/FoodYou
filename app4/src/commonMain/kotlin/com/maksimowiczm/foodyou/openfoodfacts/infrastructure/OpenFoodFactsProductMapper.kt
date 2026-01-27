@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure
 
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.Barcode
@@ -12,17 +12,16 @@ import com.maksimowiczm.foodyou.common.domain.Milliliters
 import com.maksimowiczm.foodyou.common.domain.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.common.domain.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.Ounces
-import com.maksimowiczm.foodyou.common.domain.PackageQuantity
-import com.maksimowiczm.foodyou.common.domain.ServingQuantity
-import com.maksimowiczm.foodyou.food.domain.FoodProductDto
-import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsProductEntity
-import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsProduct as NetworkOpenFoodFactsProduct
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsProductEntity
 import kotlinx.serialization.json.Json
 
-class OpenFoodFactsProductMapper {
-    fun openFoodFactsProductEntity(product: OpenFoodFactsProduct): OpenFoodFactsProductEntity =
+internal class OpenFoodFactsProductMapper {
+    fun openFoodFactsProductEntity(
+        product: NetworkOpenFoodFactsProduct
+    ): OpenFoodFactsProductEntity =
         with(product) {
             return OpenFoodFactsProductEntity(
                 barcode = barcode,
@@ -39,7 +38,7 @@ class OpenFoodFactsProductMapper {
             )
         }
 
-    fun searchableFoodDto(entity: OpenFoodFactsProductEntity): SearchableFoodDto =
+    fun openFoodFactsProduct(entity: OpenFoodFactsProductEntity): OpenFoodFactsProduct =
         buildFoodDto(entity) {
             name,
             brand,
@@ -48,34 +47,8 @@ class OpenFoodFactsProductMapper {
             packageQuantity,
             image,
             isLiquid ->
-            SearchableFoodDto(
-                identity = FoodProductIdentity.OpenFoodFacts(entity.barcode),
-                name = name,
-                brand = brand,
-                nutritionFacts = nutrients,
-                servingQuantity = servingQuantity,
-                packageQuantity = packageQuantity,
-                suggestedQuantity =
-                    servingQuantity?.let { ServingQuantity(1.0) }
-                        ?: packageQuantity?.let { PackageQuantity(1.0) }
-                        ?: if (isLiquid) AbsoluteQuantity.Volume(Milliliters(250.0))
-                        else AbsoluteQuantity.Weight(Grams(100.0)),
-                image = image,
-                isLiquid = isLiquid,
-            )
-        }
-
-    fun foodProductDto(entity: OpenFoodFactsProductEntity): FoodProductDto =
-        buildFoodDto(entity) {
-            name,
-            brand,
-            nutrients,
-            servingQuantity,
-            packageQuantity,
-            image,
-            isLiquid ->
-            FoodProductDto(
-                identity = FoodProductIdentity.OpenFoodFacts(entity.barcode),
+            OpenFoodFactsProduct(
+                identity = OpenFoodFactsProductIdentity(entity.barcode),
                 name = name,
                 brand = brand,
                 barcode = entity.barcode.takeIfNotBlank()?.let { Barcode(it) },

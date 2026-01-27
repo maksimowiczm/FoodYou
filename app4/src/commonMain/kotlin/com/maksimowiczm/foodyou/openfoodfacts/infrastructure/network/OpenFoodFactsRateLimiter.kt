@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network
 
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
 import kotlin.time.Clock
@@ -10,7 +10,7 @@ import kotlin.time.Duration.Companion.minutes
 // it for a search-as-you-type feature, you would be blocked very quickly.
 // 2 req/min for facet queries (such as /categories, /label/organic,
 // /ingredient/salt/category/breads,...).
-class OpenFoodFactsRateLimiter(clock: Clock) {
+internal class OpenFoodFactsRateLimiter(clock: Clock) {
     private val productRateLimiter = RateLimiter(clock, 100, 1.minutes)
     private val searchRateLimiter = RateLimiter(clock, 10, 1.minutes)
 

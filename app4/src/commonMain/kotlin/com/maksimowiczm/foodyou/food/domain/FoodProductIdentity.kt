@@ -12,13 +12,6 @@ import kotlin.jvm.JvmInline
 sealed interface FoodProductIdentity {
 
     /**
-     * Open Food Facts identifier using product barcode.
-     *
-     * @property barcode The product barcode
-     */
-    @JvmInline value class OpenFoodFacts(val barcode: String) : FoodProductIdentity
-
-    /**
      * FoodData Central identifier from the USDA database.
      *
      * @property fdcId The FoodData Central unique identifier

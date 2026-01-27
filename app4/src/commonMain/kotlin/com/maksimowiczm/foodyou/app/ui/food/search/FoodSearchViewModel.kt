@@ -20,6 +20,9 @@ import com.maksimowiczm.foodyou.food.search.domain.SearchParameters
 import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
 import com.maksimowiczm.foodyou.food.search.domain.SearchQueryParser
 import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodRepository
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodSearchParameters
 import kotlin.contracts.ExperimentalContracts
@@ -56,6 +59,7 @@ internal class FoodSearchViewModel(
     private val nameSelector: FoodNameSelector,
     private val observeFoodsUseCase: ObserveFoodsUseCase,
     private val userFoodRepository: UserFoodRepository,
+    private val openFoodFactsRepository: OpenFoodFactsRepository,
 ) : ViewModel() {
 
     // Use shared flow to allow emitting same value multiple times
@@ -157,7 +161,7 @@ internal class FoodSearchViewModel(
                             is SearchQuery.OpenFoodFactsUrl ->
                                 list.filter {
                                     val identity = it.identity
-                                    identity is FoodProductIdentity.OpenFoodFacts &&
+                                    identity is OpenFoodFactsProductIdentity &&
                                         identity.barcode == query.barcode
                                 }
 
@@ -220,23 +224,23 @@ internal class FoodSearchViewModel(
 
     private val openFoodFactsSearchParams =
         searchQuery.map { query ->
-            SearchParameters.OpenFoodFacts(
+            OpenFoodFactsSearchParameters(
                 query = query,
-                orderBy = SearchParameters.OpenFoodFacts.OrderBy.NameAscending,
+                orderBy = OpenFoodFactsSearchParameters.OrderBy.NameAscending,
             )
         }
 
     private val openFoodFactsPages =
         openFoodFactsSearchParams
             .flatMapLatest { params ->
-                searchableFoodRepository.search(parameters = params, pageSize = 30)
+                openFoodFactsRepository.search(parameters = params, pageSize = 30)
             }
             .map { data -> data.map { FoodSearchUiModel.Loaded(it) } }
             .cachedIn(viewModelScope)
 
     private val openFoodFactsState =
         combine(foodPreferences, openFoodFactsSearchParams) { prefs, params ->
-                val count = searchableFoodRepository.count(params)
+                val count = openFoodFactsRepository.count(params)
 
                 count.map { count ->
                     FoodSourceUiState(

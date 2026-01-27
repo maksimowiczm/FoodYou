@@ -25,10 +25,4 @@ sealed class FoodDatabaseError(message: String?) : Exception(message) {
         data object ApiKeyUnverified :
             FoodDataCentral("USDA API key is not verified. Please check your configuration.")
     }
-
-    /** Errors related to Open Food Facts API */
-    sealed class OpenFoodFacts(message: String) : FoodDatabaseError(message) {
-        data object RateLimitExceeded :
-            OpenFoodFacts("OpenFoodFacts API rate limit exceeded. Please try again later.")
-    }
 }

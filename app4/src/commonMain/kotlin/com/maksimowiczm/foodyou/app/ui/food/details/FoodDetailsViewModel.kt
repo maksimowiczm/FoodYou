@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository.FoodStatus
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -128,14 +129,15 @@ class FoodDetailsViewModel(
                     isRefreshing.value = false
                 }
 
-                is FoodProductIdentity.OpenFoodFacts -> {
-                    isRefreshing.value = true
-                    delay(500)
-                    foodProductRepository.refresh(identity).onError {
-                        // TODO
-                        logger.e { "Error refreshing OpenFoodFacts product: ${it.message}" }
-                    }
-                    isRefreshing.value = false
+                is OpenFoodFactsProductIdentity -> {
+                    //                    isRefreshing.value = true
+                    //                    delay(500)
+                    //                    foodProductRepository.refresh(identity).onError {
+                    //                        // TODO
+                    //                        logger.e { "Error refreshing OpenFoodFacts product:
+                    // ${it.message}" }
+                    //                    }
+                    //                    isRefreshing.value = false
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -18,7 +18,7 @@ import androidx.room.PrimaryKey
             )
         ],
 )
-data class OpenFoodFactsPagingKeyEntity(
+internal data class OpenFoodFactsPagingKeyEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val queryString: String,
     val productBarcode: String,

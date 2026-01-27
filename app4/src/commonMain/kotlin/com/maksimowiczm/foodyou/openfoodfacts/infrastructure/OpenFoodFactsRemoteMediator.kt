@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -6,12 +6,12 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.infrastructure.room.immediateTransaction
-import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.OpenFoodFactsRemoteDataSource
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsDatabase
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsPagingKeyEntity
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room.OpenFoodFactsProductEntity
 import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsPagingKeyEntity
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsProductEntity
 import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.first
 // TODO
 //  Fix issue with downloading first pages multiple times
 @OptIn(ExperimentalPagingApi::class)
-class OpenFoodFactsRemoteMediator(
+internal class OpenFoodFactsRemoteMediator(
     private val query: SearchQuery.NotBlank,
     private val database: OpenFoodFactsDatabase,
     private val remote: OpenFoodFactsRemoteDataSource,
@@ -60,7 +60,7 @@ class OpenFoodFactsRemoteMediator(
 
                                 val response =
                                     remote.getProduct(barcode).getOrElse {
-                                        return if (it is FoodDatabaseError.ProductNotFound)
+                                        return if (it is OpenFoodFactsApiError.ProductNotFound)
                                             MediatorResult.Success(endOfPaginationReached = true)
                                         else MediatorResult.Error(it)
                                     }

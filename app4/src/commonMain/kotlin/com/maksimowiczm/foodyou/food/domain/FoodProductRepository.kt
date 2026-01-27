@@ -20,16 +20,6 @@ interface FoodProductRepository {
     fun observe(identity: FoodProductIdentity): Flow<FoodStatus>
 
     /**
-     * Refreshes a food product from Open Food Facts, fetching the latest data.
-     *
-     * @param identity The Open Food Facts barcode identifier
-     * @return Result containing the updated food product or an error
-     */
-    suspend fun refresh(
-        identity: FoodProductIdentity.OpenFoodFacts
-    ): Result<FoodProductDto, FoodDatabaseError>
-
-    /**
      * Refreshes a food product from FoodData Central, fetching the latest data.
      *
      * @param identity The FoodData Central identifier

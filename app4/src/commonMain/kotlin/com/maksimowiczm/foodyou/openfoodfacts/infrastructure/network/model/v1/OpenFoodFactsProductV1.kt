@@ -1,14 +1,15 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model.v2
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.v1
 
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model.OpenFoodFactsNutrients
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsNutrients
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsProduct
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.decodeFromJsonElement
@@ -16,31 +17,31 @@ import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-@Serializable(with = OpenFoodFactsProductV2Serializer::class)
-data class OpenFoodFactsProductV2(
+@Serializable(with = OpenFoodFactsProductV1Serializer::class)
+internal data class OpenFoodFactsProductV1(
     override val localizedNames: Map<String, String> = emptyMap(),
     override val brand: String?,
     override val barcode: String,
+    override val nutritionFacts: OpenFoodFactsNutrients,
     override val packageWeight: Double?,
     override val packageQuantityUnit: String?,
     override val servingWeight: Double?,
     override val servingQuantityUnit: String?,
-    override val nutritionFacts: OpenFoodFactsNutrients?,
+    override val url: String?,
     override val thumbnailUrl: String?,
     override val imageUrl: String?,
-) : OpenFoodFactsProduct {
-    override val url: String? = "https://world.openfoodfacts.org/product/$barcode"
-}
+) : OpenFoodFactsProduct
 
-object OpenFoodFactsProductV2Serializer : KSerializer<OpenFoodFactsProductV2> {
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("OpenFoodFactsProductV2")
+internal object OpenFoodFactsProductV1Serializer : KSerializer<OpenFoodFactsProductV1> {
+    private val json = Json { ignoreUnknownKeys = true }
 
-    override fun deserialize(decoder: Decoder): OpenFoodFactsProductV2 {
-        require(decoder is JsonDecoder) { "This serializer only works with JSON" }
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("OpenFoodFactsProductV1")
 
-        val jsonObject = decoder.decodeJsonElement().jsonObject
+    override fun deserialize(decoder: Decoder): OpenFoodFactsProductV1 {
+        val jsonElement = decoder.decodeSerializableValue(JsonElement.serializer())
+        val jsonObject = jsonElement.jsonObject
 
-        // Extract localized names from all product_name_* fields
+        // Extract localized names
         val localizedNames = mutableMapOf<String, String>()
         jsonObject.forEach { (key, value) ->
             if (key.startsWith("product_name_") && value is JsonPrimitive) {
@@ -49,14 +50,12 @@ object OpenFoodFactsProductV2Serializer : KSerializer<OpenFoodFactsProductV2> {
             }
         }
 
-        // Deserialize other fields
-        val json = decoder.json
-
-        return OpenFoodFactsProductV2(
+        // Deserialize other fields normally
+        return OpenFoodFactsProductV1(
             localizedNames = localizedNames,
             brand = jsonObject["brands"]?.jsonPrimitive?.contentOrNull,
-            barcode =
-                jsonObject["code"]?.jsonPrimitive?.content ?: error("Missing required field: code"),
+            barcode = jsonObject["code"]?.jsonPrimitive?.content ?: "",
+            nutritionFacts = json.decodeFromJsonElement(jsonObject["nutriments"]!!),
             packageWeight =
                 jsonObject["product_quantity"]?.jsonPrimitive?.let {
                     it.doubleOrNull ?: it.contentOrNull?.toDoubleOrNull()
@@ -67,15 +66,12 @@ object OpenFoodFactsProductV2Serializer : KSerializer<OpenFoodFactsProductV2> {
                     it.doubleOrNull ?: it.contentOrNull?.toDoubleOrNull()
                 },
             servingQuantityUnit = jsonObject["serving_quantity_unit"]?.jsonPrimitive?.contentOrNull,
-            nutritionFacts =
-                jsonObject["nutriments"]?.let {
-                    json.decodeFromJsonElement<OpenFoodFactsNutrients>(it)
-                },
+            url = jsonObject["url"]?.jsonPrimitive?.contentOrNull,
             thumbnailUrl = jsonObject["image_thumb_url"]?.jsonPrimitive?.contentOrNull,
             imageUrl = jsonObject["image_url"]?.jsonPrimitive?.contentOrNull,
         )
     }
 
-    override fun serialize(encoder: Encoder, value: OpenFoodFactsProductV2) =
-        error("Serialization is not supported for OpenFoodFactsProductV2")
+    override fun serialize(encoder: Encoder, value: OpenFoodFactsProductV1) =
+        error("Serialization is not supported")
 }

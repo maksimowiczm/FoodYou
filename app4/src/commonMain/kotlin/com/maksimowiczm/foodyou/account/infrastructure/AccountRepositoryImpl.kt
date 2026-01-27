@@ -172,7 +172,7 @@ private fun ProfileEntity.toDomain(favoriteFoods: List<ProfileFavoriteFoodEntity
 private fun ProfileFavoriteFoodEntity.toDomain(accountId: LocalAccountId): FoodProductIdentity =
     when (this.identityType) {
         //        FoodIdentityType.LocalProduct -> FoodProductIdentity.Local(extra, accountId)
-        FoodIdentityType.OpenFoodFacts -> FoodProductIdentity.OpenFoodFacts(extra)
+        //        FoodIdentityType.OpenFoodFacts -> FoodProductIdentity.OpenFoodFacts(extra)
         FoodIdentityType.FoodDataCentral -> FoodProductIdentity.FoodDataCentral(extra.toInt())
     }
 
@@ -234,20 +234,20 @@ private fun Profile.toFavoriteFoodEntity(
                     extra = identity.fdcId.toString(),
                 )
 
-            //            is FoodProductIdentity.Local ->
-            //                ProfileFavoriteFoodEntity(
-            //                    profileId = id.value,
-            //                    accountId = localAccountId.value,
-            //                    identityType = FoodIdentityType.UserProduct,
-            //                    extra = identity.id,
-            //                )
+        //            is FoodProductIdentity.Local ->
+        //                ProfileFavoriteFoodEntity(
+        //                    profileId = id.value,
+        //                    accountId = localAccountId.value,
+        //                    identityType = FoodIdentityType.UserProduct,
+        //                    extra = identity.id,
+        //                )
 
-            is FoodProductIdentity.OpenFoodFacts ->
-                ProfileFavoriteFoodEntity(
-                    profileId = id.value,
-                    accountId = localAccountId.value,
-                    identityType = FoodIdentityType.OpenFoodFacts,
-                    extra = identity.barcode,
-                )
+        //            is FoodProductIdentity.OpenFoodFacts ->
+        //                ProfileFavoriteFoodEntity(
+        //                    profileId = id.value,
+        //                    accountId = localAccountId.value,
+        //                    identityType = FoodIdentityType.OpenFoodFacts,
+        //                    extra = identity.barcode,
+        //                )
         }
     }
