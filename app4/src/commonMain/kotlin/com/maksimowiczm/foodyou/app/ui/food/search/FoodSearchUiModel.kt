@@ -2,27 +2,36 @@ package com.maksimowiczm.foodyou.app.ui.food.search
 
 import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.Barcode
+import com.maksimowiczm.foodyou.common.domain.FoodBrand
+import com.maksimowiczm.foodyou.common.domain.FoodImage
+import com.maksimowiczm.foodyou.common.domain.FoodName
+import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.Grams
+import com.maksimowiczm.foodyou.common.domain.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.Quantity
-import com.maksimowiczm.foodyou.food.domain.Barcode
-import com.maksimowiczm.foodyou.food.domain.FoodBrand
-import com.maksimowiczm.foodyou.food.domain.FoodImage
-import com.maksimowiczm.foodyou.food.domain.FoodName
-import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodDto
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
+
+@Immutable
+sealed interface FoodIdentity {
+    @Immutable data class UserFood(val identity: UserFoodProductIdentity) : FoodIdentity
+
+    @Immutable data class Other(val identity: FoodProductIdentity) : FoodIdentity
+}
 
 @Immutable
 sealed interface FoodSearchUiModel {
-    val identity: FoodProductIdentity
+    val identity: FoodIdentity
 
-    @Immutable data class Loading(override val identity: FoodProductIdentity) : FoodSearchUiModel
+    @Immutable data class Loading(override val identity: FoodIdentity) : FoodSearchUiModel
 
     @Immutable
     data class Loaded(
-        override val identity: FoodProductIdentity,
+        override val identity: FoodIdentity,
         val name: FoodName,
         val brand: FoodBrand?,
         val barcode: Barcode?,
@@ -41,7 +50,7 @@ sealed interface FoodSearchUiModel {
         constructor(
             searchableFoodDto: SearchableFoodDto
         ) : this(
-            identity = searchableFoodDto.identity,
+            identity = FoodIdentity.Other(searchableFoodDto.identity),
             name = searchableFoodDto.name,
             brand = searchableFoodDto.brand,
             barcode = null,
@@ -56,7 +65,7 @@ sealed interface FoodSearchUiModel {
         constructor(
             foodProductDto: FoodProductDto
         ) : this(
-            identity = foodProductDto.identity,
+            identity = FoodIdentity.Other(foodProductDto.identity),
             name = foodProductDto.name,
             brand = foodProductDto.brand,
             barcode = foodProductDto.barcode,
@@ -65,6 +74,21 @@ sealed interface FoodSearchUiModel {
             servingQuantity = foodProductDto.servingQuantity,
             packageQuantity = foodProductDto.packageQuantity,
             isLiquid = foodProductDto.isLiquid,
+            suggestedQuantity = AbsoluteQuantity.Weight(Grams(100.0)),
+        )
+
+        constructor(
+            userFoodProduct: UserFoodProduct
+        ) : this(
+            identity = FoodIdentity.UserFood(userFoodProduct.identity),
+            name = userFoodProduct.name,
+            brand = userFoodProduct.brand,
+            barcode = userFoodProduct.barcode,
+            image = userFoodProduct.image,
+            nutritionFacts = userFoodProduct.nutritionFacts,
+            servingQuantity = userFoodProduct.servingQuantity,
+            packageQuantity = userFoodProduct.packageQuantity,
+            isLiquid = userFoodProduct.isLiquid,
             suggestedQuantity = AbsoluteQuantity.Weight(Grams(100.0)),
         )
     }

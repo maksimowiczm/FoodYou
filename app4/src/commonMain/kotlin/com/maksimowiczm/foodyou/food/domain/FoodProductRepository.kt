@@ -40,13 +40,6 @@ interface FoodProductRepository {
     ): Result<FoodProductDto, FoodDatabaseError>
 
     /**
-     * Deletes a local food product from the database.
-     *
-     * @param identity The local food product identifier
-     */
-    suspend fun delete(identity: FoodProductIdentity.Local)
-
-    /**
      * Represents the current status of a food product query.
      *
      * Provides different states for tracking food product availability, loading progress, and

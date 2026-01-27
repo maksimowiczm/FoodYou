@@ -10,8 +10,8 @@ import androidx.paging.map
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.observePrimaryProfile
+import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.application.ObserveFoodsUseCase
-import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchHistoryRepository
@@ -20,6 +20,8 @@ import com.maksimowiczm.foodyou.food.search.domain.SearchParameters
 import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
 import com.maksimowiczm.foodyou.food.search.domain.SearchQueryParser
 import com.maksimowiczm.foodyou.food.search.domain.SearchableFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodSearchParameters
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.time.Clock
@@ -53,6 +55,7 @@ internal class FoodSearchViewModel(
     observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
     private val nameSelector: FoodNameSelector,
     private val observeFoodsUseCase: ObserveFoodsUseCase,
+    private val userFoodRepository: UserFoodRepository,
 ) : ViewModel() {
 
     // Use shared flow to allow emitting same value multiple times
@@ -120,8 +123,9 @@ internal class FoodSearchViewModel(
                             when (it) {
                                 is FoodProductRepository.FoodStatus.Available ->
                                     FoodSearchUiModel.Loaded(it.food)
+
                                 is FoodProductRepository.FoodStatus.Loading ->
-                                    FoodSearchUiModel.Loading(it.identity)
+                                    FoodSearchUiModel.Loading(FoodIdentity.Other(it.identity))
 
                                 is FoodProductRepository.FoodStatus.Error,
                                 is FoodProductRepository.FoodStatus.NotFound -> null
@@ -191,23 +195,25 @@ internal class FoodSearchViewModel(
             accountManager.observePrimaryAccountId().filterNotNull(),
             accountManager.observePrimaryProfileId(),
         ) { query, accountId, profileId ->
-            SearchParameters.User(
+            UserFoodSearchParameters(
                 query = query,
-                orderBy = SearchParameters.User.OrderBy.NameAscending,
+                orderBy = UserFoodSearchParameters.OrderBy.NameAscending,
                 accountId = accountId,
                 profileId = profileId,
             )
         }
+
     private val localPages =
         localSearchParams
             .flatMapLatest { params ->
-                searchableFoodRepository.search(parameters = params, pageSize = 30)
+                userFoodRepository.search(parameters = params, pageSize = 30)
             }
             .map { data -> data.map { FoodSearchUiModel.Loaded(it) } }
             .cachedIn(viewModelScope)
+
     private val localState =
         localSearchParams.flatMapLatest { params ->
-            searchableFoodRepository.count(params).map { count ->
+            userFoodRepository.count(params).map { count ->
                 FoodSourceUiState(pages = localPages, count = count, alwaysShowFilter = true)
             }
         }

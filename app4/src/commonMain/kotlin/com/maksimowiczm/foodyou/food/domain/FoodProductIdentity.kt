@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.food.domain
 
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import kotlin.jvm.JvmInline
 
 /**
@@ -11,13 +10,6 @@ import kotlin.jvm.JvmInline
  * different food data sources.
  */
 sealed interface FoodProductIdentity {
-    /**
-     * Local database identifier for user-created or imported food products.
-     *
-     * @property id The unique identifier within the local database
-     * @property accountId The account that owns this food product
-     */
-    data class Local(val id: String, val accountId: LocalAccountId) : FoodProductIdentity
 
     /**
      * Open Food Facts identifier using product barcode.

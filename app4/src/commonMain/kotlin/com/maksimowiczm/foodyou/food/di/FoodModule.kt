@@ -1,15 +1,13 @@
 package com.maksimowiczm.foodyou.food.di
 
-import com.maksimowiczm.foodyou.common.event.di.integrationEventBus
+import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.application.ObserveFoodsUseCase
 import com.maksimowiczm.foodyou.food.domain.FoodDataCentralSettingsRepository
-import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.food.domain.FoodProductRepository
 import com.maksimowiczm.foodyou.food.infrastructure.FoodDataCentralSettingsRepositoryImpl
 import com.maksimowiczm.foodyou.food.infrastructure.FoodProductRepositoryImpl
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.openFoodFactsModule
 import com.maksimowiczm.foodyou.food.infrastructure.usda.foodDataCentralModule
-import com.maksimowiczm.foodyou.food.infrastructure.user.userFoodModule
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -18,11 +16,9 @@ import org.koin.dsl.module
 
 val foodModule = module {
     openFoodFactsModule()
-    userFoodModule()
     foodDataCentralModule()
     foodNameSelector().bind<FoodNameSelector>()
-    factory { FoodProductRepositoryImpl(get(), get(), get(), integrationEventBus()) }
-        .bind<FoodProductRepository>()
+    factory { FoodProductRepositoryImpl(get(), get()) }.bind<FoodProductRepository>()
     factoryOf(::FoodDataCentralSettingsRepositoryImpl).bind<FoodDataCentralSettingsRepository>()
 
     factoryOf(::ObserveFoodsUseCase)

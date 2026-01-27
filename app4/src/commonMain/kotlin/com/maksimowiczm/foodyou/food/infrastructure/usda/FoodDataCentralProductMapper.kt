@@ -1,20 +1,20 @@
 package com.maksimowiczm.foodyou.food.infrastructure.usda
 
 import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.Barcode
 import com.maksimowiczm.foodyou.common.domain.FluidOunces
+import com.maksimowiczm.foodyou.common.domain.FoodBrand
+import com.maksimowiczm.foodyou.common.domain.FoodName
+import com.maksimowiczm.foodyou.common.domain.FoodSource
 import com.maksimowiczm.foodyou.common.domain.Grams
 import com.maksimowiczm.foodyou.common.domain.Milliliters
 import com.maksimowiczm.foodyou.common.domain.Ounces
 import com.maksimowiczm.foodyou.common.domain.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.ServingQuantity
-import com.maksimowiczm.foodyou.food.domain.Barcode
-import com.maksimowiczm.foodyou.food.domain.FoodBrand
-import com.maksimowiczm.foodyou.food.domain.FoodName
+import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsEntity
+import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsMapper
 import com.maksimowiczm.foodyou.food.domain.FoodProductDto
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
-import com.maksimowiczm.foodyou.food.domain.FoodSource
-import com.maksimowiczm.foodyou.food.infrastructure.common.NutrientsEntity
-import com.maksimowiczm.foodyou.food.infrastructure.common.NutrientsMapper
 import com.maksimowiczm.foodyou.food.infrastructure.usda.network.model.Food
 import com.maksimowiczm.foodyou.food.infrastructure.usda.network.model.FoodNutrient
 import com.maksimowiczm.foodyou.food.infrastructure.usda.network.model.Nutrient

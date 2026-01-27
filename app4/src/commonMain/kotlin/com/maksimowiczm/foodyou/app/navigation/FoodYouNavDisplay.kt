@@ -26,6 +26,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Language
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.NutritionFactsPersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Personalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserFoodDetails
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsScreen
@@ -36,14 +37,15 @@ import com.maksimowiczm.foodyou.app.ui.personalization.ColorsScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.app.ui.privacy.PrivacyScreen
-import com.maksimowiczm.foodyou.app.ui.product.create.CreateProductScreen
-import com.maksimowiczm.foodyou.app.ui.product.edit.EditProductScreen
 import com.maksimowiczm.foodyou.app.ui.profile.add.AddProfileScreen
 import com.maksimowiczm.foodyou.app.ui.profile.edit.EditProfileScreen
+import com.maksimowiczm.foodyou.app.ui.userfood.create.CreateProductScreen
+import com.maksimowiczm.foodyou.app.ui.userfood.edit.EditProductScreen
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.food.domain.FoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -89,7 +91,7 @@ fun FoodYouNavDisplay(
                         onBack = { backStack.removeLastIf<CreateProduct>() },
                         onCreate = { id ->
                             backStack.removeLastIf<CreateProduct>()
-                            backStack.add(FoodDetails(id))
+                            backStack.add(UserFoodDetails(id))
                         },
                     )
                 }
@@ -119,6 +121,7 @@ fun FoodYouNavDisplay(
                         onBack = { backStack.removeLastIf<FoodDatabase>() },
                         onCreateProduct = { backStack.add(CreateProduct) },
                         onFood = { identity -> backStack.add(FoodDetails(identity)) },
+                        onUserFood = { id -> backStack.add(UserFoodDetails(id)) },
                         query = it.query,
                         animatedVisibilityScope = LocalNavAnimatedContentScope.current,
                     )
@@ -127,12 +130,10 @@ fun FoodYouNavDisplay(
                     FoodDetailsScreen(
                         identity = key.identity,
                         onBack = { backStack.removeLastIf<FoodDetails>() },
-                        onEdit = {
-                            backStack.add(
-                                EditProduct.from(key.identity as FoodProductIdentity.Local)
-                            )
-                        },
                     )
+                }
+                entry<UserFoodDetails> {
+                    // TODO
                 }
                 entry<Home> {
                     HomeScreen(
@@ -211,12 +212,12 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable
     data class EditProduct(val id: String, val accountId: String) : FoodYouNavHostRoute {
         companion object {
-            fun from(identity: FoodProductIdentity.Local): EditProduct =
+            fun from(identity: UserFoodProductIdentity): EditProduct =
                 EditProduct(identity.id, identity.accountId.value)
         }
 
-        val identity: FoodProductIdentity.Local
-            get() = FoodProductIdentity.Local(id, LocalAccountId(accountId))
+        val identity: UserFoodProductIdentity
+            get() = UserFoodProductIdentity(id, LocalAccountId(accountId))
     }
 
     @Serializable
@@ -232,6 +233,14 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data class FoodDatabase(val query: String?) : FoodYouNavHostRoute
 
     @Serializable
+    data class UserFoodDetails(val id: String, val accountId: String) : FoodYouNavHostRoute {
+        val identity: UserFoodProductIdentity
+            get() = UserFoodProductIdentity(id, LocalAccountId(accountId))
+
+        constructor(identity: UserFoodProductIdentity) : this(identity.id, identity.accountId.value)
+    }
+
+    @Serializable
     data class FoodDetails(val type: IdentityType, val extra: String, val extra1: String?) :
         FoodYouNavHostRoute {
         constructor(
@@ -239,19 +248,19 @@ sealed interface FoodYouNavHostRoute : NavKey {
         ) : this(
             type =
                 when (identity) {
-                    is FoodProductIdentity.Local -> IdentityType.Local
+                    // is FoodProductIdentity.Local -> IdentityType.Local
                     is FoodProductIdentity.OpenFoodFacts -> IdentityType.OpenFoodFacts
                     is FoodProductIdentity.FoodDataCentral -> IdentityType.FoodDataCentral
                 },
             extra =
                 when (identity) {
-                    is FoodProductIdentity.Local -> identity.id
+                    // is FoodProductIdentity.Local -> identity.id
                     is FoodProductIdentity.OpenFoodFacts -> identity.barcode
                     is FoodProductIdentity.FoodDataCentral -> identity.fdcId.toString()
                 },
             extra1 =
                 when (identity) {
-                    is FoodProductIdentity.Local -> identity.accountId.value
+                    // is FoodProductIdentity.Local -> identity.accountId.value
                     is FoodProductIdentity.OpenFoodFacts -> null
                     is FoodProductIdentity.FoodDataCentral -> null
                 },
@@ -260,14 +269,14 @@ sealed interface FoodYouNavHostRoute : NavKey {
         val identity: FoodProductIdentity
             get() =
                 when (type) {
-                    IdentityType.Local -> FoodProductIdentity.Local(extra, LocalAccountId(extra1!!))
+                    // IdentityType.Local -> FoodProductIdentity.Local(extra,
+                    // LocalAccountId(extra1!!))
                     IdentityType.OpenFoodFacts -> FoodProductIdentity.OpenFoodFacts(extra)
                     IdentityType.FoodDataCentral ->
                         FoodProductIdentity.FoodDataCentral(extra.toInt())
                 }
 
         enum class IdentityType {
-            Local,
             OpenFoodFacts,
             FoodDataCentral,
         }

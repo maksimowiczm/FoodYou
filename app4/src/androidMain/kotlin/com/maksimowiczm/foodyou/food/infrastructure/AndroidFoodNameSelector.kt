@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.food.infrastructure
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.maksimowiczm.foodyou.common.domain.FoodName
+import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.Language
-import com.maksimowiczm.foodyou.food.domain.FoodName
-import com.maksimowiczm.foodyou.food.domain.FoodNameSelector
 import java.util.Locale
 
 class AndroidFoodNameSelector(private val context: Context) : FoodNameSelector {
