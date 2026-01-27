@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
@@ -9,7 +9,7 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface OpenFoodFactsDao {
+internal interface OpenFoodFactsDao {
     @Query(
         """
         SELECT p.*

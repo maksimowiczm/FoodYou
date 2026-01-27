@@ -11,23 +11,6 @@ sealed interface SearchParameters {
     val query: SearchQuery
 
     /**
-     * Search parameters for Open Food Facts API.
-     *
-     * Searches the global Open Food Facts product database.
-     *
-     * @property query The search query string
-     * @property orderBy Result ordering preference
-     */
-    data class OpenFoodFacts(override val query: SearchQuery, val orderBy: OrderBy) :
-        SearchParameters {
-        /** Ordering options for Open Food Facts search results. */
-        enum class OrderBy {
-            /** Sort alphabetically by product name (A-Z). */
-            NameAscending
-        }
-    }
-
-    /**
      * Search parameters for FoodData Central API.
      *
      * Searches the USDA FoodData Central database.

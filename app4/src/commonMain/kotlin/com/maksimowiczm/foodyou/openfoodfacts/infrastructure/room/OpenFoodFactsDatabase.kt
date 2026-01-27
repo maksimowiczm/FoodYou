@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room
 
 import androidx.room.ConstructedBy
 import androidx.room.Database
@@ -11,7 +11,7 @@ import androidx.room.RoomDatabaseConstructor
     exportSchema = false,
 )
 @ConstructedBy(OpenFoodFactsDatabaseConstructor::class)
-abstract class OpenFoodFactsDatabase : RoomDatabase() {
+internal abstract class OpenFoodFactsDatabase : RoomDatabase() {
     abstract val dao: OpenFoodFactsDao
 
     companion object {
@@ -22,6 +22,7 @@ abstract class OpenFoodFactsDatabase : RoomDatabase() {
 }
 
 @Suppress("KotlinNoActualForExpect")
-expect object OpenFoodFactsDatabaseConstructor : RoomDatabaseConstructor<OpenFoodFactsDatabase> {
+internal expect object OpenFoodFactsDatabaseConstructor :
+    RoomDatabaseConstructor<OpenFoodFactsDatabase> {
     override fun initialize(): OpenFoodFactsDatabase
 }

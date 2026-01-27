@@ -1,12 +1,12 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.room
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model.OpenFoodFactsNutrients
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsNutrients
 
 @Entity(tableName = "OpenFoodFactsProduct")
-data class OpenFoodFactsProductEntity(
+internal data class OpenFoodFactsProductEntity(
     @PrimaryKey val barcode: String,
     val names: String,
     val url: String?,

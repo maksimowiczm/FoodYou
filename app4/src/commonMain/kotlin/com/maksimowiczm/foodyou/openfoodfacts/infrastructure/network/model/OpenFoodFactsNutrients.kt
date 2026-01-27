@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
  * Data class representing the nutrients information from OpenFoodFacts API. All values are per 100g
  * in grams.
  */
-data class OpenFoodFactsNutrients(
+internal data class OpenFoodFactsNutrients(
     @SerialName("energy-kcal_100g") val energy: Double? = null,
     @SerialName("proteins_100g") val proteins: Double? = null,
     @SerialName("proteins_unit") val proteinsUnit: String? = null,

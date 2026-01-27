@@ -1,6 +1,6 @@
-package com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.network.model
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model
 
-interface OpenFoodFactsProduct {
+internal interface OpenFoodFactsProduct {
     val localizedNames: Map<String, String>
     val brand: String?
     val barcode: String

@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodDataCentralErrorCard
 import com.maksimowiczm.foodyou.food.domain.FoodDatabaseError
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -32,7 +33,7 @@ internal fun FoodSearchErrorCard(
 ) {
     when (error) {
         is FoodDatabaseError.Unknown,
-        is FoodDatabaseError.OpenFoodFacts.RateLimitExceeded ->
+        is OpenFoodFactsApiError.RateLimitExceeded ->
             FoodSearchErrorCard(message = error.message, onRetry = onRetry, modifier = modifier)
 
         is FoodDatabaseError.ProductNotFound -> Unit
