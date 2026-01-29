@@ -8,26 +8,27 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.infrastructure.room.immediateTransaction
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
-import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsV2RemoteDataSource
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.SearchaliciousRemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsPagingKeyEntity
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsProductEntity
-import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
 
-// TODO
-//  Fix issue with downloading first pages multiple times
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediator(
     private val query: SearchQuery.NotBlank,
     private val database: OpenFoodFactsDatabase,
-    private val remote: OpenFoodFactsRemoteDataSource,
+    private val search: SearchaliciousRemoteDataSource,
+    private val apiV2: OpenFoodFactsV2RemoteDataSource,
+    private val mapper: OpenFoodFactsProductMapper,
+    private val pageSize: Int,
     logger: Logger,
 ) : RemoteMediator<Int, OpenFoodFactsProductEntity>() {
     private val logger = logger.withTag(TAG)
     private val dao = database.dao
-    private val mapper = OpenFoodFactsProductMapper()
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
 
@@ -59,20 +60,20 @@ internal class OpenFoodFactsRemoteMediator(
                                 }
 
                                 val response =
-                                    remote.getProduct(barcode).getOrElse {
+                                    apiV2.getProduct(barcode).getOrElse {
                                         return if (it is OpenFoodFactsApiError.ProductNotFound)
                                             MediatorResult.Success(endOfPaginationReached = true)
                                         else MediatorResult.Error(it)
                                     }
 
-                                val product = mapper.openFoodFactsProductEntity(response)
+                                val product = mapper.toEntity(response)
                                 dao.upsertProduct(product)
                                 return MediatorResult.Success(endOfPaginationReached = true)
                             }
 
                             is SearchQuery.Text -> {
                                 val count = dao.getPagingKeyCountByQuery(query.query)
-                                val nextPage = (count / PAGE_SIZE) + 1
+                                val nextPage = (count / pageSize) + 1
                                 nextPage
                             }
 
@@ -83,10 +84,9 @@ internal class OpenFoodFactsRemoteMediator(
 
             logger.d { "Loading page $page" }
 
-            val response =
-                remote.queryProducts(query = query.query, page = page, pageSize = PAGE_SIZE)
+            val response = search.search(query = query.query, page = page, pageSize = pageSize)
 
-            val entities = response.products.map(mapper::openFoodFactsProductEntity)
+            val entities = response.hits.map(mapper::toEntity)
             val pagingKeys =
                 entities.map {
                     OpenFoodFactsPagingKeyEntity(
@@ -100,17 +100,9 @@ internal class OpenFoodFactsRemoteMediator(
                 dao.insertPagingKeys(pagingKeys)
             }
 
-            val skipped = response.products.size - entities.size
-            val endOfPaginationReached = entities.size + skipped < PAGE_SIZE
-
-            return if (skipped == PAGE_SIZE) {
-                logger.w { "All products on page were skipped" }
-                load(loadType, state)
-            } else {
-                MediatorResult.Success(endOfPaginationReached)
-            }
+            return MediatorResult.Success(response.hits.size < response.pageSize)
         } catch (e: Exception) {
-            coroutineContext.ensureActive()
+            currentCoroutineContext().ensureActive()
             logger.e("Error during loading data from OpenFoodFacts", e)
             return MediatorResult.Error(e)
         }
@@ -118,6 +110,5 @@ internal class OpenFoodFactsRemoteMediator(
 
     private companion object {
         const val TAG = "OpenFoodFactsRemoteMediator"
-        const val PAGE_SIZE = 50
     }
 }

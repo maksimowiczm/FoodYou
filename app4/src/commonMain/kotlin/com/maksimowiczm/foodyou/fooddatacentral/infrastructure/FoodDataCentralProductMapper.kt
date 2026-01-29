@@ -102,8 +102,6 @@ internal class FoodDataCentralProductMapper {
                 name = FoodName(english = description, fallback = description),
                 brand = brandOwner?.let { FoodBrand(it) },
                 barcode = gtinUpc?.let { Barcode(it) },
-                note = null,
-                image = null,
                 source =
                     FoodSource.FoodDataCentral(
                         "https://fdc.nal.usda.gov/food-details/$fdcId/nutrients"

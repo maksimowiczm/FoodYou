@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure
 
+import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
-import com.maksimowiczm.foodyou.common.domain.food.FoodImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNote
 import com.maksimowiczm.foodyou.common.domain.food.FoodSource
@@ -33,7 +33,7 @@ internal class UserFoodMapper {
                 brand = brand,
                 barcode = entity.barcode?.let { Barcode(it) },
                 note = entity.note?.let { FoodNote(it) },
-                image = entity.photoPath?.let { FoodImage.Local(it) },
+                image = entity.photoPath?.let { Image.Local(it) },
                 source = entity.source?.let { FoodSource.UserAdded(it) },
                 nutritionFacts = nutrients,
                 servingQuantity = servingQuantity,

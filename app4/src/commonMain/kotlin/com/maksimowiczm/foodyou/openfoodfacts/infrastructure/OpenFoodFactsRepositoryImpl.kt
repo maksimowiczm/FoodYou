@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure
 
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadState.NotLoading
+import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -19,7 +19,8 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
-import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsV2RemoteDataSource
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.SearchaliciousRemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +33,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 internal class OpenFoodFactsRepositoryImpl(
-    private val networkDataSource: OpenFoodFactsRemoteDataSource,
+    private val searchApi: SearchaliciousRemoteDataSource,
+    private val apiV2: OpenFoodFactsV2RemoteDataSource,
     private val searchPreferencesRepository: FoodSearchPreferencesRepository,
     private val database: OpenFoodFactsDatabase,
     private val dao: OpenFoodFactsDao,
@@ -49,9 +51,13 @@ internal class OpenFoodFactsRepositoryImpl(
 
         if (parameters.query is SearchQuery.FoodDataCentralUrl) {
             return flowOf(
-                PagingData.empty(
+                PagingData.Companion.empty(
                     sourceLoadStates =
-                        LoadStates(NotLoading(true), NotLoading(true), NotLoading(true))
+                        LoadStates(
+                            LoadState.NotLoading(true),
+                            LoadState.NotLoading(true),
+                            LoadState.NotLoading(true),
+                        )
                 )
             )
         }
@@ -75,14 +81,17 @@ internal class OpenFoodFactsRepositoryImpl(
                     OpenFoodFactsRemoteMediator(
                         query = parameters.query,
                         database = database,
-                        remote = networkDataSource,
+                        search = searchApi,
+                        apiV2 = apiV2,
+                        mapper = mapper,
+                        pageSize = pageSize,
                         logger = logger,
                     )
                 } else null
 
             Pager(config = config, pagingSourceFactory = factory, remoteMediator = remoteMediator)
                 .flow
-                .map { data -> data.map(mapper::openFoodFactsProduct) }
+                .map { data -> data.map(mapper::toModel) }
         }
     }
 
@@ -107,10 +116,10 @@ internal class OpenFoodFactsRepositoryImpl(
 
         if (localProduct == null) {
             try {
-                val openFoodFactsProduct = networkDataSource.getProduct(barcode).getOrThrow()
-                val entity = mapper.openFoodFactsProductEntity(openFoodFactsProduct)
+                val openFoodFactsProduct = apiV2.getProduct(barcode).getOrThrow()
+                val entity = mapper.toEntity(openFoodFactsProduct)
                 dao.upsertProduct(entity)
-                send(RemoteData.Success(mapper.openFoodFactsProduct(entity)))
+                send(RemoteData.Success(mapper.toModel(entity)))
             } catch (e: OpenFoodFactsApiError) {
                 when (e) {
                     is OpenFoodFactsApiError.ProductNotFound -> send(RemoteData.NotFound)
@@ -119,13 +128,13 @@ internal class OpenFoodFactsRepositoryImpl(
                 }
             }
         } else {
-            send(RemoteData.Success(mapper.openFoodFactsProduct(localProduct)))
+            send(RemoteData.Success(mapper.toModel(localProduct)))
         }
 
         dao.observe(barcode).drop(1).collectLatest {
             when (it) {
                 null -> send(RemoteData.NotFound)
-                else -> send(RemoteData.Success(mapper.openFoodFactsProduct(it)))
+                else -> send(RemoteData.Success(mapper.toModel(it)))
             }
         }
     }
@@ -136,10 +145,10 @@ internal class OpenFoodFactsRepositoryImpl(
         val barcode = identity.barcode
 
         return try {
-            val remote = networkDataSource.getProduct(barcode).getOrThrow()
-            val entity = mapper.openFoodFactsProductEntity(remote)
+            val remote = apiV2.getProduct(barcode).getOrThrow()
+            val entity = mapper.toEntity(remote)
             dao.upsertProduct(entity)
-            Ok(mapper.openFoodFactsProduct(entity))
+            Ok(mapper.toModel(entity))
         } catch (e: OpenFoodFactsApiError) {
             Err(e)
         }

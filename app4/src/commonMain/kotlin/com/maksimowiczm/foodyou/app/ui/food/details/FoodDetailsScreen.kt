@@ -56,12 +56,12 @@ import androidx.compose.ui.zIndex
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.component.Image
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.common.saveable.rememberBlockingDataStore
 import com.maksimowiczm.foodyou.app.ui.food.EnergyProgressIndicator
-import com.maksimowiczm.foodyou.app.ui.food.Image
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.food.FoodNote
 import com.maksimowiczm.foodyou.common.domain.food.FoodSource

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food
+package com.maksimowiczm.foodyou.app.ui.common.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
@@ -18,7 +18,7 @@ import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
-import com.maksimowiczm.foodyou.common.domain.food.FoodImage
+import com.maksimowiczm.foodyou.common.domain.Image
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 import io.github.vinceglb.filekit.PlatformFile
@@ -27,30 +27,17 @@ import io.github.vinceglb.filekit.coil.securelyAccessFile
 import io.github.vinceglb.filekit.lastModified
 
 @Composable
-fun FoodImage.Thumbnail(shimmer: Shimmer, modifier: Modifier = Modifier) {
+fun Image.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
     when (this) {
-        is FoodImage.Remote -> ImageFor(shimmer, modifier) { thumbnail }
-        is FoodImage.Local -> ImageFor(shimmer, modifier)
+        is Image.Local -> Image(shimmer = shimmer, modifier = modifier)
+
+        is Image.Remote -> Image(shimmer = shimmer, modifier = modifier)
     }
 }
 
 @Composable
-fun FoodImage.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
-    when (this) {
-        is FoodImage.Remote -> ImageFor(shimmer, modifier) { fullSize }
-        is FoodImage.Local -> ImageFor(shimmer, modifier)
-    }
-}
-
-@Composable
-private fun FoodImage.Remote.ImageFor(
-    shimmer: Shimmer,
-    modifier: Modifier = Modifier,
-    image: FoodImage.Remote.() -> String?,
-) {
-    val image = remember(image) { image(this) }
-
-    val painter = rememberAsyncImagePainter(model = image)
+fun Image.Remote.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
+    val painter = rememberAsyncImagePainter(model = url)
     val state = painter.state.collectAsStateWithLifecycle().value
 
     val color by
@@ -102,7 +89,7 @@ private fun FoodImage.Remote.ImageFor(
 }
 
 @Composable
-fun FoodImage.Local.ImageFor(shimmer: Shimmer, modifier: Modifier = Modifier) {
+fun Image.Local.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
     val platformContext = LocalPlatformContext.current
     val model =
         remember(platformContext, uri) {

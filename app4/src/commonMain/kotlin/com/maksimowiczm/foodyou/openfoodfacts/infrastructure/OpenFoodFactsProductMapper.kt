@@ -1,194 +1,161 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure
 
-import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.Barcode
-import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
+import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
-import com.maksimowiczm.foodyou.common.domain.food.FoodImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.FoodSource
-import com.maksimowiczm.foodyou.common.domain.food.Grams
-import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
-import com.maksimowiczm.foodyou.common.domain.food.Ounces
+import com.maksimowiczm.foodyou.common.extension.takeIfNotBlank
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsProduct as NetworkOpenFoodFactsProduct
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.Nutriments
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsProductNetwork
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsProductEntity
 import kotlinx.serialization.json.Json
 
 internal class OpenFoodFactsProductMapper {
-    fun openFoodFactsProductEntity(
-        product: NetworkOpenFoodFactsProduct
-    ): OpenFoodFactsProductEntity =
-        with(product) {
-            return OpenFoodFactsProductEntity(
-                barcode = barcode,
-                names = Json.encodeToString(localizedNames),
-                url = url,
-                nutrients = nutritionFacts,
-                brand = brand.takeIfNotBlank(),
-                packageWeight = packageWeight,
-                packageQuantityUnit = packageQuantityUnit,
-                servingWeight = servingWeight,
-                servingQuantityUnit = servingQuantityUnit,
-                thumbnailUrl = thumbnailUrl,
-                imageUrl = imageUrl,
-            )
-        }
+    fun toEntity(model: OpenFoodFactsProductNetwork) =
+        OpenFoodFactsProductEntity(barcode = model.code, rawJson = Json.encodeToString(model))
 
-    fun openFoodFactsProduct(entity: OpenFoodFactsProductEntity): OpenFoodFactsProduct =
-        buildFoodDto(entity) {
-            name,
-            brand,
-            nutrients,
-            servingQuantity,
-            packageQuantity,
-            image,
-            isLiquid ->
-            OpenFoodFactsProduct(
-                identity = OpenFoodFactsProductIdentity(entity.barcode),
-                name = name,
-                brand = brand,
-                barcode = entity.barcode.takeIfNotBlank()?.let { Barcode(it) },
-                note = null,
-                image = image,
-                source = entity.url.takeIfNotBlank()?.let { FoodSource.OpenFoodFacts(it) },
-                nutritionFacts = nutrients,
-                servingQuantity = servingQuantity,
-                packageQuantity = packageQuantity,
-                isLiquid = isLiquid,
-            )
-        }
+    fun toModel(entity: OpenFoodFactsProductEntity) =
+        toModel(Json.decodeFromString<OpenFoodFactsProductNetwork>(entity.rawJson))
 
-    private inline fun <T> buildFoodDto(
-        entity: OpenFoodFactsProductEntity,
-        build:
-            (
-                FoodName,
-                FoodBrand?,
-                NutritionFacts,
-                AbsoluteQuantity?,
-                AbsoluteQuantity?,
-                FoodImage.Remote?,
-                isLiquid: Boolean,
-            ) -> T,
-    ): T =
-        with(entity) {
-            val nameMap = Json.decodeFromString<Map<String, String>>(names)
-
-            val name =
-                FoodName(
-                    english = nameMap["en"].takeIfNotBlank(),
-                    catalan = nameMap["ca"].takeIfNotBlank(),
-                    danish = nameMap["da"].takeIfNotBlank(),
-                    german = nameMap["de"].takeIfNotBlank(),
-                    spanish = nameMap["es"].takeIfNotBlank(),
-                    french = nameMap["fr"].takeIfNotBlank(),
-                    indonesian = nameMap["id"].takeIfNotBlank() ?: nameMap["in"].takeIfNotBlank(),
-                    italian = nameMap["it"].takeIfNotBlank(),
-                    hungarian = nameMap["hu"].takeIfNotBlank(),
-                    dutch = nameMap["nl"].takeIfNotBlank(),
-                    polish = nameMap["pl"].takeIfNotBlank(),
-                    portugueseBrazil =
-                        nameMap["pt_br"].takeIfNotBlank() ?: nameMap["pt"].takeIfNotBlank(),
-                    slovenian = nameMap["sl"].takeIfNotBlank(),
-                    turkish = nameMap["tr"].takeIfNotBlank(),
-                    russian = nameMap["ru"].takeIfNotBlank(),
-                    ukrainian = nameMap["uk"].takeIfNotBlank(),
-                    arabic = nameMap["ar"].takeIfNotBlank(),
-                    chineseSimplified = nameMap["zh"].takeIfNotBlank(),
-                    fallback = nameMap.values.firstOrNull { it.isNotBlank() } ?: barcode,
-                )
-
-            val nutrients =
-                NutritionFacts.requireAll(
-                    proteins = nutrients?.proteins.toNutrientValue(),
-                    carbohydrates = nutrients?.carbohydrates.toNutrientValue(),
-                    energy = nutrients?.energy.toNutrientValue(),
-                    fats = nutrients?.fats.toNutrientValue(),
-                    saturatedFats = nutrients?.saturatedFats.toNutrientValue(),
-                    transFats = nutrients?.transFats.toNutrientValue(),
-                    monounsaturatedFats = nutrients?.monounsaturatedFats.toNutrientValue(),
-                    polyunsaturatedFats = nutrients?.polyunsaturatedFats.toNutrientValue(),
-                    omega3 = nutrients?.omega3Fats.toNutrientValue(),
-                    omega6 = nutrients?.omega6Fats.toNutrientValue(),
-                    sugars = nutrients?.sugars.toNutrientValue(),
-                    addedSugars = nutrients?.addedSugars.toNutrientValue(),
-                    dietaryFiber = nutrients?.fiber.toNutrientValue(),
-                    solubleFiber = nutrients?.solubleFiber.toNutrientValue(),
-                    insolubleFiber = nutrients?.insolubleFiber.toNutrientValue(),
-                    salt = nutrients?.salt.toNutrientValue(),
-                    cholesterol = nutrients?.cholesterol.toNutrientValue(),
-                    caffeine = nutrients?.caffeine.toNutrientValue(),
-                    vitaminA = nutrients?.vitaminA.toNutrientValue(),
-                    vitaminB1 = nutrients?.vitaminB1.toNutrientValue(),
-                    vitaminB2 = nutrients?.vitaminB2.toNutrientValue(),
-                    vitaminB3 = nutrients?.vitaminB3.toNutrientValue(),
-                    vitaminB5 = nutrients?.vitaminB5.toNutrientValue(),
-                    vitaminB6 = nutrients?.vitaminB6.toNutrientValue(),
-                    vitaminB7 = nutrients?.vitaminB7.toNutrientValue(),
-                    vitaminB9 = nutrients?.vitaminB9.toNutrientValue(),
-                    vitaminB12 = nutrients?.vitaminB12.toNutrientValue(),
-                    vitaminC = nutrients?.vitaminC.toNutrientValue(),
-                    vitaminD = nutrients?.vitaminD.toNutrientValue(),
-                    vitaminE = nutrients?.vitaminE.toNutrientValue(),
-                    vitaminK = nutrients?.vitaminK.toNutrientValue(),
-                    manganese = nutrients?.manganese.toNutrientValue(),
-                    magnesium = nutrients?.magnesium.toNutrientValue(),
-                    potassium = nutrients?.potassium.toNutrientValue(),
-                    calcium = nutrients?.calcium.toNutrientValue(),
-                    copper = nutrients?.copper.toNutrientValue(),
-                    zinc = nutrients?.zinc.toNutrientValue(),
-                    sodium = nutrients?.sodium.toNutrientValue(),
-                    iron = nutrients?.iron.toNutrientValue(),
-                    phosphorus = nutrients?.phosphorus.toNutrientValue(),
-                    selenium = nutrients?.selenium.toNutrientValue(),
-                    iodine = nutrients?.iodine.toNutrientValue(),
-                    chromium = nutrients?.chromium.toNutrientValue(),
-                )
-
-            val servingQuantity = parseQuantity(servingWeight, servingQuantityUnit)
-            val packageQuantity = parseQuantity(packageWeight, packageQuantityUnit)
-
-            val image =
-                if (thumbnailUrl != null || imageUrl != null) {
-                    FoodImage.Remote(thumbnail = thumbnailUrl, fullSize = imageUrl)
-                } else {
-                    null
-                }
-
-            val brand = brand.takeIfNotBlank()?.let { FoodBrand(it) }
-
-            val isLiquid =
-                when {
-                    servingQuantity is AbsoluteQuantity.Volume -> true
-                    packageQuantity is AbsoluteQuantity.Volume -> true
-                    else -> false
-                }
-
-            return build(name, brand, nutrients, servingQuantity, packageQuantity, image, isLiquid)
-        }
-
-    private fun parseQuantity(weight: Double?, unit: String?): AbsoluteQuantity? {
-        val validWeight = weight?.takeIf { it > 0 } ?: return null
-        val normalizedUnit = unit?.lowercase() ?: return null
-
-        return when (normalizedUnit) {
-            "g" -> AbsoluteQuantity.Weight(Grams(validWeight))
-            "oz",
-            "oz." -> AbsoluteQuantity.Weight(Ounces(validWeight))
-
-            "ml" -> AbsoluteQuantity.Volume(Milliliters(validWeight))
-            "fl",
-            "fl.oz",
-            "fl. oz",
-            "fl.oz." -> AbsoluteQuantity.Volume(FluidOunces(validWeight))
-
-            else -> null
-        }
-    }
+    fun toModel(network: OpenFoodFactsProductNetwork): OpenFoodFactsProduct = network.toModel()
 }
 
-private fun String?.takeIfNotBlank(): String? = this?.takeIf { it.isNotBlank() }
+private fun OpenFoodFactsProductNetwork.toModel(): OpenFoodFactsProduct {
+    val name =
+        FoodName(
+            english =
+                localizedNames["en"].takeIfNotBlank()
+                    ?: localizedGenericNames["en"].takeIfNotBlank(),
+            catalan =
+                localizedNames["ca"].takeIfNotBlank()
+                    ?: localizedGenericNames["ca"].takeIfNotBlank(),
+            danish =
+                localizedNames["da"].takeIfNotBlank()
+                    ?: localizedGenericNames["da"].takeIfNotBlank(),
+            german =
+                localizedNames["de"].takeIfNotBlank()
+                    ?: localizedGenericNames["de"].takeIfNotBlank(),
+            spanish =
+                localizedNames["es"].takeIfNotBlank()
+                    ?: localizedGenericNames["es"].takeIfNotBlank(),
+            french =
+                localizedNames["fr"].takeIfNotBlank()
+                    ?: localizedGenericNames["fr"].takeIfNotBlank(),
+            indonesian =
+                localizedNames["id"].takeIfNotBlank()
+                    ?: localizedNames["in"].takeIfNotBlank()
+                    ?: localizedGenericNames["id"].takeIfNotBlank()
+                    ?: localizedGenericNames["in"].takeIfNotBlank(),
+            italian =
+                localizedNames["it"].takeIfNotBlank()
+                    ?: localizedGenericNames["it"].takeIfNotBlank(),
+            hungarian =
+                localizedNames["hu"].takeIfNotBlank()
+                    ?: localizedGenericNames["hu"].takeIfNotBlank(),
+            dutch =
+                localizedNames["nl"].takeIfNotBlank()
+                    ?: localizedGenericNames["nl"].takeIfNotBlank(),
+            polish =
+                localizedNames["pl"].takeIfNotBlank()
+                    ?: localizedGenericNames["pl"].takeIfNotBlank(),
+            portugueseBrazil =
+                localizedNames["pt_br"].takeIfNotBlank()
+                    ?: localizedNames["pt"].takeIfNotBlank()
+                    ?: localizedGenericNames["pt_br"].takeIfNotBlank()
+                    ?: localizedGenericNames["pt"].takeIfNotBlank(),
+            slovenian =
+                localizedNames["sl"].takeIfNotBlank()
+                    ?: localizedGenericNames["sl"].takeIfNotBlank(),
+            turkish =
+                localizedNames["tr"].takeIfNotBlank()
+                    ?: localizedGenericNames["tr"].takeIfNotBlank(),
+            russian =
+                localizedNames["ru"].takeIfNotBlank()
+                    ?: localizedGenericNames["ru"].takeIfNotBlank(),
+            ukrainian =
+                localizedNames["uk"].takeIfNotBlank()
+                    ?: localizedGenericNames["uk"].takeIfNotBlank(),
+            arabic =
+                localizedNames["ar"].takeIfNotBlank()
+                    ?: localizedGenericNames["ar"].takeIfNotBlank(),
+            chineseSimplified =
+                localizedNames["zh"].takeIfNotBlank()
+                    ?: localizedGenericNames["zh"].takeIfNotBlank(),
+            fallback =
+                localizedNames[""].takeIfNotBlank()
+                    ?: localizedGenericNames[""].takeIfNotBlank()
+                    ?: localizedNames.values.firstOrNull { it.isNotBlank() }
+                    ?: code,
+        )
+
+    val thumbnail = imageThumbUrl ?: imageFrontThumbUrl
+    val fullSize = imageUrl ?: imageFrontUrl
+
+    return OpenFoodFactsProduct(
+        identity = OpenFoodFactsProductIdentity(code),
+        name = name,
+        brand =
+            brands
+                ?.takeIf { it.isNotEmpty() }
+                ?.filterNot { it.isBlank() }
+                ?.joinToString()
+                ?.let(::FoodBrand),
+        nutritionFacts = nutriments?.toNutritionFacts() ?: NutritionFacts(),
+        // TODO
+        servingQuantity = null,
+        packageQuantity = null,
+        thumbnail = thumbnail?.let(Image::Remote),
+        image = fullSize?.let(Image::Remote),
+        source = "https://world.openfoodfacts.org/product/$code",
+    )
+}
+
+private fun Nutriments.toNutritionFacts() =
+    NutritionFacts.requireAll(
+        proteins = proteins100g.toNutrientValue(),
+        carbohydrates = carbohydrates100g.toNutrientValue(),
+        energy = energyKcal100g.toNutrientValue(),
+        fats = fat100g.toNutrientValue(),
+        saturatedFats = saturatedFat100g.toNutrientValue(),
+        transFats = transFat100g.toNutrientValue(),
+        monounsaturatedFats = monounsaturatedFat100g.toNutrientValue(),
+        polyunsaturatedFats = polyunsaturatedFat100g.toNutrientValue(),
+        omega3 = omega3Fat100g.toNutrientValue(),
+        omega6 = omega6Fat100g.toNutrientValue(),
+        sugars = sugars100g.toNutrientValue(),
+        addedSugars = addedSugars100g.toNutrientValue(),
+        dietaryFiber = fiber100g.toNutrientValue(),
+        solubleFiber = solubleFiber100g.toNutrientValue(),
+        insolubleFiber = insolubleFiber100g.toNutrientValue(),
+        salt = salt100g.toNutrientValue(),
+        cholesterol = cholesterol100g.toNutrientValue(),
+        caffeine = caffeine100g.toNutrientValue(),
+        vitaminA = vitaminA100g.toNutrientValue(),
+        vitaminB1 = vitaminB1100g.toNutrientValue(),
+        vitaminB2 = vitaminB2100g.toNutrientValue(),
+        vitaminB3 = vitaminB3100g.toNutrientValue(),
+        vitaminB5 = vitaminB5100g.toNutrientValue(),
+        vitaminB6 = vitaminB6100g.toNutrientValue(),
+        vitaminB7 = vitaminB7100g.toNutrientValue(),
+        vitaminB9 = vitaminB9100g.toNutrientValue(),
+        vitaminB12 = vitaminB12100g.toNutrientValue(),
+        vitaminC = vitaminC100g.toNutrientValue(),
+        vitaminD = vitaminD100g.toNutrientValue(),
+        vitaminE = vitaminE100g.toNutrientValue(),
+        vitaminK = vitaminK100g.toNutrientValue(),
+        manganese = manganese100g.toNutrientValue(),
+        magnesium = magnesium100g.toNutrientValue(),
+        potassium = potassium100g.toNutrientValue(),
+        calcium = calcium100g.toNutrientValue(),
+        copper = copper100g.toNutrientValue(),
+        zinc = zinc100g.toNutrientValue(),
+        sodium = sodium100g.toNutrientValue(),
+        iron = iron100g.toNutrientValue(),
+        phosphorus = phosphorus100g.toNutrientValue(),
+        selenium = selenium100g.toNutrientValue(),
+        iodine = iodine100g.toNutrientValue(),
+        chromium = chromium100g.toNutrientValue(),
+    )

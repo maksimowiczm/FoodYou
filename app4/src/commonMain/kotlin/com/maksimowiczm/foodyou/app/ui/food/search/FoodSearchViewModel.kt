@@ -10,7 +10,6 @@ import androidx.paging.map
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.observePrimaryProfile
-import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
 import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchHistoryRepository
@@ -51,7 +50,6 @@ internal class FoodSearchViewModel(
     private val searchQueryParser: SearchQueryParser,
     private val accountManager: AccountManager,
     observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
-    private val nameSelector: FoodNameSelector,
     private val userFoodRepository: UserFoodRepository,
     private val openFoodFactsRepository: OpenFoodFactsRepository,
     private val foodDataCentralRepository: FoodDataCentralRepository,
@@ -172,14 +170,14 @@ internal class FoodSearchViewModel(
         searchQuery.map { query ->
             OpenFoodFactsSearchParameters(
                 query = query,
-                orderBy = OpenFoodFactsSearchParameters.OrderBy.NameAscending,
+                orderBy = OpenFoodFactsSearchParameters.OrderBy.Relevance,
             )
         }
 
     private val openFoodFactsPages =
         openFoodFactsSearchParams
             .flatMapLatest { params ->
-                openFoodFactsRepository.search(parameters = params, pageSize = 30)
+                openFoodFactsRepository.search(parameters = params, pageSize = 50)
             }
             .map { data -> data.map { FoodSearchUiModel.Loaded(it) } }
             .cachedIn(viewModelScope)
@@ -209,7 +207,7 @@ internal class FoodSearchViewModel(
     private val usdaPages =
         usdaSearchParams
             .flatMapLatest { params ->
-                foodDataCentralRepository.search(parameters = params, pageSize = 30)
+                foodDataCentralRepository.search(parameters = params, pageSize = 200)
             }
             .map { data -> data.map { FoodSearchUiModel.Loaded(it) } }
             .cachedIn(viewModelScope)

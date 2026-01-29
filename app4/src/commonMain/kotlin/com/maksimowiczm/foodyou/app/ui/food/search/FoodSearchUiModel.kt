@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.app.ui.food.search
 
 import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
+import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
-import com.maksimowiczm.foodyou.common.domain.food.FoodImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.food.Grams
@@ -67,7 +67,7 @@ sealed interface FoodSearchUiModel {
         override val name: FoodName,
         override val brand: FoodBrand?,
         val barcode: Barcode?,
-        val image: FoodImage?,
+        val image: Image?,
         val nutritionFacts: NutritionFacts,
         val servingQuantity: AbsoluteQuantity?,
         val packageQuantity: AbsoluteQuantity?,
@@ -100,12 +100,12 @@ sealed interface FoodSearchUiModel {
             identity = FoodIdentity.OpenFoodFacts(openFoodFactsProduct.identity),
             name = openFoodFactsProduct.name,
             brand = openFoodFactsProduct.brand,
-            barcode = openFoodFactsProduct.barcode,
-            image = openFoodFactsProduct.image,
+            barcode = Barcode(openFoodFactsProduct.identity.barcode),
+            image = openFoodFactsProduct.thumbnail,
             nutritionFacts = openFoodFactsProduct.nutritionFacts,
             servingQuantity = openFoodFactsProduct.servingQuantity,
             packageQuantity = openFoodFactsProduct.packageQuantity,
-            isLiquid = openFoodFactsProduct.isLiquid,
+            isLiquid = false,
             suggestedQuantity = AbsoluteQuantity.Weight(Grams(100.0)),
         )
 
@@ -116,7 +116,7 @@ sealed interface FoodSearchUiModel {
             name = foodDataCentralProduct.name,
             brand = foodDataCentralProduct.brand,
             barcode = foodDataCentralProduct.barcode,
-            image = foodDataCentralProduct.image,
+            image = null,
             nutritionFacts = foodDataCentralProduct.nutritionFacts,
             servingQuantity = foodDataCentralProduct.servingQuantity,
             packageQuantity = foodDataCentralProduct.packageQuantity,

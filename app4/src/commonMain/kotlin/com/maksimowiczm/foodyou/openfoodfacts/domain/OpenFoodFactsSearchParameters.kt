@@ -11,9 +11,7 @@ import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
  * @property orderBy Result ordering preference
  */
 data class OpenFoodFactsSearchParameters(val query: SearchQuery, val orderBy: OrderBy) {
-    /** Ordering options for Open Food Facts search results. */
     enum class OrderBy {
-        /** Sort alphabetically by product name (A-Z). */
-        NameAscending
+        Relevance
     }
 }

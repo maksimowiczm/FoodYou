@@ -122,7 +122,9 @@ fun FoodYouNavDisplay(
                     FoodDatabaseScreen(
                         onBack = { backStack.removeLastIf<FoodDatabase>() },
                         onCreateProduct = { backStack.add(CreateProduct) },
-                        onFoodDataCentralProduct = {},
+                        onFoodDataCentralProduct = { id ->
+                            backStack.add(FoodDataCentralProductDetails.from(id))
+                        },
                         onOpenFoodFactsProduct = { id ->
                             backStack.add(OpenFoodFactsProductDetails.from(id))
                         },

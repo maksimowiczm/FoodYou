@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.common.domain.RemoteData
+import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -47,6 +48,7 @@ class FoodDetailsViewModel(
         when (identity) {
             is FoodDataCentralProductIdentity ->
                 FavoriteFoodIdentity.FoodDataCentral(identity.fdcId)
+
             is OpenFoodFactsProductIdentity -> FavoriteFoodIdentity.OpenFoodFacts(identity.barcode)
             is UserFoodProductIdentity -> FavoriteFoodIdentity.UserFoodProduct(identity.id)
             else -> error("Invalid identity")
@@ -205,9 +207,9 @@ private fun FoodDataCentralProduct.toUiState(isLoading: Boolean) =
         isLoading = isLoading,
         foodName = name,
         brand = brand?.value,
-        image = image?.let { FoodImageUiState.WithImage(it) } ?: FoodImageUiState.NoImage,
+        image = FoodImageUiState.NoImage,
         nutritionFacts = nutritionFacts,
-        note = note,
+        note = null,
         source = source,
         isFavorite = false,
     )
@@ -220,8 +222,8 @@ private fun OpenFoodFactsProduct.toUiState(isLoading: Boolean) =
         brand = brand?.value,
         image = image?.let { FoodImageUiState.WithImage(it) } ?: FoodImageUiState.NoImage,
         nutritionFacts = nutritionFacts,
-        note = note,
-        source = source,
+        note = null,
+        source = FoodSource.OpenFoodFacts(source),
         isFavorite = false,
     )
 

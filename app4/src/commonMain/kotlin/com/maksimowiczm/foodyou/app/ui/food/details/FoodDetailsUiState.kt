@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.food.details
 
 import androidx.compose.runtime.*
-import com.maksimowiczm.foodyou.common.domain.food.FoodImage
+import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.food.FoodNote
@@ -67,5 +67,5 @@ sealed interface FoodImageUiState {
 
     @Immutable data object NoImage : FoodImageUiState
 
-    @Immutable data class WithImage(val image: FoodImage) : FoodImageUiState
+    @Immutable data class WithImage(val image: Image) : FoodImageUiState
 }
