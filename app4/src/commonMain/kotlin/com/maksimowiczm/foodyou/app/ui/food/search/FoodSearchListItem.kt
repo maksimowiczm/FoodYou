@@ -107,9 +107,7 @@ private fun FoodSearchListItem(
             Text("$text $g")
         },
         energy = {
-            val text =
-                energy?.let { LocalEnergyFormatter.current.formatEnergy(it.roundToInt()) }
-                    ?: ("? " + LocalEnergyFormatter.current.suffix())
+            val text = LocalEnergyFormatter.current.formatEnergy(energy?.roundToInt())
             Text(text)
         },
         quantity = quantity,
