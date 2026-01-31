@@ -63,11 +63,10 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.common.saveable.rememberBlockingDataStore
 import com.maksimowiczm.foodyou.app.ui.food.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
-import com.maksimowiczm.foodyou.common.domain.food.FoodNote
-import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.FoodNote
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer

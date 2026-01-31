@@ -10,16 +10,16 @@ import androidx.paging.map
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Barcode
-import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
-import com.maksimowiczm.foodyou.common.domain.food.FoodNote
-import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.directory
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
+import com.maksimowiczm.foodyou.userfood.domain.FoodBrand
+import com.maksimowiczm.foodyou.userfood.domain.FoodNote
+import com.maksimowiczm.foodyou.userfood.domain.FoodSource
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductDeletedEvent
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
@@ -126,7 +126,7 @@ internal class UserFoodRepositoryImpl(
         barcode: Barcode?,
         note: FoodNote?,
         imageUri: String?,
-        source: FoodSource.UserAdded?,
+        source: FoodSource?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
@@ -185,7 +185,7 @@ internal class UserFoodRepositoryImpl(
         barcode: Barcode?,
         note: FoodNote?,
         imageUri: String?,
-        source: FoodSource.UserAdded?,
+        source: FoodSource?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,

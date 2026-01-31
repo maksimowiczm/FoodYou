@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.common.domain.food
+package com.maksimowiczm.foodyou.userfood.domain
 
 import kotlin.jvm.JvmInline
 

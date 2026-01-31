@@ -15,7 +15,6 @@ import com.maksimowiczm.foodyou.app.ui.userfood.ValuesPer
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
-import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.food.Grams
 import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
@@ -53,7 +52,7 @@ class EditProductViewModel(
             requireNotNull(product) { "Product not found: $identity" }
 
             val name = foodNameSelector.select(product.name)
-            val source = (product.source as? FoodSource.UserAdded)?.value
+            val source = product.source?.value
             val (servingQuantity, servingUnit) =
                 run {
                     if (product.servingQuantity == null) {

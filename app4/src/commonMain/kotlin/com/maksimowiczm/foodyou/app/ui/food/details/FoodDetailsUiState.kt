@@ -4,9 +4,9 @@ import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
-import com.maksimowiczm.foodyou.common.domain.food.FoodNote
-import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.userfood.domain.FoodNote
+import kotlin.jvm.JvmInline
 
 @Immutable
 sealed interface FoodDetailsUiState {
@@ -55,7 +55,7 @@ sealed interface FoodDetailsUiState {
         }
     }
 
-    @Immutable data class NotFound(override val identity: Any) : FoodDetailsUiState
+    @Immutable @JvmInline value class NotFound(override val identity: Any) : FoodDetailsUiState
 
     @Immutable
     data class Error(override val identity: Any, val message: String?) : FoodDetailsUiState
@@ -67,5 +67,14 @@ sealed interface FoodImageUiState {
 
     @Immutable data object NoImage : FoodImageUiState
 
-    @Immutable data class WithImage(val image: Image) : FoodImageUiState
+    @Immutable @JvmInline value class WithImage(val image: Image) : FoodImageUiState
+}
+
+@Immutable
+sealed interface FoodSource {
+    @Immutable @JvmInline value class OpenFoodFacts(val url: String) : FoodSource
+
+    @Immutable @JvmInline value class FoodDataCentral(val url: String) : FoodSource
+
+    @Immutable @JvmInline value class UserAdded(val value: String) : FoodSource
 }

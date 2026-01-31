@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.common.domain.RemoteData
-import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -206,7 +205,7 @@ private fun FoodDataCentralProduct.toUiState(isLoading: Boolean) =
         identity = identity,
         isLoading = isLoading,
         foodName = name,
-        brand = brand?.value,
+        brand = brand,
         image = FoodImageUiState.NoImage,
         nutritionFacts = nutritionFacts,
         note = null,
@@ -219,7 +218,7 @@ private fun OpenFoodFactsProduct.toUiState(isLoading: Boolean) =
         identity = identity,
         isLoading = isLoading,
         foodName = name,
-        brand = brand?.value,
+        brand = brand,
         image = image?.let { FoodImageUiState.WithImage(it) } ?: FoodImageUiState.NoImage,
         nutritionFacts = nutritionFacts,
         note = null,
@@ -236,6 +235,6 @@ private fun UserFoodProduct.toUiState(isLoading: Boolean) =
         image = image?.let { FoodImageUiState.WithImage(it) } ?: FoodImageUiState.NoImage,
         nutritionFacts = nutritionFacts,
         note = note,
-        source = source,
+        source = source?.value?.let(FoodSource::UserAdded),
         isFavorite = false,
     )

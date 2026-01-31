@@ -5,15 +5,15 @@ import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
-import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
-import com.maksimowiczm.foodyou.common.domain.food.FoodNote
-import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.food.Grams
 import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Ounces
+import com.maksimowiczm.foodyou.userfood.domain.FoodBrand
+import com.maksimowiczm.foodyou.userfood.domain.FoodNote
+import com.maksimowiczm.foodyou.userfood.domain.FoodSource
 import kotlinx.coroutines.flow.first
 
 class ProductFormTransformer(
@@ -25,7 +25,7 @@ class ProductFormTransformer(
         val brand: FoodBrand?,
         val barcode: Barcode?,
         val note: FoodNote?,
-        val source: FoodSource.UserAdded?,
+        val source: FoodSource?,
         val nutritionFacts: NutritionFacts,
         val servingQuantity: AbsoluteQuantity?,
         val packageQuantity: AbsoluteQuantity?,
@@ -69,7 +69,7 @@ class ProductFormTransformer(
 
         val note = form.note.value?.let { FoodNote(it) }
 
-        val source = form.source.value?.let { FoodSource.UserAdded(it) }
+        val source = form.source.value?.let { FoodSource(it) }
 
         // Multiplier is 1.0 for 100g/ml, serving size for serving, and package size for package
         // but needs to be adjusted to match that nutrition facts MUST be per 100g/ml

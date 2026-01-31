@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure
 
 import com.maksimowiczm.foodyou.common.domain.Image
-import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -97,12 +96,7 @@ private fun OpenFoodFactsProductNetwork.toModel(): OpenFoodFactsProduct {
     return OpenFoodFactsProduct(
         identity = OpenFoodFactsProductIdentity(code),
         name = name,
-        brand =
-            brands
-                ?.takeIf { it.isNotEmpty() }
-                ?.filterNot { it.isBlank() }
-                ?.joinToString()
-                ?.let(::FoodBrand),
+        brand = brands?.takeIf { it.isNotEmpty() }?.filterNot { it.isBlank() }?.joinToString(),
         nutritionFacts = nutriments?.toNutritionFacts() ?: NutritionFacts(),
         // TODO
         servingQuantity = null,

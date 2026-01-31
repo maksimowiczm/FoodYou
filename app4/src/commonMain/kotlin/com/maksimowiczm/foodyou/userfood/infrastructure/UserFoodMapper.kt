@@ -5,15 +5,15 @@ import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
-import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.FoodNote
-import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.food.Grams
 import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Ounces
 import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsMapper
+import com.maksimowiczm.foodyou.userfood.domain.FoodBrand
+import com.maksimowiczm.foodyou.userfood.domain.FoodNote
+import com.maksimowiczm.foodyou.userfood.domain.FoodSource
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.FoodNameEntity
@@ -34,7 +34,7 @@ internal class UserFoodMapper {
                 barcode = entity.barcode?.let { Barcode(it) },
                 note = entity.note?.let { FoodNote(it) },
                 image = entity.photoPath?.let { Image.Local(it) },
-                source = entity.source?.let { FoodSource.UserAdded(it) },
+                source = entity.source?.let { FoodSource(it) },
                 nutritionFacts = nutrients,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
@@ -96,7 +96,7 @@ internal class UserFoodMapper {
         barcode: Barcode?,
         note: FoodNote?,
         imagePath: String?,
-        source: FoodSource.UserAdded?,
+        source: FoodSource?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,

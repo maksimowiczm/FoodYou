@@ -4,10 +4,7 @@ import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Barcode
-import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.FoodNote
-import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import kotlinx.coroutines.flow.Flow
 
@@ -25,7 +22,7 @@ interface UserFoodRepository {
         barcode: Barcode?,
         note: FoodNote?,
         imageUri: String?,
-        source: FoodSource.UserAdded?,
+        source: FoodSource?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
@@ -40,7 +37,7 @@ interface UserFoodRepository {
         barcode: Barcode?,
         note: FoodNote?,
         imageUri: String?,
-        source: FoodSource.UserAdded?,
+        source: FoodSource?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,

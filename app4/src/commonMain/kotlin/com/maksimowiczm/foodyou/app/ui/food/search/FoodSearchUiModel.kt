@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Barcode
-import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.food.Grams
@@ -50,14 +49,14 @@ sealed interface FoodSearchUiModel {
     @Immutable
     sealed interface Branded : FoodSearchUiModel {
         val name: FoodName?
-        val brand: FoodBrand?
+        val brand: String?
     }
 
     @Immutable
     data class Error(
         override val identity: FoodIdentity,
         override val name: FoodName?,
-        override val brand: FoodBrand?,
+        override val brand: String?,
         val error: Throwable,
     ) : Branded
 
@@ -65,7 +64,7 @@ sealed interface FoodSearchUiModel {
     data class Loaded(
         override val identity: FoodIdentity,
         override val name: FoodName,
-        override val brand: FoodBrand?,
+        override val brand: String?,
         val barcode: Barcode?,
         val image: Image?,
         val nutritionFacts: NutritionFacts,
@@ -75,7 +74,7 @@ sealed interface FoodSearchUiModel {
         val suggestedQuantity: Quantity,
     ) : Branded {
         fun localizedName(foodNameSelector: FoodNameSelector): String {
-            val brandSuffix = brand?.let { " (${it.value})" } ?: ""
+            val brandSuffix = brand?.let { " ($it)" } ?: ""
             return foodNameSelector.select(name) + brandSuffix
         }
 
@@ -84,7 +83,7 @@ sealed interface FoodSearchUiModel {
         ) : this(
             identity = FoodIdentity.UserFood(userFoodProduct.identity),
             name = userFoodProduct.name,
-            brand = userFoodProduct.brand,
+            brand = userFoodProduct.brand?.value,
             barcode = userFoodProduct.barcode,
             image = userFoodProduct.image,
             nutritionFacts = userFoodProduct.nutritionFacts,
@@ -146,8 +145,8 @@ sealed interface FoodSearchUiModel {
                             else return@Comparator Int.MAX_VALUE
                     }
 
-                val brandA = a.brand?.value
-                val brandB = b.brand?.value
+                val brandA = a.brand
+                val brandB = b.brand
 
                 val result = nameA.compareTo(nameB, ignoreCase = true)
                 if (result == 0 && brandA != null && brandB != null)
