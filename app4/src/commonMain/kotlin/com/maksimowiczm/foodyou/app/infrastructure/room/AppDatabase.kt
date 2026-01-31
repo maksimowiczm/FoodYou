@@ -29,7 +29,7 @@ import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.SearchHistoryEnti
 )
 @TypeConverters(EnergyFormatConverter::class, FoodIdentityTypeConverter::class)
 @ConstructedBy(AppDatabaseConstructor::class)
-abstract class AppDatabase : RoomDatabase(), AccountDatabase, FoodSearchDatabase {
+internal abstract class AppDatabase : RoomDatabase(), AccountDatabase, FoodSearchDatabase {
     companion object {
         const val VERSION = 1
 
@@ -38,6 +38,6 @@ abstract class AppDatabase : RoomDatabase(), AccountDatabase, FoodSearchDatabase
 }
 
 @Suppress("KotlinNoActualForExpect")
-expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
+internal expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
     override fun initialize(): AppDatabase
 }

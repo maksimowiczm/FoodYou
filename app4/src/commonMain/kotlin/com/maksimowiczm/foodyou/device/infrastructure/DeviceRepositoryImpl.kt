@@ -13,7 +13,7 @@ import com.maksimowiczm.foodyou.device.domain.DeviceRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-class DeviceRepositoryImpl(
+internal class DeviceRepositoryImpl(
     private val dataStore: DataStore<Preferences>,
     private val deviceDisplayNameProvider: DeviceDisplayNameProvider,
     private val systemDetails: SystemDetails,

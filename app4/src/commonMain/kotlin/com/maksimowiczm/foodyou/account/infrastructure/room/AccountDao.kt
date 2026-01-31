@@ -8,7 +8,7 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-abstract class AccountDao {
+internal abstract class AccountDao {
     @Upsert protected abstract suspend fun upsertAccount(accountEntity: AccountEntity)
 
     @Insert protected abstract suspend fun insertProfile(profileEntity: ProfileEntity)

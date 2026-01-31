@@ -22,7 +22,7 @@ internal fun Preferences.toNutrientsColors(): NutrientsColors =
     )
 
 private object NutrientsColorsKeys {
-    val proteinsColor = longPreferencesKey("nutrientsColors:proteins")
-    val carbohydratesColor = longPreferencesKey("nutrientsColors:carbohydrates")
-    val fatsColor = longPreferencesKey("nutrientsColors:fats")
+    val proteinsColor = longPreferencesKey("device:nutrientsColors:proteins")
+    val carbohydratesColor = longPreferencesKey("device:nutrientsColors:carbohydrates")
+    val fatsColor = longPreferencesKey("device:nutrientsColors:fats")
 }

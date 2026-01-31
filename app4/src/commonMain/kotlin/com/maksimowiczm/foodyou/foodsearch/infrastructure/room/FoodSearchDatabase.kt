@@ -1,5 +1,5 @@
 package com.maksimowiczm.foodyou.foodsearch.infrastructure.room
 
-interface FoodSearchDatabase {
+internal interface FoodSearchDatabase {
     val searchHistoryDao: SearchHistoryDao
 }

@@ -18,7 +18,7 @@ import androidx.room.PrimaryKey
         ],
     indices = [Index(value = ["profileId", "accountId"]), Index(value = ["accountId"])],
 )
-data class ProfileFavoriteFoodEntity(
+internal data class ProfileFavoriteFoodEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val profileId: String,
     val accountId: String,

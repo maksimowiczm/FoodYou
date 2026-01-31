@@ -19,7 +19,7 @@ import com.maksimowiczm.foodyou.account.domain.EnergyFormat
         ],
     indices = [Index("accountId")],
 )
-data class SettingsEntity(
+internal data class SettingsEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val accountId: String,
     val onboardingFinished: Boolean,

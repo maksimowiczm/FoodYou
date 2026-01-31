@@ -18,7 +18,7 @@ import androidx.room.Index
         ],
     indices = [Index("accountId")],
 )
-data class ProfileEntity(
+internal data class ProfileEntity(
     val id: String,
     val accountId: String,
     val name: String,

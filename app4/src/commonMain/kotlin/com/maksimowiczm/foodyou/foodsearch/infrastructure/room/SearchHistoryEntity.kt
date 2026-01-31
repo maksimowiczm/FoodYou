@@ -8,4 +8,8 @@ import androidx.room.Index
     primaryKeys = ["query"],
     indices = [Index(value = ["profileId"])],
 )
-data class SearchHistoryEntity(val profileId: String, val query: String, val timestampMillis: Long)
+internal data class SearchHistoryEntity(
+    val profileId: String,
+    val query: String,
+    val timestampMillis: Long,
+)

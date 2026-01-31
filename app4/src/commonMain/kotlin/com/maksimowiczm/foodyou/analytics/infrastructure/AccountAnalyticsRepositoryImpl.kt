@@ -6,7 +6,7 @@ import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.infrastructure.room.eventstore.EventStoreDao
 import com.maksimowiczm.foodyou.common.infrastructure.room.eventstore.RoomEventStoreMapper
 
-class AccountAnalyticsRepositoryImpl(private val eventStoreDao: EventStoreDao) :
+internal class AccountAnalyticsRepositoryImpl(private val eventStoreDao: EventStoreDao) :
     AccountAnalyticsRepository {
 
     private val mapper = RoomEventStoreMapper

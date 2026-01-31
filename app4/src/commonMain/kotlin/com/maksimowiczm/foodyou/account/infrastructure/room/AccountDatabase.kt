@@ -1,5 +1,5 @@
 package com.maksimowiczm.foodyou.account.infrastructure.room
 
-interface AccountDatabase {
+internal interface AccountDatabase {
     val accountDao: AccountDao
 }

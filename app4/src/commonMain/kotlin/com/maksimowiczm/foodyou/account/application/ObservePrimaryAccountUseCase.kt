@@ -15,7 +15,7 @@ fun interface ObservePrimaryAccountUseCase {
  * Use case for observing the primary account. Emits the [Account] whenever the primary account
  * changes. If there is no primary account, the flow will suspend until one is set.
  */
-class ObservePrimaryAccountUseCaseImpl(
+internal class ObservePrimaryAccountUseCaseImpl(
     private val accountManager: AccountManager,
     private val accountRepository: AccountRepository,
 ) : ObservePrimaryAccountUseCase {

@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchPreferencesRepositor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class FoodSearchPreferencesRepositoryImpl(private val dataStore: DataStore<Preferences>) :
+internal class FoodSearchPreferencesRepositoryImpl(private val dataStore: DataStore<Preferences>) :
     FoodSearchPreferencesRepository {
     override fun observe(): Flow<FoodSearchPreferences> {
         return dataStore.data.map { preferences ->

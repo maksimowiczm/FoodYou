@@ -12,7 +12,7 @@ import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class FoodSearchHistoryRepositoryImpl(
+internal class FoodSearchHistoryRepositoryImpl(
     private val dao: SearchHistoryDao,
     private val searchQueryParser: SearchQueryParser,
 ) : FoodSearchHistoryRepository {

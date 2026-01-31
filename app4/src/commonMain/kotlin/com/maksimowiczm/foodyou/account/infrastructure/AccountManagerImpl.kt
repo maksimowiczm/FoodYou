@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class AccountManagerImpl(
+internal class AccountManagerImpl(
     private val dataStore: DataStore<Preferences>,
     private val accountRepository: AccountRepository,
 ) : AccountManager {

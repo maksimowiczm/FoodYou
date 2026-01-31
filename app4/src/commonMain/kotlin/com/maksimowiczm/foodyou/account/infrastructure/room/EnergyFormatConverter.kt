@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.account.infrastructure.room
 import androidx.room.TypeConverter
 import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 
-class EnergyFormatConverter {
+internal class EnergyFormatConverter {
     @TypeConverter
     fun toEnergyFormat(value: Int): EnergyFormat {
         return when (value) {

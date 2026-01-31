@@ -6,7 +6,7 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface SearchHistoryDao {
+internal interface SearchHistoryDao {
 
     @Query(
         """

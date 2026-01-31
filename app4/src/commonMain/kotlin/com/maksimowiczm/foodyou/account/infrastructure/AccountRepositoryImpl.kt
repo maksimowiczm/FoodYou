@@ -36,7 +36,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountRepository {
+internal class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountRepository {
     override fun observe(localAccountId: LocalAccountId): Flow<Account?> {
         return accountDao.observeRichAccount(localAccountId.value).map { accountEntity ->
             if (accountEntity == null) {

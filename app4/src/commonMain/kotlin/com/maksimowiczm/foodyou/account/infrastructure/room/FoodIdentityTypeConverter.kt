@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.account.infrastructure.room
 
 import androidx.room.TypeConverter
 
-class FoodIdentityTypeConverter {
+internal class FoodIdentityTypeConverter {
     @TypeConverter
     fun toFoodIdentityType(value: Int): FoodIdentityType =
         when (value) {
