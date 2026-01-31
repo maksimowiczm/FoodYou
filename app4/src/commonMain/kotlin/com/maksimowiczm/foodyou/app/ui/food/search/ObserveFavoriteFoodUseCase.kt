@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
+import com.maksimowiczm.foodyou.app.ui.food.FoodIdentity
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector

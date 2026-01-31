@@ -62,6 +62,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.common.saveable.rememberBlockingDataStore
 import com.maksimowiczm.foodyou.app.ui.food.EnergyProgressIndicator
+import com.maksimowiczm.foodyou.app.ui.food.FoodIdentity
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -79,7 +80,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun FoodDetailsScreen(
-    identity: Any,
+    identity: FoodIdentity,
     onBack: () -> Unit,
     onEdit: (UserFoodProductIdentity) -> Unit,
     modifier: Modifier = Modifier,

@@ -30,6 +30,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserFoodDetails
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
+import com.maksimowiczm.foodyou.app.ui.food.FoodIdentity
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
@@ -135,21 +136,21 @@ fun FoodYouNavDisplay(
                 }
                 entry<UserFoodDetails> {
                     FoodDetailsScreen(
-                        identity = it.identity,
+                        identity = FoodIdentity.UserFood(it.identity),
                         onBack = { backStack.removeLastIf<UserFoodDetails>() },
                         onEdit = { id -> backStack.add(EditProduct.from(id)) },
                     )
                 }
                 entry<OpenFoodFactsProductDetails> {
                     FoodDetailsScreen(
-                        identity = it.identity,
+                        identity = FoodIdentity.OpenFoodFacts(it.identity),
                         onBack = { backStack.removeLastIf<OpenFoodFactsProductDetails>() },
                         onEdit = { error("Not possible") },
                     )
                 }
                 entry<FoodDataCentralProductDetails> {
                     FoodDetailsScreen(
-                        identity = it.identity,
+                        identity = FoodIdentity.FoodDataCentral(it.identity),
                         onBack = { backStack.removeLastIf<FoodDataCentralProductDetails>() },
                         onEdit = { error("Not possible") },
                     )
