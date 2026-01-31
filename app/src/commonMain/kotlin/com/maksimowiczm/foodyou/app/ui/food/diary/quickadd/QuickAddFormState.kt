@@ -38,7 +38,7 @@ internal fun rememberQuickAddFormState(
     fats: Double? = null,
     energy: Double? = null,
 ): QuickAddFormState {
-    val name =
+    val nameForm =
         rememberFormField(
             initialValue = name,
             parser = stringParser(),
@@ -123,21 +123,46 @@ internal fun rememberQuickAddFormState(
             .collectLatest { energyForm.textFieldState.setTextAndPlaceCursorAtEnd(it) }
     }
 
+    val isModifiedState =
+        remember(
+            nameForm,
+            name,
+            proteinsForm,
+            proteins,
+            carbohydratesForm,
+            carbohydrates,
+            fatsForm,
+            fats,
+            energyForm,
+            energy,
+        ) {
+            derivedStateOf {
+                nameForm.value != name ||
+                    proteinsForm.value != proteins ||
+                    carbohydratesForm.value != carbohydrates ||
+                    fatsForm.value != fats ||
+                    if (energy == null) energyForm.value != null && energyForm.value != 0.0
+                    else energyForm.value != energy
+            }
+        }
+
     return remember(
-        name,
+        nameForm,
         proteinsForm,
         carbohydratesForm,
         fatsForm,
         energyForm,
         autoCalculateEnergyState,
+        isModifiedState,
     ) {
         QuickAddFormState(
-            name = name,
+            name = nameForm,
             proteins = proteinsForm,
             carbohydrates = carbohydratesForm,
             fats = fatsForm,
             energy = energyForm,
             autoCalculateEnergyState = autoCalculateEnergyState,
+            isModified = isModifiedState,
         )
     }
 }
@@ -150,8 +175,11 @@ internal class QuickAddFormState(
     val fats: FormField<Double?, QuickAddFormFieldError>,
     val energy: FormField<Double?, QuickAddFormFieldError>,
     autoCalculateEnergyState: MutableState<Boolean>,
+    isModified: State<Boolean>,
 ) {
     var autoCalculateEnergy by autoCalculateEnergyState
+
+    val isModified by isModified
 
     val isValid by derivedStateOf {
         name.error == null &&

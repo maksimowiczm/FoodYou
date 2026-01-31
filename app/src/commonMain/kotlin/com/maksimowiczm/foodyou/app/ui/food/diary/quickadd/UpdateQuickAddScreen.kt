@@ -58,6 +58,6 @@ fun UpdateQuickAddScreen(
             )
         },
         modifier = modifier,
-        formState = formState,
+        state = formState,
     )
 }

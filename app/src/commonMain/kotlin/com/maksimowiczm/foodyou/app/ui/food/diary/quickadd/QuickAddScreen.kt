@@ -15,12 +15,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationEventHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.component.DiscardDialog
 import com.maksimowiczm.foodyou.common.compose.extension.add
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
@@ -31,7 +36,7 @@ internal fun QuickAddScreen(
     onBack: () -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
-    formState: QuickAddFormState = rememberQuickAddFormState(),
+    state: QuickAddFormState = rememberQuickAddFormState(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val focusRequester = remember { FocusRequester() }
@@ -41,20 +46,45 @@ internal fun QuickAddScreen(
         val _ = runCatching { focusRequester.requestFocus() }
     }
 
+    var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
+    val handleBack = {
+        if (!state.isModified) {
+            onBack()
+        } else {
+            showDiscardDialog = true
+        }
+    }
+    NavigationEventHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = state.isModified,
+        onBackCompleted = { showDiscardDialog = true },
+    )
+    if (showDiscardDialog) {
+        DiscardDialog(
+            onDismissRequest = { showDiscardDialog = false },
+            onDiscard = {
+                showDiscardDialog = false
+                onBack()
+            },
+        ) {
+            Text(stringResource(Res.string.question_discard_changes))
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(Res.string.headline_quick_add)) },
-                navigationIcon = { ArrowBackIconButton(onBack) },
+                navigationIcon = { ArrowBackIconButton(handleBack) },
                 actions = {
                     FilledIconButton(
                         onClick = {
-                            if (formState.isValid) {
+                            if (state.isValid) {
                                 onSave()
                             }
                         },
-                        enabled = formState.isValid,
+                        enabled = state.isValid,
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Save,
@@ -79,7 +109,7 @@ internal fun QuickAddScreen(
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Spacer(Modifier.height(16.dp))
-                QuickAddForm(state = formState, modifier = Modifier.focusRequester(focusRequester))
+                QuickAddForm(state = state, modifier = Modifier.focusRequester(focusRequester))
             }
         }
     }

@@ -21,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.common.compose.component.unorderedList
+import com.maksimowiczm.foodyou.settings.domain.entity.NutrientsOrder
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -37,18 +39,26 @@ internal fun QuickAddForm(state: QuickAddFormState, modifier: Modifier = Modifie
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
 
-        state.proteins.TextField(
-            label = stringResource(Res.string.nutriment_proteins),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        state.carbohydrates.TextField(
-            label = stringResource(Res.string.nutriment_carbohydrates),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        state.fats.TextField(
-            label = stringResource(Res.string.nutriment_fats),
-            modifier = Modifier.fillMaxWidth(),
-        )
+        LocalNutrientsOrder.current.forEach {
+            when (it) {
+                NutrientsOrder.Proteins ->
+                    state.proteins.TextField(
+                        label = stringResource(Res.string.nutriment_proteins),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                NutrientsOrder.Fats ->
+                    state.fats.TextField(
+                        label = stringResource(Res.string.nutriment_fats),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                NutrientsOrder.Carbohydrates ->
+                    state.carbohydrates.TextField(
+                        label = stringResource(Res.string.nutriment_carbohydrates),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                else -> Unit
+            }
+        }
 
         OutlinedTextField(
             state = state.energy.textFieldState,

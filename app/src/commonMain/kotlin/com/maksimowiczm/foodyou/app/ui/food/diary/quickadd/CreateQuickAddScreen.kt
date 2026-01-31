@@ -44,6 +44,6 @@ fun CreateQuickAddScreen(
             )
         },
         modifier = modifier,
-        formState = formState,
+        state = formState,
     )
 }
