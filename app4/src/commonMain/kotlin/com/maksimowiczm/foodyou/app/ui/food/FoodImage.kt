@@ -18,7 +18,7 @@ import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
-import com.maksimowiczm.foodyou.common.domain.FoodImage
+import com.maksimowiczm.foodyou.common.domain.food.FoodImage
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 import io.github.vinceglb.filekit.PlatformFile

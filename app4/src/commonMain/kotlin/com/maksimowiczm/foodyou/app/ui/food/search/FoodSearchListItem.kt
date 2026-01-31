@@ -11,11 +11,11 @@ import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringRe
 import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.Thumbnail
-import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.Grams
-import com.maksimowiczm.foodyou.common.domain.Milliliters
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Grams
+import com.maksimowiczm.foodyou.common.domain.food.Milliliters
+import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
 import com.maksimowiczm.foodyou.common.fold
-import com.maksimowiczm.foodyou.food.search.domain.QuantityCalculator
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt

@@ -1,17 +1,17 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure
 
-import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.Barcode
-import com.maksimowiczm.foodyou.common.domain.FluidOunces
-import com.maksimowiczm.foodyou.common.domain.FoodBrand
-import com.maksimowiczm.foodyou.common.domain.FoodImage
-import com.maksimowiczm.foodyou.common.domain.FoodName
-import com.maksimowiczm.foodyou.common.domain.FoodSource
-import com.maksimowiczm.foodyou.common.domain.Grams
-import com.maksimowiczm.foodyou.common.domain.Milliliters
-import com.maksimowiczm.foodyou.common.domain.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.common.domain.NutritionFacts
-import com.maksimowiczm.foodyou.common.domain.Ounces
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Barcode
+import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
+import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
+import com.maksimowiczm.foodyou.common.domain.food.FoodImage
+import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSource
+import com.maksimowiczm.foodyou.common.domain.food.Grams
+import com.maksimowiczm.foodyou.common.domain.food.Milliliters
+import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.Ounces
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsProduct as NetworkOpenFoodFactsProduct

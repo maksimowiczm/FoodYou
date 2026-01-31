@@ -25,7 +25,7 @@ import com.maksimowiczm.foodyou.app.ui.common.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
-import com.maksimowiczm.foodyou.common.domain.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

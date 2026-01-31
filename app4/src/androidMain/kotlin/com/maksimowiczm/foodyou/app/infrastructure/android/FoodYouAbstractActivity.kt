@@ -15,7 +15,7 @@ import com.maksimowiczm.foodyou.app.ui.common.utility.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClockProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.DateFormatterProvider
 import com.maksimowiczm.foodyou.app.ui.food.FoodNameSelectorProvider
-import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
+import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.common.infrastructure.defaultLocale
 import com.maksimowiczm.foodyou.device.domain.DeviceRepository

@@ -12,8 +12,6 @@ import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.LoadStatus
-import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferencesRepository
-import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -23,6 +21,8 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRe
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.FoodDataCentralRemoteDataSource
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDao
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDatabase
+import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flatMapLatest

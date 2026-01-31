@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.infrastructure.room.immediateTransaction
-import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
+import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase

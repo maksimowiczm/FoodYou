@@ -12,8 +12,8 @@ import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.LoadStatus
-import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferencesRepository
-import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
+import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity

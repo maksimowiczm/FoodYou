@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.fooddatacentral.domain
 
-import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
+import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 
 /**
  * Search parameters for FoodData Central API.

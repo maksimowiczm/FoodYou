@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.userfood
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.app.ui.userfood.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.app.ui.userfood.edit.EditProductViewModel
-import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
+import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.scopedOf
 import org.koin.core.module.dsl.viewModelOf

@@ -17,12 +17,12 @@ import com.maksimowiczm.foodyou.app.ui.profile.profileModule
 import com.maksimowiczm.foodyou.app.ui.userfood.productModule
 import com.maksimowiczm.foodyou.common.clock.di.clockModule
 import com.maksimowiczm.foodyou.common.di.commonModule
+import com.maksimowiczm.foodyou.common.di.foodModule
 import com.maksimowiczm.foodyou.common.event.di.inMemoryEventBusModule
 import com.maksimowiczm.foodyou.common.logger.di.loggerModule
 import com.maksimowiczm.foodyou.device.di.deviceModule
-import com.maksimowiczm.foodyou.food.di.foodModule
-import com.maksimowiczm.foodyou.food.search.di.foodSearchModule
 import com.maksimowiczm.foodyou.fooddatacentral.di.foodDataCentralModule
+import com.maksimowiczm.foodyou.foodsearch.di.foodSearchModule
 import com.maksimowiczm.foodyou.openfoodfacts.di.openFoodFactsModule
 import com.maksimowiczm.foodyou.userfood.di.userFoodModule
 import org.koin.core.KoinApplication

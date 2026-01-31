@@ -1,15 +1,15 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
 import androidx.compose.runtime.*
-import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.Barcode
-import com.maksimowiczm.foodyou.common.domain.FoodBrand
-import com.maksimowiczm.foodyou.common.domain.FoodImage
-import com.maksimowiczm.foodyou.common.domain.FoodName
-import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
-import com.maksimowiczm.foodyou.common.domain.Grams
-import com.maksimowiczm.foodyou.common.domain.NutritionFacts
-import com.maksimowiczm.foodyou.common.domain.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Barcode
+import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
+import com.maksimowiczm.foodyou.common.domain.food.FoodImage
+import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
+import com.maksimowiczm.foodyou.common.domain.food.Grams
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct

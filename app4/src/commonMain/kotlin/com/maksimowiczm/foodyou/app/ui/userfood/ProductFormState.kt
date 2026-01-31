@@ -11,8 +11,8 @@ import com.maksimowiczm.foodyou.app.ui.common.form.nullableDoubleParser
 import com.maksimowiczm.foodyou.app.ui.common.form.nullableStringParser
 import com.maksimowiczm.foodyou.app.ui.common.form.numericStringValidator
 import com.maksimowiczm.foodyou.app.ui.common.form.stringParser
-import com.maksimowiczm.foodyou.common.domain.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.common.domain.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

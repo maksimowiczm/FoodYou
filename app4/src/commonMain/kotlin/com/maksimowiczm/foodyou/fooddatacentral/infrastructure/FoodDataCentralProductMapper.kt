@@ -1,14 +1,14 @@
 package com.maksimowiczm.foodyou.fooddatacentral.infrastructure
 
-import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.Barcode
-import com.maksimowiczm.foodyou.common.domain.FluidOunces
-import com.maksimowiczm.foodyou.common.domain.FoodBrand
-import com.maksimowiczm.foodyou.common.domain.FoodName
-import com.maksimowiczm.foodyou.common.domain.FoodSource
-import com.maksimowiczm.foodyou.common.domain.Grams
-import com.maksimowiczm.foodyou.common.domain.Milliliters
-import com.maksimowiczm.foodyou.common.domain.Ounces
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Barcode
+import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
+import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
+import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSource
+import com.maksimowiczm.foodyou.common.domain.food.Grams
+import com.maksimowiczm.foodyou.common.domain.food.Milliliters
+import com.maksimowiczm.foodyou.common.domain.food.Ounces
 import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsEntity
 import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsMapper
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct

@@ -5,12 +5,12 @@ import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountSettings
 import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.account.domain.testAccount
-import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.FoodName
-import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
-import com.maksimowiczm.foodyou.common.domain.Grams
 import com.maksimowiczm.foodyou.common.domain.Language
-import com.maksimowiczm.foodyou.common.domain.Milliliters
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
+import com.maksimowiczm.foodyou.common.domain.food.Grams
+import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

@@ -1,14 +1,14 @@
 package com.maksimowiczm.foodyou.userfood.domain
 
 import androidx.paging.PagingData
-import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.Barcode
-import com.maksimowiczm.foodyou.common.domain.FoodBrand
-import com.maksimowiczm.foodyou.common.domain.FoodName
-import com.maksimowiczm.foodyou.common.domain.FoodNote
-import com.maksimowiczm.foodyou.common.domain.FoodSource
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
-import com.maksimowiczm.foodyou.common.domain.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Barcode
+import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
+import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodNote
+import com.maksimowiczm.foodyou.common.domain.food.FoodSource
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import kotlinx.coroutines.flow.Flow
 
 interface UserFoodRepository {

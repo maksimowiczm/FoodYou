@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDatabase
 import com.maksimowiczm.foodyou.app.infrastructure.room.AppDatabase.Companion.buildDatabase
 import com.maksimowiczm.foodyou.app.infrastructure.room.EventStoreDatabase.Companion.buildDatabase
 import com.maksimowiczm.foodyou.common.infrastructure.databaseBuilder
-import com.maksimowiczm.foodyou.food.search.infrastructure.room.FoodSearchDatabase
+import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.FoodSearchDatabase
 import org.koin.dsl.binds
 import org.koin.dsl.module
 

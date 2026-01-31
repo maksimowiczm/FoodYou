@@ -1,13 +1,13 @@
 package com.maksimowiczm.foodyou.fooddatacentral.domain
 
-import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.Barcode
-import com.maksimowiczm.foodyou.common.domain.FoodBrand
-import com.maksimowiczm.foodyou.common.domain.FoodImage
-import com.maksimowiczm.foodyou.common.domain.FoodName
-import com.maksimowiczm.foodyou.common.domain.FoodNote
-import com.maksimowiczm.foodyou.common.domain.FoodSource
-import com.maksimowiczm.foodyou.common.domain.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Barcode
+import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
+import com.maksimowiczm.foodyou.common.domain.food.FoodImage
+import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodNote
+import com.maksimowiczm.foodyou.common.domain.food.FoodSource
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 
 class FoodDataCentralProduct(
     val identity: FoodDataCentralProductIdentity,

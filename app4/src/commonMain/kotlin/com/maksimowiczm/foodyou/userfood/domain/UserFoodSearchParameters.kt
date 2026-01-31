@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.userfood.domain
 
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.food.search.domain.SearchQuery
+import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 
 /**
  * Search parameters for local user database.

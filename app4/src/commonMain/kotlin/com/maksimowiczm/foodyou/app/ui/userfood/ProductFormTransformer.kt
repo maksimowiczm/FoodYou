@@ -1,19 +1,19 @@
 package com.maksimowiczm.foodyou.app.ui.userfood
 
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
-import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.Barcode
-import com.maksimowiczm.foodyou.common.domain.FluidOunces
-import com.maksimowiczm.foodyou.common.domain.FoodBrand
-import com.maksimowiczm.foodyou.common.domain.FoodName
-import com.maksimowiczm.foodyou.common.domain.FoodNameSelector
-import com.maksimowiczm.foodyou.common.domain.FoodNote
-import com.maksimowiczm.foodyou.common.domain.FoodSource
-import com.maksimowiczm.foodyou.common.domain.Grams
 import com.maksimowiczm.foodyou.common.domain.Language
-import com.maksimowiczm.foodyou.common.domain.Milliliters
-import com.maksimowiczm.foodyou.common.domain.NutritionFacts
-import com.maksimowiczm.foodyou.common.domain.Ounces
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Barcode
+import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
+import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
+import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
+import com.maksimowiczm.foodyou.common.domain.food.FoodNote
+import com.maksimowiczm.foodyou.common.domain.food.FoodSource
+import com.maksimowiczm.foodyou.common.domain.food.Grams
+import com.maksimowiczm.foodyou.common.domain.food.Milliliters
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.Ounces
 import kotlinx.coroutines.flow.first
 
 class ProductFormTransformer(

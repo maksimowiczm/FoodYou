@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.food.search.domain
 
 import com.maksimowiczm.foodyou.account.domain.testProfileId
 import com.maksimowiczm.foodyou.common.clock.testClock
+import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchHistory
+import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Instant

@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.common.infrastructure.food
 
-import com.maksimowiczm.foodyou.common.domain.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.common.domain.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 
 class NutrientsMapper {
     fun toNutritionFats(entity: NutrientsEntity): NutritionFacts =

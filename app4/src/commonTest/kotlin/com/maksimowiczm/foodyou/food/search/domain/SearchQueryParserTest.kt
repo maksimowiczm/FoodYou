@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.food.search.domain
 
+import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
+import com.maksimowiczm.foodyou.foodsearch.domain.SearchQueryParser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

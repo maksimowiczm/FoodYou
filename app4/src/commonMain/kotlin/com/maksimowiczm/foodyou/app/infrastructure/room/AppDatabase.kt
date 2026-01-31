@@ -12,8 +12,8 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.FoodIdentityTypeConv
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
-import com.maksimowiczm.foodyou.food.search.infrastructure.room.FoodSearchDatabase
-import com.maksimowiczm.foodyou.food.search.infrastructure.room.SearchHistoryEntity
+import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.FoodSearchDatabase
+import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.SearchHistoryEntity
 
 @Database(
     entities =

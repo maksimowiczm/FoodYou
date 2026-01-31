@@ -1,18 +1,19 @@
 package com.maksimowiczm.foodyou.app.ui.common.utility
 
 import androidx.compose.runtime.*
+import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.FluidOunces
-import com.maksimowiczm.foodyou.common.domain.Grams
-import com.maksimowiczm.foodyou.common.domain.Milliliters
-import com.maksimowiczm.foodyou.common.domain.Ounces
-import com.maksimowiczm.foodyou.common.domain.PackageQuantity
-import com.maksimowiczm.foodyou.common.domain.Quantity
-import com.maksimowiczm.foodyou.common.domain.ServingQuantity
-import com.maksimowiczm.foodyou.food.search.domain.QuantityCalculator
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
+import com.maksimowiczm.foodyou.common.domain.food.Grams
+import com.maksimowiczm.foodyou.common.domain.food.Milliliters
+import com.maksimowiczm.foodyou.common.domain.food.Ounces
+import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
+import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
