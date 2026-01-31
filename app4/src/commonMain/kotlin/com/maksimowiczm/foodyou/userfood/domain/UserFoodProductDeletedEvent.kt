@@ -10,4 +10,4 @@ import com.maksimowiczm.foodyou.common.event.IntegrationEvent
  *
  * @property identity The identity of the deleted user food product
  */
-data class UserFoodDeletedEvent(val identity: UserFoodProductIdentity) : IntegrationEvent
+data class UserFoodProductDeletedEvent(val identity: UserFoodProductIdentity) : IntegrationEvent

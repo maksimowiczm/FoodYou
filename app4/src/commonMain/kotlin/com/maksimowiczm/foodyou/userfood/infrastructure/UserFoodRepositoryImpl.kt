@@ -16,9 +16,12 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.food.FoodNote
 import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.directory
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductDeletedEvent
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodSearchParameters
@@ -43,6 +46,7 @@ import kotlinx.coroutines.flow.map
 internal class UserFoodRepositoryImpl(
     private val dao: UserFoodDao,
     private val nameSelector: FoodNameSelector,
+    private val integrationEventBus: EventBus<IntegrationEvent>,
 ) : UserFoodRepository {
     private val mapper = UserFoodMapper()
 
@@ -262,5 +266,7 @@ internal class UserFoodRepositoryImpl(
 
         dao.delete(existingEntity)
         PlatformFile("${existingEntity.uuid}.jpg").delete(mustExist = false)
+
+        integrationEventBus.publish(UserFoodProductDeletedEvent(identity))
     }
 }

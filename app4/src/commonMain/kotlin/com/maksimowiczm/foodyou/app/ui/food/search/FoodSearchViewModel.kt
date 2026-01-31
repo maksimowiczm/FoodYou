@@ -21,6 +21,9 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodSearchParameters
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,9 +41,6 @@ import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
-import kotlin.time.Clock
 
 internal class FoodSearchViewModel(
     private val initialQuery: String?,
