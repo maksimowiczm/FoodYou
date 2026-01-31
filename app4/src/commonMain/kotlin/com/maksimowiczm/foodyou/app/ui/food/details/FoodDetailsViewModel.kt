@@ -210,7 +210,7 @@ private fun FoodDataCentralProduct.toUiState(isLoading: Boolean) =
         image = FoodImageUiState.NoImage,
         nutritionFacts = nutritionFacts,
         note = null,
-        source = source,
+        source = FoodSource.FoodDataCentral(source),
         isFavorite = false,
     )
 

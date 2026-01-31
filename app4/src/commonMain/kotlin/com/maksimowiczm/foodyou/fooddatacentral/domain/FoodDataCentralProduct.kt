@@ -4,7 +4,6 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.FoodSource
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 
 class FoodDataCentralProduct(
@@ -12,7 +11,7 @@ class FoodDataCentralProduct(
     val name: FoodName,
     val brand: FoodBrand?,
     val barcode: Barcode?,
-    val source: FoodSource?,
+    val source: String,
     val nutritionFacts: NutritionFacts,
     val servingQuantity: AbsoluteQuantity?,
     val packageQuantity: AbsoluteQuantity?,

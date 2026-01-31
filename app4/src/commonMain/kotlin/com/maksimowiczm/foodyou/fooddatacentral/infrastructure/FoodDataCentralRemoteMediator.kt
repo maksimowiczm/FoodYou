@@ -21,12 +21,13 @@ internal class FoodDataCentralRemoteMediator(
     private val query: SearchQuery.NotBlank,
     private val database: FoodDataCentralDatabase,
     private val remote: FoodDataCentralRemoteDataSource,
+    private val mapper: FoodDataCentralProductMapper,
     private val apiKey: String?,
+    private val pageSize: Int,
     logger: Logger,
 ) : RemoteMediator<Int, FoodDataCentralProductEntity>() {
     private val logger = logger.withTag(TAG)
     private val dao = database.dao
-    private val mapper = FoodDataCentralProductMapper()
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
 
@@ -47,7 +48,7 @@ internal class FoodDataCentralRemoteMediator(
                             is SearchQuery.Text,
                             is SearchQuery.Barcode -> {
                                 val count = dao.getPagingKeyCountByQuery(query.query)
-                                val nextPage = (count / PAGE_SIZE) + 1
+                                val nextPage = (count / pageSize) + 1
                                 nextPage
                             }
 
@@ -81,7 +82,7 @@ internal class FoodDataCentralRemoteMediator(
                     query = query.query,
                     page = page,
                     apiKey = apiKey,
-                    pageSize = PAGE_SIZE,
+                    pageSize = pageSize,
                 )
 
             val entities = response.foods.map(mapper::foodDataCentralProductEntity)
@@ -95,15 +96,7 @@ internal class FoodDataCentralRemoteMediator(
                 dao.insertPagingKeys(pagingKeys)
             }
 
-            val skipped = response.foods.size - entities.size
-            val endOfPaginationReached = entities.size + skipped < PAGE_SIZE
-
-            return if (skipped == PAGE_SIZE) {
-                logger.w { "All products on page were skipped" }
-                load(loadType, state)
-            } else {
-                MediatorResult.Success(endOfPaginationReached)
-            }
+            return MediatorResult.Success(response.foods.size < pageSize)
         } catch (e: Exception) {
             currentCoroutineContext().ensureActive()
             logger.e("Error during loading data from OpenFoodFacts", e)
@@ -113,6 +106,5 @@ internal class FoodDataCentralRemoteMediator(
 
     private companion object {
         private const val TAG = "FoodDataCentralRemoteMediator"
-        private const val PAGE_SIZE = 200
     }
 }

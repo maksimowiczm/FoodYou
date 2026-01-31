@@ -5,7 +5,6 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.FoodDataCentralRepositoryImpl
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.FoodDataCentralSettingsRepositoryImpl
-import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.FoodDataCentralRateLimiter
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.FoodDataCentralRemoteDataSource
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDatabase
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDatabase.Companion.buildDatabase
@@ -15,13 +14,14 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.dsl.onClose
 
 private const val FOOD_DATA_CENTRAL_DATABASE_NAME = "FoodDataCentralDatabase.db"
+private val httpClientQualifier = named("FoodDataCentralHttpClient")
+private val rateLimiter = named("FoodDataCentralRateLimiter")
 
 val foodDataCentralModule = module {
     single {
@@ -29,18 +29,18 @@ val foodDataCentralModule = module {
     }
     factory { get<FoodDataCentralDatabase>().dao }
 
-    singleOf(::FoodDataCentralRateLimiter)
-    single(named("FoodDataCentralRemoteDataSource")) {
+    single(httpClientQualifier) {
             HttpClient {
                 install(HttpTimeout)
                 install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
             }
         }
         .onClose { it?.close() }
+    single(rateLimiter) { FoodDataCentralRemoteDataSource.rateLimiter(get()) }
     factory {
         FoodDataCentralRemoteDataSource(
-            client = get(named("FoodDataCentralRemoteDataSource")),
-            rateLimiter = get(),
+            client = get(httpClientQualifier),
+            rateLimiter = get(rateLimiter),
             networkConfig = get(),
             logger = get(),
         )

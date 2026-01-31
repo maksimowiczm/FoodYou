@@ -76,7 +76,9 @@ internal class FoodDataCentralRepositoryImpl(
                         query = parameters.query,
                         database = database,
                         remote = networkDataSource,
+                        mapper = mapper,
                         apiKey = settingsRepository.load().apiKey,
+                        pageSize = pageSize,
                         logger = logger,
                     )
                 } else null

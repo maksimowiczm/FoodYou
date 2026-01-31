@@ -26,5 +26,5 @@ internal class FoodDataCentralSettingsRepositoryImpl(
 }
 
 private object PreferencesKeys {
-    val usdaApiKey = stringPreferencesKey("food:usda_api_key")
+    val usdaApiKey = stringPreferencesKey("fooddatacentral:usda_api_key")
 }

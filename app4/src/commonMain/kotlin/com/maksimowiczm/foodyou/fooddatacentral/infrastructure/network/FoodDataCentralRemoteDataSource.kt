@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network
 
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.NetworkConfig
+import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.DetailedFood
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.FoodDataCentralFoodPageResponse
@@ -13,11 +14,13 @@ import io.ktor.client.request.parameter
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 
 internal class FoodDataCentralRemoteDataSource(
     private val client: HttpClient,
     private val networkConfig: NetworkConfig,
-    private val rateLimiter: FoodDataCentralRateLimiter,
+    private val rateLimiter: RateLimiter,
     logger: Logger,
 ) {
     private val logger = logger.withTag(TAG)
@@ -112,8 +115,10 @@ internal class FoodDataCentralRemoteDataSource(
             }
         }
 
-    private companion object {
+    companion object {
         private const val TAG = "FoodDataCentralRemoteDataSourceImpl"
         private const val API_URL = "https://api.nal.usda.gov/fdc"
+
+        fun rateLimiter(clock: Clock) = RateLimiter(clock, 30, 1.hours)
     }
 }
