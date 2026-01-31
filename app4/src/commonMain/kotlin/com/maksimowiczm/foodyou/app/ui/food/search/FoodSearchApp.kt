@@ -237,6 +237,9 @@ private fun FoodSearchApp(
                                 onClick = { onFoodClick(food) },
                                 shimmer = shimmer,
                             )
+
+                        // TODO
+                        is FoodSearchUiModel.Error -> Unit
                     }
                 }
 

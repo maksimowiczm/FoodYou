@@ -2,10 +2,14 @@ package com.maksimowiczm.foodyou.app.ui.food.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.domain.AccountManager
+import com.maksimowiczm.foodyou.account.domain.observePrimaryProfile
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
@@ -17,9 +21,6 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodSearchParameters
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
-import kotlin.time.Clock
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -36,9 +38,12 @@ import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+import kotlin.time.Clock
 
 internal class FoodSearchViewModel(
-    private val query: String?,
+    private val initialQuery: String?,
     //    private val excludedRecipeId: FoodId.Recipe?,
     private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
     private val searchHistoryRepository: FoodSearchHistoryRepository,
@@ -50,12 +55,13 @@ internal class FoodSearchViewModel(
     private val userFoodRepository: UserFoodRepository,
     private val openFoodFactsRepository: OpenFoodFactsRepository,
     private val foodDataCentralRepository: FoodDataCentralRepository,
+    private val observeFavoriteFoodUseCase: ObserveFavoriteFoodUseCase,
 ) : ViewModel() {
 
     // Use shared flow to allow emitting same value multiple times
     private val searchQuery =
         MutableSharedFlow<SearchQuery>(replay = 1).apply {
-            runBlocking { emit(searchQueryParser.parse(query)) }
+            runBlocking { emit(searchQueryParser.parse(initialQuery)) }
         }
 
     private val filter = MutableStateFlow(FoodFilter())
@@ -80,110 +86,58 @@ internal class FoodSearchViewModel(
                 initialValue = runBlocking { foodSearchPreferencesRepository.observe().first() },
             )
 
-    //    private val favoriteFoods =
-    //        observePrimaryAccountUseCase
-    //            .observe()
-    //            .flatMapLatest { acc -> accountManager.observePrimaryProfile(acc) }
-    //            .map { it.favoriteFoods }
-    //
-    //    private val favoriteFoodState =
-    //        combine(favoriteFoods, searchQuery) { list, query ->
-    //                val loadStates =
-    //                    LoadStates(
-    //                        LoadState.NotLoading(true),
-    //                        LoadState.NotLoading(true),
-    //                        LoadState.NotLoading(true),
-    //                    )
-    //
-    //                if (list.isEmpty()) {
-    //                    return@combine flowOf(
-    //                        FoodSourceUiState(
-    //                            pages =
-    //                                flowOf(
-    //                                    PagingData.empty(
-    //                                        mediatorLoadStates = loadStates,
-    //                                        sourceLoadStates = loadStates,
-    //                                    )
-    //                                ),
-    //                            count = 0,
-    //                            alwaysShowFilter = true,
-    //                        )
-    //                    )
-    //                }
-    //
-    //                val foods =
-    //                    observeFoodsUseCase.observe(*list.toTypedArray()).map { list ->
-    //                        list.mapNotNull {
-    //                            when (it) {
-    //                                is FoodProductRepository.FoodStatus.Available ->
-    //                                    FoodSearchUiModel.Loaded(it.food)
-    //
-    //                                is FoodProductRepository.FoodStatus.Loading ->
-    //                                    FoodSearchUiModel.Loading(FoodIdentity.Other(it.identity))
-    //
-    //                                is FoodProductRepository.FoodStatus.Error,
-    //                                is FoodProductRepository.FoodStatus.NotFound -> null
-    //                            }
-    //                        }
-    //                    }
-    //
-    //                foods.map { list ->
-    //                    val list =
-    //                        when (query) {
-    //                            SearchQuery.Blank -> list
-    //                            is SearchQuery.Barcode ->
-    //                                list.filter {
-    //                                    when (it) {
-    //                                        is FoodSearchUiModel.Loaded ->
-    //                                            it.barcode?.value?.contains(query.barcode) ?:
-    // false
-    //
-    //                                        is FoodSearchUiModel.Loading -> true
-    //                                    }
-    //                                }
-    //
-    //                            is SearchQuery.FoodDataCentralUrl ->
-    //                                list.filter {
-    //                                    val identity = it.identity
-    //                                    identity is FoodDataCentralProductIdentity &&
-    //                                        identity.fdcId == query.fdcId
-    //                                }
-    //
-    //                            is SearchQuery.OpenFoodFactsUrl ->
-    //                                list.filter {
-    //                                    val identity = it.identity
-    //                                    identity is OpenFoodFactsProductIdentity &&
-    //                                        identity.barcode == query.barcode
-    //                                }
-    //
-    //                            is SearchQuery.Text ->
-    //                                list.filter {
-    //                                    when (it) {
-    //                                        is FoodSearchUiModel.Loaded ->
-    // it.name.contains(query.query)
-    //                                        is FoodSearchUiModel.Loading -> true
-    //                                    }
-    //                                }
-    //                        }
-    //
-    //                    val sorted = list.sortedWith(FoodSearchUiModel.comparator(nameSelector))
-    //
-    //                    FoodSourceUiState(
-    //                        pages =
-    //                            flowOf(
-    //                                    PagingData.from(
-    //                                        data = sorted,
-    //                                        sourceLoadStates = loadStates,
-    //                                        mediatorLoadStates = loadStates,
-    //                                    )
-    //                                )
-    //                                .cachedIn(viewModelScope),
-    //                        count = list.size,
-    //                        alwaysShowFilter = true,
-    //                    )
-    //                }
-    //            }
-    //            .flatMapLatest { it }
+    private val favoriteFoods =
+        observePrimaryAccountUseCase
+            .observe()
+            .flatMapLatest { acc -> accountManager.observePrimaryProfile(acc) }
+            .map { it.favoriteFoods }
+
+    private val favoriteFoodState =
+        combine(
+                favoriteFoods,
+                searchQuery,
+                accountManager.observePrimaryAccountId().filterNotNull(),
+            ) { list, query, accountId ->
+                val loadStates =
+                    LoadStates(
+                        LoadState.NotLoading(true),
+                        LoadState.NotLoading(true),
+                        LoadState.NotLoading(true),
+                    )
+
+                if (list.isEmpty()) {
+                    return@combine flowOf(
+                        FoodSourceUiState(
+                            pages =
+                                flowOf(
+                                    PagingData.empty(
+                                        mediatorLoadStates = loadStates,
+                                        sourceLoadStates = loadStates,
+                                    )
+                                ),
+                            count = 0,
+                            alwaysShowFilter = true,
+                        )
+                    )
+                }
+
+                observeFavoriteFoodUseCase.observe(list, query, accountId).map { foods ->
+                    FoodSourceUiState(
+                        pages =
+                            flowOf(
+                                    PagingData.from(
+                                        data = foods,
+                                        sourceLoadStates = loadStates,
+                                        mediatorLoadStates = loadStates,
+                                    )
+                                )
+                                .cachedIn(viewModelScope),
+                        count = list.size,
+                        alwaysShowFilter = true,
+                    )
+                }
+            }
+            .flatMapLatest { it }
 
     private val localSearchParams =
         combine(
@@ -294,20 +248,19 @@ internal class FoodSearchViewModel(
                 localState,
                 openFoodFactsState,
                 usdaState,
-                //                favoriteFoodState,
+                favoriteFoodState,
             ) { arr ->
                 val filter = arr[0] as FoodFilter
                 val searchHistory = arr[1] as List<SearchQuery.NotBlank>
                 val localState = arr[2] as FoodSourceUiState<FoodSearchUiModel>
                 val openFoodFactsState = arr[3] as FoodSourceUiState<FoodSearchUiModel>
                 val usdaState = arr[4] as FoodSourceUiState<FoodSearchUiModel>
-                //                val favoriteState = arr[5] as FoodSourceUiState<FoodSearchUiModel>
+                val favoriteState = arr[5] as FoodSourceUiState<FoodSearchUiModel>
 
                 FoodSearchUiState(
                     sources =
                         mapOf(
-                            //                            FoodFilter.Source.Favorite to
-                            // favoriteState,
+                            FoodFilter.Source.Favorite to favoriteState,
                             FoodFilter.Source.YourFood to localState,
                             FoodFilter.Source.OpenFoodFacts to openFoodFactsState,
                             FoodFilter.Source.USDA to usdaState,

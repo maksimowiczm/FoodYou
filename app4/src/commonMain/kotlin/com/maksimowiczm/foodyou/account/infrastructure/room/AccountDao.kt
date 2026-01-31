@@ -30,7 +30,7 @@ abstract class AccountDao {
     open suspend fun upsertAccountWithDetails(
         accountEntity: AccountEntity,
         profileEntities: List<ProfileEntity>,
-        //        profileFavoriteFoodEntities: List<ProfileFavoriteFoodEntity>,
+        profileFavoriteFoodEntities: List<ProfileFavoriteFoodEntity>,
         settingsEntity: SettingsEntity,
     ) {
         upsertAccount(accountEntity)
@@ -38,7 +38,7 @@ abstract class AccountDao {
         profileEntities.forEach { insertProfile(it) }
         upsertSettings(settingsEntity)
         deleteFavoriteFoods(accountEntity.id)
-        //        insertFavoriteFoods(profileFavoriteFoodEntities)
+        insertFavoriteFoods(profileFavoriteFoodEntities)
     }
 
     @Transaction

@@ -1,12 +1,14 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val foodSearchModule = module {
-    viewModel { (query: String?) ->
+    viewModel { (initialQuery: String?) ->
         FoodSearchViewModel(
-            query = query,
+            initialQuery = initialQuery,
+            get(),
             get(),
             get(),
             get(),
@@ -19,4 +21,5 @@ val foodSearchModule = module {
             get(),
         )
     }
+    factoryOf(::ObserveFavoriteFoodUseCase)
 }

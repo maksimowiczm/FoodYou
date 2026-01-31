@@ -3,11 +3,13 @@ package com.maksimowiczm.foodyou.account.infrastructure
 import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.AccountSettings
+import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDao
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountEntity
+import com.maksimowiczm.foodyou.account.infrastructure.room.FoodIdentityType
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
@@ -90,13 +92,13 @@ class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountReposit
         val profileEntities =
             account.profiles.map { async { it.toEntity(account.localAccountId) } }.awaitAll()
         val settingsEntity = account.settings.toEntity(account.localAccountId.value)
-        //        val profileFavoriteFoodEntities =
-        //            account.profiles.flatMap { it.toFavoriteFoodEntity(account.localAccountId) }
+        val profileFavoriteFoodEntities =
+            account.profiles.flatMap { it.toFavoriteFoodEntity(account.localAccountId) }
 
         accountDao.upsertAccountWithDetails(
             accountEntity = accountEntity,
             profileEntities = profileEntities,
-            //            profileFavoriteFoodEntities = profileFavoriteFoodEntities,
+            profileFavoriteFoodEntities = profileFavoriteFoodEntities,
             settingsEntity = settingsEntity,
         )
     }
@@ -163,16 +165,16 @@ private fun ProfileEntity.toDomain(favoriteFoods: List<ProfileFavoriteFoodEntity
         name = name,
         avatar = avatar,
         homeCardsOrder = homeFeaturesOrder,
-        //        favoriteFoods = favoriteFoods.map { it.toDomain(LocalAccountId(accountId)) },
+        favoriteFoods = favoriteFoods.map { it.toDomain() },
     )
 }
 
-// private fun ProfileFavoriteFoodEntity.toDomain(accountId: LocalAccountId): FoodProductIdentity =
-//    when (this.identityType) {
-//        //        FoodIdentityType.LocalProduct -> FoodProductIdentity.Local(extra, accountId)
-//        //        FoodIdentityType.OpenFoodFacts -> FoodProductIdentity.OpenFoodFacts(extra)
-//        FoodIdentityType.FoodDataCentral -> FoodProductIdentity.FoodDataCentral(extra.toInt())
-//    }
+private fun ProfileFavoriteFoodEntity.toDomain(): FavoriteFoodIdentity =
+    when (this.identityType) {
+        FoodIdentityType.UserFoodProduct -> FavoriteFoodIdentity.UserFoodProduct(extra)
+        FoodIdentityType.OpenFoodFacts -> FavoriteFoodIdentity.OpenFoodFacts(extra)
+        FoodIdentityType.FoodDataCentral -> FavoriteFoodIdentity.FoodDataCentral(extra.toInt())
+    }
 
 private suspend fun Profile.Avatar.toEntity(accountId: LocalAccountId, id: ProfileId): String =
     when (this) {
@@ -219,33 +221,33 @@ private suspend fun Profile.toEntity(localAccountId: LocalAccountId): ProfileEnt
         homeFeaturesOrder = homeCardsOrder.joinToString(",") { it.ordinal.toString() },
     )
 
-// private fun Profile.toFavoriteFoodEntity(
-//    localAccountId: LocalAccountId
-// ): List<ProfileFavoriteFoodEntity> =
-//    favoriteFoods.map { identity ->
-//        when (identity) {
-//            is FoodProductIdentity.FoodDataCentral ->
-//                ProfileFavoriteFoodEntity(
-//                    profileId = id.value,
-//                    accountId = localAccountId.value,
-//                    identityType = FoodIdentityType.FoodDataCentral,
-//                    extra = identity.fdcId.toString(),
-//                )
-//
-//        //            is FoodProductIdentity.Local ->
-//        //                ProfileFavoriteFoodEntity(
-//        //                    profileId = id.value,
-//        //                    accountId = localAccountId.value,
-//        //                    identityType = FoodIdentityType.UserProduct,
-//        //                    extra = identity.id,
-//        //                )
-//
-//        //            is FoodProductIdentity.OpenFoodFacts ->
-//        //                ProfileFavoriteFoodEntity(
-//        //                    profileId = id.value,
-//        //                    accountId = localAccountId.value,
-//        //                    identityType = FoodIdentityType.OpenFoodFacts,
-//        //                    extra = identity.barcode,
-//        //                )
-//        }
-//    }
+private fun Profile.toFavoriteFoodEntity(
+    localAccountId: LocalAccountId
+): List<ProfileFavoriteFoodEntity> =
+    favoriteFoods.map { identity ->
+        when (identity) {
+            is FavoriteFoodIdentity.FoodDataCentral ->
+                ProfileFavoriteFoodEntity(
+                    profileId = id.value,
+                    accountId = localAccountId.value,
+                    identityType = FoodIdentityType.FoodDataCentral,
+                    extra = identity.fdcId.toString(),
+                )
+
+            is FavoriteFoodIdentity.UserFoodProduct ->
+                ProfileFavoriteFoodEntity(
+                    profileId = id.value,
+                    accountId = localAccountId.value,
+                    identityType = FoodIdentityType.UserFoodProduct,
+                    extra = identity.id,
+                )
+
+            is FavoriteFoodIdentity.OpenFoodFacts ->
+                ProfileFavoriteFoodEntity(
+                    profileId = id.value,
+                    accountId = localAccountId.value,
+                    identityType = FoodIdentityType.OpenFoodFacts,
+                    extra = identity.barcode,
+                )
+        }
+    }

@@ -11,7 +11,7 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.LoadStatus
+import com.maksimowiczm.foodyou.common.domain.RemoteData
 import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchPreferencesRepository
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
@@ -24,6 +24,9 @@ import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsD
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -95,37 +98,36 @@ internal class OpenFoodFactsRepositoryImpl(
 
     override fun observe(
         identity: OpenFoodFactsProductIdentity
-    ): Flow<LoadStatus<OpenFoodFactsProduct>> = channelFlow {
-        //        send(FoodStatus.Loading(identity, null))
-        //
-        //        val barcode = identity.barcode
-        //
-        //        val localProduct = dao.observe(barcode).first()
-        //
-        //        if (localProduct == null) {
-        //            try {
-        //                val openFoodFactsProduct =
-        // networkDataSource.getProduct(barcode).getOrThrow()
-        //                val entity = mapper.openFoodFactsProductEntity(openFoodFactsProduct)
-        //                dao.upsertProduct(entity)
-        //                send(FoodStatus.Available(mapper.openFoodFactsProduct(entity)))
-        //            } catch (e: FoodDatabaseError) {
-        //                when (e) {
-        //                    is FoodDatabaseError.ProductNotFound ->
-        // send(FoodStatus.NotFound(identity))
-        //                    else -> send(FoodStatus.Error(identity, null, e))
-        //                }
-        //            }
-        //        } else {
-        //            send(FoodStatus.Available(mapper.openFoodFactsProduct(localProduct)))
-        //        }
-        //
-        //        dao.observe(barcode).drop(1).collectLatest {
-        //            when (it) {
-        //                null -> send(FoodStatus.NotFound(identity))
-        //                else -> send(FoodStatus.Available(mapper.openFoodFactsProduct(it)))
-        //            }
-        //        }
+    ): Flow<RemoteData<OpenFoodFactsProduct>> = channelFlow {
+        send(RemoteData.Loading(null))
+
+        val barcode = identity.barcode
+
+        val localProduct = dao.observe(barcode).first()
+
+        if (localProduct == null) {
+            try {
+                val openFoodFactsProduct = networkDataSource.getProduct(barcode).getOrThrow()
+                val entity = mapper.openFoodFactsProductEntity(openFoodFactsProduct)
+                dao.upsertProduct(entity)
+                send(RemoteData.Success(mapper.openFoodFactsProduct(entity)))
+            } catch (e: OpenFoodFactsApiError) {
+                when (e) {
+                    is OpenFoodFactsApiError.ProductNotFound -> send(RemoteData.NotFound)
+
+                    else -> send(RemoteData.Error(e, null))
+                }
+            }
+        } else {
+            send(RemoteData.Success(mapper.openFoodFactsProduct(localProduct)))
+        }
+
+        dao.observe(barcode).drop(1).collectLatest {
+            when (it) {
+                null -> send(RemoteData.NotFound)
+                else -> send(RemoteData.Success(mapper.openFoodFactsProduct(it)))
+            }
+        }
     }
 
     override suspend fun refresh(

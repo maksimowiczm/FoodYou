@@ -9,12 +9,12 @@ fun testProfile(
     name: String = "Test User",
     avatar: Profile.Avatar = Profile.Avatar.Predefined.Person,
     homeCardsOrder: List<HomeCard> = HomeCard.defaultOrder,
-//    favoriteFoods: List<FoodProductIdentity> = listOf(),
+    favoriteFoods: List<FavoriteFoodIdentity> = listOf(),
 ): Profile =
     Profile(
         id = id,
         name = name,
         avatar = avatar,
         homeCardsOrder = homeCardsOrder,
-//        favoriteFoods = favoriteFoods,
+        favoriteFoods = favoriteFoods,
     )

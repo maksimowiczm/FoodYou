@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.openfoodfacts.domain
 
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.LoadStatus
+import com.maksimowiczm.foodyou.common.domain.RemoteData
 import kotlinx.coroutines.flow.Flow
 
 interface OpenFoodFactsRepository {
@@ -13,7 +13,7 @@ interface OpenFoodFactsRepository {
 
     fun count(parameters: OpenFoodFactsSearchParameters): Flow<Int>
 
-    fun observe(identity: OpenFoodFactsProductIdentity): Flow<LoadStatus<OpenFoodFactsProduct>>
+    fun observe(identity: OpenFoodFactsProductIdentity): Flow<RemoteData<OpenFoodFactsProduct>>
 
     suspend fun refresh(
         identity: OpenFoodFactsProductIdentity

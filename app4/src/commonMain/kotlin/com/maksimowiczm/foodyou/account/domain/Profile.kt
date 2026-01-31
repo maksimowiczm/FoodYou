@@ -8,7 +8,7 @@ class Profile(
     name: String,
     avatar: Avatar,
     homeCardsOrder: List<HomeCard>,
-    //    favoriteFoods: List<FoodProductIdentity>,
+    favoriteFoods: List<FavoriteFoodIdentity>,
 ) {
     companion object {
         fun new(name: String, avatar: Avatar): Profile {
@@ -18,7 +18,7 @@ class Profile(
                 name = name,
                 avatar = avatar,
                 homeCardsOrder = HomeCard.defaultOrder,
-                //                favoriteFoods = listOf(),
+                favoriteFoods = listOf(),
             )
         }
     }
@@ -33,9 +33,9 @@ class Profile(
     val homeCardsOrder: List<HomeCard>
         get() = _homeCardsOrder.toList()
 
-    //    private val _favoriteFoods = favoriteFoods.toMutableList()
-    //    val favoriteFoods: List<FoodProductIdentity>
-    //        get() = _favoriteFoods
+    private val _favoriteFoods = favoriteFoods.toMutableList()
+    val favoriteFoods: List<FavoriteFoodIdentity>
+        get() = _favoriteFoods
 
     fun updateHomeCardsOrder(newOrder: List<HomeCard>) {
         require(newOrder.containsAll(HomeCard.entries)) { "New order must contain all home cards" }
@@ -52,15 +52,15 @@ class Profile(
         avatar = newAvatar
     }
 
-    //    fun addFavoriteFood(food: FoodProductIdentity) {
-    //        _favoriteFoods.add(food)
-    //    }
-    //
-    //    fun removeFavoriteFood(food: FoodProductIdentity) {
-    //        _favoriteFoods.remove(food)
-    //    }
-    //
-    //    fun isFavorite(food: FoodProductIdentity): Boolean = _favoriteFoods.contains(food)
+    fun addFavoriteFood(food: FavoriteFoodIdentity) {
+        _favoriteFoods.add(food)
+    }
+
+    fun removeFavoriteFood(food: FavoriteFoodIdentity) {
+        _favoriteFoods.remove(food)
+    }
+
+    fun isFavorite(food: FavoriteFoodIdentity): Boolean = _favoriteFoods.contains(food)
 
     sealed interface Avatar {
         data class Photo(val uri: String) : Avatar

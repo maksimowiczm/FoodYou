@@ -11,7 +11,7 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.LoadStatus
+import com.maksimowiczm.foodyou.common.domain.RemoteData
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -25,6 +25,9 @@ import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchPreferencesRepositor
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -98,39 +101,37 @@ internal class FoodDataCentralRepositoryImpl(
 
     override fun observe(
         identity: FoodDataCentralProductIdentity
-    ): Flow<LoadStatus<FoodDataCentralProduct>> = channelFlow {
-        //        send(FoodStatus.Loading(identity, null))
-        //
-        //        val fdcId = identity.fdcId
-        //
-        //        val localProduct = dao.observe(fdcId).first()
-        //
-        //        if (localProduct == null) {
-        //            try {
-        //                val apiKey = settingsRepository.load().apiKey
-        //                val openFoodFactsProduct = networkDataSource.getProduct(fdcId,
-        // apiKey).getOrThrow()
-        //                val entity = mapper.foodDataCentralProductEntity(openFoodFactsProduct)
-        //                dao.upsertProduct(entity)
-        //                send(FoodStatus.Available(mapper.foodProductDto(entity)))
-        //            } catch (e: FoodDatabaseError) {
-        //                when (e) {
-        //                    is FoodDatabaseError.ProductNotFound ->
-        // send(FoodStatus.NotFound(identity))
-        //
-        //                    else -> send(FoodStatus.Error(identity, null, e))
-        //                }
-        //            }
-        //        } else {
-        //            send(FoodStatus.Available(mapper.foodProductDto(localProduct)))
-        //        }
-        //
-        //        dao.observe(fdcId).drop(1).collectLatest {
-        //            when (it) {
-        //                null -> send(FoodStatus.NotFound(identity))
-        //                else -> send(FoodStatus.Available(mapper.foodProductDto(it)))
-        //            }
-        //        }
+    ): Flow<RemoteData<FoodDataCentralProduct>> = channelFlow {
+        send(RemoteData.Loading(null))
+
+        val fdcId = identity.fdcId
+
+        val localProduct = dao.observe(fdcId).first()
+
+        if (localProduct == null) {
+            try {
+                val apiKey = settingsRepository.load().apiKey
+                val openFoodFactsProduct = networkDataSource.getProduct(fdcId, apiKey).getOrThrow()
+                val entity = mapper.foodDataCentralProductEntity(openFoodFactsProduct)
+                dao.upsertProduct(entity)
+                send(RemoteData.Success(mapper.foodDataCentralProduct(entity)))
+            } catch (e: FoodDataCentralApiError) {
+                when (e) {
+                    is FoodDataCentralApiError.ProductNotFound -> send(RemoteData.NotFound)
+
+                    else -> send(RemoteData.Error(e, null))
+                }
+            }
+        } else {
+            send(RemoteData.Success(mapper.foodDataCentralProduct(localProduct)))
+        }
+
+        dao.observe(fdcId).drop(1).collectLatest {
+            when (it) {
+                null -> send(RemoteData.NotFound)
+                else -> send(RemoteData.Success(mapper.foodDataCentralProduct(it)))
+            }
+        }
     }
 
     override suspend fun refresh(

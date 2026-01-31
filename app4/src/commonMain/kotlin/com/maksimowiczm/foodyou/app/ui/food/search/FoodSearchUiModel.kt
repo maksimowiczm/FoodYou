@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
 import androidx.compose.runtime.*
+import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
+import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FoodBrand
@@ -26,6 +28,17 @@ sealed interface FoodIdentity {
 
     @Immutable
     data class FoodDataCentral(val identity: FoodDataCentralProductIdentity) : FoodIdentity
+
+    companion object {
+        fun from(identity: FavoriteFoodIdentity.OpenFoodFacts) =
+            OpenFoodFacts(OpenFoodFactsProductIdentity(identity.barcode))
+
+        fun from(identity: FavoriteFoodIdentity.UserFoodProduct, localAccountId: LocalAccountId) =
+            UserFood(UserFoodProductIdentity(identity.id, localAccountId))
+
+        fun from(identity: FavoriteFoodIdentity.FoodDataCentral) =
+            FoodDataCentral(FoodDataCentralProductIdentity(identity.fdcId))
+    }
 }
 
 @Immutable
@@ -35,10 +48,24 @@ sealed interface FoodSearchUiModel {
     @Immutable data class Loading(override val identity: FoodIdentity) : FoodSearchUiModel
 
     @Immutable
+    sealed interface Branded : FoodSearchUiModel {
+        val name: FoodName?
+        val brand: FoodBrand?
+    }
+
+    @Immutable
+    data class Error(
+        override val identity: FoodIdentity,
+        override val name: FoodName?,
+        override val brand: FoodBrand?,
+        val error: Throwable,
+    ) : Branded
+
+    @Immutable
     data class Loaded(
         override val identity: FoodIdentity,
-        val name: FoodName,
-        val brand: FoodBrand?,
+        override val name: FoodName,
+        override val brand: FoodBrand?,
         val barcode: Barcode?,
         val image: FoodImage?,
         val nutritionFacts: NutritionFacts,
@@ -46,7 +73,7 @@ sealed interface FoodSearchUiModel {
         val packageQuantity: AbsoluteQuantity?,
         val isLiquid: Boolean,
         val suggestedQuantity: Quantity,
-    ) : FoodSearchUiModel {
+    ) : Branded {
         fun localizedName(foodNameSelector: FoodNameSelector): String {
             val brandSuffix = brand?.let { " (${it.value})" } ?: ""
             return foodNameSelector.select(name) + brandSuffix
@@ -105,17 +132,26 @@ sealed interface FoodSearchUiModel {
                     when (a) {
                         is Loaded -> nameSelector.select(a.name)
                         is Loading -> return@Comparator Int.MAX_VALUE
+                        is Error ->
+                            if (a.name != null) nameSelector.select(a.name)
+                            else return@Comparator Int.MAX_VALUE
                     }
 
                 val nameB =
                     when (b) {
                         is Loaded -> nameSelector.select(b.name)
                         is Loading -> return@Comparator Int.MAX_VALUE
+                        is Error ->
+                            if (b.name != null) nameSelector.select(b.name)
+                            else return@Comparator Int.MAX_VALUE
                     }
 
+                val brandA = a.brand?.value
+                val brandB = b.brand?.value
+
                 val result = nameA.compareTo(nameB, ignoreCase = true)
-                if (result == 0 && a.brand != null && b.brand != null)
-                    a.brand.value.compareTo(b.brand.value, ignoreCase = true)
+                if (result == 0 && brandA != null && brandB != null)
+                    brandA.compareTo(brandB, ignoreCase = true)
                 else result
             }
     }
