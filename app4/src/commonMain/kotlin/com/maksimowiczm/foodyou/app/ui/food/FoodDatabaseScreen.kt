@@ -26,7 +26,6 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.Scrim
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefaults
-import com.maksimowiczm.foodyou.app.ui.food.search.FoodIdentity
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchApp
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity

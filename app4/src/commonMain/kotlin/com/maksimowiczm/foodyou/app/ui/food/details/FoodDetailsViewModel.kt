@@ -7,50 +7,44 @@ import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
-import com.maksimowiczm.foodyou.common.domain.RemoteData
+import com.maksimowiczm.foodyou.app.ui.food.FoodIdentity
 import com.maksimowiczm.foodyou.common.onError
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class FoodDetailsViewModel(
-    private val identity: Any,
+    private val identity: FoodIdentity,
     observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
     private val accountManager: AccountManager,
     private val accountRepository: AccountRepository,
     private val foodDataCentralRepository: FoodDataCentralRepository,
     private val openFoodFactsRepository: OpenFoodFactsRepository,
     private val userFoodRepository: UserFoodRepository,
+    observeFoodUseCase: ObserveFoodUseCase,
     logger: Logger,
 ) : ViewModel() {
     private val logger = logger.withTag("FoodDetailsViewModel")
 
     private val favoriteIdentity =
         when (identity) {
-            is FoodDataCentralProductIdentity ->
-                FavoriteFoodIdentity.FoodDataCentral(identity.fdcId)
+            is FoodIdentity.FoodDataCentral ->
+                FavoriteFoodIdentity.FoodDataCentral(identity.identity.fdcId)
 
-            is OpenFoodFactsProductIdentity -> FavoriteFoodIdentity.OpenFoodFacts(identity.barcode)
-            is UserFoodProductIdentity -> FavoriteFoodIdentity.UserFoodProduct(identity.id)
-            else -> error("Invalid identity")
+            is FoodIdentity.OpenFoodFacts ->
+                FavoriteFoodIdentity.OpenFoodFacts(identity.identity.barcode)
+            is FoodIdentity.UserFood -> FavoriteFoodIdentity.UserFoodProduct(identity.identity.id)
         }
 
     private val account =
@@ -77,41 +71,11 @@ class FoodDetailsViewModel(
     private val eventChannel = Channel<FoodDetailsUiEvent>()
     val uiEvents = eventChannel.receiveAsFlow()
 
-    private val foodProduct: StateFlow<RemoteData<Any>> =
-        when (identity) {
-            is FoodDataCentralProductIdentity -> foodDataCentralRepository.observe(identity)
-            is OpenFoodFactsProductIdentity -> openFoodFactsRepository.observe(identity)
-            is UserFoodProductIdentity ->
-                userFoodRepository.observe(identity).filterNotNull().map { RemoteData.Success(it) }
-
-            else -> error("Invalid identity")
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = RemoteData.Loading(null),
-        )
-
     private val isRefreshing = MutableStateFlow(false)
 
     val uiState =
-        foodProduct
-            .map { status ->
-                when (status) {
-                    is RemoteData.Success -> status.value.toUiState(isLoading = false)
-
-                    is RemoteData.Loading ->
-                        status.partialValue?.toUiState(isLoading = true)
-                            ?: FoodDetailsUiState.WithData.loading(identity)
-
-                    is RemoteData.Error ->
-                        FoodDetailsUiState.Error(
-                            identity = identity,
-                            message = status.error.message,
-                        )
-
-                    is RemoteData.NotFound -> FoodDetailsUiState.NotFound(identity = identity)
-                }
-            }
+        observeFoodUseCase
+            .observe(identity)
             .combine(isRefreshing) { uiState, refreshing ->
                 if (refreshing && uiState is FoodDetailsUiState.WithData)
                     uiState.copy(isLoading = true)
@@ -142,25 +106,28 @@ class FoodDetailsViewModel(
     fun refresh() {
         viewModelScope.launch {
             when (identity) {
-                is FoodDataCentralProductIdentity -> {
+                is FoodIdentity.FoodDataCentral -> {
                     isRefreshing.value = true
                     delay(500)
-                    foodDataCentralRepository.refresh(identity).onError {
+                    foodDataCentralRepository.refresh(identity.identity).onError {
                         // TODO
                         logger.e { "Error refreshing FoodDataCentral product: ${it.message}" }
                     }
                     isRefreshing.value = false
                 }
 
-                is OpenFoodFactsProductIdentity -> {
+                is FoodIdentity.OpenFoodFacts -> {
                     isRefreshing.value = true
                     delay(500)
-                    openFoodFactsRepository.refresh(identity).onError {
+                    openFoodFactsRepository.refresh(identity.identity).onError {
                         // TODO
                         logger.e { "Error refreshing OpenFoodFacts product: ${it.message}" }
                     }
                     isRefreshing.value = false
                 }
+
+                // Throw and hope user will report a bug
+                is FoodIdentity.UserFood -> error("UserFood is not refreshable")
             }
         }
     }
@@ -191,50 +158,3 @@ class FoodDetailsViewModel(
         }
     }
 }
-
-private fun Any.toUiState(isLoading: Boolean) =
-    when (this) {
-        is FoodDataCentralProduct -> this.toUiState(isLoading)
-        is OpenFoodFactsProduct -> this.toUiState(isLoading)
-        is UserFoodProduct -> this.toUiState(isLoading)
-        else -> error("Invalid identity $this")
-    }
-
-private fun FoodDataCentralProduct.toUiState(isLoading: Boolean) =
-    FoodDetailsUiState.WithData(
-        identity = identity,
-        isLoading = isLoading,
-        foodName = name,
-        brand = brand,
-        image = FoodImageUiState.NoImage,
-        nutritionFacts = nutritionFacts,
-        note = null,
-        source = FoodSource.FoodDataCentral(source),
-        isFavorite = false,
-    )
-
-private fun OpenFoodFactsProduct.toUiState(isLoading: Boolean) =
-    FoodDetailsUiState.WithData(
-        identity = identity,
-        isLoading = isLoading,
-        foodName = name,
-        brand = brand,
-        image = image?.let { FoodImageUiState.WithImage(it) } ?: FoodImageUiState.NoImage,
-        nutritionFacts = nutritionFacts,
-        note = null,
-        source = FoodSource.OpenFoodFacts(source),
-        isFavorite = false,
-    )
-
-private fun UserFoodProduct.toUiState(isLoading: Boolean) =
-    FoodDetailsUiState.WithData(
-        identity = identity,
-        isLoading = isLoading,
-        foodName = name,
-        brand = brand?.value,
-        image = image?.let { FoodImageUiState.WithImage(it) } ?: FoodImageUiState.NoImage,
-        nutritionFacts = nutritionFacts,
-        note = note,
-        source = source?.value?.let(FoodSource::UserAdded),
-        isFavorite = false,
-    )
