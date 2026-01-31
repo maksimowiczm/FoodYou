@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.common.extension
 
 fun <T> MutableList<T>.removeLastIf(predicate: (T) -> Boolean) {
     if (isNotEmpty() && predicate(last())) {
-        removeLast()
+        removeAt(lastIndex)
     }
 }
 
