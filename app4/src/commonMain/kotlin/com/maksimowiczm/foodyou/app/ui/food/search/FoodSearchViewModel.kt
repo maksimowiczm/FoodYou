@@ -130,7 +130,7 @@ internal class FoodSearchViewModel(
                                     )
                                 )
                                 .cachedIn(viewModelScope),
-                        count = list.size,
+                        count = foods.size,
                         alwaysShowFilter = true,
                     )
                 }
