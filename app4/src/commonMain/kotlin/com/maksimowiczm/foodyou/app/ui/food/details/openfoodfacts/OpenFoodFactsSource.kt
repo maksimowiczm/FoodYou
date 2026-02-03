@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.details
+package com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,7 +19,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun OpenFoodFactsSource(url: String, modifier: Modifier = Modifier) {
+internal fun OpenFoodFactsSource(url: String, modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
 
     Column(

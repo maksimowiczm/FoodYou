@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.food
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity

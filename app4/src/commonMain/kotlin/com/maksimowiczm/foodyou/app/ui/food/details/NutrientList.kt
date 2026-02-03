@@ -30,7 +30,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun NutrientList(facts: NutritionFacts, expanded: Boolean, modifier: Modifier = Modifier) {
+internal fun NutrientList(facts: NutritionFacts, expanded: Boolean, modifier: Modifier = Modifier) {
     val nutrientsOrder = LocalNutrientsOrder.current
 
     Column(modifier = modifier) {

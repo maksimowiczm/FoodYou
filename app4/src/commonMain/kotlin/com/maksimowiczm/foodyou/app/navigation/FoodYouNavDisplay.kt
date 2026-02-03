@@ -30,8 +30,9 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserFoodDetails
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
-import com.maksimowiczm.foodyou.app.ui.food.FoodIdentity
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsScreen
+import com.maksimowiczm.foodyou.app.ui.food.details.fooddatacentral.FoodDataCentralDetailsScreen
+import com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts.OpenFoodFactsDetailsScreen
+import com.maksimowiczm.foodyou.app.ui.food.details.userfood.UserFoodDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
@@ -135,24 +136,23 @@ fun FoodYouNavDisplay(
                     )
                 }
                 entry<UserFoodDetails> {
-                    FoodDetailsScreen(
-                        identity = FoodIdentity.UserFood(it.identity),
+                    UserFoodDetailsScreen(
+                        identity = it.identity,
+                        onEdit = { backStack.add(EditProduct.from(it.identity)) },
                         onBack = { backStack.removeLastIf<UserFoodDetails>() },
-                        onEdit = { id -> backStack.add(EditProduct.from(id)) },
+                        onDelete = { backStack.removeLastIf<UserFoodDetails>() },
                     )
                 }
                 entry<OpenFoodFactsProductDetails> {
-                    FoodDetailsScreen(
-                        identity = FoodIdentity.OpenFoodFacts(it.identity),
+                    OpenFoodFactsDetailsScreen(
+                        identity = it.identity,
                         onBack = { backStack.removeLastIf<OpenFoodFactsProductDetails>() },
-                        onEdit = { error("Not possible") },
                     )
                 }
                 entry<FoodDataCentralProductDetails> {
-                    FoodDetailsScreen(
-                        identity = FoodIdentity.FoodDataCentral(it.identity),
+                    FoodDataCentralDetailsScreen(
+                        identity = it.identity,
                         onBack = { backStack.removeLastIf<FoodDataCentralProductDetails>() },
-                        onEdit = { error("Not possible") },
                     )
                 }
                 entry<Home> {

@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 
-class FoodDataCentralProduct(
+data class FoodDataCentralProduct(
     val identity: FoodDataCentralProductIdentity,
     val name: FoodName,
     val brand: String?,
