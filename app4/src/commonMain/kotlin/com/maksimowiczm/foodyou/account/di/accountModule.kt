@@ -23,5 +23,5 @@ val accountModule = module {
 
     factoryOf(::ObservePrimaryAccountUseCaseImpl).bind<ObservePrimaryAccountUseCase>()
 
-    integrationEventHandler { RemoveDeletedFoodFromFavoritesHandler(get()) }
+    integrationEventHandler { RemoveDeletedFoodFromFavoritesHandler(get(), get()) }
 }
