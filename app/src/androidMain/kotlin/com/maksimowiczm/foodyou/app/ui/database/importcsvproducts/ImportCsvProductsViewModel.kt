@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.importexport.domain.usecase.ImportCsvProductUseC
 import java.io.BufferedReader
 import java.io.IOException
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.stream.consumeAsFlow
+import kotlinx.coroutines.withContext
 
 internal class ImportCsvProductsViewModel(
     private val importCsvProductUseCase: ImportCsvProductUseCase
@@ -28,35 +30,37 @@ internal class ImportCsvProductsViewModel(
     private var bufferedReader: BufferedReader? = null
 
     fun handleCsv(uri: Uri, context: Context) {
-        val stream = context.contentResolver.openInputStream(uri)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    val stream = context.contentResolver.openInputStream(uri)
+                    if (stream == null) {
+                        _uiState.value =
+                            UiState.FailedToOpenFile(
+                                "Failed to open file. Please ensure the file exists and is accessible."
+                            )
+                        return@withContext
+                    }
 
-        if (stream == null) {
-            _uiState.value =
-                UiState.FailedToOpenFile(
-                    "Failed to open file. Please ensure the file exists and is accessible."
-                )
-            return
-        }
+                    val bufferedReader = stream.bufferedReader()
+                    val line: String? = bufferedReader.readLine()
 
-        val bufferedReader = stream.bufferedReader()
+                    if (line == null) {
+                        bufferedReader.close()
+                        _uiState.value =
+                            UiState.FailedToOpenFile("CSV file is empty or could not be read.")
+                        return@withContext
+                    }
 
-        try {
-            val line: String? = bufferedReader.readLine()
-
-            if (line == null) {
-                bufferedReader.close()
-                _uiState.value = UiState.FailedToOpenFile("CSV file is empty or could not be read.")
-                return
+                    val header = line.split(",")
+                    this@ImportCsvProductsViewModel.bufferedReader = bufferedReader
+                    addCloseable(bufferedReader)
+                    _uiState.value = UiState.FileOpened(header)
+                } catch (e: IOException) {
+                    _uiState.value =
+                        UiState.FailedToOpenFile("Error reading CSV file: ${e.message}")
+                }
             }
-
-            val header = line.split(",")
-            _uiState.value = UiState.FileOpened(header)
-        } catch (e: IOException) {
-            bufferedReader.close()
-            _uiState.value = UiState.FailedToOpenFile("Error reading CSV file: ${e.message}")
-        } finally {
-            this.bufferedReader = bufferedReader
-            addCloseable(bufferedReader)
         }
     }
 
@@ -93,7 +97,7 @@ internal class ImportCsvProductsViewModel(
 
         viewModelScope.launch {
             try {
-                importCsvProducts(bufferedReader, mapper)
+                withContext(Dispatchers.IO) { importCsvProducts(bufferedReader, mapper) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: IOException) {
@@ -101,7 +105,7 @@ internal class ImportCsvProductsViewModel(
             } catch (e: Exception) {
                 _uiState.value = UiState.FailedToImport(e.message)
             } finally {
-                bufferedReader.close()
+                withContext(Dispatchers.IO) { bufferedReader.close() }
                 this@ImportCsvProductsViewModel.bufferedReader = null
             }
         }

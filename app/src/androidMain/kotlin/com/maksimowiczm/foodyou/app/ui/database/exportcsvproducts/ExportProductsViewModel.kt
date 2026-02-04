@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.importexport.domain.entity.ProductField
 import com.maksimowiczm.foodyou.importexport.domain.usecase.ExportCsvProductsUseCase
 import java.io.BufferedWriter
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 internal class ExportProductsViewModel(
     private val exportCsvProductsUseCase: ExportCsvProductsUseCase
@@ -24,25 +26,27 @@ internal class ExportProductsViewModel(
     val uiState = _uiState.asStateFlow()
 
     fun handleCsv(uri: Uri, context: Context) {
-        val stream = context.contentResolver.openOutputStream(uri)
-
-        if (stream == null) {
-            _uiState.value =
-                UiState.Error(
-                    "Failed to open file. Please ensure the file exists and is accessible."
-                )
-            return
-        }
-
-        addCloseable(stream)
-
         viewModelScope.launch {
-            try {
-                stream.bufferedWriter().use { handleWriter(it) }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.message)
+            withContext(Dispatchers.IO) {
+                try {
+                    val stream = context.contentResolver.openOutputStream(uri)
+
+                    if (stream == null) {
+                        _uiState.value =
+                            UiState.Error(
+                                "Failed to open file. Please ensure the file exists and is accessible."
+                            )
+                        return@withContext
+                    }
+
+                    addCloseable(stream)
+
+                    stream.bufferedWriter().use { handleWriter(it) }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    _uiState.value = UiState.Error(e.message)
+                }
             }
         }
     }

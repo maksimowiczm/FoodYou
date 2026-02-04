@@ -2,7 +2,14 @@ package com.maksimowiczm.foodyou.app.ui.database.exportcsvproducts
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,7 +60,18 @@ actual fun ExportCsvProductsScreen(onBack: () -> Unit, onFinish: () -> Unit, mod
         is UiState.Exported ->
             SuccessScreen(count = uiState.count, onBack = onBack, modifier = modifier)
 
-        UiState.WaitingForFile -> Unit
+        UiState.WaitingForFile ->
+            Scaffold(modifier) { paddingValues ->
+                Box(
+                    modifier =
+                        Modifier.fillMaxSize()
+                            .padding(paddingValues)
+                            .consumeWindowInsets(paddingValues),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    LoadingIndicator()
+                }
+            }
 
         is UiState.Exporting -> ExportingProductsScreen(count = uiState.count, modifier = modifier)
     }
