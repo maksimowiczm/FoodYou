@@ -3,7 +3,9 @@ package com.maksimowiczm.foodyou.recipe.di
 import com.maksimowiczm.foodyou.common.event.di.integrationEventBus
 import com.maksimowiczm.foodyou.common.event.di.integrationEventHandler
 import com.maksimowiczm.foodyou.common.infrastructure.databaseBuilder
+import com.maksimowiczm.foodyou.recipe.application.HandleRecipeDeletedEventHandler
 import com.maksimowiczm.foodyou.recipe.application.HandleUserFoodDeletedEventHandler
+import com.maksimowiczm.foodyou.recipe.domain.RecipeDeletedEvent
 import com.maksimowiczm.foodyou.recipe.domain.RecipeRepository
 import com.maksimowiczm.foodyou.recipe.infrastructure.RecipeRepositoryImpl
 import com.maksimowiczm.foodyou.recipe.infrastructure.room.RecipeDatabase
@@ -21,7 +23,12 @@ val recipeModule = module {
     factory { RecipeRepositoryImpl(dao = get(), integrationEventBus = integrationEventBus()) }
         .bind<RecipeRepository>()
 
+    // Event handlers
     integrationEventHandler<UserFoodProductDeletedEvent, HandleUserFoodDeletedEventHandler> {
         HandleUserFoodDeletedEventHandler(get())
+    }
+
+    integrationEventHandler<RecipeDeletedEvent, HandleRecipeDeletedEventHandler> {
+        HandleRecipeDeletedEventHandler(get())
     }
 }
