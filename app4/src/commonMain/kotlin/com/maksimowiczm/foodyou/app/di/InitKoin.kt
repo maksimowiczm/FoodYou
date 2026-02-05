@@ -24,6 +24,7 @@ import com.maksimowiczm.foodyou.device.di.deviceModule
 import com.maksimowiczm.foodyou.fooddatacentral.di.foodDataCentralModule
 import com.maksimowiczm.foodyou.foodsearch.di.foodSearchModule
 import com.maksimowiczm.foodyou.openfoodfacts.di.openFoodFactsModule
+import com.maksimowiczm.foodyou.recipe.di.recipeModule
 import com.maksimowiczm.foodyou.userfood.di.userFoodModule
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
@@ -45,6 +46,7 @@ fun initKoin(config: KoinAppDeclaration? = null): KoinApplication = startKoin {
         foodSearchModule,
         foodDataCentralModule,
         openFoodFactsModule,
+        recipeModule,
         userFoodModule,
     )
 
