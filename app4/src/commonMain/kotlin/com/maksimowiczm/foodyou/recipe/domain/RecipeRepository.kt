@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.recipe.domain
 
 import androidx.paging.PagingData
+import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.userfood.domain.FoodNote
@@ -19,7 +20,7 @@ interface RecipeRepository {
         note: FoodNote?,
         finalWeight: Double?,
         ingredients: List<RecipeIngredient>,
-    ): RecipeIdentity
+    ): Result<RecipeIdentity, CircularRecipeReferenceError>
 
     suspend fun update(
         identity: RecipeIdentity,
@@ -29,7 +30,7 @@ interface RecipeRepository {
         note: FoodNote?,
         finalWeight: Double?,
         ingredients: List<RecipeIngredient>,
-    )
+    ): Result<Unit, CircularRecipeReferenceError>
 
     fun observe(identity: RecipeIdentity): Flow<Recipe?>
 
