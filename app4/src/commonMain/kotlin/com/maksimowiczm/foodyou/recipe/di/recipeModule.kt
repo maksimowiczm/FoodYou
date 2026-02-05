@@ -20,7 +20,7 @@ val recipeModule = module {
     single { databaseBuilder<RecipeDatabase>(RECIPE_DATABASE_NAME).buildDatabase() }
     factory { get<RecipeDatabase>().dao }
 
-    factory { RecipeRepositoryImpl(dao = get(), integrationEventBus = integrationEventBus()) }
+    factory { RecipeRepositoryImpl(database = get(), integrationEventBus = integrationEventBus()) }
         .bind<RecipeRepository>()
 
     // Event handlers

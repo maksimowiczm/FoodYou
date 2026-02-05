@@ -7,12 +7,19 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.maksimowiczm.foodyou.common.Err
+import com.maksimowiczm.foodyou.common.Ok
+import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.directory
+import com.maksimowiczm.foodyou.common.infrastructure.room.immediateTransaction
+import com.maksimowiczm.foodyou.common.onError
+import com.maksimowiczm.foodyou.common.onSuccess
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
+import com.maksimowiczm.foodyou.recipe.domain.CircularRecipeReferenceError
 import com.maksimowiczm.foodyou.recipe.domain.FoodReference
 import com.maksimowiczm.foodyou.recipe.domain.Recipe
 import com.maksimowiczm.foodyou.recipe.domain.RecipeDeletedEvent
@@ -22,7 +29,7 @@ import com.maksimowiczm.foodyou.recipe.domain.RecipeName
 import com.maksimowiczm.foodyou.recipe.domain.RecipeRepository
 import com.maksimowiczm.foodyou.recipe.domain.RecipeSearchParameters
 import com.maksimowiczm.foodyou.recipe.infrastructure.room.FoodReferenceType
-import com.maksimowiczm.foodyou.recipe.infrastructure.room.RecipeDao
+import com.maksimowiczm.foodyou.recipe.infrastructure.room.RecipeDatabase
 import com.maksimowiczm.foodyou.userfood.domain.FoodNote
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.ImageFormat
@@ -42,10 +49,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 internal class RecipeRepositoryImpl(
-    private val dao: RecipeDao,
+    private val database: RecipeDatabase,
     private val integrationEventBus: EventBus<IntegrationEvent>,
 ) : RecipeRepository {
     private val mapper = RecipeMapper()
+    private val dao = database.dao
 
     @OptIn(ExperimentalPagingApi::class)
     override fun search(
@@ -111,12 +119,12 @@ internal class RecipeRepositoryImpl(
         note: FoodNote?,
         finalWeight: Double?,
         ingredients: List<RecipeIngredient>,
-    ): RecipeIdentity {
+    ): Result<RecipeIdentity, CircularRecipeReferenceError> {
         require(ingredients.isNotEmpty()) { "Recipe must have at least one ingredient" }
         require(servings > 0) { "Recipe must have a positive number of servings" }
         require(finalWeight == null || finalWeight > 0) { "Final weight must be a positive number" }
 
-        val uuid = Uuid.random().toString()
+        val recipeId = Uuid.random().toString()
 
         val recipeDirectory = accountId.directory() / "recipes"
         recipeDirectory.createDirectories()
@@ -134,7 +142,7 @@ internal class RecipeRepositoryImpl(
                         imageFormat = ImageFormat.JPEG,
                     )
 
-                val dest = (recipeDirectory / "$uuid.jpg").apply { write(compressed) }
+                val dest = (recipeDirectory / "$recipeId.jpg").apply { write(compressed) }
                 dest.path
             } else {
                 null
@@ -142,7 +150,7 @@ internal class RecipeRepositoryImpl(
 
         val recipe =
             Recipe(
-                identity = RecipeIdentity(uuid, accountId),
+                identity = RecipeIdentity(recipeId, accountId),
                 name = name,
                 servings = servings,
                 image = photoPath?.let { Image.Local(it) },
@@ -153,9 +161,18 @@ internal class RecipeRepositoryImpl(
 
         val recipeEntity = mapper.toEntity(recipe)
         val ingredientEntities = mapper.toIngredientEntities(ingredients)
-        dao.insertRecipeWithIngredients(recipeEntity, ingredientEntities)
 
-        return RecipeIdentity(uuid, accountId)
+        return database
+            .immediateTransaction<Result<RecipeIdentity, CircularRecipeReferenceError>> {
+                try {
+                    checkCircularReference(recipeId, ingredients, accountId)
+                    dao.insertRecipeWithIngredients(recipeEntity, ingredientEntities)
+                    Ok(RecipeIdentity(recipeId, accountId))
+                } catch (e: CircularRecipeReferenceException) {
+                    Err(CircularRecipeReferenceError(e.recipeId, e.cyclePath))
+                }
+            }
+            .onError { PlatformFile("${recipeId}.jpg").delete(mustExist = false) }
     }
 
     override suspend fun update(
@@ -166,7 +183,7 @@ internal class RecipeRepositoryImpl(
         note: FoodNote?,
         finalWeight: Double?,
         ingredients: List<RecipeIngredient>,
-    ) {
+    ): Result<Unit, CircularRecipeReferenceError> {
         require(ingredients.isNotEmpty()) { "Recipe must have at least one ingredient" }
         require(servings > 0) { "Recipe must have a positive number of servings" }
         require(finalWeight == null || finalWeight > 0) { "Final weight must be a positive number" }
@@ -179,6 +196,7 @@ internal class RecipeRepositoryImpl(
         val recipeDirectory = identity.accountId.directory() / "recipes"
         recipeDirectory.createDirectories()
 
+        val oldImagePath = existingEntity.recipe.imagePath
         val imagePath: String? =
             if (image != null && existingEntity.recipe.imagePath != image.uri) {
                 val sourceFile = PlatformFile(image.uri)
@@ -196,11 +214,6 @@ internal class RecipeRepositoryImpl(
 
                 dest.path
             } else if (image == null && existingEntity.recipe.imagePath != null) {
-                val existingPath = existingEntity.recipe.imagePath
-                val existingFile = PlatformFile(existingPath)
-                if (existingFile.exists()) {
-                    existingFile.delete()
-                }
                 null
             } else {
                 existingEntity.recipe.imagePath
@@ -219,7 +232,32 @@ internal class RecipeRepositoryImpl(
 
         val updatedEntity = mapper.toEntity(recipe, sqliteId = existingEntity.recipe.sqliteId)
         val ingredientEntities = mapper.toIngredientEntities(ingredients)
-        dao.updateRecipeWithIngredients(updatedEntity, ingredientEntities)
+
+        return database
+            .immediateTransaction<Result<Unit, CircularRecipeReferenceError>> {
+                try {
+                    checkCircularReference(identity.id, ingredients, identity.accountId)
+                    dao.updateRecipeWithIngredients(updatedEntity, ingredientEntities)
+                    Ok()
+                } catch (e: CircularRecipeReferenceException) {
+                    Err(CircularRecipeReferenceError(e.recipeId, e.cyclePath))
+                }
+            }
+            .onError {
+                // Cleanup new image if transaction failed
+                if (imagePath != null && imagePath != oldImagePath) {
+                    PlatformFile(imagePath).delete(mustExist = false)
+                }
+            }
+            .onSuccess {
+                // Delete old image if it was replaced
+                if (imagePath != oldImagePath && oldImagePath != null) {
+                    val existingFile = PlatformFile(oldImagePath)
+                    if (existingFile.exists()) {
+                        existingFile.delete()
+                    }
+                }
+            }
     }
 
     override fun observe(identity: RecipeIdentity): Flow<Recipe?> =
@@ -259,4 +297,100 @@ internal class RecipeRepositoryImpl(
             )
             .map { mapper.toDomain(it) }
     }
+
+    /**
+     * Checks if adding the given ingredients to a recipe would create a circular reference.
+     *
+     * Uses depth-first search to detect cycles in the recipe dependency graph.
+     *
+     * @param recipeId The recipe being created/updated
+     * @param ingredients The ingredients to check
+     * @param accountId The account ID for querying recipes
+     * @throws CircularRecipeReferenceError if a circular reference is detected
+     */
+    private suspend fun checkCircularReference(
+        recipeId: String,
+        ingredients: List<RecipeIngredient>,
+        accountId: LocalAccountId,
+    ) {
+        // Get all recipe references in ingredients
+        val referencedRecipes =
+            ingredients.mapNotNull { ingredient ->
+                when (val ref = ingredient.foodReference) {
+                    is FoodReference.Recipe -> ref.foodId
+                    else -> null
+                }
+            }
+
+        // Check each referenced recipe for cycles
+        referencedRecipes.forEach { referencedRecipeId ->
+            checkCircularReferenceRecursive(
+                currentRecipeId = referencedRecipeId,
+                targetRecipeId = recipeId,
+                accountId = accountId,
+                visitedPath = mutableListOf(recipeId),
+            )
+        }
+    }
+
+    /**
+     * Recursively checks for circular references using depth-first search.
+     *
+     * @param currentRecipeId The recipe currently being examined
+     * @param targetRecipeId The original recipe we're checking (looking for cycle back to this)
+     * @param accountId The account ID
+     * @param visitedPath The path of recipes visited so far (for error reporting)
+     * @throws CircularRecipeReferenceError if a cycle is detected
+     */
+    private suspend fun checkCircularReferenceRecursive(
+        currentRecipeId: String,
+        targetRecipeId: String,
+        accountId: LocalAccountId,
+        visitedPath: MutableList<String>,
+    ) {
+        // Check if we've found a cycle back to the target
+        if (currentRecipeId == targetRecipeId) {
+            throw CircularRecipeReferenceException(
+                recipeId = targetRecipeId,
+                cyclePath = visitedPath.toList(),
+            )
+        }
+
+        // Prevent infinite loops in case of existing circular references
+        if (currentRecipeId in visitedPath) {
+            return
+        }
+
+        // Get the current recipe
+        val currentRecipe =
+            dao.observe(currentRecipeId, accountId.value).first() ?: return // Recipe doesn't exist
+
+        visitedPath.add(currentRecipeId)
+
+        // Get all recipe references in the current recipe's ingredients
+        val nestedRecipes =
+            currentRecipe.ingredients.mapNotNull { ingredient ->
+                when (ingredient.foodReferenceType) {
+                    FoodReferenceType.Recipe -> ingredient.foodId
+                    else -> null
+                }
+            }
+
+        // Recursively check each nested recipe
+        nestedRecipes.forEach { nestedRecipeId ->
+            checkCircularReferenceRecursive(
+                currentRecipeId = nestedRecipeId,
+                targetRecipeId = targetRecipeId,
+                accountId = accountId,
+                visitedPath = visitedPath,
+            )
+        }
+
+        visitedPath.removeAt(visitedPath.size - 1)
+    }
+
+    private class CircularRecipeReferenceException(
+        val recipeId: String,
+        val cyclePath: List<String>,
+    ) : Exception()
 }
