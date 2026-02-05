@@ -34,4 +34,16 @@ interface RecipeRepository {
     fun observe(identity: RecipeIdentity): Flow<Recipe?>
 
     suspend fun delete(identity: RecipeIdentity)
+
+    /**
+     * Finds all recipes that use the specified food reference.
+     *
+     * @param foodReference The food reference to search for
+     * @param accountId The account to search within
+     * @return List of recipes containing the specified food
+     */
+    suspend fun findRecipesUsingFood(
+        foodReference: FoodReference,
+        accountId: LocalAccountId,
+    ): List<Recipe>
 }
