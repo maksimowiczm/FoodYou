@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.directory
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
+import com.maksimowiczm.foodyou.recipe.domain.FoodReference
 import com.maksimowiczm.foodyou.recipe.domain.Recipe
 import com.maksimowiczm.foodyou.recipe.domain.RecipeDeletedEvent
 import com.maksimowiczm.foodyou.recipe.domain.RecipeIdentity
@@ -20,6 +21,7 @@ import com.maksimowiczm.foodyou.recipe.domain.RecipeIngredient
 import com.maksimowiczm.foodyou.recipe.domain.RecipeName
 import com.maksimowiczm.foodyou.recipe.domain.RecipeRepository
 import com.maksimowiczm.foodyou.recipe.domain.RecipeSearchParameters
+import com.maksimowiczm.foodyou.recipe.infrastructure.room.FoodReferenceType
 import com.maksimowiczm.foodyou.recipe.infrastructure.room.RecipeDao
 import com.maksimowiczm.foodyou.userfood.domain.FoodNote
 import io.github.vinceglb.filekit.FileKit
@@ -236,5 +238,25 @@ internal class RecipeRepositoryImpl(
         PlatformFile("${existingEntity.recipe.uuid}.jpg").delete(mustExist = false)
 
         integrationEventBus.publish(RecipeDeletedEvent(identity))
+    }
+
+    override suspend fun findRecipesUsingFood(
+        foodReference: FoodReference,
+        accountId: LocalAccountId,
+    ): List<Recipe> {
+        val foodReferenceType =
+            when (foodReference) {
+                is FoodReference.UserFood -> FoodReferenceType.UserFood
+                is FoodReference.FoodDataCentral -> FoodReferenceType.FoodDataCentral
+                is FoodReference.OpenFoodFacts -> FoodReferenceType.OpenFoodFacts
+                is FoodReference.Recipe -> FoodReferenceType.Recipe
+            }
+
+        return dao.findRecipesUsingFood(
+                accountId = accountId.value,
+                foodReferenceType = foodReferenceType,
+                foodId = foodReference.foodId,
+            )
+            .map { mapper.toDomain(it) }
     }
 }
