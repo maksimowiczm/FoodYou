@@ -32,11 +32,7 @@ import com.maksimowiczm.foodyou.app.ui.userfood.FillSuggestedFieldsDialog
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductForm
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import com.valentinilk.shimmer.shimmer
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_save
-import foodyou.app.generated.resources.headline_edit_product
-import foodyou.app.generated.resources.headline_please_wait
-import foodyou.app.generated.resources.question_discard_product
+import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
