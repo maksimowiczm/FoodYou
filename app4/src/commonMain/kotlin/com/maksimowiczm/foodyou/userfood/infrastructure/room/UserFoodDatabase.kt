@@ -5,13 +5,14 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
+import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnitConverter
 
 @Database(
     entities = [UserFoodEntity::class, UserFoodFts::class],
     version = UserFoodDatabase.VERSION,
     exportSchema = false,
 )
-@TypeConverters(QuantityEntityConverter::class)
+@TypeConverters(QuantityTypeConverter::class, MeasurementUnitConverter::class)
 @ConstructedBy(UserFoodDatabaseConstructor::class)
 internal abstract class UserFoodDatabase : RoomDatabase() {
     abstract val dao: UserFoodDao

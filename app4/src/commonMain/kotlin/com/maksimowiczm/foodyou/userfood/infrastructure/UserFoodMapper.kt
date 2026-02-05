@@ -11,13 +11,13 @@ import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Ounces
 import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsMapper
+import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnit
 import com.maksimowiczm.foodyou.userfood.domain.FoodBrand
 import com.maksimowiczm.foodyou.userfood.domain.FoodNote
 import com.maksimowiczm.foodyou.userfood.domain.FoodSource
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.FoodNameEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.MeasurementUnit
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.QuantityEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.QuantityType
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.UserFoodEntity
