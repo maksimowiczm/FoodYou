@@ -38,7 +38,7 @@ internal class RecipeMapper {
         )
     }
 
-    fun toEntity(recipe: Recipe, sqliteId: Long = -1): RecipeEntity {
+    fun toEntity(recipe: Recipe, sqliteId: Long = 0): RecipeEntity {
         return RecipeEntity(
             sqliteId = sqliteId,
             uuid = recipe.identity.id,
@@ -53,7 +53,7 @@ internal class RecipeMapper {
 
     fun toIngredientEntities(
         ingredients: List<RecipeIngredient>,
-        recipeSqliteId: Long = -1,
+        recipeSqliteId: Long = 0,
     ): List<RecipeIngredientEntity> {
         return ingredients.map { ingredient ->
             RecipeIngredientEntity(

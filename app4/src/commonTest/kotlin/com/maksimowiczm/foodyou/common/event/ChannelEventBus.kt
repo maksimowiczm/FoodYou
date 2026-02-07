@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
  * ```
  */
 @OptIn(DelicateCoroutinesApi::class)
-class TestEventBus<E>(val channel: Channel<E> = Channel(Channel.UNLIMITED)) : EventBus<E> {
+class ChannelEventBus<E>(val channel: Channel<E> = Channel(Channel.UNLIMITED)) : EventBus<E> {
 
     /**
      * A cold Flow that emits all events published to this event bus.
@@ -76,4 +76,21 @@ class TestEventBus<E>(val channel: Channel<E> = Channel(Channel.UNLIMITED)) : Ev
 
     private fun assertOpen() =
         assertTrue("Channel should not be closed") { !channel.isClosedForSend }
+}
+
+class ListEventBus<E> : EventBus<E> {
+    private val _events = mutableListOf<E>()
+    val publishedEvents: List<E>
+        get() = _events.toList()
+
+    override val events: Flow<E>
+        get() = error("Not implemented")
+
+    override suspend fun publish(event: E) {
+        _events.add(event)
+    }
+
+    override suspend fun publish(events: List<E>) {
+        _events.addAll(events)
+    }
 }

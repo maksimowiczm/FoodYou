@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.common.event.di
 
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
+import com.maksimowiczm.foodyou.common.event.ChannelEventBus
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.EventHandler
-import com.maksimowiczm.foodyou.common.event.TestEventBus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -104,7 +104,7 @@ class EventHandlerTest {
     context(scope: TestScope)
     private fun Module.configureTestModule(eventBusQualifier: Qualifier) {
         applicationCoroutineScope { scope.backgroundScope }
-        single<EventBus<DomainEvent>>(eventBusQualifier) { TestEventBus() }
+        single<EventBus<DomainEvent>>(eventBusQualifier) { ChannelEventBus() }
     }
 
     private class TestHandler : EventHandler<DomainEvent> {
