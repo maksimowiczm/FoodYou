@@ -1,6 +1,10 @@
 package com.maksimowiczm.foodyou.app.infrastructure.android
 
 import android.app.Application
+import android.content.Intent
+import android.os.Build
+import com.maksimowiczm.foodyou.BuildConfig
+import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
 import com.maksimowiczm.foodyou.app.di.initKoin
@@ -28,6 +32,12 @@ class FoodYouApplication : Application() {
                 }
                 .koin
 
+        val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { t, e ->
+            handleUncaughtException(e)
+            defaultHandler?.uncaughtException(t, e)
+        }
+
         coroutineScope.launch {
             val accountManager = koin.get<AccountManager>()
             val accountId = accountManager.observePrimaryAccountId().first()
@@ -38,5 +48,22 @@ class FoodYouApplication : Application() {
 
             koin.get<AppLaunchUseCase>().execute(accountId)
         }
+    }
+
+    private fun handleUncaughtException(e: Throwable) {
+        val intent = Intent(this, CrashReportActivity::class.java)
+
+        val report = buildString {
+            appendLine("${getString(R.string.app_name)} ${BuildConfig.VERSION_NAME}")
+            appendLine("Android ${Build.VERSION.RELEASE} (${Build.VERSION.SDK_INT})")
+            appendLine("${Build.MANUFACTURER} ${Build.MODEL}")
+            appendLine()
+            appendLine(e.stackTraceToString())
+        }
+
+        intent.putExtra("report", report)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+        startActivity(intent)
     }
 }

@@ -11,6 +11,7 @@ class FoodYouConfig : AppConfig, NetworkConfig {
     override val foodDataCentralPrivacyPolicyUri: String = "https://www.usda.gov/privacy-policy"
     override val sourceCodeUri: String = "https://github.com/maksimowiczm/FoodYou"
     override val featureRequestUri: String = "https://github.com/maksimowiczm/FoodYou/issues"
+    override val bugReportUri: String = "https://github.com/maksimowiczm/FoodYou/issues"
     override val emailContactUri: String =
         "mailto:maksimowicz.dev@gmail.com?subject=Food You Feedback&body=Food You Version: $versionName\n"
     override val translateUri: String = "https://crowdin.com/project/food-you"

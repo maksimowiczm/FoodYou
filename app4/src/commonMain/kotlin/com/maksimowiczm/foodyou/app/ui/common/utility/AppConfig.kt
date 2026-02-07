@@ -1,8 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.common.utility
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.app.domain.AppConfig
 
 private val defaultAppConfig =
@@ -14,6 +12,7 @@ private val defaultAppConfig =
         override val foodDataCentralPrivacyPolicyUri: String = "foodDataCentralPrivacyPolicyUri"
         override val sourceCodeUri: String = "sourceCodeUri"
         override val featureRequestUri: String = "featureRequestUri"
+        override val bugReportUri: String = "bugReportUri"
         override val emailContactUri: String = "emailContactUri"
         override val translateUri: String = "translateUri"
         override val changelogUri: String = "changelogUri"

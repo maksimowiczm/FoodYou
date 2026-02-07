@@ -141,6 +141,11 @@ android {
         manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildFeatures {
+            buildConfig = true
+            buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
+        }
     }
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
     buildTypes {
