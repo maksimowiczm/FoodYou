@@ -33,7 +33,6 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsUiState
 import com.maksimowiczm.foodyou.app.ui.food.details.NutrientList
 import com.maksimowiczm.foodyou.app.ui.food.details.NutrientsHeader
 import com.maksimowiczm.foodyou.app.ui.food.details.RefreshMenu
-import com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts.OpenFoodFactsSource
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
@@ -179,7 +178,7 @@ private fun FoodDataCentralDetailsScreen(
                         Spacer(Modifier.height(16.dp))
                         HorizontalDivider(Modifier.fillMaxWidth().padding(horizontal = 16.dp))
                         Spacer(Modifier.height(16.dp))
-                        OpenFoodFactsSource(
+                        FoodDataCentralSource(
                             url = url,
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                         )
