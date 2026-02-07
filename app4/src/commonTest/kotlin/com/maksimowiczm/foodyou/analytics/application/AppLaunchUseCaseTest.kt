@@ -6,9 +6,9 @@ import com.maksimowiczm.foodyou.analytics.domain.testAccountAnalytics
 import com.maksimowiczm.foodyou.app.domain.testAppConfig
 import com.maksimowiczm.foodyou.common.clock.testClock
 import com.maksimowiczm.foodyou.common.domain.testLocalAccountId
+import com.maksimowiczm.foodyou.common.event.ChannelEventBus
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.common.event.EventBus
-import com.maksimowiczm.foodyou.common.event.TestEventBus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -88,7 +88,7 @@ class AppLaunchUseCaseTest {
     @Test
     fun execute_shouldPublishAccountDomainEvents() = runTest {
         val account = testAccountAnalytics()
-        val eventBus = TestEventBus<DomainEvent>()
+        val eventBus = ChannelEventBus<DomainEvent>()
         val useCase =
             appLaunchUseCase(
                 accountAnalyticsRepository = FakeAccountAnalyticsRepository(onLoad = { account }),
@@ -105,7 +105,7 @@ class AppLaunchUseCaseTest {
 
     fun appLaunchUseCase(
         accountAnalyticsRepository: AccountAnalyticsRepository = FakeAccountAnalyticsRepository(),
-        eventBus: EventBus<DomainEvent> = TestEventBus(),
+        eventBus: EventBus<DomainEvent> = ChannelEventBus(),
     ) =
         AppLaunchUseCase(
             clock = testClock(),

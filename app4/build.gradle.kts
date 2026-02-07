@@ -104,6 +104,7 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.androidx.room.testing)
         }
 
         androidMain.dependencies {
@@ -188,3 +189,5 @@ compose.resources {
     packageOfResClass = "com.maksimowiczm.foodyou.app.generated.resources"
     generateResClass = always
 }
+
+tasks.withType<Test> { useJUnitPlatform() }

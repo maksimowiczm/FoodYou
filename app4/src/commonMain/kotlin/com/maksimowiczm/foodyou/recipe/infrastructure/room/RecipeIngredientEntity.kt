@@ -17,7 +17,7 @@ import androidx.room.PrimaryKey
                 onDelete = ForeignKey.CASCADE,
             )
         ],
-    indices = [Index(value = ["recipeSqliteId"]), Index(value = ["foodReferenceType", "foodId"])],
+    indices = [Index(value = ["recipeSqliteId"])],
 )
 internal data class RecipeIngredientEntity(
     @PrimaryKey(autoGenerate = true) val sqliteId: Long = 0,
