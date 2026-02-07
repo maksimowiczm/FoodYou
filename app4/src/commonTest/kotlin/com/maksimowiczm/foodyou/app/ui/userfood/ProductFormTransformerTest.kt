@@ -45,7 +45,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should transform valid form to result`() = runTest {
+    fun should_transform_valid_form_to_result() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState()
         form.fillRequiredFields()
@@ -68,7 +68,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should throw exception when form is invalid`() = runTest {
+    fun should_throw_exception_when_form_is_invalid() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState()
 
@@ -76,7 +76,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should throw exception when name is missing`() = runTest {
+    fun should_throw_exception_when_name_is_missing() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState()
         form.proteins.textFieldState.setTextAndPlaceCursorAtEnd("10")
@@ -88,7 +88,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should transform form with brand`() = runTest {
+    fun should_transform_form_with_brand() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState()
         form.fillRequiredFields()
@@ -101,7 +101,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should transform form with barcode`() = runTest {
+    fun should_transform_form_with_barcode() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState()
         form.fillRequiredFields()
@@ -114,7 +114,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should transform form with note`() = runTest {
+    fun should_transform_form_with_note() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState()
         form.fillRequiredFields()
@@ -127,7 +127,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should transform form with source`() = runTest {
+    fun should_transform_form_with_source() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState()
         form.fillRequiredFields()
@@ -140,7 +140,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should set correct language for Polish`() = runTest {
+    fun should_set_correct_language_for_Polish() = runTest {
         val transformer =
             createProductFormTransformer(selector = createDefaultSelector(Language.Polish))
         val form = ProductFormState()
@@ -154,7 +154,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should set correct language for German`() = runTest {
+    fun should_set_correct_language_for_German() = runTest {
         val transformer =
             createProductFormTransformer(selector = createDefaultSelector(Language.German))
         val form = ProductFormState()
@@ -168,7 +168,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should convert kilojoules to kilocalories`() = runTest {
+    fun should_convert_kilojoules_to_kilocalories() = runTest {
         val account =
             testAccount(
                 settings = AccountSettings.default.copy(energyFormat = EnergyFormat.Kilojoules)
@@ -185,7 +185,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should calculate multiplier for serving size in grams`() = runTest {
+    fun should_calculate_multiplier_for_serving_size_in_grams() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState(valuesPer = ValuesPer.Serving, servingUnit = QuantityUnit.Gram)
         form.fillRequiredFields()
@@ -208,7 +208,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should calculate multiplier for serving size in milliliters`() = runTest {
+    fun should_calculate_multiplier_for_serving_size_in_milliliters() = runTest {
         val transformer = createProductFormTransformer()
         val form =
             ProductFormState(valuesPer = ValuesPer.Serving, servingUnit = QuantityUnit.Milliliter)
@@ -232,7 +232,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should calculate multiplier for package size`() = runTest {
+    fun should_calculate_multiplier_for_package_size() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState(valuesPer = ValuesPer.Package, packageUnit = QuantityUnit.Gram)
         form.fillRequiredFields()
@@ -255,7 +255,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should throw exception when serving quantity is missing for serving values`() = runTest {
+    fun should_throw_exception_when_serving_quantity_is_missing_for_serving_values() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState(valuesPer = ValuesPer.Serving)
         form.fillRequiredFields()
@@ -264,7 +264,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should throw exception when package quantity is missing for package values`() = runTest {
+    fun should_throw_exception_when_package_quantity_is_missing_for_package_values() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState(valuesPer = ValuesPer.Package)
         form.fillRequiredFields()
@@ -273,7 +273,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should store serving quantity in grams`() = runTest {
+    fun should_store_serving_quantity_in_grams() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState(servingUnit = QuantityUnit.Gram)
         form.fillRequiredFields()
@@ -287,7 +287,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should store serving quantity in milliliters`() = runTest {
+    fun should_store_serving_quantity_in_milliliters() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState(servingUnit = QuantityUnit.Milliliter)
         form.fillRequiredFields()
@@ -301,7 +301,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should store package quantity in grams`() = runTest {
+    fun should_store_package_quantity_in_grams() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState(packageUnit = QuantityUnit.Gram)
         form.fillRequiredFields()
@@ -315,7 +315,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should store package quantity in milliliters`() = runTest {
+    fun should_store_package_quantity_in_milliliters() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState(packageUnit = QuantityUnit.Milliliter)
         form.fillRequiredFields()
@@ -329,7 +329,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should handle ounces for serving size`() = runTest {
+    fun should_handle_ounces_for_serving_size() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState(valuesPer = ValuesPer.Serving, servingUnit = QuantityUnit.Ounce)
         form.fillRequiredFields()
@@ -346,7 +346,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should handle fluid ounces for serving size`() = runTest {
+    fun should_handle_fluid_ounces_for_serving_size() = runTest {
         val transformer = createProductFormTransformer()
         val form =
             ProductFormState(valuesPer = ValuesPer.Serving, servingUnit = QuantityUnit.FluidOunce)
@@ -364,7 +364,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should always set fallback name`() = runTest {
+    fun should_always_set_fallback_name() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState()
         form.fillRequiredFields()
@@ -376,7 +376,7 @@ class ProductFormTransformerTest {
     }
 
     @Test
-    fun `should handle all optional fields together`() = runTest {
+    fun should_handle_all_optional_fields_together() = runTest {
         val transformer = createProductFormTransformer()
         val form = ProductFormState()
         form.fillRequiredFields()

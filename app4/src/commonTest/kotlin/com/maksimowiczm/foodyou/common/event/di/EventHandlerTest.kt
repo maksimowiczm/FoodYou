@@ -87,12 +87,17 @@ class EventHandlerTest {
         vararg modules: Module,
         block: suspend Koin.() -> Unit,
     ) {
-        val koin = startKoin { modules(*modules) }
         try {
-            block(koin.koin)
-            koin.close()
-        } finally {
+            // It's possible that koin is already running. On Android it will be already running
             stopKoin()
+        } finally {
+            val koin = startKoin { modules(*modules) }
+            try {
+                block(koin.koin)
+                koin.close()
+            } finally {
+                stopKoin()
+            }
         }
     }
 

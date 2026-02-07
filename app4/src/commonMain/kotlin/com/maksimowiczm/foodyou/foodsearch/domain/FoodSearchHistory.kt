@@ -32,7 +32,9 @@ private constructor(val profileId: ProfileId, history: List<SearchHistory>) {
         _history.removeAll { it.query == query }
         _history.add(0, SearchHistory(query, clock.now()))
         if (_history.size > MAX_HISTORY_SIZE) {
-            _history.removeLast()
+            // https://youtrack.jetbrains.com/issue/KT-71375/Prevent-Kotlins-removeFirst-and-removeLast-from-causing-crashes-on-Android-14-and-below-after-upgrading-to-Android-API-Level-35
+            // Can't use removeLast because older Androids will crash 😂
+            _history.removeAt(_history.lastIndex)
         }
     }
 }
