@@ -22,6 +22,9 @@ interface AppConfig {
     /** URI to the feature request page. */
     val featureRequestUri: String
 
+    /** URI to the bug report page. */
+    val bugReportUri: String
+
     /** URI to the email contact. */
     val emailContactUri: String
 

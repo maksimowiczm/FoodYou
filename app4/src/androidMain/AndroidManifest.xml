@@ -39,6 +39,12 @@
 
         </activity>
 
+        <activity
+            android:name=".app.infrastructure.android.CrashReportActivity"
+            android:exported="false"
+            android:label="CrashReportActivity"
+            android:theme="@style/Theme.FoodYou" />
+
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
             android:enabled="false"
