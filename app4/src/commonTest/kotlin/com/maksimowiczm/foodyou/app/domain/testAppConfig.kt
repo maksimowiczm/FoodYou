@@ -8,6 +8,7 @@ fun testAppConfig(
     foodDataCentralPrivacyPolicyUri: String = "testFoodDataCentralPrivacyPolicyUri",
     sourceCodeUri: String = "testSourceCodeUri",
     featureRequestUri: String = "testFeatureRequestUri",
+    bugReportUri: String = "testBugReportUri",
     emailContactUri: String = "testEmailContactUri",
     translateUri: String = "testTranslateUri",
     changelogUri: String = "testChangelogUri",
@@ -20,6 +21,7 @@ fun testAppConfig(
         override val foodDataCentralPrivacyPolicyUri: String = foodDataCentralPrivacyPolicyUri
         override val sourceCodeUri: String = sourceCodeUri
         override val featureRequestUri: String = featureRequestUri
+        override val bugReportUri: String = bugReportUri
         override val emailContactUri: String = emailContactUri
         override val translateUri: String = translateUri
         override val changelogUri: String = changelogUri
