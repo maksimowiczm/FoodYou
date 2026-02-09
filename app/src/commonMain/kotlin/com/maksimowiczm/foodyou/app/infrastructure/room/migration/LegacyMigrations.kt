@@ -15,14 +15,14 @@ object LegacyMigrations {
                     """
                     ALTER TABLE MealEntity 
                     ADD COLUMN rank INTEGER NOT NULL DEFAULT -1
-                        """
+                    """
                         .trimIndent()
                 )
                 connection.execSQL(
                     """
                     UPDATE MealEntity 
                     SET rank = id
-                        """
+                    """
                         .trimIndent()
                 )
             }
@@ -42,14 +42,14 @@ object LegacyMigrations {
                         totalCount INTEGER NOT NULL,
                         PRIMARY KEY(queryString, country)
                     )
-                        """
+                    """
                         .trimIndent()
                 )
                 connection.execSQL(
                     """
                     INSERT INTO OpenFoodFactsPagingKeyEntity (queryString, country, fetchedCount, totalCount)
                     SELECT queryString, country, fetchedCount, totalCount FROM OpenFoodFactsPagingKey
-                        """
+                    """
                         .trimIndent()
                 )
                 connection.execSQL("DROP TABLE OpenFoodFactsPagingKey")
@@ -75,7 +75,7 @@ object LegacyMigrations {
                         sodium REAL,
                         fiber REAL
                     )
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -94,7 +94,7 @@ object LegacyMigrations {
                         calories, proteins, carbohydrates, sugars, fats, saturatedFats,
                         salt, sodium, fiber
                     FROM ProductEntity
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -116,7 +116,7 @@ object LegacyMigrations {
                         FOREIGN KEY (productId) REFERENCES ProductEntity(id) ON DELETE CASCADE,
                         FOREIGN KEY (mealId) REFERENCES MealEntity(id) ON DELETE CASCADE
                     )
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -125,7 +125,7 @@ object LegacyMigrations {
                     """
                     CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_productId 
                     ON ProductMeasurementEntity (productId)
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -133,7 +133,7 @@ object LegacyMigrations {
                     """
                     CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_isDeleted 
                     ON ProductMeasurementEntity (isDeleted)
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -141,7 +141,7 @@ object LegacyMigrations {
                     """
                     CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_mealId 
                     ON ProductMeasurementEntity (mealId)
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -154,7 +154,7 @@ object LegacyMigrations {
                     SELECT 
                         id, mealId, diaryEpochDay, productId, measurement, quantity, createdAt, isDeleted
                     FROM WeightMeasurementEntity
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -167,7 +167,7 @@ object LegacyMigrations {
                         query TEXT NOT NULL PRIMARY KEY,
                         epochSeconds INTEGER NOT NULL
                     )
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -176,7 +176,7 @@ object LegacyMigrations {
                     """
                     INSERT INTO SearchQueryEntity (query, epochSeconds)
                     SELECT query, date FROM ProductQueryEntity
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -212,7 +212,7 @@ object LegacyMigrations {
                         WHERE productSource = 1
                         AND id NOT IN (SELECT productId FROM UsedProducts)
                     ) 
-                        """
+                    """
                         .trimIndent()
                 )
             }
@@ -224,7 +224,7 @@ object LegacyMigrations {
                 connection.execSQL(
                     """
                     DROP TABLE IF EXISTS OpenFoodFactsPagingKeyEntity
-                        """
+                    """
                         .trimIndent()
                 )
             }
@@ -246,7 +246,7 @@ object LegacyMigrations {
                     UPDATE ProductEntity 
                     SET sodiumMilli = sodiumMilli * 1000
                     WHERE sodiumMilli IS NOT NULL
-                        """
+                    """
                         .trimIndent()
                 )
             }
@@ -282,7 +282,7 @@ object LegacyMigrations {
                         FOREIGN KEY (productId) REFERENCES ProductEntity(id) ON DELETE CASCADE,
                         FOREIGN KEY (recipeId) REFERENCES RecipeEntity(id) ON DELETE CASCADE
                     )
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -291,7 +291,7 @@ object LegacyMigrations {
                     """
                     CREATE INDEX IF NOT EXISTS index_MeasurementEntity_epochDay
                     ON MeasurementEntity (epochDay)
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -299,7 +299,7 @@ object LegacyMigrations {
                     """
                     CREATE INDEX IF NOT EXISTS index_MeasurementEntity_productId
                     ON MeasurementEntity (productId)
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -307,7 +307,7 @@ object LegacyMigrations {
                     """
                     CREATE INDEX IF NOT EXISTS index_MeasurementEntity_recipeId
                     ON MeasurementEntity (recipeId)
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -315,7 +315,7 @@ object LegacyMigrations {
                     """
                     CREATE INDEX IF NOT EXISTS index_MeasurementEntity_mealId
                     ON MeasurementEntity (mealId)
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -329,7 +329,7 @@ object LegacyMigrations {
                         mealId, diaryEpochDay as epochDay, productId, measurement, quantity, createdAt, isDeleted
                     FROM ProductMeasurementEntity
                     WHERE true
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -343,7 +343,7 @@ object LegacyMigrations {
                         mealId, epochDay, recipeId, measurement, quantity, createdAt, isDeleted
                     FROM RecipeMeasurementEntity
                     WHERE true
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -368,7 +368,7 @@ object LegacyMigrations {
                         id, name, brand, barcode, packageWeight, servingWeight, proteins, carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro
                     FROM ProductEntity
                     WHERE true
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -389,7 +389,7 @@ object LegacyMigrations {
                     SELECT 
                         id, name, brand, barcode, packageWeight, servingWeight, proteins, carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, sugars, salt, fiber, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro
                     FROM ProductEntity_temp
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -409,7 +409,7 @@ object LegacyMigrations {
                         `measurement` INTEGER NOT NULL,
                         `quantity` REAL NOT NULL
                     )
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -423,7 +423,7 @@ object LegacyMigrations {
                         id, recipeId, productId AS ingredientProductId, recipeIngredientId AS ingredientRecipeId, measurement, quantity
                     FROM RecipeIngredientEntity
                     WHERE true
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -444,7 +444,7 @@ object LegacyMigrations {
                         FOREIGN KEY (ingredientProductId) REFERENCES ProductEntity(id) ON DELETE CASCADE,
                         FOREIGN KEY (ingredientRecipeId) REFERENCES RecipeEntity(id) ON DELETE CASCADE
                     )
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -453,7 +453,7 @@ object LegacyMigrations {
                     """
                     CREATE INDEX IF NOT EXISTS index_RecipeIngredientEntity_recipeId 
                     ON RecipeIngredientEntity (recipeId)
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -461,7 +461,7 @@ object LegacyMigrations {
                     """
                     CREATE INDEX IF NOT EXISTS index_RecipeIngredientEntity_ingredientProductId 
                     ON RecipeIngredientEntity (ingredientProductId)
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -469,7 +469,7 @@ object LegacyMigrations {
                     """
                     CREATE INDEX IF NOT EXISTS index_RecipeIngredientEntity_ingredientRecipeId 
                     ON RecipeIngredientEntity (ingredientRecipeId)
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -482,7 +482,7 @@ object LegacyMigrations {
                     SELECT 
                         id, recipeId, ingredientProductId, ingredientRecipeId, measurement, quantity
                     FROM RecipeIngredientEntity_temp
-                        """
+                    """
                         .trimIndent()
                 )
 
@@ -499,14 +499,14 @@ object LegacyMigrations {
                     """
                     ALTER TABLE ProductEntity 
                     ADD COLUMN isLiquid INTEGER NOT NULL DEFAULT 0
-                        """
+                    """
                         .trimIndent()
                 )
                 connection.execSQL(
                     """
                     ALTER TABLE RecipeEntity 
                     ADD COLUMN isLiquid INTEGER NOT NULL DEFAULT 0
-                        """
+                    """
                         .trimIndent()
                 )
             }
@@ -520,14 +520,14 @@ object LegacyMigrations {
                     """
                     ALTER TABLE ProductEntity 
                     ADD COLUMN note TEXT
-                        """
+                    """
                         .trimIndent()
                 )
                 connection.execSQL(
                     """
                     ALTER TABLE RecipeEntity 
                     ADD COLUMN note TEXT
-                        """
+                    """
                         .trimIndent()
                 )
             }
