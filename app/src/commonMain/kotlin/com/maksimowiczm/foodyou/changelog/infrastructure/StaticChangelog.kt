@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_4_3,
                 v_3_4_2,
                 v_3_4_1,
                 v_3_4_0,
@@ -48,6 +49,19 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_0_0,
             )
 
+    val v_3_4_3 =
+        Version(
+            version = "3.4.3",
+            date = LocalDate(2026, 2, 11),
+            bugFixes =
+                listOf(
+                    "Fixed Quick Add screen not respecting nutrient order settings.",
+                    "Fixed an issue where invalid foods could not be removed from recipes.",
+                    "Fixed importing files from network locations."
+                ),
+            translations = listOf("Added Czech."),
+        )
+
     val v_3_4_2 =
         Version(
             version = "3.4.2",
@@ -57,7 +71,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 listOf(
                     "Fixed a crash occurring when deleting a product package or serving weight."
                 ),
-            translations = listOf("Added Indonesian", "Added Slovenian"),
+            translations = listOf("Added Indonesian.", "Added Slovenian."),
         )
 
     val v_3_4_1 =
