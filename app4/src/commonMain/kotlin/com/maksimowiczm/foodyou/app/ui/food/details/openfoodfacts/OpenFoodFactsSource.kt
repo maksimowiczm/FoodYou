@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalClipboardManager
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -21,13 +22,15 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun OpenFoodFactsSource(url: String, modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
+    val clipboardManager = LocalClipboardManager.current
 
     Column(
         modifier =
-            modifier.clickable(
+            modifier.combinedClickable(
                 interactionSource = null,
                 indication = null,
                 onClick = { uriHandler.openUri(url) },
+                onLongClick = { clipboardManager.copy("url", url) },
             ),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
