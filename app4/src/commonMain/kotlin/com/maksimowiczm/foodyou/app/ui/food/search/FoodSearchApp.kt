@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,16 +10,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.LunchDining
-import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
@@ -40,14 +36,23 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
-import androidx.paging.compose.itemKey
-import com.maksimowiczm.foodyou.app.ui.common.component.FoodDataCentralErrorCard
-import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.component.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
-import com.maksimowiczm.foodyou.app.ui.common.extension.error
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
+import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchApp
+import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchApp
+import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchApp
+import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchApp
+import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -58,47 +63,67 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun FoodSearchApp(
-    onFoodClick: (FoodSearchUiModel) -> Unit,
+internal fun FoodSearchApp(
+    onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
+    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
+    onUserFood: (UserFoodProductIdentity) -> Unit,
     query: String?,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
 ) {
+    val scope = rememberCoroutineScope()
+
     val viewModel: FoodSearchViewModel = koinViewModel { parametersOf(query) }
+    val filter by viewModel.filter.collectAsStateWithLifecycle()
+    val recentSearches by viewModel.searchHistory.collectAsStateWithLifecycle()
+    val appState: FoodSearchAppState =
+        rememberFoodSearchAppState(searchTextFieldState = rememberTextFieldState(query ?: ""))
+
+    val onSearch: (String?) -> Unit = { query ->
+        appState.searchTextFieldState.setTextAndPlaceCursorAtEnd(query ?: "")
+        viewModel.search(query)
+        scope.launch { appState.searchBarState.animateToCollapsed() }
+    }
+
+    val userFoodSearchViewModel: UserFoodSearchViewModel = koinViewModel()
+    val openFoodFactsSearchViewModel: OpenFoodFactsSearchViewModel = koinViewModel()
+    val foodDataCentralSearchViewModel: FoodDataCentralSearchViewModel = koinViewModel()
+    val favoriteFoodSearchViewModel: FavoriteFoodSearchViewModel = koinViewModel()
+
+    LaunchedCollectWithLifecycle(viewModel.searchQuery) {
+        userFoodSearchViewModel.search(it)
+        openFoodFactsSearchViewModel.search(it)
+        foodDataCentralSearchViewModel.search(it)
+        favoriteFoodSearchViewModel.search(it)
+    }
 
     FoodSearchApp(
-        uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
-        onSearch = viewModel::search,
-        onSourceChange = viewModel::changeSource,
-        onFoodClick = onFoodClick,
+        appState = appState,
+        filter = filter,
+        recentSearches = recentSearches,
+        onSearch = onSearch,
         onBack = onBack,
+        onFoodDataCentralProduct = onFoodDataCentralProduct,
+        onOpenFoodFactsProduct = onOpenFoodFactsProduct,
+        onUserFood = onUserFood,
         modifier = modifier,
-        appState =
-            rememberFoodSearchAppState(searchTextFieldState = rememberTextFieldState(query ?: "")),
     )
 }
 
 @Composable
 private fun FoodSearchApp(
-    uiState: FoodSearchUiState,
+    appState: FoodSearchAppState,
+    filter: FoodFilter,
+    recentSearches: List<String>,
     onSearch: (String?) -> Unit,
-    onSourceChange: (FoodFilter.Source) -> Unit,
-    onFoodClick: (FoodSearchUiModel) -> Unit,
     onBack: (() -> Unit)?,
+    onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
+    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
+    onUserFood: (UserFoodProductIdentity) -> Unit,
     modifier: Modifier = Modifier,
-    appState: FoodSearchAppState = rememberFoodSearchAppState(),
+    viewModel: FoodSearchViewModel = koinViewModel(),
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val onSearch: (String?) -> Unit =
-        remember(onSearch, appState, coroutineScope) {
-            { query ->
-                appState.searchTextFieldState.setTextAndPlaceCursorAtEnd(query ?: "")
-                onSearch(query)
-                coroutineScope.launch { appState.searchBarState.animateToCollapsed() }
-            }
-        }
-
-    val pages = uiState.currentSourceState?.collectAsLazyPagingItems()
+    val scope = rememberCoroutineScope()
     val shimmer = rememberShimmer(ShimmerBounds.View)
 
     FullScreenCameraBarcodeScanner(
@@ -121,12 +146,32 @@ private fun FoodSearchApp(
             )
         }
 
+    val filters = run {
+        val openFoodFactsSearchViewModel: OpenFoodFactsSearchViewModel = koinViewModel()
+        val foodDataCentralSearchViewModel: FoodDataCentralSearchViewModel = koinViewModel()
+
+        val usda =
+            foodDataCentralSearchViewModel.shouldShowFilter.collectAsStateWithLifecycle().value
+        val off = openFoodFactsSearchViewModel.shouldShowFilter.collectAsStateWithLifecycle().value
+
+        remember(usda, off) {
+            listOfNotNull(
+                FoodFilter.Source.Favorite,
+                FoodFilter.Source.YourFood,
+                FoodFilter.Source.OpenFoodFacts.takeIf { off },
+                FoodFilter.Source.USDA.takeIf { usda },
+            )
+        }
+    }
+
     FoodSearchView(
-        appState = appState,
-        uiState = uiState,
+        searchBarState = appState.searchBarState,
+        recentSearches = recentSearches,
+        selectedFilter = filter.source,
+        filters = filters,
         onFill = { search -> appState.searchTextFieldState.setTextAndPlaceCursorAtEnd(search) },
         onSearch = onSearch,
-        onSource = onSourceChange,
+        onSource = viewModel::changeSource,
         inputField = searchInputField,
     )
 
@@ -142,14 +187,13 @@ private fun FoodSearchApp(
                         WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
                     )
                     .padding(top = paddingValues.calculateTopPadding())
-                    .onSizeChanged { topContentHeight = it.height }
-                    .padding(vertical = 8.dp),
+                    .onSizeChanged { topContentHeight = it.height },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             SearchBar(
                 state = appState.searchBarState,
                 inputField = searchInputField,
-                modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
+                modifier = Modifier.padding(horizontal = 16.dp).padding(top = 8.dp).fillMaxWidth(),
                 colors =
                     SearchBarDefaults.colors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
@@ -157,100 +201,68 @@ private fun FoodSearchApp(
                 shadowElevation = 2.dp,
             )
 
-            if (uiState.sources.isNotEmpty()) {
-                Spacer(Modifier.height(8.dp))
-                FoodSearchFilters(
-                    uiState = uiState,
-                    onSource = {
-                        onSourceChange(it)
-
-                        if (it == uiState.filter.source) {
-                            val listState = appState.listStates.state(it)
-                            coroutineScope.launch { listState.animateScrollToItem(0) }
-                        }
-                    },
-                    modifier = Modifier.height(32.dp + 8.dp + 32.dp).fillMaxWidth(),
-                )
-            }
-
-            when (val error = pages?.loadState?.error) {
-                null -> Unit
-
-                is FoodDataCentralApiError ->
-                    FoodDataCentralErrorCard(
-                        error = error,
-                        modifier =
-                            Modifier.fillMaxWidth().padding(top = 8.dp).padding(horizontal = 16.dp),
-                    )
-
-                else ->
-                    FoodSearchErrorCard(
-                        message = error.message,
-                        onRetry = pages::retry,
-                        modifier =
-                            Modifier.fillMaxWidth().padding(top = 8.dp).padding(horizontal = 16.dp),
-                    )
-            }
+            Spacer(Modifier.height(8.dp))
+            FoodSearchFilters(
+                selectedSource = filter.source,
+                onSource = {
+                    viewModel.changeSource(it)
+                    if (it == filter.source) {
+                        scope.launch { appState.listStates.state(it).animateScrollToItem(0) }
+                    }
+                },
+                modifier = Modifier.height(32.dp + 8.dp + 32.dp).fillMaxWidth(),
+            )
+            Spacer(Modifier.height(8.dp))
         }
 
-        val paddingValues =
+        val contentPadding =
             paddingValues.add(
                 top = LocalDensity.current.run { topContentHeight.toDp() },
                 bottom = 56.dp + 32.dp,
             )
 
-        if (pages?.itemCount == 0 && pages.loadState.append !is LoadState.Loading) {
-            Box(Modifier.fillMaxSize()) {
-                Text(
-                    text = stringResource(Res.string.neutral_no_food_found),
-                    modifier = Modifier.safeContentPadding().align(Alignment.Center),
+        when (filter.source) {
+            FoodFilter.Source.Favorite ->
+                FavoriteFoodSearchApp(
+                    shimmer = shimmer,
+                    contentPadding = contentPadding,
+                    lazyListState = appState.listStates.favorite,
+                    onClick = {
+                        when (it) {
+                            is UserFoodProduct -> onUserFood(it.identity)
+                            is OpenFoodFactsProduct -> onOpenFoodFactsProduct(it.identity)
+                            is FoodDataCentralProduct -> onFoodDataCentralProduct(it.identity)
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
                 )
-            }
-        }
 
-        if (pages?.delayedLoadingState() == true) {
-            Box(Modifier.fillMaxSize().zIndex(20f)) {
-                ContainedLoadingIndicator(
-                    modifier =
-                        Modifier.align(Alignment.TopCenter)
-                            .padding(top = paddingValues.calculateTopPadding())
+            FoodFilter.Source.YourFood ->
+                UserFoodSearchApp(
+                    shimmer = shimmer,
+                    contentPadding = contentPadding,
+                    lazyListState = appState.listStates.yourFood,
+                    onClick = { onUserFood(it.identity) },
+                    modifier = Modifier.fillMaxSize(),
                 )
-            }
-        }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = paddingValues,
-            state = appState.listStates.state(uiState.filter.source),
-        ) {
-            if (pages != null) {
-                items(
-                    count = pages.itemCount,
-                    key = pages.itemKey { (it.identity to uiState.filter.source).toString() },
-                ) { i ->
-                    when (val food = pages[i]) {
-                        null -> FoodListItemSkeleton(shimmer)
-                        is FoodSearchUiModel.Loading -> FoodListItemSkeleton(shimmer)
-                        is FoodSearchUiModel.Loaded ->
-                            FoodSearchListItem(
-                                food = food,
-                                onClick = { onFoodClick(food) },
-                                shimmer = shimmer,
-                            )
+            FoodFilter.Source.OpenFoodFacts ->
+                OpenFoodFactsSearchApp(
+                    shimmer = shimmer,
+                    contentPadding = contentPadding,
+                    lazyListState = appState.listStates.openFoodFacts,
+                    onClick = { onOpenFoodFactsProduct(it.identity) },
+                    modifier = Modifier.fillMaxSize(),
+                )
 
-                        // TODO
-                        is FoodSearchUiModel.Error -> Unit
-                    }
-                }
-
-                if (pages.loadState.append is LoadState.Loading) {
-                    items(10) { FoodListItemSkeleton(shimmer) }
-                }
-            }
-
-            if (pages == null) {
-                items(10) { FoodListItemSkeleton(shimmer) }
-            }
+            FoodFilter.Source.USDA ->
+                FoodDataCentralSearchApp(
+                    shimmer = shimmer,
+                    contentPadding = contentPadding,
+                    lazyListState = appState.listStates.usda,
+                    onClick = { onFoodDataCentralProduct(it.identity) },
+                    modifier = Modifier.fillMaxSize(),
+                )
         }
     }
 }
@@ -330,7 +342,6 @@ object FoodSearchAppDefaults {
 
 private fun ListStates.state(source: FoodFilter.Source) =
     when (source) {
-        FoodFilter.Source.Recent -> recent
         FoodFilter.Source.YourFood -> yourFood
         FoodFilter.Source.OpenFoodFacts -> openFoodFacts
         FoodFilter.Source.USDA -> usda

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food
+package com.maksimowiczm.foodyou.app.ui.food.details
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.defaultMinSize
@@ -16,7 +16,7 @@ import kotlin.math.max
 
 /** Indicator with goal. */
 @Composable
-fun EnergyProgressIndicator(
+internal fun EnergyProgressIndicator(
     energy: Float,
     proteins: Float,
     carbohydrates: Float,
@@ -68,7 +68,7 @@ fun EnergyProgressIndicator(
 
 /** Indicator without goal. */
 @Composable
-fun EnergyProgressIndicator(
+internal fun EnergyProgressIndicator(
     proteins: Float,
     carbohydrates: Float,
     fats: Float,

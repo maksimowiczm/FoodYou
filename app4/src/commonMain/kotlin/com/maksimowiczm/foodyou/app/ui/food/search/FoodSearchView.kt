@@ -26,6 +26,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SearchBarState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,18 +41,18 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FoodSearchView(
-    appState: FoodSearchAppState,
-    uiState: FoodSearchUiState,
+    searchBarState: SearchBarState,
+    recentSearches: List<String>,
+    selectedFilter: FoodFilter.Source,
+    filters: List<FoodFilter.Source>,
     onFill: (String) -> Unit,
     onSearch: (String?) -> Unit,
     onSource: (FoodFilter.Source) -> Unit,
     inputField: @Composable () -> Unit,
 ) {
-    val filters = uiState.sources.filterValues { state -> state.shouldShowFilter }
-
-    ExpandedFullScreenSearchBar(state = appState.searchBarState, inputField = inputField) {
+    ExpandedFullScreenSearchBar(state = searchBarState, inputField = inputField) {
         LazyColumn {
-            items(uiState.recentSearches.take(3)) {
+            items(recentSearches.take(3)) {
                 FoodSearchItem(
                     search = it,
                     onFill = { onFill(it) },
@@ -60,7 +61,7 @@ internal fun FoodSearchView(
             }
 
             item {
-                if (uiState.recentSearches.isNotEmpty()) {
+                if (recentSearches.isNotEmpty()) {
                     HorizontalDivider()
                 }
 
@@ -78,9 +79,9 @@ internal fun FoodSearchView(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp),
                     ) {
-                        items(filters.toList()) { (source, _) ->
+                        items(filters.toList()) { source ->
                             DatabaseFilterIconButton(
-                                selected = uiState.filter.source == source,
+                                selected = selectedFilter == source,
                                 onClick = { onSource(source) },
                                 logo = { source.Icon(it) },
                                 label = {
@@ -97,7 +98,7 @@ internal fun FoodSearchView(
                 HorizontalDivider()
             }
 
-            items(uiState.recentSearches.drop(3)) {
+            items(recentSearches.drop(3)) {
                 FoodSearchItem(
                     search = it,
                     onFill = { onFill(it) },

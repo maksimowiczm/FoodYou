@@ -1,0 +1,57 @@
+package com.maksimowiczm.foodyou.app.ui.food.search.userfood
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.account.domain.AccountManager
+import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodSearchParameters
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
+internal class UserFoodSearchViewModel(
+    private val repository: UserFoodRepository,
+    accountManager: AccountManager,
+) : ViewModel() {
+    private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
+
+    private val searchParameters =
+        combine(
+            accountManager.observePrimaryAccountId().filterNotNull(),
+            accountManager.observePrimaryProfileId().filterNotNull(),
+            searchQuery,
+        ) { accountId, profileId, query ->
+            UserFoodSearchParameters(
+                query = query,
+                accountId = accountId,
+                profileId = profileId,
+                orderBy = UserFoodSearchParameters.OrderBy.NameAscending,
+            )
+        }
+
+    val pages =
+        searchParameters.flatMapLatest { repository.search(it, PAGE_SIZE) }.cachedIn(viewModelScope)
+
+    val count =
+        searchParameters
+            .flatMapLatest(repository::count)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
+
+    fun search(query: SearchQuery) {
+        viewModelScope.launch { searchQuery.emit(query) }
+    }
+
+    private companion object {
+        private const val PAGE_SIZE = 50
+    }
+}

@@ -41,9 +41,8 @@ internal class FoodSearchAppState(
 }
 
 @Immutable
-class ListStates(
+internal class ListStates(
     val favorite: LazyListState,
-    val recent: LazyListState,
     val yourFood: LazyListState,
     val openFoodFacts: LazyListState,
     val usda: LazyListState,
@@ -52,15 +51,13 @@ class ListStates(
 @Composable
 private fun rememberListStates(): ListStates {
     val favorite = rememberLazyListState()
-    val recent = rememberLazyListState()
     val yourFood = rememberLazyListState()
     val openFoodFacts = rememberLazyListState()
     val usda = rememberLazyListState()
 
-    return remember(favorite, recent, yourFood, openFoodFacts, usda) {
+    return remember(favorite, yourFood, openFoodFacts, usda) {
         ListStates(
             favorite = favorite,
-            recent = recent,
             yourFood = yourFood,
             openFoodFacts = openFoodFacts,
             usda = usda,

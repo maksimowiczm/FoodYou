@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -14,26 +13,14 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Immutable
-data class FoodFilter(val source: Source = DefaultFilter) {
+internal data class FoodFilter(val source: Source = DefaultFilter) {
 
     companion object {
         val DefaultFilter = Source.Favorite
     }
 
-    val filterCount: Int
-        get() {
-            var count = 0
-
-            if (source != DefaultFilter) {
-                count++
-            }
-
-            return count
-        }
-
     enum class Source {
         Favorite,
-        Recent,
         YourFood,
         OpenFoodFacts,
         USDA;
@@ -44,13 +31,6 @@ data class FoodFilter(val source: Source = DefaultFilter) {
                 Favorite ->
                     androidx.compose.material3.Icon(
                         imageVector = Icons.Filled.Favorite,
-                        contentDescription = null,
-                        modifier = modifier,
-                    )
-
-                Recent ->
-                    androidx.compose.material3.Icon(
-                        imageVector = Icons.Filled.History,
                         contentDescription = null,
                         modifier = modifier,
                     )
@@ -81,7 +61,6 @@ data class FoodFilter(val source: Source = DefaultFilter) {
         fun stringResource(): String =
             when (this) {
                 Favorite -> stringResource(Res.string.headline_favorite)
-                Recent -> stringResource(Res.string.headline_recent)
                 YourFood -> stringResource(Res.string.headline_your_food)
                 OpenFoodFacts -> stringResource(Res.string.headline_open_food_facts)
                 USDA -> stringResource(Res.string.headline_food_data_central_usda)

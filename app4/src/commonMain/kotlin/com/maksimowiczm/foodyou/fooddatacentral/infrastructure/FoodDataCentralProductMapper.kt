@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.fooddatacentral.infrastructure
 
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.Grams
@@ -99,7 +98,7 @@ internal class FoodDataCentralProductMapper {
                 identity = FoodDataCentralProductIdentity(fdcId),
                 name = FoodName(english = description, fallback = description),
                 brand = brandOwner,
-                barcode = gtinUpc?.let { Barcode(it) },
+                barcode = gtinUpc,
                 source = "https://fdc.nal.usda.gov/food-details/$fdcId/nutrients",
                 nutritionFacts = nutrientsMapper.toNutritionFats(entity.nutrients),
                 servingQuantity = servingQuantity,

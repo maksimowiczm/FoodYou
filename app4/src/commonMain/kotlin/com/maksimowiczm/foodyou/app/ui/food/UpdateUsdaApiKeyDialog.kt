@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.search
+package com.maksimowiczm.foodyou.app.ui.food
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -24,7 +24,7 @@ import org.koin.compose.koinInject
 fun UpdateUsdaApiKeyDialog(
     onDismissRequest: () -> Unit,
     onSave: () -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val repository: FoodDataCentralSettingsRepository = koinInject()

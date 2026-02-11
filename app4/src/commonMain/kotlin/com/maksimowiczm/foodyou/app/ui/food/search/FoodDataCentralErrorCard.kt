@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.common.component
+package com.maksimowiczm.foodyou.app.ui.food.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,13 +19,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.ui.food.search.UpdateUsdaApiKeyDialog
+import com.maksimowiczm.foodyou.app.ui.food.UpdateUsdaApiKeyDialog
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun FoodDataCentralErrorCard(error: FoodDataCentralApiError, modifier: Modifier = Modifier) {
+internal fun FoodDataCentralErrorCard(
+    error: FoodDataCentralApiError,
+    modifier: Modifier = Modifier,
+) {
     val errorText =
         when (error) {
             is FoodDataCentralApiError.ProductNotFound -> return
@@ -60,13 +63,13 @@ fun FoodDataCentralErrorCard(error: FoodDataCentralApiError, modifier: Modifier 
             ),
     ) {
         Column(
-            modifier = Modifier.Companion.padding(16.dp),
+            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(
-                modifier = Modifier.Companion.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.Companion.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(imageVector = Icons.Outlined.ErrorOutline, contentDescription = null)
                 Text(

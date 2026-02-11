@@ -15,11 +15,6 @@ plugins {
 room { schemaDirectory("$projectDir/schemas") }
 
 kotlin {
-    sourceSets.all {
-        languageSettings.enableLanguageFeature("ExpectActualClasses")
-        languageSettings.enableLanguageFeature("ContextParameters")
-    }
-
     compilerOptions {
         optIn.add("androidx.compose.ui.ExperimentalComposeUiApi")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
@@ -28,7 +23,10 @@ kotlin {
         optIn.add("kotlinx.coroutines.ExperimentalCoroutinesApi")
         optIn.add("kotlin.uuid.ExperimentalUuidApi")
         optIn.add("kotlin.contracts.ExperimentalContracts")
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.add("-Xcontext-parameters")
         freeCompilerArgs.add("-Xreturn-value-checker=check")
+        freeCompilerArgs.add("-Xexplicit-backing-fields")
     }
 
     androidTarget {
