@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.common.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -21,25 +21,33 @@ fun FoodErrorListItem(
     errorMessage: String,
     modifier: Modifier = Modifier.Companion,
     onClick: (() -> Unit)? = null,
+    trailingContent: (@Composable () -> Unit)? = null,
     shape: Shape = RectangleShape,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
 ) {
     val content =
         @Composable {
-            Column(
-                modifier = Modifier.Companion.fillMaxWidth().padding(contentPadding),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+            Row(
+                modifier = Modifier.padding(contentPadding),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                CompositionLocalProvider(
-                    LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    Text(headline)
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
+                    ) {
+                        Text(headline)
+                    }
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                    ) {
+                        Text(errorMessage)
+                    }
                 }
-                CompositionLocalProvider(
-                    LocalTextStyle provides MaterialTheme.typography.bodyMedium
-                ) {
-                    Text(errorMessage)
-                }
+
+                trailingContent?.invoke()
             }
         }
 

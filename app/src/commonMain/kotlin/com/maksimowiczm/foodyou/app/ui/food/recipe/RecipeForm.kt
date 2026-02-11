@@ -216,6 +216,16 @@ private fun IngredientListItem(
             errorMessage = stringResource(Res.string.error_measurement_error),
             modifier = modifier,
             onClick = onEdit,
+            trailingContent = {
+                Row {
+                    IconButton(onEdit) {
+                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = null)
+                    }
+                    IconButton(onDelete) {
+                        Icon(imageVector = Icons.Outlined.Delete, contentDescription = null)
+                    }
+                }
+            },
         )
     }
 
@@ -243,6 +253,16 @@ private fun IngredientListItem(
             modifier = modifier,
             onClick = onEdit,
             errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
+            trailingContent = {
+                Row {
+                    IconButton(onEdit) {
+                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = null)
+                    }
+                    IconButton(onDelete) {
+                        Icon(imageVector = Icons.Outlined.Delete, contentDescription = null)
+                    }
+                }
+            },
         )
     }
 
