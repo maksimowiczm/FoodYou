@@ -157,6 +157,7 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Pokaż więcej</string>
     <string name="action_download_product">Pobierz produkt</string>
     <string name="action_copy_and_open_bug_report">Skopiuj i otwórz raport o błędzie</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Skopiuj i zgłoś</string>
     <string name="action_show_details">Pokaż szczegóły</string>
     <string name="action_browse_usda">Przeglądaj FoodData Central (USDA)</string>
     <string name="action_set_key">Ustaw klucz</string>
@@ -230,12 +231,13 @@
     <string name="description_please_wait_while_exporting_products">Proszę czekać podczas eksportowania produktów</string>
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="description_open_food_facts">Wspólna, wolna i otwarta baza produktów spożywczych z całego świata</string>
+    <string name="error_open_food_facts_rate_limit">Przekroczono limit Open Food Facts API</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Eksportuje produkty</string>
     <string name="notification_importing_products">Importuje produkty</string>
     <string name="notification_importing_products_success">Zakończono import produktów</string>
     <string name="description_food_data_central_usda">FoodData Central to kompleksowe źródło danych USDA na temat składu żywności, zawierające wiele różnych typów danych</string>
-    <string name="error_usda_rate_limit">Przekroczono limit pobrań Food Data Central (USDA) API</string>
+    <string name="error_usda_rate_limit">Przekroczono limit Food Data Central (USDA) API</string>
     <string name="description_swiss_food_composition_database_short">Baza danych Swiss Food Composition Database zawiera informacje o wartościach odżywczych dla ponad 1100 produktów spożywczych.</string>
     <string name="description2_swiss_food_composition_database">Baza danych Swiss Food Composition Database zawiera informacje o wartościach odżywczych dla ponad 1100 produktów spożywczych. Jest dostępna w czterech językach. Aby zaimportować te produkty do dziennika żywności, wybierz preferowane języki.</string>
     <string name="headline_external_databases">Zewnętrzne bazy danych</string>
@@ -282,7 +284,6 @@
     <string name="description_delete_ingredient">Składnik zostanie usunięty z przepisu</string>
     <string name="neutral_remote_database_error">Nie udało się pobrać produktów ze zdalnej bazy danych. Wciąż możesz przeglądać produkty wcześniej pobrane.</string>
     <string name="headline_before_you_start">Zanim zaczniesz</string>
-    <string name="description_before_you_start">Aby zapewnić Ci darmowy i otwarty dziennik żywieniowy, Twoja prywatność jest dla nas priorytetem. Ta aplikacja nie gromadzi, nie przechowuje ani nie udostępnia żadnych danych osobowych. Twoje wpisy są zapisywane lokalnie na Twoim urządzeniu i pozostają pod Twoją pełną kontrolą.</string>
     <string name="action_agree_and_continue">Zgadzam się i kontynuuj</string>
     <string name="headline_food_database">Baza danych żywności</string>
     <string name="description_food_database">Możesz wybrać, czy chcesz korzystać z tych opcjonalnych usług zewnętrznych, które mogą mieć własne warunki i zasady ochrony prywatności</string>
@@ -375,7 +376,6 @@
     <string name="description_random_theme">Przy każdym uruchomieniu aplikacji zostanie zastosowany losowy motyw</string>
     <string name="headline_terms_of_use">Warunki użytkowania</string>
     <string name="onboarding_privacy_tip">Ta aplikacja jest otwartoźródłowa i stworzona z myślą o Tobie. Szanujemy Twoją prywatność, Twoje dane pozostają prywatne.</string>
-    <string name="onboarding_allow_food_you_services">Zezwól na połączenie z usługami Food You</string>
     <string name="headline_add_profile">Dodaj profil</string>
     <string name="headline_how_do_you_want_to_be_called">Jak chcesz być nazywany?</string>
     <string name="headline_profile_name">Nazwa profilu</string>
@@ -403,8 +403,8 @@
     <string name="action_remove_a_photo">Usuń zdjęcie</string>
     <string name="description_values_per">Wybierz ilość, na której bazują Twoje wartości odżywcze</string>
     <string name="description_privacy">Kontroluj swoje dane osobowe</string>
-    <string name="description_food_you_services">Połączenie z usługami Food You odblokowuje dodatkowe funkcje i narzędzia, które wzbogacają Twoje doświadczenie</string>
     <string name="headline_database_backup">Kopia zapasowa bazy danych</string>
     <string name="description_replacing_database">Zastępowanie bazy danych, proszę czekać...</string>
     <string name="headline_experimental">Eksperymentalne</string>
+    <string name="description_privacy_policy">Zobacz, jak przetwarzane są Twoje dane</string>
 </resources>

@@ -140,6 +140,7 @@
     <string name="action_disable_camera_flash">Выключить вспышку</string>
     <string name="action_prevent_screen_capture">Запретить захват экрана</string>
     <string name="action_go_to_today">Перейти к сегодняшнему дню</string>
+    <string name="action_feature_request_on_github">Предложить идею на GitHub</string>
     <string name="action_show_calendar">Показать календарь</string>
     <string name="action_reorder">Изменить порядок</string>
     <string name="action_move_up" description="reorder list item up">Вверх</string>
@@ -199,6 +200,7 @@
     <string name="error_unknown_error">Неизвестная ошибка</string>
     <string name="error_measurement_error">Ошибка измерения, пожалуйста, проверьте вес порции и вес упаковки</string>
     <string name="error_api_key_is_invalid">API ключ недействителен</string>
+    <string name="error_not_a_barcode">Не штрихкод</string>
     <string name="positive_goal_reached">Цель достигнута</string>
     <string name="positive_ok">Хорошо</string>
     <plurals name="negative_exceeded_by_calories">
@@ -242,6 +244,7 @@
     <string name="action_unpack" description="Unpack the recipe ingredients">Распаковать</string>
     <string name="headline_sponsor">Спонсор</string>
     <string name="description_sponsor_short_2">Поддержите приложение в развитии</string>
+    <string name="headline_source_code">Исходный код</string>
     <string name="action_write_an_email">Написать email</string>
     <string name="headline_contact">Связаться</string>
     <string name="description_sponsor_contact">Если у вас есть какие-либо запросы по поводу спонсорства, свяжитесь со мной по электронной почте или через GitHub.</string>
@@ -279,7 +282,6 @@
     <string name="description_delete_ingredient">Ингредиент будет удален из рецепта</string>
     <string name="neutral_remote_database_error">Не удалось загрузить продукт из удаленной базы данных. Вы по-прежнему можете просматривать ранее загруженные продукты.</string>
     <string name="headline_before_you_start">Перед тем как вы начнете</string>
-    <string name="description_before_you_start">Чтобы предоставить вам бесплатный дневник питания с открытым исходным кодом, мы ставим вашу конфиденциальность превыше всего. Это приложение не собирает, не хранит и не передает никакую личную информацию. Ваши записи сохраняются локально на вашем устройстве и остаются полностью под вашим контролем.</string>
     <string name="action_agree_and_continue">Согласиться и продолжить</string>
     <string name="headline_food_database">База продуктов питания</string>
     <string name="description_food_database">Вы можете выбрать, использовать ли эти необязательные внешние сервисы, которые могут иметь свои собственные условия и политику конфиденциальности</string>
@@ -371,12 +373,36 @@
     <string name="headline_random_theme">Случайная тема</string>
     <string name="description_random_theme">При каждом запуске приложения будет применяться случайная тема</string>
     <string name="headline_terms_of_use">Условия использования</string>
+    <string name="onboarding_privacy_tip">Это приложение с открытым исходным кодом и создано для вас. Мы уважаем вашу конфиденциальность, ваша информация остается только вашей.</string>
     <string name="headline_add_profile">Добавить профиль</string>
+    <string name="headline_how_do_you_want_to_be_called">Как вы хотите, чтобы вас называли?</string>
     <string name="headline_profile_name">Название профиля</string>
     <string name="headline_profile_picture">Фото профиля</string>
     <string name="action_continue">Продолжить</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Привет, %1$s!</string>
+    <string name="headline_data_backup_and_export">Резервная копия данных &amp; экспорт</string>
+    <string name="headline_privacy">Конфиденциальность</string>
+    <string name="action_switch_profile">Сменить профиль</string>
     <string name="action_add_profile">Добавить профиль</string>
     <string name="action_refresh">Обновить</string>
+    <string name="description_not_sure_yet">Ещё не уверены? Вы можете изменить это в любое время</string>
+    <string name="question_discard_profile">Отклонить профиль?</string>
+    <string name="headline_edit_profile">Редактировать профиль</string>
+    <string name="action_delete_profile">Удалить профиль</string>
+    <string name="headline_delete_profile">Удалить профиль</string>
+    <string name="description_delete_profile">Этот профиль будет удален навсегда. Все связанные с ним данные будут безвозвратно потеряны.</string>
     <string name="action_today" description="Set date to today">Сегодня</string>
+    <string name="action_fill_in_details">Заполнить подробности</string>
+    <string name="action_skip_for_now">Пропустить сейчас</string>
+    <string name="headline_add_more_details">Добавить больше подробностей</string>
+    <string name="description_add_more_details_product_form">Заполнение информации о белках, жирах, углеводах и энергетической ценности позволяет получить более точные данные о питании</string>
+    <string name="headline_favorite">Избранное</string>
+    <string name="action_add_a_photo">Добавить фото</string>
+    <string name="action_remove_a_photo">Удалить фото</string>
+    <string name="description_values_per">Выберите количество питательных веществ на основе</string>
+    <string name="description_privacy">Управляйте вашей личной информацией</string>
+    <string name="headline_database_backup">Резервное копирование базы данных</string>
+    <string name="description_replacing_database">Замена базы данных, пожалуйста, подождите...</string>
+    <string name="headline_experimental">Экспериментальные функции</string>
+    <string name="description_privacy_policy">Узнайте, как обрабатываются ваши данные</string>
 </resources>

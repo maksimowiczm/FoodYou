@@ -1,13 +1,13 @@
-<b>Food You</b> è un potente strumento open-source per il monitoraggio dell’alimentazione, progettato con una moderna estetica Material You. Ti aiuta a tenere traccia non solo delle calorie, ma dell’intero apporto di nutrienti, grazie a dati alimentari affidabili e a un’interfaccia flessibile e modulare.
+<b>Food You</b> è un potente tracker nutrizionale open-source, realizzato con un moderno design Material You. Ti aiuta a monitorare non solo le calorie, ma l'intero apporto nutritivo, grazie a dati alimentari affidabili e un'interfaccia flessibile e modulare.
 
 <b>Funzionalità:</b>
 <ul>
-    <li><b>Design Material You:</b> Tema dinamico che si adatta al tuo dispositivo per un’esperienza visiva uniforme.</li>
-    <li><b>Database Alimentari Completi:</b> Accedi ai dati nutrizionali di Open Food Facts, USDA FoodCentral e del Database Svizzero sulla Composizione degli Alimenti.</li>
-    <li><b>Monitoraggio Nutrizionale Completo:</b> Tieni traccia di calorie, macronutrienti, vitamine, minerali e altro ancora.</li>
-    <li><b>Creazione di Ricette:</b> Combina alimenti in ricette personalizzate con calcolo automatico dei valori nutrizionali.</li>
-    <li><b>Obiettivi Giornalieri:</b> Imposta e segui traguardi nutrizionali personalizzati.</li>
-    <li><b>Schermata Iniziale Modulare:</b> Personalizza la tua home con schede su misura per le tue esigenze.</li>
+    <li><b>Design Material You:</b> Temi dinamici che si adattano al tuo dispositivo per un'esperienza visiva fluida e coerente.</li>
+    <li><b>Database alimentari completi:</b> Accedi ai dati nutrizionali di Open Food Facts, USDA FoodCentral e del Database Svizzero sulla Composizione degli Alimenti.</li>
+    <li><b>Monitoraggio nutrizionale completo:</b> Tieni traccia di calorie, macronutrienti, vitamine, minerali e altro ancora.</li>
+    <li><b>Creazione di ricette:</b> Combina gli alimenti in ricette personalizzate con il calcolo automatico dei valori nutrizionali.</li>
+    <li><b>Obiettivi giornalieri:</b> Imposta e segui target nutrizionali personalizzati.</li>
+    <li><b>Schermata iniziale modulare:</b> Personalizza la tua home con schede su misura per le tue necessità.</li>
 </ul>
 
 Inizia oggi a monitorare la tua alimentazione con Food You — semplice, completo e totalmente tuo.

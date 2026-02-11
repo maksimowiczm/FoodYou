@@ -271,7 +271,6 @@
     <string name="description_delete_ingredient">L'ingrediente sarà rimosso dalla ricetta</string>
     <string name="neutral_remote_database_error">Non è stato possibile scaricare il prodotto da un database remoto. Puoi comunque visualizzare i prodotti precedentemente scaricati.</string>
     <string name="headline_before_you_start">Prima di cominciare</string>
-    <string name="description_before_you_start">Per fornirti un diario alimentare gratuito e open-source, diamo la priorità alla tua privacy sopra ogni cosa. Questa applicazione non raccoglie, memorizza o condivide alcuna informazione personale. Le tue voci vengono salvate localmente sul tuo dispositivo e rimangono completamente sotto il tuo controllo.</string>
     <string name="action_agree_and_continue">Accetta &amp; Continua</string>
     <string name="headline_food_database">Database cibo</string>
     <string name="description_food_database">Puoi scegliere se usare questi servizi esterni opzionali, che potrebbero avere i propri termini e politiche sulla privacy</string>
@@ -360,7 +359,6 @@
     <string name="description_random_theme">Verrà applicato un tema casuale ogni volta che viene avviata l'applicazione</string>
     <string name="headline_terms_of_use">Termini di utilizzo</string>
     <string name="onboarding_privacy_tip">Questa app è open-source e costruita per te. Rispettiamo la tua privacy, le tue informazioni rimango private.</string>
-    <string name="onboarding_allow_food_you_services">Consenti la connessione ai servizi di Food You</string>
     <string name="headline_add_profile">Aggiungi profilo</string>
     <string name="headline_how_do_you_want_to_be_called">Come vuoi essere chiamato?</string>
     <string name="headline_profile_name">Nome profilo</string>
@@ -388,8 +386,8 @@
     <string name="action_remove_a_photo">Rimuovi una foto</string>
     <string name="description_values_per">Seleziona la quantità su cui si basano i tuoi valori nutrizionali</string>
     <string name="description_privacy">Gestisci le tue informazioni personali</string>
-    <string name="description_food_you_services">La connessione ai servizi di Food You sblocca funzionalità e strumenti aggiuntivi che migliorano la tua esperienza</string>
     <string name="headline_database_backup">Backup del database</string>
     <string name="description_replacing_database">Sostituzione del database in corso, attendere…</string>
     <string name="headline_experimental">Sperimentale</string>
+    <string name="description_privacy_policy">Scopri come vengono gestiti i tuoi dati</string>
 </resources>

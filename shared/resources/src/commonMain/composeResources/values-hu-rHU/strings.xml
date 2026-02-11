@@ -270,7 +270,6 @@
     <string name="description_delete_ingredient">A hozzávaló el lesz távolítva a receptből</string>
     <string name="neutral_remote_database_error">Képtelenek voltunk a termék letöltésére az adatbázisból. Az eddig letöltött termékeket még megtekintheted.</string>
     <string name="headline_before_you_start">Mielőtt belekezdesz</string>
-    <string name="description_before_you_start">Azért, hogy egy ingyenes és nyílt forráskódú ételnaplót adhassuk, a személyes adataidat előbbre tesszük mindennél. Ez az applikáció nem gyűjti, tárolja és nem osztja meg másokkal az adataidat. Az összes adat az eszközödön van elmentve, és a te kezelésed alatt áll.</string>
     <string name="action_agree_and_continue">Beleegyezés &amp; Folytatás</string>
     <string name="headline_food_database">Étel adatbázis</string>
     <string name="description_food_database">Dönthetsz úgy, hogy igénybe veszed ezeket a nem kötelező külső szolgáltatásokat, amelyek saját felhasználási feltételeikkel és adatvédelmi irányelveikkel rendelkezhetnek</string>
@@ -359,7 +358,6 @@
     <string name="description_random_theme">Egy random téma lesz beállítva minden alakalommal amikor az app újraindul</string>
     <string name="headline_terms_of_use">Felhasználási feltételek</string>
     <string name="onboarding_privacy_tip">Ez az app nyílt forráskódú és neked épült. Az információd biztonságban marad.</string>
-    <string name="onboarding_allow_food_you_services">A Food You szolgáltatásaihoz való csatlakozás engedélyezése</string>
     <string name="headline_add_profile">Profil hozzáadása</string>
     <string name="headline_how_do_you_want_to_be_called">Hogyan nevezhetünk?</string>
     <string name="headline_profile_name">Profilnév</string>
@@ -387,7 +385,6 @@
     <string name="action_remove_a_photo">Fotó eltávolítása</string>
     <string name="description_values_per">Válaszd ki, hogy a tápanyagok mely mennyiségre vonatkoznak</string>
     <string name="description_privacy">A személyes információk szabályozása</string>
-    <string name="description_food_you_services">A Food You szolgáltatásokhoz való csatlakozás extra funkciókat és eszközöket tár fel, amelyek fokozzák az élményt</string>
     <string name="headline_database_backup">Adatbázis biztonsági mentése</string>
     <string name="description_replacing_database">Adatbázis kicserélése, kérem várjon...</string>
     <string name="headline_experimental">Kísérleti</string>

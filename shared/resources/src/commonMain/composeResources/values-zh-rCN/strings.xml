@@ -261,7 +261,6 @@
     <string name="description_delete_ingredient">将从食谱中删除此配料</string>
     <string name="neutral_remote_database_error">无法从远程数据库下载产品。您仍可查看之前下载的产品。</string>
     <string name="headline_before_you_start">开始之前</string>
-    <string name="description_before_you_start">为向您提供自由开源的饮食日记服务，我们始终将您的隐私置于首位。本应用不会收集、存储或分享任何个人信息。您的记录将保存在设备本地，并完全由您掌控。</string>
     <string name="action_agree_and_continue">我同意，继续</string>
     <string name="headline_food_database">食品数据库</string>
     <string name="description_food_database">您可以选择是否使用这些可选的外部服务，这些服务可能有其自身的条款和隐私政策</string>

@@ -14,9 +14,9 @@
     <string name="headline_system">Sistem</string>
     <string name="headline_system_language_settings">Nastavitve sistemskega jezika</string>
     <string name="headline_secure_screen">Zaščita zaslona</string>
-    <string name="headline_about">O aplikaciji</string>
+    <string name="headline_about">O aplikaciji Food You</string>
     <string name="headline_version">Različica</string>
-    <string name="headline_all_day" description="All-day (meal)">Celodnevni</string>
+    <string name="headline_all_day" description="All-day (meal)">Celodnevno</string>
     <string name="headline_time_based_ordering">Naročanje na podlagi časa</string>
     <string name="headline_incomplete_products">Nepopolni izdelki</string>
     <string name="headline_product">Izdelek</string>
@@ -27,8 +27,8 @@
     <string name="headline_whats_new">Kaj je novega</string>
     <string name="headline_changelog">Seznam sprememb</string>
     <string name="headline_installed" description="Installed version of the app">Nameščen</string>
-    <string name="headline_home" description="Home screen">Domov</string>
-    <string name="headline_home_settings" description="Home screen settings">Domače nastavitve</string>
+    <string name="headline_home" description="Home screen">Domača stran</string>
+    <string name="headline_home_settings" description="Home screen settings">Nastavitve domače strani</string>
     <string name="headline_calendar">Koledar</string>
     <string name="headline_meals_settings">Nastavitve obrokov</string>
     <string name="headline_horizontal">Vodoravno</string>
@@ -135,17 +135,17 @@
     <string name="action_delete_entry">Brisanje vnosa</string>
     <string name="action_close">Zapri</string>
     <string name="action_discard">Zavrnite</string>
-    <string name="action_translate">Prevesti</string>
+    <string name="action_translate">Prevodi</string>
     <string name="action_enable_camera_flash">Omogočite bliskavico fotoaparata</string>
     <string name="action_disable_camera_flash">Onemogočite bliskavico kamere</string>
-    <string name="action_prevent_screen_capture">Preprečevanje zajemanja zaslona</string>
+    <string name="action_prevent_screen_capture">Prepreči zajemanje zaslonske slike</string>
     <string name="action_go_to_today">Pojdi na današnji dan</string>
     <string name="action_feature_request_on_github">Zahtevaj novo funkcionalnost na GitHubu</string>
     <string name="action_show_calendar">Prikaži koledar</string>
     <string name="action_reorder">Ponovno sortiraj</string>
     <string name="action_move_up" description="reorder list item up">Premakni navzgor</string>
     <string name="action_move_down" description="reorder list item down">Premakni navzdol</string>
-    <string name="action_use_time_based_ordering">Uporabi sortiranje na podlagi časa</string>
+    <string name="action_use_time_based_ordering">Sortiranje na podlagi časa obroka</string>
     <string name="action_ignore_all_day_meals">Ignorirajte celodnevne obroke</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Dodajte sestavino</string>
     <string name="action_delete_ingredient">Izbriši sestavino</string>
@@ -243,7 +243,7 @@
     <string name="feature_manual_database_import">Ročni uvoz podatkovne zbirke</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Odpakiraj</string>
     <string name="headline_sponsor">Postani sponzor</string>
-    <string name="description_sponsor_short_2">Podpri rasti aplikacije</string>
+    <string name="description_sponsor_short_2">Podpri rast aplikacije</string>
     <string name="headline_source_code">Izvorna koda</string>
     <string name="action_write_an_email">Napišite e-poštno sporočilo</string>
     <string name="headline_contact">Kontakt</string>
@@ -252,9 +252,9 @@
     <string name="action_treat_as_liquid">Obravnavaj kot tekočino</string>
     <string name="description_treat_as_liquid">Pri merjenju raje uporabljajte mililitre</string>
     <string name="headline_personalization">Prilagoditve po meri</string>
-    <string name="description_personalization">Prilagodite svojo izkušnjo</string>
+    <string name="description_personalization">Prilagodite svojo izkušnjo z aplikacijo</string>
     <string name="headline_nutrition_facts">Prehranski podatki</string>
-    <string name="description_personalize_nutrition_facts_short">Spremeni vrstni red prehranskih podatkov</string>
+    <string name="description_personalize_nutrition_facts_short">Spremenite vrstni red prehranskih podatkov</string>
     <string name="action_reset_ordering">Ponastavitev sortiranja</string>
     <string name="headline_reset_to_default">Ponastavitev na privzeto vrednost</string>
     <string name="action_reset" description="Confirm resetting">Ponastavitev</string>
@@ -345,21 +345,21 @@
     <string name="headline_appearance">Izgled aplikacije</string>
     <string name="headline_theme">Tema</string>
     <string name="headline_pick_a_color">Izberite barvo</string>
-    <string name="headline_nutrients_colors">Barve hranil</string>
+    <string name="headline_nutrients_colors">Barve makrohranil</string>
     <string name="description_nutrients_colors_reset">Nastavitve barv hranil bodo ponastavljene na privzete vrednosti</string>
     <string name="headline_sponsorship_goals">Cilji</string>
-    <string name="description_sponsorship_goals">S sponzoriranjem pomagate ohraniti neodvisnost in trajnost tega projekta, ki se ne zanaša na izkoriščevalske poslovne modele. Številne komercialne aplikacije služijo denar z zbiranjem in prodajo podatkov o uporabnikih, usmerjanjem oglasov ali spodbujanjem uporabnikov k zasvojenim vzorcem sodelovanja. Sponzorstvo zagotavlja, da bo ta aplikacija ostala prijazna do zasebnosti, pregledna in osredotočena na zagotavljanje resnične vrednosti, ne da bi ogrožala vaše zaupanje ali dobro počutje.</string>
+    <string name="description_sponsorship_goals">S sponzoriranjem pomagate ohraniti neodvisnost in trajnost tega projekta, ki se ne zanaša na izkoriščevalske poslovne modele. Številne komercialne aplikacije služijo denar z zbiranjem in prodajo podatkov o uporabnikih, usmerjenimi oglasi ali s spodbujanjem uporabnikov k zasvojenim vzorcem uporabe. Sponzorstvo zagotavlja, da bo ta aplikacija ostala prijazna do zasebnosti, pregledna in osredotočena na zagotavljanje resnične vrednosti, ne da bi ogrožala vaše zaupanje ali dobro počutje.</string>
     <string name="description_x_away_from_next_goal">%1$s še do naslednjega cilja</string>
     <string name="headline_sponsors">Sponzorji</string>
     <string name="description_no_sponsors_this_month">Ta mesec ni sponzorjev</string>
     <string name="headline_latest" description="Latest, most recent">Najnovejše</string>
-    <string name="headline_top_sponsorships" description="Most money contributed">Največje</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Po znesku</string>
     <string name="headline_this_month_we_raised">Ta mesec smo zbrali %1$s</string>
     <string name="description_sponsors_privacy">Food You resno jemlje vašo zasebnost. Zato se ne bo povezala z nobeno zunanjo storitvijo, če tega ne dovolite. Če si želite ogledati najnovejše sponzorje, morate podatke prenesti s strežnikov Food You.</string>
     <string name="action_allow" description="Allow something">Omogočite</string>
     <string name="action_next_month">Naslednji mesec</string>
     <string name="action_previous_month">Prejšnji mesec</string>
-    <string name="headline_sponsor_methods">Načini</string>
+    <string name="headline_sponsor_methods">Možnosti podpore</string>
     <string name="headline_save_database">Shranjevanje podatkovne zbirke</string>
     <string name="description_save_database">Shranite kopijo svoje zbirke podatkov</string>
     <string name="headline_replace_database">Zamenjava podatkovne baze</string>
@@ -380,7 +380,7 @@
     <string name="headline_profile_picture">Profilna slika</string>
     <string name="action_continue">Nadaljuj</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Pozdravljeni, %1$s!</string>
-    <string name="headline_data_backup_and_export">Varnostno kopiranje podatkov &amp; izvoz</string>
+    <string name="headline_data_backup_and_export">Varnostno kopiranje podatkov in izvoz</string>
     <string name="headline_privacy">Zasebnost</string>
     <string name="action_switch_profile">Zamenjaj profil</string>
     <string name="action_add_profile">Dodaj profil</string>
@@ -404,4 +404,5 @@
     <string name="headline_database_backup">Varnostno kopiranje zbirke podatkov</string>
     <string name="description_replacing_database">Zamenjujem podatkovno bazo, počakajte ...</string>
     <string name="headline_experimental">Eksperimentalni</string>
+    <string name="description_privacy_policy">Preglej kako se upravlja s podatki</string>
 </resources>

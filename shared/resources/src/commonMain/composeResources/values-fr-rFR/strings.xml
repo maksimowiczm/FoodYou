@@ -270,7 +270,6 @@
     <string name="description_delete_ingredient">L'ingrédient sera retiré de la composition</string>
     <string name="neutral_remote_database_error">Impossible de télécharger le produit depuis la base de données distante. Vous pouvez toujours consulter les produits que vous avez déjà téléchargés.</string>
     <string name="headline_before_you_start">Avant de commencer</string>
-    <string name="description_before_you_start">Afin de vous fournir un journal alimentaire gratuit et open source, nous accordons une priorité absolue à la confidentialité de vos données. Cette application ne collecte, ne stocke ni ne partage aucune information personnelle. Vos entrées sont enregistrées localement sur votre appareil et restent entièrement sous votre contrôle.</string>
     <string name="action_agree_and_continue">Accepter et continuer</string>
     <string name="headline_food_database">Base de données alimentaire</string>
     <string name="description_food_database">Vous pouvez choisir d'utiliser ou non ces services externes facultatifs, qui peuvent avoir leurs propres conditions générales et politiques de confidentialité</string>
@@ -359,7 +358,6 @@
     <string name="description_random_theme">Un thème aléatoire sera appliqué à chaque démarrage de l'application</string>
     <string name="headline_terms_of_use">Conditions d'utilisation</string>
     <string name="onboarding_privacy_tip">Cette application est open source et conçue pour vous. Nous respectons votre vie privée, vos informations restent confidentielles.</string>
-    <string name="onboarding_allow_food_you_services">Autoriser la connexion aux services Food You</string>
     <string name="headline_add_profile">Ajouter un profil</string>
     <string name="headline_how_do_you_want_to_be_called">Comment souhaitez-vous être appelé ?</string>
     <string name="headline_profile_name">Nom du profil</string>
@@ -387,8 +385,8 @@
     <string name="action_remove_a_photo">Supprimer une photo</string>
     <string name="description_values_per">Sélectionnez la quantité sur laquelle vos valeurs nutritionnelles sont basées</string>
     <string name="description_privacy">Contrôlez vos informations personnelles</string>
-    <string name="description_food_you_services">La connexion aux services Food You vous donne accès à des fonctionnalités et des outils supplémentaires qui améliorent votre expérience</string>
     <string name="headline_database_backup">Sauvegarde de la base de données</string>
     <string name="description_replacing_database">Remplacement de la base de données, veuillez patienter...</string>
     <string name="headline_experimental">Expérimental</string>
+    <string name="description_privacy_policy">Découvrez comment vos données sont gérées</string>
 </resources>

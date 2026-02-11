@@ -270,7 +270,6 @@
     <string name="description_delete_ingredient">Malzeme tariften kaldırılacak</string>
     <string name="neutral_remote_database_error">Uzak veritabanından ürün indirilemedi. Daha önce indirdiğiniz ürünleri yine de görüntüleyebilirsiniz.</string>
     <string name="headline_before_you_start">Başlamadan önce</string>
-    <string name="description_before_you_start">Size ücretsiz ve açık kaynaklı bir yemek günlüğü sunmak için gizliliğinize her şeyden çok önem veriyoruz. Bu uygulama hiçbir kişisel bilgiyi toplamaz, saklamaz veya paylaşmaz. Girdileriniz yerel olarak cihazınıza kaydedilir ve tamamen sizin kontrolünüz altında kalır.</string>
     <string name="action_agree_and_continue">Kabul Et ve Devam Et</string>
     <string name="headline_food_database">Gıda veritabanı</string>
     <string name="description_food_database">Kendi şartları ve gizlilik politikaları olabilecek bu isteğe bağlı harici hizmetleri kullanıp kullanmamayı seçebilirsiniz</string>
@@ -359,7 +358,6 @@
     <string name="description_random_theme">Uygulama her başlatıldığında rastgele bir tema uygulanacaktır</string>
     <string name="headline_terms_of_use">Kullanım koşulları</string>
     <string name="onboarding_privacy_tip">Bu uygulama açık kaynaklıdır ve sizin için geliştirilmiştir. Gizliliğinize saygı duyuyoruz, bilgileriniz gizli kalır.</string>
-    <string name="onboarding_allow_food_you_services">Food You servislerine bağlanmaya izin ver</string>
     <string name="headline_add_profile">Profil ekle</string>
     <string name="headline_how_do_you_want_to_be_called">Size nasıl hitap edilmesini istersiniz?</string>
     <string name="headline_profile_name">Profil adı</string>
@@ -387,7 +385,6 @@
     <string name="action_remove_a_photo">Fotoğrafı kaldır</string>
     <string name="description_values_per">Besin değerlerinizin dayandığı miktarı seçin</string>
     <string name="description_privacy">Kişisel bilgilerinizi kontrol edin</string>
-    <string name="description_food_you_services">Food You servislerine bağlanmak, deneyiminizi geliştiren ek özelliklerin ve araçların kilidini açar</string>
     <string name="headline_database_backup">Veritabanı yedeği</string>
     <string name="description_replacing_database">Veritabanı değiştiriliyor, lütfen bekleyin...</string>
     <string name="headline_experimental">Deneysel</string>
