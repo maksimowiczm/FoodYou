@@ -8,6 +8,7 @@ package com.maksimowiczm.foodyou.common.domain
 enum class Language(val displayName: String, val language: String, val country: String) {
     English("English", "en", "US"),
     Catalan("Catalan", "ca", "ES"),
+    Czech("Czech", "cs", "CZ"),
     Danish("Danish", "da", "DK"),
     German("German", "de", "DE"),
     Spanish("Spanish", "es", "ES"),

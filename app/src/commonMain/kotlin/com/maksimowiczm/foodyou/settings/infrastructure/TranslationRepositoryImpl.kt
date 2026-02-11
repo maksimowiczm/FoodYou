@@ -63,6 +63,7 @@ private val languages =
         // ),
         EnglishUS,
         Translation("Català (Espanya)", "ca-ES"),
+        Translation("Čeština (Česko)", "cs-CZ"),
         Translation("Dansk (Danmark)", "da-DK"),
         Translation("Deutsch (Deutschland)", "de-DE"),
         Translation("Español (España)", "es-ES"),

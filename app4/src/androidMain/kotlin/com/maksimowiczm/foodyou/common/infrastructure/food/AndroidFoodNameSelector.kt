@@ -20,6 +20,7 @@ internal class AndroidFoodNameSelector(private val systemDetails: SystemDetails)
         when (locale.language) {
             "en" -> Language.English
             "ca" -> Language.Catalan
+            "cs" -> Language.Czech
             "da" -> Language.Danish
             "de" -> Language.German
             "es" -> Language.Spanish

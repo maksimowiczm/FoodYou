@@ -56,9 +56,10 @@ internal class UserFoodMapper {
     ): T =
         with(entity) {
             val name =
-                FoodName(
+                FoodName.requireAll(
                     english = name.english,
                     catalan = name.catalan,
+                    czech = name.czech,
                     danish = name.danish,
                     german = name.german,
                     spanish = name.spanish,

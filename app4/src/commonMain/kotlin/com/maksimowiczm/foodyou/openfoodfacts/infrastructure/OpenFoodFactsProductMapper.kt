@@ -24,13 +24,16 @@ internal class OpenFoodFactsProductMapper {
 
 private fun OpenFoodFactsProductNetwork.toModel(): OpenFoodFactsProduct {
     val name =
-        FoodName(
+        FoodName.requireAll(
             english =
                 localizedNames["en"].takeIfNotBlank()
                     ?: localizedGenericNames["en"].takeIfNotBlank(),
             catalan =
                 localizedNames["ca"].takeIfNotBlank()
                     ?: localizedGenericNames["ca"].takeIfNotBlank(),
+            czech =
+                localizedNames["cs"].takeIfNotBlank()
+                    ?: localizedGenericNames["cs"].takeIfNotBlank(),
             danish =
                 localizedNames["da"].takeIfNotBlank()
                     ?: localizedGenericNames["da"].takeIfNotBlank(),

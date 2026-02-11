@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 
 internal data class FoodNameEntity(
     @ColumnInfo(name = "en") val english: String? = null,
+    @ColumnInfo(name = "cs") val czech: String? = null,
     @ColumnInfo(name = "ca") val catalan: String? = null,
     @ColumnInfo(name = "da") val danish: String? = null,
     @ColumnInfo(name = "de") val german: String? = null,
@@ -26,6 +27,7 @@ internal data class FoodNameEntity(
         listOf(
                 english,
                 catalan,
+                czech,
                 danish,
                 german,
                 spanish,
@@ -52,6 +54,7 @@ internal data class FoodNameEntity(
             listOfNotNull(
                     english,
                     catalan,
+                    czech,
                     danish,
                     german,
                     spanish,

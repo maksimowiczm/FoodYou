@@ -1,0 +1,15 @@
+<b>Food You</b> je výkonný open-source nástroj pro sledování výživy vytvořený v moderním vizuálu Material You. Pomůže vám sledovat nejen kalorie, ale celý váš příjem živin – se spolehlivými daty o potravinách a flexibilním, modulárním rozhraním.
+
+<b>Funkce:</b>
+<ul>
+    <li><b>Design Material You:</b> Dynamické motivy, které se přizpůsobí vašemu zařízení pro dokonale sjednocený vizuální zážitek.</li>
+    <li><b>Komplexní databáze potravin:</b> Získejte přístup k nutričním údajům z databází Open Food Facts, USDA FoodCentral a Švýcarské databáze složení potravin.</li>
+    <li><b>Kompletní sledování výživy:</b> Sledujte kalorie, makroživiny, vitamíny, minerály a další.</li>
+    <li><b>Tvorba receptů:</b> Kombinujte potraviny do vlastních receptů s automatickým výpočtem nutričních hodnot.</li>
+    <li><b>Denní cíle:</b> Nastavte si a dodržujte osobní výživové cíle.</li>
+    <li><b>Modulární domovská obrazovka:</b> Přizpůsobte si domovskou obrazovku pomocí karet ušitých na míru vašim potřebám.</li>
+</ul>
+
+Začněte sledovat svou výživu ještě dnes s Food You — přehledně, kompletně a plně ve vašich rukou.
+
+Ikona aplikace pochází z <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

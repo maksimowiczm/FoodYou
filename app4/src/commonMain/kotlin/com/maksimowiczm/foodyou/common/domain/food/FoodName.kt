@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.common.domain.Language
 data class FoodName(
     val english: String? = null,
     val catalan: String? = null,
+    val czech: String? = null,
     val danish: String? = null,
     val german: String? = null,
     val spanish: String? = null,
@@ -27,6 +28,7 @@ data class FoodName(
         listOf(
             english,
             catalan,
+            czech,
             danish,
             german,
             spanish,
@@ -58,6 +60,7 @@ data class FoodName(
         when (language) {
             Language.English -> english
             Language.Catalan -> catalan
+            Language.Czech -> czech
             Language.Danish -> danish
             Language.German -> german
             Language.Spanish -> spanish
@@ -78,5 +81,52 @@ data class FoodName(
 
     fun contains(text: String): Boolean {
         return list.any { it?.contains(text, ignoreCase = true) == true }
+    }
+
+    companion object {
+        fun requireAll(
+            english: String?,
+            catalan: String?,
+            czech: String?,
+            danish: String?,
+            german: String?,
+            spanish: String?,
+            french: String?,
+            indonesian: String?,
+            italian: String?,
+            hungarian: String?,
+            dutch: String?,
+            polish: String?,
+            portugueseBrazil: String?,
+            slovenian: String?,
+            turkish: String?,
+            russian: String?,
+            ukrainian: String?,
+            arabic: String?,
+            chineseSimplified: String?,
+            fallback: String,
+        ) =
+            FoodName(
+                english = english,
+                catalan = catalan,
+                czech = czech,
+                danish = danish,
+                german = german,
+                spanish = spanish,
+                french = french,
+                indonesian = indonesian,
+                italian = italian,
+                hungarian = hungarian,
+                dutch = dutch,
+                polish = polish,
+                portugueseBrazil = portugueseBrazil,
+                slovenian = slovenian,
+                turkish = turkish,
+                russian = russian,
+                ukrainian = ukrainian,
+                arabic = arabic,
+                chineseSimplified = chineseSimplified,
+                fallback = fallback,
+            )
     }
 }

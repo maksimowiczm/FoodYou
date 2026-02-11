@@ -78,6 +78,7 @@ val languages =
         // ),
         EnglishUS,
         Translation("Català (Espanya)", Language.Catalan),
+        Translation("Čeština (Česko)", Language.Czech),
         Translation("Dansk (Danmark)", Language.Danish),
         Translation("Deutsch (Deutschland)", Language.German),
         Translation("Español (España)", Language.Spanish),

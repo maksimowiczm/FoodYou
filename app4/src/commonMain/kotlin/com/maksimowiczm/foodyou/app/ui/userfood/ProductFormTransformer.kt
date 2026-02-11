@@ -41,9 +41,10 @@ class ProductFormTransformer(
         val name = form.name.value
         requireNotNull(name) { "Name is required" }
         val foodName =
-            FoodName(
+            FoodName.requireAll(
                 english = if (language == Language.English) name else null,
                 catalan = if (language == Language.Catalan) name else null,
+                czech = if (language == Language.Czech) name else null,
                 danish = if (language == Language.Danish) name else null,
                 german = if (language == Language.German) name else null,
                 spanish = if (language == Language.Spanish) name else null,
