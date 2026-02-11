@@ -1,0 +1,7 @@
+Bug fixes
+- Fixed Quick Add screen not respecting nutrient order settings.
+- Fixed an issue where invalid foods could not be removed from recipes.
+- Fixed importing files from network locations.
+
+Translations
+- Added Czech.
