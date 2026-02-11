@@ -246,7 +246,7 @@
     <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="description_open_food_facts">A collaborative, free and open database of food products from around the world</string>
     <string name="link_open_food_facts" translatable="false">https://world.openfoodfacts.org</string>
-    <string name="error_open_food_facts_rate_limit">Open Food Facts API rate limit exceeded"></string>
+    <string name="error_open_food_facts_rate_limit">Open Food Facts API rate limit exceeded</string>
 
     <!-- Don't translate changelog strings -->
     <string name="changelog_new_features" translatable="false">New features</string>
