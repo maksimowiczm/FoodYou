@@ -11,9 +11,9 @@ import com.maksimowiczm.foodyou.common.domain.food.Grams
 import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Ounces
-import com.maksimowiczm.foodyou.userfood.domain.FoodBrand
 import com.maksimowiczm.foodyou.userfood.domain.FoodNote
-import com.maksimowiczm.foodyou.userfood.domain.FoodSource
+import com.maksimowiczm.foodyou.userfood.domain.product.FoodBrand
+import com.maksimowiczm.foodyou.userfood.domain.product.FoodSource
 import kotlinx.coroutines.flow.first
 
 class ProductFormTransformer(

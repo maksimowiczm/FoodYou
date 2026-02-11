@@ -27,7 +27,7 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Grams
 import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.fold
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProduct
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.map

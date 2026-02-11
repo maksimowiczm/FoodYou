@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodSearchParameters
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodSearchParameters
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine

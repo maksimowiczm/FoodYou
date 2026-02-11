@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map

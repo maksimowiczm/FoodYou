@@ -29,7 +29,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefau
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchApp
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

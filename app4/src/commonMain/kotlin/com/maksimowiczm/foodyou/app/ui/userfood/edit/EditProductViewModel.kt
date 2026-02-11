@@ -19,8 +19,8 @@ import com.maksimowiczm.foodyou.common.domain.food.Grams
 import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.Ounces
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

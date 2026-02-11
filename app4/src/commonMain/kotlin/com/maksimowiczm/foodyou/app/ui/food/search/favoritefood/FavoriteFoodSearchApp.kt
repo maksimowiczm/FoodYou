@@ -31,7 +31,7 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.fold
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProduct
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.map

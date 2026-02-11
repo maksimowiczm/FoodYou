@@ -21,9 +21,9 @@ import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProduct
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted

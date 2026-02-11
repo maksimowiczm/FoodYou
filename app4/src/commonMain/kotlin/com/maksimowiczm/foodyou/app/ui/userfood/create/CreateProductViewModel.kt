@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState.Companion.requi
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
 import com.maksimowiczm.foodyou.app.ui.userfood.QuantityUnit
 import com.maksimowiczm.foodyou.app.ui.userfood.ValuesPer
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -30,7 +30,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifec
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.userfood.FillSuggestedFieldsDialog
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductForm
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch

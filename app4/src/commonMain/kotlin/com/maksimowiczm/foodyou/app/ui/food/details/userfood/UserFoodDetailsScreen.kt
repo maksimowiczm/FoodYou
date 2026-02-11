@@ -48,8 +48,8 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIcon
 import com.maksimowiczm.foodyou.app.ui.food.details.NutrientList
 import com.maksimowiczm.foodyou.app.ui.food.details.NutrientsHeader
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProduct
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer

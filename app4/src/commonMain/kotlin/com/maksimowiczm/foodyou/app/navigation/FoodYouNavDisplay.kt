@@ -49,7 +49,7 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic

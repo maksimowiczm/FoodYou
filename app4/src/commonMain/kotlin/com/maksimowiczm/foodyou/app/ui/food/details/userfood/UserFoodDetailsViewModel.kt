@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.app.ui.food.details.ObserveIsFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.ui.food.details.SetFavoriteFoodUseCase
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow

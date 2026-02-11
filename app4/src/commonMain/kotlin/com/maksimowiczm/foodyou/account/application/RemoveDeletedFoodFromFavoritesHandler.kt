@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.account.application
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.common.event.EventHandler
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodProductDeletedEvent
+import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductDeletedEvent
 
 /**
  * Handles the [UserFoodProductDeletedEvent] by removing the deleted food from the owner's account
