@@ -13,11 +13,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
+import com.maksimowiczm.foodyou.app.ui.common.extension.debounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem
@@ -28,6 +30,7 @@ import com.maksimowiczm.foodyou.common.fold
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodProduct
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -41,6 +44,10 @@ internal fun UserFoodSearchApp(
     viewModel: UserFoodSearchViewModel = koinViewModel(),
 ) {
     val pages = viewModel.pages.collectAsLazyPagingItems()
+    val isLoading =
+        remember(pages) { pages.debounceIsIdle().map { !it } }
+            .collectAsStateWithLifecycle(false)
+            .value
 
     Box(modifier) {
         LazyColumn(state = lazyListState, contentPadding = contentPadding) {
@@ -56,17 +63,22 @@ internal fun UserFoodSearchApp(
                 }
             }
 
-            if (pages.loadState.append is LoadState.Loading) {
+            if (
+                pages.loadState.append is LoadState.Loading ||
+                    pages.loadState.refresh is LoadState.Loading
+            ) {
                 items(10) { FoodListItemSkeleton(shimmer) }
             }
         }
 
-        if (pages.itemCount == 0 && pages.loadState.isIdle) {
+        if (pages.itemCount == 0 && !isLoading) {
             Text(
                 text = stringResource(Res.string.neutral_no_food_found),
                 modifier = Modifier.safeContentPadding().align(Alignment.Center),
             )
-        } else if (!pages.loadState.isIdle) {
+        }
+
+        if (isLoading) {
             ContainedLoadingIndicator(
                 Modifier.align(Alignment.TopCenter)
                     .padding(top = contentPadding.calculateTopPadding())

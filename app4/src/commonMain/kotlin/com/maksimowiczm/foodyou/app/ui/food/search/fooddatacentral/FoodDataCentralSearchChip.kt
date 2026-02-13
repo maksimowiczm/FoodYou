@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.maksimowiczm.foodyou.app.ui.common.extension.debounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodFilter
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -34,7 +35,7 @@ internal fun FoodDataCentralSearchChip(
     }
 
     val pages = viewModel.pages.collectAsLazyPagingItems()
-    val isLoading = !pages.loadState.isIdle || count == null
+    val isIdle = remember(pages) { pages.debounceIsIdle() }.collectAsStateWithLifecycle(false).value
     val hasError = pages.loadState.hasError
 
     val colors =
@@ -78,7 +79,7 @@ internal fun FoodDataCentralSearchChip(
                     modifier = Modifier.size(FilterChipDefaults.IconSize),
                 )
             } else {
-                if (isLoading) {
+                if (!isIdle || count == null) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(FilterChipDefaults.IconSize),
                         strokeWidth = 2.dp,

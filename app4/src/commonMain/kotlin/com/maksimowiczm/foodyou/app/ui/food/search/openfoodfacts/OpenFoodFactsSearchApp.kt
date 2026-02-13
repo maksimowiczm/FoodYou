@@ -15,12 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.common.extension.debounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.common.extension.error
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
@@ -33,6 +35,7 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -47,6 +50,10 @@ internal fun OpenFoodFactsSearchApp(
 ) {
     val density = LocalDensity.current
     val pages = viewModel.pages.collectAsLazyPagingItems()
+    val isLoading =
+        remember(pages) { pages.debounceIsIdle().map { !it } }
+            .collectAsStateWithLifecycle(false)
+            .value
 
     val error = pages.loadState.error
     var errorCardHeight by remember { mutableIntStateOf(0) }
@@ -68,7 +75,10 @@ internal fun OpenFoodFactsSearchApp(
                 }
             }
 
-            if (pages.loadState.append is LoadState.Loading) {
+            if (
+                pages.loadState.append is LoadState.Loading ||
+                    pages.loadState.refresh is LoadState.Loading
+            ) {
                 items(10) { FoodListItemSkeleton(shimmer) }
             }
         }
@@ -95,12 +105,14 @@ internal fun OpenFoodFactsSearchApp(
             }
         }
 
-        if (pages.itemCount == 0 && pages.loadState.isIdle) {
+        if (pages.itemCount == 0 && !isLoading) {
             Text(
                 text = stringResource(Res.string.neutral_no_food_found),
                 modifier = Modifier.safeContentPadding().align(Alignment.Center),
             )
-        } else if (!pages.loadState.isIdle && error == null) {
+        }
+
+        if (isLoading) {
             ContainedLoadingIndicator(
                 Modifier.align(Alignment.TopCenter)
                     .padding(top = contentPadding.calculateTopPadding())

@@ -57,7 +57,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 listOf(
                     "Fixed Quick Add screen not respecting nutrient order settings.",
                     "Fixed an issue where invalid foods could not be removed from recipes.",
-                    "Fixed importing files from network locations."
+                    "Fixed importing files from network locations.",
                 ),
             translations = listOf("Added Czech."),
         )
