@@ -11,34 +11,35 @@ import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnit
-import com.maksimowiczm.foodyou.userfood.domain.FoodNote
+import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.recipe.FoodReference
-import com.maksimowiczm.foodyou.userfood.domain.recipe.Recipe
-import com.maksimowiczm.foodyou.userfood.domain.recipe.RecipeIdentity
-import com.maksimowiczm.foodyou.userfood.domain.recipe.RecipeIngredient
-import com.maksimowiczm.foodyou.userfood.domain.recipe.RecipeName
-import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.room.FoodReferenceType
-import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.room.RecipeEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.room.RecipeIngredientEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.room.RecipeQuantityEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.room.RecipeQuantityType
-import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.room.RecipeWithIngredients
+import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipe
+import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIngredient
+import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeName
+import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.FoodReferenceType
+import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeEntity
+import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeIngredientEntity
+import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeQuantityEntity
+import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeQuantityType
+import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeWithIngredients
 
 internal class RecipeMapper {
 
-    fun toDomain(entity: RecipeWithIngredients): Recipe {
-        return Recipe(
-            identity = RecipeIdentity(entity.recipe.uuid, LocalAccountId(entity.recipe.accountId)),
-            name = RecipeName(entity.recipe.name),
+    fun toDomain(entity: RecipeWithIngredients): UserRecipe {
+        return UserRecipe(
+            identity =
+                UserRecipeIdentity(entity.recipe.uuid, LocalAccountId(entity.recipe.accountId)),
+            name = UserRecipeName(entity.recipe.name),
             servings = entity.recipe.servings,
             image = entity.recipe.imagePath?.let { Image.Local(it) },
-            note = entity.recipe.note?.let { FoodNote(it) },
+            note = entity.recipe.note?.let { UserFoodNote(it) },
             finalWeight = entity.recipe.finalWeight,
             ingredients = entity.ingredients.map { toIngredient(it) },
         )
     }
 
-    fun toEntity(recipe: Recipe, sqliteId: Long = 0): RecipeEntity {
+    fun toEntity(recipe: UserRecipe, sqliteId: Long = 0): RecipeEntity {
         return RecipeEntity(
             sqliteId = sqliteId,
             uuid = recipe.identity.id,
@@ -52,7 +53,7 @@ internal class RecipeMapper {
     }
 
     fun toIngredientEntities(
-        ingredients: List<RecipeIngredient>,
+        ingredients: List<UserRecipeIngredient>,
         recipeSqliteId: Long = 0,
     ): List<RecipeIngredientEntity> {
         return ingredients.map { ingredient ->
@@ -60,10 +61,10 @@ internal class RecipeMapper {
                 recipeSqliteId = recipeSqliteId,
                 foodReferenceType =
                     when (ingredient.foodReference) {
-                        is FoodReference.UserFood -> FoodReferenceType.UserFood
+                        is FoodReference.UserProduct -> FoodReferenceType.UserFood
                         is FoodReference.FoodDataCentral -> FoodReferenceType.FoodDataCentral
                         is FoodReference.OpenFoodFacts -> FoodReferenceType.OpenFoodFacts
-                        is FoodReference.Recipe -> FoodReferenceType.Recipe
+                        is FoodReference.UserRecipe -> FoodReferenceType.UserRecipe
                     },
                 foodId = ingredient.foodReference.foodId,
                 quantity = toQuantityEntity(ingredient.quantity),
@@ -71,18 +72,18 @@ internal class RecipeMapper {
         }
     }
 
-    private fun toIngredient(entity: RecipeIngredientEntity): RecipeIngredient {
+    private fun toIngredient(entity: RecipeIngredientEntity): UserRecipeIngredient {
         val foodReference =
             when (entity.foodReferenceType) {
-                FoodReferenceType.UserFood -> FoodReference.UserFood(entity.foodId)
+                FoodReferenceType.UserFood -> FoodReference.UserProduct(entity.foodId)
                 FoodReferenceType.FoodDataCentral -> FoodReference.FoodDataCentral(entity.foodId)
                 FoodReferenceType.OpenFoodFacts -> FoodReference.OpenFoodFacts(entity.foodId)
-                FoodReferenceType.Recipe -> FoodReference.Recipe(entity.foodId)
+                FoodReferenceType.UserRecipe -> FoodReference.UserRecipe(entity.foodId)
             }
 
         val quantity = toQuantity(entity.quantity)
 
-        return RecipeIngredient(foodReference = foodReference, quantity = quantity)
+        return UserRecipeIngredient(foodReference = foodReference, quantity = quantity)
     }
 
     private fun toQuantityEntity(quantity: Quantity): RecipeQuantityEntity {

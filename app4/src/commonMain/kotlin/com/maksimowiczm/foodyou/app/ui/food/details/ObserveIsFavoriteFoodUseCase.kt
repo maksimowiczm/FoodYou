@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -20,8 +20,8 @@ internal class ObserveIsFavoriteFoodUseCase(
     fun observe(identity: FoodDataCentralProductIdentity): Flow<Boolean> =
         observe(FavoriteFoodIdentity.FoodDataCentral(identity.fdcId))
 
-    fun observe(identity: UserFoodProductIdentity): Flow<Boolean> =
-        observe(FavoriteFoodIdentity.UserFoodProduct(identity.id))
+    fun observe(identity: UserProductIdentity): Flow<Boolean> =
+        observe(FavoriteFoodIdentity.UserProduct(identity.id))
 
     fun observe(identity: FavoriteFoodIdentity): Flow<Boolean> =
         combine(observePrimaryAccountUseCase.observe(), accountManager.observePrimaryProfileId()) {

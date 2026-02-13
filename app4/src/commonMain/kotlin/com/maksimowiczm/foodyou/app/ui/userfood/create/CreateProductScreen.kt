@@ -30,7 +30,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifec
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.userfood.FillSuggestedFieldsDialog
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductForm
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CreateProductScreen(
     onBack: () -> Unit,
-    onCreate: (UserFoodProductIdentity) -> Unit,
+    onCreate: (UserProductIdentity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: CreateProductViewModel = koinViewModel()

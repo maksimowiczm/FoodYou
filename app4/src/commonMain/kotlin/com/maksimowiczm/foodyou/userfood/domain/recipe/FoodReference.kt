@@ -18,17 +18,17 @@ sealed interface FoodReference {
      *
      * @property foodId UUID of the UserFoodProduct
      */
-    @JvmInline value class UserFood(override val foodId: String) : FoodReference
+    @JvmInline value class UserProduct(override val foodId: String) : FoodReference
 
     /**
-     * Reference to a food from FoodDataCentral.
+     * Reference to food from FoodDataCentral.
      *
      * @property foodId FDC ID of the food
      */
     @JvmInline value class FoodDataCentral(override val foodId: String) : FoodReference
 
     /**
-     * Reference to a food from OpenFoodFacts.
+     * Reference to food from OpenFoodFacts.
      *
      * @property foodId Barcode or product ID
      */
@@ -39,5 +39,5 @@ sealed interface FoodReference {
      *
      * @property foodId UUID of the Recipe
      */
-    @JvmInline value class Recipe(override val foodId: String) : FoodReference
+    @JvmInline value class UserRecipe(override val foodId: String) : FoodReference
 }

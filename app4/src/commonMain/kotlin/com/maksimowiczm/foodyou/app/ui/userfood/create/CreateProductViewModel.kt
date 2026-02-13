@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState.Companion.requi
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
 import com.maksimowiczm.foodyou.app.ui.userfood.QuantityUnit
 import com.maksimowiczm.foodyou.app.ui.userfood.ValuesPer
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class CreateProductViewModel(
     private val observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
-    private val userFoodRepository: UserFoodRepository,
+    private val userProductRepository: UserProductRepository,
     private val productFormTransformer: ProductFormTransformer,
 ) : ViewModel() {
 
@@ -57,7 +57,7 @@ class CreateProductViewModel(
             val accountId = observePrimaryAccountUseCase.observe().first().localAccountId
 
             val id =
-                userFoodRepository.create(
+                userProductRepository.create(
                     name = foodName,
                     brand = brand,
                     barcode = barcode,

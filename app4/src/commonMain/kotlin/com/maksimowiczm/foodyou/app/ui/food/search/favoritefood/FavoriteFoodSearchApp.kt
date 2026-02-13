@@ -31,7 +31,7 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.fold
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProduct
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.map
@@ -163,7 +163,7 @@ private fun FoodSearchListItem(
 
 private fun Any.name(): FoodName =
     when (this) {
-        is UserFoodProduct -> name
+        is UserProduct -> name
         is OpenFoodFactsProduct -> name
         is FoodDataCentralProduct -> name
         else -> error("Unknown type ${this::class}")
@@ -179,7 +179,7 @@ private fun RemoteData<Any>.name(): FoodName? =
 
 private fun Any.packageQuantity(): AbsoluteQuantity? =
     when (this) {
-        is UserFoodProduct -> packageQuantity
+        is UserProduct -> packageQuantity
         is OpenFoodFactsProduct -> packageQuantity
         is FoodDataCentralProduct -> packageQuantity
         else -> error("Unknown type ${this::class}")
@@ -195,7 +195,7 @@ private fun RemoteData<Any>.packageQuantity(): AbsoluteQuantity? =
 
 private fun Any.servingQuantity(): AbsoluteQuantity? =
     when (this) {
-        is UserFoodProduct -> servingQuantity
+        is UserProduct -> servingQuantity
         is OpenFoodFactsProduct -> servingQuantity
         is FoodDataCentralProduct -> servingQuantity
         else -> error("Unknown type ${this::class}")
@@ -211,7 +211,7 @@ private fun RemoteData<Any>.servingQuantity(): AbsoluteQuantity? =
 
 private fun Any.nutritionFacts(): NutritionFacts =
     when (this) {
-        is UserFoodProduct -> nutritionFacts
+        is UserProduct -> nutritionFacts
         is OpenFoodFactsProduct -> nutritionFacts
         is FoodDataCentralProduct -> nutritionFacts
         else -> error("Unknown type ${this::class}")
@@ -227,7 +227,7 @@ private fun RemoteData<Any>.nutritionFacts(): NutritionFacts? =
 
 private fun Any.image(): Image? =
     when (this) {
-        is UserFoodProduct -> image
+        is UserProduct -> image
         is OpenFoodFactsProduct -> image
         is FoodDataCentralProduct -> null
         else -> error("Unknown type ${this::class}")

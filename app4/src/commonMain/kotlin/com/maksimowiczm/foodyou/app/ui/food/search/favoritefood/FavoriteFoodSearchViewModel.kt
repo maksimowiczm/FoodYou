@@ -21,9 +21,9 @@ import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProduct
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -40,7 +40,7 @@ internal class FavoriteFoodSearchViewModel(
     observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
     private val foodDataCentralRepository: FoodDataCentralRepository,
     private val openFoodFactsRepository: OpenFoodFactsRepository,
-    private val userFoodRepository: UserFoodRepository,
+    private val userProductRepository: UserProductRepository,
     private val nameSelector: FoodNameSelector,
 ) : ViewModel() {
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
@@ -70,9 +70,9 @@ internal class FavoriteFoodSearchViewModel(
                                     OpenFoodFactsProductIdentity(identity.barcode)
                                 )
 
-                            is FavoriteFoodIdentity.UserFoodProduct ->
-                                userFoodRepository
-                                    .observe(UserFoodProductIdentity(identity.id, accountId))
+                            is FavoriteFoodIdentity.UserProduct ->
+                                userProductRepository
+                                    .observe(UserProductIdentity(identity.id, accountId))
                                     .map { food ->
                                         when (food) {
                                             null -> RemoteData.NotFound
@@ -158,7 +158,7 @@ internal class FavoriteFoodSearchViewModel(
 
 private fun Any.barcode(): String? =
     when (this) {
-        is UserFoodProduct -> barcode?.value
+        is UserProduct -> barcode?.value
         is OpenFoodFactsProduct -> identity.barcode
         is FoodDataCentralProduct -> barcode
         else -> error("Unknown type ${this::class}")
@@ -174,7 +174,7 @@ private fun RemoteData<Any>.barcode(): String? =
 
 private fun Any.name(): FoodName =
     when (this) {
-        is UserFoodProduct -> name
+        is UserProduct -> name
         is OpenFoodFactsProduct -> name
         is FoodDataCentralProduct -> name
         else -> error("Unknown type ${this::class}")
@@ -190,7 +190,7 @@ private fun RemoteData<Any>.name(): FoodName? =
 
 private fun Any.brand(): String? =
     when (this) {
-        is UserFoodProduct -> brand?.value
+        is UserProduct -> brand?.value
         is OpenFoodFactsProduct -> brand
         is FoodDataCentralProduct -> brand
         else -> error("Unknown type ${this::class}")

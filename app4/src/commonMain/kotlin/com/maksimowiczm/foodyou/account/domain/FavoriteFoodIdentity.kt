@@ -7,5 +7,5 @@ sealed interface FavoriteFoodIdentity {
 
     @JvmInline value class OpenFoodFacts(val barcode: String) : FavoriteFoodIdentity
 
-    @JvmInline value class UserFoodProduct(val id: String) : FavoriteFoodIdentity
+    @JvmInline value class UserProduct(val id: String) : FavoriteFoodIdentity
 }

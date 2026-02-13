@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.account.domain
 
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import kotlin.uuid.Uuid
 
 class Account
@@ -74,9 +74,7 @@ private constructor(
         _profiles.removeAt(index)
     }
 
-    fun removeFavoriteUserFood(identity: UserFoodProductIdentity) {
-        _profiles.forEach {
-            it.removeFavoriteFood(FavoriteFoodIdentity.UserFoodProduct(identity.id))
-        }
+    fun removeFavoriteUserFood(identity: UserProductIdentity) {
+        _profiles.forEach { it.removeFavoriteFood(FavoriteFoodIdentity.UserProduct(identity.id)) }
     }
 }

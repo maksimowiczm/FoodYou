@@ -27,7 +27,7 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Grams
 import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.fold
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProduct
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.map
@@ -39,7 +39,7 @@ internal fun UserFoodSearchApp(
     shimmer: Shimmer,
     contentPadding: PaddingValues,
     lazyListState: LazyListState,
-    onClick: (UserFoodProduct) -> Unit,
+    onClick: (UserProduct) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UserFoodSearchViewModel = koinViewModel(),
 ) {
@@ -89,7 +89,7 @@ internal fun UserFoodSearchApp(
 
 @Composable
 private fun FoodSearchListItem(
-    food: UserFoodProduct,
+    food: UserProduct,
     onClick: () -> Unit,
     shimmer: Shimmer,
     modifier: Modifier = Modifier,

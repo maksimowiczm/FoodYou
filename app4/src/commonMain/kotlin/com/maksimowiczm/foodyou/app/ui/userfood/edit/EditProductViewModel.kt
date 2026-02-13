@@ -19,8 +19,8 @@ import com.maksimowiczm.foodyou.common.domain.food.Grams
 import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.Ounces
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodRepository
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,10 +31,10 @@ import kotlinx.coroutines.launch
 
 class EditProductViewModel(
     private val observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
-    private val userFoodRepository: UserFoodRepository,
+    private val userProductRepository: UserProductRepository,
     private val foodNameSelector: FoodNameSelector,
     private val productFormTransformer: ProductFormTransformer,
-    private val identity: UserFoodProductIdentity,
+    private val identity: UserProductIdentity,
 ) : ViewModel() {
     private val eventBus = Channel<EditProductEvent>()
     val uiEvents = eventBus.receiveAsFlow()
@@ -47,7 +47,7 @@ class EditProductViewModel(
 
     init {
         viewModelScope.launch {
-            val product = userFoodRepository.observe(identity = identity).first()
+            val product = userProductRepository.observe(identity = identity).first()
 
             requireNotNull(product) { "Product not found: $identity" }
 
@@ -349,7 +349,7 @@ class EditProductViewModel(
 
             val accountId = observePrimaryAccountUseCase.observe().first().localAccountId
 
-            userFoodRepository.edit(
+            userProductRepository.edit(
                 identity = identity,
                 name = foodName,
                 brand = brand,

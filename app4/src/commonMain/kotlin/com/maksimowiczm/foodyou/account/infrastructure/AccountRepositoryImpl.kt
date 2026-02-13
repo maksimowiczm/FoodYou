@@ -171,7 +171,7 @@ private fun ProfileEntity.toDomain(favoriteFoods: List<ProfileFavoriteFoodEntity
 
 private fun ProfileFavoriteFoodEntity.toDomain(): FavoriteFoodIdentity =
     when (this.identityType) {
-        FoodIdentityType.UserFoodProduct -> FavoriteFoodIdentity.UserFoodProduct(extra)
+        FoodIdentityType.UserProduct -> FavoriteFoodIdentity.UserProduct(extra)
         FoodIdentityType.OpenFoodFacts -> FavoriteFoodIdentity.OpenFoodFacts(extra)
         FoodIdentityType.FoodDataCentral -> FavoriteFoodIdentity.FoodDataCentral(extra.toInt())
     }
@@ -234,11 +234,11 @@ private fun Profile.toFavoriteFoodEntity(
                     extra = identity.fdcId.toString(),
                 )
 
-            is FavoriteFoodIdentity.UserFoodProduct ->
+            is FavoriteFoodIdentity.UserProduct ->
                 ProfileFavoriteFoodEntity(
                     profileId = id.value,
                     accountId = localAccountId.value,
-                    identityType = FoodIdentityType.UserFoodProduct,
+                    identityType = FoodIdentityType.UserProduct,
                     extra = identity.id,
                 )
 

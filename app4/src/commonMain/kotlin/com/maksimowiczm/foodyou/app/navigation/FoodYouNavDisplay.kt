@@ -16,8 +16,8 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Colors
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProfile
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProfile
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditUserProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDataCentralProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
@@ -27,12 +27,12 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.NutritionFact
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.OpenFoodFactsProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Personalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserFoodDetails
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserProductDetails
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.fooddatacentral.FoodDataCentralDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts.OpenFoodFactsDetailsScreen
-import com.maksimowiczm.foodyou.app.ui.food.details.userfood.UserFoodDetailsScreen
+import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
@@ -49,7 +49,7 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -95,7 +95,7 @@ fun FoodYouNavDisplay(
                         onBack = { backStack.removeLastIf<CreateProduct>() },
                         onCreate = { id ->
                             backStack.removeLastIf<CreateProduct>()
-                            backStack.add(UserFoodDetails(id))
+                            backStack.add(UserProductDetails(id))
                         },
                     )
                 }
@@ -105,11 +105,11 @@ fun FoodYouNavDisplay(
                         onCreate = { backStack.removeLastIf<CreateProfile>() },
                     )
                 }
-                entry<EditProduct> {
+                entry<EditUserProduct> {
                     EditProductScreen(
                         identity = it.identity,
-                        onBack = { backStack.removeLastIf<EditProduct>() },
-                        onEdit = { backStack.removeLastIf<EditProduct>() },
+                        onBack = { backStack.removeLastIf<EditUserProduct>() },
+                        onEdit = { backStack.removeLastIf<EditUserProduct>() },
                     )
                 }
                 entry<EditProfile> {
@@ -130,17 +130,17 @@ fun FoodYouNavDisplay(
                         onOpenFoodFactsProduct = { id ->
                             backStack.add(OpenFoodFactsProductDetails.from(id))
                         },
-                        onUserFood = { id -> backStack.add(UserFoodDetails(id)) },
+                        onUserFood = { id -> backStack.add(UserProductDetails(id)) },
                         query = it.query,
                         animatedVisibilityScope = LocalNavAnimatedContentScope.current,
                     )
                 }
-                entry<UserFoodDetails> {
-                    UserFoodDetailsScreen(
+                entry<UserProductDetails> {
+                    UserProductDetailsScreen(
                         identity = it.identity,
-                        onEdit = { backStack.add(EditProduct.from(it.identity)) },
-                        onBack = { backStack.removeLastIf<UserFoodDetails>() },
-                        onDelete = { backStack.removeLastIf<UserFoodDetails>() },
+                        onEdit = { backStack.add(EditUserProduct.from(it.identity)) },
+                        onBack = { backStack.removeLastIf<UserProductDetails>() },
+                        onDelete = { backStack.removeLastIf<UserProductDetails>() },
                     )
                 }
                 entry<OpenFoodFactsProductDetails> {
@@ -201,10 +201,10 @@ fun rememberFoodYouNavBackStack(): NavBackStack<NavKey> {
                 subclass(Colors.serializer())
                 subclass(CreateProduct.serializer())
                 subclass(CreateProfile.serializer())
-                subclass(EditProduct.serializer())
+                subclass(EditUserProduct.serializer())
                 subclass(EditProfile.serializer())
                 subclass(FoodDatabase.serializer())
-                subclass(UserFoodDetails.serializer())
+                subclass(UserProductDetails.serializer())
                 subclass(OpenFoodFactsProductDetails.serializer())
                 subclass(FoodDataCentralProductDetails.serializer())
                 subclass(Home.serializer())
@@ -232,14 +232,14 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data object CreateProfile : FoodYouNavHostRoute
 
     @Serializable
-    data class EditProduct(val id: String, val accountId: String) : FoodYouNavHostRoute {
+    data class EditUserProduct(val id: String, val accountId: String) : FoodYouNavHostRoute {
         companion object {
-            fun from(identity: UserFoodProductIdentity): EditProduct =
-                EditProduct(identity.id, identity.accountId.value)
+            fun from(identity: UserProductIdentity): EditUserProduct =
+                EditUserProduct(identity.id, identity.accountId.value)
         }
 
-        val identity: UserFoodProductIdentity
-            get() = UserFoodProductIdentity(id, LocalAccountId(accountId))
+        val identity: UserProductIdentity
+            get() = UserProductIdentity(id, LocalAccountId(accountId))
     }
 
     @Serializable
@@ -255,11 +255,11 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data class FoodDatabase(val query: String?) : FoodYouNavHostRoute
 
     @Serializable
-    data class UserFoodDetails(val id: String, val accountId: String) : FoodYouNavHostRoute {
-        val identity: UserFoodProductIdentity
-            get() = UserFoodProductIdentity(id, LocalAccountId(accountId))
+    data class UserProductDetails(val id: String, val accountId: String) : FoodYouNavHostRoute {
+        val identity: UserProductIdentity
+            get() = UserProductIdentity(id, LocalAccountId(accountId))
 
-        constructor(identity: UserFoodProductIdentity) : this(identity.id, identity.accountId.value)
+        constructor(identity: UserProductIdentity) : this(identity.id, identity.accountId.value)
     }
 
     @Serializable

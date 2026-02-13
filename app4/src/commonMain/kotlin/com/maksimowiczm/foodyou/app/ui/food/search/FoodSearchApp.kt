@@ -51,8 +51,8 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProduct
 import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -66,7 +66,7 @@ import org.koin.core.parameter.parametersOf
 internal fun FoodSearchApp(
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
-    onUserFood: (UserFoodProductIdentity) -> Unit,
+    onUserFood: (UserProductIdentity) -> Unit,
     query: String?,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
@@ -229,7 +229,7 @@ private fun FoodSearchApp(
                     lazyListState = appState.listStates.favorite,
                     onClick = {
                         when (it) {
-                            is UserFoodProduct -> onUserFood(it.identity)
+                            is UserProduct -> onUserFood(it.identity)
                             is OpenFoodFactsProduct -> onOpenFoodFactsProduct(it.identity)
                             is FoodDataCentralProduct -> onFoodDataCentralProduct(it.identity)
                         }

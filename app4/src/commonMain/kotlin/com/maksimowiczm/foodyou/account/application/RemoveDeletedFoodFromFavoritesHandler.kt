@@ -3,10 +3,10 @@ package com.maksimowiczm.foodyou.account.application
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.common.event.EventHandler
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductDeletedEvent
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
 
 /**
- * Handles the [UserFoodProductDeletedEvent] by removing the deleted food from the owner's account
+ * Handles the [UserProductDeletedEvent] by removing the deleted food from the owner's account
  * favorites.
  *
  * When a user food product is deleted, this handler ensures data consistency by removing the
@@ -15,10 +15,10 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductDeletedEv
 class RemoveDeletedFoodFromFavoritesHandler(
     private val accountRepository: AccountRepository,
     logger: Logger,
-) : EventHandler<UserFoodProductDeletedEvent> {
+) : EventHandler<UserProductDeletedEvent> {
     private val logger = logger.withTag("RemoveDeletedFoodFromFavoritesHandler")
 
-    override suspend fun handle(event: UserFoodProductDeletedEvent) {
+    override suspend fun handle(event: UserProductDeletedEvent) {
         accountRepository
             .load(event.identity.accountId)
             ?.apply { removeFavoriteUserFood(event.identity) }
