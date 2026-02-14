@@ -29,7 +29,8 @@ import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.userfood.FillSuggestedFieldsDialog
-import com.maksimowiczm.foodyou.app.ui.userfood.ProductForm
+import com.maksimowiczm.foodyou.app.ui.userfood.ProductForm2
+import com.maksimowiczm.foodyou.app.ui.userfood.rememberProductForm2State
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
@@ -44,7 +45,7 @@ fun CreateProductScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: CreateProductViewModel = koinViewModel()
-    val productFormState by viewModel.productFormState.collectAsStateWithLifecycle()
+    val formState = rememberProductForm2State()
     val isLocked by viewModel.isLocked.collectAsStateWithLifecycle()
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
@@ -66,7 +67,7 @@ fun CreateProductScreen(
 
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
-        isBackEnabled = !isLocked && productFormState.isModified,
+        isBackEnabled = !isLocked && formState.isModified,
         onBackCompleted = { showDiscardDialog = true },
     )
     val pleaseWaitStr = stringResource(Res.string.headline_please_wait)
@@ -102,7 +103,7 @@ fun CreateProductScreen(
                 navigationIcon = {
                     ArrowBackIconButton(
                         onClick = {
-                            if (productFormState.isModified) showDiscardDialog = true else onBack()
+                            if (formState.isModified) showDiscardDialog = true else onBack()
                         },
                         enabled = !isLocked,
                     )
@@ -111,12 +112,7 @@ fun CreateProductScreen(
                     val buttonHeight = ButtonDefaults.ExtraSmallContainerHeight
                     Button(
                         onClick = {
-                            if (
-                                productFormState.proteins.value == null ||
-                                    productFormState.fats.value == null ||
-                                    productFormState.carbohydrates.value == null ||
-                                    productFormState.energy.value == null
-                            ) {
+                            if (!formState.hasSuggestedFieldsFilled) {
                                 showFillSuggestedFieldsDialog = true
                             } else {
                                 viewModel.create()
@@ -126,7 +122,7 @@ fun CreateProductScreen(
                         modifier =
                             Modifier.height(buttonHeight)
                                 .then(if (isLocked) Modifier.shimmer() else Modifier),
-                        enabled = productFormState.isValid && !isLocked,
+                        enabled = formState.isValid && !isLocked,
                         contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
                     ) {
                         Text(
@@ -152,17 +148,7 @@ fun CreateProductScreen(
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
-            item {
-                ProductForm(
-                    state = productFormState,
-                    setImageUri = viewModel::setImage,
-                    setValuesPer = viewModel::setValuesPer,
-                    setServingUnit = viewModel::setServingUnit,
-                    setPackageUnit = viewModel::setPackageUnit,
-                    isLocked = isLocked,
-                    macroFocusRequester = focusRequester,
-                )
-            }
+            item { ProductForm2(state = formState, isLocked = isLocked) }
         }
     }
 }
