@@ -194,27 +194,53 @@ NULL as r_imagePath,
 NULL as r_note,
 NULL as r_finalWeight,
 NULL as r_accountId,
-CASE :languageCode
-    WHEN 'en-US' THEN p.name_en
-    WHEN 'ca-ES' THEN p.name_ca
-    WHEN 'cs-CZ' THEN p.name_cs
-    WHEN 'da-DK' THEN p.name_da
-    WHEN 'de-DE' THEN p.name_de
-    WHEN 'es-ES' THEN p.name_es
-    WHEN 'fr-FR' THEN p.name_fr
-    WHEN 'it-IT' THEN p.name_it
-    WHEN 'id-ID' THEN p.name_id
-    WHEN 'hu-HU' THEN p.name_hu
-    WHEN 'nl-NL' THEN p.name_nl
-    WHEN 'pl-PL' THEN p.name_pl
-    WHEN 'sl-SI' THEN p.name_sl
-    WHEN 'pt-BR' THEN p.`name_pt-BR`
-    WHEN 'tr-TR' THEN p.name_tr
-    WHEN 'ru-RU' THEN p.name_ru
-    WHEN 'uk-UA' THEN p.name_uk
-    WHEN 'ar-SA' THEN p.name_ar
-    WHEN 'zh-CN' THEN p.`name_zh-CN`
-    ELSE p.name_en
+CASE 
+    WHEN p.brand IS NOT NULL THEN
+        CASE :languageCode
+            WHEN 'en-US' THEN p.name_en || ' (' || p.brand || ')'
+            WHEN 'ca-ES' THEN p.name_ca || ' (' || p.brand || ')'
+            WHEN 'cs-CZ' THEN p.name_cs || ' (' || p.brand || ')'
+            WHEN 'da-DK' THEN p.name_da || ' (' || p.brand || ')'
+            WHEN 'de-DE' THEN p.name_de || ' (' || p.brand || ')'
+            WHEN 'es-ES' THEN p.name_es || ' (' || p.brand || ')'
+            WHEN 'fr-FR' THEN p.name_fr || ' (' || p.brand || ')'
+            WHEN 'it-IT' THEN p.name_it || ' (' || p.brand || ')'
+            WHEN 'id-ID' THEN p.name_id || ' (' || p.brand || ')'
+            WHEN 'hu-HU' THEN p.name_hu || ' (' || p.brand || ')'
+            WHEN 'nl-NL' THEN p.name_nl || ' (' || p.brand || ')'
+            WHEN 'pl-PL' THEN p.name_pl || ' (' || p.brand || ')'
+            WHEN 'sl-SI' THEN p.name_sl || ' (' || p.brand || ')'
+            WHEN 'pt-BR' THEN p.`name_pt-BR` || ' (' || p.brand || ')'
+            WHEN 'tr-TR' THEN p.name_tr || ' (' || p.brand || ')'
+            WHEN 'ru-RU' THEN p.name_ru || ' (' || p.brand || ')'
+            WHEN 'uk-UA' THEN p.name_uk || ' (' || p.brand || ')'
+            WHEN 'ar-SA' THEN p.name_ar || ' (' || p.brand || ')'
+            WHEN 'zh-CN' THEN p.`name_zh-CN` || ' (' || p.brand || ')'
+            ELSE p.name_en || ' (' || p.brand || ')'
+        END
+    ELSE
+        CASE :languageCode
+            WHEN 'en-US' THEN p.name_en
+            WHEN 'ca-ES' THEN p.name_ca
+            WHEN 'cs-CZ' THEN p.name_cs
+            WHEN 'da-DK' THEN p.name_da
+            WHEN 'de-DE' THEN p.name_de
+            WHEN 'es-ES' THEN p.name_es
+            WHEN 'fr-FR' THEN p.name_fr
+            WHEN 'it-IT' THEN p.name_it
+            WHEN 'id-ID' THEN p.name_id
+            WHEN 'hu-HU' THEN p.name_hu
+            WHEN 'nl-NL' THEN p.name_nl
+            WHEN 'pl-PL' THEN p.name_pl
+            WHEN 'sl-SI' THEN p.name_sl
+            WHEN 'pt-BR' THEN p.`name_pt-BR`
+            WHEN 'tr-TR' THEN p.name_tr
+            WHEN 'ru-RU' THEN p.name_ru
+            WHEN 'uk-UA' THEN p.name_uk
+            WHEN 'ar-SA' THEN p.name_ar
+            WHEN 'zh-CN' THEN p.`name_zh-CN`
+            ELSE p.name_en
+        END
 END as simpleName
 """
 

@@ -115,7 +115,7 @@ private fun UserProductDetailsScreen(
             userFood?.let { food ->
                 buildString {
                     append(nameSelector.select(food.name))
-                    append(food.brand?.let { " ($it)" } ?: "")
+                    append(food.brand?.value?.let { " ($it)" } ?: "")
                 }
             }
         }

@@ -153,8 +153,16 @@ private fun FoodSearchListItem(
             .stringResource(food.packageQuantity, food.servingQuantity)
             .fold(onSuccess = { it }, onError = { absoluteQuantity.stringResource() })
 
+    val headline =
+        remember(food, nameSelector) {
+            buildString {
+                append(nameSelector.select(food.name))
+                append(food.brand?.value?.let { " ($it)" } ?: "")
+            }
+        }
+
     FoodSearchListItem(
-        headline = nameSelector.select(food.name),
+        headline = headline,
         proteins = measurementFacts.proteins.value,
         carbohydrates = measurementFacts.carbohydrates.value,
         fats = measurementFacts.fats.value,
