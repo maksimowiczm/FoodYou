@@ -4,8 +4,8 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.profile.ProfileUiState
@@ -23,8 +23,8 @@ import kotlinx.coroutines.launch
 
 class EditProfileViewModel(
     private val profileId: ProfileId,
+    private val appAccountManager: AppAccountManager,
     private val accountRepository: AccountRepository,
-    private val observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
     logger: Logger,
 ) : ViewModel() {
     private val logger = logger.withTag(TAG)
@@ -33,8 +33,8 @@ class EditProfileViewModel(
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     val canDelete: StateFlow<Boolean> =
-        observePrimaryAccountUseCase
-            .observe()
+        appAccountManager
+            .observeAppAccount()
             .map { it.profiles.size > 1 }
             .stateIn(
                 scope = viewModelScope,
@@ -48,7 +48,7 @@ class EditProfileViewModel(
     init {
         viewModelScope.launch {
             logger.d { "Loading primary account to edit profile" }
-            val account = observePrimaryAccountUseCase.observe().first()
+            val account = appAccountManager.observeAppAccount().first()
             val profile = account.profiles.find { it.id == profileId }
 
             if (profile != null) {
@@ -81,7 +81,7 @@ class EditProfileViewModel(
         _uiState.value = state.copy(isLocked = true)
 
         viewModelScope.launch {
-            val account = observePrimaryAccountUseCase.observe().first()
+            val account = appAccountManager.observeAppAccount().first()
 
             account.updateProfile(profileId) {
                 it.apply {
@@ -106,7 +106,7 @@ class EditProfileViewModel(
         _uiState.value = state.copy(isLocked = true)
 
         viewModelScope.launch {
-            val account = observePrimaryAccountUseCase.observe().first()
+            val account = appAccountManager.observeAppAccount().first()
 
             account.removeProfile(profileId)
 

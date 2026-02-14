@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.food.search.userfood
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.account.domain.AccountManager
+import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchParameters
 import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchRepository
@@ -17,12 +17,12 @@ import kotlinx.coroutines.launch
 
 internal class UserFoodSearchViewModel(
     private val repository: UserFoodSearchRepository,
-    accountManager: AccountManager,
+    appAccountManager: AppAccountManager,
 ) : ViewModel() {
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
 
     private val searchParameters =
-        combine(accountManager.observePrimaryAccountId().filterNotNull(), searchQuery) {
+        combine(appAccountManager.observeAppAccountId().filterNotNull(), searchQuery) {
             accountId,
             query ->
             UserFoodSearchParameters(

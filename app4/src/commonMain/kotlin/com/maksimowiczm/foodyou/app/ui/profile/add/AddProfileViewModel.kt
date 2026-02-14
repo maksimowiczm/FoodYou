@@ -3,14 +3,12 @@ package com.maksimowiczm.foodyou.app.ui.profile.add
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
-import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
+import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.profile.ProfileUiState
-import com.maksimowiczm.foodyou.common.fold
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,9 +18,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class AddProfileViewModel(
-    private val accountManager: AccountManager,
+    private val appAccountManager: AppAccountManager,
     private val accountRepository: AccountRepository,
-    private val observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
     logger: Logger,
 ) : ViewModel() {
     private val logger = logger.withTag(TAG)
@@ -48,7 +45,7 @@ class AddProfileViewModel(
 
         viewModelScope.launch {
             logger.d { "Loading primary account to add profile" }
-            val account = observePrimaryAccountUseCase.observe().first()
+            val account = appAccountManager.observeAppAccount().first()
 
             val profile =
                 Profile.new(
@@ -60,12 +57,9 @@ class AddProfileViewModel(
 
             accountRepository.save(account)
 
-            accountManager
-                .setPrimaryProfileId(profile.id)
-                .fold(
-                    onSuccess = { _uiEventBus.send(AddProfileEvent.Created(profile.id)) },
-                    onError = { error("Failed to set primary profile: $it") },
-                )
+            appAccountManager.setAppProfileId(profile.id)
+
+            _uiEventBus.send(AddProfileEvent.Created(profile.id))
         }
     }
 

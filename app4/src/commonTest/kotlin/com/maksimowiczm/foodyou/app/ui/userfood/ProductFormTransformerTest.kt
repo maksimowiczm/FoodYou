@@ -1,8 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.userfood
 
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import com.maksimowiczm.foodyou.account.domain.Account
-import com.maksimowiczm.foodyou.account.domain.AccountSettings
 import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.account.domain.testAccount
 import com.maksimowiczm.foodyou.common.domain.Language
@@ -15,7 +13,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 
@@ -28,11 +25,11 @@ class ProductFormTransformerTest {
         }
 
     private fun createProductFormTransformer(
-        account: Account = testAccount(),
+        energyFormat: EnergyFormat = testAccount().settings.energyFormat,
         selector: FoodNameSelector = createDefaultSelector(),
     ): ProductFormTransformer =
         ProductFormTransformer(
-            observePrimaryAccountUseCase = { flowOf(account) },
+            getAppAccountEnergyFormatUseCase = { energyFormat },
             foodNameSelector = selector,
         )
 
@@ -169,11 +166,7 @@ class ProductFormTransformerTest {
 
     @Test
     fun should_convert_kilojoules_to_kilocalories() = runTest {
-        val account =
-            testAccount(
-                settings = AccountSettings.default.copy(energyFormat = EnergyFormat.Kilojoules)
-            )
-        val transformer = createProductFormTransformer(account = account)
+        val transformer = createProductFormTransformer(energyFormat = EnergyFormat.Kilojoules)
         val form = ProductFormState()
         form.fillRequiredFields()
         form.energy.textFieldState.setTextAndPlaceCursorAtEnd("836.8") // 836.8 kJ = ~200 kcal

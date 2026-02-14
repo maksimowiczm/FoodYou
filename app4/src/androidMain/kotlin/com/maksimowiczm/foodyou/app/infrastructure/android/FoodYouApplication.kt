@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Build
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.R
-import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
+import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.di.initKoin
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
 import kotlinx.coroutines.CoroutineName
@@ -39,13 +39,8 @@ class FoodYouApplication : Application() {
         }
 
         coroutineScope.launch {
-            val accountManager = koin.get<AccountManager>()
-            val accountId = accountManager.observePrimaryAccountId().first()
-
-            if (accountId == null) {
-                return@launch
-            }
-
+            val accountManager = koin.get<AppAccountManager>()
+            val accountId = accountManager.observeAppAccountId().first() ?: return@launch
             koin.get<AppLaunchUseCase>().execute(accountId)
         }
     }

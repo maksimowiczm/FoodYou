@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.app.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import kotlin.time.Duration.Companion.seconds
@@ -24,19 +24,19 @@ import kotlinx.coroutines.runBlocking
 
 @OptIn(FlowPreview::class)
 class AppViewModel(
+    private val appAccountManager: AppAccountManager,
     private val accountRepository: AccountRepository,
-    private val observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
 ) : ViewModel() {
     private val primaryAccount: StateFlow<Account?> =
-        observePrimaryAccountUseCase
-            .observe()
+        appAccountManager
+            .observeAppAccount()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
                 initialValue =
                     runBlocking {
-                        observePrimaryAccountUseCase
-                            .observe()
+                        appAccountManager
+                            .observeAppAccount()
                             .map<Account, Account?> { it }
                             .timeout(1.seconds)
                             .catch {

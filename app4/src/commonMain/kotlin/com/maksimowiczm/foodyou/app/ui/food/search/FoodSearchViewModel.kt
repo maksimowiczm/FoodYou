@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.food.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.account.domain.AccountManager
+import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchHistoryRepository
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQueryParser
@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -28,7 +29,7 @@ internal class FoodSearchViewModel(
     private val searchQueryParser: SearchQueryParser,
     private val searchHistoryRepository: FoodSearchHistoryRepository,
     private val clock: Clock,
-    accountManager: AccountManager,
+    appAccountManager: AppAccountManager,
 ) : ViewModel() {
     val filter: StateFlow<FoodFilter>
         field = MutableStateFlow(FoodFilter())
@@ -52,8 +53,9 @@ internal class FoodSearchViewModel(
     }
 
     val searchHistory =
-        accountManager
-            .observePrimaryProfileId()
+        appAccountManager
+            .observeAppProfileId()
+            .filterNotNull()
             .flatMapLatest { profileId ->
                 searchHistoryRepository.observe(profileId).map { history ->
                     history.history.map { it.query.query }
@@ -69,7 +71,7 @@ internal class FoodSearchViewModel(
         searchQuery
             .filterIsInstance<SearchQuery.NotBlank>()
             .onEach {
-                val profileId = accountManager.observePrimaryProfileId().first()
+                val profileId = appAccountManager.observeAppProfileId().filterNotNull().first()
                 val history = searchHistoryRepository.observe(profileId).first()
                 history.recordSearchQuery(it, clock)
                 searchHistoryRepository.save(history)

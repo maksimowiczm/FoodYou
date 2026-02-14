@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.userfood.edit
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
+import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
@@ -24,13 +24,14 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class EditProductViewModel(
-    private val observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
+    private val appAccountManager: AppAccountManager,
     private val userProductRepository: UserProductRepository,
     private val foodNameSelector: FoodNameSelector,
     private val productFormTransformer: ProductFormTransformer,
@@ -347,7 +348,7 @@ class EditProductViewModel(
                 isLiquid) =
                 productFormTransformer.validate(form)
 
-            val accountId = observePrimaryAccountUseCase.observe().first().localAccountId
+            val accountId = appAccountManager.observeAppAccountId().filterNotNull().first()
 
             userProductRepository.edit(
                 identity = identity,

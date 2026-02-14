@@ -6,10 +6,8 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
-import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
-import com.maksimowiczm.foodyou.account.domain.observePrimaryProfile
+import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.common.domain.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
@@ -36,8 +34,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class FavoriteFoodSearchViewModel(
-    private val accountManager: AccountManager,
-    observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
+    private val appAccountManager: AppAccountManager,
     private val foodDataCentralRepository: FoodDataCentralRepository,
     private val openFoodFactsRepository: OpenFoodFactsRepository,
     private val userProductRepository: UserProductRepository,
@@ -46,12 +43,9 @@ internal class FavoriteFoodSearchViewModel(
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
 
     private val favoriteFoodIdentities =
-        observePrimaryAccountUseCase
-            .observe()
-            .flatMapLatest(accountManager::observePrimaryProfile)
-            .map { it.favoriteFoods }
+        appAccountManager.observeAppProfile().map { it.favoriteFoods }
 
-    private val accountId = accountManager.observePrimaryAccountId().filterNotNull()
+    private val accountId = appAccountManager.observeAppAccountId().filterNotNull()
 
     private val foodList: Flow<List<RemoteData<Any>>> =
         combine(favoriteFoodIdentities, accountId) { list, accountId ->

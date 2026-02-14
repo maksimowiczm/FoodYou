@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.app.ui.userfood
 
-import com.maksimowiczm.foodyou.account.application.ObservePrimaryAccountUseCase
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Barcode
@@ -14,10 +13,9 @@ import com.maksimowiczm.foodyou.common.domain.food.Ounces
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductSource
-import kotlinx.coroutines.flow.first
 
 class ProductFormTransformer(
-    private val observePrimaryAccountUseCase: ObservePrimaryAccountUseCase,
+    private val getAppAccountEnergyFormatUseCase: GetAppAccountEnergyFormatUseCase,
     private val foodNameSelector: FoodNameSelector,
 ) {
     data class Result(
@@ -35,7 +33,7 @@ class ProductFormTransformer(
     suspend fun validate(form: ProductFormState): Result {
         require(form.isValid) { "Form is not valid" }
 
-        val energyFormat = observePrimaryAccountUseCase.observe().first().settings.energyFormat
+        val energyFormat = getAppAccountEnergyFormatUseCase.getAppAccountEnergyFormat()
         val language = foodNameSelector.select()
 
         val name = form.name.value
