@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.userfood.domain.product
 
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
@@ -12,7 +11,7 @@ interface UserProductRepository {
     suspend fun create(
         name: FoodName,
         brand: UserProductBrand?,
-        barcode: Barcode?,
+        barcode: UserProductBarcode?,
         note: UserFoodNote?,
         imageUri: String?,
         source: UserProductSource?,
@@ -27,7 +26,7 @@ interface UserProductRepository {
         identity: UserProductIdentity,
         name: FoodName,
         brand: UserProductBrand?,
-        barcode: Barcode?,
+        barcode: UserProductBarcode?,
         note: UserFoodNote?,
         imageUri: String?,
         source: UserProductSource?,

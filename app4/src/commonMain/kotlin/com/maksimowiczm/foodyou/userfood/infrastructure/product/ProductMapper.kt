@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.userfood.infrastructure.product
 import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.Grams
@@ -14,6 +13,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsMapper
 import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnit
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductSource
@@ -62,7 +62,7 @@ internal class ProductMapper {
                 identity = UserProductIdentity(entity.uuid, LocalAccountId(entity.accountId)),
                 name = name,
                 brand = brand,
-                barcode = entity.barcode?.let { Barcode(it) },
+                barcode = entity.barcode?.let { UserProductBarcode(it) },
                 note = entity.note?.let { UserFoodNote(it) },
                 image = entity.photoPath?.let { Image.Local(it) },
                 source = entity.source?.let { UserProductSource(it) },
@@ -78,7 +78,7 @@ internal class ProductMapper {
         uuid: String,
         name: FoodName,
         brand: UserProductBrand?,
-        barcode: Barcode?,
+        barcode: UserProductBarcode?,
         note: UserFoodNote?,
         imagePath: String?,
         source: UserProductSource?,

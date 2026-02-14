@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.app.ui.userfood
 
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
@@ -11,6 +10,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Ounces
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductSource
 
@@ -21,7 +21,7 @@ class ProductFormTransformer(
     data class Result(
         val foodName: FoodName,
         val brand: UserProductBrand?,
-        val barcode: Barcode?,
+        val barcode: UserProductBarcode?,
         val note: UserFoodNote?,
         val source: UserProductSource?,
         val nutritionFacts: NutritionFacts,
@@ -64,7 +64,7 @@ class ProductFormTransformer(
 
         val brand = form.brand.value?.let { UserProductBrand(it) }
 
-        val barcode = form.barcode.value?.let { Barcode(it) }
+        val barcode = form.barcode.value?.let { UserProductBarcode(it) }
 
         val note = form.note.value?.let { UserFoodNote(it) }
 

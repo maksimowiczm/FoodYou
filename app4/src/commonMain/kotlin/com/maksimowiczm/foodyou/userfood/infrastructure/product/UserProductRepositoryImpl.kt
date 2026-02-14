@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.Barcode
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.event.EventBus
@@ -10,6 +9,7 @@ import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.directory
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
@@ -41,7 +41,7 @@ internal class UserProductRepositoryImpl(
     override suspend fun create(
         name: FoodName,
         brand: UserProductBrand?,
-        barcode: Barcode?,
+        barcode: UserProductBarcode?,
         note: UserFoodNote?,
         imageUri: String?,
         source: UserProductSource?,
@@ -100,7 +100,7 @@ internal class UserProductRepositoryImpl(
         identity: UserProductIdentity,
         name: FoodName,
         brand: UserProductBrand?,
-        barcode: Barcode?,
+        barcode: UserProductBarcode?,
         note: UserFoodNote?,
         imageUri: String?,
         source: UserProductSource?,
