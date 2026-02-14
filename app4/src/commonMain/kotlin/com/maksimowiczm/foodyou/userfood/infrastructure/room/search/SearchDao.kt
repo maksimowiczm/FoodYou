@@ -9,30 +9,17 @@ import kotlinx.coroutines.flow.Flow
 internal interface SearchDao {
     @Query(
         """
-        SELECT
-            $PRODUCT_SELECT,
-            NULL as recipeId
+        SELECT $PRODUCT_SELECT
         FROM Product p
         WHERE accountId = :accountId
-        ORDER BY CASE :languageCode
-            WHEN 'en-US' THEN name_en
-            WHEN 'ca-ES' THEN name_ca
-            WHEN 'da-DK' THEN name_da
-            WHEN 'de-DE' THEN name_de
-            WHEN 'es-ES' THEN name_es
-            WHEN 'fr-FR' THEN name_fr
-            WHEN 'it-IT' THEN name_it
-            WHEN 'hu-HU' THEN name_hu
-            WHEN 'nl-NL' THEN name_nl
-            WHEN 'pl-PL' THEN name_pl
-            WHEN 'pt-BR' THEN `name_pt-BR`
-            WHEN 'tr-TR' THEN name_tr
-            WHEN 'ru-RU' THEN name_ru
-            WHEN 'uk-UA' THEN name_uk
-            WHEN 'ar-SA' THEN name_ar
-            WHEN 'zh-CN' THEN `name_zh-CN`
-            ELSE name_en
-        END ASC, name_en
+
+        UNION ALL
+
+        SELECT $RECIPE_SELECT
+        FROM Recipe r
+        WHERE accountId = :accountId
+
+        ORDER BY simpleName
         """
     )
     fun getPagingSource(
@@ -42,41 +29,32 @@ internal interface SearchDao {
 
     @Query(
         """
-        SELECT COUNT(*)
-        FROM Product
-        WHERE accountId = :accountId
+        SELECT 
+            (SELECT COUNT(*) FROM Product WHERE accountId = :accountId) +
+            (SELECT COUNT(*) FROM Recipe WHERE accountId = :accountId)
         """
     )
     fun observeCount(accountId: String): Flow<Int>
 
     @Query(
         """
-        SELECT
-            $PRODUCT_SELECT,
-            NULL as recipeId
-        FROM Product p JOIN ProductFts fts ON sqliteId = fts.rowid
+        SELECT $PRODUCT_SELECT
+        FROM Product p 
+        JOIN ProductFts fts ON p.sqliteId = fts.rowid
         WHERE 
-            accountId = :accountId AND
+            p.accountId = :accountId AND
             ProductFts MATCH :query || '*'
-        ORDER BY CASE :languageCode
-            WHEN 'en-US' THEN fts.name_en
-            WHEN 'ca-ES' THEN fts.name_ca
-            WHEN 'da-DK' THEN fts.name_da
-            WHEN 'de-DE' THEN fts.name_de
-            WHEN 'es-ES' THEN fts.name_es
-            WHEN 'fr-FR' THEN fts.name_fr
-            WHEN 'it-IT' THEN fts.name_it
-            WHEN 'hu-HU' THEN fts.name_hu
-            WHEN 'nl-NL' THEN fts.name_nl
-            WHEN 'pl-PL' THEN fts.name_pl
-            WHEN 'pt-BR' THEN fts.`name_pt-BR`
-            WHEN 'tr-TR' THEN fts.name_tr
-            WHEN 'ru-RU' THEN fts.name_ru
-            WHEN 'uk-UA' THEN fts.name_uk
-            WHEN 'ar-SA' THEN fts.name_ar
-            WHEN 'zh-CN' THEN fts.`name_zh-CN`
-            ELSE fts.name_en
-        END ASC, fts.name_en
+
+        UNION ALL
+
+        SELECT $RECIPE_SELECT
+        FROM Recipe r 
+        JOIN RecipeFts fts ON r.sqliteId = fts.rowid
+        WHERE 
+            r.accountId = :accountId AND
+            RecipeFts MATCH :query || '*'
+
+        ORDER BY simpleName
         """
     )
     fun getPagingSourceByQuery(
@@ -87,11 +65,15 @@ internal interface SearchDao {
 
     @Query(
         """
-        SELECT COUNT(*)
-        FROM Product uf JOIN ProductFts fts ON uf.sqliteId = fts.rowid
-        WHERE 
-            uf.accountId = :accountId AND
-            ProductFts MATCH :query || '*'
+        SELECT 
+            (SELECT COUNT(*) 
+             FROM Product p 
+             JOIN ProductFts fts ON p.sqliteId = fts.rowid
+             WHERE p.accountId = :accountId AND ProductFts MATCH :query || '*') +
+            (SELECT COUNT(*) 
+             FROM Recipe r 
+             JOIN RecipeFts fts ON r.sqliteId = fts.rowid
+             WHERE r.accountId = :accountId AND RecipeFts MATCH :query || '*')
         """
     )
     fun observeCountByQuery(query: String, accountId: String): Flow<Int>
@@ -99,31 +81,12 @@ internal interface SearchDao {
     @Query(
         """
         SELECT
-            $PRODUCT_SELECT,
-            NULL as recipeId
+            $PRODUCT_SELECT
         FROM Product p
         WHERE 
             accountId = :accountId AND
             barcode LIKE '%' || :barcode || '%'
-        ORDER BY CASE :languageCode
-            WHEN 'en-US' THEN name_en
-            WHEN 'ca-ES' THEN name_ca
-            WHEN 'da-DK' THEN name_da
-            WHEN 'de-DE' THEN name_de
-            WHEN 'es-ES' THEN name_es
-            WHEN 'fr-FR' THEN name_fr
-            WHEN 'it-IT' THEN name_it
-            WHEN 'hu-HU' THEN name_hu
-            WHEN 'nl-NL' THEN name_nl
-            WHEN 'pl-PL' THEN name_pl
-            WHEN 'pt-BR' THEN `name_pt-BR`
-            WHEN 'tr-TR' THEN name_tr
-            WHEN 'ru-RU' THEN name_ru
-            WHEN 'uk-UA' THEN name_uk
-            WHEN 'ar-SA' THEN name_ar
-            WHEN 'zh-CN' THEN `name_zh-CN`
-            ELSE name_en
-        END ASC, name_en
+        ORDER BY simpleName
         """
     )
     fun getPagingSourceByBarcode(
@@ -150,14 +113,17 @@ p.sqliteId as p_sqliteId,
 p.uuid as p_uuid,
 p.name_en as p_name_en,
 p.name_ca as p_name_ca,
+p.name_cs as p_name_cs,
 p.name_da as p_name_da,
 p.name_de as p_name_de,
 p.name_es as p_name_es,
 p.name_fr as p_name_fr,
 p.name_it as p_name_it,
+p.name_id as p_name_id,
 p.name_hu as p_name_hu,
 p.name_nl as p_name_nl,
 p.name_pl as p_name_pl,
+p.name_sl as p_name_sl,
 p.`name_pt-BR` as `p_name_pt-BR`,
 p.name_tr as p_name_tr,
 p.name_ru as p_name_ru,
@@ -173,18 +139,18 @@ p.accountId as p_accountId,
 p.energy as p_energy,
 p.proteins as p_proteins,
 p.fats as p_fats,
-p.saturatedFats as p_saturatedfats,
-p.transfats as p_transfats,
-p.monounsaturatedFats as p_monounsaturatedfats,
-p.polyunsaturatedFats as p_polyunsaturatedfats,
+p.saturatedFats as p_saturatedFats,
+p.transFats as p_transFats,
+p.monounsaturatedFats as p_monounsaturatedFats,
+p.polyunsaturatedFats as p_polyunsaturatedFats,
 p.omega3 as p_omega3,
 p.omega6 as p_omega6,
 p.carbohydrates as p_carbohydrates,
 p.sugars as p_sugars,
-p.addedSugars as p_addedsugars,
-p.dietaryFiber as p_dietaryfiber,
-p.solubleFiber as p_solublefiber,
-p.insolubleFiber as p_insolublefiber,
+p.addedSugars as p_addedSugars,
+p.dietaryFiber as p_dietaryFiber,
+p.solubleFiber as p_solubleFiber,
+p.insolubleFiber as p_insolubleFiber,
 p.salt as p_salt,
 p.cholesterol as p_cholesterol,
 p.caffeine as p_caffeine,
@@ -219,5 +185,125 @@ p.package_unit as p_package_unit,
 p.serving_type as p_serving_type,
 p.serving_amount as p_serving_amount,
 p.serving_unit as p_serving_unit,
-p.isLiquid as p_isLiquid
+NULL as p_isLiquid,
+NULL as r_sqliteId,
+NULL as r_uuid,
+NULL as r_name,
+NULL as r_servings,
+NULL as r_imagePath,
+NULL as r_note,
+NULL as r_finalWeight,
+NULL as r_accountId,
+CASE :languageCode
+    WHEN 'en-US' THEN p.name_en
+    WHEN 'ca-ES' THEN p.name_ca
+    WHEN 'cs-CZ' THEN p.name_cs
+    WHEN 'da-DK' THEN p.name_da
+    WHEN 'de-DE' THEN p.name_de
+    WHEN 'es-ES' THEN p.name_es
+    WHEN 'fr-FR' THEN p.name_fr
+    WHEN 'it-IT' THEN p.name_it
+    WHEN 'id-ID' THEN p.name_id
+    WHEN 'hu-HU' THEN p.name_hu
+    WHEN 'nl-NL' THEN p.name_nl
+    WHEN 'pl-PL' THEN p.name_pl
+    WHEN 'sl-SI' THEN p.name_sl
+    WHEN 'pt-BR' THEN p.`name_pt-BR`
+    WHEN 'tr-TR' THEN p.name_tr
+    WHEN 'ru-RU' THEN p.name_ru
+    WHEN 'uk-UA' THEN p.name_uk
+    WHEN 'ar-SA' THEN p.name_ar
+    WHEN 'zh-CN' THEN p.`name_zh-CN`
+    ELSE p.name_en
+END as simpleName
+"""
+
+private const val RECIPE_SELECT =
+    """
+NULL as p_sqliteId,
+NULL as p_uuid,
+NULL as p_name_en,
+NULL as p_name_ca,
+NULL as p_name_cs,
+NULL as p_name_da,
+NULL as p_name_de,
+NULL as p_name_es,
+NULL as p_name_fr,
+NULL as p_name_it,
+NULL as p_name_id,
+NULL as p_name_hu,
+NULL as p_name_nl,
+NULL as p_name_pl,
+NULL as p_name_sl,
+NULL as `p_name_pt-BR`,
+NULL as p_name_tr,
+NULL as p_name_ru,
+NULL as p_name_uk,
+NULL as p_name_ar,
+NULL as `p_name_zh-CN`,
+NULL as p_brand,
+NULL as p_barcode,
+NULL as p_note,
+NULL as p_source,
+NULL as p_photoPath,
+NULL as p_accountId,
+NULL as p_energy,
+NULL as p_proteins,
+NULL as p_fats,
+NULL as p_saturatedFats,
+NULL as p_transFats,
+NULL as p_monounsaturatedFats,
+NULL as p_polyunsaturatedFats,
+NULL as p_omega3,
+NULL as p_omega6,
+NULL as p_carbohydrates,
+NULL as p_sugars,
+NULL as p_addedSugars,
+NULL as p_dietaryFiber,
+NULL as p_solubleFiber,
+NULL as p_insolubleFiber,
+NULL as p_salt,
+NULL as p_cholesterol,
+NULL as p_caffeine,
+NULL as p_manganese,
+NULL as p_magnesium,
+NULL as p_potassium,
+NULL as p_calcium,
+NULL as p_copper,
+NULL as p_zinc,
+NULL as p_sodium,
+NULL as p_iron,
+NULL as p_phosphorus,
+NULL as p_selenium,
+NULL as p_iodine,
+NULL as p_chromium,
+NULL as p_vitaminA,
+NULL as p_vitaminB1,
+NULL as p_vitaminB2,
+NULL as p_vitaminB3,
+NULL as p_vitaminB5,
+NULL as p_vitaminB6,
+NULL as p_vitaminB7,
+NULL as p_vitaminB9,
+NULL as p_vitaminB12,
+NULL as p_vitaminC,
+NULL as p_vitaminD,
+NULL as p_vitaminE,
+NULL as p_vitaminK,
+NULL as p_package_type,
+NULL as p_package_amount,
+NULL as p_package_unit,
+NULL as p_serving_type,
+NULL as p_serving_amount,
+NULL as p_serving_unit,
+NULL as p_isLiquid,
+r.sqliteId as r_sqliteId,
+r.uuid as r_uuid,
+r.name as r_name,
+r.servings as r_servings,
+r.imagePath as r_imagePath,
+r.note as r_note,
+r.finalWeight as r_finalWeight,
+r.accountId as r_accountId,
+r.name as simpleName
 """
