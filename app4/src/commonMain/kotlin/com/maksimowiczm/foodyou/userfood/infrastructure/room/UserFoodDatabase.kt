@@ -8,14 +8,15 @@ import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnitConverter
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductDao
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductFts
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.QuantityTypeConverter
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.FoodReferenceTypeConverter
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeDao
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeFts
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeQuantityTypeConverter
+import com.maksimowiczm.foodyou.userfood.infrastructure.room.search.ProductFts
+import com.maksimowiczm.foodyou.userfood.infrastructure.room.search.RecipeFts
+import com.maksimowiczm.foodyou.userfood.infrastructure.room.search.SearchDao
 
 @Database(
     entities =
@@ -39,6 +40,7 @@ import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeQuanti
 internal abstract class UserFoodDatabase : RoomDatabase() {
     abstract val productDao: ProductDao
     abstract val recipeDao: RecipeDao
+    abstract val searchDao: SearchDao
 
     companion object {
         const val VERSION = 1

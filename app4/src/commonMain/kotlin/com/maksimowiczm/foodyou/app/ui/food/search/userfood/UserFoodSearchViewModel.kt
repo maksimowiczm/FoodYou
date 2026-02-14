@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.account.domain.AccountManager
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodRepository
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodSearchParameters
+import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchParameters
+import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -16,21 +16,18 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class UserFoodSearchViewModel(
-    private val repository: UserFoodRepository,
+    private val repository: UserFoodSearchRepository,
     accountManager: AccountManager,
 ) : ViewModel() {
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
 
     private val searchParameters =
-        combine(
-            accountManager.observePrimaryAccountId().filterNotNull(),
-            accountManager.observePrimaryProfileId().filterNotNull(),
-            searchQuery,
-        ) { accountId, profileId, query ->
+        combine(accountManager.observePrimaryAccountId().filterNotNull(), searchQuery) {
+            accountId,
+            query ->
             UserFoodSearchParameters(
                 query = query,
-                accountId = accountId,
-                profileId = profileId,
+                localAccountId = accountId,
                 orderBy = UserFoodSearchParameters.OrderBy.NameAscending,
             )
         }

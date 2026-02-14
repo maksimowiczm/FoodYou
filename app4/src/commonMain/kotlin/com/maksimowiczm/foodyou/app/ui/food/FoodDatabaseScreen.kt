@@ -103,7 +103,7 @@ fun FoodDatabaseScreen(
                 FoodSearchApp(
                     onFoodDataCentralProduct = onFoodDataCentralProduct,
                     onOpenFoodFactsProduct = onOpenFoodFactsProduct,
-                    onUserFood = onUserFood,
+                    onUserProduct = onUserFood,
                     onBack = onBack,
                     query = query,
                 )

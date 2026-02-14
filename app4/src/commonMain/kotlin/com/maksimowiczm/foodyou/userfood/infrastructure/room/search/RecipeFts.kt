@@ -1,8 +1,9 @@
-package com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe
+package com.maksimowiczm.foodyou.userfood.infrastructure.room.search
 
 import androidx.room.Entity
 import androidx.room.Fts4
 import androidx.room.FtsOptions
+import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeEntity
 
 @Fts4(
     contentEntity = RecipeEntity::class,

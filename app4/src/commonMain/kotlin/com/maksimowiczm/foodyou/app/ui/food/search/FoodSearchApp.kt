@@ -51,8 +51,8 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserFoodProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -66,7 +66,7 @@ import org.koin.core.parameter.parametersOf
 internal fun FoodSearchApp(
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
-    onUserFood: (UserProductIdentity) -> Unit,
+    onUserProduct: (UserProductIdentity) -> Unit,
     query: String?,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
@@ -105,7 +105,7 @@ internal fun FoodSearchApp(
         onBack = onBack,
         onFoodDataCentralProduct = onFoodDataCentralProduct,
         onOpenFoodFactsProduct = onOpenFoodFactsProduct,
-        onUserFood = onUserFood,
+        onUserProduct = onUserProduct,
         modifier = modifier,
     )
 }
@@ -119,7 +119,7 @@ private fun FoodSearchApp(
     onBack: (() -> Unit)?,
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
-    onUserFood: (UserFoodProductIdentity) -> Unit,
+    onUserProduct: (UserProductIdentity) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FoodSearchViewModel = koinViewModel(),
 ) {
@@ -229,7 +229,7 @@ private fun FoodSearchApp(
                     lazyListState = appState.listStates.favorite,
                     onClick = {
                         when (it) {
-                            is UserProduct -> onUserFood(it.identity)
+                            is UserProduct -> onUserProduct(it.identity)
                             is OpenFoodFactsProduct -> onOpenFoodFactsProduct(it.identity)
                             is FoodDataCentralProduct -> onFoodDataCentralProduct(it.identity)
                         }
@@ -242,7 +242,7 @@ private fun FoodSearchApp(
                     shimmer = shimmer,
                     contentPadding = contentPadding,
                     lazyListState = appState.listStates.yourFood,
-                    onClick = { onUserFood(it.identity) },
+                    onUserProduct = { onUserProduct(it.identity) },
                     modifier = Modifier.fillMaxSize(),
                 )
 

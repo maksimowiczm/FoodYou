@@ -28,6 +28,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Grams
 import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.fold
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
+import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchItem
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.map
@@ -39,7 +40,7 @@ internal fun UserFoodSearchApp(
     shimmer: Shimmer,
     contentPadding: PaddingValues,
     lazyListState: LazyListState,
-    onClick: (UserProduct) -> Unit,
+    onUserProduct: (UserProduct) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UserFoodSearchViewModel = koinViewModel(),
 ) {
@@ -51,13 +52,27 @@ internal fun UserFoodSearchApp(
 
     Box(modifier) {
         LazyColumn(state = lazyListState, contentPadding = contentPadding) {
-            items(count = pages.itemCount, key = pages.itemKey { it.identity.toString() }) { i ->
+            items(
+                count = pages.itemCount,
+                key =
+                    pages.itemKey {
+                        when (it) {
+                            is UserFoodSearchItem.Product -> it.product.identity.toString()
+                            is UserFoodSearchItem.Recipe -> TODO()
+                        }
+                    },
+            ) { i ->
                 when (val food = pages[i]) {
                     null -> FoodListItemSkeleton(shimmer)
                     else ->
                         FoodSearchListItem(
                             food = food,
-                            onClick = { onClick(food) },
+                            onClick = {
+                                when (food) {
+                                    is UserFoodSearchItem.Product -> onUserProduct(food.product)
+                                    is UserFoodSearchItem.Recipe -> TODO()
+                                }
+                            },
                             shimmer = shimmer,
                         )
                 }
@@ -84,6 +99,26 @@ internal fun UserFoodSearchApp(
                     .padding(top = contentPadding.calculateTopPadding())
             )
         }
+    }
+}
+
+@Composable
+private fun FoodSearchListItem(
+    food: UserFoodSearchItem,
+    onClick: () -> Unit,
+    shimmer: Shimmer,
+    modifier: Modifier = Modifier,
+) {
+    when (food) {
+        is UserFoodSearchItem.Product ->
+            FoodSearchListItem(
+                food = food.product,
+                onClick = onClick,
+                shimmer = shimmer,
+                modifier = modifier,
+            )
+
+        is UserFoodSearchItem.Recipe -> TODO()
     }
 }
 
