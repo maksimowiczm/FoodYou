@@ -25,11 +25,12 @@ internal fun NutrientsHeader(
     fats: Float?,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
+    enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val rotationState =
         animateFloatAsState(
-            targetValue = if (expanded) 180f else 0f,
+            targetValue = if (expanded || !enabled) 180f else 0f,
             animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
         )
 
@@ -62,6 +63,7 @@ internal fun NutrientsHeader(
         IconButton(
             onClick = { onExpandedChange(!expanded) },
             shapes = IconButtonDefaults.shapes(),
+            enabled = enabled,
         ) {
             Icon(
                 imageVector = Icons.Outlined.KeyboardArrowUp,

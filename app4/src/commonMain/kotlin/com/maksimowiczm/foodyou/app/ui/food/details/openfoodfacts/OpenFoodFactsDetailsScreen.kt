@@ -37,6 +37,7 @@ import com.maksimowiczm.foodyou.app.ui.food.details.NutrientsHeader
 import com.maksimowiczm.foodyou.app.ui.food.details.RefreshMenu
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
@@ -112,6 +113,11 @@ private fun OpenFoodFactsDetailsScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     var expanded by rememberNutrientExpanded()
+    val expandingEnabled =
+        remember(nutritionFacts) {
+            if (nutritionFacts == null) return@remember false
+            (Nutrient.all - Nutrient.basic).any { nutritionFacts[it].value != null }
+        }
 
     Scaffold(
         modifier = modifier,
@@ -188,8 +194,10 @@ private fun OpenFoodFactsDetailsScreen(
                             fats = nutritionFacts.fats.value?.toFloat(),
                             expanded = expanded,
                             onExpandedChange = { expanded = it },
+                            enabled = expandingEnabled,
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                         )
+                        Spacer(Modifier.height(8.dp))
                         Spacer(Modifier.height(8.dp))
                         NutrientList(
                             facts = nutritionFacts,
