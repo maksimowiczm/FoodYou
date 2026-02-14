@@ -211,6 +211,53 @@ data class NutritionFacts(
             chromium = chromium + other.chromium,
         )
 
+    operator fun get(nutrient: Nutrient): NutrientValue =
+        when (nutrient) {
+            Nutrient.Proteins -> proteins
+            Nutrient.Carbohydrates -> carbohydrates
+            Nutrient.Energy -> energy
+            Nutrient.Fats -> fats
+            Nutrient.SaturatedFats -> saturatedFats
+            Nutrient.TransFats -> transFats
+            Nutrient.MonounsaturatedFats -> monounsaturatedFats
+            Nutrient.PolyunsaturatedFats -> polyunsaturatedFats
+            Nutrient.Omega3 -> omega3
+            Nutrient.Omega6 -> omega6
+            Nutrient.Sugars -> sugars
+            Nutrient.AddedSugars -> addedSugars
+            Nutrient.DietaryFiber -> dietaryFiber
+            Nutrient.SolubleFiber -> solubleFiber
+            Nutrient.InsolubleFiber -> insolubleFiber
+            Nutrient.Salt -> salt
+            Nutrient.Cholesterol -> cholesterol
+            Nutrient.Caffeine -> caffeine
+            Nutrient.VitaminA -> vitaminA
+            Nutrient.VitaminB1 -> vitaminB1
+            Nutrient.VitaminB2 -> vitaminB2
+            Nutrient.VitaminB3 -> vitaminB3
+            Nutrient.VitaminB5 -> vitaminB5
+            Nutrient.VitaminB6 -> vitaminB6
+            Nutrient.VitaminB7 -> vitaminB7
+            Nutrient.VitaminB9 -> vitaminB9
+            Nutrient.VitaminB12 -> vitaminB12
+            Nutrient.VitaminC -> vitaminC
+            Nutrient.VitaminD -> vitaminD
+            Nutrient.VitaminE -> vitaminE
+            Nutrient.VitaminK -> vitaminK
+            Nutrient.Manganese -> manganese
+            Nutrient.Magnesium -> magnesium
+            Nutrient.Potassium -> potassium
+            Nutrient.Calcium -> calcium
+            Nutrient.Copper -> copper
+            Nutrient.Zinc -> zinc
+            Nutrient.Sodium -> sodium
+            Nutrient.Iron -> iron
+            Nutrient.Phosphorus -> phosphorus
+            Nutrient.Selenium -> selenium
+            Nutrient.Iodine -> iodine
+            Nutrient.Chromium -> chromium
+        }
+
     companion object {
         /**
          * Creates a NutritionFacts instance requiring all nutrient values to be explicitly
