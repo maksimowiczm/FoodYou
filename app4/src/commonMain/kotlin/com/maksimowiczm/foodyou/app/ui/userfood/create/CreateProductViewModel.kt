@@ -2,45 +2,46 @@ package com.maksimowiczm.foodyou.app.ui.userfood.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
-import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState.Companion.optionalField
-import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState.Companion.requiredField
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
-import com.maksimowiczm.foodyou.app.ui.userfood.QuantityUnit
-import com.maksimowiczm.foodyou.app.ui.userfood.ValuesPer
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class CreateProductViewModel(
+internal class CreateProductViewModel(
     private val appAccountManager: AppAccountManager,
     private val userProductRepository: UserProductRepository,
     private val productFormTransformer: ProductFormTransformer,
 ) : ViewModel() {
 
+    val energyFormat =
+        appAccountManager
+            .observeAppAccount()
+            .map { it.settings.energyFormat }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = EnergyFormat.Kilocalories,
+            )
+
     private val eventBus = Channel<CreateProductEvent>()
     val uiEvents = eventBus.receiveAsFlow()
 
-    private val _productFormState = MutableStateFlow(ProductFormState())
-    val productFormState = _productFormState.asStateFlow()
+    val isLocked: StateFlow<Boolean>
+        field = MutableStateFlow(false)
 
-    private val _isLocked = MutableStateFlow(false)
-    val isLocked = _isLocked.asStateFlow()
-
-    fun create() {
-        val isLocked = _isLocked.value
-        if (isLocked) return
-        _isLocked.value = true
-
-        val form = _productFormState.value.copy()
-        require(form.isValid) { "Form is not valid" }
+    fun create(form: ProductFormState) {
+        if (!isLocked.compareAndSet(expect = false, update = true)) return
 
         viewModelScope.launch {
             val (
@@ -53,7 +54,7 @@ class CreateProductViewModel(
                 servingQuantity,
                 packageQuantity,
                 isLiquid,
-            ) = productFormTransformer.validate(form)
+            ) = productFormTransformer.transform(form)
 
             val accountId = appAccountManager.observeAppAccountId().filterNotNull().first()
 
@@ -73,43 +74,5 @@ class CreateProductViewModel(
 
             eventBus.send(CreateProductEvent.Created(id))
         }
-    }
-
-    fun setImage(uri: String?) {
-        _productFormState.value = _productFormState.value.copy(imageUri = uri)
-    }
-
-    fun setValuesPer(valuesPer: ValuesPer) {
-        _productFormState.update {
-            val servingQuantity =
-                when (valuesPer) {
-                    ValuesPer.Serving ->
-                        requiredField(textFieldState = it.servingQuantity.textFieldState)
-
-                    else -> optionalField(textFieldState = it.servingQuantity.textFieldState)
-                }
-
-            val packageQuantity =
-                when (valuesPer) {
-                    ValuesPer.Package ->
-                        requiredField(textFieldState = it.packageQuantity.textFieldState)
-
-                    else -> optionalField(textFieldState = it.packageQuantity.textFieldState)
-                }
-
-            it.copy(
-                valuesPer = valuesPer,
-                servingQuantity = servingQuantity,
-                packageQuantity = packageQuantity,
-            )
-        }
-    }
-
-    fun setServingUnit(unit: QuantityUnit) {
-        _productFormState.update { it.copy(servingUnit = unit) }
-    }
-
-    fun setPackageUnit(unit: QuantityUnit) {
-        _productFormState.update { it.copy(packageUnit = unit) }
     }
 }

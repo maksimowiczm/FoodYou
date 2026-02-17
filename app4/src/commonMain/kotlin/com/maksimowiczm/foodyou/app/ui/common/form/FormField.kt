@@ -1,40 +1,46 @@
 package com.maksimowiczm.foodyou.app.ui.common.form
 
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.*
+import io.konform.validation.Validation
+import io.konform.validation.ValidationBuilder
+import io.konform.validation.ValidationResult
 
 @Stable
-class FormField<T, E>(
+class FormField(
     val textFieldState: TextFieldState = TextFieldState(),
-    val parser: Parser<T, E>,
-    val validator: Validator<T, E> = defaultValidator(),
+    private val defaultValue: String? = null,
+    val validation: Validation<String?> = Validation {},
 ) {
-    private val parseResult by derivedStateOf { parser(textFieldState.text.toString()) }
-
-    private val validationError by derivedStateOf {
-        when (val res = parseResult) {
-            is ParseResult.Success -> validator(res.value)
-            is ParseResult.Failure -> null
-        }
+    private val validationResult: ValidationResult<String?> by derivedStateOf {
+        validation(textFieldState.text.takeIf { it.isNotBlank() }?.toString())
     }
 
-    val error by derivedStateOf {
-        when (val res = parseResult) {
-            is ParseResult.Success -> validationError
-            is ParseResult.Failure -> res.error
-        }
+    val error: String? by derivedStateOf { validationResult.errors.firstOrNull()?.message }
+
+    val isModified: Boolean by derivedStateOf {
+        textFieldState.text.takeIf { it.isNotBlank() } != defaultValue
     }
+}
 
-    val isValid by derivedStateOf { error == null }
+@Composable
+fun rememberFormField(
+    vararg keys: Any?,
+    defaultValue: String? = null,
+    validationBuilder: ValidationBuilder<String?>.() -> Unit,
+): FormField {
+    val textFieldState = rememberTextFieldState(defaultValue ?: "")
+    val validation = remember(*keys, validationBuilder) { Validation { validationBuilder() } }
+    return remember(*keys, defaultValue, textFieldState, validation) {
+        FormField(textFieldState, defaultValue, validation)
+    }
+}
 
-    /**
-     * The parsed value of the form field, or null if parsing failed. Value is present even if there
-     * is a validation error.
-     */
-    val value by derivedStateOf {
-        when (val res = parseResult) {
-            is ParseResult.Success -> res.value
-            is ParseResult.Failure -> null
-        }
+@Composable
+fun rememberFormField(defaultValue: String? = null): FormField {
+    val textFieldState = rememberTextFieldState(defaultValue ?: "")
+    return remember(textFieldState, defaultValue) {
+        FormField(textFieldState, defaultValue, Validation {})
     }
 }

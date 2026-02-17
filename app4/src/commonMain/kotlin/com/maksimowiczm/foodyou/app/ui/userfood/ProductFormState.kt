@@ -1,342 +1,597 @@
 package com.maksimowiczm.foodyou.app.ui.userfood
 
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
-import com.maksimowiczm.foodyou.app.ui.common.form.Parser
-import com.maksimowiczm.foodyou.app.ui.common.form.nonBlankStringValidator
-import com.maksimowiczm.foodyou.app.ui.common.form.nonNegativeDoubleValidator
-import com.maksimowiczm.foodyou.app.ui.common.form.nullableDoubleParser
-import com.maksimowiczm.foodyou.app.ui.common.form.nullableStringParser
-import com.maksimowiczm.foodyou.app.ui.common.form.numericStringValidator
-import com.maksimowiczm.foodyou.app.ui.common.form.stringParser
-import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.app.ui.common.form.rememberFormField
+import com.maksimowiczm.foodyou.app.ui.common.form.validateDouble
+import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
+import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
+import com.maksimowiczm.foodyou.common.domain.food.Grams
+import com.maksimowiczm.foodyou.common.domain.food.Milliliters
+import com.maksimowiczm.foodyou.common.domain.food.Ounces
+import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import foodyou.app.generated.resources.*
+import io.konform.validation.ifPresent
 import org.jetbrains.compose.resources.stringResource
 
-enum class FormFieldError {
-    NotANumber,
-    NotABarcode,
-    NegativeValue,
-    Required;
+@Stable
+internal class ProductFormState(
+    val name: FormField,
+    val brand: FormField,
+    val barcode: FormField,
+    private val defaultImageUri: String?,
+    val imageUri: MutableState<String?>,
+    private val defaultValuesPer: ValuesPer,
+    val valuesPer: MutableState<ValuesPer>,
+    val servingQuantity: FormField,
+    private val defaultServingUnit: QuantityUnit,
+    val servingUnit: MutableState<QuantityUnit>,
+    val packageQuantity: FormField,
+    private val defaultPackageUnit: QuantityUnit,
+    val packageUnit: MutableState<QuantityUnit>,
+    val note: FormField,
+    val proteins: FormField,
+    val carbohydrates: FormField,
+    val fats: FormField,
+    val energy: FormField,
+    private val defaultEnergyFormat: EnergyFormat,
+    val energyFormat: MutableState<EnergyFormat>,
+    val saturatedFats: FormField,
+    val transFats: FormField,
+    val monounsaturatedFats: FormField,
+    val polyunsaturatedFats: FormField,
+    val omega3: FormField,
+    val omega6: FormField,
+    val sugars: FormField,
+    val addedSugars: FormField,
+    val solubleFiber: FormField,
+    val insolubleFiber: FormField,
+    val dietaryFiber: FormField,
+    val salt: FormField,
+    val cholesterolMilli: FormField,
+    val caffeineMilli: FormField,
+    val vitaminAMicro: FormField,
+    val vitaminB1Milli: FormField,
+    val vitaminB2Milli: FormField,
+    val vitaminB3Milli: FormField,
+    val vitaminB5Milli: FormField,
+    val vitaminB6Milli: FormField,
+    val vitaminB7Micro: FormField,
+    val vitaminB9Micro: FormField,
+    val vitaminB12Micro: FormField,
+    val vitaminCMilli: FormField,
+    val vitaminDMicro: FormField,
+    val vitaminEMilli: FormField,
+    val vitaminKMicro: FormField,
+    val manganeseMilli: FormField,
+    val magnesiumMilli: FormField,
+    val potassiumMilli: FormField,
+    val calciumMilli: FormField,
+    val copperMilli: FormField,
+    val zincMilli: FormField,
+    val sodiumMilli: FormField,
+    val ironMilli: FormField,
+    val phosphorusMilli: FormField,
+    val seleniumMicro: FormField,
+    val iodineMicro: FormField,
+    val chromiumMicro: FormField,
+) {
+    val isModified: Boolean by derivedStateOf {
+        name.isModified ||
+            brand.isModified ||
+            barcode.isModified ||
+            imageUri.value != defaultImageUri ||
+            valuesPer.value != defaultValuesPer ||
+            servingQuantity.isModified ||
+            servingUnit.value != defaultServingUnit ||
+            packageQuantity.isModified ||
+            packageUnit.value != defaultPackageUnit ||
+            note.isModified ||
+            proteins.isModified ||
+            carbohydrates.isModified ||
+            fats.isModified ||
+            energy.isModified ||
+            energyFormat.value != defaultEnergyFormat ||
+            saturatedFats.isModified ||
+            transFats.isModified ||
+            monounsaturatedFats.isModified ||
+            polyunsaturatedFats.isModified ||
+            omega3.isModified ||
+            omega6.isModified ||
+            sugars.isModified ||
+            addedSugars.isModified ||
+            dietaryFiber.isModified ||
+            solubleFiber.isModified ||
+            insolubleFiber.isModified ||
+            salt.isModified ||
+            cholesterolMilli.isModified ||
+            caffeineMilli.isModified ||
+            vitaminAMicro.isModified ||
+            vitaminB1Milli.isModified ||
+            vitaminB2Milli.isModified ||
+            vitaminB3Milli.isModified ||
+            vitaminB5Milli.isModified ||
+            vitaminB6Milli.isModified ||
+            vitaminB7Micro.isModified ||
+            vitaminB9Micro.isModified ||
+            vitaminB12Micro.isModified ||
+            vitaminCMilli.isModified ||
+            vitaminDMicro.isModified ||
+            vitaminEMilli.isModified ||
+            vitaminKMicro.isModified ||
+            manganeseMilli.isModified ||
+            magnesiumMilli.isModified ||
+            potassiumMilli.isModified ||
+            calciumMilli.isModified ||
+            copperMilli.isModified ||
+            zincMilli.isModified ||
+            sodiumMilli.isModified ||
+            ironMilli.isModified ||
+            phosphorusMilli.isModified ||
+            seleniumMicro.isModified ||
+            iodineMicro.isModified ||
+            chromiumMicro.isModified
+    }
 
-    @Composable
-    fun stringResource(): String {
-        return when (this) {
-            NotANumber -> stringResource(Res.string.error_invalid_number)
-            NotABarcode -> stringResource(Res.string.error_not_a_barcode)
-            NegativeValue -> stringResource(Res.string.error_value_cannot_be_negative)
-            Required -> "* " + stringResource(Res.string.neutral_required)
-        }
+    val isValid: Boolean by derivedStateOf {
+        name.error == null &&
+            name.textFieldState.text.isNotBlank() &&
+            brand.error == null &&
+            barcode.error == null &&
+            servingQuantity.error == null &&
+            packageQuantity.error == null &&
+            note.error == null &&
+            proteins.error == null &&
+            carbohydrates.error == null &&
+            fats.error == null &&
+            energy.error == null &&
+            saturatedFats.error == null &&
+            transFats.error == null &&
+            monounsaturatedFats.error == null &&
+            polyunsaturatedFats.error == null &&
+            omega3.error == null &&
+            omega6.error == null &&
+            sugars.error == null &&
+            addedSugars.error == null &&
+            dietaryFiber.error == null &&
+            solubleFiber.error == null &&
+            insolubleFiber.error == null &&
+            salt.error == null &&
+            cholesterolMilli.error == null &&
+            caffeineMilli.error == null &&
+            vitaminAMicro.error == null &&
+            vitaminB1Milli.error == null &&
+            vitaminB2Milli.error == null &&
+            vitaminB3Milli.error == null &&
+            vitaminB5Milli.error == null &&
+            vitaminB6Milli.error == null &&
+            vitaminB7Micro.error == null &&
+            vitaminB9Micro.error == null &&
+            vitaminB12Micro.error == null &&
+            vitaminCMilli.error == null &&
+            vitaminDMicro.error == null &&
+            vitaminEMilli.error == null &&
+            vitaminKMicro.error == null &&
+            manganeseMilli.error == null &&
+            magnesiumMilli.error == null &&
+            potassiumMilli.error == null &&
+            calciumMilli.error == null &&
+            copperMilli.error == null &&
+            zincMilli.error == null &&
+            sodiumMilli.error == null &&
+            ironMilli.error == null &&
+            phosphorusMilli.error == null &&
+            seleniumMicro.error == null &&
+            iodineMicro.error == null &&
+            chromiumMicro.error == null
+    }
+
+    val hasSuggestedFieldsFilled: Boolean by derivedStateOf {
+        proteins.textFieldState.text.isNotBlank() &&
+            carbohydrates.textFieldState.text.isNotBlank() &&
+            fats.textFieldState.text.isNotBlank() &&
+            energy.textFieldState.text.isNotBlank()
     }
 }
 
-enum class ValuesPer {
-    Grams100,
-    Milliliters100,
-    Serving,
-    Package;
+@Composable
+internal fun rememberProductForm2State(
+    product: UserProduct? = null,
+    defaultEnergyUnit: EnergyFormat = EnergyFormat.Kilocalories,
+): ProductFormState {
+    val required = stringResource(Res.string.neutral_required)
+    val notABarcode = stringResource(Res.string.error_not_a_barcode)
+    val invalidNumber = stringResource(Res.string.error_invalid_number)
+    val valueMustBePositive = stringResource(Res.string.error_value_must_be_positive)
 
-    @Composable
-    fun stringResource(): String =
-        when (this) {
-            Grams100 -> "100 " + stringResource(Res.string.unit_gram_short)
-            Milliliters100 -> "100 " + stringResource(Res.string.unit_milliliter_short)
-            Serving ->
-                stringResource(
-                    Res.string.x_times_y,
-                    "1",
-                    stringResource(Res.string.product_serving),
-                )
+    val nameSelector = LocalFoodNameSelector.current
 
-            Package ->
-                stringResource(
-                    Res.string.x_times_y,
-                    "1",
-                    stringResource(Res.string.product_package),
-                )
+    val name =
+        rememberFormField(defaultValue = product?.name?.let(nameSelector::select)) {
+            constrain(required) { !it.isNullOrBlank() }
         }
-}
+    val brand = rememberFormField(product?.brand?.value)
+    val barcode =
+        rememberFormField(product?.barcode?.value) {
+            ifPresent { constrain(notABarcode) { it.all(Char::isDigit) } }
+        }
+    val imageUri = rememberSaveable(product) { mutableStateOf(product?.image?.uri) }
+    val defaultValuesPer =
+        if (product?.isLiquid == true) ValuesPer.Milliliters100 else ValuesPer.Grams100
+    val valuesPer = rememberSaveable(defaultValuesPer) { mutableStateOf(defaultValuesPer) }
 
-enum class QuantityUnit {
-    Gram,
-    Milliliter,
-    Ounce,
-    FluidOunce,
-}
+    val (defaultServingQuantity, defaultServingUnit) =
+        remember(product) {
+            if (product?.servingQuantity == null) {
+                return@remember null to QuantityUnit.Gram
+            }
 
-@Stable
-data class ProductFormState(
-    val name: FormField<String, FormFieldError> =
-        FormField(
-            parser = stringParser(),
-            validator = nonBlankStringValidator(onEmpty = { FormFieldError.Required }),
-        ),
-    val defaultName: String = "",
-    val brand: FormField<String?, Unit> = FormField(parser = nullableStringParser()),
-    val defaultBrand: String? = null,
-    val barcode: FormField<String?, FormFieldError> =
-        FormField(
-            parser = nullableStringParser(),
-            validator = numericStringValidator(onNotNumeric = { FormFieldError.NotABarcode }),
-        ),
-    val defaultBarcode: String? = null,
-    val note: FormField<String?, Unit> = FormField(parser = nullableStringParser()),
-    val defaultNote: String? = null,
-    val source: FormField<String?, Unit> = FormField(parser = nullableStringParser()),
-    val defaultSource: String? = null,
-    val proteins: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultProteins: Double? = null,
-    val fats: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultFats: Double? = null,
-    val carbohydrates: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultCarbohydrates: Double? = null,
-    val energy: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultEnergy: Double? = null,
-    val saturatedFats: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultSaturatedFats: Double? = null,
-    val transFats: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultTransFats: Double? = null,
-    val monounsaturatedFats: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultMonounsaturatedFats: Double? = null,
-    val polyunsaturatedFats: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultPolyunsaturatedFats: Double? = null,
-    val omega3: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultOmega3: Double? = null,
-    val omega6: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultOmega6: Double? = null,
-    val sugars: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultSugars: Double? = null,
-    val addedSugars: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultAddedSugars: Double? = null,
-    val dietaryFiber: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultDietaryFiber: Double? = null,
-    val solubleFiber: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultSolubleFiber: Double? = null,
-    val insolubleFiber: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultInsolubleFiber: Double? = null,
-    val salt: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultSalt: Double? = null,
-    val cholesterolMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultCholesterolMilli: Double? = null,
-    val caffeineMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultCaffeineMilli: Double? = null,
-    val vitaminAMicro: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminAMicro: Double? = null,
-    val vitaminB1Milli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminB1Milli: Double? = null,
-    val vitaminB2Milli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminB2Milli: Double? = null,
-    val vitaminB3Milli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminB3Milli: Double? = null,
-    val vitaminB5Milli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminB5Milli: Double? = null,
-    val vitaminB6Milli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminB6Milli: Double? = null,
-    val vitaminB7Micro: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminB7Micro: Double? = null,
-    val vitaminB9Micro: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminB9Micro: Double? = null,
-    val vitaminB12Micro: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminB12Micro: Double? = null,
-    val vitaminCMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminCMilli: Double? = null,
-    val vitaminDMicro: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminDMicro: Double? = null,
-    val vitaminEMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminEMilli: Double? = null,
-    val vitaminKMicro: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultVitaminKMicro: Double? = null,
-    val manganeseMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultManganeseMilli: Double? = null,
-    val magnesiumMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultMagnesiumMilli: Double? = null,
-    val potassiumMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultPotassiumMilli: Double? = null,
-    val calciumMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultCalciumMilli: Double? = null,
-    val copperMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultCopperMilli: Double? = null,
-    val zincMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultZincMilli: Double? = null,
-    val sodiumMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultSodiumMilli: Double? = null,
-    val ironMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultIronMilli: Double? = null,
-    val phosphorusMilli: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultPhosphorusMilli: Double? = null,
-    val seleniumMicro: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultSeleniumMicro: Double? = null,
-    val iodineMicro: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultIodineMicro: Double? = null,
-    val chromiumMicro: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultChromiumMicro: Double? = null,
-    val imageUri: String? = null,
-    val defaultImageUri: String? = null,
-    val valuesPer: ValuesPer = defaultValuesPer,
-    val servingQuantity: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultServingQuantity: Double? = null,
-    val servingUnit: QuantityUnit = QuantityUnit.Gram,
-    val defaultServingUnit: QuantityUnit = QuantityUnit.Gram,
-    val packageQuantity: FormField<Double?, FormFieldError> = optionalField(),
-    val defaultPackageQuantity: Double? = null,
-    val packageUnit: QuantityUnit = QuantityUnit.Gram,
-    val defaultPackageUnit: QuantityUnit = QuantityUnit.Gram,
-) {
-    private val fieldsWithDefaults =
-        listOf(
-            name to defaultName,
-            brand to defaultBrand,
-            barcode to defaultBarcode,
-            note to defaultNote,
-            source to defaultSource,
-            proteins to defaultProteins,
-            fats to defaultFats,
-            carbohydrates to defaultCarbohydrates,
-            energy to defaultEnergy,
-            saturatedFats to defaultSaturatedFats,
-            transFats to defaultTransFats,
-            monounsaturatedFats to defaultMonounsaturatedFats,
-            polyunsaturatedFats to defaultPolyunsaturatedFats,
-            omega3 to defaultOmega3,
-            omega6 to defaultOmega6,
-            sugars to defaultSugars,
-            addedSugars to defaultAddedSugars,
-            dietaryFiber to defaultDietaryFiber,
-            solubleFiber to defaultSolubleFiber,
-            insolubleFiber to defaultInsolubleFiber,
-            salt to defaultSalt,
-            cholesterolMilli to defaultCholesterolMilli,
-            caffeineMilli to defaultCaffeineMilli,
-            vitaminAMicro to defaultVitaminAMicro,
-            vitaminB1Milli to defaultVitaminB1Milli,
-            vitaminB2Milli to defaultVitaminB2Milli,
-            vitaminB3Milli to defaultVitaminB3Milli,
-            vitaminB5Milli to defaultVitaminB5Milli,
-            vitaminB6Milli to defaultVitaminB6Milli,
-            vitaminB7Micro to defaultVitaminB7Micro,
-            vitaminB9Micro to defaultVitaminB9Micro,
-            vitaminB12Micro to defaultVitaminB12Micro,
-            vitaminCMilli to defaultVitaminCMilli,
-            vitaminDMicro to defaultVitaminDMicro,
-            vitaminEMilli to defaultVitaminEMilli,
-            vitaminKMicro to defaultVitaminKMicro,
-            manganeseMilli to defaultManganeseMilli,
-            magnesiumMilli to defaultMagnesiumMilli,
-            potassiumMilli to defaultPotassiumMilli,
-            calciumMilli to defaultCalciumMilli,
-            copperMilli to defaultCopperMilli,
-            zincMilli to defaultZincMilli,
-            sodiumMilli to defaultSodiumMilli,
-            ironMilli to defaultIronMilli,
-            phosphorusMilli to defaultPhosphorusMilli,
-            seleniumMicro to defaultSeleniumMicro,
-            iodineMicro to defaultIodineMicro,
-            chromiumMicro to defaultChromiumMicro,
-            servingQuantity to defaultServingQuantity,
-            packageQuantity to defaultPackageQuantity,
+            when (product.servingQuantity) {
+                is AbsoluteQuantity.Volume ->
+                    when (product.servingQuantity.volume) {
+                        is FluidOunces ->
+                            product.servingQuantity.volume.fluidOunces to QuantityUnit.FluidOunce
+
+                        is Milliliters ->
+                            product.servingQuantity.volume.milliliters to QuantityUnit.Milliliter
+                    }
+
+                is AbsoluteQuantity.Weight ->
+                    when (product.servingQuantity.weight) {
+                        is Grams -> product.servingQuantity.weight.grams to QuantityUnit.Gram
+                        is Ounces -> product.servingQuantity.weight.ounces to QuantityUnit.Ounce
+                    }
+            }
+        }
+    val servingQuantity =
+        rememberFormField(
+            valuesPer.value,
+            defaultValue = defaultServingQuantity?.formatClipZeros(),
+        ) {
+            dynamic {
+                if (valuesPer.value == ValuesPer.Serving) {
+                    constrain(required) { !it.isNullOrBlank() }
+                }
+            }
+            ifPresent {
+                validateDouble {
+                    constrain(invalidNumber) { it != null }
+                    constrain(valueMustBePositive) { it?.let { it > 0 } ?: true }
+                }
+            }
+        }
+    val servingUnit = rememberSaveable(defaultServingUnit) { mutableStateOf(defaultServingUnit) }
+
+    val (defaultPackageQuantity, defaultPackageUnit) =
+        remember(product) {
+            if (product?.packageQuantity == null) {
+                return@remember null to QuantityUnit.Gram
+            }
+
+            when (product.packageQuantity) {
+                is AbsoluteQuantity.Volume ->
+                    when (product.packageQuantity.volume) {
+                        is FluidOunces ->
+                            product.packageQuantity.volume.fluidOunces to QuantityUnit.FluidOunce
+
+                        is Milliliters ->
+                            product.packageQuantity.volume.milliliters to QuantityUnit.Milliliter
+                    }
+
+                is AbsoluteQuantity.Weight ->
+                    when (product.packageQuantity.weight) {
+                        is Grams -> product.packageQuantity.weight.grams to QuantityUnit.Gram
+
+                        is Ounces -> product.packageQuantity.weight.ounces to QuantityUnit.Ounce
+                    }
+            }
+        }
+    val packageQuantity =
+        rememberFormField(
+            valuesPer.value,
+            defaultValue = defaultPackageQuantity?.formatClipZeros(),
+        ) {
+            dynamic {
+                if (valuesPer.value == ValuesPer.Package) {
+                    constrain(required) { !it.isNullOrBlank() }
+                }
+            }
+            ifPresent {
+                validateDouble {
+                    constrain(invalidNumber) { it != null }
+                    constrain(valueMustBePositive) { it?.let { it > 0 } ?: true }
+                }
+            }
+        }
+    val packageUnit = rememberSaveable(defaultPackageUnit) { mutableStateOf(defaultPackageUnit) }
+
+    val note = rememberFormField()
+
+    val proteins =
+        rememberDoubleFormField2(product?.nutritionFacts?.proteins?.value?.formatClipZeros())
+    val carbs =
+        rememberDoubleFormField2(product?.nutritionFacts?.carbohydrates?.value?.formatClipZeros())
+    val fats = rememberDoubleFormField2(product?.nutritionFacts?.fats?.value?.formatClipZeros())
+    val energy = rememberDoubleFormField2(product?.nutritionFacts?.energy?.value?.formatClipZeros())
+    val energyUnit = rememberSaveable(defaultEnergyUnit) { mutableStateOf(defaultEnergyUnit) }
+
+    val saturatedFats =
+        rememberDoubleFormField2(product?.nutritionFacts?.saturatedFats?.value?.formatClipZeros())
+    val transFats =
+        rememberDoubleFormField2(product?.nutritionFacts?.transFats?.value?.formatClipZeros())
+    val monounsaturatedFats =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.monounsaturatedFats?.value?.formatClipZeros()
+        )
+    val polyunsaturatedFats =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.polyunsaturatedFats?.value?.formatClipZeros()
+        )
+    val omega3 = rememberDoubleFormField2(product?.nutritionFacts?.omega3?.value?.formatClipZeros())
+    val omega6 = rememberDoubleFormField2(product?.nutritionFacts?.omega6?.value?.formatClipZeros())
+
+    val sugars = rememberDoubleFormField2(product?.nutritionFacts?.sugars?.value?.formatClipZeros())
+    val addedSugars =
+        rememberDoubleFormField2(product?.nutritionFacts?.addedSugars?.value?.formatClipZeros())
+    val dietaryFiber =
+        rememberDoubleFormField2(product?.nutritionFacts?.dietaryFiber?.value?.formatClipZeros())
+    val solubleFiber =
+        rememberDoubleFormField2(product?.nutritionFacts?.solubleFiber?.value?.formatClipZeros())
+    val insolubleFiber =
+        rememberDoubleFormField2(product?.nutritionFacts?.insolubleFiber?.value?.formatClipZeros())
+
+    val salt = rememberDoubleFormField2(product?.nutritionFacts?.salt?.value?.formatClipZeros())
+    val cholesterolMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.cholesterol?.value?.div(1_000)?.formatClipZeros()
+        )
+    val caffeineMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.caffeine?.value?.div(1_000)?.formatClipZeros()
         )
 
-    private val fields = fieldsWithDefaults.map { it.first }
+    val vitaminAMicro =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminA?.value?.div(1_000_000)?.formatClipZeros()
+        )
+    val vitaminB1Milli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminB1?.value?.div(1_000)?.formatClipZeros()
+        )
+    val vitaminB2Milli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminB2?.value?.div(1_000)?.formatClipZeros()
+        )
+    val vitaminB3Milli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminB3?.value?.div(1_000)?.formatClipZeros()
+        )
+    val vitaminB5Milli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminB5?.value?.div(1_000)?.formatClipZeros()
+        )
+    val vitaminB6Milli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminB6?.value?.div(1_000)?.formatClipZeros()
+        )
+    val vitaminB7Micro =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminB7?.value?.div(1_000_000)?.formatClipZeros()
+        )
+    val vitaminB9Micro =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminB9?.value?.div(1_000_000)?.formatClipZeros()
+        )
+    val vitaminB12Micro =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminB12?.value?.div(1_000_000)?.formatClipZeros()
+        )
+    val vitaminCMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminC?.value?.div(1_000)?.formatClipZeros()
+        )
+    val vitaminDMicro =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminD?.value?.div(1_000_000)?.formatClipZeros()
+        )
+    val vitaminEMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminE?.value?.div(1_000)?.formatClipZeros()
+        )
+    val vitaminKMicro =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.vitaminK?.value?.div(1_000_000)?.formatClipZeros()
+        )
 
-    val isValid by derivedStateOf { fields.all { it.isValid } }
+    val manganeseMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.manganese?.value?.div(1_000)?.formatClipZeros()
+        )
+    val magnesiumMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.magnesium?.value?.div(1_000)?.formatClipZeros()
+        )
+    val potassiumMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.potassium?.value?.div(1_000)?.formatClipZeros()
+        )
+    val calciumMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.calcium?.value?.div(1_000)?.formatClipZeros()
+        )
+    val copperMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.copper?.value?.div(1_000)?.formatClipZeros()
+        )
+    val zincMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.zinc?.value?.div(1_000)?.formatClipZeros()
+        )
+    val sodiumMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.sodium?.value?.div(1_000)?.formatClipZeros()
+        )
+    val ironMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.iron?.value?.div(1_000)?.formatClipZeros()
+        )
+    val phosphorusMilli =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.phosphorus?.value?.div(1_000)?.formatClipZeros()
+        )
+    val seleniumMicro =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.selenium?.value?.div(1_000_000)?.formatClipZeros()
+        )
+    val iodineMicro =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.iodine?.value?.div(1_000_000)?.formatClipZeros()
+        )
+    val chromiumMicro =
+        rememberDoubleFormField2(
+            product?.nutritionFacts?.chromium?.value?.div(1_000_000)?.formatClipZeros()
+        )
 
-    val isModified by derivedStateOf {
-        fieldsWithDefaults.any { (field, defaultValue) -> field.value != defaultValue } ||
-            imageUri != defaultImageUri ||
-            valuesPer != defaultValuesPer ||
-            servingUnit != defaultServingUnit ||
-            packageUnit != defaultPackageUnit
-    }
-
-    companion object {
-        private val defaultValuesPer = ValuesPer.Grams100
-
-        fun optionalField(
-            textFieldState: TextFieldState = TextFieldState(),
-            parser: Parser<Double?, FormFieldError> =
-                nullableDoubleParser(onNotANumber = { FormFieldError.NotANumber }),
-            validator: (Double?) -> FormFieldError? =
-                nonNegativeDoubleValidator(onNegative = { FormFieldError.NegativeValue }),
-        ): FormField<Double?, FormFieldError> =
-            FormField(textFieldState = textFieldState, parser = parser, validator = validator)
-
-        fun requiredField(
-            textFieldState: TextFieldState = TextFieldState(),
-            parser: Parser<Double?, FormFieldError> =
-                nullableDoubleParser(onNotANumber = { FormFieldError.NotANumber }),
-            validator: (Double?) -> FormFieldError? =
-                nonNegativeDoubleValidator(
-                    onNegative = { FormFieldError.NegativeValue },
-                    onNull = { FormFieldError.Required },
-                ),
-        ): FormField<Double?, FormFieldError> =
-            FormField(textFieldState = textFieldState, parser = parser, validator = validator)
+    return remember(
+        name,
+        brand,
+        barcode,
+        product,
+        imageUri,
+        defaultValuesPer,
+        valuesPer,
+        servingQuantity,
+        defaultServingUnit,
+        servingUnit,
+        packageQuantity,
+        defaultPackageUnit,
+        packageUnit,
+        note,
+        proteins,
+        carbs,
+        fats,
+        energy,
+        defaultEnergyUnit,
+        energyUnit,
+        saturatedFats,
+        transFats,
+        monounsaturatedFats,
+        polyunsaturatedFats,
+        omega3,
+        omega6,
+        sugars,
+        addedSugars,
+        solubleFiber,
+        insolubleFiber,
+        dietaryFiber,
+        salt,
+        cholesterolMilli,
+        caffeineMilli,
+        vitaminAMicro,
+        vitaminB1Milli,
+        vitaminB2Milli,
+        vitaminB3Milli,
+        vitaminB5Milli,
+        vitaminB6Milli,
+        vitaminB7Micro,
+        vitaminB9Micro,
+        vitaminB12Micro,
+        vitaminCMilli,
+        vitaminDMicro,
+        vitaminEMilli,
+        vitaminKMicro,
+        manganeseMilli,
+        magnesiumMilli,
+        potassiumMilli,
+        calciumMilli,
+        copperMilli,
+        zincMilli,
+        sodiumMilli,
+        ironMilli,
+        phosphorusMilli,
+        seleniumMicro,
+        iodineMicro,
+        chromiumMicro,
+    ) {
+        ProductFormState(
+            name = name,
+            brand = brand,
+            barcode = barcode,
+            defaultImageUri = product?.image?.uri,
+            imageUri = imageUri,
+            defaultValuesPer = defaultValuesPer,
+            valuesPer = valuesPer,
+            servingQuantity = servingQuantity,
+            defaultServingUnit = defaultServingUnit,
+            servingUnit = servingUnit,
+            packageQuantity = packageQuantity,
+            defaultPackageUnit = defaultPackageUnit,
+            packageUnit = packageUnit,
+            note = note,
+            proteins = proteins,
+            carbohydrates = carbs,
+            fats = fats,
+            energy = energy,
+            defaultEnergyFormat = defaultEnergyUnit,
+            energyFormat = energyUnit,
+            saturatedFats = saturatedFats,
+            transFats = transFats,
+            monounsaturatedFats = monounsaturatedFats,
+            polyunsaturatedFats = polyunsaturatedFats,
+            omega3 = omega3,
+            omega6 = omega6,
+            sugars = sugars,
+            addedSugars = addedSugars,
+            solubleFiber = solubleFiber,
+            insolubleFiber = insolubleFiber,
+            dietaryFiber = dietaryFiber,
+            salt = salt,
+            cholesterolMilli = cholesterolMilli,
+            caffeineMilli = caffeineMilli,
+            vitaminAMicro = vitaminAMicro,
+            vitaminB1Milli = vitaminB1Milli,
+            vitaminB2Milli = vitaminB2Milli,
+            vitaminB3Milli = vitaminB3Milli,
+            vitaminB5Milli = vitaminB5Milli,
+            vitaminB6Milli = vitaminB6Milli,
+            vitaminB7Micro = vitaminB7Micro,
+            vitaminB9Micro = vitaminB9Micro,
+            vitaminB12Micro = vitaminB12Micro,
+            vitaminCMilli = vitaminCMilli,
+            vitaminDMicro = vitaminDMicro,
+            vitaminEMilli = vitaminEMilli,
+            vitaminKMicro = vitaminKMicro,
+            manganeseMilli = manganeseMilli,
+            magnesiumMilli = magnesiumMilli,
+            potassiumMilli = potassiumMilli,
+            calciumMilli = calciumMilli,
+            copperMilli = copperMilli,
+            zincMilli = zincMilli,
+            sodiumMilli = sodiumMilli,
+            ironMilli = ironMilli,
+            phosphorusMilli = phosphorusMilli,
+            seleniumMicro = seleniumMicro,
+            iodineMicro = iodineMicro,
+            chromiumMicro = chromiumMicro,
+        )
     }
 }
 
-fun ProductFormState.toNutritionFacts(
-    multiplier: Double,
-    energyFormat: EnergyFormat,
-): NutritionFacts {
-    // Energy MUST be in kilocalories internally
-    val kcal =
-        when (energyFormat) {
-            EnergyFormat.Kilocalories -> energy.value
-            EnergyFormat.Kilojoules -> energy.value?.let { it / 4.184 }
+@Composable
+private fun rememberDoubleFormField2(defaultValue: String?): FormField {
+    val invalidNumber = stringResource(Res.string.error_invalid_number)
+    val valueMustBePositive = stringResource(Res.string.error_value_must_be_positive)
+
+    return rememberFormField(defaultValue = defaultValue) {
+        ifPresent {
+            validateDouble {
+                constrain(invalidNumber) { it != null }
+                constrain(valueMustBePositive) { it?.let { it > 0 } ?: true }
+            }
         }
-
-    return NutritionFacts.requireAll(
-        proteins = proteins.value?.multiplier(multiplier).toNutrientValue(),
-        carbohydrates = carbohydrates.value?.multiplier(multiplier).toNutrientValue(),
-        fats = fats.value?.multiplier(multiplier).toNutrientValue(),
-        energy = kcal?.multiplier(multiplier).toNutrientValue(),
-        saturatedFats = saturatedFats.value?.multiplier(multiplier).toNutrientValue(),
-        transFats = transFats.value?.multiplier(multiplier).toNutrientValue(),
-        monounsaturatedFats = monounsaturatedFats.value?.multiplier(multiplier).toNutrientValue(),
-        polyunsaturatedFats = polyunsaturatedFats.value?.multiplier(multiplier).toNutrientValue(),
-        omega3 = omega3.value?.multiplier(multiplier).toNutrientValue(),
-        omega6 = omega6.value?.multiplier(multiplier).toNutrientValue(),
-        sugars = sugars.value?.multiplier(multiplier).toNutrientValue(),
-        addedSugars = addedSugars.value?.multiplier(multiplier).toNutrientValue(),
-        dietaryFiber = dietaryFiber.value?.multiplier(multiplier).toNutrientValue(),
-        solubleFiber = solubleFiber.value?.multiplier(multiplier).toNutrientValue(),
-        insolubleFiber = insolubleFiber.value?.multiplier(multiplier).toNutrientValue(),
-        salt = salt.value?.multiplier(multiplier).toNutrientValue(),
-        cholesterol =
-            (cholesterolMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        caffeine = (caffeineMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        vitaminA = (vitaminAMicro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
-        vitaminB1 = (vitaminB1Milli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        vitaminB2 = (vitaminB2Milli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        vitaminB3 = (vitaminB3Milli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        vitaminB5 = (vitaminB5Milli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        vitaminB6 = (vitaminB6Milli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        vitaminB7 =
-            (vitaminB7Micro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
-        vitaminB9 =
-            (vitaminB9Micro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
-        vitaminB12 =
-            (vitaminB12Micro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
-        vitaminC = (vitaminCMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        vitaminD = (vitaminDMicro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
-        vitaminE = (vitaminEMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        vitaminK = (vitaminKMicro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
-        manganese = (manganeseMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        magnesium = (magnesiumMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        potassium = (potassiumMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        calcium = (calciumMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        copper = (copperMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        zinc = (zincMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        sodium = (sodiumMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        iron = (ironMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        phosphorus = (phosphorusMilli.value?.multiplier(multiplier)?.div(1_000)).toNutrientValue(),
-        selenium = (seleniumMicro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
-        iodine = (iodineMicro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
-        chromium = (chromiumMicro.value?.multiplier(multiplier)?.div(1_000_000)).toNutrientValue(),
-    )
+    }
 }
-
-private fun Double.multiplier(multiplier: Double): Double? = times(multiplier)

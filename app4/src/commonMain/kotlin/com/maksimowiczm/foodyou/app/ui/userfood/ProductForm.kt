@@ -32,6 +32,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SplitButtonDefaults
@@ -56,6 +57,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.component.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
@@ -74,53 +76,33 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ProductForm(
+internal fun ProductForm(
     state: ProductFormState,
     isLocked: Boolean,
-    setImageUri: (String?) -> Unit,
-    setValuesPer: (ValuesPer) -> Unit,
-    setServingUnit: (QuantityUnit) -> Unit,
-    setPackageUnit: (QuantityUnit) -> Unit,
     macroFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
     val order = LocalNutrientsOrder.current
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(24.dp)) {
-        General(
-            state = state,
-            setImageUri = setImageUri,
-            setValuesPer = setValuesPer,
-            setServingUnit = setServingUnit,
-            setPackageUnit = setPackageUnit,
-            isLocked = isLocked,
-        )
+        General(state = state, isLocked = isLocked)
         Macronutrients(state, isLocked, Modifier.focusRequester(macroFocusRequester))
         order.forEachIndexed { i, it ->
-            val lastKeyboardAction = if (i == order.lastIndex) ImeAction.Done else ImeAction.Next
-
+            val trailingImeAction = if (i == order.lastIndex) ImeAction.Done else ImeAction.Next
             when (it) {
                 NutrientsOrder.Proteins -> Unit
-                NutrientsOrder.Fats -> Fats(state, isLocked, lastKeyboardAction)
-                NutrientsOrder.Carbohydrates -> Carbohydrates(state, isLocked, lastKeyboardAction)
-                NutrientsOrder.Other -> Other(state, isLocked, lastKeyboardAction)
-                NutrientsOrder.Vitamins -> Vitamins(state, isLocked, lastKeyboardAction)
-                NutrientsOrder.Minerals -> Minerals(state, isLocked, lastKeyboardAction)
+                NutrientsOrder.Fats -> Fats(state, isLocked, trailingImeAction)
+                NutrientsOrder.Carbohydrates -> Carbohydrates(state, isLocked, trailingImeAction)
+                NutrientsOrder.Other -> Other(state, isLocked, trailingImeAction)
+                NutrientsOrder.Vitamins -> Vitamins(state, isLocked, trailingImeAction)
+                NutrientsOrder.Minerals -> Minerals(state, isLocked, trailingImeAction)
             }
         }
     }
 }
 
 @Composable
-private fun General(
-    state: ProductFormState,
-    setImageUri: (String?) -> Unit,
-    setValuesPer: (ValuesPer) -> Unit,
-    setServingUnit: (QuantityUnit) -> Unit,
-    setPackageUnit: (QuantityUnit) -> Unit,
-    isLocked: Boolean,
-    modifier: Modifier = Modifier,
-) {
+private fun General(state: ProductFormState, isLocked: Boolean, modifier: Modifier = Modifier) {
     var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
     if (showBarcodeScanner) {
         FullScreenCameraBarcodeScanner(
@@ -133,50 +115,28 @@ private fun General(
     }
 
     Column(modifier) {
-        Text(
-            text = stringResource(Res.string.headline_general),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-        )
-        OutlinedTextField(
-            state = state.name.textFieldState,
+        state.name.OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             enabled = !isLocked,
             label = { Text(requiredStringResource(stringResource(Res.string.product_name))) },
             supportingText = { Text(requiredStringResource()) },
-            trailingIcon = {
-                if (!state.name.isValid) {
-                    Icon(imageVector = Icons.Outlined.Error, contentDescription = null)
-                }
-            },
-            isError = !state.name.isValid,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
-        OutlinedTextField(
-            state = state.brand.textFieldState,
+        state.brand.OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             enabled = !isLocked,
             label = { Text(stringResource(Res.string.product_brand)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
         Spacer(Modifier.height(8.dp))
-        OutlinedTextField(
-            state = state.barcode.textFieldState,
+        state.barcode.OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             enabled = !isLocked,
             label = { Text(stringResource(Res.string.product_barcode)) },
-            isError = !state.barcode.isValid,
-            supportingText = {
-                val error = state.barcode.error
-                if (error != null) {
-                    Text(error.stringResource())
-                }
-            },
             trailingIcon = {
                 FilledTonalIconButton(
                     onClick = { showBarcodeScanner = true },
                     shapes = IconButtonDefaults.shapes(),
-                    enabled = !isLocked,
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_barcode_scanner),
@@ -189,45 +149,38 @@ private fun General(
         )
         Spacer(Modifier.height(16.dp))
         PhotoPicker(
-            imageUri = state.imageUri,
-            setImageUri = setImageUri,
+            imageUri = state.imageUri.value,
+            setImageUri = { state.imageUri.value = it },
             isLocked = isLocked,
             modifier = Modifier.fillMaxWidth().then(if (isLocked) Modifier.shimmer() else Modifier),
         )
         Spacer(Modifier.height(16.dp))
         ValuesPerPicker(
-            selected = state.valuesPer,
-            onSelect = setValuesPer,
+            selected = state.valuesPer.value,
+            onSelect = { state.valuesPer.value = it },
             isLocked = isLocked,
             modifier = Modifier.fillMaxWidth(),
         )
-        Spacer(Modifier.height(8.dp))
-        state.servingQuantity.QuantityTextField(
-            label = { Text(stringResource(Res.string.product_serving)) },
+        Spacer(Modifier.height(16.dp))
+        state.servingQuantity.QuantityOutlinedTextField(
+            label = stringResource(Res.string.product_serving),
+            quantity = state.servingUnit,
             isLocked = isLocked,
-            quantityUnit = state.servingUnit,
-            setQuantityUnit = setServingUnit,
+            isRequired = state.valuesPer.value == ValuesPer.Serving,
+            modifier = Modifier.fillMaxWidth(),
         )
-        state.packageQuantity.QuantityTextField(
-            label = { Text(stringResource(Res.string.product_package)) },
+        state.packageQuantity.QuantityOutlinedTextField(
+            label = stringResource(Res.string.product_package),
+            quantity = state.packageUnit,
             isLocked = isLocked,
-            quantityUnit = state.packageUnit,
-            setQuantityUnit = setPackageUnit,
+            isRequired = state.valuesPer.value == ValuesPer.Package,
+            modifier = Modifier.fillMaxWidth(),
         )
-        OutlinedTextField(
-            state = state.note.textFieldState,
+        state.note.OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             enabled = !isLocked,
             label = { Text(stringResource(Res.string.headline_note)) },
             supportingText = { Text(stringResource(Res.string.description_add_note)) },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        )
-        OutlinedTextField(
-            state = state.source.textFieldState,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !isLocked,
-            label = { Text(stringResource(Res.string.headline_source)) },
-            supportingText = { Text(stringResource(Res.string.description_food_source)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
     }
@@ -426,94 +379,6 @@ private fun ValuesPerPicker(
 }
 
 @Composable
-private fun FormField<Double?, FormFieldError>.QuantityTextField(
-    label: @Composable TextFieldLabelScope.() -> Unit,
-    isLocked: Boolean,
-    quantityUnit: QuantityUnit,
-    setQuantityUnit: (QuantityUnit) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
-
-    val menu =
-        @Composable {
-            DropdownMenu(
-                expanded = expanded && !isLocked,
-                onDismissRequest = { expanded = false },
-            ) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(Res.string.unit_gram_short)) },
-                    onClick = {
-                        setQuantityUnit(QuantityUnit.Gram)
-                        expanded = false
-                    },
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(Res.string.unit_ounce_short)) },
-                    onClick = {
-                        setQuantityUnit(QuantityUnit.Ounce)
-                        expanded = false
-                    },
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(Res.string.unit_milliliter_short)) },
-                    onClick = {
-                        setQuantityUnit(QuantityUnit.Milliliter)
-                        expanded = false
-                    },
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(Res.string.unit_fluid_ounce_short)) },
-                    onClick = {
-                        setQuantityUnit(QuantityUnit.FluidOunce)
-                        expanded = false
-                    },
-                )
-            }
-        }
-
-    OutlinedTextField(
-        state = textFieldState,
-        modifier = modifier.fillMaxWidth(),
-        enabled = !isLocked,
-        label = label,
-        supportingText = { error?.let { Text(it.stringResource()) } },
-        trailingIcon = {
-            menu()
-            Row(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                if (!isValid) {
-                    Icon(imageVector = Icons.Outlined.Error, contentDescription = null)
-                }
-                FilledTonalIconButton(
-                    onClick = { expanded = !expanded },
-                    shapes = IconButtonDefaults.shapes(),
-                    enabled = !isLocked,
-                ) {
-                    val str =
-                        when (quantityUnit) {
-                            QuantityUnit.Gram -> stringResource(Res.string.unit_gram_short)
-                            QuantityUnit.Ounce -> stringResource(Res.string.unit_ounce_short)
-                            QuantityUnit.Milliliter ->
-                                stringResource(Res.string.unit_milliliter_short)
-
-                            QuantityUnit.FluidOunce ->
-                                stringResource(Res.string.unit_fluid_ounce_short)
-                        }
-                    Text(str)
-                }
-            }
-        },
-        isError = !isValid,
-        keyboardOptions =
-            KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
-    )
-}
-
-@Composable
 private fun Macronutrients(
     state: ProductFormState,
     isLocked: Boolean,
@@ -528,24 +393,42 @@ private fun Macronutrients(
         LocalNutrientsOrder.current.forEach {
             when (it) {
                 NutrientsOrder.Proteins ->
-                    state.proteins.TextField(
+                    state.proteins.OutlinedTextField(
                         label = { Text(stringResource(Res.string.nutriment_proteins)) },
+                        modifier = Modifier.fillMaxWidth(),
                         suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                        isLocked = isLocked,
+                        enabled = !isLocked,
+                        keyboardOptions =
+                            KeyboardOptions(
+                                keyboardType = KeyboardType.Decimal,
+                                imeAction = ImeAction.Next,
+                            ),
                     )
 
                 NutrientsOrder.Fats ->
-                    state.fats.TextField(
+                    state.fats.OutlinedTextField(
                         label = { Text(stringResource(Res.string.nutriment_fats)) },
+                        modifier = Modifier.fillMaxWidth(),
                         suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                        isLocked = isLocked,
+                        enabled = !isLocked,
+                        keyboardOptions =
+                            KeyboardOptions(
+                                keyboardType = KeyboardType.Decimal,
+                                imeAction = ImeAction.Next,
+                            ),
                     )
 
                 NutrientsOrder.Carbohydrates ->
-                    state.carbohydrates.TextField(
+                    state.carbohydrates.OutlinedTextField(
                         label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
+                        modifier = Modifier.fillMaxWidth(),
                         suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                        isLocked = isLocked,
+                        enabled = !isLocked,
+                        keyboardOptions =
+                            KeyboardOptions(
+                                keyboardType = KeyboardType.Decimal,
+                                imeAction = ImeAction.Next,
+                            ),
                     )
 
                 NutrientsOrder.Other,
@@ -553,10 +436,13 @@ private fun Macronutrients(
                 NutrientsOrder.Minerals -> Unit
             }
         }
-        state.energy.TextField(
+        state.energy.OutlinedTextField(
             label = { Text(stringResource(Res.string.unit_energy)) },
+            modifier = Modifier.fillMaxWidth(),
             suffix = { Text(LocalEnergyFormatter.current.suffix()) },
-            isLocked = isLocked,
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
         )
     }
 }
@@ -565,7 +451,7 @@ private fun Macronutrients(
 private fun Fats(
     state: ProductFormState,
     isLocked: Boolean,
-    lastKeyboardAction: ImeAction,
+    trailingImeAction: ImeAction,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -574,37 +460,53 @@ private fun Fats(
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
         )
-        state.saturatedFats.TextField(
+        state.saturatedFats.OutlinedTextField(
             label = { Text(stringResource(Res.string.nutriment_saturated_fats)) },
+            modifier = Modifier.fillMaxWidth(),
             suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
-        )
-        state.transFats.TextField(
-            label = { Text(stringResource(Res.string.nutriment_trans_fats)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
-        )
-        state.monounsaturatedFats.TextField(
-            label = { Text(stringResource(Res.string.nutriment_monounsaturated_fats)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
-        )
-        state.polyunsaturatedFats.TextField(
-            label = { Text(stringResource(Res.string.nutriment_polyunsaturated_fats)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
-        )
-        state.omega3.TextField(
-            label = { Text(stringResource(Res.string.nutriment_omega_3)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
-        )
-        state.omega6.TextField(
-            label = { Text(stringResource(Res.string.nutriment_omega_6)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
+            enabled = !isLocked,
             keyboardOptions =
-                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = lastKeyboardAction),
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.transFats.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_trans_fats)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.monounsaturatedFats.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_monounsaturated_fats)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.polyunsaturatedFats.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_polyunsaturated_fats)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.omega3.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_omega_3)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.omega6.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_omega_6)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = trailingImeAction),
         )
     }
 }
@@ -613,7 +515,7 @@ private fun Fats(
 private fun Carbohydrates(
     state: ProductFormState,
     isLocked: Boolean,
-    lastKeyboardAction: ImeAction,
+    trailingImeAction: ImeAction,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -622,32 +524,45 @@ private fun Carbohydrates(
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
         )
-        state.sugars.TextField(
+        state.sugars.OutlinedTextField(
             label = { Text(stringResource(Res.string.nutriment_sugars)) },
+            modifier = Modifier.fillMaxWidth(),
             suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
-        )
-        state.addedSugars.TextField(
-            label = { Text(stringResource(Res.string.nutriment_added_sugars)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
-        )
-        state.dietaryFiber.TextField(
-            label = { Text(stringResource(Res.string.nutriment_fiber)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
-        )
-        state.solubleFiber.TextField(
-            label = { Text(stringResource(Res.string.nutriment_soluble_fiber)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
-        )
-        state.insolubleFiber.TextField(
-            label = { Text(stringResource(Res.string.nutriment_insoluble_fiber)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
+            enabled = !isLocked,
             keyboardOptions =
-                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = lastKeyboardAction),
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.addedSugars.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_added_sugars)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.dietaryFiber.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_fiber)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.solubleFiber.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_soluble_fiber)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.insolubleFiber.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_insoluble_fiber)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = trailingImeAction),
         )
     }
 }
@@ -656,7 +571,7 @@ private fun Carbohydrates(
 private fun Other(
     state: ProductFormState,
     isLocked: Boolean,
-    lastKeyboardAction: ImeAction,
+    trailingImeAction: ImeAction,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -665,22 +580,29 @@ private fun Other(
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
         )
-        state.salt.TextField(
+        state.salt.OutlinedTextField(
             label = { Text(stringResource(Res.string.nutriment_salt)) },
+            modifier = Modifier.fillMaxWidth(),
             suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isLocked = isLocked,
-        )
-        state.cholesterolMilli.TextField(
-            label = { Text(stringResource(Res.string.nutriment_cholesterol)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.caffeineMilli.TextField(
-            label = { Text(stringResource(Res.string.nutriment_caffeine)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
+            enabled = !isLocked,
             keyboardOptions =
-                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = lastKeyboardAction),
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.cholesterolMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_cholesterol)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.caffeineMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.nutriment_caffeine)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = trailingImeAction),
         )
     }
 }
@@ -689,7 +611,7 @@ private fun Other(
 private fun Vitamins(
     state: ProductFormState,
     isLocked: Boolean,
-    lastKeyboardAction: ImeAction,
+    trailingImeAction: ImeAction,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -698,72 +620,109 @@ private fun Vitamins(
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
         )
-        state.vitaminAMicro.TextField(
+        state.vitaminAMicro.OutlinedTextField(
             label = { Text(stringResource(Res.string.vitamin_a)) },
+            modifier = Modifier.fillMaxWidth(),
             suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminB1Milli.TextField(
-            label = { Text(stringResource(Res.string.vitamin_b1)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminB2Milli.TextField(
-            label = { Text(stringResource(Res.string.vitamin_b2)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminB3Milli.TextField(
-            label = { Text(stringResource(Res.string.vitamin_b3)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminB5Milli.TextField(
-            label = { Text(stringResource(Res.string.vitamin_b5)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminB6Milli.TextField(
-            label = { Text(stringResource(Res.string.vitamin_b6)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminB7Micro.TextField(
-            label = { Text(stringResource(Res.string.vitamin_b7)) },
-            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminB9Micro.TextField(
-            label = { Text(stringResource(Res.string.vitamin_b9)) },
-            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminB12Micro.TextField(
-            label = { Text(stringResource(Res.string.vitamin_b12)) },
-            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminCMilli.TextField(
-            label = { Text(stringResource(Res.string.vitamin_c)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminDMicro.TextField(
-            label = { Text(stringResource(Res.string.vitamin_d)) },
-            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminEMilli.TextField(
-            label = { Text(stringResource(Res.string.vitamin_e)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.vitaminKMicro.TextField(
-            label = { Text(stringResource(Res.string.vitamin_k)) },
-            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
-            isLocked = isLocked,
+            enabled = !isLocked,
             keyboardOptions =
-                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = lastKeyboardAction),
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminB1Milli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_b1)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminB2Milli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_b2)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminB3Milli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_b3)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminB5Milli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_b5)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminB6Milli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_b6)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminB7Micro.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_b7)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminB9Micro.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_b9)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminB12Micro.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_b12)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminCMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_c)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminDMicro.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_d)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminEMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_e)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.vitaminKMicro.OutlinedTextField(
+            label = { Text(stringResource(Res.string.vitamin_k)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = trailingImeAction),
         )
     }
 }
@@ -772,7 +731,7 @@ private fun Vitamins(
 private fun Minerals(
     state: ProductFormState,
     isLocked: Boolean,
-    lastKeyboardAction: ImeAction,
+    trailingImeAction: ImeAction,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -781,102 +740,222 @@ private fun Minerals(
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
         )
-        state.manganeseMilli.TextField(
+        state.manganeseMilli.OutlinedTextField(
             label = { Text(stringResource(Res.string.mineral_manganese)) },
+            modifier = Modifier.fillMaxWidth(),
             suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.magnesiumMilli.TextField(
-            label = { Text(stringResource(Res.string.mineral_magnesium)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.potassiumMilli.TextField(
-            label = { Text(stringResource(Res.string.mineral_potassium)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.calciumMilli.TextField(
-            label = { Text(stringResource(Res.string.mineral_calcium)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.copperMilli.TextField(
-            label = { Text(stringResource(Res.string.mineral_copper)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.zincMilli.TextField(
-            label = { Text(stringResource(Res.string.mineral_zinc)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.sodiumMilli.TextField(
-            label = { Text(stringResource(Res.string.mineral_sodium)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.ironMilli.TextField(
-            label = { Text(stringResource(Res.string.mineral_iron)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.phosphorusMilli.TextField(
-            label = { Text(stringResource(Res.string.mineral_phosphorus)) },
-            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
-            isLocked = isLocked,
-        )
-        state.seleniumMicro.TextField(
-            label = { Text(stringResource(Res.string.mineral_selenium)) },
-            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
-            isLocked = isLocked,
-        )
-        state.iodineMicro.TextField(
-            label = { Text(stringResource(Res.string.mineral_iodine)) },
-            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
-            isLocked = isLocked,
-        )
-        state.chromiumMicro.TextField(
-            label = { Text(stringResource(Res.string.mineral_chromium)) },
-            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
-            isLocked = isLocked,
+            enabled = !isLocked,
             keyboardOptions =
-                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = lastKeyboardAction),
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.magnesiumMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_magnesium)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.potassiumMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_potassium)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.calciumMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_calcium)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.copperMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_copper)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.zincMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_zinc)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.sodiumMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_sodium)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.ironMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_iron)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.phosphorusMilli.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_phosphorus)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_milligram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.seleniumMicro.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_selenium)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.iodineMicro.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_iodine)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+        )
+        state.chromiumMicro.OutlinedTextField(
+            label = { Text(stringResource(Res.string.mineral_chromium)) },
+            modifier = Modifier.fillMaxWidth(),
+            suffix = { Text(stringResource(Res.string.unit_microgram_short)) },
+            enabled = !isLocked,
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = trailingImeAction),
         )
     }
 }
 
 @Composable
-private fun FormField<Double?, FormFieldError>.TextField(
-    label: @Composable TextFieldLabelScope.() -> Unit,
-    suffix: @Composable () -> Unit,
+private fun FormField.QuantityOutlinedTextField(
+    label: String,
+    quantity: MutableState<QuantityUnit>,
     isLocked: Boolean,
+    isRequired: Boolean,
     modifier: Modifier = Modifier,
-    supportingText: (@Composable () -> Unit)? = null,
     keyboardOptions: KeyboardOptions =
         KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
 ) {
+    val error = error
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    val menu =
+        @Composable {
+            DropdownMenu(
+                expanded = expanded && !isLocked,
+                onDismissRequest = { expanded = false },
+            ) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(Res.string.unit_gram_short)) },
+                    onClick = {
+                        quantity.value = QuantityUnit.Gram
+                        expanded = false
+                    },
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(Res.string.unit_ounce_short)) },
+                    onClick = {
+                        quantity.value = QuantityUnit.Ounce
+                        expanded = false
+                    },
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(Res.string.unit_milliliter_short)) },
+                    onClick = {
+                        quantity.value = QuantityUnit.Milliliter
+                        expanded = false
+                    },
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(Res.string.unit_fluid_ounce_short)) },
+                    onClick = {
+                        quantity.value = QuantityUnit.FluidOunce
+                        expanded = false
+                    },
+                )
+            }
+        }
+
     OutlinedTextField(
         state = textFieldState,
         modifier = modifier.fillMaxWidth(),
         enabled = !isLocked,
-        label = label,
+        label = {
+            val str = if (isRequired) requiredStringResource(label) else label
+            Text(str)
+        },
         supportingText = {
-            val error = this.error
-            if (error != null) {
-                Text(error.stringResource())
-            } else if (supportingText != null) {
-                supportingText()
+            if (error != null) Text(error)
+            else Spacer(Modifier.height(LocalTextStyle.current.toDp()))
+        },
+        trailingIcon = {
+            menu()
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                if (error != null) {
+                    Icon(imageVector = Icons.Outlined.Error, contentDescription = null)
+                }
+                FilledTonalIconButton(
+                    onClick = { expanded = !expanded },
+                    shapes = IconButtonDefaults.shapes(),
+                    enabled = !isLocked,
+                ) {
+                    Text(quantity.value.stringResource())
+                }
             }
         },
-        suffix = suffix,
+        isError = error != null,
+        keyboardOptions = keyboardOptions,
+    )
+}
+
+@Composable
+private fun FormField.OutlinedTextField(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    label: @Composable TextFieldLabelScope.() -> Unit,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    suffix: @Composable (() -> Unit)? = null,
+    supportingText: @Composable (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+) {
+    val error = error
+
+    OutlinedTextField(
+        state = textFieldState,
+        modifier = modifier,
+        enabled = enabled,
+        label = label,
         trailingIcon =
-            if (!isValid) {
-                { Icon(imageVector = Icons.Outlined.Error, contentDescription = null) }
-            } else {
-                null
+            trailingIcon
+                ?: if (error != null) {
+                    { Icon(Icons.Outlined.Error, null) }
+                } else null,
+        suffix = suffix,
+        supportingText =
+            if (error != null) {
+                { Text(error) }
+            } else if (supportingText != null) supportingText
+            else {
+                { Spacer(Modifier.height(LocalTextStyle.current.toDp())) }
             },
-        isError = !isValid,
+        isError = error != null,
         keyboardOptions = keyboardOptions,
     )
 }

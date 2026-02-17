@@ -30,6 +30,8 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifec
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.userfood.FillSuggestedFieldsDialog
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductForm
+import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
+import com.maksimowiczm.foodyou.app.ui.userfood.rememberProductForm2State
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
@@ -45,10 +47,6 @@ fun EditProductScreen(
     onEdit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
     val viewModel: EditProductViewModel = koinViewModel { parametersOf(identity) }
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
@@ -57,8 +55,33 @@ fun EditProductScreen(
         }
     }
 
-    val formState by viewModel.productFormState.collectAsStateWithLifecycle()
     val isLocked by viewModel.isLocked.collectAsStateWithLifecycle()
+    val product by viewModel.product.collectAsStateWithLifecycle()
+
+    if (product != null) {
+        val formState = rememberProductForm2State(product)
+
+        EditProductScreen(
+            onBack = onBack,
+            onSave = viewModel::save,
+            formState = formState,
+            isLocked = isLocked,
+            modifier = modifier,
+        )
+    }
+}
+
+@Composable
+private fun EditProductScreen(
+    onBack: () -> Unit,
+    onSave: (ProductFormState) -> Unit,
+    formState: ProductFormState,
+    isLocked: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     if (showDiscardDialog) {
@@ -92,7 +115,7 @@ fun EditProductScreen(
             },
             onSkip = {
                 showFillSuggestedFieldsDialog = false
-                viewModel.save()
+                onSave(formState)
             },
         )
     }
@@ -114,15 +137,10 @@ fun EditProductScreen(
                     val buttonHeight = ButtonDefaults.ExtraSmallContainerHeight
                     Button(
                         onClick = {
-                            if (
-                                formState.proteins.value == null ||
-                                    formState.fats.value == null ||
-                                    formState.carbohydrates.value == null ||
-                                    formState.energy.value == null
-                            ) {
+                            if (!formState.hasSuggestedFieldsFilled) {
                                 showFillSuggestedFieldsDialog = true
                             } else {
-                                viewModel.save()
+                                onSave(formState)
                             }
                         },
                         shapes = ButtonDefaults.shapesFor(buttonHeight),
@@ -158,10 +176,6 @@ fun EditProductScreen(
             item {
                 ProductForm(
                     state = formState,
-                    setImageUri = viewModel::setImage,
-                    setValuesPer = viewModel::setValuesPer,
-                    setServingUnit = viewModel::setServingUnit,
-                    setPackageUnit = viewModel::setPackageUnit,
                     isLocked = isLocked,
                     macroFocusRequester = focusRequester,
                 )

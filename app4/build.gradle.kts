@@ -97,6 +97,8 @@ kotlin {
             implementation(libs.filekit.coil)
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
+
+            implementation(libs.konform)
         }
 
         commonTest.dependencies {

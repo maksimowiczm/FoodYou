@@ -8,7 +8,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun FillSuggestedFieldsDialog(
+internal fun FillSuggestedFieldsDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     onSkip: () -> Unit,
