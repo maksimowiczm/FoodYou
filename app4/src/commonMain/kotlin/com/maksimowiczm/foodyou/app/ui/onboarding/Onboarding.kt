@@ -19,10 +19,10 @@ import com.maksimowiczm.foodyou.app.navigation.ForwardBackwardTransition
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -108,14 +108,10 @@ fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier
     }
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 private val config = SavedStateConfiguration {
     serializersModule = SerializersModule {
-        polymorphic(NavKey::class) {
-            subclass(AddProfile.serializer())
-            subclass(AlmostDone.serializer())
-            subclass(BeforeYouStart.serializer())
-            subclass(FoodDatabase.serializer())
-        }
+        polymorphic(NavKey::class) { subclassesOfSealed<OnboardingNavKey>() }
     }
 }
 

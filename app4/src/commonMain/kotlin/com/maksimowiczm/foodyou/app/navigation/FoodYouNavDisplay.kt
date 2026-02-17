@@ -50,10 +50,10 @@ import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 
 @Composable
 fun FoodYouNavDisplay(
@@ -191,29 +191,13 @@ fun FoodYouNavDisplay(
     )
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 @Suppress("UNCHECKED_CAST")
 @Composable
 fun rememberFoodYouNavBackStack(): NavBackStack<NavKey> {
     val config = SavedStateConfiguration {
         serializersModule = SerializersModule {
-            polymorphic(NavKey::class) {
-                subclass(About.serializer())
-                subclass(Colors.serializer())
-                subclass(CreateProduct.serializer())
-                subclass(CreateProfile.serializer())
-                subclass(EditUserProduct.serializer())
-                subclass(EditProfile.serializer())
-                subclass(FoodDatabase.serializer())
-                subclass(UserProductDetails.serializer())
-                subclass(OpenFoodFactsProductDetails.serializer())
-                subclass(FoodDataCentralProductDetails.serializer())
-                subclass(Home.serializer())
-                subclass(HomePersonalization.serializer())
-                subclass(Language.serializer())
-                subclass(NutritionFactsPersonalization.serializer())
-                subclass(Personalization.serializer())
-                subclass(Privacy.serializer())
-            }
+            polymorphic(NavKey::class) { subclassesOfSealed<FoodYouNavHostRoute>() }
         }
     }
 

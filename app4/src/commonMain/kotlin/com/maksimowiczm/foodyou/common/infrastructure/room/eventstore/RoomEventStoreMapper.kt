@@ -9,6 +9,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 import kotlinx.serialization.serializer
 
 object RoomEventStoreMapper {
@@ -31,12 +32,9 @@ private object DomainEventSerializer {
     val json = Json {
         serializersModule = SerializersModule {
             polymorphic(DomainEvent::class) {
-                subclass(AppLaunchedEvent::class, AppLaunchedEvent.serializer())
-                subclass(AppVersionChangedEvent::class, AppVersionChangedEvent.serializer())
-                subclass(
-                    FirstAppLaunchRecordedEvent::class,
-                    FirstAppLaunchRecordedEvent.serializer(),
-                )
+                subclass(AppLaunchedEvent.serializer())
+                subclass(AppVersionChangedEvent.serializer())
+                subclass(FirstAppLaunchRecordedEvent.serializer())
             }
         }
     }
