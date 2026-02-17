@@ -217,18 +217,6 @@ private fun UserProductDetailsScreen(
                     )
                 }
             }
-
-            if (userFood?.source != null) {
-                item {
-                    Spacer(Modifier.height(16.dp))
-                    HorizontalDivider(Modifier.fillMaxWidth().padding(horizontal = 16.dp))
-                    Spacer(Modifier.height(16.dp))
-                    UserAddedSource(
-                        value = userFood.source.value,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    )
-                }
-            }
         }
     }
 }

@@ -53,7 +53,6 @@ class EditProductViewModel(
             requireNotNull(product) { "Product not found: $identity" }
 
             val name = foodNameSelector.select(product.name)
-            val source = product.source?.value
             val (servingQuantity, servingUnit) =
                 run {
                     if (product.servingQuantity == null) {
@@ -118,7 +117,6 @@ class EditProductViewModel(
                         defaultBrand = product.brand?.value,
                         defaultBarcode = product.barcode?.value,
                         defaultNote = product.note?.value,
-                        defaultSource = source,
                         defaultProteins = product.nutritionFacts.proteins.value,
                         defaultFats = product.nutritionFacts.fats.value,
                         defaultCarbohydrates = product.nutritionFacts.carbohydrates.value,
@@ -204,7 +202,6 @@ class EditProductViewModel(
                         this.note.textFieldState.setTextAndPlaceCursorAtEnd(
                             product.note?.value.orEmpty()
                         )
-                        this.source.textFieldState.setTextAndPlaceCursorAtEnd(source.orEmpty())
                         this.servingQuantity.fill(servingQuantity)
                         this.packageQuantity.fill(packageQuantity)
                         this.proteins.fill(product.nutritionFacts.proteins)
@@ -341,7 +338,7 @@ class EditProductViewModel(
                 brand,
                 barcode,
                 note,
-                source,
+                image,
                 nutritionFacts,
                 servingQuantity,
                 packageQuantity,
@@ -356,8 +353,7 @@ class EditProductViewModel(
                 brand = brand,
                 barcode = barcode,
                 note = note,
-                imageUri = form.imageUri,
-                source = source,
+                image = image,
                 nutritionFacts = nutritionFacts,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,

@@ -13,7 +13,6 @@ data class UserProduct(
     val barcode: UserProductBarcode?,
     val note: UserFoodNote?,
     val image: Image.Local?,
-    val source: UserProductSource?,
     val nutritionFacts: NutritionFacts,
     val servingQuantity: AbsoluteQuantity?,
     val packageQuantity: AbsoluteQuantity?,

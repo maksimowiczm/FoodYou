@@ -54,7 +54,6 @@ class ProductFormTransformerTest {
         assertNull(result.brand)
         assertNull(result.barcode)
         assertNull(result.note)
-        assertNull(result.source)
         assertEquals(200.0, result.nutritionFacts.energy.value)
         assertEquals(10.0, result.nutritionFacts.proteins.value)
         assertEquals(20.0, result.nutritionFacts.carbohydrates.value)
@@ -121,19 +120,6 @@ class ProductFormTransformerTest {
         advanceUntilIdle()
 
         assertEquals("Test note", result.note?.value)
-    }
-
-    @Test
-    fun should_transform_form_with_source() = runTest {
-        val transformer = createProductFormTransformer()
-        val form = ProductFormState()
-        form.fillRequiredFields()
-        form.source.textFieldState.setTextAndPlaceCursorAtEnd("Test source")
-
-        val result = transformer.validate(form)
-        advanceUntilIdle()
-
-        assertEquals("Test source", result.source?.value)
     }
 
     @Test
@@ -386,7 +372,6 @@ class ProductFormTransformerTest {
         assertEquals("Brand", result.brand?.value)
         assertEquals("123456", result.barcode?.value)
         assertEquals("Note", result.note?.value)
-        assertEquals("Source", result.source?.value)
         assertEquals(AbsoluteQuantity.Weight(Grams(100.0)), result.servingQuantity)
         assertEquals(AbsoluteQuantity.Weight(Grams(500.0)), result.packageQuantity)
         assertEquals(false, result.isLiquid)

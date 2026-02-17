@@ -16,7 +16,6 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductSource
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.FoodNameEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.QuantityEntity
@@ -65,7 +64,6 @@ internal class ProductMapper {
                 barcode = entity.barcode?.let { UserProductBarcode(it) },
                 note = entity.note?.let { UserFoodNote(it) },
                 image = entity.photoPath?.let { Image.Local(it) },
-                source = entity.source?.let { UserProductSource(it) },
                 nutritionFacts = nutrients,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
@@ -81,7 +79,6 @@ internal class ProductMapper {
         barcode: UserProductBarcode?,
         note: UserFoodNote?,
         imagePath: String?,
-        source: UserProductSource?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
@@ -120,7 +117,6 @@ internal class ProductMapper {
             brand = brand?.value,
             barcode = barcode?.value,
             note = note?.value,
-            source = source?.value,
             photoPath = imagePath,
             accountId = accountId.value,
             nutrients = nutrientsMapper.toNutrientsEntity(nutritionFacts),

@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.domain.product
 
+import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -13,8 +14,7 @@ interface UserProductRepository {
         brand: UserProductBrand?,
         barcode: UserProductBarcode?,
         note: UserFoodNote?,
-        imageUri: String?,
-        source: UserProductSource?,
+        image: Image.Local?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
@@ -28,8 +28,7 @@ interface UserProductRepository {
         brand: UserProductBrand?,
         barcode: UserProductBarcode?,
         note: UserFoodNote?,
-        imageUri: String?,
-        source: UserProductSource?,
+        image: Image.Local?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,

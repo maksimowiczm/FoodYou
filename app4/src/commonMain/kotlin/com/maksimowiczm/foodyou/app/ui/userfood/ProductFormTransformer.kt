@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.userfood
 
+import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
@@ -12,7 +13,6 @@ import com.maksimowiczm.foodyou.common.domain.food.Ounces
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductSource
 
 class ProductFormTransformer(
     private val getAppAccountEnergyFormatUseCase: GetAppAccountEnergyFormatUseCase,
@@ -23,7 +23,7 @@ class ProductFormTransformer(
         val brand: UserProductBrand?,
         val barcode: UserProductBarcode?,
         val note: UserFoodNote?,
-        val source: UserProductSource?,
+        val image: Image.Local?,
         val nutritionFacts: NutritionFacts,
         val servingQuantity: AbsoluteQuantity?,
         val packageQuantity: AbsoluteQuantity?,
@@ -67,8 +67,6 @@ class ProductFormTransformer(
         val barcode = form.barcode.value?.let { UserProductBarcode(it) }
 
         val note = form.note.value?.let { UserFoodNote(it) }
-
-        val source = form.source.value?.let { UserProductSource(it) }
 
         // Multiplier is 1.0 for 100g/ml, serving size for serving, and package size for package
         // but needs to be adjusted to match that nutrition facts MUST be per 100g/ml
@@ -150,12 +148,14 @@ class ProductFormTransformer(
                 ?: possibleIsLiquid
                 ?: false
 
+        val image = form.imageUri?.let(Image::Local)
+
         return Result(
             foodName = foodName,
             brand = brand,
             barcode = barcode,
             note = note,
-            source = source,
+            image = image,
             nutritionFacts = nutritionFacts,
             servingQuantity = servingQuantity,
             packageQuantity = packageQuantity,

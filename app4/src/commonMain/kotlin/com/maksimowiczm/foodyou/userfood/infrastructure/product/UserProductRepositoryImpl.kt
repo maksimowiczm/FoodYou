@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
+import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -14,7 +15,6 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductSource
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductDao
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.ImageFormat
@@ -43,8 +43,7 @@ internal class UserProductRepositoryImpl(
         brand: UserProductBrand?,
         barcode: UserProductBarcode?,
         note: UserFoodNote?,
-        imageUri: String?,
-        source: UserProductSource?,
+        image: Image.Local?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
@@ -57,9 +56,9 @@ internal class UserProductRepositoryImpl(
         val uuid = Uuid.random().toString()
 
         val photoPath =
-            if (imageUri != null) {
-                val sourceFile = PlatformFile(imageUri)
-                require(sourceFile.exists()) { "Image file does not exist at path: $imageUri" }
+            if (image != null) {
+                val sourceFile = PlatformFile(image.uri)
+                require(sourceFile.exists()) { "Image file does not exist at path: ${image.uri}" }
                 val bytes = sourceFile.readBytes()
 
                 val compressed =
@@ -83,7 +82,6 @@ internal class UserProductRepositoryImpl(
                 barcode = barcode,
                 note = note,
                 imagePath = photoPath,
-                source = source,
                 nutritionFacts = nutritionFacts,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
@@ -102,8 +100,7 @@ internal class UserProductRepositoryImpl(
         brand: UserProductBrand?,
         barcode: UserProductBarcode?,
         note: UserFoodNote?,
-        imageUri: String?,
-        source: UserProductSource?,
+        image: Image.Local?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
@@ -121,10 +118,12 @@ internal class UserProductRepositoryImpl(
         foodDirectory.createDirectories()
 
         val imagePath: String? =
-            if (existingEntity.photoPath != imageUri) {
-                if (imageUri != null) {
-                    val sourceFile = PlatformFile(imageUri)
-                    require(sourceFile.exists()) { "Image file does not exist at path: $imageUri" }
+            if (existingEntity.photoPath != image?.uri) {
+                if (image != null) {
+                    val sourceFile = PlatformFile(image.uri)
+                    require(sourceFile.exists()) {
+                        "Image file does not exist at path: ${image.uri}"
+                    }
                     val bytes = sourceFile.readBytes()
 
                     val compressed =
@@ -159,7 +158,6 @@ internal class UserProductRepositoryImpl(
                 barcode = barcode,
                 note = note,
                 imagePath = imagePath,
-                source = source,
                 nutritionFacts = nutritionFacts,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,

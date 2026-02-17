@@ -27,7 +27,6 @@ internal data class ProductEntity(
     val brand: String?,
     val barcode: String?,
     val note: String?,
-    val source: String?,
     val photoPath: String?,
     val accountId: String,
     @Embedded val nutrients: NutrientsEntity,
