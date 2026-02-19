@@ -23,6 +23,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.profile.ProfileForm
+import com.maksimowiczm.foodyou.app.ui.profile.rememberProfileFormState
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -35,7 +36,8 @@ fun AddProfileScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: AddProfileViewModel = koinViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isLocked by viewModel.isLocked.collectAsStateWithLifecycle()
+    val formState = rememberProfileFormState()
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {
@@ -46,7 +48,7 @@ fun AddProfileScreen(
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
-        isBackEnabled = uiState.isModified,
+        isBackEnabled = formState.isModified,
         onBackCompleted = { showDiscardDialog = true },
     )
     if (showDiscardDialog) {
@@ -63,16 +65,23 @@ fun AddProfileScreen(
                 title = { Text(stringResource(Res.string.headline_add_profile)) },
                 navigationIcon = {
                     ArrowBackIconButton(
-                        onClick = { if (uiState.isModified) showDiscardDialog = true else onBack() }
+                        onClick = {
+                            if (formState.isModified) showDiscardDialog = true else onBack()
+                        }
                     )
                 },
                 actions = {
                     val buttonHeight = ButtonDefaults.ExtraSmallContainerHeight
                     Button(
-                        onClick = viewModel::create,
+                        onClick = {
+                            viewModel.create(
+                                name = formState.nameTextState.text.toString(),
+                                avatar = formState.avatar,
+                            )
+                        },
                         shapes = ButtonDefaults.shapesFor(buttonHeight),
                         modifier = Modifier.height(buttonHeight),
-                        enabled = uiState.isValid && !uiState.isLocked,
+                        enabled = formState.isValid && !isLocked,
                         contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
                     ) {
                         Text(
@@ -96,13 +105,7 @@ fun AddProfileScreen(
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues,
         ) {
-            item {
-                ProfileForm(
-                    uiState = uiState,
-                    onSetAvatar = viewModel::setAvatar,
-                    autoFocusName = true,
-                )
-            }
+            item { ProfileForm(state = formState, isLocked = isLocked, autoFocusName = true) }
         }
     }
 }

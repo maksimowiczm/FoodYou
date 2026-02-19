@@ -38,9 +38,9 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ProfileForm(
-    uiState: ProfileUiState,
-    onSetAvatar: (UiProfileAvatar) -> Unit,
+internal fun ProfileForm(
+    state: ProfileFormState,
+    isLocked: Boolean,
     autoFocusName: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -75,8 +75,8 @@ fun ProfileForm(
             ) {
                 items(items = Variant.entries.map { it.toAvatar() }) { avatar ->
                     FilledIconToggleButton(
-                        checked = uiState.avatar == avatar,
-                        onCheckedChange = { if (it) onSetAvatar(avatar) },
+                        checked = state.avatar == avatar,
+                        onCheckedChange = { if (it) state.avatar = avatar },
                         shapes = IconButtonDefaults.toggleableShapes(),
                         modifier = modifier.size(56.dp),
                     ) {
@@ -85,21 +85,21 @@ fun ProfileForm(
                 }
                 item {
                     FilledIconToggleButton(
-                        checked = uiState.avatar is UiProfileAvatar.Photo,
+                        checked = state.avatar is UiProfileAvatar.Photo,
                         onCheckedChange = {
                             scope.launch {
                                 val image = FileKit.openFilePicker(type = FileKitType.Image)
                                 if (image != null) {
-                                    onSetAvatar(UiProfileAvatar.Photo(image.path))
+                                    state.avatar = UiProfileAvatar.Photo(image.path)
                                 }
                             }
                         },
                         shapes = IconButtonDefaults.toggleableShapes(),
                         modifier = modifier.size(56.dp),
                     ) {
-                        when (uiState.avatar) {
+                        when (val avatar = state.avatar) {
                             is UiProfileAvatar.Photo ->
-                                uiState.avatar.Avatar(Modifier.size(40.dp).clip(CircleShape))
+                                avatar.Avatar(Modifier.size(40.dp).clip(CircleShape))
 
                             else ->
                                 Icon(
@@ -122,9 +122,9 @@ fun ProfileForm(
                 style = MaterialTheme.typography.labelLarge,
             )
             OutlinedTextField(
-                state = uiState.nameTextState,
+                state = state.nameTextState,
                 modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-                enabled = !uiState.isLocked,
+                enabled = !isLocked,
                 placeholder = { Text(stringResource(Res.string.headline_profile_name)) },
                 lineLimits = TextFieldLineLimits.SingleLine,
             )

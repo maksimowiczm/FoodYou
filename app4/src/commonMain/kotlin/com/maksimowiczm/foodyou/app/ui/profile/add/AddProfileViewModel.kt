@@ -8,50 +8,37 @@ import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
-import com.maksimowiczm.foodyou.app.ui.profile.ProfileUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class AddProfileViewModel(
+internal class AddProfileViewModel(
     private val appAccountManager: AppAccountManager,
     private val accountRepository: AccountRepository,
     logger: Logger,
 ) : ViewModel() {
     private val logger = logger.withTag(TAG)
 
-    private val _uiState = MutableStateFlow(ProfileUiState())
-    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+    val isLocked: StateFlow<Boolean>
+        field = MutableStateFlow(false)
 
     private val _uiEventBus = Channel<AddProfileEvent>()
     val uiEvents = _uiEventBus.receiveAsFlow()
 
-    fun setAvatar(avatar: UiProfileAvatar) {
-        _uiState.value = _uiState.value.copy(avatar = avatar)
-    }
-
-    fun create() {
-        val state = _uiState.value
-        if (state.isLocked) {
+    fun create(name: String, avatar: UiProfileAvatar) {
+        if (!isLocked.compareAndSet(expect = false, update = true)) {
             logger.w { "Create profile called while already locked" }
             return
         }
-
-        _uiState.value = state.copy(isLocked = true)
 
         viewModelScope.launch {
             logger.d { "Loading primary account to add profile" }
             val account = appAccountManager.observeAppAccount().first()
 
-            val profile =
-                Profile.new(
-                    name = state.nameTextState.text.toString(),
-                    avatar = ProfileAvatarMapper.toModel(state.avatar),
-                )
+            val profile = Profile.new(name = name, avatar = ProfileAvatarMapper.toModel(avatar))
 
             account.addProfile(profile)
 

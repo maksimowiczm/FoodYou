@@ -31,8 +31,11 @@ import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
+import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.profile.ProfileForm
+import com.maksimowiczm.foodyou.app.ui.profile.ProfileFormState
+import com.maksimowiczm.foodyou.app.ui.profile.rememberProfileFormState
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -48,10 +51,9 @@ fun EditProfileScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: EditProfileViewModel = koinViewModel { parametersOf(profileId) }
-
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val canDelete by viewModel.canDelete.collectAsStateWithLifecycle()
-
+    val isLocked by viewModel.isLocked.collectAsStateWithLifecycle()
+    val profile by viewModel.profile.collectAsStateWithLifecycle()
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {
             EditProfileEvent.Edited -> onEdit()
@@ -59,10 +61,22 @@ fun EditProfileScreen(
         }
     }
 
+    if (profile == null) {
+        return
+    }
+
+    val formState =
+        rememberProfileFormState(
+            defaultName = profile?.name ?: "",
+            defaultAvatar =
+                profile?.avatar?.let(ProfileAvatarMapper::toUiModel)
+                    ?: ProfileFormState.DEFAULT_AVATAR,
+        )
+
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
-        isBackEnabled = uiState.isModified,
+        isBackEnabled = formState.isModified,
         onBackCompleted = { showDiscardDialog = true },
     )
     if (showDiscardDialog) {
@@ -114,16 +128,23 @@ fun EditProfileScreen(
                 title = { Text(stringResource(Res.string.headline_edit_profile)) },
                 navigationIcon = {
                     ArrowBackIconButton(
-                        onClick = { if (uiState.isModified) showDiscardDialog = true else onBack() }
+                        onClick = {
+                            if (formState.isModified) showDiscardDialog = true else onBack()
+                        }
                     )
                 },
                 actions = {
                     val buttonHeight = ButtonDefaults.ExtraSmallContainerHeight
                     Button(
-                        onClick = viewModel::edit,
+                        onClick = {
+                            viewModel.edit(
+                                name = formState.nameTextState.text.toString(),
+                                avatar = formState.avatar,
+                            )
+                        },
                         shapes = ButtonDefaults.shapesFor(buttonHeight),
                         modifier = Modifier.height(buttonHeight),
-                        enabled = uiState.isValid && !uiState.isLocked,
+                        enabled = formState.isValid && !isLocked,
                         contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
                     ) {
                         Text(
@@ -147,13 +168,7 @@ fun EditProfileScreen(
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues,
         ) {
-            item {
-                ProfileForm(
-                    uiState = uiState,
-                    onSetAvatar = viewModel::setAvatar,
-                    autoFocusName = false,
-                )
-            }
+            item { ProfileForm(state = formState, isLocked = isLocked, autoFocusName = false) }
             if (canDelete) {
                 item {
                     Spacer(Modifier.height(32.dp))
@@ -161,7 +176,7 @@ fun EditProfileScreen(
                         TextButton(
                             onClick = { showDeleteDialog = true },
                             shapes = ButtonDefaults.shapes(),
-                            enabled = !uiState.isLocked,
+                            enabled = !isLocked,
                         ) {
                             Text(stringResource(Res.string.action_delete_profile))
                         }
