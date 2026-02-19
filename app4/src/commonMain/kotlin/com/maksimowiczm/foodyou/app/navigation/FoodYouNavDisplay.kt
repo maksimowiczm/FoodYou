@@ -192,7 +192,6 @@ fun FoodYouNavDisplay(
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-@Suppress("UNCHECKED_CAST")
 @Composable
 fun rememberFoodYouNavBackStack(): NavBackStack<NavKey> {
     val config = SavedStateConfiguration {

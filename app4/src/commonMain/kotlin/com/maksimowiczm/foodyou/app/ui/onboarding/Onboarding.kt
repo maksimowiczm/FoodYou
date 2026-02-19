@@ -5,9 +5,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
@@ -29,8 +28,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier) {
     val viewModel: OnboardingViewModel = koinViewModel()
 
-    @Suppress("UNCHECKED_CAST")
-    val backstack = rememberNavBackStack(config, BeforeYouStart) as NavBackStack<OnboardingNavKey>
+    val backstack = rememberNavBackStack(config, BeforeYouStart)
 
     LaunchedCollectWithLifecycle(viewModel.events) { event ->
         when (event) {
@@ -73,39 +71,34 @@ fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier
                 ForwardBackwardTransition.popExitTransition(),
             )
         },
-    ) { key ->
-        when (key) {
-            AddProfile ->
-                NavEntry(key) {
+        entryProvider =
+            entryProvider {
+                entry<AddProfile> {
                     AddProfileScreen(
                         viewModel = viewModel,
                         onBack = { backstack.removeLastIf<AddProfile>() },
                         onContinue = viewModel::finishOnboarding,
                     )
                 }
-
-            AlmostDone ->
-                NavEntry(key) {
+                entry<AlmostDone> {
                     NavigationBackHandler(
                         state = rememberNavigationEventState(NavigationEventInfo.None),
                         onBackCompleted = {},
                     )
                     AlmostDoneScreen()
                 }
-
-            BeforeYouStart ->
-                NavEntry(key) { BeforeYouStartScreen(onContinue = { backstack.add(FoodDatabase) }) }
-
-            FoodDatabase ->
-                NavEntry(key) {
+                entry<BeforeYouStart> {
+                    BeforeYouStartScreen(onContinue = { backstack.add(FoodDatabase) })
+                }
+                entry<FoodDatabase> {
                     FoodDatabaseScreen(
                         viewModel = viewModel,
                         onBack = { backstack.removeLastIf<FoodDatabase>() },
                         onContinue = { backstack.add(AddProfile) },
                     )
                 }
-        }
-    }
+            },
+    )
 }
 
 @OptIn(ExperimentalSerializationApi::class)
