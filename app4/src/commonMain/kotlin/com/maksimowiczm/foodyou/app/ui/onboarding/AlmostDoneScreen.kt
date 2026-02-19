@@ -28,7 +28,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AlmostDoneScreen(modifier: Modifier = Modifier) {
+internal fun AlmostDoneScreen(modifier: Modifier = Modifier) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(

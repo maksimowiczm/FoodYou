@@ -34,7 +34,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun BeforeYouStartScreen(onContinue: () -> Unit, modifier: Modifier = Modifier) {
+internal fun BeforeYouStartScreen(onContinue: () -> Unit, modifier: Modifier = Modifier) {
     val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
 

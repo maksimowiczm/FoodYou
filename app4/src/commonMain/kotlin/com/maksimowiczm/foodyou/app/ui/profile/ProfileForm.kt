@@ -27,7 +27,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
-import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar.Predefined.Type
+import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar.Predefined.Variant
 import foodyou.app.generated.resources.*
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -73,7 +73,7 @@ fun ProfileForm(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp),
             ) {
-                items(items = Type.entries.map { it.toAvatar() }) { avatar ->
+                items(items = Variant.entries.map { it.toAvatar() }) { avatar ->
                     FilledIconToggleButton(
                         checked = uiState.avatar == avatar,
                         onCheckedChange = { if (it) onSetAvatar(avatar) },

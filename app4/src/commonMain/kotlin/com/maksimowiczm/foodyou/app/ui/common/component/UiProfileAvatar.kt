@@ -18,12 +18,15 @@ import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.coil.securelyAccessFile
 import io.github.vinceglb.filekit.lastModified
+import kotlinx.serialization.Serializable
 
 @Immutable
+@Serializable
 sealed interface UiProfileAvatar {
     @Immutable
-    data class Predefined(val type: Type) : UiProfileAvatar {
-        enum class Type {
+    @Serializable
+    data class Predefined(val variant: Variant) : UiProfileAvatar {
+        enum class Variant {
             PERSON,
             WOMAN,
             MAN,
@@ -36,11 +39,11 @@ sealed interface UiProfileAvatar {
         override fun Avatar(modifier: Modifier) {
             Icon(
                 imageVector =
-                    when (type) {
-                        Type.PERSON -> Icons.Outlined.Person
-                        Type.WOMAN -> Icons.Outlined.Person3
-                        Type.MAN -> Icons.Outlined.Person4
-                        Type.ENGINEER -> Icons.Outlined.Engineering
+                    when (variant) {
+                        Variant.PERSON -> Icons.Outlined.Person
+                        Variant.WOMAN -> Icons.Outlined.Person3
+                        Variant.MAN -> Icons.Outlined.Person4
+                        Variant.ENGINEER -> Icons.Outlined.Engineering
                     },
                 contentDescription = null,
                 modifier = modifier,
@@ -49,6 +52,7 @@ sealed interface UiProfileAvatar {
     }
 
     @Immutable
+    @Serializable
     data class Photo(val uri: String) : UiProfileAvatar {
         @Composable
         override fun Avatar(modifier: Modifier) {
@@ -87,22 +91,23 @@ object ProfileAvatarMapper {
         when (model) {
             is Profile.Avatar.Photo -> UiProfileAvatar.Photo(model.uri)
             Profile.Avatar.Predefined.Engineer ->
-                UiProfileAvatar.Predefined.Type.ENGINEER.toAvatar()
+                UiProfileAvatar.Predefined.Variant.ENGINEER.toAvatar()
 
-            Profile.Avatar.Predefined.Man -> UiProfileAvatar.Predefined.Type.MAN.toAvatar()
-            Profile.Avatar.Predefined.Person -> UiProfileAvatar.Predefined.Type.PERSON.toAvatar()
-            Profile.Avatar.Predefined.Woman -> UiProfileAvatar.Predefined.Type.WOMAN.toAvatar()
+            Profile.Avatar.Predefined.Man -> UiProfileAvatar.Predefined.Variant.MAN.toAvatar()
+            Profile.Avatar.Predefined.Person -> UiProfileAvatar.Predefined.Variant.PERSON.toAvatar()
+            Profile.Avatar.Predefined.Woman -> UiProfileAvatar.Predefined.Variant.WOMAN.toAvatar()
         }
 
     fun toModel(uiModel: UiProfileAvatar): Profile.Avatar =
         when (uiModel) {
             is UiProfileAvatar.Photo -> Profile.Avatar.Photo(uiModel.uri)
             is UiProfileAvatar.Predefined ->
-                when (uiModel.type) {
-                    UiProfileAvatar.Predefined.Type.PERSON -> Profile.Avatar.Predefined.Person
-                    UiProfileAvatar.Predefined.Type.WOMAN -> Profile.Avatar.Predefined.Woman
-                    UiProfileAvatar.Predefined.Type.MAN -> Profile.Avatar.Predefined.Man
-                    UiProfileAvatar.Predefined.Type.ENGINEER -> Profile.Avatar.Predefined.Engineer
+                when (uiModel.variant) {
+                    UiProfileAvatar.Predefined.Variant.PERSON -> Profile.Avatar.Predefined.Person
+                    UiProfileAvatar.Predefined.Variant.WOMAN -> Profile.Avatar.Predefined.Woman
+                    UiProfileAvatar.Predefined.Variant.MAN -> Profile.Avatar.Predefined.Man
+                    UiProfileAvatar.Predefined.Variant.ENGINEER ->
+                        Profile.Avatar.Predefined.Engineer
                 }
         }
 }

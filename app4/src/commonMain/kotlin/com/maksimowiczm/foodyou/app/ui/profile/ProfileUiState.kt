@@ -19,6 +19,6 @@ data class ProfileUiState(
     }
 
     companion object {
-        val DEFAULT_AVATAR = UiProfileAvatar.Predefined(UiProfileAvatar.Predefined.Type.PERSON)
+        val DEFAULT_AVATAR = UiProfileAvatar.Predefined(UiProfileAvatar.Predefined.Variant.PERSON)
     }
 }

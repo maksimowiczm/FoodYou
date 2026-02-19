@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.OpenFoodFactsPrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.component.UsdaPrivacyCard
@@ -29,29 +28,8 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun FoodDatabaseScreen(
-    viewModel: OnboardingViewModel,
-    onBack: () -> Unit,
-    onContinue: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-
-    FoodDatabaseScreen(
-        uiState = uiState,
-        onAllowOpenFoodFactsChange = viewModel::setAllowOpenFoodFacts,
-        onAllowFoodDataCentralChange = viewModel::setAllowFoodDataCentral,
-        onBack = onBack,
-        onContinue = onContinue,
-        modifier = modifier,
-    )
-}
-
-@Composable
-private fun FoodDatabaseScreen(
-    uiState: OnboardingUiState,
-    onAllowOpenFoodFactsChange: (Boolean) -> Unit,
-    onAllowFoodDataCentralChange: (Boolean) -> Unit,
+internal fun FoodDatabaseScreen(
+    state: OnboardingState,
     onBack: () -> Unit,
     onContinue: () -> Unit,
     modifier: Modifier = Modifier,
@@ -99,15 +77,15 @@ private fun FoodDatabaseScreen(
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 OpenFoodFactsPrivacyCard(
-                    selected = uiState.allowOpenFoodFacts,
-                    onSelectedChange = onAllowOpenFoodFactsChange,
+                    selected = state.allowOpenFoodFacts,
+                    onSelectedChange = { state.allowOpenFoodFacts = it },
                 )
             }
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 UsdaPrivacyCard(
-                    selected = uiState.allowFoodDataCentral,
-                    onSelectedChange = onAllowFoodDataCentralChange,
+                    selected = state.allowFoodDataCentral,
+                    onSelectedChange = { state.allowFoodDataCentral = it },
                 )
             }
         }
@@ -118,12 +96,6 @@ private fun FoodDatabaseScreen(
 @Composable
 private fun FoodDatabaseScreenPreview() {
     PreviewFoodYouTheme {
-        FoodDatabaseScreen(
-            uiState = OnboardingUiState(),
-            onAllowOpenFoodFactsChange = {},
-            onAllowFoodDataCentralChange = {},
-            onBack = {},
-            onContinue = {},
-        )
+        FoodDatabaseScreen(state = rememberOnboardingState(), onBack = {}, onContinue = {})
     }
 }

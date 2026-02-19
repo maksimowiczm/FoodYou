@@ -19,7 +19,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddAPhoto
@@ -43,10 +43,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
-import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar.Predefined.Type
+import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar.Predefined.Variant
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import foodyou.app.generated.resources.*
 import io.github.vinceglb.filekit.FileKit
@@ -58,29 +57,8 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AddProfileScreen(
-    viewModel: OnboardingViewModel,
-    onBack: () -> Unit,
-    onContinue: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-
-    AddProfileScreen(
-        uiState = uiState,
-        onSetName = viewModel::setProfileName,
-        onSetAvatar = viewModel::setAvatar,
-        onBack = onBack,
-        onContinue = onContinue,
-        modifier = modifier,
-    )
-}
-
-@Composable
-private fun AddProfileScreen(
-    uiState: OnboardingUiState,
-    onSetName: (String) -> Unit,
-    onSetAvatar: (UiProfileAvatar) -> Unit,
+internal fun AddProfileScreen(
+    state: OnboardingState,
     onBack: () -> Unit,
     onContinue: () -> Unit,
     modifier: Modifier = Modifier,
@@ -134,10 +112,10 @@ private fun AddProfileScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp),
                 ) {
-                    items(items = Type.entries.map { it.toAvatar() }) { avatar ->
+                    items(items = Variant.entries.map { it.toAvatar() }) { avatar ->
                         FilledIconToggleButton(
-                            checked = uiState.avatar == avatar,
-                            onCheckedChange = { if (it) onSetAvatar(avatar) },
+                            checked = state.profileAvatar == avatar,
+                            onCheckedChange = { if (it) state.profileAvatar = avatar },
                             shapes = IconButtonDefaults.toggleableShapes(),
                             modifier = modifier.size(56.dp),
                         ) {
@@ -146,21 +124,21 @@ private fun AddProfileScreen(
                     }
                     item {
                         FilledIconToggleButton(
-                            checked = uiState.avatar is UiProfileAvatar.Photo,
+                            checked = state.profileAvatar is UiProfileAvatar.Photo,
                             onCheckedChange = {
                                 scope.launch {
                                     val image = FileKit.openFilePicker(type = FileKitType.Image)
                                     if (image != null) {
-                                        onSetAvatar(UiProfileAvatar.Photo(image.path))
+                                        state.profileAvatar = UiProfileAvatar.Photo(image.path)
                                     }
                                 }
                             },
                             shapes = IconButtonDefaults.toggleableShapes(),
                             modifier = modifier.size(56.dp),
                         ) {
-                            when (uiState.avatar) {
+                            when (val avatar = state.profileAvatar) {
                                 is UiProfileAvatar.Photo ->
-                                    uiState.avatar.Avatar(Modifier.size(40.dp).clip(CircleShape))
+                                    avatar.Avatar(Modifier.size(40.dp).clip(CircleShape))
 
                                 else ->
                                     Icon(
@@ -183,17 +161,15 @@ private fun AddProfileScreen(
                     style = MaterialTheme.typography.labelLarge,
                 )
                 OutlinedTextField(
-                    value = uiState.profileName,
-                    onValueChange = onSetName,
+                    state = state.nameTextFieldState,
                     placeholder = { Text(stringResource(Res.string.headline_profile_name)) },
-                    singleLine = true,
+                    lineLimits = TextFieldLineLimits.SingleLine,
                     modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-                    keyboardActions =
-                        KeyboardActions {
-                            if (uiState.isProfileValid) {
-                                onContinue()
-                            }
-                        },
+                    onKeyboardAction = {
+                        if (state.isValid) {
+                            onContinue()
+                        }
+                    },
                 )
             }
             Spacer(Modifier.height(32.dp))
@@ -213,7 +189,7 @@ private fun AddProfileScreen(
                     onClick = onContinue,
                     shapes = ButtonDefaults.shapesFor(fabHeight),
                     modifier = Modifier.widthIn(min = 250.dp),
-                    enabled = uiState.isProfileValid,
+                    enabled = state.isValid,
                     contentPadding = ButtonDefaults.contentPaddingFor(fabHeight),
                 ) {
                     Text(
@@ -231,12 +207,6 @@ private fun AddProfileScreen(
 @Composable
 private fun AddProfileScreenPreview() {
     PreviewFoodYouTheme {
-        AddProfileScreen(
-            uiState = OnboardingUiState(),
-            onSetName = {},
-            onSetAvatar = {},
-            onBack = {},
-            onContinue = {},
-        )
+        AddProfileScreen(state = rememberOnboardingState(), onBack = {}, onContinue = {})
     }
 }

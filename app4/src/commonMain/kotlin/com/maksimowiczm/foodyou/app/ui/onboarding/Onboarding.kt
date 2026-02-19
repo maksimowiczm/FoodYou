@@ -27,6 +27,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier) {
     val viewModel: OnboardingViewModel = koinViewModel()
+    val state = rememberOnboardingState()
 
     val backstack = rememberNavBackStack(config, BeforeYouStart)
 
@@ -75,9 +76,16 @@ fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier
             entryProvider {
                 entry<AddProfile> {
                     AddProfileScreen(
-                        viewModel = viewModel,
+                        state = state,
                         onBack = { backstack.removeLastIf<AddProfile>() },
-                        onContinue = viewModel::finishOnboarding,
+                        onContinue = {
+                            viewModel.finishOnboarding(
+                                name = state.nameTextFieldState.text.toString(),
+                                avatar = state.profileAvatar,
+                                allowOpenFoodFacts = state.allowOpenFoodFacts,
+                                allowFoodDataCentral = state.allowFoodDataCentral,
+                            )
+                        },
                     )
                 }
                 entry<AlmostDone> {
@@ -92,7 +100,7 @@ fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier
                 }
                 entry<FoodDatabase> {
                     FoodDatabaseScreen(
-                        viewModel = viewModel,
+                        state = state,
                         onBack = { backstack.removeLastIf<FoodDatabase>() },
                         onContinue = { backstack.add(AddProfile) },
                     )
