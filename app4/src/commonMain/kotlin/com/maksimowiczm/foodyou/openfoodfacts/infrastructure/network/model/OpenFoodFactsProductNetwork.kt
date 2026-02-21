@@ -146,14 +146,22 @@ internal data class NutriscoreData(
     @SerialName("fruits_vegetables_nuts_colza_walnut_olive_oils_value")
     val fruitsVegetablesNutsColzaWalnutOliveOilsValue: Double? = null,
     @SerialName("grade") val grade: String? = null,
-    @SerialName("is_beverage") val isBeverage: Int? = null,
+    @Serializable(with = FlexibleIntSerializer::class)
+    @SerialName("is_beverage")
+    val isBeverage: Int? = null,
     @Serializable(with = FlexibleIntSerializer::class)
     @SerialName("is_cheese")
     val isCheese: Int? = null,
-    @SerialName("is_fat") val isFat: Int? = null,
-    @SerialName("is_water") val isWater: Int? = null,
-    @SerialName("is_fat_oil_nuts_seeds") val isFatOilNutsSeeds: Int? = null,
-    @SerialName("is_red_meat_product") val isRedMeatProduct: Int? = null,
+    @Serializable(with = FlexibleIntSerializer::class) @SerialName("is_fat") val isFat: Int? = null,
+    @Serializable(with = FlexibleIntSerializer::class)
+    @SerialName("is_water")
+    val isWater: Int? = null,
+    @Serializable(with = FlexibleIntSerializer::class)
+    @SerialName("is_fat_oil_nuts_seeds")
+    val isFatOilNutsSeeds: Int? = null,
+    @Serializable(with = FlexibleIntSerializer::class)
+    @SerialName("is_red_meat_product")
+    val isRedMeatProduct: Int? = null,
     @SerialName("negative_points") val negativePoints: Int? = null,
     @SerialName("negative_points_max") val negativePointsMax: Int? = null,
     @SerialName("positive_points") val positivePoints: Int? = null,
