@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.maksimowiczm.foodyou.app.ui.common.extension.debounceIsIdle
+import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodFilter
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -35,7 +35,7 @@ internal fun OpenFoodFactsSearchChip(
     }
 
     val pages = viewModel.pages.collectAsLazyPagingItems()
-    val isIdle = remember(pages) { pages.debounceIsIdle() }.collectAsStateWithLifecycle(false).value
+    val isIdle = pages.rememberDebounceIsIdle()
     val hasError = pages.loadState.hasError
 
     val colors =

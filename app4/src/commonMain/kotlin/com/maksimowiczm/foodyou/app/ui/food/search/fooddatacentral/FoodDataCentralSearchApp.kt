@@ -14,14 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
-import com.maksimowiczm.foodyou.app.ui.common.extension.debounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.common.extension.error
+import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodDataCentralErrorCard
@@ -34,7 +33,6 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -49,11 +47,7 @@ internal fun FoodDataCentralSearchApp(
 ) {
     val density = LocalDensity.current
     val pages = viewModel.pages.collectAsLazyPagingItems()
-    val isLoading =
-        remember(pages) { pages.debounceIsIdle().map { !it } }
-            .collectAsStateWithLifecycle(false)
-            .value
-
+    val isIdle = pages.rememberDebounceIsIdle()
     val error = pages.loadState.error
     var errorCardHeight by remember { mutableIntStateOf(0) }
 
@@ -98,14 +92,14 @@ internal fun FoodDataCentralSearchApp(
             }
         }
 
-        if (pages.itemCount == 0 && !isLoading) {
+        if (pages.itemCount == 0 && isIdle) {
             Text(
                 text = stringResource(Res.string.neutral_no_food_found),
                 modifier = Modifier.safeContentPadding().align(Alignment.Center),
             )
         }
 
-        if (isLoading) {
+        if (!isIdle) {
             ContainedLoadingIndicator(
                 Modifier.align(Alignment.TopCenter)
                     .padding(top = contentPadding.calculateTopPadding())

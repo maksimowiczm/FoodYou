@@ -13,12 +13,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
-import com.maksimowiczm.foodyou.app.ui.common.extension.debounceIsIdle
+import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem
@@ -34,7 +33,6 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -48,10 +46,7 @@ internal fun FavoriteFoodSearchApp(
     viewModel: FavoriteFoodSearchViewModel = koinViewModel(),
 ) {
     val pages = viewModel.pages.collectAsLazyPagingItems()
-    val isLoading =
-        remember(pages) { pages.debounceIsIdle().map { !it } }
-            .collectAsStateWithLifecycle(false)
-            .value
+    val isIdle = pages.rememberDebounceIsIdle()
 
     Box(modifier) {
         LazyColumn(state = lazyListState, contentPadding = contentPadding) {
@@ -101,14 +96,14 @@ internal fun FavoriteFoodSearchApp(
             }
         }
 
-        if (pages.itemCount == 0 && !isLoading) {
+        if (pages.itemCount == 0 && isIdle) {
             Text(
                 text = stringResource(Res.string.neutral_no_food_found),
                 modifier = Modifier.safeContentPadding().align(Alignment.Center),
             )
         }
 
-        if (isLoading) {
+        if (!isIdle) {
             ContainedLoadingIndicator(
                 Modifier.align(Alignment.TopCenter)
                     .padding(top = contentPadding.calculateTopPadding())
