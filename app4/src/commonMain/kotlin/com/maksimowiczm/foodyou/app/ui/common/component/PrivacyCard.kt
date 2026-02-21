@@ -179,6 +179,7 @@ fun UsdaPrivacyCard(
         UpdateUsdaApiKeyDialog(
             onDismissRequest = { showApiKeyDialog = false },
             onSave = { showApiKeyDialog = false },
+            autoFocus = true,
         )
     }
 

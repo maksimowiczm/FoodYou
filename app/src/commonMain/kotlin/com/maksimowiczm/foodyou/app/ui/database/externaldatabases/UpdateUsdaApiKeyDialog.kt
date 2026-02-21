@@ -7,13 +7,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.common.domain.userpreferences.UserPreferencesRepository
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferences
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -34,13 +31,7 @@ fun UpdateUsdaApiKeyDialog(
         return
     }
 
-    val focusRequester = remember { FocusRequester() }
     val textFieldState = rememberTextFieldState(foodSearchPreferences.usda.apiKey ?: "")
-
-    LaunchedEffect(Unit) {
-        delay(200)
-        focusRequester.requestFocus()
-    }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -67,7 +58,6 @@ fun UpdateUsdaApiKeyDialog(
         text = {
             OutlinedTextField(
                 state = textFieldState,
-                modifier = Modifier.focusRequester(focusRequester),
                 placeholder = { Text(stringResource(Res.string.headline_api_key)) },
             )
         },

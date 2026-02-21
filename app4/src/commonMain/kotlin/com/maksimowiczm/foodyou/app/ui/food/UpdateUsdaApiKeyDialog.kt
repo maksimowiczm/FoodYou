@@ -25,6 +25,7 @@ fun UpdateUsdaApiKeyDialog(
     onDismissRequest: () -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
+    autoFocus: Boolean = false,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val repository: FoodDataCentralSettingsRepository = koinInject()
@@ -37,9 +38,11 @@ fun UpdateUsdaApiKeyDialog(
     val focusRequester = remember { FocusRequester() }
     val textFieldState = rememberTextFieldState(settings.apiKey ?: "")
 
-    LaunchedEffect(Unit) {
-        delay(200)
-        focusRequester.requestFocus()
+    LaunchedEffect(autoFocus) {
+        if (autoFocus) {
+            delay(200)
+            focusRequester.requestFocus()
+        }
     }
 
     AlertDialog(
