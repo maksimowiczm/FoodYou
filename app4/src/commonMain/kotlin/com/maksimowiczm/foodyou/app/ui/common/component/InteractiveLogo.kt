@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ripple
 import androidx.compose.material3.toPath
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -73,39 +74,17 @@ fun InteractiveLogo(
             animationSpec = animationSpec,
         )
 
-    val morphs = remember {
-        val shapes =
-            listOf(
-                    MaterialShapes.Diamond,
-                    MaterialShapes.Gem,
-                    MaterialShapes.Oval,
-                    MaterialShapes.Pill,
-                    MaterialShapes.VerySunny,
-                    MaterialShapes.Sunny,
-                    MaterialShapes.Pentagon,
-                    MaterialShapes.Burst,
-                    MaterialShapes.Boom,
-                    MaterialShapes.Flower,
-                    MaterialShapes.PixelCircle,
-                    MaterialShapes.Cookie4Sided,
-                    MaterialShapes.Cookie6Sided,
-                    MaterialShapes.Cookie7Sided,
-                    MaterialShapes.Cookie9Sided,
-                    MaterialShapes.Cookie12Sided,
-                    MaterialShapes.Ghostish,
-                    MaterialShapes.Clover4Leaf,
-                    MaterialShapes.Clover8Leaf,
-                )
-                .shuffled()
+    val shapes = rememberShapes()
+    val morphs =
+        remember(shapes) {
+            val pairs = mutableListOf<Pair<RoundedPolygon, RoundedPolygon>>()
+            for (i in 1 until shapes.size) {
+                pairs.add(Pair(shapes[i - 1], shapes[i]))
+            }
+            pairs.add(Pair(shapes.last(), shapes.first()))
 
-        val pairs = mutableListOf<Pair<RoundedPolygon, RoundedPolygon>>()
-        for (i in 1 until shapes.size) {
-            pairs.add(Pair(shapes[i - 1], shapes[i]))
+            pairs.map { (start, end) -> Morph(start, end) }
         }
-        pairs.add(Pair(shapes.last(), shapes.first()))
-
-        pairs.map { (start, end) -> Morph(start, end) }
-    }
     val progress = rememberWrapAroundCounter(morphs.size.toFloat())
     val morph by remember {
         derivedStateOf {
@@ -135,9 +114,9 @@ fun InteractiveLogo(
     val iconPainter = painterResource(Res.drawable.ic_sushi)
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        // This is hacky way to clip the canvas to a morphing shape because it can't be done
-        // directly in draw scope because of ripple effect. Instead we use graphicsLayer to clip and
-        // rotate the whole canvas. To keep the icon upright we rotate it back in the draw scope.
+        // This is a hacky way to clip the canvas to a morphing shape because it can't be done
+        // directly in draw scope because of ripple effect. Instead, we use graphicsLayer to clip
+        // and rotate the whole canvas. To keep the icon upright we rotate it back in the draw scope
         Canvas(
             Modifier.fillMaxSize(.95f)
                 .graphicsLayer {
@@ -187,6 +166,36 @@ fun InteractiveLogo(
     }
 }
 
+private val allowedShapes =
+    listOf(
+        MaterialShapes.Diamond,
+        MaterialShapes.Gem,
+        MaterialShapes.Oval,
+        MaterialShapes.Pill,
+        MaterialShapes.VerySunny,
+        MaterialShapes.Sunny,
+        MaterialShapes.Pentagon,
+        MaterialShapes.Burst,
+        MaterialShapes.Boom,
+        MaterialShapes.Flower,
+        MaterialShapes.PixelCircle,
+        MaterialShapes.Cookie4Sided,
+        MaterialShapes.Cookie6Sided,
+        MaterialShapes.Cookie7Sided,
+        MaterialShapes.Cookie9Sided,
+        MaterialShapes.Cookie12Sided,
+        MaterialShapes.Ghostish,
+        MaterialShapes.Clover4Leaf,
+        MaterialShapes.Clover8Leaf,
+    )
+
+@Composable
+private fun rememberShapes(): List<RoundedPolygon> {
+    var shuffledIndices by rememberSaveable { mutableStateOf(allowedShapes.indices.shuffled()) }
+
+    return remember(shuffledIndices) { shuffledIndices.map { allowedShapes[it] } }
+}
+
 @Stable
 private class WrapAroundCounter(
     private val maxValue: Float,
@@ -207,12 +216,13 @@ private fun rememberWrapAroundCounter(
     maxValue: Float,
     initialValue: Float = 0f,
 ): WrapAroundCounter {
-    val animatable = remember(initialValue) { Animatable(initialValue) }
+    var savedValue by rememberSaveable { mutableFloatStateOf(initialValue) }
 
-    val counter =
-        remember(animatable, maxValue) {
-            WrapAroundCounter(maxValue = maxValue, animatable = animatable)
-        }
+    val animatable = remember { Animatable(savedValue) }
 
-    return counter
+    LaunchedEffect(animatable.value) { savedValue = animatable.value }
+
+    return remember(animatable, maxValue) {
+        WrapAroundCounter(maxValue = maxValue, animatable = animatable)
+    }
 }
