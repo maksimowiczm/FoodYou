@@ -7,6 +7,11 @@
     <img src="./metadata/en-US/images/featureGraphic.png" alt="Feature Graphic" />
 </div>
 
+**Food You** is a free, open-source, and privacy-focused food diary and nutrition tracker built
+using [Material Design](https://m3.material.io/) principles.
+
+## Installation
+
 <div align="center">
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="75">](https://f-droid.org/packages/com.maksimowiczm.foodyou)
@@ -14,8 +19,10 @@
 
 </div>
 
-**Food You** is a free, open-source, and privacy-focused food diary and nutrition tracker built
-using [Material Design](https://m3.material.io/) principles.
+SHA-256 hash of signing certificate: `cd74b0aedd8ead8184063a65909d639a8c885cf6465829690a9be83a8904bdea`
+
+The above signature is also valid for the F-Droid, thanks to [reproducible builds](https://f-droid.org/docs/Reproducible_Builds/)
+
 
 ## ✨ Features
 
@@ -92,7 +99,7 @@ Looking for alternatives or similar tools?
 ## 📜 License
 
 ```
-Copyright (C) 2024-2025 Mateusz Maksimowicz
+Copyright (C) 2024-2026 Mateusz Maksimowicz
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
