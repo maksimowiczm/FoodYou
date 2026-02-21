@@ -25,21 +25,12 @@ internal actual fun FoodYouTheme(
     nutrientsColors: NutrientsColors?,
     content: @Composable (() -> Unit),
 ) {
-    if (themeSettings == null) {
-        FoodYouTheme(
-            isDark = isSystemInDarkTheme(),
-            theme = Theme.Default,
-            nutrientsColors = nutrientsColors,
-            content = content,
-        )
-    } else {
-        FoodYouTheme(
-            isDark = themeSettings.isDark(),
-            theme = themeSettings.theme,
-            nutrientsColors = nutrientsColors,
-            content = content,
-        )
-    }
+    FoodYouTheme(
+        isDark = themeSettings?.isDark() ?: isSystemInDarkTheme(),
+        theme = themeSettings?.theme ?: Theme.Default,
+        nutrientsColors = nutrientsColors,
+        content = content,
+    )
 }
 
 @Composable
@@ -110,11 +101,13 @@ private fun FoodYouTheme(
                 animationSpec = { MaterialTheme.motionScheme.slowEffectsSpec() },
             )
 
-    val nutrientsPalette = if (isDark) DarkNutrientsPalette else LightNutrientsPalette
+    val nutrientsPalette =
+        remember(isDark, nutrientsColors) {
+            val palette = if (isDark) DarkNutrientsPalette else LightNutrientsPalette
+            palette.applyColors(nutrientsColors)
+        }
 
-    CompositionLocalProvider(
-        LocalNutrientsPalette provides nutrientsPalette.applyColors(nutrientsColors)
-    ) {
+    CompositionLocalProvider(LocalNutrientsPalette provides nutrientsPalette) {
         MaterialTheme(colorScheme = animatedColorScheme, content = content)
     }
 }
