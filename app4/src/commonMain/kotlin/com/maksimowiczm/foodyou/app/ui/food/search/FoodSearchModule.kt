@@ -10,7 +10,7 @@ import org.koin.dsl.module
 
 val foodSearchModule = module {
     viewModel { (initialQuery: String?) ->
-        FoodSearchViewModel(initialQuery, get(), get(), get(), get())
+        FoodSearchViewModel(initialQuery, get(), get(), get(), get(), get())
     }
 
     viewModelOf(::UserFoodSearchViewModel)

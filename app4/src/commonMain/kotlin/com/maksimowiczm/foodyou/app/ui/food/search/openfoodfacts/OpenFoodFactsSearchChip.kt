@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
-import com.maksimowiczm.foodyou.app.ui.food.search.FoodFilter
+import com.maksimowiczm.foodyou.app.ui.food.search.FoodSource
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -70,9 +70,7 @@ internal fun OpenFoodFactsSearchChip(
         onClick = onSelect,
         label = { Text(stringResource(Res.string.headline_open_food_facts)) },
         modifier = modifier,
-        leadingIcon = {
-            FoodFilter.Source.OpenFoodFacts.Icon(Modifier.size(FilterChipDefaults.IconSize))
-        },
+        leadingIcon = { FoodSource.OpenFoodFacts.Icon(Modifier.size(FilterChipDefaults.IconSize)) },
         trailingIcon = {
             if (hasError) {
                 Icon(

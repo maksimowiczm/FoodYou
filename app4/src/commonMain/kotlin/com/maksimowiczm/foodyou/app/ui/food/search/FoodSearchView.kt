@@ -43,11 +43,11 @@ import org.jetbrains.compose.resources.stringResource
 internal fun FoodSearchView(
     searchBarState: SearchBarState,
     recentSearches: List<String>,
-    selectedFilter: FoodFilter.Source,
-    filters: List<FoodFilter.Source>,
+    selectedFilter: FoodSource,
+    filters: List<FoodSource>,
     onFill: (String) -> Unit,
     onSearch: (String?) -> Unit,
-    onSource: (FoodFilter.Source) -> Unit,
+    onSource: (FoodSource) -> Unit,
     inputField: @Composable () -> Unit,
 ) {
     ExpandedFullScreenSearchBar(state = searchBarState, inputField = inputField) {

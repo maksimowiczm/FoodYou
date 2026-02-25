@@ -14,8 +14,8 @@ import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchChip
 
 @Composable
 internal fun FoodSearchFilters(
-    selectedSource: FoodFilter.Source,
-    onSource: (FoodFilter.Source) -> Unit,
+    selectedSource: FoodSource,
+    onSource: (FoodSource) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
 ) {
@@ -28,29 +28,29 @@ internal fun FoodSearchFilters(
     ) {
         item {
             FavoriteFoodSearchChip(
-                selected = selectedSource == FoodFilter.Source.Favorite,
-                onSelect = { onSource(FoodFilter.Source.Favorite) },
+                selected = selectedSource == FoodSource.Favorite,
+                onSelect = { onSource(FoodSource.Favorite) },
                 modifier = Modifier.animateItem(),
             )
         }
         item {
             UserFoodSearchChip(
-                selected = selectedSource == FoodFilter.Source.YourFood,
-                onSelect = { onSource(FoodFilter.Source.YourFood) },
+                selected = selectedSource == FoodSource.YourFood,
+                onSelect = { onSource(FoodSource.YourFood) },
                 modifier = Modifier.animateItem(),
             )
         }
         item {
             OpenFoodFactsSearchChip(
-                selected = selectedSource == FoodFilter.Source.OpenFoodFacts,
-                onSelect = { onSource(FoodFilter.Source.OpenFoodFacts) },
+                selected = selectedSource == FoodSource.OpenFoodFacts,
+                onSelect = { onSource(FoodSource.OpenFoodFacts) },
                 modifier = Modifier.animateItem(),
             )
         }
         item {
             FoodDataCentralSearchChip(
-                selected = selectedSource == FoodFilter.Source.USDA,
-                onSelect = { onSource(FoodFilter.Source.USDA) },
+                selected = selectedSource == FoodSource.USDA,
+                onSelect = { onSource(FoodSource.USDA) },
                 modifier = Modifier.animateItem(),
             )
         }

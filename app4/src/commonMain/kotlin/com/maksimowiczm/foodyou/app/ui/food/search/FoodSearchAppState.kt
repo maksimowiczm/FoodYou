@@ -13,17 +13,27 @@ import androidx.compose.runtime.saveable.rememberSaveable
 internal fun rememberFoodSearchAppState(
     searchBarState: SearchBarState = rememberSearchBarState(),
     searchTextFieldState: TextFieldState = rememberTextFieldState(),
+    foodSource: FoodSource = FoodSource.Favorite,
     showBarcodeScanner: Boolean = false,
 ): FoodSearchAppState {
     val showBarcodeScanner =
         rememberSaveable(showBarcodeScanner) { mutableStateOf(showBarcodeScanner) }
 
+    val foodSource = rememberSaveable(foodSource) { mutableStateOf(foodSource) }
+
     val listStates = rememberListStates()
 
-    return remember(searchBarState, searchTextFieldState, showBarcodeScanner, listStates) {
+    return remember(
+        searchBarState,
+        searchTextFieldState,
+        foodSource,
+        showBarcodeScanner,
+        listStates,
+    ) {
         FoodSearchAppState(
             searchBarState = searchBarState,
             searchTextFieldState = searchTextFieldState,
+            foodSourceState = foodSource,
             showBarcodeScannerState = showBarcodeScanner,
             listStates = listStates,
         )
@@ -34,9 +44,11 @@ internal fun rememberFoodSearchAppState(
 internal class FoodSearchAppState(
     val searchBarState: SearchBarState,
     val searchTextFieldState: TextFieldState,
+    foodSourceState: MutableState<FoodSource>,
     showBarcodeScannerState: MutableState<Boolean>,
     val listStates: ListStates,
 ) {
+    var foodSource by foodSourceState
     var showBarcodeScanner by showBarcodeScannerState
 }
 

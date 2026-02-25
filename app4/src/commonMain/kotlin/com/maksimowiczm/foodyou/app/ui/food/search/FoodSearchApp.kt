@@ -49,6 +49,7 @@ import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchApp
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
@@ -56,6 +57,8 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -74,7 +77,6 @@ internal fun FoodSearchApp(
     val scope = rememberCoroutineScope()
 
     val viewModel: FoodSearchViewModel = koinViewModel { parametersOf(query) }
-    val filter by viewModel.filter.collectAsStateWithLifecycle()
     val recentSearches by viewModel.searchHistory.collectAsStateWithLifecycle()
     val appState: FoodSearchAppState =
         rememberFoodSearchAppState(searchTextFieldState = rememberTextFieldState(query ?: ""))
@@ -97,9 +99,39 @@ internal fun FoodSearchApp(
         favoriteFoodSearchViewModel.search(it)
     }
 
+    // Switch food source when there aren't any food available
+    LaunchedCollectWithLifecycle(viewModel.searchQuery) { query ->
+        // Don't switch when the query is blank
+        if (query is SearchQuery.Blank) {
+            return@LaunchedCollectWithLifecycle
+        }
+
+        // Don't switch when already using remote source
+        when (appState.foodSource) {
+            FoodSource.Favorite,
+            FoodSource.YourFood -> Unit
+
+            FoodSource.OpenFoodFacts,
+            FoodSource.USDA -> return@LaunchedCollectWithLifecycle
+        }
+
+        // Give it a little time to load
+        delay(150)
+
+        when {
+            favoriteFoodSearchViewModel.count.first().positive() ->
+                appState.foodSource = FoodSource.Favorite
+
+            openFoodFactsSearchViewModel.count.first().positive() ->
+                appState.foodSource = FoodSource.OpenFoodFacts
+
+            foodDataCentralSearchViewModel.count.first().positive() ->
+                appState.foodSource = FoodSource.USDA
+        }
+    }
+
     FoodSearchApp(
         appState = appState,
-        filter = filter,
         recentSearches = recentSearches,
         onSearch = onSearch,
         onBack = onBack,
@@ -113,7 +145,6 @@ internal fun FoodSearchApp(
 @Composable
 private fun FoodSearchApp(
     appState: FoodSearchAppState,
-    filter: FoodFilter,
     recentSearches: List<String>,
     onSearch: (String?) -> Unit,
     onBack: (() -> Unit)?,
@@ -121,7 +152,6 @@ private fun FoodSearchApp(
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
     onUserProduct: (UserProductIdentity) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: FoodSearchViewModel = koinViewModel(),
 ) {
     val scope = rememberCoroutineScope()
     val shimmer = rememberShimmer(ShimmerBounds.View)
@@ -156,10 +186,10 @@ private fun FoodSearchApp(
 
         remember(usda, off) {
             listOfNotNull(
-                FoodFilter.Source.Favorite,
-                FoodFilter.Source.YourFood,
-                FoodFilter.Source.OpenFoodFacts.takeIf { off },
-                FoodFilter.Source.USDA.takeIf { usda },
+                FoodSource.Favorite,
+                FoodSource.YourFood,
+                FoodSource.OpenFoodFacts.takeIf { off },
+                FoodSource.USDA.takeIf { usda },
             )
         }
     }
@@ -167,11 +197,11 @@ private fun FoodSearchApp(
     FoodSearchView(
         searchBarState = appState.searchBarState,
         recentSearches = recentSearches,
-        selectedFilter = filter.source,
+        selectedFilter = appState.foodSource,
         filters = filters,
         onFill = { search -> appState.searchTextFieldState.setTextAndPlaceCursorAtEnd(search) },
         onSearch = onSearch,
-        onSource = viewModel::changeSource,
+        onSource = { appState.foodSource = it },
         inputField = searchInputField,
     )
 
@@ -203,12 +233,12 @@ private fun FoodSearchApp(
 
             Spacer(Modifier.height(8.dp))
             FoodSearchFilters(
-                selectedSource = filter.source,
+                selectedSource = appState.foodSource,
                 onSource = {
-                    viewModel.changeSource(it)
-                    if (it == filter.source) {
+                    if (it == appState.foodSource) {
                         scope.launch { appState.listStates.state(it).animateScrollToItem(0) }
                     }
+                    appState.foodSource = it
                 },
                 modifier = Modifier.height(32.dp + 8.dp + 32.dp).fillMaxWidth(),
             )
@@ -221,8 +251,8 @@ private fun FoodSearchApp(
                 bottom = 56.dp + 32.dp,
             )
 
-        when (filter.source) {
-            FoodFilter.Source.Favorite ->
+        when (appState.foodSource) {
+            FoodSource.Favorite ->
                 FavoriteFoodSearchApp(
                     shimmer = shimmer,
                     contentPadding = contentPadding,
@@ -237,7 +267,7 @@ private fun FoodSearchApp(
                     modifier = Modifier.fillMaxSize(),
                 )
 
-            FoodFilter.Source.YourFood ->
+            FoodSource.YourFood ->
                 UserFoodSearchApp(
                     shimmer = shimmer,
                     contentPadding = contentPadding,
@@ -246,7 +276,7 @@ private fun FoodSearchApp(
                     modifier = Modifier.fillMaxSize(),
                 )
 
-            FoodFilter.Source.OpenFoodFacts ->
+            FoodSource.OpenFoodFacts ->
                 OpenFoodFactsSearchApp(
                     shimmer = shimmer,
                     contentPadding = contentPadding,
@@ -255,7 +285,7 @@ private fun FoodSearchApp(
                     modifier = Modifier.fillMaxSize(),
                 )
 
-            FoodFilter.Source.USDA ->
+            FoodSource.USDA ->
                 FoodDataCentralSearchApp(
                     shimmer = shimmer,
                     contentPadding = contentPadding,
@@ -340,10 +370,12 @@ object FoodSearchAppDefaults {
     }
 }
 
-private fun ListStates.state(source: FoodFilter.Source) =
+private fun ListStates.state(source: FoodSource) =
     when (source) {
-        FoodFilter.Source.YourFood -> yourFood
-        FoodFilter.Source.OpenFoodFacts -> openFoodFacts
-        FoodFilter.Source.USDA -> usda
-        FoodFilter.Source.Favorite -> favorite
+        FoodSource.YourFood -> yourFood
+        FoodSource.OpenFoodFacts -> openFoodFacts
+        FoodSource.USDA -> usda
+        FoodSource.Favorite -> favorite
     }
+
+private fun Int?.positive(): Boolean = this != null && this > 0

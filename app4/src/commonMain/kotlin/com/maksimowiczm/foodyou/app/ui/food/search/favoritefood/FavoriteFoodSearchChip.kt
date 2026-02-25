@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
-import com.maksimowiczm.foodyou.app.ui.food.search.FoodFilter
+import com.maksimowiczm.foodyou.app.ui.food.search.FoodSource
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -66,9 +66,7 @@ internal fun FavoriteFoodSearchChip(
         onClick = onSelect,
         label = { Text(stringResource(Res.string.headline_favorite)) },
         modifier = modifier,
-        leadingIcon = {
-            FoodFilter.Source.Favorite.Icon(Modifier.size(FilterChipDefaults.IconSize))
-        },
+        leadingIcon = { FoodSource.Favorite.Icon(Modifier.size(FilterChipDefaults.IconSize)) },
         trailingIcon = {
             if (hasError) {
                 Icon(

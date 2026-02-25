@@ -10,8 +10,10 @@ import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -22,12 +24,19 @@ internal class FoodDataCentralSearchViewModel(
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
 
     private val searchParameters =
-        searchQuery.map { query ->
-            FoodDataCentralSearchParameters(
-                query = query,
-                orderBy = FoodDataCentralSearchParameters.OrderBy.NameAscending,
+        searchQuery
+            .distinctUntilChanged()
+            .map { query ->
+                FoodDataCentralSearchParameters(
+                    query = query,
+                    orderBy = FoodDataCentralSearchParameters.OrderBy.NameAscending,
+                )
+            }
+            .shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                replay = 1,
             )
-        }
 
     val pages =
         searchParameters.flatMapLatest { repository.search(it, PAGE_SIZE) }.cachedIn(viewModelScope)

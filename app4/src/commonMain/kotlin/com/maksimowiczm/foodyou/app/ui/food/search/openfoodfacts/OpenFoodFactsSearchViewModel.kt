@@ -10,8 +10,10 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParamete
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -22,12 +24,19 @@ internal class OpenFoodFactsSearchViewModel(
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
 
     private val searchParameters =
-        searchQuery.map { query ->
-            OpenFoodFactsSearchParameters(
-                query = query,
-                orderBy = OpenFoodFactsSearchParameters.OrderBy.Relevance,
+        searchQuery
+            .distinctUntilChanged()
+            .map { query ->
+                OpenFoodFactsSearchParameters(
+                    query = query,
+                    orderBy = OpenFoodFactsSearchParameters.OrderBy.Relevance,
+                )
+            }
+            .shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                replay = 1,
             )
-        }
 
     val pages =
         searchParameters.flatMapLatest { repository.search(it, PAGE_SIZE) }.cachedIn(viewModelScope)
