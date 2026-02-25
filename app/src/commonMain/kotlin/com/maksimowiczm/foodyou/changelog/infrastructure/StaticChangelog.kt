@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_4_4,
                 v_3_4_3,
                 v_3_4_2,
                 v_3_4_1,
@@ -48,6 +49,17 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_4_4 =
+        Version(
+            version = "3.4.4",
+            date = LocalDate(2026, 2, 25),
+            bugFixes =
+                listOf(
+                    "Fixed an issue with setting the FoodData Central API key on the search screen",
+                    "Fixed Open Food Facts 'nutriments' search error",
+                ),
+        )
 
     val v_3_4_3 =
         Version(
