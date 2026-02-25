@@ -78,7 +78,7 @@
     <string name="nutriment_sugars">Cukry</string>
     <string name="nutriment_fats">Tuky</string>
     <string name="nutriment_fats_short">T</string>
-    <string name="nutriment_saturated_fats">Nasycené tuky</string>
+    <string name="nutriment_saturated_fats">Nasycené mastné kyseliny</string>
     <string name="nutriment_polyunsaturated_fats">Polynenasycené mastné kyseliny</string>
     <string name="nutriment_monounsaturated_fats">Mononenasycené mastné kyseliny</string>
     <string name="nutriment_omega_3">Omega-3 mastné kyseliny</string>
@@ -157,6 +157,7 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Zobrazit více</string>
     <string name="action_download_product">Stáhnout produkt</string>
     <string name="action_copy_and_open_bug_report">Kopírovat a otevřít hlášení o chybě</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Kopírovat &amp; nahlásit</string>
     <string name="action_show_details">Zobrazit detaily</string>
     <string name="action_browse_usda">Procházet FoodData Central (USDA)</string>
     <string name="action_set_key">Nastavit klíč</string>
@@ -230,6 +231,7 @@
     <string name="description_please_wait_while_exporting_products">Prosím počkejte na export produktů</string>
     <string name="headline_launcher_icon_by_icons8">Ikona aplikace od Icons8</string>
     <string name="description_open_food_facts">Kolaborativní, svobodná a otevřená databáze potravit z celého světa</string>
+    <string name="error_open_food_facts_rate_limit">Byl překročen API limit pro Open Food Facts</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Exportuji produkty</string>
     <string name="notification_importing_products">Importuji produkty</string>

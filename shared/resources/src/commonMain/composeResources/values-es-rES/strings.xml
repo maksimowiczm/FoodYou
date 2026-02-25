@@ -5,8 +5,9 @@
     <string name="headline_settings">Ajustes</string>
     <string name="headline_daily_goals">Objetivo diario</string>
     <string name="headline_general">General</string>
-    <string name="headline_macronutrients">Marcronutrientes</string>
+    <string name="headline_macronutrients">Macronutrientes</string>
     <string name="headline_meals">Comidas</string>
+    <string name="headline_delete_food">Eliminar alimento</string>
     <string name="headline_edit_product">Editar producto</string>
     <string name="headline_permission_required">Permiso necesario</string>
     <string name="headline_language">Idioma</string>
@@ -36,15 +37,16 @@
     <string name="headline_other">Otros</string>
     <string name="headline_vitamins">Vitaminas</string>
     <string name="headline_minerals">Minerales</string>
-    <string name="headline_supported_URLs" description="URLs that can be used to add products">Enlaces soportados</string>
-    <string name="headline_something_went_wrong">Oops! Algo ha ido mal</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">URL soportadas</string>
+    <string name="headline_something_went_wrong">¡Ups! Algo salió mal</string>
     <string name="headline_daily_goals_settings">Configuración de los objetivos diarios</string>
-    <string name="headline_api_key">Llave API</string>
+    <string name="headline_api_key">Clave API</string>
     <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Fuente</string>
     <string name="headline_features">Características</string>
     <string name="weight">Peso</string>
     <string name="unit_energy" description="Energy as calories">Energía</string>
     <string name="unit_kcal">kcal</string>
+    <string name="unit_kilojoules">kJ</string>
     <plurals name="unit_gram">
         <item quantity="one">gramo</item>
         <item quantity="other">gramos</item>
@@ -53,6 +55,8 @@
         <item quantity="one">mililitro</item>
         <item quantity="other">mililitros</item>
     </plurals>
+    <string name="unit_ounce_short">onz</string>
+    <string name="unit_fluid_ounce_short">liq onz</string>
     <string name="product_package_weight">Peso del paquete</string>
     <string name="product_package">Paquete</string>
     <string name="product_serving_weight">Peso por porción</string>
@@ -63,7 +67,7 @@
     <string name="product_link">Enlace del producto</string>
     <string name="recipe_servings">Porciones</string>
     <string name="description_recipe_servings">Cuantas raciones hace esta receta</string>
-    <string name="nutriment_proteins">Proteinas</string>
+    <string name="nutriment_proteins">Proteínas</string>
     <string name="nutriment_proteins_short">P</string>
     <string name="nutriment_carbohydrates">Carbohidratos</string>
     <string name="nutriment_carbohydrates_short">C</string>
@@ -76,8 +80,24 @@
     <string name="nutriment_omega_3">Ácidos grasos Omega-3</string>
     <string name="nutriment_omega_6">Ácidos grasos Omega-6</string>
     <string name="nutriment_salt">Sal</string>
+    <string name="nutriment_fiber">Fibra dietética</string>
     <string name="nutriment_cholesterol">Colesterol</string>
     <string name="nutriment_caffeine">Cafeína</string>
+    <string name="nutriment_trans_fats">Grasas trans</string>
+    <string name="nutriment_added_sugars">Azúcares añadidos</string>
+    <string name="nutriment_soluble_fiber">Fibra Soluble</string>
+    <string name="nutriment_insoluble_fiber">Fibra insoluble</string>
+    <string name="vitamin_a">Vitamina A (Retinol)</string>
+    <string name="vitamin_b1">Vitamina B1 (Tiamina)</string>
+    <string name="vitamin_b2">Vitamina B2 (Riboflavina)</string>
+    <string name="vitamin_b3">Vitamina B3 (Niacina)</string>
+    <string name="vitamin_b5">Vitamina B5 (Ácido Pantoténico)</string>
+    <string name="vitamin_b6">Vitamina B6 (Piridoxina)</string>
+    <string name="vitamin_b7">Vitamina B7 (Biotina)</string>
+    <string name="vitamin_b9">Vitamina B9 (Ácido fólico)</string>
+    <string name="vitamin_b12">Vitamina B12 (Cobalamina)</string>
+    <string name="vitamin_c">Vitamina C (Ácido ascórbico)</string>
+    <string name="vitamin_d">Vitamina D (Calciferol)</string>
     <string name="vitamin_e">Vitamina E</string>
     <string name="vitamin_k">Vitamina K</string>
     <string name="mineral_manganese">Manganeso</string>
@@ -116,6 +136,7 @@
     <string name="action_disable_camera_flash">Deshabilita el flash</string>
     <string name="action_prevent_screen_capture">Prevenir capturas de pantalla</string>
     <string name="action_go_to_today">Ir a hoy</string>
+    <string name="action_feature_request_on_github">Solicitar características en GitHub</string>
     <string name="action_show_calendar">Mostrar calendario</string>
     <string name="action_reorder">Reordenar</string>
     <string name="action_move_up" description="reorder list item up">Mover arriba</string>
@@ -132,9 +153,11 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mostrar más</string>
     <string name="action_download_product">Descargar producto</string>
     <string name="action_copy_and_open_bug_report">Copiar y abrir informe de error</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Copiar &amp; reportar</string>
     <string name="action_show_details">Mostrar detalles</string>
-    <string name="action_set_key">Establece clave</string>
-    <string name="action_obtain_key">Obten clave</string>
+    <string name="action_browse_usda">Buscar en Food Data Central (USDA)</string>
+    <string name="action_set_key">Establecer clave</string>
+    <string name="action_obtain_key">Obtener clave</string>
     <string name="action_dont_show_again">No mostrar de nuevo</string>
     <string name="neutral_barcode_scanner_camera_request">Permitir el acceso a su cámara para escanear códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Necesitas tener permiso a la cámara para poder escanear el código de barras</string>
@@ -144,13 +167,18 @@
         <item quantity="one">%1$d caloría restante</item>
         <item quantity="other">%1$d calorías restantes</item>
     </plurals>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">Kilojulio restante</item>
+        <item quantity="other">Kilojulios restantes</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Establecer objetivos diarios de nutrición</string>
     <string name="neutral_set_your_meal_schedule">Establecer tu horario de comidas</string>
     <string name="neutral_permanently_delete_meal">¿Eliminar comida permanentemente?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">La comida se eliminará de forma permanente. Todos los datos relacionados con esta comida se perderán.</string>
     <string name="neutral_required">Requerido</string>
     <string name="neutral_help_translating_the_app">Ayuda a traducir la aplicación</string>
     <string name="neutral_copied">Información copiada al portapapeles</string>
-    <string name="neutral_product_created">Producte creat</string>
+    <string name="neutral_product_created">Producto creado</string>
     <string name="question_discard_product">¿Descartar producto?</string>
     <string name="question_discard_changes">¿Descartar cambios?</string>
     <string name="question_discard_recipe">¿Descartar receta?</string>
@@ -165,12 +193,18 @@
     <string name="error_unknown_error">Error desconocido</string>
     <string name="error_measurement_error">Error de medida, por favor compruebe el peso de la porción y del paquete</string>
     <string name="error_api_key_is_invalid">Llave API inválida</string>
+    <string name="error_not_a_barcode">No es un código de barras</string>
     <string name="positive_goal_reached">Objetivo alcanzado</string>
     <string name="positive_ok">Vale</string>
     <plurals name="negative_exceeded_by_calories">
-        <item quantity="one">Excedido en %1$d caloría</item>
-        <item quantity="other">Excedido en %1$d calorías</item>
+        <item quantity="one">Excedido por %1$d caloría</item>
+        <item quantity="other">Excedido por %1$d calorías</item>
     </plurals>
+    <plurals name="negative_exceeded_by_kilojoules">
+        <item quantity="one">Excedido por %1$d Kilojulio </item>
+        <item quantity="other">Excedido por %1$d Kilojulios</item>
+    </plurals>
+    <string name="description_delete_food">El alimento será eliminado permanentemente</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Esta entrada se borrará de tu agenda. Puedes volver a añadirla en cualquier momento.</string>
     <string name="description_about_setting">Más información sobre la aplicación</string>
     <string name="description_time_based_meals_sorting">Si esta opción está activada, se mostrarán en primer lugar las comidas actuales</string>
@@ -182,27 +216,179 @@
     <string name="description_download_product_hint">Puede pegar cualquier texto. Se utilizará el primer enlace.</string>
     <string name="description_show_macronutrients_goals">Mostrar objetivos de los macronutrientes</string>
     <string name="description_please_wait_while_importing_products">Por favor, espera mientras se importan los productos</string>
+    <string name="description_please_wait_while_exporting_products">Por favor, espera mientras se exportan los productos</string>
     <string name="headline_launcher_icon_by_icons8">Icono hecho con Icons8</string>
     <string name="description_open_food_facts">Una base de datos colaborativa, gratuita y abierta de productos alimentarios de todo el mundo</string>
+    <string name="error_open_food_facts_rate_limit">Se ha superado el límite de la API de Open Food Facts</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Exportando productos</string>
     <string name="notification_importing_products">Importando productos</string>
+    <string name="notification_importing_products_success">Se han acabado de importar los productos</string>
     <string name="description_food_data_central_usda">FoodData Central es la fuente completa de datos sobre la composición de los alimentos del USDA, con múltiples tipos de datos distintos</string>
+    <string name="error_usda_rate_limit">Se ha superado el límite de la API de FoodData Central (USDA)</string>
+    <string name="description_swiss_food_composition_database_short">La base de datos suiza de composición alimentaria incluye información nutricional para más de 1.100 productos alimenticios generales</string>
+    <string name="description2_swiss_food_composition_database">La base de datos suiza de composición de alimentos incluye información nutricional de más de 1.100 productos alimenticios generales. Está disponible en cuatro idiomas. Para importar estos productos a su diario de alimentos, seleccione el idioma que prefieras.</string>
     <string name="headline_external_databases">Bases de datos externas</string>
+    <string name="description_external_databases">Ver bases de datos compatibles</string>
     <string name="feature_manual_database_import">Importación manual de bases de datos</string>
-    <string name="action_unpack" description="Unpack the recipe ingredients">Desempaqueta</string>
+    <string name="action_unpack" description="Unpack the recipe ingredients">Desempaquetar</string>
     <string name="headline_sponsor">Patrocinador</string>
-    <string name="action_write_an_email">Escribir un correo electrónico</string>
-    <string name="headline_contact">Contacto</string>
-    <string name="description_sponsor_contact">Si tienes alguna petición relacionada con el patrocinio, no dudes en ponerte en contacto conmigo por correo electrónico o GitHub.</string>
+    <string name="description_sponsor_short_2">Apoya el crecimiento de la aplicación</string>
+    <string name="headline_source_code">Código fuente</string>
+    <string name="action_write_an_email">Escribir un email</string>
+    <string name="headline_contact">Contactar</string>
+    <string name="description_sponsor_contact">Si tienes alguna petición relacionada para patrocinar, no dudes en ponerte en contacto conmigo por correo electrónico o GitHub.</string>
     <string name="sponsor_bank_or_card">Cuenta bancaria o tarjeta de crédito</string>
     <string name="action_treat_as_liquid">Tratar como un líquido</string>
     <string name="description_treat_as_liquid">Preferir mililitros cuando se mida</string>
     <string name="headline_personalization">Personalización</string>
     <string name="description_personalization">Personaliza tu experiencia</string>
     <string name="headline_nutrition_facts">Información nutricional</string>
+    <string name="description_personalize_nutrition_facts_short">Reorganizar la información nutricional</string>
     <string name="action_reset_ordering">Restablecer el orden</string>
     <string name="headline_reset_to_default">Restablecer valores por defecto</string>
     <string name="action_reset" description="Confirm resetting">Reiniciar</string>
     <string name="description_reset_nutrition_facts">Restablecer la personalización de la información nutricional por defecto</string>
+    <string name="headline_note">Nota</string>
+    <string name="description_add_note">Notas opcionales (p. ej., ingredientes, es vegano, alergenos, aditivos) o cualquier otro detalle no nutritivo</string>
+    <string name="action_try_again">Intentar de nuevo</string>
+    <string name="description_calories_are_calculated">La energía se calcula automáticamente a partir de macronutrientes. Puede desactivar esta función e introducir el valor manualmente si es necesario. El alcohol no está incluido en este cálculo.</string>
+    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
+    <string name="neutral_an_error_occurred">Ha ocurrido un error</string>
+    <string name="action_retry">Reintentar</string>
+    <string name="action_import">Importar</string>
+    <string name="headline_today" description="Today, date">Hoy, %1$s</string>
+    <string name="headline_yesterday" description="Yesterday, date">Ayer, %1$s</string>
+    <string name="headline_tomorrow" description="Tomorrow, date">Mañana, %1$s</string>
+    <string name="headline_user" description="User, person who uses the app">Usuario</string>
+    <string name="description_food_source">Especifica de dónde provienen los datos de los alimentos</string>
+    <string name="error_food_is_missing_required_fields">Faltan campos obligatorios de comida</string>
+    <string name="headline_preview_release">Vista previa</string>
+    <string name="description_preview_release">Actualmente estás usando una versión previa. Puede estar incompleta, inestable o sujeto a cambios.</string>
+    <string name="headline_your_food">Tus alimentos</string>
+    <string name="headline_filters">Filtros</string>
+    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">Escoger ingrediente</string>
+    <string name="headline_edit_recipe">Editar receta</string>
+    <string name="description_delete_ingredient">El ingrediente se eliminará de la receta</string>
+    <string name="neutral_remote_database_error">No se pudo descargar el producto de la base de datos remota. Todavía puede ver sus productos previamente descargados.</string>
+    <string name="headline_before_you_start">Antes de comenzar</string>
+    <string name="action_agree_and_continue">Aceptar y continuar</string>
+    <string name="headline_food_database">Bases de datos alimentarias</string>
+    <string name="description_food_database">Puedes elegir si usar estos servicios externos opcionales, estos servicios podrían tener sus propios términos y políticas de privacidad</string>
+    <string name="action_skip">Omitir</string>
+    <string name="headline_almost_done">Casi hemos terminado</string>
+    <string name="headline_preparing_your_food_diary">Preparando tu diario de comidas</string>
+    <string name="headline_please_wait">Por favor, espera</string>
+    <string name="headline_created">Creada</string>
+    <string name="headline_imported">Importado</string>
+    <string name="headline_downloaded">Descargado</string>
+    <string name="headline_edited">Editado</string>
+    <string name="headline_history">Historial</string>
+    <string name="headline_anonymous">Anónimo</string>
+    <string name="headline_recent">Recientes</string>
+    <string name="headline_database">Bases de datos</string>
+    <string name="description_manage_database">Administra tus bases de datos</string>
+    <string name="action_done">Hecho</string>
+    <string name="neutral_measurement_added">¡Perfecto! Hemos añadido tu alimento</string>
+    <string name="headline_imported_from_food_you_2">Importado de Food You 2</string>
+    <string name="action_set_goals">Establece tus objetivos</string>
+    <string name="headline_pick_the_days">Selecciona los días</string>
+    <string name="action_set_separate_goals">Establece objetivos distintos para cada día</string>
+    <string name="headline_percentages">Porcentajes</string>
+    <string name="action_import_csv_food_products">Importar alimentos desde CSV</string>
+    <string name="description_import_csv_food_products">Importar alimentos y sus macros desde un archivo CSV</string>
+    <string name="description_import_csv_food_products_hint">Solo necesitamos saber qué es cada cosa, para ello, cuéntanos qué columna es el nombre del producto, la marca, etc.</string>
+    <string name="description_import_csv_food_products_hint_2">Todos los valores de nutrientes deben ser dados en gramos o kcal por 100 g</string>
+    <string name="action_export_csv_food_products">Exportar alimentos a CSV</string>
+    <string name="description_export_csv_food_products">Exporta tus alimentos a un archivo CSV</string>
+    <string name="neutral_no_column">Columna sin seleccionar</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="one">Importado %1$d alimento</item>
+        <item quantity="other">Importados %1$d alimentos</item>
+    </plurals>
+    <string name="headline_energy_unit">Unidad de energía</string>
+    <string name="description_energy_unit">Selecciona tu unidad de energía preferida</string>
+    <plurals name="neutral_exported_x_food_products">
+        <item quantity="one">Exportado %1$d alimento</item>
+        <item quantity="other">Exportados %1$d alimentos</item>
+    </plurals>
+    <string name="headline_auto_calculate_energy">Autocalcular energía</string>
+    <string name="headline_manual_energy_input">Ingreso manual de energía</string>
+    <string name="headline_quick_add">Agregar rápidamente</string>
+    <string name="description_quick_add">Añadir rápidamente permite registrar macros sin buscar alimentos específicos. Es una forma rápida de registrar comidas cuando ya conoces el recuento de calorías o quieres una estimación simple.</string>
+    <string name="action_open_poll">Abrir encuesta</string>
+    <string name="headline_colors">Colores</string>
+    <string name="description_colors">Personalizar los colores de la aplicación</string>
+    <string name="headline_custom_palette">Paleta personalizada</string>
+    <string name="description_custom_palette">Configura tu propia paleta</string>
+    <string name="headline_dynamic_colors">Colores dinámicos</string>
+    <string name="description_dynamic_colors">Aplica los colores del sistema</string>
+    <string name="headline_palette_style">Estilo de la paleta</string>
+    <string name="headline_contrast">Contraste</string>
+    <string name="headline_amoled">AMOLED</string>
+    <string name="headline_light">Claro</string>
+    <string name="headline_dark">Oscuro</string>
+    <string name="headline_appearance">Apariencia</string>
+    <string name="headline_theme">Tema</string>
+    <string name="headline_pick_a_color">Selecciona un color</string>
+    <string name="headline_nutrients_colors">Colores de los macronutrientes</string>
+    <string name="description_nutrients_colors_reset">Los colores de los macronutrientes se restablecerán a los valores por defecto</string>
+    <string name="headline_sponsorship_goals">Objetivos</string>
+    <string name="description_sponsorship_goals">Al donar, ayudas a mantener este proyecto independiente y sostenible sin depender de modelos de negocio explotadores. Muchas aplicaciones comerciales ganan dinero recopilando y vendiendo datos de los usuarios, con anuncios dirigidos o empujando a los usuarios a patrones de uso adictivos. Las donaciones garantizan que esta aplicación siga siendo respetuosa con la privacidad, transparente y centrada en ofrecer un valor real sin comprometer tu confianza o tu bienestar.</string>
+    <string name="description_x_away_from_next_goal">Estamos a %1$s del siguiente objetivo</string>
+    <string name="headline_sponsors">Patrocinadores</string>
+    <string name="description_no_sponsors_this_month">No hay patrocinadores este mes</string>
+    <string name="headline_latest" description="Latest, most recent">Recientes</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Mayores donaciones</string>
+    <string name="headline_this_month_we_raised">Este mes hemos recaudado %1$s</string>
+    <string name="description_sponsors_privacy">Food You se toma muy en serio tu privacidad. Por eso no habrá conexiones a ningún servicio externo a menos que lo permitas. Para ver los últimos patrocinadores, los datos deben descargarse desde los servidores de GitHub.</string>
+    <string name="action_allow" description="Allow something">Permitir</string>
+    <string name="action_next_month">Próximo mes</string>
+    <string name="action_previous_month">Mes anterior</string>
+    <string name="headline_sponsor_methods">Métodos</string>
+    <string name="headline_save_database">Guardar base de datos</string>
+    <string name="description_save_database">Guardar una copia de tu base de datos</string>
+    <string name="headline_replace_database">Reemplazar base de datos</string>
+    <string name="description_replace_database">Reemplaza tu base de datos con una copia previamente guardada</string>
+    <string name="action_replace">Reemplazar</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">La base de datos será REEMPLAZADA, y todos los datos actuales serán perdidos. La aplicación se reiniciará después de que la base de datos sea reemplazada. Puede que necesites reabrir la aplicación.</string>
+    <string name="action_sign_in">Registrarse</string>
+    <string name="headline_terms_of_service">Términos de Servicio</string>
+    <string name="headline_privacy_policy">Política de Privacidad</string>
+    <string name="error_there_was_an_error_while_signing_in">Se ha producido un error al iniciar sesión</string>
+    <string name="headline_random_theme">Tema aleatorio</string>
+    <string name="description_random_theme">Se aplicará un tema aleatorio cada vez que se inicie la aplicación</string>
+    <string name="headline_terms_of_use">Condiciones de uso</string>
+    <string name="onboarding_privacy_tip">Esta aplicación es de código abierto y hecha para ti. Por ello respetamos tu privacidad, y toda tu información se mantiene privada.</string>
+    <string name="headline_add_profile">Añadir perfil</string>
+    <string name="headline_how_do_you_want_to_be_called">¿Cómo quieres que te llamen?</string>
+    <string name="headline_profile_name">Nombre de perfil</string>
+    <string name="headline_profile_picture">Foto de perfil</string>
+    <string name="action_continue">Continuar</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Hi, %1$s!</string>
+    <string name="headline_data_backup_and_export">Copia de seguridad de datos &amp; exportar</string>
+    <string name="headline_privacy">Privacidad</string>
+    <string name="action_switch_profile">Cambiar de perfil</string>
+    <string name="action_add_profile">Añadir perfil</string>
+    <string name="action_refresh">Actualizar</string>
+    <string name="description_not_sure_yet">¿Aún no estás seguro? Puedes cambiarlo en cualquier momento</string>
+    <string name="question_discard_profile">¿Descartar perfil?</string>
+    <string name="headline_edit_profile">Editar perfil</string>
+    <string name="action_delete_profile">Eliminar perfil</string>
+    <string name="headline_delete_profile">Eliminar perfil</string>
+    <string name="description_delete_profile">Este perfil se eliminará permanentemente. Todos los datos asociados a él se perderán para siempre.</string>
+    <string name="action_today" description="Set date to today">Hoy</string>
+    <string name="action_fill_in_details">Rellenar detalles</string>
+    <string name="action_skip_for_now">Omitir por ahora</string>
+    <string name="headline_add_more_details">Añadir más detalles</string>
+    <string name="description_add_more_details_product_form">Rellenar proteínas, grasas, hidratos de carbono y valores energéticos ayuda a proporcionar una información nutricional más precisa</string>
+    <string name="headline_favorite">Favorito</string>
+    <string name="action_add_a_photo">Añadir una foto</string>
+    <string name="action_remove_a_photo">Eliminar una foto</string>
+    <string name="description_values_per">Selecciona la cantidad en la que se basan los valores nutricionales</string>
+    <string name="description_privacy">Controla tu información personal</string>
+    <string name="headline_database_backup">Copia de seguridad de la base de datos</string>
+    <string name="description_replacing_database">Reemplazando base de datos, por favor espere...</string>
+    <string name="headline_experimental">Experimental</string>
+    <string name="description_privacy_policy">Observa cómo se manejan tus datos</string>
 </resources>

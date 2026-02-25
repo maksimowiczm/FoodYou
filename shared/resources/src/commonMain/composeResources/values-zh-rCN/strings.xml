@@ -6,7 +6,7 @@
     <string name="headline_daily_goals">每日目标</string>
     <string name="headline_general">常规</string>
     <string name="headline_macronutrients">宏量营养素</string>
-    <string name="headline_meals">餐</string>
+    <string name="headline_meals">餐食</string>
     <string name="headline_delete_food">删除食品</string>
     <string name="headline_edit_product">编辑产品</string>
     <string name="headline_permission_required">需要权限</string>
@@ -66,12 +66,12 @@
     <string name="recipe_servings">份</string>
     <string name="description_recipe_servings">这个食谱做多少份</string>
     <string name="nutriment_proteins">蛋白质</string>
-    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_proteins_short">蛋白质</string>
     <string name="nutriment_carbohydrates">碳水化合物</string>
-    <string name="nutriment_carbohydrates_short">C</string>
+    <string name="nutriment_carbohydrates_short">碳水</string>
     <string name="nutriment_sugars">糖</string>
     <string name="nutriment_fats">脂肪</string>
-    <string name="nutriment_fats_short">F</string>
+    <string name="nutriment_fats_short">脂肪</string>
     <string name="nutriment_saturated_fats">饱和脂肪</string>
     <string name="nutriment_polyunsaturated_fats">多不饱和脂肪</string>
     <string name="nutriment_monounsaturated_fats">单不饱和脂肪</string>
@@ -102,7 +102,7 @@
     <string name="mineral_magnesium">镁</string>
     <string name="mineral_potassium">钾</string>
     <string name="mineral_calcium">钙</string>
-    <string name="mineral_copper"> 铜</string>
+    <string name="mineral_copper">铜</string>
     <string name="mineral_zinc">锌</string>
     <string name="mineral_sodium">钠</string>
     <string name="mineral_iron">铁</string>
@@ -114,7 +114,7 @@
     <string name="action_scan_barcode">扫描条形码</string>
     <string name="action_add">添加</string>
     <string name="action_go_back">返回</string>
-    <string name="action_tap_to_allow_access">点击以允许访问</string>
+    <string name="action_tap_to_allow_access">点击以授予访问</string>
     <string name="action_create">创建</string>
     <string name="action_clear">清楚</string>
     <string name="action_cancel">取消</string>
@@ -134,6 +134,7 @@
     <string name="action_disable_camera_flash">关闭闪光灯</string>
     <string name="action_prevent_screen_capture">禁止截图</string>
     <string name="action_go_to_today">回到今天</string>
+    <string name="action_feature_request_on_github">在 GitHub 上提交功能请求</string>
     <string name="action_show_calendar">显示日历</string>
     <string name="action_reorder">重新安排</string>
     <string name="action_move_up" description="reorder list item up">上移</string>
@@ -155,7 +156,7 @@
     <string name="action_set_key">设置密钥</string>
     <string name="action_obtain_key">获取密钥</string>
     <string name="action_dont_show_again">不再显示</string>
-    <string name="neutral_barcode_scanner_camera_request">允许访问您的相机以扫描条形码</string>
+    <string name="neutral_barcode_scanner_camera_request">授予相机使用权限，即可扫描条形码</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">您必须允许相机访问才能扫描条形码</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">扫描条形码需要相机权限。请在应用程序设置中允许它。</string>
     <string name="neutral_no_food_found">未找到食品</string>
@@ -187,10 +188,11 @@
     <string name="error_unknown_error">未知错误</string>
     <string name="error_measurement_error">测量误差，请检查份量和包装重量</string>
     <string name="error_api_key_is_invalid">API 密钥无效</string>
+    <string name="error_not_a_barcode">不是条形码</string>
     <string name="positive_goal_reached">达到目标</string>
     <string name="positive_ok">好的</string>
     <plurals name="negative_exceeded_by_calories">
-        <item quantity="other">超过 %1$d 卡路里</item>
+        <item quantity="other">超出 %1$d 卡路里</item>
     </plurals>
     <plurals name="negative_exceeded_by_kilojoules">
         <item quantity="other">超出 %1$d 千焦</item>
@@ -200,16 +202,17 @@
     <string name="description_about_setting">了解有关该应用程序的更多信息</string>
     <string name="description_time_based_meals_sorting">启用后，将首先显示当前正在进行的用餐</string>
     <string name="description_action_ignore_all_day_meals">全天餐点将显示在列表末尾</string>
-    <string name="description_incomplete_nutrition_data">一些二手产品缺乏这种价值;因此，显示的值可能不准确</string>
-    <string name="description_translation_warning">翻译由志愿者创建。它们可能并不完美，并且可能缺少一些翻译。如果您发现任何错误，请随时帮助改进它们。</string>
+    <string name="description_incomplete_nutrition_data">一些二手产品缺乏这种价值，因此，显示的值可能不准确</string>
+    <string name="description_translation_warning">翻译由志愿者贡献，可能存在疏漏或不足之处。如发现错误，欢迎随时协助改进。</string>
     <string name="description_home_settings">自定义您的主页</string>
     <string name="description_download_product">粘贴食品类商品的链接，并自动获取营养成分和商品详情。</string>
     <string name="description_download_product_hint">您可以粘贴任何文本。将使用第一个 URL。</string>
     <string name="description_show_macronutrients_goals">显示宏量营养素目标</string>
     <string name="description_please_wait_while_importing_products">请稍候，正在导出产品</string>
     <string name="description_please_wait_while_exporting_products">请稍候，正在导出产品</string>
-    <string name="headline_launcher_icon_by_icons8">启动器图标来自于Icon8</string>
+    <string name="headline_launcher_icon_by_icons8">启动器图标来自于 Icon8</string>
     <string name="description_open_food_facts">一个协作、免费和开放的食品数据库，包含来自世界各地的食品</string>
+    <string name="error_open_food_facts_rate_limit">Open Food Facts API 速率限制超出</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">导出产品</string>
     <string name="notification_importing_products">进口商品</string>
@@ -224,6 +227,7 @@
     <string name="action_unpack" description="Unpack the recipe ingredients">解包</string>
     <string name="headline_sponsor">支持</string>
     <string name="description_sponsor_short_2">助力应用发展</string>
+    <string name="headline_source_code">源代码</string>
     <string name="action_write_an_email">写邮件联系</string>
     <string name="headline_contact">联系</string>
     <string name="description_sponsor_contact">如有赞助相关事宜，欢迎通过电子邮件或 GitHub 与我联系。</string>
@@ -265,7 +269,7 @@
     <string name="headline_food_database">食品数据库</string>
     <string name="description_food_database">您可以选择是否使用这些可选的外部服务，这些服务可能有其自身的条款和隐私政策</string>
     <string name="action_skip">跳过</string>
-    <string name="headline_almost_done">快搞定了！</string>
+    <string name="headline_almost_done">快搞定了</string>
     <string name="headline_preparing_your_food_diary">正在准备您的饮食数据</string>
     <string name="headline_please_wait">请稍候</string>
     <string name="headline_created">创建的</string>
@@ -345,4 +349,37 @@
     <string name="error_there_was_an_error_while_signing_in">登录时发生错误</string>
     <string name="headline_random_theme">随机主题</string>
     <string name="description_random_theme">每次启动应用将使用一个随机主题</string>
+    <string name="headline_terms_of_use">使用条款</string>
+    <string name="onboarding_privacy_tip">专为您打造的开源应用。我们尊重您的隐私，您的信息将保密。</string>
+    <string name="headline_add_profile">添加个人资料</string>
+    <string name="headline_how_do_you_want_to_be_called">您希望怎么称呼？</string>
+    <string name="headline_profile_name">个人资料名称</string>
+    <string name="headline_profile_picture">个人资料图片</string>
+    <string name="action_continue">继续</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">%1$s，您好！</string>
+    <string name="headline_data_backup_and_export">数据备份 &amp; 导出</string>
+    <string name="headline_privacy">隐私</string>
+    <string name="action_switch_profile">切换个人资料</string>
+    <string name="action_add_profile">添加个人资料</string>
+    <string name="action_refresh">刷新</string>
+    <string name="description_not_sure_yet">拿不定主意？您随时可以更改</string>
+    <string name="question_discard_profile">不保存个人资料？</string>
+    <string name="headline_edit_profile">编辑个人资料</string>
+    <string name="action_delete_profile">删除个人资料</string>
+    <string name="headline_delete_profile">删除个人资料</string>
+    <string name="description_delete_profile">此个人资料将被永久删除。所有相关数据将永远丢失。</string>
+    <string name="action_today" description="Set date to today">今天</string>
+    <string name="action_fill_in_details">填写详细信息</string>
+    <string name="action_skip_for_now">暂时跳过</string>
+    <string name="headline_add_more_details">添加更多详细信息</string>
+    <string name="description_add_more_details_product_form">填写蛋白质、脂肪和碳水化合物的含量以及能量值，有助于提供更准确的营养分析</string>
+    <string name="headline_favorite">收藏</string>
+    <string name="action_add_a_photo">添加图片</string>
+    <string name="action_remove_a_photo">移除图片</string>
+    <string name="description_values_per">选择您的营养数值所基于的份量</string>
+    <string name="description_privacy">管控您的个人信息</string>
+    <string name="headline_database_backup">备份数据库</string>
+    <string name="description_replacing_database">正在替换数据库，请稍候……</string>
+    <string name="headline_experimental">实验性功能</string>
+    <string name="description_privacy_policy">了解您的数据被如何处理</string>
 </resources>

@@ -157,6 +157,7 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Показать больше</string>
     <string name="action_download_product">Загрузить продукт</string>
     <string name="action_copy_and_open_bug_report">Скопировать и открыть отчет об ошибке</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Скопировать &amp; отчет</string>
     <string name="action_show_details">Показать подробности</string>
     <string name="action_browse_usda">Найти в FoodData Central (USDA)</string>
     <string name="action_set_key">Задать ключ</string>
@@ -230,6 +231,7 @@
     <string name="description_please_wait_while_exporting_products">Пожалуйста, подождите, продукты экспортируются</string>
     <string name="headline_launcher_icon_by_icons8">Иконка приложения от Icons8</string>
     <string name="description_open_food_facts">Совместная, бесплатная и открытая база данных продуктов питания со всего мира</string>
+    <string name="error_open_food_facts_rate_limit">Превышен лимит запросов к API Open Food Facts</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Продукты экспортируются</string>
     <string name="notification_importing_products">Продукты импортируются</string>
