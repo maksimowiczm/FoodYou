@@ -1,0 +1,3 @@
+Bug fixes
+- Fixed an issue with setting the FoodData Central API key on the search screen
+- Fixed Open Food Facts 'nutriments' search error
