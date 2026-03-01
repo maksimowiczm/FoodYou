@@ -32,6 +32,6 @@ internal class GithubSponsorsApiClient(
     }
 
     private companion object {
-        private const val API_URL = "https://maksimowiczm.github.io/FoodYou-sponsors"
+        private const val API_URL = "https://sponsors.maksimowiczm.com"
     }
 }
