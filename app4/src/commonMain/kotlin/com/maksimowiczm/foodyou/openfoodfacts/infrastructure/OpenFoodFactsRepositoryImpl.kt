@@ -86,6 +86,7 @@ internal class OpenFoodFactsRepositoryImpl(
                         mapper = mapper,
                         pageSize = pageSize,
                         logger = logger,
+                        dietaryFilter = parameters.dietaryFilter,
                     )
                 } else null
 

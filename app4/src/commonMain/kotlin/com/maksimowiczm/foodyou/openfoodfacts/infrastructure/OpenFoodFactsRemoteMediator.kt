@@ -8,6 +8,7 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.infrastructure.room.immediateTransaction
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsV2RemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.SearchaliciousRemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase
@@ -26,6 +27,7 @@ internal class OpenFoodFactsRemoteMediator(
     private val mapper: OpenFoodFactsProductMapper,
     private val pageSize: Int,
     logger: Logger,
+    private val dietaryFilter: OpenFoodFactsSearchParameters.DietaryFilter? = null,
 ) : RemoteMediator<Int, OpenFoodFactsProductEntity>() {
     private val logger = logger.withTag(TAG)
     private val dao = database.dao
@@ -84,7 +86,12 @@ internal class OpenFoodFactsRemoteMediator(
 
             logger.d { "Loading page $page" }
 
-            val response = search.search(query = query.query, page = page, pageSize = pageSize)
+            val response = search.search(
+                query = query.query,
+                page = page,
+                pageSize = pageSize,
+                ingredientsAnalysisTag = dietaryFilter?.tag,
+            )
 
             val entities = response.hits.map(mapper::toEntity)
             val pagingKeys =

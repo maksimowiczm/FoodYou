@@ -35,6 +35,9 @@ internal class SearchaliciousRemoteDataSource(
      * @param pageSize Number of results to return per page. Defaults to 10.
      * @param page Page number to request, starts at 1. Defaults to 1.
      * @param sortBy Field name to sort results by. Prefix with "-" for descending order.
+     * @param ingredientsAnalysisTag When non-null, restricts results to products whose
+     *   `ingredients_analysis_tags` field contains this value (e.g. `"en:vegan"`). Appended to
+     *   the Lucene query using an AND clause so it composes safely with any text query.
      * @return SearchaliciousResponse containing the search results with raw JSON populated for each
      *   hit
      */
@@ -43,6 +46,7 @@ internal class SearchaliciousRemoteDataSource(
         pageSize: Int = 10,
         page: Int = 1,
         sortBy: String? = null,
+        ingredientsAnalysisTag: String? = null,
     ): SearchaliciousResponse {
         if (!rateLimiter.canMakeRequest()) {
             logger.d { "Rate limit exceeded for OpenFoodFacts API" }
@@ -59,8 +63,9 @@ internal class SearchaliciousRemoteDataSource(
                         socketTimeoutMillis = TIMEOUT
                     }
 
-                    // Add query parameters
-                    query?.let { parameter("q", it) }
+                    // Combine text query with optional dietary tag filter
+                    val effectiveQuery = buildEffectiveQuery(query, ingredientsAnalysisTag)
+                    effectiveQuery?.let { parameter("q", it) }
                     parameter("page_size", pageSize)
                     parameter("page", page)
                     sortBy?.let { parameter("sort_by", it) }
@@ -68,6 +73,20 @@ internal class SearchaliciousRemoteDataSource(
                 .body<SearchaliciousResponse>()
         } finally {
             rateLimiter.recordRequest()
+        }
+    }
+
+    /**
+     * Builds the final Lucene query string by ANDing the user text query with an optional
+     * `ingredients_analysis_tags` filter clause.
+     */
+    private fun buildEffectiveQuery(query: String?, ingredientsAnalysisTag: String?): String? {
+        val tagClause = ingredientsAnalysisTag?.let { """ingredients_analysis_tags:"$it"""" }
+        return when {
+            query != null && tagClause != null -> "($query) AND $tagClause"
+            query != null -> query
+            tagClause != null -> tagClause
+            else -> null
         }
     }
 
