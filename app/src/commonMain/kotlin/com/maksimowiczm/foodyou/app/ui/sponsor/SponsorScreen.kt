@@ -435,18 +435,6 @@ private fun LinkSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modifie
         trailingIcon = { Icon(imageVector = Icons.Outlined.Link, contentDescription = null) },
         onClick = onClick,
         modifier = modifier,
-        color =
-            if (primary) {
-                MaterialTheme.colorScheme.primaryContainer
-            } else {
-                MaterialTheme.colorScheme.surfaceContainer
-            },
-        contentColor =
-            if (primary) {
-                MaterialTheme.colorScheme.onPrimaryContainer
-            } else {
-                MaterialTheme.colorScheme.onSurface
-            },
     )
 }
 
@@ -485,18 +473,6 @@ private fun CryptoSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modif
                 clicked = true
                 onClick()
             },
-            color =
-                if (primary) {
-                    MaterialTheme.colorScheme.primaryContainer
-                } else {
-                    MaterialTheme.colorScheme.surfaceContainer
-                },
-            contentColor =
-                if (primary) {
-                    MaterialTheme.colorScheme.onPrimaryContainer
-                } else {
-                    MaterialTheme.colorScheme.onSurface
-                },
         )
     }
 }
@@ -508,8 +484,8 @@ private fun SponsorCard(
     trailingIcon: @Composable () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.surfaceContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = MaterialTheme.colorScheme.primaryContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
 ) {
     Surface(
         onClick = onClick,
@@ -769,12 +745,12 @@ private fun Goal(
 ) {
     val color by
         animateColorAsState(
-            if (goal.fulfilled) MaterialTheme.colorScheme.primaryContainer
+            if (goal.fulfilled) MaterialTheme.colorScheme.secondaryContainer
             else MaterialTheme.colorScheme.surfaceContainer
         )
     val contentColor by
         animateColorAsState(
-            if (goal.fulfilled) MaterialTheme.colorScheme.onPrimaryContainer
+            if (goal.fulfilled) MaterialTheme.colorScheme.onSecondaryContainer
             else MaterialTheme.colorScheme.onSurface
         )
 
@@ -921,8 +897,8 @@ private fun SponsorMessageCard(
     Surface(
         modifier = modifier,
         shape = shape,
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        color = MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp)) {
             Row(
