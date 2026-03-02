@@ -41,6 +41,7 @@
         buildInputs = [
           pkgs.just
           pkgs.temurin-bin-21
+          pkgs.jq
           androidComposition.androidsdk
         ];
 
