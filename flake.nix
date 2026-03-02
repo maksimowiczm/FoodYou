@@ -35,8 +35,6 @@
         url = "https://github.com/facebook/ktfmt/releases/download/v0.61/ktfmt-0.61-with-dependencies.jar";
         sha256 = "b2a6ef02352a4c4ada96610196038129a877d7cddd34fe5290c764bce98cd5f9";
       };
-
-      pythonEnv = pkgs.python3.withPackages (ps: with ps; [ pandas openpyxl ]);
     in
     {
       devShells.${system}.default = pkgs.mkShell {
@@ -44,7 +42,6 @@
           pkgs.just
           pkgs.temurin-bin-21
           androidComposition.androidsdk
-          pythonEnv
         ];
 
         KTFMT_JAR = "${ktfmtJar}";
