@@ -1,8 +1,8 @@
-## 3. Create local mirror for external food databases
+# Create local mirror for external food databases
 
 Date: 2025-10-13
 
-### Problem
+## Problem
 
 Food You relies on external food databases like Open Food Facts and USDA FoodData Central to provide
 comprehensive food information. Currently, app stores all fetched food items in single table in
@@ -12,7 +12,7 @@ mechanisms, which can lead to inconsistent search results and a suboptimal user 
 - filtering out items that remote database provides
 - food items being outdated
 
-### Decision
+## Decision
 
 To address these issues, I decided to create a local mirror of the external food databases. This
 mirror would behave same as the remote databases. This means that the app would fetch food items
@@ -20,12 +20,12 @@ from the remote databases and store them in a local database, but it would also 
 and filtering mechanisms of the remote databases. This way, users would get consistent search
 results whether they are searching in the app or in browser on the remote database's website.
 
-### Rationale
+## Rationale
 
 - **Consistency**: By replicating the search and filtering mechanisms of the remote databases, users
   will have a consistent experience.
 
-### Consequences
+## Consequences
 
 - **Refactoring Effort**: Implementing this change will require significant refactoring of the
   existing codebase, particularly in the areas related to data fetching, storage, and search

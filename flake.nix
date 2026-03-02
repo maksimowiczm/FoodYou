@@ -42,6 +42,7 @@
           pkgs.just
           pkgs.temurin-bin-21
           pkgs.jq
+          pkgs.zensical
           androidComposition.androidsdk
         ];
 

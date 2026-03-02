@@ -1,8 +1,8 @@
-## 1. Create a decision log
+# Create a decision log
 
 Date: 2025-09-25
 
-### Problem
+## Problem
 
 Food You has grown significantly, and with that growth comes an increase in the number of
 decisions that need to be made. These decisions can range from technical choices to strategic
@@ -13,7 +13,7 @@ Example issues that highlight the need for a decision log:
 
 - [#239](https://github.com/maksimowiczm/FoodYou/issues/239)
 
-### Decision
+## Decision
 
 We will create a decision log to document significant decisions made within the organization. This
 log will include the following information for each decision:
@@ -24,7 +24,7 @@ log will include the following information for each decision:
 - **Rationale**: The reasoning behind the decision, including any alternatives considered.
 - **Consequences**: The expected outcomes or implications of the decision.
 
-### Rationale
+## Rationale
 
 - **Transparency**: A decision log provides a clear record of why certain decisions were made, which
   can be useful for collaborators.
@@ -35,7 +35,7 @@ log will include the following information for each decision:
 - **Collaboration**: A shared decision log encourages collaboration and discussion when making
   significant decisions.
 
-### Consequences
+## Consequences
 
 - **Maintenance**: The decision log will require regular updates and maintenance to ensure it
   remains relevant and accurate.

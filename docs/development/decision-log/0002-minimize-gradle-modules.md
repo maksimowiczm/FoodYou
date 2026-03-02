@@ -1,8 +1,8 @@
-## 2. Minimize Gradle modules
+# Minimize Gradle modules
 
 Date: 2025-09-25
 
-### Problem
+## Problem
 
 I started Food You as a random, experimental project with a multiple modules structure in mind. As
 the project grew, I realized that the multiple modules structure added unnecessary complexity and
@@ -10,7 +10,7 @@ overhead to the development process. The modules were not providing significant 
 code organization or reusability, and they were making it harder to manage dependencies and build
 configurations. This complexity was slowing down development.
 
-### Decision
+## Decision
 
 I decided to minimize the number of Gradle modules in the Food You project. I decided to restructure
 the project into the following modules:
@@ -25,14 +25,14 @@ the project into the following modules:
 Obviously, the `app` module will be a large module, but if one of its parts grows too big, we can
 always consider extracting it into a separate module.
 
-### Rationale
+## Rationale
 
 - **Simplicity**: Reducing the number of modules simplifies the project structure, making it easier
   to navigate and understand.
 - **Reduced Overhead**: Fewer modules mean less configuration and management overhead, leading to
   faster development.
 
-### Consequences
+## Consequences
 
 - **Easier Maintenance**: With fewer modules, maintaining the project becomes easier, as there are
   fewer moving parts to manage.

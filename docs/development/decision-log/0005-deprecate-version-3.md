@@ -1,8 +1,8 @@
-## 5. Deprecate version 3
+# Deprecate version 3
 
 Date: 2026-03-02
 
-### Problem
+## Problem
 
 Food You 3.x.x has been in active development for some time, but maintaining two major versions
 simultaneously requires significant effort and resources. Version 3.x.x also contains several
@@ -10,7 +10,7 @@ fundamental design decisions that have proven to be suboptimal and difficult to 
 represents a significant improvement in architecture, features, and user experience, and continuing
 to invest heavily in version 3 diverts attention from these advancements.
 
-### Decision
+## Decision
 
 I decided to deprecate Food You 3.x.x. From this point forward:
 
@@ -18,7 +18,7 @@ I decided to deprecate Food You 3.x.x. From this point forward:
 - No new features will be added to version 3
 - All development effort will focus on Food You 4
 
-### Rationale
+## Rationale
 
 - **Better User Experience**: Version 4 provides a better foundation for future development and
   offers users an improved experience.
@@ -27,7 +27,7 @@ I decided to deprecate Food You 3.x.x. From this point forward:
 - **Clear Migration Path**: Users have a clear signal that version 4 is the future of the app,
   encouraging migration when ready.
 
-### Consequences
+## Consequences
 
 - **User Impact**: Users on version 3 will not receive new features, though their app will remain
   functional with critical fixes.

@@ -1,14 +1,14 @@
-## 4. Development Branch Access Restriction
+# Development Branch Access Restriction
 
 Date: 2026-03-01
 
-### Problem
+## Problem
 
 Food You source code appears to be heavily scraped by bots/LLMs. Keeping the full development
 history publicly visible makes it easy to continuously ingest unreleased work, and I do not want to
 provide free training data at the expense of the project.
 
-### Decision
+## Decision
 
 Going forward, development will no longer occur in public.
 
@@ -16,7 +16,7 @@ App releases will still be published, and source code will still be available, b
 versions. The source code for the development version will not be publicly available until it is
 released.
 
-### Rationale
+## Rationale
 
 - **Reduce scraping**: Publishing only released snapshots reduces the value of continuous scraping
   of
@@ -24,7 +24,7 @@ released.
 - **Protect work-in-progress**: Keeps unreleased features, refactors, and experiments private until
   they are ready.
 
-### Consequences
+## Consequences
 
 - **Less transparency**: External users will not see day-to-day development activity.
 - **Reduced external contributions**: Drive-by fixes and community collaboration will be harder.
