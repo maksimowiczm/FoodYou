@@ -75,6 +75,7 @@ private val languages =
         Translation("Polski (Polska)", "pl-PL", true, me),
         Translation("Português (Brasil)", "pt-BR"),
         Translation("Slovenščina (Slovenija)", "sl-SI", false, DarjanZlobec),
+        Translation("Suomi (Suomi)", "fi-FI"),
         Translation("Türkçe (Türkiye)", "tr-TR", false, mikropsoft),
         Translation("Русский (Россия)", "ru-RU"),
         Translation("Українська (Україна)", "uk-UA"),
