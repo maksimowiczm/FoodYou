@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.Bitcoin
+import com.maksimowiczm.foodyou.sponsorship.domain.entity.Dash
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.Ko_Fi
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.Monero
 import com.maksimowiczm.foodyou.sponsorship.domain.entity.PayPal
@@ -35,6 +36,13 @@ internal fun SponsorMethod.Icon(modifier: Modifier = Modifier) {
                 modifier = modifier,
             )
 
+        Dash ->
+            Image(
+                painter = painterResource(Res.drawable.dash_coin),
+                contentDescription = null,
+                modifier = modifier,
+            )
+
         PayPal ->
             Image(
                 painter = painterResource(Res.drawable.paypal_logo),
@@ -52,6 +60,7 @@ internal fun SponsorMessageUiModel.icon(): (@Composable (Modifier) -> Unit)? {
                 when (currency) {
                     "BTC" -> Bitcoin
                     "XMR" -> Monero
+                    "DASH" -> Dash
                     else -> return null
                 }
 
