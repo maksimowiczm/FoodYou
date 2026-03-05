@@ -517,4 +517,6 @@
     <string name="headline_experimental">Experimental</string>
 
     <string name="description_privacy_policy">See how your data is handled</string>
+
+    <string name="error_open_food_facts_timeout">Open Food Facts is taking too long to respond. The service may be temporarily slow or unavailable. Try scanning the product barcode instead.</string>
 </resources>

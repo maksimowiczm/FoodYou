@@ -91,6 +91,11 @@ internal class OpenFoodFactsRemoteDataSource(
                     parameter("page_size", pageSize)
                     parameter("sort_by", "product_name")
                     parameter("fields", FIELDS)
+                    timeout {
+                        requestTimeoutMillis = TIMEOUT
+                        connectTimeoutMillis = TIMEOUT
+                        socketTimeoutMillis = TIMEOUT
+                    }
                 }
                 .body<OpenFoodFactsPageResponseV1>()
         } catch (e: Exception) {

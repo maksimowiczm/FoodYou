@@ -32,9 +32,21 @@ internal fun FoodSearchErrorCard(
     modifier: Modifier = Modifier,
 ) {
     when (error) {
-        is RemoteFoodException.Unknown,
+        is RemoteFoodException.Unknown ->
+            FoodSearchErrorCard(
+                message = null,
+                detailedMessage = error.message,
+                onRetry = onRetry,
+                modifier = modifier,
+            )
+
         is RemoteFoodException.OpenFoodFacts.RateLimit ->
-            FoodSearchErrorCard(message = error.message, onRetry = onRetry, modifier = modifier)
+            FoodSearchErrorCard(
+                message = stringResource(Res.string.error_open_food_facts_timeout),
+                detailedMessage = null,
+                onRetry = onRetry,
+                modifier = modifier,
+            )
 
         is RemoteFoodException.ProductNotFoundException -> Unit
 
@@ -55,11 +67,11 @@ internal fun FoodSearchErrorCard(
 @Composable
 private fun FoodSearchErrorCard(
     message: String?,
+    detailedMessage: String?,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showDetails by rememberSaveable { mutableStateOf(false) }
-    val message = message ?: stringResource(Res.string.error_unknown_error)
 
     Surface(
         modifier = modifier,
@@ -75,43 +87,46 @@ private fun FoodSearchErrorCard(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = stringResource(Res.string.neutral_remote_database_error),
+                text = message ?: stringResource(Res.string.neutral_remote_database_error),
                 style = MaterialTheme.typography.bodyMedium,
             )
-            Spacer(Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-            ) {
-                TextButton(
-                    onClick = { showDetails = !showDetails },
-                    colors =
-                        ButtonDefaults.textButtonColors(
-                            contentColor = MaterialTheme.colorScheme.onErrorContainer
-                        ),
+            if (detailedMessage == null) {
+                Spacer(Modifier.height(16.dp))
+            } else {
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                 ) {
-                    Text(stringResource(Res.string.action_show_details))
-                }
+                    TextButton(
+                        onClick = { showDetails = !showDetails },
+                        colors =
+                            ButtonDefaults.textButtonColors(
+                                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                            ),
+                    ) {
+                        Text(stringResource(Res.string.action_show_details))
+                    }
 
-                FilledTonalButton(
-                    onClick = { onRetry() },
-                    colors =
-                        ButtonDefaults.filledTonalButtonColors(
-                            contentColor = MaterialTheme.colorScheme.errorContainer,
-                            containerColor = MaterialTheme.colorScheme.onErrorContainer,
-                        ),
-                ) {
-                    Text(stringResource(Res.string.action_retry))
+                    FilledTonalButton(
+                        onClick = { onRetry() },
+                        colors =
+                            ButtonDefaults.filledTonalButtonColors(
+                                contentColor = MaterialTheme.colorScheme.errorContainer,
+                                containerColor = MaterialTheme.colorScheme.onErrorContainer,
+                            ),
+                    ) {
+                        Text(stringResource(Res.string.action_retry))
+                    }
                 }
-            }
-            Spacer(Modifier.height(8.dp))
-
-            AnimatedVisibility(showDetails) {
-                Text(
-                    text = message,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                )
+                Spacer(Modifier.height(8.dp))
+                AnimatedVisibility(showDetails) {
+                    Text(
+                        text = detailedMessage,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                    )
+                }
             }
         }
     }
