@@ -14,6 +14,7 @@ import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
 import com.maksimowiczm.foodyou.importexport.domain.entity.ProductField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.drop
 
 fun interface ImportCsvProductUseCase {
 
@@ -22,14 +23,15 @@ fun interface ImportCsvProductUseCase {
      *
      * @param mapper A list of [ProductField] that defines the mapping of CSV columns to product
      *   fields. The list can contain null values for columns that should be ignored.
-     * @param lines A [Flow] of [String] representing the lines of the CSV file to be imported.
+     * @param stream A [Flow] of [Char] representing the CSV file content as a stream.
      * @param source The [FoodSource.Type] indicating the source of the food data.
      * @return A [Flow] of [Int] representing the number of products successfully imported.
      */
     suspend fun import(
         mapper: List<ProductField?>,
-        lines: Flow<String>,
+        stream: Flow<Byte>,
         source: FoodSource.Type,
+        skipHeader: Boolean,
     ): Flow<Int>
 }
 
@@ -43,30 +45,35 @@ internal class ImportCsvProductUseCaseImpl(
 
     override suspend fun import(
         mapper: List<ProductField?>,
-        lines: Flow<String>,
+        stream: Flow<Byte>,
         source: FoodSource.Type,
+        skipHeader: Boolean,
     ): Flow<Int> = channelFlow {
         var count = 1
         transactionProvider.withTransaction {
-            lines.collect { line ->
-                processLine(mapper = mapper, source = source, line = line)
-                send(count++)
-            }
+            csvParser
+                .parse(stream)
+                .let {
+                    // Drop header
+                    if (skipHeader) it.drop(1) else it
+                }
+                .collect { line ->
+                    processLine(mapper = mapper, source = source, line = line)
+                    send(count++)
+                }
         }
     }
 
     private suspend fun processLine(
         mapper: List<ProductField?>,
         source: FoodSource.Type,
-        line: String,
+        line: List<String?>,
     ) {
-        val values = csvParser.parseLine(line)
-
-        if (values.size != mapper.size) {
+        if (line.size != mapper.size) {
             error("Invalid number of columns in CSV line: $line")
         }
 
-        val productData = mapper.zip(values).associate { (field, value) -> field to value }
+        val productData = mapper.zip(line).associate { (field, value) -> field to value }
 
         val product =
             Product(
@@ -79,8 +86,10 @@ internal class ImportCsvProductUseCaseImpl(
                     when (productData[ProductField.IsLiquid]) {
                         "true",
                         "1" -> true
+
                         "false",
                         "0" -> false
+
                         else -> false
                     },
                 packageWeight = productData[ProductField.PackageWeight]?.toDouble(),
@@ -181,3 +190,8 @@ internal class ImportCsvProductUseCaseImpl(
         }
     }
 }
+
+private fun String.toDouble(): Double? =
+    with(trim().replace("<=", "").replace("<", "").lowercase()) {
+        if (this == "-" || this == "null" || this.isBlank()) null else toDoubleOrNull()
+    }

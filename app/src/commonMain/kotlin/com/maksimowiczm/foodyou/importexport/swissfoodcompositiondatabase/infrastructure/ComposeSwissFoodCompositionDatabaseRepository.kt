@@ -6,12 +6,15 @@ import com.maksimowiczm.foodyou.importexport.swissfoodcompositiondatabase.domain
 import com.maksimowiczm.foodyou.importexport.swissfoodcompositiondatabase.domain.SwissFoodCompositionDatabaseRepository.Language.FRENCH
 import com.maksimowiczm.foodyou.importexport.swissfoodcompositiondatabase.domain.SwissFoodCompositionDatabaseRepository.Language.GERMAN
 import com.maksimowiczm.foodyou.importexport.swissfoodcompositiondatabase.domain.SwissFoodCompositionDatabaseRepository.Language.ITALIAN
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 
 internal class ComposeSwissFoodCompositionDatabaseRepository :
     SwissFoodCompositionDatabaseRepository {
-    override suspend fun readCsvLines(
+
+    override suspend fun readCsvFile(
         language: SwissFoodCompositionDatabaseRepository.Language
-    ): List<String> {
+    ): Flow<Byte> {
         val bytes =
             when (language) {
                 ENGLISH -> Res.readBytes("files/swiss-food-composition-database/data.csv")
@@ -20,6 +23,6 @@ internal class ComposeSwissFoodCompositionDatabaseRepository :
                 ITALIAN -> Res.readBytes("files/swiss-food-composition-database/data-it-IT.csv")
             }
 
-        return bytes.decodeToString().split("\n").filterNot(String::isBlank)
+        return bytes.toList().asFlow()
     }
 }

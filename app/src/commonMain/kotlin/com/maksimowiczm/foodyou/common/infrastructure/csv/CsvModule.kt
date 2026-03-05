@@ -6,5 +6,5 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 
 fun Module.csvModule() {
-    factoryOf(::VibeCsvParser).bind<CsvParser>()
+    factoryOf(::CsvParserImpl).bind<CsvParser>()
 }

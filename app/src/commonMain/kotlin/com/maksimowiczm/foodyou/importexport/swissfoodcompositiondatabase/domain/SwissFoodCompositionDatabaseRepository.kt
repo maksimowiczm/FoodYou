@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.importexport.swissfoodcompositiondatabase.domain
 
+import kotlinx.coroutines.flow.Flow
+
 interface SwissFoodCompositionDatabaseRepository {
     enum class Language {
         ENGLISH,
@@ -10,5 +12,5 @@ interface SwissFoodCompositionDatabaseRepository {
         val size = 1190
     }
 
-    suspend fun readCsvLines(language: Language): List<String>
+    suspend fun readCsvFile(language: Language): Flow<Byte>
 }

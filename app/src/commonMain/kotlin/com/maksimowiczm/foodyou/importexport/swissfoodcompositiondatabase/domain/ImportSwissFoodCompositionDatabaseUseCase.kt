@@ -23,11 +23,12 @@ internal class ImportSwissFoodCompositionDatabaseUseCaseImpl(
         languages
             .asFlow()
             .flatMapConcat {
-                val lines = swissFoodCompositionDatabaseRepository.readCsvLines(it)
+                val lines = swissFoodCompositionDatabaseRepository.readCsvFile(it)
                 importCsvProductUseCase.import(
                     mapper = order,
-                    lines = lines.drop(1).asFlow(),
+                    stream = lines,
                     source = FoodSource.Type.SwissFoodCompositionDatabase,
+                    skipHeader = true,
                 )
             }
             .collect { emit(count++) }
