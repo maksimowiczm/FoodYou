@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directory to scan for meal files (hardcoded)
-MEALS_DIR="app/src/commonMain/composeResources/files/meals"
+MEALS_DIR="composeApp/src/commonMain/composeResources/files/meals"
 
 # Colors for output
 RED='\033[0;31m'
