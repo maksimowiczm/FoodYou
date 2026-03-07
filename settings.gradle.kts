@@ -35,3 +35,5 @@ include(":app")
 include(":shared:barcodescanner")
 
 include(":shared:resources")
+
+include(":app4")
