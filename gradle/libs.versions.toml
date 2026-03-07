@@ -16,7 +16,6 @@ colorpickerCompose = "1.1.3"
 composeMultiplatform = "1.10.1"
 composeMultiplatformLifecycle = "2.10.0-alpha08"
 composeMultiplatformMaterial3 = "1.11.0-alpha03"
-composeNavigation = "2.9.2"
 composeNavigation3 = "1.0.0-alpha06"
 composeNavigationevent = "1.0.1"
 datastorePreferences = "1.2.0"
@@ -69,7 +68,6 @@ jetbrains-compose-components-resources = { module = "org.jetbrains.compose.compo
 jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
 jetbrains-compose-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 jetbrains-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMultiplatformMaterial3" }
-jetbrains-compose-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 jetbrains-compose-navigationevent-compose = { module = "org.jetbrains.androidx.navigationevent:navigationevent-compose", version.ref = "composeNavigationevent" }
 jetbrains-compose-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "composeNavigation3" }
 jetbrains-compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeMultiplatform" }
