@@ -1,0 +1,9 @@
+Changes
+- Limited sponsorship methods to Ko-fi, BTC, and XMR.
+- Increased Open Food Facts request timeout.
+
+Bug fixes
+- Fixed an issue with setting the FoodData Central API key on the search screen (again).
+
+Translations
+- Added Finish

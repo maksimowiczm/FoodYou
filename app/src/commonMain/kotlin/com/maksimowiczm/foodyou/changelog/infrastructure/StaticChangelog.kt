@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_4_5,
                 v_3_4_4,
                 v_3_4_3,
                 v_3_4_2,
@@ -50,14 +51,30 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_0_0,
             )
 
+    val v_3_4_5 =
+        Version(
+            version = "3.4.5",
+            date = LocalDate(2026, 3, 7),
+            changes =
+                listOf(
+                    "Limited sponsorship methods to Ko-fi, BTC, and XMR.",
+                    "Increased Open Food Facts request timeout.",
+                ),
+            bugFixes =
+                listOf(
+                    "Fixed an issue with setting the FoodData Central API key on the search screen (again)."
+                ),
+            translations = listOf("Added Finnish."),
+        )
+
     val v_3_4_4 =
         Version(
             version = "3.4.4",
             date = LocalDate(2026, 2, 25),
             bugFixes =
                 listOf(
-                    "Fixed an issue with setting the FoodData Central API key on the search screen",
-                    "Fixed Open Food Facts 'nutriments' search error",
+                    "Fixed an issue with setting the FoodData Central API key on the search screen.",
+                    "Fixed Open Food Facts 'nutriments' search error.",
                 ),
         )
 
