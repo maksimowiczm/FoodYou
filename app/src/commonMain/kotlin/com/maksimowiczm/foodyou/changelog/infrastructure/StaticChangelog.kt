@@ -62,7 +62,8 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 ),
             bugFixes =
                 listOf(
-                    "Fixed an issue with setting the FoodData Central API key on the search screen (again)."
+                    "Fixed an issue with setting the FoodData Central API key on the search screen (again).",
+                    "Added RFC-compliant CSV parser.",
                 ),
             translations = listOf("Added Finnish."),
         )
