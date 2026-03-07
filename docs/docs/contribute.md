@@ -2,7 +2,7 @@
 
 You can contribute to the development and improvement of the Food You app in several ways.
 
-!!! danger
+!!! danger "Code contributions not accepted"
     Code contributions are currently not accepted due to licensing restrictions and the fact that this
     app generates some income.
 
