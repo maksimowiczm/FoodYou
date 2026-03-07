@@ -8,5 +8,6 @@ plugins {
     alias(libs.plugins.room) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.gmazzo.buildconfig) apply false
-    alias(libs.plugins.android.kotlin.multiplatform.library) apply false
+    alias(libs.plugins.androidMultiplatformLibrary) apply false
+    alias(libs.plugins.kotlinAndroid) apply false
 }

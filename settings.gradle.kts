@@ -34,4 +34,6 @@ include(":shared:barcodescanner")
 
 include(":shared:resources")
 
-include(":app4")
+include(":composeApp")
+
+include(":androidApp")
