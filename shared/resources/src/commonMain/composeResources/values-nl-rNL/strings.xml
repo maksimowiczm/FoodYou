@@ -153,6 +153,7 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Laat meer zien</string>
     <string name="action_download_product">Product downloaden</string>
     <string name="action_copy_and_open_bug_report">Kopieer en open bug rapport</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Kopieer &amp; rapport</string>
     <string name="action_show_details">Laat details zien</string>
     <string name="action_browse_usda">Doorzoek FoodData Central (USDA)</string>
     <string name="action_set_key">Stel sleutel in</string>
@@ -218,6 +219,7 @@
     <string name="description_please_wait_while_exporting_products">Eén moment terwijl producten worden geëxporteerd</string>
     <string name="headline_launcher_icon_by_icons8">App icoon door Icons8</string>
     <string name="description_open_food_facts">Een samenwerkend, gratis en open database van voedselproducten van over de hele wereld</string>
+    <string name="error_open_food_facts_rate_limit">Open Food Facts API verzoeklimiet overschreden</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Producten aan het exporteren</string>
     <string name="notification_importing_products">Producten aan het importeren</string>
@@ -313,7 +315,7 @@
     <string name="headline_auto_calculate_energy">Energie automatisch berekenen</string>
     <string name="headline_manual_energy_input">Handmatig energie invoeren</string>
     <string name="headline_quick_add">Snel toevoegen</string>
-    <string name="description_quick_add">Snel toevoegen laat je invullen zonder te zoeken naar specifieke voeding. Het is een snelle manier om je maaltijden op te schrijven waarvan je het aantal calorieën.</string>
+    <string name="description_quick_add">Snel toevoegen laat je invullen zonder te zoeken naar specifieke voeding. Het is een snelle manier om je maaltijden op te schrijven waarvan je het aantal calorieën weet.</string>
     <string name="action_open_poll">Open peiling</string>
     <string name="headline_colors">Kleuren</string>
     <string name="description_colors">Pas de kleuren in de app aan</string>

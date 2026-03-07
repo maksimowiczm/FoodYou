@@ -407,4 +407,5 @@
     <string name="description_replacing_database">Zastępowanie bazy danych, proszę czekać...</string>
     <string name="headline_experimental">Eksperymentalne</string>
     <string name="description_privacy_policy">Zobacz, jak przetwarzane są Twoje dane</string>
+    <string name="error_open_food_facts_timeout">Open Food Facts odpowiada zbyt długo. Usługa może być tymczasowo niedostępna. Zamiast tego spróbuj zeskanować kod kreskowy produktu.</string>
 </resources>
