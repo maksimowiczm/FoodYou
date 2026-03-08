@@ -38,6 +38,11 @@ kotlin {
 
         withHostTestBuilder {}.configure {}
         withDeviceTestBuilder { sourceSetTreeName = "test" }
+
+        optimization {
+            consumerKeepRules.publish = true
+            consumerKeepRules.files.add(project.file("proguard-rules.pro"))
+        }
     }
 
     listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
