@@ -4,6 +4,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.ImageLoader
+import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavDisplay
@@ -33,6 +34,7 @@ fun FoodYouApp(userQuery: String?) {
     setSingletonImageLoaderFactory { context ->
         val httpClient = HttpClient { install(UserAgent) { agent = networkConfig.userAgent } }
 
+        @OptIn(ExperimentalCoilApi::class)
         ImageLoader.Builder(context)
             .components {
                 addPlatformFileSupport()
