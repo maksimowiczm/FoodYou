@@ -109,7 +109,6 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(libs.jetbrains.compose.ui.tooling.preview)
             implementation(libs.sqlite.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.accompanist.permissions)
