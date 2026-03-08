@@ -77,8 +77,11 @@ internal fun CameraBarcodeScanner(onBarcodeScan: (String) -> Unit, modifier: Mod
     val analyzer = remember {
         ConfirmingBarcodeAnalyzer(
             scanFraction = scanFraction,
-            confirmationsRequired = 10,
-            penaltyPerMiss = 1,
+            strategy =
+                CombinedBarcodeConfirmationStrategy(
+                    ConsecutiveBarcodeConfirmationStrategy(confirmationsRequired = 10),
+                    BufferBarcodeConfirmationStrategy(confirmationsRequired = 5, bufferSize = 20),
+                ),
             onBarcode = onBarcodeScan,
             onCertainty = {
                 scope.launch { animatableCertainty.animateTo(it, motionScheme.fastEffectsSpec()) }
