@@ -52,7 +52,6 @@ kotlin {
             implementation(libs.kotlin.reflect)
 
             implementation(projects.shared.resources)
-            implementation(projects.shared.barcodescanner)
 
             implementation(libs.jetbrains.compose.runtime)
             implementation(libs.jetbrains.compose.foundation)
@@ -115,6 +114,13 @@ kotlin {
             implementation(libs.jetbrains.compose.ui.tooling.preview)
             implementation(libs.sqlite.android)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.accompanist.permissions)
+
+            implementation(libs.androidx.camera.camera2)
+            implementation(libs.androidx.camera.lifecycle)
+            implementation(libs.androidx.camera.view)
+
+            implementation(libs.zxing.core)
         }
 
         getByName("androidDeviceTest").dependencies {

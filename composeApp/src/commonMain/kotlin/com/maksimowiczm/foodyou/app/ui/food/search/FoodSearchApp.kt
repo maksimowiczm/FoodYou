@@ -36,7 +36,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.ui.common.component.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.app.ui.common.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchApp

@@ -1,7 +1,7 @@
-package com.maksimowiczm.foodyou.app.ui.common.component
+package com.maksimowiczm.foodyou.app.ui.common.barcodescanner
 
 import androidx.compose.runtime.*
-import com.maksimowiczm.foodyou.barcodescanner.ui.CameraBarcodeScannerScreen
+import com.maksimowiczm.foodyou.app.ui.common.component.FullScreenDialog
 
 @Composable
 fun FullScreenCameraBarcodeScanner(onBarcodeScan: (String) -> Unit, onClose: () -> Unit) {

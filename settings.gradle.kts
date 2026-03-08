@@ -30,8 +30,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "FoodYou"
 
-include(":shared:barcodescanner")
-
 include(":shared:resources")
 
 include(":composeApp")
