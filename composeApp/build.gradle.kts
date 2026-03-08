@@ -1,13 +1,13 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidMultiplatformLibrary)
-    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.androidxRoom)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
 }
 
 room { schemaDirectory("$projectDir/schemas") }
@@ -53,91 +53,48 @@ kotlin {
     }
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.bundles.camera)
+            implementation(libs.google.accompanistPermissions)
+            implementation(libs.google.zxing.core)
+            implementation(libs.ktor.clientOkhttp)
+            implementation(libs.requery.sqliteAndroid)
+        }
+
         commonMain.dependencies {
+            implementation(libs.androidx.datastore.preferencesCore)
+            implementation(libs.bundles.coil)
+            implementation(libs.bundles.compose.core)
+            implementation(libs.bundles.compose.navigation)
+            implementation(libs.bundles.filekit)
+            implementation(libs.bundles.koin.compose)
+            implementation(libs.bundles.kotlinx)
+            implementation(libs.bundles.paging)
+            implementation(libs.bundles.room)
+            implementation(libs.bundles.ktor)
+            implementation(libs.calvin.reorderable)
             implementation(libs.kotlin.reflect)
-
-            implementation(libs.jetbrains.compose.runtime)
-            implementation(libs.jetbrains.compose.foundation)
-            implementation(libs.jetbrains.compose.material3)
-            implementation(libs.jetbrains.compose.material.icons.extended)
-            implementation(libs.jetbrains.compose.ui)
-            implementation(libs.jetbrains.compose.components.resources)
-            implementation(libs.jetbrains.compose.ui.tooling.preview)
-            implementation(libs.jetbrains.compose.navigationevent.compose)
-
-            implementation(libs.jetbrains.compose.navigation3.ui)
-            implementation(libs.jetbrains.lifecycle.viewmodelNavigation3)
-
-            implementation(libs.androidx.datastore.preferences.core)
-
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-
-            implementation(libs.kotlinx.serialization.json)
-
-            implementation(libs.kotlinx.datetime)
-
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.paging)
-
-            implementation(libs.material.kolor)
-
-            implementation(libs.kermit)
-
-            implementation(libs.reorderable)
-
-            implementation(libs.androidx.paging.common)
-            implementation(libs.androidx.paging.compose)
-
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.serialization.kotlinx.json)
-
-            implementation(libs.compose.shimmer)
-
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network.ktor3)
-
-            implementation(libs.colorpicker.compose)
-
-            implementation(libs.filekit.coil)
-            implementation(libs.filekit.core)
-            implementation(libs.filekit.dialogs.compose)
-
             implementation(libs.konform)
+            implementation(libs.materialKolor)
+            implementation(libs.skydoves.colorpickerCompose)
+            implementation(libs.touchlab.kermit)
+            implementation(libs.valentinilk.shimmer.composeShimmer)
         }
 
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.kotlinx.coroutines.test)
             implementation(libs.androidx.room.testing)
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutinesTest)
         }
 
-        androidMain.dependencies {
-            implementation(libs.sqlite.android)
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.accompanist.permissions)
+        getByName("androidDeviceTest").dependencies { implementation(libs.bundles.androidx.test) }
 
-            implementation(libs.androidx.camera.camera2)
-            implementation(libs.androidx.camera.lifecycle)
-            implementation(libs.androidx.camera.view)
-
-            implementation(libs.zxing.core)
-        }
-
-        getByName("androidDeviceTest").dependencies {
-            implementation(libs.androidx.testCore)
-            implementation(libs.androidx.testCore.ktx)
-            implementation(libs.androidx.testRunner)
-            implementation(libs.androidx.testExt.junit)
-        }
-
-        iosMain.dependencies { implementation(libs.ktor.client.darwin) }
+        iosMain.dependencies { implementation(libs.ktor.clientDarwin) }
     }
 }
 
 dependencies {
-    androidRuntimeClasspath(libs.jetbrains.compose.ui.tooling)
+    androidRuntimeClasspath(libs.compose.ui.tooling)
 
     listOf("kspCommonMainMetadata", "kspAndroid", "kspIosArm64", "kspIosSimulatorArm64").forEach {
         add(it, libs.androidx.room.compiler)

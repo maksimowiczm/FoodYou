@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeMultiplatform)
 }
 
 kotlin {
@@ -10,16 +10,12 @@ kotlin {
     dependencies {
         implementation(projects.composeApp)
 
-        implementation(libs.jetbrains.compose.runtime)
-        implementation(libs.jetbrains.compose.components.resources)
-
-        implementation(libs.androidx.activity.compose)
-        implementation(libs.androidx.appcompat)
-
-        implementation(libs.koin.android)
-
-        implementation(libs.filekit.core)
-        implementation(libs.filekit.dialogs.compose)
+        implementation(libs.bundles.androidx.android.ui)
+        implementation(libs.compose.components.resources)
+        implementation(libs.compose.runtime)
+        implementation(libs.insert.koin.android)
+        implementation(libs.vinceglb.filekitCore)
+        implementation(libs.vinceglb.filekitDialogsCompose)
     }
 }
 
