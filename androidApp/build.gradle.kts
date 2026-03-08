@@ -1,7 +1,4 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
@@ -24,8 +21,6 @@ kotlin {
         implementation(libs.filekit.core)
         implementation(libs.filekit.dialogs.compose)
     }
-
-    target { compilerOptions { jvmTarget.set(JvmTarget.JVM_21) } }
 }
 
 android {
@@ -49,9 +44,11 @@ android {
             buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
         }
     }
+
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
+
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -64,8 +61,8 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
         create("miniDevRelease") {
-            initWith(getByName("devRelease"))
-            isMinifyEnabled = true
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
         }
         create("preview") {
             initWith(getByName("release"))
