@@ -1,14 +1,12 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
 import com.maksimowiczm.foodyou.common.domain.AggregateRoot
-import com.maksimowiczm.foodyou.common.domain.EventSourcedAggregateRoot
 import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-class AccountAnalytics private constructor(val ownerId: LocalAccountId) :
-    AggregateRoot(), EventSourcedAggregateRoot {
+class AccountAnalytics private constructor(val ownerId: LocalAccountId) : AggregateRoot() {
     companion object {
         fun of(ownerId: LocalAccountId): AccountAnalytics {
             return AccountAnalytics(ownerId = ownerId)
@@ -35,34 +33,35 @@ class AccountAnalytics private constructor(val ownerId: LocalAccountId) :
 
     fun recordAppLaunch(versionName: String, clock: Clock) {
         val now = clock.now()
-        val localEvents = mutableListOf<DomainEvent>()
 
-        localEvents.add(
-            AppLaunchedEvent(
-                accountOwnerId = ownerId.value,
-                versionName = versionName,
-                timestamp = now,
-            )
-        )
-
-        if (firstLaunchEver == null) {
-            localEvents.add(
-                FirstAppLaunchRecordedEvent(
+        val localEvents = buildList {
+            add(
+                AppLaunchedEvent(
                     accountOwnerId = ownerId.value,
                     versionName = versionName,
                     timestamp = now,
                 )
             )
-        }
 
-        if (currentVersion != versionName) {
-            localEvents.add(
-                AppVersionChangedEvent(
-                    accountOwnerId = ownerId.value,
-                    newVersionName = versionName,
-                    timestamp = now,
+            if (firstLaunchEver == null) {
+                add(
+                    FirstAppLaunchRecordedEvent(
+                        accountOwnerId = ownerId.value,
+                        versionName = versionName,
+                        timestamp = now,
+                    )
                 )
-            )
+            }
+
+            if (currentVersion != versionName) {
+                add(
+                    AppVersionChangedEvent(
+                        accountOwnerId = ownerId.value,
+                        newVersionName = versionName,
+                        timestamp = now,
+                    )
+                )
+            }
         }
 
         localEvents.forEach {
@@ -71,24 +70,27 @@ class AccountAnalytics private constructor(val ownerId: LocalAccountId) :
         }
     }
 
-    override fun apply(event: DomainEvent) {
+    fun apply(event: DomainEvent) =
         when (event) {
-            is FirstAppLaunchRecordedEvent -> {
-                firstLaunchEver = event.timestamp
-                firstLaunchEverVersionName = event.versionName
-            }
-
-            is AppVersionChangedEvent -> {
-                currentVersion = event.newVersionName
-                firstLaunchCurrentVersion = event.timestamp
-                firstLaunchCurrentVersionName = event.newVersionName
-            }
-
-            is AppLaunchedEvent -> {
-                launchCount++
-            }
-
-            else -> error("Unknown event type: ${event::class.simpleName}")
+            is FirstAppLaunchRecordedEvent -> apply(event)
+            is AppVersionChangedEvent -> apply(event)
+            is AppLaunchedEvent -> apply(event)
+            else -> Unit
         }
+
+    private fun apply(event: FirstAppLaunchRecordedEvent) {
+        firstLaunchEver = event.timestamp
+        firstLaunchEverVersionName = event.versionName
+    }
+
+    private fun apply(event: AppVersionChangedEvent) {
+        currentVersion = event.newVersionName
+        firstLaunchCurrentVersion = event.timestamp
+        firstLaunchCurrentVersionName = event.newVersionName
+    }
+
+    @Suppress("unused")
+    private fun apply(event: AppLaunchedEvent) {
+        launchCount++
     }
 }

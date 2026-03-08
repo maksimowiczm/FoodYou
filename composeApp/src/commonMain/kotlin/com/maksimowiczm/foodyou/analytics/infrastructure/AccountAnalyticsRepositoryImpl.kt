@@ -13,17 +13,16 @@ internal class AccountAnalyticsRepositoryImpl(private val eventStoreDao: EventSt
 
     override suspend fun load(localAccountId: LocalAccountId): AccountAnalytics {
         val roomEvents = eventStoreDao.getAllByAggregateId(localAccountId.value)
-        val events = roomEvents.map { mapper.toDomainEvent(it) }
+        val events = roomEvents.map(mapper::toDomainEvent)
 
         val accountAnalytics = AccountAnalytics.of(localAccountId)
-        events.forEach { accountAnalytics.apply(it) }
+        events.forEach(accountAnalytics::apply)
 
         return accountAnalytics
     }
 
     override suspend fun save(accountAnalytics: AccountAnalytics) {
-        val events = accountAnalytics.events
-        val roomEvents = events.map { mapper.toRoomEventStoreEntity(it) }
+        val roomEvents = accountAnalytics.events.map(mapper::toRoomEventStoreEntity)
         eventStoreDao.insertAll(roomEvents)
     }
 }

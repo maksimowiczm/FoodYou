@@ -58,9 +58,9 @@ class AccountAnalyticsTest {
 
         val events = analytics.events
         assertEquals(3, events.size)
-        assertIs<AppLaunchedEvent>(events[0])
-        assertIs<FirstAppLaunchRecordedEvent>(events[1])
-        assertIs<AppVersionChangedEvent>(events[2])
+        val _ = assertIs<AppLaunchedEvent>(events[0])
+        val _ = assertIs<FirstAppLaunchRecordedEvent>(events[1])
+        val _ = assertIs<AppVersionChangedEvent>(events[2])
     }
 
     @Test

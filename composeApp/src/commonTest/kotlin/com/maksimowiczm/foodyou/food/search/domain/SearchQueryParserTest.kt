@@ -11,14 +11,14 @@ class SearchQueryParserTest {
     fun parse_blankQuery_returnsBlank() {
         val parser = SearchQueryParser()
         val result = parser.parse("   ")
-        assertIs<SearchQuery.Blank>(result)
+        val _ = assertIs<SearchQuery.Blank>(result)
     }
 
     @Test
     fun parse_barcodeQuery_returnsBarcode() {
         val parser = SearchQueryParser()
         val result = parser.parse("1234567890123")
-        assertIs<SearchQuery.Barcode>(result)
+        val _ = assertIs<SearchQuery.Barcode>(result)
         assertEquals("1234567890123", result.barcode)
     }
 
@@ -34,7 +34,7 @@ class SearchQueryParserTest {
 
         for (url in urls) {
             val result = parser.parse(url)
-            assertIs<SearchQuery.OpenFoodFactsUrl>(result, "Failed for URL: $url")
+            val _ = assertIs<SearchQuery.OpenFoodFactsUrl>(result, "Failed for URL: $url")
             assertEquals(url, result.url)
         }
     }
@@ -44,7 +44,7 @@ class SearchQueryParserTest {
         val parser = SearchQueryParser()
         val url = "https://fdc.nal.usda.gov/food-details/2262074/nutrients"
         val result = parser.parse(url)
-        assertIs<SearchQuery.FoodDataCentralUrl>(result)
+        val _ = assertIs<SearchQuery.FoodDataCentralUrl>(result)
         assertEquals(url, result.url)
     }
 
@@ -52,7 +52,7 @@ class SearchQueryParserTest {
     fun parse_textQuery_returnsText() {
         val parser = SearchQueryParser()
         val result = parser.parse("Sample Product Name")
-        assertIs<SearchQuery.Text>(result)
+        val _ = assertIs<SearchQuery.Text>(result)
         assertEquals("Sample Product Name", result.query)
     }
 }
