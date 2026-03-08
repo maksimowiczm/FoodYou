@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
 
-class UserUserRecipeRepositoryIntegrationTest {
+class UserRecipeRepositoryIntegrationTest {
     private lateinit var database: UserFoodDatabase
     private lateinit var repository: UserRecipeRepository
     private lateinit var eventBus: ListEventBus<IntegrationEvent>
