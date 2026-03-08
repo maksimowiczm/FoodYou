@@ -34,7 +34,7 @@ kotlin {
 
         compilerOptions { jvmTarget.set(JvmTarget.JVM_21) }
 
-        androidResources { enable = true }
+        androidResources.enable = true
 
         withHostTestBuilder {}.configure {}
         withDeviceTestBuilder { sourceSetTreeName = "test" }
@@ -50,8 +50,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlin.reflect)
-
-            implementation(projects.shared.resources)
 
             implementation(libs.jetbrains.compose.runtime)
             implementation(libs.jetbrains.compose.foundation)
@@ -140,4 +138,10 @@ dependencies {
     listOf("kspCommonMainMetadata", "kspAndroid", "kspIosArm64", "kspIosSimulatorArm64").forEach {
         add(it, libs.androidx.room.compiler)
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "foodyou.app.generated.resources"
+    generateResClass = always
 }

@@ -30,8 +30,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "FoodYou"
 
-include(":shared:resources")
-
 include(":composeApp")
 
 include(":androidApp")

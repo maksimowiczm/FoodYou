@@ -12,7 +12,6 @@ kotlin {
 
     dependencies {
         implementation(projects.composeApp)
-        implementation(projects.shared.resources)
 
         implementation(libs.jetbrains.compose.runtime)
         implementation(libs.jetbrains.compose.components.resources)
