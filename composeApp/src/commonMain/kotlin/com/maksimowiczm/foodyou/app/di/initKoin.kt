@@ -24,13 +24,12 @@ import com.maksimowiczm.foodyou.fooddatacentral.di.foodDataCentralModule
 import com.maksimowiczm.foodyou.foodsearch.di.foodSearchModule
 import com.maksimowiczm.foodyou.openfoodfacts.di.openFoodFactsModule
 import com.maksimowiczm.foodyou.userfood.di.userFoodModule
-import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
-fun initKoin(config: KoinAppDeclaration? = null): KoinApplication = startKoin {
+fun initKoin(appModule: AppModule, config: KoinAppDeclaration? = null) = startKoin {
     // App modules
-    modules(dataStoreModule, roomModule, appModule)
+    modules(dataStoreModule, roomModule, appModule.module)
 
     // Common modules
     modules(clockModule, inMemoryEventBusModule, commonModule, loggerModule)

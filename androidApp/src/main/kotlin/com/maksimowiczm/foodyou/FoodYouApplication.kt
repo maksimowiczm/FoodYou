@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Build
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
+import com.maksimowiczm.foodyou.app.di.AppModule
 import com.maksimowiczm.foodyou.app.di.initKoin
+import com.maksimowiczm.foodyou.app.infrastructure.config.FoodYouConfig
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -24,7 +26,12 @@ class FoodYouApplication : Application() {
         super.onCreate()
 
         val koin =
-            initKoin {
+            initKoin(
+                    appModule =
+                        AppModule(
+                            foodYouConfig = { single { FoodYouConfig(BuildConfig.VERSION_NAME) } }
+                        )
+                ) {
                     androidContext(this@FoodYouApplication)
                     modules(module { applicationCoroutineScope { coroutineScope } })
                 }

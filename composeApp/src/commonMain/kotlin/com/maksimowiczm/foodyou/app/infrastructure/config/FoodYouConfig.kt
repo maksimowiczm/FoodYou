@@ -3,8 +3,7 @@ package com.maksimowiczm.foodyou.app.infrastructure.config
 import com.maksimowiczm.foodyou.app.domain.AppConfig
 import com.maksimowiczm.foodyou.common.domain.NetworkConfig
 
-class FoodYouConfig : AppConfig, NetworkConfig {
-    override val versionName: String = "4.0.0-dev"
+class FoodYouConfig(override val versionName: String) : AppConfig, NetworkConfig {
     override val privacyPolicyUri: String = "https://foodyou.maksimowiczm.com/privacy-policy"
     override val openFoodFactsTermsOfUseUri: String = "https://world.openfoodfacts.org/terms-of-use"
     override val openFoodFactsPrivacyPolicyUri: String = "https://world.openfoodfacts.org/privacy"
