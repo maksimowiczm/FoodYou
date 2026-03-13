@@ -15,6 +15,7 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -58,6 +59,7 @@ class AppViewModel(
                     AppPage.Main
                 }
             }
+            .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -67,6 +69,7 @@ class AppViewModel(
     val nutrientsOrder: StateFlow<List<NutrientsOrder>> =
         primaryAccount
             .map { account -> account?.settings?.nutrientsOrder ?: NutrientsOrder.defaultOrder }
+            .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -75,8 +78,10 @@ class AppViewModel(
 
     val energyFormatter: StateFlow<EnergyFormatter> =
         primaryAccount
-            .map { account ->
-                when (account?.settings?.energyFormat) {
+            .map { it?.settings?.energyFormat }
+            .distinctUntilChanged()
+            .map {
+                when (it) {
                     EnergyFormat.Kilocalories -> EnergyFormatter.kilocalories
                     EnergyFormat.Kilojoules -> EnergyFormatter.kilojoules
                     null -> EnergyFormatter.kilocalories
