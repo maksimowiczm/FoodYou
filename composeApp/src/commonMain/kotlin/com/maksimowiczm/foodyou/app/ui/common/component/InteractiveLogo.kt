@@ -82,36 +82,40 @@ fun InteractiveLogo(
                 pairs.add(Pair(shapes[i - 1], shapes[i]))
             }
             pairs.add(Pair(shapes.last(), shapes.first()))
-
             pairs.map { (start, end) -> Morph(start, end) }
         }
     val progress = rememberWrapAroundCounter(morphs.size.toFloat())
-    val morph by remember {
-        derivedStateOf {
-            val index = (progress.value / 1f).toInt()
+    val morph by remember { derivedStateOf { morphs[progress.value.toInt() % morphs.size] } }
 
-            if (index >= morphs.size) {
-                morphs[0]
-            } else {
-                morphs[index]
-            }
-        }
-    }
-
-    val motionScheme = MaterialTheme.motionScheme
-
-    val offset by
+    val offset =
         infiniteTransition.animateFloat(
             initialValue = 0f,
-            targetValue = 1000f,
+            targetValue = 1f,
             animationSpec =
                 InfiniteRepeatableSpec(
-                    animation = tween(durationMillis = 20_000 * 1000, easing = LinearEasing),
+                    animation = tween(durationMillis = 30_000, easing = LinearEasing),
                     repeatMode = RepeatMode.Restart,
                 ),
         )
 
+    val brush =
+        remember(backgroundGradientColors, offset) {
+            object : ShaderBrush() {
+                override fun createShader(size: Size): Shader {
+                    val widthOffset = size.width * offset.value
+                    val heightOffset = size.height * offset.value
+                    return LinearGradientShader(
+                        colors = backgroundGradientColors,
+                        from = Offset(widthOffset, heightOffset),
+                        to = Offset(widthOffset + size.width, heightOffset + size.height),
+                        tileMode = TileMode.Mirror,
+                    )
+                }
+            }
+        }
+
     val iconPainter = painterResource(Res.drawable.ic_sushi)
+    val motionScheme = MaterialTheme.motionScheme
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         // This is a hacky way to clip the canvas to a morphing shape because it can't be done
@@ -126,7 +130,6 @@ fun InteractiveLogo(
                             morph.toPath(progress.value % 1f).apply {
                                 transform(Matrix().apply { scale(size.width, size.height) })
                             }
-
                         addPath(path)
                     }
                     rotationZ = rotation
@@ -135,20 +138,6 @@ fun InteractiveLogo(
                     coroutineScope.launch { progress.increment(motionScheme.slowSpatialSpec()) }
                 }
         ) {
-            val brush =
-                object : ShaderBrush() {
-                    override fun createShader(size: Size): Shader {
-                        val widthOffset = size.width * offset
-                        val heightOffset = size.height * offset
-                        return LinearGradientShader(
-                            colors = backgroundGradientColors,
-                            from = Offset(widthOffset, heightOffset),
-                            to = Offset(widthOffset + size.width, heightOffset + size.height),
-                            tileMode = TileMode.Mirror,
-                        )
-                    }
-                }
-
             drawRect(brush)
 
             val iconSize = Size(size.width * iconFraction, size.height * iconFraction)
