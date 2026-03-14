@@ -1,0 +1,15 @@
+<b>Food You</b> on tehokas, avoimen lähdekoodin ravitsemuspäiväkirja modernilla Material You -estetiikalla. Se auttaa kalorien seuraamisen lisäksi seuraamaan ravitsemusta kokonaisuutena — luotettavalla elintarviketiedolla ja joustavalla, modulaarisella käyttöliittymällä.
+
+<b>Ominaisuudet:</b>
+<ul>
+    <li><b>Material You -design:</b> Dynaaminen teemoitus, joka mukautuu laitteesi mukaan luodakseen saumattoman visuaalisen kokemuksen.</li>
+    <li><b>Kattavat elintarviketietokannat:</b> Hae tietoja tietokannoista Open Food Facts, USDA FoodCentral, ja Swiss Food Composition Database.</li>
+    <li><b>Kattava ravintoseuranta:</b> Tarkkaile kaloreita, makroja, vitamiineja, mineraaleja, yms.</li>
+    <li><b>Reseptien luominen:</b> Luo reseptejä, joiden ravintoarvot lasketaan automaattisesti.</li>
+    <li><b>Päivittäiset tavoitteet:</b> Aseta ja seuraa henkilökohtaisia ravitsemustavoitteitasi.</li>
+    <li><b>Modulaarinen etusivu:</b> Kustomoi etusivusi omiin tarpeisiisi räätälöidyillä korteilla.</li>
+</ul>
+
+Aloita ravitsemuksesi seuranta jo tänään Food You -sovelluksella — selkeä, kattava ja täysin sinun.
+
+Käynnistinkuvakkeen on tehnyt <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">N/A</string>
+    <string name="headline_create_product">Luo tuote</string>
+    <string name="headline_settings">Asetukset</string>
+    <string name="headline_daily_goals">Päivittäiset tavoitteesi</string>
+    <string name="headline_general">Yleiset</string>
+    <string name="headline_macronutrients">Makroravinteet</string>
+    <string name="headline_meals">Ateriat</string>
+    <string name="headline_delete_food">Poista ruoka</string>
+    <string name="headline_edit_product">Muokkaa tuotetta</string>
+    <string name="headline_permission_required">Lupaa vaaditaan</string>
+    <string name="headline_language">Kieli</string>
+    <string name="headline_system">Järjestelmän kieli</string>
+    <string name="headline_system_language_settings">Järjestelmän kieliasetukset</string>
+    <string name="headline_secure_screen">Suojattu näyttö</string>
+    <string name="headline_about">Lisätietoja</string>
+    <string name="headline_version">Versio</string>
+    <string name="headline_all_day" description="All-day (meal)">Koko päivä</string>
+    <string name="headline_time_based_ordering">Aikaperusteinen järjestys</string>
+    <string name="headline_incomplete_products">Keskeneräiset tuotteet</string>
+    <string name="headline_product">Tuote</string>
+    <string name="headline_recipe">Resepti</string>
+    <string name="headline_create_recipe">Luo resepti</string>
+    <string name="headline_ingredients" description="Recipe ingredients">Ainesosat</string>
+    <string name="headline_summary">Yhteenveto</string>
+    <string name="headline_whats_new">Uutta</string>
+    <string name="headline_changelog">Muutosloki</string>
+    <string name="headline_installed" description="Installed version of the app">Asennettu</string>
+    <string name="headline_home" description="Home screen">Etusivu</string>
+    <string name="headline_home_settings" description="Home screen settings">Etusivun asetukset</string>
+    <string name="headline_calendar">Kalenteri</string>
+    <string name="headline_meals_settings">Aterioiden asetukset</string>
+    <string name="headline_horizontal">Vaakasuuntainen</string>
+    <string name="headline_vertical">Pystysuuntainen</string>
+    <string name="headline_values_per">Arvot per</string>
+    <string name="headline_other">Muut</string>
+    <string name="headline_vitamins">Vitamiinit</string>
+    <string name="headline_minerals">Kivennäisaineet</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">Tuetut URL-osoitteet</string>
+    <string name="headline_something_went_wrong">Hupsista! Jokin meni pieleen</string>
+    <string name="headline_daily_goals_settings">Päivittäisten tavoitteiden asetukset</string>
+    <string name="headline_api_key">API-avain</string>
+    <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Lähdekoodi</string>
+    <string name="headline_features">Ominaisuudet</string>
+    <string name="weight">Paino</string>
+    <string name="unit_energy" description="Energy as calories">Energia</string>
+    <string name="unit_kcal">kcal</string>
+    <string name="unit_kilojoules">kJ</string>
+    <plurals name="unit_gram">
+        <item quantity="one">gramma</item>
+        <item quantity="other">grammaa</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">millilitra</item>
+        <item quantity="other">millilitraa</item>
+    </plurals>
+    <string name="unit_ounce_short">oz</string>
+    <string name="unit_fluid_ounce_short">fl oz</string>
+    <string name="product_package_weight">Pakkauksen paino</string>
+    <string name="product_package">Paketti</string>
+    <string name="product_serving_weight">Annoksen paino</string>
+    <string name="product_serving">Annos</string>
+    <string name="product_name">Nimi</string>
+    <string name="product_brand">Tuotemerkki</string>
+    <string name="product_barcode">Viivakoodi</string>
+    <string name="product_link">Tuotteen linkki</string>
+    <string name="recipe_servings">Annosmäärä</string>
+    <string name="description_recipe_servings">Kuinka monta annosta tällä reseptillä saa</string>
+    <string name="nutriment_proteins">Proteiinit</string>
+    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_carbohydrates">Hiilihydraatit</string>
+    <string name="nutriment_carbohydrates_short">H</string>
+    <string name="nutriment_sugars">Sokerit</string>
+    <string name="nutriment_fats">Rasvat</string>
+    <string name="nutriment_fats_short">R</string>
+    <string name="nutriment_saturated_fats">Tyydyttyneet rasvat</string>
+    <string name="nutriment_polyunsaturated_fats">Monityydyttymättömät rasvat</string>
+    <string name="nutriment_monounsaturated_fats">Kertatyydyttymättömät rasvat</string>
+    <string name="nutriment_omega_3">Omega-3-rasvahapot</string>
+    <string name="nutriment_omega_6">Omega-6-rasvahapot</string>
+    <string name="nutriment_salt">Suola</string>
+    <string name="nutriment_fiber">Ravintokuitu</string>
+    <string name="nutriment_cholesterol">Kolesteroli</string>
+    <string name="nutriment_caffeine">Kofeiini</string>
+    <string name="nutriment_trans_fats">Transrasvat</string>
+    <string name="nutriment_added_sugars">Lisätyt sokerit</string>
+    <string name="nutriment_soluble_fiber">Liukoinen kuitu</string>
+    <string name="nutriment_insoluble_fiber">Liukenematon kuitu</string>
+    <string name="vitamin_a">A-vitamiini (retinoli)</string>
+    <string name="vitamin_b1">B1-vitamiini (tiamiini)</string>
+    <string name="vitamin_b2">B2-vitamiini (riboflaviini)</string>
+    <string name="vitamin_b3">B3-vitamiini (niasiini)</string>
+    <string name="vitamin_b5">B5-vitamiini (pantoteenihappo)</string>
+    <string name="vitamin_b6">B6-vitamiini (pyridoksiini)</string>
+    <string name="vitamin_b7">B7-vitamiini (biotiini)</string>
+    <string name="vitamin_b9">B9-vitamiini (folaatti)</string>
+    <string name="vitamin_b12">B12-vitamiini (kobalamiinit)</string>
+    <string name="vitamin_c">C-vitamiini (askorbiinihappo)</string>
+    <string name="vitamin_d">D-vitamiini (kalsiferolit)</string>
+    <string name="vitamin_e">E-vitamiini</string>
+    <string name="vitamin_k">K-vitamiini</string>
+    <string name="mineral_manganese">Mangaani</string>
+    <string name="mineral_magnesium">Magnesium</string>
+    <string name="mineral_potassium">Kalium</string>
+    <string name="mineral_calcium">Kalsium</string>
+    <string name="mineral_copper">Kupari</string>
+    <string name="mineral_zinc">Sinkki</string>
+    <string name="mineral_sodium">Natrium</string>
+    <string name="mineral_iron">Rauta</string>
+    <string name="mineral_phosphorus">Fosfori</string>
+    <string name="mineral_selenium">Seleeni</string>
+    <string name="mineral_iodine">Jodi</string>
+    <string name="mineral_chromium">Kromi</string>
+    <string name="action_search">Hae</string>
+    <string name="action_scan_barcode">Skannaa viivakoodi</string>
+    <string name="action_add">Lisää</string>
+    <string name="action_go_back">Palaa</string>
+    <string name="action_tap_to_allow_access">Salli pääsy napauttamalla</string>
+    <string name="action_create">Luo</string>
+    <string name="action_clear">Tyhjennä</string>
+    <string name="action_cancel">Peruuta</string>
+    <string name="action_go_to_settings">Siirry asetuksiin</string>
+    <string name="action_save">Tallenna</string>
+    <string name="action_delete">Poista</string>
+    <string name="action_confirm">Vahvista</string>
+    <string name="action_add_meal">Lisää ateria</string>
+    <string name="action_edit">Muokkaa</string>
+    <string name="action_insert_suggested_search">Aseta ehdotettu haku</string>
+    <string name="action_edit_entry">Muokkaa kohdetta</string>
+    <string name="action_delete_entry">Poista kohde</string>
+    <string name="action_close">Sulje</string>
+    <string name="action_discard">Hylkää</string>
+    <string name="action_translate">Käännä</string>
+    <string name="action_enable_camera_flash">Ota kameran salama käyttöön</string>
+    <string name="action_disable_camera_flash">Poista kameran salama käytöstä</string>
+    <string name="action_prevent_screen_capture">Estä kuvakaappaus</string>
+    <string name="action_go_to_today">Siirry tähän päivään</string>
+    <string name="action_feature_request_on_github">Pyydä ominaisuutta GitHubissa</string>
+    <string name="action_show_calendar">Näytä kalenteri</string>
+    <string name="action_reorder">Järjestä uudelleen</string>
+    <string name="action_move_up" description="reorder list item up">Siirrä ylös</string>
+    <string name="action_move_down" description="reorder list item down">Siirrä alas</string>
+    <string name="action_use_time_based_ordering">Käyttöaikaperusteinen järjestys</string>
+    <string name="action_ignore_all_day_meals">Sivuuta koko päivän ateriat</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Lisää ainesosa</string>
+    <string name="action_delete_ingredient">Poista ainesosa</string>
+    <string name="action_download">Lataa</string>
+    <string name="action_paste_url">Liitä URL</string>
+    <string name="action_browse_open_food_facts">Selaa Open Food Factsia</string>
+    <string name="action_copy">Kopioi</string>
+    <string name="action_choose_other_date">Valitse toinen päivämäärä</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Näytä lisää</string>
+    <string name="action_download_product">Lataa tuote</string>
+    <string name="action_copy_and_open_bug_report">Kopioi ja avaa vikailmoitus</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Kopioi ja ilmoita</string>
+    <string name="action_show_details">Näytä lisätiedot</string>
+    <string name="action_browse_usda">Selaa FoodData Centralia (USDA)</string>
+    <string name="action_set_key">Aseta avain</string>
+    <string name="action_obtain_key">Hanki avain</string>
+    <string name="action_dont_show_again">Älä näytä uudelleen</string>
+    <string name="neutral_barcode_scanner_camera_request">Salli kameran käyttö skannataksesi viivakoodeja</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Sinun täytyy sallia pääsy skannataksesi viivakoodeja</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Kameran käyttöoikeus tarvitaan viivakoodien skannaamiseen. Salli se sovelluksen asetuksissa.</string>
+    <string name="neutral_no_food_found">Ruokaa ei löytynyt</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">%1$d kilokalori jäljellä</item>
+        <item quantity="other">%1$d kilokaloria jäljellä</item>
+    </plurals>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">%1$d kilojoule jäljellä</item>
+        <item quantity="other">%1$d kilojoulea jäljellä</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Aseta päivittäiset ravitsemustavoitteesi</string>
+    <string name="neutral_set_your_meal_schedule">Aseta ateria-aikataulusi</string>
+    <string name="neutral_permanently_delete_meal">Poistetaanko ateria pysyvästi?</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Ateria poistetaan pysyvästi. Kaikki tähän ateriaan liittyvät tiedot menetetään.</string>
+    <string name="neutral_required">Pakollinen</string>
+    <string name="neutral_help_translating_the_app">Auta sovelluksen kääntämisessä</string>
+    <string name="neutral_copied">Tiedot kopioitu leikepöydälle</string>
+    <string name="neutral_product_created">Tuote luotu</string>
+    <string name="question_discard_product">Hylätäänkö tuote?</string>
+    <string name="question_discard_changes">Hylätäänkö muutokset?</string>
+    <string name="question_discard_recipe">Hylätäänkö resepti?</string>
+    <string name="error_invalid_number">Virheellinen numero</string>
+    <string name="error_value_cannot_be_negative">Arvo ei voi olla negatiivinen</string>
+    <string name="error_value_must_be_integer">Arvon on oltava kokonaisluku</string>
+    <string name="error_value_must_be_positive">Arvon on oltava positiivinen</string>
+    <string name="error_url_not_found">URL-osoitetta ei löytynyt</string>
+    <string name="error_url_is_not_supported">URL-osoitetta ei tueta</string>
+    <string name="error_failed_to_download_product">Tuotteen lataaminen epäonnistui</string>
+    <string name="error_product_not_found">Tuotetta ei löytynyt</string>
+    <string name="error_unknown_error">Tuntematon virhe</string>
+    <string name="error_measurement_error">Laskuvirhe, tarkista annoksen ja pakkauksen paino</string>
+    <string name="error_api_key_is_invalid">API-avain ei kelpaa</string>
+    <string name="error_not_a_barcode">Ei viivakoodi</string>
+    <string name="positive_goal_reached">Tavoite saavutettu</string>
+    <string name="positive_ok">OK</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">%1$d kilokalorin ylitys</item>
+        <item quantity="other">%1$d kilokalorin ylitys</item>
+    </plurals>
+    <plurals name="negative_exceeded_by_kilojoules">
+        <item quantity="one">%1$d kilojoulen ylitys</item>
+        <item quantity="other">%1$d kilojoulen ylitys</item>
+    </plurals>
+    <string name="description_delete_food">Ruoka poistetaan pysyvästi</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Tämä kohde poistetaan päiväkirjastasi. Voit lisätä sen uudelleen koska tahansa.</string>
+    <string name="description_about_setting">Lue lisää sovelluksesta</string>
+    <string name="description_time_based_meals_sorting">Kun käytössä, tällä hetkellä tapahtuvat ateriat näytetään ensin</string>
+    <string name="description_action_ignore_all_day_meals">Koko päivän ateriat näytetään luettelon lopussa</string>
+    <string name="description_incomplete_nutrition_data">Joillakin käytetyillä tuotteilla ei ole tätä arvoa, joten näytettävä arvo ei ehkä ole tarkka</string>
+    <string name="description_translation_warning">Käännökset ovat vapaaehtoisten luomia. Ne eivät ehkä ole täydellisiä ja joitakin käännöksiä saattaa puuttua. Jos huomaat virheitä, voit auttaa niiden korjaamisessa.</string>
+    <string name="description_home_settings">Muokkaa etusivuasi</string>
+    <string name="description_download_product">Liitä linkki elintarviketuotteeseen, ja hae automaattisesti ravintosisältö ja tuotetiedot.</string>
+    <string name="description_download_product_hint">Voit liittää minkä tahansa tekstin. Ensimmäinen URL-osoite käytetään.</string>
+    <string name="description_show_macronutrients_goals">Näytä makroravinnetavoitteet</string>
+    <string name="description_please_wait_while_importing_products">Odota hetki tuotaessa tuotteita</string>
+    <string name="description_please_wait_while_exporting_products">Odota kun tuotteita viedään</string>
+    <string name="headline_launcher_icon_by_icons8">Käynnistinkuvakkeen on tehnyt Icons8</string>
+    <string name="description_open_food_facts">Yhteistyöhön perustuva, vapaa ja avoin tietokanta elintarvikkeista ympäri maailmaa</string>
+    <string name="error_open_food_facts_rate_limit">Open Food Facts API-raja ylittynyt</string>
+    <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">Tuotteita viedään</string>
+    <string name="notification_importing_products">Tuotteita tuodaan</string>
+    <string name="notification_importing_products_success">Tuotteiden tuonti valmis</string>
+    <string name="description_food_data_central_usda">FoodData Central on USDA:n kattava elintarvikkeiden koostumustietolähde, jossa on useita erillisiä tietotyyppejä</string>
+    <string name="error_usda_rate_limit">FoodData Central (USDA) API-raja ylittynyt</string>
+    <string name="description_swiss_food_composition_database_short">Swiss Food Composition Database sisältää ravitsemustietoa yli 1100 yleisestä elintarvikkeesta</string>
+    <string name="description2_swiss_food_composition_database">Swiss Food Composition Database sisältää ravitsemustietoa yli 1100 yleisestä elintarviketuotteesta. Se on saatavilla neljällä kielellä. Tuodaksesi nämä tuotteet ruokapäiväkirjaan, valitse haluamasi kielet.</string>
+    <string name="headline_external_databases">Ulkoiset tietokannat</string>
+    <string name="description_external_databases">Tutustu tuettuihin tietokantoihin</string>
+    <string name="feature_manual_database_import">Manuaalinen tietokannan tuonti</string>
+    <string name="action_unpack" description="Unpack the recipe ingredients">Pura</string>
+    <string name="headline_sponsor">Tue</string>
+    <string name="description_sponsor_short_2">Tue sovelluksen kasvua</string>
+    <string name="headline_source_code">Lähdekoodi</string>
+    <string name="action_write_an_email">Kirjoita sähköpostia</string>
+    <string name="headline_contact">Ota yhteyttä</string>
+    <string name="description_sponsor_contact">Jos sinulla on tukemista koskevia pyyntöjä, ota rohkeasti yhteyttä minuun sähköpostitse tai GitHubissa.</string>
+    <string name="sponsor_bank_or_card">Pankkitili tai luottokortti</string>
+    <string name="action_treat_as_liquid">Käsittele nesteenä</string>
+    <string name="description_treat_as_liquid">Suosi millilitroja mittauksessa</string>
+    <string name="headline_personalization">Mukauttaminen</string>
+    <string name="description_personalization">Mukauta kokemustasi</string>
+    <string name="headline_nutrition_facts">Ravintosisältö</string>
+    <string name="description_personalize_nutrition_facts_short">Järjestä ravitsemustiedot uudelleen</string>
+    <string name="action_reset_ordering">Palauta järjestys</string>
+    <string name="headline_reset_to_default">Palauta oletukset</string>
+    <string name="action_reset" description="Confirm resetting">Palauta alkuarvoihin</string>
+    <string name="description_reset_nutrition_facts">Nollaa ravintoarvojen mukautus</string>
+    <string name="headline_note">Huomautus</string>
+    <string name="description_add_note">Valinnaiset huomautukset (esim. ainesosat, vegaanisuuden tila, allergeenit, lisäaineet) tai muut ravintoaineisiin liittymättömät tiedot</string>
+    <string name="action_try_again">Yritä uudelleen</string>
+    <string name="description_calories_are_calculated">Energia lasketaan automaattisesti makroravintoineista. Voit poistaa tämän ominaisuuden käytöstä ja syöttää arvon manuaalisesti tarvittaessa. Alkoholi ei sisälly laskelmaan.</string>
+    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
+    <string name="neutral_an_error_occurred">Tapahtui virhe</string>
+    <string name="action_retry">Yritä uudelleen</string>
+    <string name="action_import">Tuo</string>
+    <string name="headline_today" description="Today, date">Tänään, %1$s</string>
+    <string name="headline_yesterday" description="Yesterday, date">Eilen, %1$s</string>
+    <string name="headline_tomorrow" description="Tomorrow, date">Huomenna, %1$s</string>
+    <string name="headline_user" description="User, person who uses the app">Käyttäjä</string>
+    <string name="description_food_source">Täsmennä mistä ravintotiedot ovat peräisin</string>
+    <string name="error_food_is_missing_required_fields">Ruuasta puuttuu vaadittuja kenttiä</string>
+    <string name="headline_preview_release">Julkaisun esiversio</string>
+    <string name="description_preview_release">Käytössäsi on tällä hetkellä esiversio. Se voi olla epätäydellinen, epävakaa ja altis muutoksille.</string>
+    <string name="headline_your_food">Sinun ruokasi</string>
+    <string name="headline_filters">Suodattimet</string>
+    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">Valitse ainesosa</string>
+    <string name="headline_edit_recipe">Muokkaa reseptiä</string>
+    <string name="description_delete_ingredient">Ainesosa poistetaan reseptistä</string>
+    <string name="neutral_remote_database_error">Tuotetta ei voitu ladata etätietokannasta. Voit silti tarkastella aiemmin ladattuja tuotteita.</string>
+    <string name="headline_before_you_start">Ennen kuin aloitat</string>
+    <string name="action_agree_and_continue">Hyväksy ja jatka</string>
+    <string name="headline_food_database">Elintarviketietokanta</string>
+    <string name="description_food_database">Voit valita, käytätkö näitä valinnaisia ulkoisia palveluja, joilla voi olla omat ehtonsa ja tietosuojakäytäntönsä</string>
+    <string name="action_skip">Ohita</string>
+    <string name="headline_almost_done">Melkein valmista</string>
+    <string name="headline_preparing_your_food_diary">Ruokapäiväkirjan valmistelu</string>
+    <string name="headline_please_wait">Odota hetki</string>
+    <string name="headline_created">Luotu</string>
+    <string name="headline_imported">Tuotu</string>
+    <string name="headline_downloaded">Ladattu</string>
+    <string name="headline_edited">Muokattu</string>
+    <string name="headline_history">Historia</string>
+    <string name="headline_anonymous">Nimetön</string>
+    <string name="headline_recent">Viimeisimmät</string>
+    <string name="headline_database">Tietokanta</string>
+    <string name="description_manage_database">Hallinnoi tietokantaasi</string>
+    <string name="action_done">Valmis</string>
+    <string name="neutral_measurement_added">Selvä! Mittauksesi on lisätty</string>
+    <string name="headline_imported_from_food_you_2">Tuotu Food Youn versiosta 2</string>
+    <string name="action_set_goals">Aseta tavoitteita</string>
+    <string name="headline_pick_the_days">Valitse päivät</string>
+    <string name="action_set_separate_goals">Aseta kullekin päivälle erilliset tavoitteet</string>
+    <string name="headline_percentages">Prosenttiosuudet</string>
+    <string name="action_import_csv_food_products">Tuo ruoka-CSV</string>
+    <string name="description_import_csv_food_products">Tuo elintarvikkeet CSV-tiedostosta</string>
+    <string name="description_import_csv_food_products_hint">Meidän täytyy tietää, mikä on mitä. Kerro missä tiedoston sarakkeessa on tuotteen nimi, tuotemerkki, jne.</string>
+    <string name="description_import_csv_food_products_hint_2">Kaikki ravintoarvot on annettava grammoina tai kilokaloreina 100 grammaa kohden</string>
+    <string name="action_export_csv_food_products">Vie ruoka-CSV</string>
+    <string name="description_export_csv_food_products">Vie elintarvikkeet CSV-tiedostoon</string>
+    <string name="neutral_no_column">Ei saraketta</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="one">Tuotiin %1$d elintarviketta</item>
+        <item quantity="other">Tuotiin %1$d elintarviketta</item>
+    </plurals>
+    <string name="headline_energy_unit">Energiayksikkö</string>
+    <string name="description_energy_unit">Valitse ensisijainen energiayksikkö</string>
+    <plurals name="neutral_exported_x_food_products">
+        <item quantity="one">Viety %1$d elintarviketta</item>
+        <item quantity="other">Viety %1$d elintarviketta</item>
+    </plurals>
+    <string name="headline_auto_calculate_energy">Laske energia automaattisesti</string>
+    <string name="headline_manual_energy_input">Syötä energia manuaalisesti</string>
+    <string name="headline_quick_add">Pikalisäys</string>
+    <string name="description_quick_add">Pikalisäys antaa sinun kirjata tietoja etsimättä tiettyjä elintarvikkeita. Se on nopea tapa aterioiden kirjaamiseen, jos tiedät kalorimäärän tai haluat yksinkertaisen arvion.</string>
+    <string name="action_open_poll">Avaa kysely</string>
+    <string name="headline_colors">Värit</string>
+    <string name="description_colors">Mukauta sovelluksen värejä</string>
+    <string name="headline_custom_palette">Mukautettu paletti</string>
+    <string name="description_custom_palette">Määritä oma paletti</string>
+    <string name="headline_dynamic_colors">Dynaamiset värit</string>
+    <string name="description_dynamic_colors">Käytä järjestelmän värejä</string>
+    <string name="headline_palette_style">Paletin tyyli</string>
+    <string name="headline_contrast">Kontrasti</string>
+    <string name="headline_amoled">AMOLED</string>
+    <string name="headline_light">Vaalea</string>
+    <string name="headline_dark">Tumma</string>
+    <string name="headline_appearance">Ulkoasu</string>
+    <string name="headline_theme">Teema</string>
+    <string name="headline_pick_a_color">Valitse väri</string>
+    <string name="headline_nutrients_colors">Ravintoaineiden värit</string>
+    <string name="description_nutrients_colors_reset">Ravintoaineiden värien asetukset palautetaan oletusarvoihin</string>
+    <string name="headline_sponsorship_goals">Tavoitteet</string>
+    <string name="description_sponsorship_goals">Tukemalla autat pitämään tämän projektin itsenäisenä ja kestävänä, joka ei perustu hyväksikäyttöön perustuviin liiketoimintamalleihin. Monet kaupalliset sovellukset tekevät rahaa keräämällä ja myymällä käyttäjätietoja, kohdistamalla mainoksia tai ohjaamalla käyttäjiä riippuvuutta aiheuttaviin vuorovaikutusmalleihin. Tukeminen varmistaa, että tämä sovellus suojaa yksityisyyttäsi, pysyy läpinäkyvänä ja keskittyy todellisen arvon tuottamiseen vaarantamatta luottamustasi tai hyvinvointiasi.</string>
+    <string name="description_x_away_from_next_goal">%1$s seuraavaan tavoitteeseen</string>
+    <string name="headline_sponsors">Tukijat</string>
+    <string name="description_no_sponsors_this_month">Ei tukijoita tässä kuussa</string>
+    <string name="headline_latest" description="Latest, most recent">Viimeisimmät</string>
+    <string name="headline_top_sponsorships" description="Most money contributed">Parhaat</string>
+    <string name="headline_this_month_we_raised">Tässä kuussa keräsimme %1$s</string>
+    <string name="description_sponsors_privacy">Food You ottaa yksityisyytesi tosissaan. Sen takia emme yhdistä sinua mihinkään ulkopuoliseen palveluun ilman sinun hyväksyntääsi. Nähdäksesi viimeisimmät tukijat, tiedot täytyy ladata GitHubin palvelimilta.</string>
+    <string name="action_allow" description="Allow something">Salli</string>
+    <string name="action_next_month">Seuraava kuukausi</string>
+    <string name="action_previous_month">Edellinen kuukausi</string>
+    <string name="headline_sponsor_methods">Menetelmät</string>
+    <string name="headline_save_database">Tallenna tietokanta</string>
+    <string name="description_save_database">Tallenna kopio tietokannastasi</string>
+    <string name="headline_replace_database">Korvaa tietokanta</string>
+    <string name="description_replace_database">Korvaa tietokantasi aiemmin tallennetulla kopiolla</string>
+    <string name="action_replace">Korvaa</string>
+    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Tietokantasi KORVATAAN ja kaikki nykyiset tiedot POISTETAAN. Sovellus käynnistyy uudelleen, kun tietokanta on vaihdettu. Saatat joutua avaamaan sovelluksen uudelleen.</string>
+    <string name="action_sign_in">Kirjaudu sisään</string>
+    <string name="headline_terms_of_service">Palveluehdot</string>
+    <string name="headline_privacy_policy">Tietosuojakäytäntö</string>
+    <string name="error_there_was_an_error_while_signing_in">Sisäänkirjautumisessa tapahtui virhe</string>
+    <string name="headline_random_theme">Satunnainen teema</string>
+    <string name="description_random_theme">Satunnainen teema otetaan käyttöön aina kun sovellus käynnistetään</string>
+    <string name="headline_terms_of_use">Käyttöehdot</string>
+    <string name="onboarding_privacy_tip">Tämä sovellus on avointa lähdekoodia ja tehty sinua varten. Kunnioitamme yksityisyyttäsi, tietosi pysyvät yksityisinä.</string>
+    <string name="headline_add_profile">Lisää profiili</string>
+    <string name="headline_how_do_you_want_to_be_called">Miten haluat itseäsi kutsuttavan?</string>
+    <string name="headline_profile_name">Profiilin nimi</string>
+    <string name="headline_profile_picture">Profiilikuva</string>
+    <string name="action_continue">Jatka</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Moi, %1$s!</string>
+    <string name="headline_data_backup_and_export">Tietojen varmuuskopiointi ja vienti</string>
+    <string name="headline_privacy">Yksityisyys</string>
+    <string name="action_switch_profile">Vaihda profiilia</string>
+    <string name="action_add_profile">Lisää profiili</string>
+    <string name="action_refresh">Virkistä</string>
+    <string name="description_not_sure_yet">Etkö ole vielä varma? Voit muuttaa sitä milloin tahansa</string>
+    <string name="question_discard_profile">Hylätäänkö profiili?</string>
+    <string name="headline_edit_profile">Muokkaa profiilia</string>
+    <string name="action_delete_profile">Poista profiili</string>
+    <string name="headline_delete_profile">Poista profiili</string>
+    <string name="description_delete_profile">Tämä profiili poistetaan pysyvästi. Kaikki siihen liittyvät tiedot poistetaan lopullisesti.</string>
+    <string name="action_today" description="Set date to today">Tänään</string>
+    <string name="action_fill_in_details">Täydennä tiedot</string>
+    <string name="action_skip_for_now">Ohita toistaiseksi</string>
+    <string name="headline_add_more_details">Anna lisätietoja</string>
+    <string name="description_add_more_details_product_form">Proteiinien, rasvojen, hiilihydraattien, ja energia-arvojen lisääminen auttaa tuottamaan tarkempaa tietoa ravitsemuksestasi</string>
+    <string name="headline_favorite">Suosikit</string>
+    <string name="action_add_a_photo">Lisää valokuva</string>
+    <string name="action_remove_a_photo">Poista valokuva</string>
+    <string name="description_values_per">Valitse määrä, johon ravintoarvot perustuvat</string>
+    <string name="description_privacy">Hallinnoi henkilökohtaisia tietojasi</string>
+    <string name="headline_database_backup">Tietokannan varmuuskopiointi</string>
+    <string name="description_replacing_database">Korvataan tietokantaa, odota hetki...</string>
+    <string name="headline_experimental">Kokeelliset</string>
+    <string name="description_privacy_policy">Katso miten tietojasi käsitellään</string>
+</resources>

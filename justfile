@@ -7,7 +7,7 @@ format:
 
 release:
     @./gradlew --no-daemon --no-build-cache clean
-    @./gradlew --no-daemon --no-build-cache assembleRelease
+    @./gradlew --no-daemon --no-build-cache app:assembleRelease
     @zipalign -f -p -v 4 \
       app/build/outputs/apk/release/app-release-unsigned.apk \
       app/build/outputs/apk/release/aligned.apk
@@ -20,7 +20,7 @@ release:
 
 preview:
     @./gradlew --no-daemon --no-build-cache clean
-    @./gradlew --no-daemon --no-build-cache assemblePreview
+    @./gradlew --no-daemon --no-build-cache app:assemblePreview
     @zipalign -f -p -v 4 \
       app/build/outputs/apk/preview/app-preview-unsigned.apk \
       app/build/outputs/apk/preview/aligned.apk
@@ -30,3 +30,7 @@ preview:
       --ks-key-alias foodyou \
       --out ./preview-signed.apk \
       app/build/outputs/apk/preview/aligned.apk
+
+[working-directory: 'docs']
+serve:
+    zensical serve

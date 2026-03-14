@@ -16,6 +16,7 @@ import com.maksimowiczm.foodyou.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.OpenFoodFactsProductMapper
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.model.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.food.search.domain.DietaryFilter
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.OpenFoodFactsPagingKeyDao
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.OpenFoodFactsPagingKeyEntity
 import kotlin.time.Instant
@@ -34,6 +35,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
     private val remoteMapper: RemoteProductMapper,
     private val dateProvider: DateProvider,
     private val logger: Logger,
+    private val dietaryFilter: DietaryFilter? = null,
 ) : RemoteMediator<K, T>() {
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
@@ -103,6 +105,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                     countries = country,
                     page = page,
                     pageSize = PAGE_SIZE,
+                    ingredientsAnalysisTag = dietaryFilter?.tag,
                 )
 
             val fetchedCount =

@@ -68,11 +68,22 @@ internal class OpenFoodFactsRemoteDataSource(
         }
     }
 
+    /**
+     * Search for products using the Open Food Facts search API.
+     *
+     * @param query The search query string.
+     * @param countries Optional country filter.
+     * @param page Page number to request.
+     * @param pageSize Number of results per page.
+     * @param ingredientsAnalysisTag When non-null, restricts results to products whose
+     *   `ingredients_analysis_tags` field contains this value (e.g. `"en:vegan"`).
+     */
     suspend fun queryProducts(
         query: String,
         countries: String? = null,
         page: Int? = null,
         pageSize: Int = 50,
+        ingredientsAnalysisTag: String? = null,
     ): OpenFoodPageResponse =
         try {
             if (!rateLimiter.canMakeSearchRequest()) {
@@ -91,6 +102,16 @@ internal class OpenFoodFactsRemoteDataSource(
                     parameter("page_size", pageSize)
                     parameter("sort_by", "product_name")
                     parameter("fields", FIELDS)
+                    ingredientsAnalysisTag?.let {
+                        parameter("tagtype_0", "ingredients_analysis_tags")
+                        parameter("tag_contains_0", "contains")
+                        parameter("tag_0", it)
+                    }
+                    timeout {
+                        requestTimeoutMillis = TIMEOUT
+                        connectTimeoutMillis = TIMEOUT
+                        socketTimeoutMillis = TIMEOUT
+                    }
                 }
                 .body<OpenFoodFactsPageResponseV1>()
         } catch (e: Exception) {

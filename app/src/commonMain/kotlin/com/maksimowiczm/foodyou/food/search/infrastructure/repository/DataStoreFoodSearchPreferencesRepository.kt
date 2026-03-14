@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.maksimowiczm.foodyou.common.infrastructure.datastore.AbstractDataStoreUserPreferencesRepository
 import com.maksimowiczm.foodyou.common.infrastructure.datastore.set
+import com.maksimowiczm.foodyou.food.search.domain.DietaryFilter
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferences
 
 internal class DataStoreFoodSearchPreferencesRepository(dataStore: DataStore<Preferences>) :
@@ -15,7 +16,9 @@ internal class DataStoreFoodSearchPreferencesRepository(dataStore: DataStore<Pre
         FoodSearchPreferences(
             openFoodFacts =
                 FoodSearchPreferences.OpenFoodFacts(
-                    enabled = this[FoodPreferencesKeys.UseOpenFoodFacts] ?: false
+                    enabled = this[FoodPreferencesKeys.UseOpenFoodFacts] ?: false,
+                    dietaryFilter = this[FoodPreferencesKeys.OpenFoodFactsDietaryFilter]
+                        ?.let { name -> DietaryFilter.entries.find { it.name == name } },
                 ),
             usda =
                 FoodSearchPreferences.Usda(
@@ -26,6 +29,8 @@ internal class DataStoreFoodSearchPreferencesRepository(dataStore: DataStore<Pre
 
     override fun MutablePreferences.applyUserPreferences(updated: FoodSearchPreferences) {
         this[FoodPreferencesKeys.UseOpenFoodFacts] = updated.openFoodFacts.enabled
+        this[FoodPreferencesKeys.OpenFoodFactsDietaryFilter] =
+            updated.openFoodFacts.dietaryFilter?.name
         this[FoodPreferencesKeys.UseUsda] = updated.usda.enabled
         this[FoodPreferencesKeys.UsdaApiKey] = updated.usda.apiKey
     }
@@ -33,6 +38,7 @@ internal class DataStoreFoodSearchPreferencesRepository(dataStore: DataStore<Pre
 
 private object FoodPreferencesKeys {
     val UseOpenFoodFacts = booleanPreferencesKey("food:use_open_food_facts")
+    val OpenFoodFactsDietaryFilter = stringPreferencesKey("food:off_dietary_filter")
     val UseUsda = booleanPreferencesKey("food:use_usda")
     val UsdaApiKey = stringPreferencesKey("food:usda_api_key")
 }

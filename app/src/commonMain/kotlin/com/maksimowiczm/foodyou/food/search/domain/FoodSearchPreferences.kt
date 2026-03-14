@@ -4,7 +4,10 @@ import com.maksimowiczm.foodyou.common.domain.userpreferences.UserPreferences
 
 data class FoodSearchPreferences(val openFoodFacts: OpenFoodFacts, val usda: Usda) :
     UserPreferences {
-    data class OpenFoodFacts(val enabled: Boolean)
+    data class OpenFoodFacts(
+        val enabled: Boolean,
+        val dietaryFilter: DietaryFilter? = null,
+    )
 
     data class Usda(val enabled: Boolean, val apiKey: String?)
 

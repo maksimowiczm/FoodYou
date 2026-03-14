@@ -45,3 +45,5 @@ data object Ko_Fi : LinkSponsorMethod {
 }
 
 data object PayPal : SponsorMethod
+
+data object Dash : SponsorMethod

@@ -64,23 +64,28 @@ class FoodSearchUseCase(
 
     private fun FoodSearchPreferences.remoteMediatorFactory(
         source: FoodSource.Type
-    ): ProductRemoteMediatorFactory? =
+    ): Pair<ProductRemoteMediatorFactory, DietaryFilter?>? =
         when (source) {
             FoodSource.Type.OpenFoodFacts if this.openFoodFacts.enabled ->
-                foodRemoteMediatorFactoryAggregate.openFoodFactsRemoteMediatorFactory
+                foodRemoteMediatorFactoryAggregate.openFoodFactsRemoteMediatorFactory to
+                    this.openFoodFacts.dietaryFilter
 
             FoodSource.Type.USDA if this.usda.enabled ->
-                foodRemoteMediatorFactoryAggregate.usdaRemoteMediatorFactory
+                foodRemoteMediatorFactoryAggregate.usdaRemoteMediatorFactory to null
             else -> null
         }
 
     @OptIn(ExperimentalPagingApi::class)
-    private fun ProductRemoteMediatorFactory.wrap(query: SearchQuery): RemoteMediatorFactory =
-        object : RemoteMediatorFactory {
+    private fun Pair<ProductRemoteMediatorFactory, DietaryFilter?>.wrap(
+        query: SearchQuery,
+    ): RemoteMediatorFactory {
+        val (factory, dietaryFilter) = this
+        return object : RemoteMediatorFactory {
             override fun <K : Any, T : Any> create(): RemoteMediator<K, T>? = runBlocking {
-                this@wrap.create(query, PAGE_SIZE)
+                factory.create(query, PAGE_SIZE, dietaryFilter)
             }
         }
+    }
 
     private companion object {
         const val PAGE_SIZE = 30

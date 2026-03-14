@@ -12,6 +12,7 @@ import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
 import com.maksimowiczm.foodyou.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.food.infrastructure.usda.USDAMapper
 import com.maksimowiczm.foodyou.food.infrastructure.usda.USDARemoteDataSource
+import com.maksimowiczm.foodyou.food.search.domain.DietaryFilter
 import com.maksimowiczm.foodyou.food.search.domain.FoodSearchPreferences
 import com.maksimowiczm.foodyou.food.search.domain.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.USDAPagingKeyDao
@@ -33,6 +34,7 @@ internal class USDARemoteMediatorFactory(
     override suspend fun <K : Any, T : Any> create(
         query: SearchQuery,
         pageSize: Int,
+        dietaryFilter: DietaryFilter?,
     ): RemoteMediator<K, T>? {
         if (query !is SearchQuery.NotBlank) {
             return null

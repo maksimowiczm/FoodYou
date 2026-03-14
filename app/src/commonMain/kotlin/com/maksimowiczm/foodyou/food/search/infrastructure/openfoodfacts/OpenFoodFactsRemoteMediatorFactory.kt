@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.food.domain.repository.ProductRepository
 import com.maksimowiczm.foodyou.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.OpenFoodFactsProductMapper
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.food.search.domain.DietaryFilter
 import com.maksimowiczm.foodyou.food.search.domain.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.food.search.infrastructure.room.OpenFoodFactsPagingKeyDao
 
@@ -29,6 +30,7 @@ internal class OpenFoodFactsRemoteMediatorFactory(
     override suspend fun <K : Any, T : Any> create(
         query: SearchQuery,
         pageSize: Int,
+        dietaryFilter: DietaryFilter?,
     ): RemoteMediator<K, T>? {
         if (query !is SearchQuery.NotBlank) {
             return null
@@ -47,6 +49,7 @@ internal class OpenFoodFactsRemoteMediatorFactory(
             remoteMapper = remoteMapper,
             dateProvider = dateProvider,
             logger = logger,
+            dietaryFilter = dietaryFilter,
         )
     }
 }
