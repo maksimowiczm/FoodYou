@@ -40,14 +40,12 @@ internal abstract class RecipeDao {
         FROM Recipe
         INNER JOIN RecipeIngredient ON Recipe.sqliteId = RecipeIngredient.recipeSqliteId
         WHERE Recipe.accountId = :accountId 
-            AND RecipeIngredient.foodReferenceType = :foodReferenceType
-            AND RecipeIngredient.foodId = :foodId
+            AND RecipeIngredient.foodReferenceJson = :foodReferenceJson
         """
     )
     abstract suspend fun findRecipesUsingFood(
         accountId: String,
-        foodReferenceType: FoodReferenceType,
-        foodId: String,
+        foodReferenceJson: String,
     ): List<RecipeWithIngredients>
 
     /** Atomically insert a recipe with its ingredients in a single transaction. */

@@ -173,8 +173,14 @@ class UserRecipeRepositoryIntegrationTest {
         val recipe = repository.observe(identity).first()
         assertNotNull(recipe)
         assertEquals(2, recipe.ingredients.size)
-        assertEquals("food-2", recipe.ingredients[0].foodReference.foodId)
-        assertEquals("food-3", recipe.ingredients[1].foodReference.foodId)
+        assertEquals(
+            "food-2",
+            (recipe.ingredients[0].foodReference as FoodReference.UserProduct).id,
+        )
+        assertEquals(
+            "food-3",
+            (recipe.ingredients[1].foodReference as FoodReference.UserProduct).id,
+        )
 
         // Verify old ingredients are removed
         database.useReaderConnection { transactor ->
@@ -305,14 +311,17 @@ class UserRecipeRepositoryIntegrationTest {
         // Verify Recipe A is unchanged
         val unchangedRecipeA = repository.observe(recipeAId).first()
         assertNotNull(unchangedRecipeA)
-        assertEquals("food-1", unchangedRecipeA.ingredients[0].foodReference.foodId)
+        assertEquals(
+            "food-1",
+            (unchangedRecipeA.ingredients[0].foodReference as FoodReference.UserProduct).id,
+        )
 
         // Verify Recipe B is also unchanged
         val recipeB = repository.observe(recipeBId).first()
         assertNotNull(recipeB)
         assertEquals(
             recipeAId.id,
-            (recipeB.ingredients[0].foodReference as FoodReference.UserRecipe).foodId,
+            (recipeB.ingredients[0].foodReference as FoodReference.UserRecipe).id,
         )
     }
 
@@ -551,7 +560,7 @@ class UserRecipeRepositoryIntegrationTest {
         assertNotNull(recipeC)
         assertEquals(
             recipeBId.id,
-            (recipeC.ingredients[0].foodReference as FoodReference.UserRecipe).foodId,
+            (recipeC.ingredients[0].foodReference as FoodReference.UserRecipe).id,
         )
 
         // Event was published

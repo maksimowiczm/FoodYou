@@ -9,7 +9,6 @@ import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnitConver
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductDao
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.QuantityTypeConverter
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.FoodReferenceTypeConverter
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeDao
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeIngredientEntity
@@ -33,7 +32,6 @@ import com.maksimowiczm.foodyou.userfood.infrastructure.room.search.SearchDao
 @TypeConverters(
     QuantityTypeConverter::class,
     MeasurementUnitConverter::class,
-    FoodReferenceTypeConverter::class,
     RecipeQuantityTypeConverter::class,
 )
 @ConstructedBy(UserFoodDatabaseConstructor::class)

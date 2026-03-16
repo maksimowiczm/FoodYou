@@ -21,7 +21,6 @@ import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIngredient
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeName
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeRepository
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.UserFoodDatabase
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.FoodReferenceType
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
@@ -37,6 +36,7 @@ import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 
 internal class UserRecipeRepositoryImpl(
     private val database: UserFoodDatabase,
@@ -216,18 +216,11 @@ internal class UserRecipeRepositoryImpl(
         foodReference: FoodReference,
         accountId: LocalAccountId,
     ): List<UserRecipe> {
-        val foodReferenceType =
-            when (foodReference) {
-                is FoodReference.UserProduct -> FoodReferenceType.UserFood
-                is FoodReference.FoodDataCentral -> FoodReferenceType.FoodDataCentral
-                is FoodReference.OpenFoodFacts -> FoodReferenceType.OpenFoodFacts
-                is FoodReference.UserRecipe -> FoodReferenceType.UserRecipe
-            }
+        val foodReferenceJson = Json.encodeToString(foodReference)
 
         return dao.findRecipesUsingFood(
                 accountId = accountId.value,
-                foodReferenceType = foodReferenceType,
-                foodId = foodReference.foodId,
+                foodReferenceJson = foodReferenceJson,
             )
             .map { mapper.toDomain(it) }
     }
@@ -251,7 +244,7 @@ internal class UserRecipeRepositoryImpl(
         val referencedRecipes =
             ingredients.mapNotNull { ingredient ->
                 when (val ref = ingredient.foodReference) {
-                    is FoodReference.UserRecipe -> ref.foodId
+                    is FoodReference.UserRecipe -> ref.id
                     else -> null
                 }
             }
@@ -304,16 +297,14 @@ internal class UserRecipeRepositoryImpl(
         // Get all recipe references in the current recipe's ingredients
         val nestedRecipes =
             currentRecipe.ingredients.mapNotNull { ingredient ->
-                when (ingredient.foodReferenceType) {
-                    FoodReferenceType.UserRecipe -> ingredient.foodId
-                    else -> null
-                }
+                Json.decodeFromString<FoodReference>(ingredient.foodReferenceJson)
+                    as? FoodReference.UserRecipe
             }
 
         // Recursively check each nested recipe
         nestedRecipes.forEach { nestedRecipeId ->
             checkCircularReferenceRecursive(
-                currentRecipeId = nestedRecipeId,
+                currentRecipeId = nestedRecipeId.id,
                 targetRecipeId = targetRecipeId,
                 accountId = accountId,
                 visitedPath = visitedPath,

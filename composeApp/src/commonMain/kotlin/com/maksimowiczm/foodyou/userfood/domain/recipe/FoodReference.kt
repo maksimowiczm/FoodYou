@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.domain.recipe
 
-import kotlin.jvm.JvmInline
+import kotlinx.serialization.Serializable
 
 /**
  * Reference to food from any bounded context.
@@ -10,34 +10,29 @@ import kotlin.jvm.JvmInline
  * - External food products (FoodDataCentral, OpenFoodFacts contexts)
  * - Other recipes (Recipe context)
  */
+@Serializable
 sealed interface FoodReference {
-    val foodId: String
-
     /**
      * Reference to a user-created food product.
      *
-     * @property foodId UUID of the UserFoodProduct
+     * @property id The unique identifier within the local database
      */
-    @JvmInline value class UserProduct(override val foodId: String) : FoodReference
+    @Serializable data class UserProduct(val id: String) : FoodReference
 
     /**
      * Reference to food from FoodDataCentral.
      *
-     * @property foodId FDC ID of the food
+     * @property fdcId The FoodData Central unique identifier
      */
-    @JvmInline value class FoodDataCentral(override val foodId: String) : FoodReference
+    @Serializable data class FoodDataCentral(val fdcId: Int) : FoodReference
 
-    /**
-     * Reference to food from OpenFoodFacts.
-     *
-     * @property foodId Barcode or product ID
-     */
-    @JvmInline value class OpenFoodFacts(override val foodId: String) : FoodReference
+    /** Reference to food from OpenFoodFacts. */
+    @Serializable data class OpenFoodFacts(val barcode: String) : FoodReference
 
     /**
      * Reference to another recipe (allows nested recipes).
      *
-     * @property foodId UUID of the Recipe
+     * @property id The unique identifier within the local database
      */
-    @JvmInline value class UserRecipe(override val foodId: String) : FoodReference
+    @Serializable data class UserRecipe(val id: String) : FoodReference
 }

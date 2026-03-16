@@ -17,12 +17,12 @@ import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipe
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIdentity
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIngredient
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeName
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.FoodReferenceType
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeQuantityEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeQuantityType
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeWithIngredients
+import kotlinx.serialization.json.Json
 
 internal class RecipeMapper {
 
@@ -59,28 +59,14 @@ internal class RecipeMapper {
         return ingredients.map { ingredient ->
             RecipeIngredientEntity(
                 recipeSqliteId = recipeSqliteId,
-                foodReferenceType =
-                    when (ingredient.foodReference) {
-                        is FoodReference.UserProduct -> FoodReferenceType.UserFood
-                        is FoodReference.FoodDataCentral -> FoodReferenceType.FoodDataCentral
-                        is FoodReference.OpenFoodFacts -> FoodReferenceType.OpenFoodFacts
-                        is FoodReference.UserRecipe -> FoodReferenceType.UserRecipe
-                    },
-                foodId = ingredient.foodReference.foodId,
+                foodReferenceJson = Json.encodeToString(ingredient.foodReference),
                 quantity = toQuantityEntity(ingredient.quantity),
             )
         }
     }
 
     private fun toIngredient(entity: RecipeIngredientEntity): UserRecipeIngredient {
-        val foodReference =
-            when (entity.foodReferenceType) {
-                FoodReferenceType.UserFood -> FoodReference.UserProduct(entity.foodId)
-                FoodReferenceType.FoodDataCentral -> FoodReference.FoodDataCentral(entity.foodId)
-                FoodReferenceType.OpenFoodFacts -> FoodReference.OpenFoodFacts(entity.foodId)
-                FoodReferenceType.UserRecipe -> FoodReference.UserRecipe(entity.foodId)
-            }
-
+        val foodReference = Json.decodeFromString<FoodReference>(entity.foodReferenceJson)
         val quantity = toQuantity(entity.quantity)
 
         return UserRecipeIngredient(foodReference = foodReference, quantity = quantity)

@@ -22,7 +22,6 @@ import androidx.room.PrimaryKey
 internal data class RecipeIngredientEntity(
     @PrimaryKey(autoGenerate = true) val sqliteId: Long = 0,
     val recipeSqliteId: Long,
-    val foodReferenceType: FoodReferenceType,
-    val foodId: String,
+    val foodReferenceJson: String,
     @Embedded(prefix = "quantity_") val quantity: RecipeQuantityEntity,
 )
