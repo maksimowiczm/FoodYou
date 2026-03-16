@@ -8,6 +8,7 @@ import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavDisplay
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.rememberFoodYouNavBackStack
 import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
@@ -54,7 +55,7 @@ fun FoodYouApp(userQuery: String?) {
                             Onboarding(onFinish = appViewModel::onFinishOnboarding)
 
                         AppPage.Main -> {
-                            val backStack = rememberFoodYouNavBackStack()
+                            val backStack = rememberFoodYouNavBackStack(FoodYouNavHostRoute.Home)
 
                             LaunchedEffect(backStack, userQuery) {
                                 if (userQuery != null) {

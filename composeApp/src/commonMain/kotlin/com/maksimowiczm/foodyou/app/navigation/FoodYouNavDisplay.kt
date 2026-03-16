@@ -56,10 +56,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
 @Composable
-fun FoodYouNavDisplay(
-    backStack: NavBackStack<NavKey> = rememberFoodYouNavBackStack(),
-    modifier: Modifier = Modifier,
-) {
+fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modifier) {
     NavDisplay(
         backStack = backStack,
         modifier = modifier,
@@ -193,14 +190,16 @@ fun FoodYouNavDisplay(
 
 @OptIn(ExperimentalSerializationApi::class)
 @Composable
-fun rememberFoodYouNavBackStack(): NavBackStack<NavKey> {
+fun rememberFoodYouNavBackStack(
+    vararg elements: FoodYouNavHostRoute = arrayOf(Home)
+): NavBackStack<NavKey> {
     val config = SavedStateConfiguration {
         serializersModule = SerializersModule {
             polymorphic(NavKey::class) { subclassesOfSealed<FoodYouNavHostRoute>() }
         }
     }
 
-    return rememberNavBackStack(config, Home)
+    return rememberNavBackStack(config, *elements)
 }
 
 @Serializable
