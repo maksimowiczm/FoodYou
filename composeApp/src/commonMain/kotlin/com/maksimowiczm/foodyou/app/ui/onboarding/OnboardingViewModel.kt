@@ -54,19 +54,16 @@ internal class OnboardingViewModel(
                         )
 
                 accountRepository.save(account)
-                accountManager.setAppAccountId(account.localAccountId)
                 accountManager.setAppProfileId(profile.id)
-                appLaunchUseCase.execute(account.localAccountId)
+                appLaunchUseCase.execute()
                 foodSearchPreferencesRepository.save(searchPreferences)
-
-                account.localAccountId
             }
             val minDelayTask = async { delay(2_000) }
 
-            val localAccountId = realTask.await()
+            realTask.await()
             minDelayTask.await()
 
-            eventBus.send(OnboardingEvent.Finished(localAccountId))
+            eventBus.send(OnboardingEvent.Finished)
         }
     }
 }

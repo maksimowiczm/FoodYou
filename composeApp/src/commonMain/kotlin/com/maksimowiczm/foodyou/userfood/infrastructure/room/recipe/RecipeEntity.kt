@@ -4,15 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(
-    tableName = "Recipe",
-    indices =
-        [
-            Index(value = ["uuid"]),
-            Index(value = ["accountId"]),
-            Index(value = ["uuid", "accountId"], unique = true),
-        ],
-)
+@Entity(tableName = "Recipe", indices = [Index(value = ["uuid"], unique = true)])
 /**
  * @sqliteId Primary key for SQLite database, it is useful for FTS search.
  *
@@ -26,5 +18,4 @@ internal data class RecipeEntity(
     val imagePath: String?,
     val note: String?,
     val finalWeight: Double?,
-    val accountId: String,
 )

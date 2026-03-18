@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.recipe
 
 import com.maksimowiczm.foodyou.common.domain.Image
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.Grams
@@ -28,8 +27,7 @@ internal class RecipeMapper {
 
     fun toDomain(entity: RecipeWithIngredients): UserRecipe {
         return UserRecipe(
-            identity =
-                UserRecipeIdentity(entity.recipe.uuid, LocalAccountId(entity.recipe.accountId)),
+            identity = UserRecipeIdentity(entity.recipe.uuid),
             name = UserRecipeName(entity.recipe.name),
             servings = entity.recipe.servings,
             image = entity.recipe.imagePath?.let { Image.Local(it) },
@@ -48,7 +46,6 @@ internal class RecipeMapper {
             imagePath = recipe.image?.uri,
             note = recipe.note?.value?.takeIf { it.isNotBlank() },
             finalWeight = recipe.finalWeight,
-            accountId = recipe.identity.accountId.value,
         )
     }
 

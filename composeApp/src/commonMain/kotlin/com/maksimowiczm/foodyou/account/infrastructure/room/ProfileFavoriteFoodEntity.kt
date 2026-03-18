@@ -11,17 +11,16 @@ import androidx.room.PrimaryKey
         [
             ForeignKey(
                 entity = ProfileEntity::class,
-                parentColumns = ["id", "accountId"],
-                childColumns = ["profileId", "accountId"],
+                parentColumns = ["id"],
+                childColumns = ["profileId"],
                 onDelete = ForeignKey.CASCADE,
             )
         ],
-    indices = [Index(value = ["profileId", "accountId"]), Index(value = ["accountId"])],
+    indices = [Index("profileId")],
 )
 internal data class ProfileFavoriteFoodEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val profileId: String,
-    val accountId: String,
     val identityType: FoodIdentityType,
     val extra: String,
 )

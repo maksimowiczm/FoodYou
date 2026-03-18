@@ -1,11 +1,10 @@
 package com.maksimowiczm.foodyou.analytics.application
 
-import com.maksimowiczm.foodyou.analytics.domain.AccountAnalyticsRepository
-import com.maksimowiczm.foodyou.analytics.domain.FakeAccountAnalyticsRepository
+import com.maksimowiczm.foodyou.analytics.domain.AnalyticsRepository
+import com.maksimowiczm.foodyou.analytics.domain.FakeAnalyticsRepository
 import com.maksimowiczm.foodyou.analytics.domain.testAccountAnalytics
 import com.maksimowiczm.foodyou.app.domain.testAppConfig
 import com.maksimowiczm.foodyou.common.clock.testClock
-import com.maksimowiczm.foodyou.common.domain.testLocalAccountId
 import com.maksimowiczm.foodyou.common.event.ChannelEventBus
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.common.event.EventBus
@@ -20,22 +19,20 @@ import kotlinx.coroutines.test.runTest
 
 class AppLaunchUseCaseTest {
     @Test
-    fun execute_shouldLoadAccountWithGivenId() = runTest {
-        val testId = testLocalAccountId()
+    fun execute() = runTest {
         var wasCalled = false
         val useCase =
             appLaunchUseCase(
-                accountAnalyticsRepository =
-                    FakeAccountAnalyticsRepository(
-                        onLoad = { id ->
+                analyticsRepository =
+                    FakeAnalyticsRepository(
+                        onLoad = {
                             wasCalled = true
-                            assertEquals(testId, id, "Account ID should be loaded")
                             testAccountAnalytics()
                         }
                     )
             )
 
-        useCase.execute(testId)
+        useCase.execute()
         advanceUntilIdle()
         assertTrue(wasCalled, "Account was never loaded")
     }
@@ -46,8 +43,8 @@ class AppLaunchUseCaseTest {
         var wasCalled = false
         val useCase =
             appLaunchUseCase(
-                accountAnalyticsRepository =
-                    FakeAccountAnalyticsRepository(
+                analyticsRepository =
+                    FakeAnalyticsRepository(
                         onLoad = { testAccount },
                         onSave = { account ->
                             wasCalled = true
@@ -56,7 +53,7 @@ class AppLaunchUseCaseTest {
                     )
             )
 
-        useCase.execute(testAccount.ownerId)
+        useCase.execute()
         advanceUntilIdle()
         assertTrue(wasCalled, "Account was never saved")
     }
@@ -67,8 +64,8 @@ class AppLaunchUseCaseTest {
 
         val useCase =
             appLaunchUseCase(
-                accountAnalyticsRepository =
-                    FakeAccountAnalyticsRepository(
+                analyticsRepository =
+                    FakeAnalyticsRepository(
                         onLoad = {
                             channel.send("load")
                             testAccountAnalytics()
@@ -77,7 +74,7 @@ class AppLaunchUseCaseTest {
                     )
             )
 
-        useCase.execute(testLocalAccountId())
+        useCase.execute()
         channel.close()
         advanceUntilIdle()
 
@@ -91,11 +88,11 @@ class AppLaunchUseCaseTest {
         val eventBus = ChannelEventBus<DomainEvent>()
         val useCase =
             appLaunchUseCase(
-                accountAnalyticsRepository = FakeAccountAnalyticsRepository(onLoad = { account }),
+                analyticsRepository = FakeAnalyticsRepository(onLoad = { account }),
                 eventBus = eventBus,
             )
 
-        useCase.execute(account.ownerId)
+        useCase.execute()
         eventBus.close()
         advanceUntilIdle()
 
@@ -104,12 +101,12 @@ class AppLaunchUseCaseTest {
     }
 
     fun appLaunchUseCase(
-        accountAnalyticsRepository: AccountAnalyticsRepository = FakeAccountAnalyticsRepository(),
+        analyticsRepository: AnalyticsRepository = FakeAnalyticsRepository(),
         eventBus: EventBus<DomainEvent> = ChannelEventBus(),
     ) =
         AppLaunchUseCase(
             clock = testClock(),
-            accountAnalyticsRepository = accountAnalyticsRepository,
+            analyticsRepository = analyticsRepository,
             appConfig = testAppConfig(),
             eventBus = eventBus,
         )

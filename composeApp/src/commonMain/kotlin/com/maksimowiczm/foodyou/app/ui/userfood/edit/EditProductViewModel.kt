@@ -11,8 +11,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -56,8 +54,6 @@ internal class EditProductViewModel(
                 isLiquid) =
                 productFormTransformer.transform(form)
 
-            val accountId = appAccountManager.observeAppAccountId().filterNotNull().first()
-
             userProductRepository.edit(
                 identity = identity,
                 name = foodName,
@@ -68,7 +64,6 @@ internal class EditProductViewModel(
                 nutritionFacts = nutritionFacts,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
-                accountId = accountId,
                 isLiquid = isLiquid,
             )
 

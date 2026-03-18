@@ -10,11 +10,10 @@ interface EventStoreDao {
         """
         SELECT *
         FROM EventStore
-        WHERE aggregateId = :aggregateId
         ORDER BY timestamp ASC
         """
     )
-    suspend fun getAllByAggregateId(aggregateId: String): List<RoomEventStoreEntity>
+    suspend fun getAllByAggregateId(): List<RoomEventStoreEntity>
 
     @Insert suspend fun insert(event: RoomEventStoreEntity)
 

@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.domain.product
 
 import com.maksimowiczm.foodyou.common.domain.Image
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -18,7 +17,6 @@ interface UserProductRepository {
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
-        accountId: LocalAccountId,
         isLiquid: Boolean,
     ): UserProductIdentity
 
@@ -32,7 +30,6 @@ interface UserProductRepository {
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
-        accountId: LocalAccountId,
         isLiquid: Boolean,
     )
 

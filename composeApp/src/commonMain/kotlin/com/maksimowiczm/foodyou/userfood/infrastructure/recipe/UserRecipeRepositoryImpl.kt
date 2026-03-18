@@ -4,10 +4,9 @@ import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.Image
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.directory
+import com.maksimowiczm.foodyou.common.infrastructure.filekit.accountDirectory
 import com.maksimowiczm.foodyou.common.infrastructure.room.immediateTransaction
 import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.common.onSuccess
@@ -46,7 +45,6 @@ internal class UserRecipeRepositoryImpl(
     private val dao = database.recipeDao
 
     override suspend fun create(
-        accountId: LocalAccountId,
         name: UserRecipeName,
         servings: Double,
         image: Image.Local?,
@@ -60,7 +58,7 @@ internal class UserRecipeRepositoryImpl(
 
         val recipeId = Uuid.random().toString()
 
-        val recipeDirectory = accountId.directory() / "recipes"
+        val recipeDirectory = accountDirectory() / "recipes"
         recipeDirectory.createDirectories()
 
         val photoPath =
@@ -84,7 +82,7 @@ internal class UserRecipeRepositoryImpl(
 
         val recipe =
             UserRecipe(
-                identity = UserRecipeIdentity(recipeId, accountId),
+                identity = UserRecipeIdentity(recipeId),
                 name = name,
                 servings = servings,
                 image = photoPath?.let { Image.Local(it) },
@@ -99,9 +97,9 @@ internal class UserRecipeRepositoryImpl(
         return database
             .immediateTransaction<Result<UserRecipeIdentity, CircularUserRecipeReferenceError>> {
                 try {
-                    checkCircularReference(recipeId, ingredients, accountId)
+                    checkCircularReference(recipeId, ingredients)
                     dao.insertRecipeWithIngredients(recipeEntity, ingredientEntities)
-                    Ok(UserRecipeIdentity(recipeId, accountId))
+                    Ok(UserRecipeIdentity(recipeId))
                 } catch (e: CircularRecipeReferenceException) {
                     Err(CircularUserRecipeReferenceError(e.recipeId, e.cyclePath))
                 }
@@ -122,12 +120,12 @@ internal class UserRecipeRepositoryImpl(
         require(servings > 0) { "Recipe must have a positive number of servings" }
         require(finalWeight == null || finalWeight > 0) { "Final weight must be a positive number" }
 
-        val existingEntity = dao.observe(identity.id, identity.accountId.value).first()
+        val existingEntity = dao.observe(identity.id).first()
 
         requireNotNull(existingEntity) { "Cannot edit non-existing recipe with id: ${identity.id}" }
 
         val uuid = identity.id
-        val recipeDirectory = identity.accountId.directory() / "recipes"
+        val recipeDirectory = accountDirectory() / "recipes"
         recipeDirectory.createDirectories()
 
         val oldImagePath = existingEntity.recipe.imagePath
@@ -170,7 +168,7 @@ internal class UserRecipeRepositoryImpl(
         return database
             .immediateTransaction<Result<Unit, CircularUserRecipeReferenceError>> {
                 try {
-                    checkCircularReference(identity.id, ingredients, identity.accountId)
+                    checkCircularReference(identity.id, ingredients)
                     dao.updateRecipeWithIngredients(updatedEntity, ingredientEntities)
                     Ok()
                 } catch (e: CircularRecipeReferenceException) {
@@ -195,12 +193,10 @@ internal class UserRecipeRepositoryImpl(
     }
 
     override fun observe(identity: UserRecipeIdentity): Flow<UserRecipe?> =
-        dao.observe(identity.id, identity.accountId.value).map { entity ->
-            entity?.let(mapper::toDomain)
-        }
+        dao.observe(identity.id).map { entity -> entity?.let(mapper::toDomain) }
 
     override suspend fun delete(identity: UserRecipeIdentity) {
-        val existingEntity = dao.observe(identity.id, identity.accountId.value).first()
+        val existingEntity = dao.observe(identity.id).first()
 
         requireNotNull(existingEntity) {
             "Cannot delete non-existing recipe with id: ${identity.id}"
@@ -212,17 +208,12 @@ internal class UserRecipeRepositoryImpl(
         integrationEventBus.publish(UserRecipeDeletedEvent(identity))
     }
 
-    override suspend fun findRecipesUsingFood(
-        foodReference: FoodReference,
-        accountId: LocalAccountId,
-    ): List<UserRecipe> {
+    override suspend fun findRecipesUsingFood(foodReference: FoodReference): List<UserRecipe> {
         val foodReferenceJson = Json.encodeToString(foodReference)
 
-        return dao.findRecipesUsingFood(
-                accountId = accountId.value,
-                foodReferenceJson = foodReferenceJson,
-            )
-            .map { mapper.toDomain(it) }
+        return dao.findRecipesUsingFood(foodReferenceJson = foodReferenceJson).map {
+            mapper.toDomain(it)
+        }
     }
 
     /**
@@ -238,7 +229,6 @@ internal class UserRecipeRepositoryImpl(
     private suspend fun checkCircularReference(
         recipeId: String,
         ingredients: List<UserRecipeIngredient>,
-        accountId: LocalAccountId,
     ) {
         // Get all recipe references in ingredients
         val referencedRecipes =
@@ -254,7 +244,6 @@ internal class UserRecipeRepositoryImpl(
             checkCircularReferenceRecursive(
                 currentRecipeId = referencedRecipeId,
                 targetRecipeId = recipeId,
-                accountId = accountId,
                 visitedPath = mutableListOf(recipeId),
             )
         }
@@ -272,7 +261,6 @@ internal class UserRecipeRepositoryImpl(
     private suspend fun checkCircularReferenceRecursive(
         currentRecipeId: String,
         targetRecipeId: String,
-        accountId: LocalAccountId,
         visitedPath: MutableList<String>,
     ) {
         // Check if we've found a cycle back to the target
@@ -289,8 +277,7 @@ internal class UserRecipeRepositoryImpl(
         }
 
         // Get the current recipe
-        val currentRecipe =
-            dao.observe(currentRecipeId, accountId.value).first() ?: return // Recipe doesn't exist
+        val currentRecipe = dao.observe(currentRecipeId).first() ?: return // Recipe doesn't exist
 
         visitedPath.add(currentRecipeId)
 
@@ -306,7 +293,6 @@ internal class UserRecipeRepositoryImpl(
             checkCircularReferenceRecursive(
                 currentRecipeId = nestedRecipeId.id,
                 targetRecipeId = targetRecipeId,
-                accountId = accountId,
                 visitedPath = visitedPath,
             )
         }

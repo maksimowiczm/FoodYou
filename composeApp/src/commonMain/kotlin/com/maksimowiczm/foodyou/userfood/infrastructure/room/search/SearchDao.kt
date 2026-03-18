@@ -11,38 +11,26 @@ internal interface SearchDao {
         """
         SELECT $PRODUCT_SELECT
         FROM Product p
-        WHERE accountId = :accountId
 
         UNION ALL
 
         SELECT $RECIPE_SELECT
         FROM Recipe r
-        WHERE accountId = :accountId
 
         ORDER BY simpleName
         """
     )
-    fun getPagingSource(
-        languageCode: String,
-        accountId: String,
-    ): PagingSource<Int, UserFoodSearchEntity>
+    fun getPagingSource(languageCode: String): PagingSource<Int, UserFoodSearchEntity>
 
-    @Query(
-        """
-        SELECT 
-            (SELECT COUNT(*) FROM Product WHERE accountId = :accountId) +
-            (SELECT COUNT(*) FROM Recipe WHERE accountId = :accountId)
-        """
-    )
-    fun observeCount(accountId: String): Flow<Int>
+    @Query("""SELECT (SELECT COUNT(*) FROM Product) + (SELECT COUNT(*) FROM Recipe)""")
+    fun observeCount(): Flow<Int>
 
     @Query(
         """
         SELECT $PRODUCT_SELECT
         FROM Product p 
         JOIN ProductFts fts ON p.sqliteId = fts.rowid
-        WHERE 
-            p.accountId = :accountId AND
+        WHERE
             ProductFts MATCH :query || '*'
 
         UNION ALL
@@ -50,8 +38,7 @@ internal interface SearchDao {
         SELECT $RECIPE_SELECT
         FROM Recipe r 
         JOIN RecipeFts fts ON r.sqliteId = fts.rowid
-        WHERE 
-            r.accountId = :accountId AND
+        WHERE
             RecipeFts MATCH :query || '*'
 
         ORDER BY simpleName
@@ -60,7 +47,6 @@ internal interface SearchDao {
     fun getPagingSourceByQuery(
         query: String,
         languageCode: String,
-        accountId: String,
     ): PagingSource<Int, UserFoodSearchEntity>
 
     @Query(
@@ -69,22 +55,23 @@ internal interface SearchDao {
             (SELECT COUNT(*) 
              FROM Product p 
              JOIN ProductFts fts ON p.sqliteId = fts.rowid
-             WHERE p.accountId = :accountId AND ProductFts MATCH :query || '*') +
+             WHERE
+                ProductFts MATCH :query || '*') +
             (SELECT COUNT(*) 
              FROM Recipe r 
              JOIN RecipeFts fts ON r.sqliteId = fts.rowid
-             WHERE r.accountId = :accountId AND RecipeFts MATCH :query || '*')
+             WHERE
+                RecipeFts MATCH :query || '*')
         """
     )
-    fun observeCountByQuery(query: String, accountId: String): Flow<Int>
+    fun observeCountByQuery(query: String): Flow<Int>
 
     @Query(
         """
         SELECT
             $PRODUCT_SELECT
         FROM Product p
-        WHERE 
-            accountId = :accountId AND
+        WHERE
             barcode LIKE '%' || :barcode || '%'
         ORDER BY simpleName
         """
@@ -92,19 +79,17 @@ internal interface SearchDao {
     fun getPagingSourceByBarcode(
         barcode: String,
         languageCode: String,
-        accountId: String,
     ): PagingSource<Int, UserFoodSearchEntity>
 
     @Query(
         """
         SELECT COUNT(*)
         FROM Product
-        WHERE 
-            accountId = :accountId AND
+        WHERE
             barcode LIKE '%' || :barcode || '%'
         """
     )
-    fun observeCountByBarcode(barcode: String, accountId: String): Flow<Int>
+    fun observeCountByBarcode(barcode: String): Flow<Int>
 }
 
 private const val PRODUCT_SELECT =
@@ -134,7 +119,6 @@ p.brand as p_brand,
 p.barcode as p_barcode,
 p.note as p_note,
 p.photoPath as p_photoPath,
-p.accountId as p_accountId,
 p.energy as p_energy,
 p.proteins as p_proteins,
 p.fats as p_fats,
@@ -192,7 +176,6 @@ NULL as r_servings,
 NULL as r_imagePath,
 NULL as r_note,
 NULL as r_finalWeight,
-NULL as r_accountId,
 CASE 
     WHEN p.brand IS NOT NULL THEN
         COALESCE(
@@ -312,7 +295,6 @@ NULL as p_brand,
 NULL as p_barcode,
 NULL as p_note,
 NULL as p_photoPath,
-NULL as p_accountId,
 NULL as p_energy,
 NULL as p_proteins,
 NULL as p_fats,
@@ -370,6 +352,5 @@ r.servings as r_servings,
 r.imagePath as r_imagePath,
 r.note as r_note,
 r.finalWeight as r_finalWeight,
-r.accountId as r_accountId,
 r.name as simpleName
 """

@@ -25,9 +25,8 @@ internal class HandleRecipeDeletedEventHandler(
 ) : EventHandler<UserRecipeDeletedEvent> {
     override suspend fun handle(event: UserRecipeDeletedEvent) {
         val foodReference = FoodReference.UserRecipe(event.identity.id)
-        val accountId = event.identity.accountId
 
-        userRecipeRepository.findRecipesUsingFood(foodReference, accountId).forEach { recipe ->
+        userRecipeRepository.findRecipesUsingFood(foodReference).forEach { recipe ->
             val updatedIngredients = recipe.ingredients.filter { it.foodReference != foodReference }
 
             // If no ingredients left, delete the recipe (business rule violation)

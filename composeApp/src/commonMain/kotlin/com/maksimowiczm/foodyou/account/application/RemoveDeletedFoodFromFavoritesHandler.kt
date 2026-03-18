@@ -20,9 +20,8 @@ class RemoveDeletedFoodFromFavoritesHandler(
 
     override suspend fun handle(event: UserProductDeletedEvent) {
         accountRepository
-            .load(event.identity.accountId)
+            .load()
             ?.apply { removeFavoriteUserFood(event.identity) }
-            ?.also { accountRepository.save(it) }
-            ?: logger.w { "Account not found for user food product with id: ${event.identity.id}" }
+            ?.also { accountRepository.save(it) } ?: logger.w { "Account not found" }
     }
 }

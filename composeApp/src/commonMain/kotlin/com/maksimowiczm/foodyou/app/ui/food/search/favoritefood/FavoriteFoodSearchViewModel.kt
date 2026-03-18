@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -45,11 +44,10 @@ internal class FavoriteFoodSearchViewModel(
     private val favoriteFoodIdentities =
         appAccountManager.observeAppProfile().map { it.favoriteFoods }
 
-    private val accountId = appAccountManager.observeAppAccountId().filterNotNull()
-
     private val foodList: Flow<List<RemoteData<Any>>> =
-        combine(favoriteFoodIdentities, accountId) { list, accountId ->
-                if (list.isEmpty()) return@combine flowOf(listOf())
+        favoriteFoodIdentities
+            .map { list ->
+                if (list.isEmpty()) return@map flowOf(listOf())
 
                 list
                     .map { identity ->
@@ -66,7 +64,7 @@ internal class FavoriteFoodSearchViewModel(
 
                             is FavoriteFoodIdentity.UserProduct ->
                                 userProductRepository
-                                    .observe(UserProductIdentity(identity.id, accountId))
+                                    .observe(UserProductIdentity(identity.id))
                                     .map { food ->
                                         when (food) {
                                             null -> RemoteData.NotFound

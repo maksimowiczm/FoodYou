@@ -6,15 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsEntity
 
-@Entity(
-    tableName = "Product",
-    indices =
-        [
-            Index(value = ["uuid"]),
-            Index(value = ["accountId"]),
-            Index(value = ["uuid", "accountId"], unique = true),
-        ],
-)
+@Entity(tableName = "Product", indices = [Index(value = ["uuid"], unique = true)])
 /**
  * @sqliteId Primary key for SQLite database, it is useful for FTS search.
  *
@@ -28,7 +20,6 @@ internal data class ProductEntity(
     val barcode: String?,
     val note: String?,
     val photoPath: String?,
-    val accountId: String,
     @Embedded val nutrients: NutrientsEntity,
     @Embedded(prefix = "package_") val packageSize: QuantityEntity?,
     @Embedded(prefix = "serving_") val servingSize: QuantityEntity?,

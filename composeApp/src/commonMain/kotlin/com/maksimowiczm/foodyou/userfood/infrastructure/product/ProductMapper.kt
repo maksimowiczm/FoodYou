@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
 import com.maksimowiczm.foodyou.common.domain.Image
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -58,7 +57,7 @@ internal class ProductMapper {
             val brand = brand?.let { UserProductBrand(it) }
 
             UserProduct(
-                identity = UserProductIdentity(entity.uuid, LocalAccountId(entity.accountId)),
+                identity = UserProductIdentity(entity.uuid),
                 name = name,
                 brand = brand,
                 barcode = entity.barcode?.let { UserProductBarcode(it) },
@@ -82,7 +81,6 @@ internal class ProductMapper {
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
-        accountId: LocalAccountId,
         isLiquid: Boolean,
     ): ProductEntity {
         val servingSize = servingQuantity?.let { toQuantityEntity(it) }
@@ -118,7 +116,6 @@ internal class ProductMapper {
             barcode = barcode?.value,
             note = note?.value,
             photoPath = imagePath,
-            accountId = accountId.value,
             nutrients = nutrientsMapper.toNutrientsEntity(nutritionFacts),
             packageSize = packageSize,
             servingSize = servingSize,

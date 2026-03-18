@@ -6,7 +6,6 @@ import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDatabase
-import com.maksimowiczm.foodyou.account.infrastructure.room.AccountEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.EnergyFormatConverter
 import com.maksimowiczm.foodyou.account.infrastructure.room.FoodIdentityTypeConverter
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
@@ -18,7 +17,6 @@ import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.SearchHistoryEnti
 @Database(
     entities =
         [
-            AccountEntity::class,
             ProfileEntity::class,
             ProfileFavoriteFoodEntity::class,
             SettingsEntity::class,

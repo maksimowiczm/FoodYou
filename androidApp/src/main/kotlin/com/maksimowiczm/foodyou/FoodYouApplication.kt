@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Intent
 import android.os.Build
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
-import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.di.AppModule
 import com.maksimowiczm.foodyou.app.di.initKoin
 import com.maksimowiczm.foodyou.app.infrastructure.config.FoodYouConfig
@@ -13,7 +12,6 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -43,11 +41,7 @@ class FoodYouApplication : Application() {
             defaultHandler?.uncaughtException(t, e)
         }
 
-        coroutineScope.launch {
-            val accountManager = koin.get<AppAccountManager>()
-            val accountId = accountManager.observeAppAccountId().first() ?: return@launch
-            koin.get<AppLaunchUseCase>().execute(accountId)
-        }
+        coroutineScope.launch { koin.get<AppLaunchUseCase>().execute() }
     }
 
     private fun handleUncaughtException(e: Throwable) {

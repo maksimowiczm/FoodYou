@@ -50,22 +50,13 @@ internal class UserFoodSearchRepositoryImpl(
         val config = PagingConfig(pageSize = pageSize)
         val factory = {
             when (parameters.query) {
-                SearchQuery.Blank ->
-                    dao.getPagingSource(language.tag, parameters.localAccountId.value)
+                SearchQuery.Blank -> dao.getPagingSource(language.tag)
 
                 is SearchQuery.Barcode ->
-                    dao.getPagingSourceByBarcode(
-                        parameters.query.barcode,
-                        language.tag,
-                        parameters.localAccountId.value,
-                    )
+                    dao.getPagingSourceByBarcode(parameters.query.barcode, language.tag)
 
                 is SearchQuery.Text ->
-                    dao.getPagingSourceByQuery(
-                        parameters.query.query,
-                        language.tag,
-                        parameters.localAccountId.value,
-                    )
+                    dao.getPagingSourceByQuery(parameters.query.query, language.tag)
 
                 is SearchQuery.OpenFoodFactsUrl,
                 is SearchQuery.FoodDataCentralUrl -> error("Unreachable")
@@ -78,18 +69,11 @@ internal class UserFoodSearchRepositoryImpl(
     }
 
     override fun count(parameters: UserFoodSearchParameters): Flow<Int> {
-        val localAccountId = parameters.localAccountId.value
-
         val countFlow: Flow<Int> =
             when (parameters.query) {
-                SearchQuery.Blank -> dao.observeCount(localAccountId)
-
-                is SearchQuery.Barcode ->
-                    dao.observeCountByBarcode(parameters.query.barcode, localAccountId)
-
-                is SearchQuery.Text ->
-                    dao.observeCountByQuery(parameters.query.query, localAccountId)
-
+                SearchQuery.Blank -> dao.observeCount()
+                is SearchQuery.Barcode -> dao.observeCountByBarcode(parameters.query.barcode)
+                is SearchQuery.Text -> dao.observeCountByQuery(parameters.query.query)
                 is SearchQuery.OpenFoodFactsUrl,
                 is SearchQuery.FoodDataCentralUrl -> flowOf(0)
             }

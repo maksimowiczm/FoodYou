@@ -16,7 +16,6 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.ForwardBackwardTransition
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -25,7 +24,7 @@ import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier) {
+fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: OnboardingViewModel = koinViewModel()
     val state = rememberOnboardingState()
 
@@ -33,7 +32,7 @@ fun Onboarding(onFinish: (LocalAccountId) -> Unit, modifier: Modifier = Modifier
 
     LaunchedCollectWithLifecycle(viewModel.events) { event ->
         when (event) {
-            is OnboardingEvent.Finished -> onFinish(event.localAccountId)
+            is OnboardingEvent.Finished -> onFinish()
         }
     }
 

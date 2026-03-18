@@ -19,7 +19,6 @@ object RoomEventStoreMapper {
 
     fun toRoomEventStoreEntity(event: DomainEvent): RoomEventStoreEntity {
         return RoomEventStoreEntity(
-            aggregateId = event.aggregateId,
             eventType = event::class.simpleName ?: error("Event class must have a name"),
             eventData = DomainEventSerializer.serialize(event),
             timestamp = event.timestamp.toEpochMilliseconds(),

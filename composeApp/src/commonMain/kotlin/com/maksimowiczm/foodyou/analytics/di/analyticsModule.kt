@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.analytics.di
 
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
-import com.maksimowiczm.foodyou.analytics.domain.AccountAnalyticsRepository
-import com.maksimowiczm.foodyou.analytics.infrastructure.AccountAnalyticsRepositoryImpl
+import com.maksimowiczm.foodyou.analytics.domain.AnalyticsRepository
+import com.maksimowiczm.foodyou.analytics.infrastructure.AnalyticsRepositoryImpl
 import com.maksimowiczm.foodyou.common.event.di.domainEventBus
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
@@ -13,10 +13,10 @@ val analyticsModule = module {
     factory {
         AppLaunchUseCase(
             clock = get(),
-            accountAnalyticsRepository = get(),
+            analyticsRepository = get(),
             appConfig = get(),
             eventBus = domainEventBus(),
         )
     }
-    factoryOf(::AccountAnalyticsRepositoryImpl).bind<AccountAnalyticsRepository>()
+    factoryOf(::AnalyticsRepositoryImpl).bind<AnalyticsRepository>()
 }

@@ -1,26 +1,11 @@
 package com.maksimowiczm.foodyou.account.infrastructure.room
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
+import androidx.room.PrimaryKey
 
-@Entity(
-    tableName = "AccountProfile",
-    primaryKeys = ["id", "accountId"],
-    foreignKeys =
-        [
-            ForeignKey(
-                entity = AccountEntity::class,
-                parentColumns = ["id"],
-                childColumns = ["accountId"],
-                onDelete = ForeignKey.CASCADE,
-            )
-        ],
-    indices = [Index("accountId")],
-)
+@Entity(tableName = "AccountProfile")
 internal data class ProfileEntity(
-    val id: String,
-    val accountId: String,
+    @PrimaryKey val id: String,
     val name: String,
     val avatar: String,
     val homeFeaturesOrder: String,

@@ -9,9 +9,6 @@ import kotlin.time.Instant
  * immutable and captures the state change that occurred at a specific point in time.
  */
 interface DomainEvent {
-    /** The ID of the aggregate that the event is associated with. */
-    val aggregateId: String
-
     /** The timestamp when the event was created. */
     val timestamp: Instant
 }

@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.TimeoutCancellationException
@@ -93,12 +92,10 @@ class AppViewModel(
                 initialValue = EnergyFormatter.kilocalories,
             )
 
-    fun onFinishOnboarding(localAccountId: LocalAccountId) {
+    fun onFinishOnboarding() {
         viewModelScope.launch {
-            val account = accountRepository.load(localAccountId) ?: return@launch
-
+            val account = accountRepository.load() ?: return@launch
             account.updateSettings { it.copy(onboardingFinished = true) }
-
             accountRepository.save(account)
         }
     }

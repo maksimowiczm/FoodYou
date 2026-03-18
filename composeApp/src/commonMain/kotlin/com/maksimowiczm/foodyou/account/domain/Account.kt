@@ -1,33 +1,16 @@
 package com.maksimowiczm.foodyou.account.domain
 
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
-import kotlin.uuid.Uuid
 
-class Account
-private constructor(
-    val localAccountId: LocalAccountId,
-    settings: AccountSettings,
-    profiles: List<Profile>,
-) {
+class Account private constructor(settings: AccountSettings, profiles: List<Profile>) {
     companion object {
         fun create(primaryProfile: Profile): Account {
-            val uuid = Uuid.random()
-            val id = LocalAccountId(uuid.toString())
-            return Account(
-                localAccountId = id,
-                settings = AccountSettings.default,
-                profiles = listOf(primaryProfile),
-            )
+            return Account(settings = AccountSettings.default, profiles = listOf(primaryProfile))
         }
 
-        fun of(
-            localAccountId: LocalAccountId,
-            settings: AccountSettings,
-            profiles: List<Profile>,
-        ): Account =
-            Account(localAccountId = localAccountId, settings = settings, profiles = profiles)
+        fun of(settings: AccountSettings, profiles: List<Profile>): Account =
+            Account(settings = settings, profiles = profiles)
     }
 
     init {

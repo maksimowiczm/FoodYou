@@ -1,13 +1,12 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
 import com.maksimowiczm.foodyou.common.domain.Image
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.directory
+import com.maksimowiczm.foodyou.common.infrastructure.filekit.accountDirectory
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
@@ -47,10 +46,9 @@ internal class UserProductRepositoryImpl(
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
-        accountId: LocalAccountId,
         isLiquid: Boolean,
     ): UserProductIdentity {
-        val foodDirectory = accountId.directory() / "food"
+        val foodDirectory = accountDirectory() / "food"
         foodDirectory.createDirectories()
 
         val uuid = Uuid.random().toString()
@@ -85,13 +83,12 @@ internal class UserProductRepositoryImpl(
                 nutritionFacts = nutritionFacts,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
-                accountId = accountId,
                 isLiquid = isLiquid,
             )
 
         dao.insert(entity)
 
-        return UserProductIdentity(uuid, LocalAccountId(entity.accountId))
+        return UserProductIdentity(uuid)
     }
 
     override suspend fun edit(
@@ -104,17 +101,16 @@ internal class UserProductRepositoryImpl(
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
-        accountId: LocalAccountId,
         isLiquid: Boolean,
     ) {
-        val existingEntity = dao.observe(identity.id, accountId.value).first()
+        val existingEntity = dao.observe(identity.id).first()
 
         requireNotNull(existingEntity) {
             "Cannot edit non-existing food product with id: ${identity.id}"
         }
 
         val uuid = identity.id
-        val foodDirectory = accountId.directory() / "food"
+        val foodDirectory = accountDirectory() / "food"
         foodDirectory.createDirectories()
 
         val imagePath: String? =
@@ -137,12 +133,7 @@ internal class UserProductRepositoryImpl(
 
                     dest.path
                 } else {
-                    existingEntity.photoPath?.let { existingPath ->
-                        val existingFile = PlatformFile(existingPath)
-                        if (existingFile.exists()) {
-                            existingFile.delete()
-                        }
-                    }
+                    existingEntity.photoPath?.let(::PlatformFile)?.delete(mustExist = false)
                     null
                 }
             } else {
@@ -161,7 +152,6 @@ internal class UserProductRepositoryImpl(
                 nutritionFacts = nutritionFacts,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
-                accountId = accountId,
                 isLiquid = isLiquid,
             )
 
@@ -169,19 +159,17 @@ internal class UserProductRepositoryImpl(
     }
 
     override fun observe(identity: UserProductIdentity): Flow<UserProduct?> =
-        dao.observe(identity.id, identity.accountId.value).map { entity ->
-            entity?.let(mapper::userProduct)
-        }
+        dao.observe(identity.id).map { entity -> entity?.let(mapper::userProduct) }
 
     override suspend fun delete(identity: UserProductIdentity) {
-        val existingEntity = dao.observe(identity.id, identity.accountId.value).first()
+        val existingEntity = dao.observe(identity.id).first()
 
         requireNotNull(existingEntity) {
             "Cannot delete non-existing food product with id: ${identity.id}"
         }
 
         dao.delete(existingEntity)
-        PlatformFile("${existingEntity.uuid}.jpg").delete(mustExist = false)
+        existingEntity.photoPath?.let(::PlatformFile)?.delete(mustExist = false)
 
         integrationEventBus.publish(UserProductDeletedEvent(identity))
     }

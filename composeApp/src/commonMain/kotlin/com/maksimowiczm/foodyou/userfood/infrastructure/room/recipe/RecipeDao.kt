@@ -27,11 +27,12 @@ internal abstract class RecipeDao {
         """
         SELECT *
         FROM Recipe
-        WHERE accountId = :accountId AND uuid = :uuid
+        WHERE
+            uuid = :uuid
         LIMIT 1
     """
     )
-    abstract fun observe(uuid: String, accountId: String): Flow<RecipeWithIngredients?>
+    abstract fun observe(uuid: String): Flow<RecipeWithIngredients?>
 
     @Transaction
     @Query(
@@ -39,13 +40,12 @@ internal abstract class RecipeDao {
         SELECT Recipe.*
         FROM Recipe
         INNER JOIN RecipeIngredient ON Recipe.sqliteId = RecipeIngredient.recipeSqliteId
-        WHERE Recipe.accountId = :accountId 
-            AND RecipeIngredient.foodReferenceJson = :foodReferenceJson
+        WHERE 
+            RecipeIngredient.foodReferenceJson = :foodReferenceJson
         """
     )
     abstract suspend fun findRecipesUsingFood(
-        accountId: String,
-        foodReferenceJson: String,
+        foodReferenceJson: String
     ): List<RecipeWithIngredients>
 
     /** Atomically insert a recipe with its ingredients in a single transaction. */

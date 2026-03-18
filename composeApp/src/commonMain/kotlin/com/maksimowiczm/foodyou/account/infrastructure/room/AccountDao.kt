@@ -9,17 +9,18 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal abstract class AccountDao {
-    @Upsert protected abstract suspend fun upsertAccount(accountEntity: AccountEntity)
+    @Query("SELECT * FROM AccountProfile") abstract fun observeProfiles(): Flow<List<ProfileEntity>>
 
-    @Insert protected abstract suspend fun insertProfile(profileEntity: ProfileEntity)
+    @Query("SELECT * FROM ProfileFavoriteFood")
+    abstract fun observeFavoriteFoods(): Flow<List<ProfileFavoriteFoodEntity>>
+
+    @Query("SELECT * FROM AccountSettings") abstract fun observeSettings(): Flow<SettingsEntity?>
+
+    @Upsert protected abstract suspend fun upsertProfiles(profileEntity: List<ProfileEntity>)
 
     @Upsert protected abstract suspend fun upsertSettings(settingsEntity: SettingsEntity)
 
-    @Query("DELETE FROM AccountProfile WHERE accountId = :accountId")
-    protected abstract suspend fun deleteProfiles(accountId: String)
-
-    @Query("DELETE FROM ProfileFavoriteFood WHERE accountId = :accountId")
-    protected abstract suspend fun deleteFavoriteFoods(accountId: String)
+    @Query("DELETE FROM ProfileFavoriteFood") protected abstract suspend fun deleteFavoriteFoods()
 
     @Insert
     protected abstract suspend fun insertFavoriteFoods(
@@ -28,24 +29,13 @@ internal abstract class AccountDao {
 
     @Transaction
     open suspend fun upsertAccountWithDetails(
-        accountEntity: AccountEntity,
-        profileEntities: List<ProfileEntity>,
-        profileFavoriteFoodEntities: List<ProfileFavoriteFoodEntity>,
-        settingsEntity: SettingsEntity,
+        profiles: List<ProfileEntity>,
+        favoriteFoods: List<ProfileFavoriteFoodEntity>,
+        settings: SettingsEntity,
     ) {
-        upsertAccount(accountEntity)
-        deleteProfiles(accountEntity.id)
-        profileEntities.forEach { insertProfile(it) }
-        upsertSettings(settingsEntity)
-        deleteFavoriteFoods(accountEntity.id)
-        insertFavoriteFoods(profileFavoriteFoodEntities)
+        upsertProfiles(profiles)
+        deleteFavoriteFoods()
+        insertFavoriteFoods(favoriteFoods)
+        upsertSettings(settings)
     }
-
-    @Transaction
-    @Query("SELECT a.id as a_id FROM Account a WHERE a.id = :id")
-    abstract fun observeRichAccount(id: String): Flow<RichAccount?>
-
-    @Transaction
-    @Query("SELECT a.id as a_id FROM Account a")
-    abstract fun observeRichAccounts(): Flow<List<RichAccount>>
 }

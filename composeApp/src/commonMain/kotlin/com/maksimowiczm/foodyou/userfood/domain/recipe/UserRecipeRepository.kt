@@ -2,13 +2,11 @@ package com.maksimowiczm.foodyou.userfood.domain.recipe
 
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.Image
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import kotlinx.coroutines.flow.Flow
 
 interface UserRecipeRepository {
     suspend fun create(
-        accountId: LocalAccountId,
         name: UserRecipeName,
         servings: Double,
         image: Image.Local?,
@@ -38,8 +36,5 @@ interface UserRecipeRepository {
      * @param accountId The account to search within
      * @return List of recipes containing the specified food
      */
-    suspend fun findRecipesUsingFood(
-        foodReference: FoodReference,
-        accountId: LocalAccountId,
-    ): List<UserRecipe>
+    suspend fun findRecipesUsingFood(foodReference: FoodReference): List<UserRecipe>
 }

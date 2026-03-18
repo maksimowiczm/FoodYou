@@ -19,11 +19,8 @@ internal abstract class ProductDao {
         """
         SELECT *
         FROM Product
-        WHERE 
-            accountId = :accountId AND
-            uuid = :uuid
-        LIMIT 1
+        WHERE uuid = :uuid
         """
     )
-    abstract fun observe(uuid: String, accountId: String): Flow<ProductEntity?>
+    abstract fun observe(uuid: String): Flow<ProductEntity?>
 }

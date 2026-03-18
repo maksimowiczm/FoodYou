@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.userfood.domain.recipe
 
 import androidx.room.useReaderConnection
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Grams
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
@@ -26,7 +25,6 @@ class UserRecipeRepositoryIntegrationTest {
     private lateinit var database: UserFoodDatabase
     private lateinit var repository: UserRecipeRepository
     private lateinit var eventBus: ListEventBus<IntegrationEvent>
-    private val testAccountId = LocalAccountId("test-account-id")
 
     @BeforeTest
     fun setup() {
@@ -47,7 +45,6 @@ class UserRecipeRepositoryIntegrationTest {
         // Arrange - Create recipe
         val createResult =
             repository.create(
-                accountId = testAccountId,
                 name = UserRecipeName("Recipe to Delete"),
                 servings = 1.0,
                 image = null,
@@ -72,7 +69,6 @@ class UserRecipeRepositoryIntegrationTest {
         val event = assertIs<UserRecipeDeletedEvent>(publishedEvents[0])
         assertEquals(identity, event.identity)
         assertEquals(identity.id, event.identity.id)
-        assertEquals(testAccountId, event.identity.accountId)
     }
 
     @Test
@@ -80,7 +76,6 @@ class UserRecipeRepositoryIntegrationTest {
         // Arrange - Create recipe with ingredients
         val createResult =
             repository.create(
-                accountId = testAccountId,
                 name = UserRecipeName("Recipe with Ingredients"),
                 servings = 1.0,
                 image = null,
@@ -129,7 +124,6 @@ class UserRecipeRepositoryIntegrationTest {
         // Arrange - Create recipe with initial ingredients
         val createResult =
             repository.create(
-                accountId = testAccountId,
                 name = UserRecipeName("Original Recipe"),
                 servings = 1.0,
                 image = null,
@@ -197,7 +191,6 @@ class UserRecipeRepositoryIntegrationTest {
         // Arrange - Create Recipe A
         val recipeAResult =
             repository.create(
-                accountId = testAccountId,
                 name = UserRecipeName("Recipe A"),
                 servings = 1.0,
                 image = null,
@@ -252,7 +245,6 @@ class UserRecipeRepositoryIntegrationTest {
         // Arrange - Create Recipe A with UserFood
         val recipeAResult =
             repository.create(
-                accountId = testAccountId,
                 name = UserRecipeName("Recipe A"),
                 servings = 1.0,
                 image = null,
@@ -271,7 +263,6 @@ class UserRecipeRepositoryIntegrationTest {
         // Create Recipe B that includes Recipe A
         val recipeBResult =
             repository.create(
-                accountId = testAccountId,
                 name = UserRecipeName("Recipe B"),
                 servings = 1.0,
                 image = null,
@@ -330,7 +321,6 @@ class UserRecipeRepositoryIntegrationTest {
         // Arrange - Create a base recipe
         val baseRecipeResult =
             repository.create(
-                accountId = testAccountId,
                 name = UserRecipeName("Base Recipe"),
                 servings = 1.0,
                 image = null,
@@ -348,7 +338,6 @@ class UserRecipeRepositoryIntegrationTest {
 
         // Create recipes that depend on base recipe
         repository.create(
-            accountId = testAccountId,
             name = UserRecipeName("Dependent Recipe 1"),
             servings = 1.0,
             image = null,
@@ -364,7 +353,6 @@ class UserRecipeRepositoryIntegrationTest {
         )
 
         repository.create(
-            accountId = testAccountId,
             name = UserRecipeName("Dependent Recipe 2"),
             servings = 1.0,
             image = null,
@@ -381,7 +369,6 @@ class UserRecipeRepositoryIntegrationTest {
 
         // Create a recipe that doesn't depend on base recipe
         repository.create(
-            accountId = testAccountId,
             name = UserRecipeName("Independent Recipe"),
             servings = 1.0,
             image = null,
@@ -399,8 +386,7 @@ class UserRecipeRepositoryIntegrationTest {
         // Act - Find recipes that use the base recipe
         val dependentRecipes =
             repository.findRecipesUsingFood(
-                foodReference = FoodReference.UserRecipe(baseRecipeId.id),
-                accountId = testAccountId,
+                foodReference = FoodReference.UserRecipe(baseRecipeId.id)
             )
 
         // Assert - Only dependent recipes are found
@@ -415,7 +401,6 @@ class UserRecipeRepositoryIntegrationTest {
         val targetFoodId = "target-user-food"
 
         repository.create(
-            accountId = testAccountId,
             name = UserRecipeName("Direct User 1"),
             servings = 1.0,
             image = null,
@@ -431,7 +416,6 @@ class UserRecipeRepositoryIntegrationTest {
         )
 
         repository.create(
-            accountId = testAccountId,
             name = UserRecipeName("Direct User 2"),
             servings = 1.0,
             image = null,
@@ -451,7 +435,6 @@ class UserRecipeRepositoryIntegrationTest {
         )
 
         repository.create(
-            accountId = testAccountId,
             name = UserRecipeName("Non-User"),
             servings = 1.0,
             image = null,
@@ -468,10 +451,7 @@ class UserRecipeRepositoryIntegrationTest {
 
         // Act
         val recipes =
-            repository.findRecipesUsingFood(
-                foodReference = FoodReference.UserProduct(targetFoodId),
-                accountId = testAccountId,
-            )
+            repository.findRecipesUsingFood(foodReference = FoodReference.UserProduct(targetFoodId))
 
         // Assert - Cross-bounded context query finds all recipes using this user food
         assertEquals(2, recipes.size)
@@ -484,7 +464,6 @@ class UserRecipeRepositoryIntegrationTest {
         // Arrange - Create a dependency chain: Recipe C uses Recipe B uses Recipe A
         val recipeAResult =
             repository.create(
-                accountId = testAccountId,
                 name = UserRecipeName("Recipe A"),
                 servings = 1.0,
                 image = null,
@@ -502,7 +481,6 @@ class UserRecipeRepositoryIntegrationTest {
 
         val recipeBResult =
             repository.create(
-                accountId = testAccountId,
                 name = UserRecipeName("Recipe B"),
                 servings = 1.0,
                 image = null,
@@ -520,7 +498,6 @@ class UserRecipeRepositoryIntegrationTest {
 
         val recipeCResult =
             repository.create(
-                accountId = testAccountId,
                 name = UserRecipeName("Recipe C"),
                 servings = 1.0,
                 image = null,
@@ -537,13 +514,11 @@ class UserRecipeRepositoryIntegrationTest {
         val recipeCId = assertIs<Result.Success<UserRecipeIdentity, *>>(recipeCResult).data
 
         // Verify dependency chain
-        val recipesUsingA =
-            repository.findRecipesUsingFood(FoodReference.UserRecipe(recipeAId.id), testAccountId)
+        val recipesUsingA = repository.findRecipesUsingFood(FoodReference.UserRecipe(recipeAId.id))
         assertEquals(1, recipesUsingA.size)
         assertEquals("Recipe B", recipesUsingA[0].name.value)
 
-        val recipesUsingB =
-            repository.findRecipesUsingFood(FoodReference.UserRecipe(recipeBId.id), testAccountId)
+        val recipesUsingB = repository.findRecipesUsingFood(FoodReference.UserRecipe(recipeBId.id))
         assertEquals(1, recipesUsingB.size)
         assertEquals("Recipe C", recipesUsingB[0].name.value)
 
@@ -567,65 +542,5 @@ class UserRecipeRepositoryIntegrationTest {
         val events = eventBus.publishedEvents.filterIsInstance<UserRecipeDeletedEvent>()
         assertEquals(1, events.size)
         assertEquals(recipeBId.id, events[0].identity.id)
-    }
-
-    @Test
-    fun accountIsolation_recipesAreAccountSpecific() = runTest {
-        // Arrange - Create recipes for different accounts
-        val account1 = LocalAccountId("account-1")
-        val account2 = LocalAccountId("account-2")
-
-        val recipe1Result =
-            repository.create(
-                accountId = account1,
-                name = UserRecipeName("Account 1 Recipe"),
-                servings = 1.0,
-                image = null,
-                note = null,
-                finalWeight = null,
-                ingredients =
-                    listOf(
-                        UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-1"),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
-                        )
-                    ),
-            )
-        val recipe1Id = assertIs<Result.Success<UserRecipeIdentity, *>>(recipe1Result).data
-
-        val recipe2Result =
-            repository.create(
-                accountId = account2,
-                name = UserRecipeName("Account 2 Recipe"),
-                servings = 1.0,
-                image = null,
-                note = null,
-                finalWeight = null,
-                ingredients =
-                    listOf(
-                        UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-2"),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
-                        )
-                    ),
-            )
-        val recipe2Id = assertIs<Result.Success<UserRecipeIdentity, *>>(recipe2Result).data
-
-        // Act & Assert - Can observe own recipe
-        assertNotNull(repository.observe(recipe1Id).firstOrNull())
-        assertNotNull(repository.observe(recipe2Id).firstOrNull())
-
-        // Can't observe other account's recipes
-        assertNull(repository.observe(recipe1Id.copy(accountId = account2)).firstOrNull())
-        assertNull(repository.observe(recipe2Id.copy(accountId = account1)).firstOrNull())
-
-        // Account 1 can't find Account 2's recipes using food reference queries
-        val account1Recipes =
-            repository.findRecipesUsingFood(FoodReference.UserProduct("food-2"), account1)
-        assertEquals(0, account1Recipes.size)
-
-        val account2Recipes =
-            repository.findRecipesUsingFood(FoodReference.UserProduct("food-1"), account2)
-        assertEquals(0, account2Recipes.size)
     }
 }

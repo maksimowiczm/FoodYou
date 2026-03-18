@@ -1,18 +1,11 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
 import com.maksimowiczm.foodyou.common.domain.AggregateRoot
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-class AccountAnalytics private constructor(val ownerId: LocalAccountId) : AggregateRoot() {
-    companion object {
-        fun of(ownerId: LocalAccountId): AccountAnalytics {
-            return AccountAnalytics(ownerId = ownerId)
-        }
-    }
-
+class Analytics : AggregateRoot() {
     var firstLaunchEver: Instant? = null
         private set
 
@@ -35,32 +28,14 @@ class AccountAnalytics private constructor(val ownerId: LocalAccountId) : Aggreg
         val now = clock.now()
 
         val localEvents = buildList {
-            add(
-                AppLaunchedEvent(
-                    accountOwnerId = ownerId.value,
-                    versionName = versionName,
-                    timestamp = now,
-                )
-            )
+            add(AppLaunchedEvent(versionName = versionName, timestamp = now))
 
             if (firstLaunchEver == null) {
-                add(
-                    FirstAppLaunchRecordedEvent(
-                        accountOwnerId = ownerId.value,
-                        versionName = versionName,
-                        timestamp = now,
-                    )
-                )
+                add(FirstAppLaunchRecordedEvent(versionName = versionName, timestamp = now))
             }
 
             if (currentVersion != versionName) {
-                add(
-                    AppVersionChangedEvent(
-                        accountOwnerId = ownerId.value,
-                        newVersionName = versionName,
-                        timestamp = now,
-                    )
-                )
+                add(AppVersionChangedEvent(newVersionName = versionName, timestamp = now))
             }
         }
 

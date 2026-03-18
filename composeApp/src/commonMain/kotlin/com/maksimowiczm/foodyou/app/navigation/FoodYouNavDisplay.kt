@@ -44,7 +44,6 @@ import com.maksimowiczm.foodyou.app.ui.profile.add.AddProfileScreen
 import com.maksimowiczm.foodyou.app.ui.profile.edit.EditProfileScreen
 import com.maksimowiczm.foodyou.app.ui.userfood.create.CreateProductScreen
 import com.maksimowiczm.foodyou.app.ui.userfood.edit.EditProductScreen
-import com.maksimowiczm.foodyou.common.domain.LocalAccountId
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -214,14 +213,13 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data object CreateProfile : FoodYouNavHostRoute
 
     @Serializable
-    data class EditUserProduct(val id: String, val accountId: String) : FoodYouNavHostRoute {
+    data class EditUserProduct(val id: String) : FoodYouNavHostRoute {
         companion object {
-            fun from(identity: UserProductIdentity): EditUserProduct =
-                EditUserProduct(identity.id, identity.accountId.value)
+            fun from(identity: UserProductIdentity): EditUserProduct = EditUserProduct(identity.id)
         }
 
         val identity: UserProductIdentity
-            get() = UserProductIdentity(id, LocalAccountId(accountId))
+            get() = UserProductIdentity(id)
     }
 
     @Serializable
@@ -237,11 +235,11 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data class FoodDatabase(val query: String?) : FoodYouNavHostRoute
 
     @Serializable
-    data class UserProductDetails(val id: String, val accountId: String) : FoodYouNavHostRoute {
+    data class UserProductDetails(val id: String) : FoodYouNavHostRoute {
         val identity: UserProductIdentity
-            get() = UserProductIdentity(id, LocalAccountId(accountId))
+            get() = UserProductIdentity(id)
 
-        constructor(identity: UserProductIdentity) : this(identity.id, identity.accountId.value)
+        constructor(identity: UserProductIdentity) : this(identity.id)
     }
 
     @Serializable

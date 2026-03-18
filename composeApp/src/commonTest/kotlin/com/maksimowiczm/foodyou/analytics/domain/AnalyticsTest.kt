@@ -1,16 +1,15 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
 import com.maksimowiczm.foodyou.common.clock.testClock
-import com.maksimowiczm.foodyou.common.domain.testLocalAccountId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.time.Instant
 
-class AccountAnalyticsTest {
+class AnalyticsTest {
     @Test
     fun recordAppLaunch_once() {
-        val analytics = AccountAnalytics.of(testLocalAccountId())
+        val analytics = Analytics()
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
         val clock = testClock(now)
@@ -27,7 +26,7 @@ class AccountAnalyticsTest {
 
     @Test
     fun recordAppLaunch_multipleTimes() {
-        val analytics = AccountAnalytics.of(testLocalAccountId())
+        val analytics = Analytics()
         val versionNameV1 = "4.0.0"
         val versionNameV2 = "4.1.0"
         val now1 = Instant.fromEpochSeconds(1_600_000_000)
@@ -49,7 +48,7 @@ class AccountAnalyticsTest {
 
     @Test
     fun recordAppLaunch_raisesEvents() {
-        val analytics = AccountAnalytics.of(testLocalAccountId())
+        val analytics = Analytics()
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
         val clock = testClock(now)
@@ -65,15 +64,10 @@ class AccountAnalyticsTest {
 
     @Test
     fun applyAppLaunchedEvent() {
-        val analytics = AccountAnalytics.of(testLocalAccountId())
+        val analytics = Analytics()
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
-        val event =
-            AppLaunchedEvent(
-                accountOwnerId = "test-account",
-                versionName = versionName,
-                timestamp = now,
-            )
+        val event = AppLaunchedEvent(versionName = versionName, timestamp = now)
 
         analytics.apply(event)
 
@@ -82,15 +76,10 @@ class AccountAnalyticsTest {
 
     @Test
     fun applyFirstAppLaunchRecordedEvent() {
-        val analytics = AccountAnalytics.of(testLocalAccountId())
+        val analytics = Analytics()
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
-        val event =
-            FirstAppLaunchRecordedEvent(
-                accountOwnerId = "test-account",
-                versionName = versionName,
-                timestamp = now,
-            )
+        val event = FirstAppLaunchRecordedEvent(versionName = versionName, timestamp = now)
 
         analytics.apply(event)
 
@@ -100,15 +89,10 @@ class AccountAnalyticsTest {
 
     @Test
     fun applyAppVersionChangedEvent() {
-        val analytics = AccountAnalytics.of(testLocalAccountId())
+        val analytics = Analytics()
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
-        val event =
-            AppVersionChangedEvent(
-                accountOwnerId = "test-account",
-                newVersionName = versionName,
-                timestamp = now,
-            )
+        val event = AppVersionChangedEvent(newVersionName = versionName, timestamp = now)
 
         analytics.apply(event)
 
