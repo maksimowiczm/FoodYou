@@ -24,9 +24,6 @@ class Account private constructor(settings: AccountSettings, profiles: List<Prof
     val profiles: List<Profile>
         get() = _profiles.toList()
 
-    val defaultProfile: Profile
-        get() = _profiles.first()
-
     fun updateSettings(transform: (AccountSettings) -> AccountSettings) {
         settings = transform(settings)
     }
