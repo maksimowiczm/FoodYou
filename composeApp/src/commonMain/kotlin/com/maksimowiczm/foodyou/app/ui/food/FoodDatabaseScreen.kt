@@ -9,7 +9,6 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
@@ -25,7 +24,7 @@ import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.app.ui.common.component.Scrim
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
-import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefaults
+import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefaults.rememberScrollConnection
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchApp
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
@@ -52,7 +51,7 @@ fun FoodDatabaseScreen(
     )
 
     val offset = rememberSaveable { mutableFloatStateOf(0f) }
-    val scrollConnection = StatusBarProtectionDefaults.scrollConnection { offset.value -= it.y }
+    val scrollConnection = rememberScrollConnection { offset.floatValue -= it.y }
     val topBarHeight = LocalDensity.current.run { (56 * 3).dp.toPx() }
 
     Box(modifier) {
@@ -109,8 +108,6 @@ fun FoodDatabaseScreen(
                 )
             },
         )
-        StatusBarProtection(MaterialTheme.colorScheme.surfaceContainerHigh) {
-            (offset.value / topBarHeight).coerceIn(0f, 1f)
-        }
+        StatusBarProtection { (offset.value / topBarHeight).coerceIn(0f, 1f) }
     }
 }
