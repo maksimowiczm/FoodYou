@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.food.details.userproduct
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
@@ -23,28 +26,29 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LargeFlexibleTopAppBar
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
+import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
-import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIcon
+import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
 import com.maksimowiczm.foodyou.app.ui.food.details.NutrientList
 import com.maksimowiczm.foodyou.app.ui.food.details.NutrientsHeader
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
@@ -101,7 +105,6 @@ private fun UserProductDetailsScreen(
     modifier: Modifier = Modifier,
 ) {
     val nameSelector = LocalFoodNameSelector.current
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
@@ -120,41 +123,71 @@ private fun UserProductDetailsScreen(
             }
         }
 
+    val lazyListState = rememberLazyListState()
+    val animatedIsScrolled =
+        animateFloatAsState(
+            targetValue = if (lazyListState.canScrollBackward) 1f else 0f,
+            animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+        )
+    val animatedIconButtonColor =
+        animateColorAsState(
+            targetValue =
+                if (lazyListState.canScrollBackward) MaterialTheme.colorScheme.surfaceContainerHigh
+                else MaterialTheme.colorScheme.surface
+        )
+
     Scaffold(
         modifier = modifier,
         topBar = {
-            LargeFlexibleTopAppBar(
-                title = {
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    ArrowBackIconButton(
+                        onClick = onBack,
+                        colors =
+                            IconButtonDefaults.iconButtonColors(
+                                containerColor = animatedIconButtonColor.value
+                            ),
+                    )
+                },
+                actions = {
+                    FavoriteIconButton(
+                        favorite = isFavorite ?: false,
+                        onChange = onSetFavorite,
+                        colors =
+                            IconButtonDefaults.iconButtonColors(
+                                containerColor = animatedIconButtonColor.value
+                            ),
+                    )
+                    LocalMenu(
+                        onEdit = { onEdit() },
+                        onDelete = { onDelete() },
+                        colors =
+                            IconButtonDefaults.iconButtonColors(
+                                containerColor = animatedIconButtonColor.value
+                            ),
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+            )
+        },
+    ) { contentPadding ->
+        LazyColumn(state = lazyListState, contentPadding = contentPadding.add(bottom = 8.dp)) {
+            item {
+                Box(Modifier.fillMaxWidth().padding(16.dp)) {
                     if (headline != null) {
-                        Text(headline)
+                        Text(text = headline, style = MaterialTheme.typography.displaySmall)
                     } else {
                         Spacer(
                             Modifier.shimmer()
                                 .fillMaxWidth(.75f)
-                                .height(LocalTextStyle.current.toDp())
+                                .height(MaterialTheme.typography.displaySmall.toDp())
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(MaterialTheme.colorScheme.secondaryContainer)
                         )
                     }
-                },
-                navigationIcon = { ArrowBackIconButton(onBack) },
-                actions = {
-                    FavoriteIcon(favorite = isFavorite ?: false, onChange = onSetFavorite)
-
-                    LocalMenu(onEdit = { onEdit() }, onDelete = { onDelete() })
-                },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                    ),
-                scrollBehavior = scrollBehavior,
-            )
-        },
-    ) { contentPadding ->
-        LazyColumn(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = contentPadding.add(bottom = 8.dp),
-        ) {
+                }
+            }
             item {
                 when {
                     userFood == null ->
@@ -219,10 +252,16 @@ private fun UserProductDetailsScreen(
             }
         }
     }
+    StatusBarProtection(MaterialTheme.colorScheme.surfaceContainerHigh) { animatedIsScrolled.value }
 }
 
 @Composable
-private fun LocalMenu(onEdit: () -> Unit, onDelete: () -> Unit, modifier: Modifier = Modifier) {
+private fun LocalMenu(
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier,
+    colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
+) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
@@ -256,7 +295,11 @@ private fun LocalMenu(onEdit: () -> Unit, onDelete: () -> Unit, modifier: Modifi
     }
 
     Box(modifier) {
-        IconButton(onClick = { expanded = true }, shapes = IconButtonDefaults.shapes()) {
+        IconButton(
+            onClick = { expanded = true },
+            shapes = IconButtonDefaults.shapes(),
+            colors = colors,
+        ) {
             Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = null)
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {

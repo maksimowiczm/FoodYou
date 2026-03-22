@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -10,31 +12,33 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearWavyProgressIndicator
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
+import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
-import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIcon
+import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsUiState
 import com.maksimowiczm.foodyou.app.ui.food.details.NutrientList
 import com.maksimowiczm.foodyou.app.ui.food.details.NutrientsHeader
-import com.maksimowiczm.foodyou.app.ui.food.details.RefreshMenu
+import com.maksimowiczm.foodyou.app.ui.food.details.RefreshIconButton
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
@@ -110,46 +114,61 @@ private fun OpenFoodFactsDetailsScreen(
     onSetFavorite: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
         remember(nutritionFacts) {
             if (nutritionFacts == null) return@remember false
             (Nutrient.all - Nutrient.basic).any { nutritionFacts[it].value != null }
         }
+    val lazyListState = rememberLazyListState()
+    val animatedIsScrolled =
+        animateFloatAsState(
+            targetValue = if (lazyListState.canScrollBackward) 1f else 0f,
+            animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+        )
+    val animatedIconButtonColor =
+        animateColorAsState(
+            targetValue =
+                if (lazyListState.canScrollBackward) MaterialTheme.colorScheme.surfaceContainerHigh
+                else MaterialTheme.colorScheme.surface
+        )
 
     Scaffold(
         modifier = modifier,
         topBar = {
-            LargeFlexibleTopAppBar(
-                title = {
-                    if (headline != null) {
-                        Text(headline)
-                    } else {
-                        Spacer(
-                            Modifier.shimmer()
-                                .fillMaxWidth(.75f)
-                                .height(LocalTextStyle.current.toDp())
-                                .clip(MaterialTheme.shapes.medium)
-                                .background(MaterialTheme.colorScheme.secondaryContainer)
-                        )
-                    }
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    ArrowBackIconButton(
+                        onClick = onBack,
+                        colors =
+                            IconButtonDefaults.iconButtonColors(
+                                containerColor = animatedIconButtonColor.value
+                            ),
+                    )
                 },
-                navigationIcon = { ArrowBackIconButton(onBack) },
                 actions = {
-                    FavoriteIcon(favorite = isFavorite, onChange = onSetFavorite)
-                    RefreshMenu(onRefresh)
+                    FavoriteIconButton(
+                        favorite = isFavorite,
+                        onChange = onSetFavorite,
+                        colors =
+                            IconButtonDefaults.iconButtonColors(
+                                containerColor = animatedIconButtonColor.value
+                            ),
+                    )
+                    RefreshIconButton(
+                        onRefresh = onRefresh,
+                        colors =
+                            IconButtonDefaults.iconButtonColors(
+                                containerColor = animatedIconButtonColor.value
+                            ),
+                    )
                 },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                    ),
-                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
             )
         },
     ) { contentPadding ->
-        Box(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
+        Box {
             Column(Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f)) {
                 if (isLoading) {
                     Spacer(Modifier.height(8.dp))
@@ -159,8 +178,25 @@ private fun OpenFoodFactsDetailsScreen(
                     Spacer(Modifier.height(26.dp))
                 }
             }
-
-            LazyColumn(contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp)) {
+            LazyColumn(
+                contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
+                state = lazyListState,
+            ) {
+                item {
+                    Box(Modifier.fillMaxWidth().padding(16.dp)) {
+                        if (headline != null) {
+                            Text(text = headline, style = MaterialTheme.typography.displaySmall)
+                        } else {
+                            Spacer(
+                                Modifier.shimmer()
+                                    .fillMaxWidth(.75f)
+                                    .height(MaterialTheme.typography.displaySmall.toDp())
+                                    .clip(MaterialTheme.shapes.medium)
+                                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                            )
+                        }
+                    }
+                }
                 item {
                     when (image) {
                         is Image ->
@@ -227,4 +263,5 @@ private fun OpenFoodFactsDetailsScreen(
             }
         }
     }
+    StatusBarProtection(MaterialTheme.colorScheme.surfaceContainerHigh) { animatedIsScrolled.value }
 }

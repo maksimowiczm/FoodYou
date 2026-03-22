@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -15,10 +16,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun FavoriteIcon(
+internal fun FavoriteIconButton(
     favorite: Boolean,
     onChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
+    colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
 ) {
     val scope = rememberCoroutineScope()
     val animatable = remember { Animatable(1f) }
@@ -38,6 +40,7 @@ internal fun FavoriteIcon(
             }
         },
         shapes = IconButtonDefaults.shapes(),
+        colors = colors,
         modifier = modifier,
     ) {
         Icon(

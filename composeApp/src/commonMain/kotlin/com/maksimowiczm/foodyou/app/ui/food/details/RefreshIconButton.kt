@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -15,7 +16,11 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun RefreshMenu(onRefresh: () -> Unit, modifier: Modifier = Modifier.Companion) {
+internal fun RefreshIconButton(
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+    colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
+) {
     val animatable = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
 
@@ -28,6 +33,7 @@ internal fun RefreshMenu(onRefresh: () -> Unit, modifier: Modifier = Modifier.Co
             onRefresh()
         },
         shapes = IconButtonDefaults.shapes(),
+        colors = colors,
         modifier = modifier,
     ) {
         Icon(
