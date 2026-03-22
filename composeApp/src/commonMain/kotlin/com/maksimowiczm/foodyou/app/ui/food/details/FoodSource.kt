@@ -1,12 +1,10 @@
-package com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts
+package com.maksimowiczm.foodyou.app.ui.food.details
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -16,11 +14,15 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalClipboardManager
 import foodyou.app.generated.resources.*
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun OpenFoodFactsSource(url: String, modifier: Modifier = Modifier) {
+internal fun FoodSource(
+    url: String,
+    logo: @Composable () -> Unit,
+    headline: String,
+    modifier: Modifier = Modifier,
+) {
     val uriHandler = LocalUriHandler.current
     val clipboardManager = LocalClipboardManager.current
 
@@ -44,14 +46,10 @@ internal fun OpenFoodFactsSource(url: String, modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Image(
-                painter = painterResource(Res.drawable.openfoodfacts_logo),
-                contentDescription = null,
-                modifier = Modifier.sizeIn(maxHeight = 32.dp, maxWidth = 32.dp),
-            )
+            logo()
             Column {
                 Text(
-                    text = stringResource(Res.string.headline_open_food_facts),
+                    text = headline,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
@@ -64,4 +62,8 @@ internal fun OpenFoodFactsSource(url: String, modifier: Modifier = Modifier) {
             }
         }
     }
+}
+
+internal object FoodSourceDefaults {
+    val logoMaxSize = 32.dp
 }

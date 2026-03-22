@@ -1,14 +1,9 @@
 package com.maksimowiczm.foodyou.app.ui.food.details.userproduct
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,32 +27,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.app.ui.common.component.Image
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
-import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
-import com.maksimowiczm.foodyou.app.ui.food.details.NutrientList
-import com.maksimowiczm.foodyou.app.ui.food.details.NutrientsHeader
+import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
+import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsImage
+import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsNutrients
+import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
+import com.maksimowiczm.foodyou.app.ui.food.details.rememberFoodDetailsChrome
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
-import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -124,39 +112,21 @@ private fun UserProductDetailsScreen(
         }
 
     val lazyListState = rememberLazyListState()
-    val animatedIsScrolled =
-        animateFloatAsState(
-            targetValue = if (lazyListState.canScrollBackward) 1f else 0f,
-            animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
-        )
-    val animatedIconButtonColor =
-        animateColorAsState(
-            targetValue =
-                if (lazyListState.canScrollBackward) MaterialTheme.colorScheme.surfaceContainerHigh
-                else MaterialTheme.colorScheme.surface
-        )
+    val chrome = rememberFoodDetailsChrome(lazyListState)
 
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    ArrowBackIconButton(
-                        onClick = onBack,
-                        colors =
-                            IconButtonDefaults.iconButtonColors(
-                                containerColor = animatedIconButtonColor.value
-                            ),
-                    )
-                },
+            FoodDetailsTopBar(
+                onBack = onBack,
+                iconButtonContainerColor = chrome.iconButtonContainerColor,
                 actions = {
                     FavoriteIconButton(
                         favorite = isFavorite ?: false,
                         onChange = onSetFavorite,
                         colors =
                             IconButtonDefaults.iconButtonColors(
-                                containerColor = animatedIconButtonColor.value
+                                containerColor = chrome.iconButtonContainerColor
                             ),
                     )
                     LocalMenu(
@@ -164,86 +134,30 @@ private fun UserProductDetailsScreen(
                         onDelete = { onDelete() },
                         colors =
                             IconButtonDefaults.iconButtonColors(
-                                containerColor = animatedIconButtonColor.value
+                                containerColor = chrome.iconButtonContainerColor
                             ),
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
             )
         },
     ) { contentPadding ->
         LazyColumn(state = lazyListState, contentPadding = contentPadding.add(bottom = 8.dp)) {
-            item {
-                Box(Modifier.fillMaxWidth().padding(16.dp)) {
-                    if (headline != null) {
-                        Text(text = headline, style = MaterialTheme.typography.displaySmall)
-                    } else {
-                        Spacer(
-                            Modifier.shimmer()
-                                .fillMaxWidth(.75f)
-                                .height(MaterialTheme.typography.displaySmall.toDp())
-                                .clip(MaterialTheme.shapes.medium)
-                                .background(MaterialTheme.colorScheme.secondaryContainer)
-                        )
-                    }
-                }
-            }
-            item {
-                when {
-                    userFood == null ->
-                        Spacer(
-                            Modifier.shimmer()
-                                .fillMaxWidth()
-                                .aspectRatio(16f / 9f)
-                                .padding(horizontal = 32.dp)
-                                .clip(MaterialTheme.shapes.medium)
-                                .background(MaterialTheme.colorScheme.secondaryContainer)
-                        )
-
-                    userFood.image == null -> Unit
-
-                    else ->
-                        userFood.image.Image(
-                            shimmer = rememberShimmer(ShimmerBounds.View),
-                            modifier =
-                                Modifier.fillMaxWidth()
-                                    .aspectRatio(16f / 9f)
-                                    .padding(horizontal = 32.dp),
-                        )
-                }
-            }
+            item { FoodDetailsHeadline(headline = headline) }
+            item { FoodDetailsImage(image = userFood?.image, showPlaceholder = userFood == null) }
             item { Spacer(Modifier.height(8.dp)) }
             if (userFood?.nutritionFacts != null) {
                 item {
-                    NutrientsHeader(
-                        proteins = userFood.nutritionFacts.proteins.value?.toFloat(),
-                        carbohydrates = userFood.nutritionFacts.carbohydrates.value?.toFloat(),
-                        fats = userFood.nutritionFacts.fats.value?.toFloat(),
+                    FoodDetailsNutrients(
+                        nutritionFacts = userFood.nutritionFacts,
                         expanded = expanded,
                         onExpandedChange = { expanded = it },
-                        enabled = expandingEnabled,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    NutrientList(
-                        facts = userFood.nutritionFacts,
-                        expanded = expanded,
-                        modifier =
-                            Modifier.fillMaxWidth()
-                                .padding(horizontal = 8.dp)
-                                .clickable(
-                                    interactionSource = null,
-                                    indication = null,
-                                    onClick = { expanded = !expanded },
-                                ),
+                        expandingEnabled = expandingEnabled,
                     )
                 }
             }
             if (userFood?.note != null) {
                 item {
-                    Spacer(Modifier.height(16.dp))
-                    HorizontalDivider(Modifier.fillMaxWidth().padding(horizontal = 16.dp))
-                    Spacer(Modifier.height(16.dp))
+                    HorizontalDivider(Modifier.fillMaxWidth().padding(16.dp))
                     Note(
                         note = userFood.note.value,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -252,7 +166,9 @@ private fun UserProductDetailsScreen(
             }
         }
     }
-    StatusBarProtection(MaterialTheme.colorScheme.surfaceContainerHigh) { animatedIsScrolled.value }
+    StatusBarProtection(MaterialTheme.colorScheme.surfaceContainerHigh) {
+        chrome.statusBarProtection
+    }
 }
 
 @Composable
