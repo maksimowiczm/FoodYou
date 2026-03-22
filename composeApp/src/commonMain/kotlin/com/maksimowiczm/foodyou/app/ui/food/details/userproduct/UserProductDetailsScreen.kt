@@ -27,12 +27,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
@@ -41,7 +42,6 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsImage
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsNutrients
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
-import com.maksimowiczm.foodyou.app.ui.food.details.rememberFoodDetailsChrome
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
@@ -112,36 +112,27 @@ private fun UserProductDetailsScreen(
         }
 
     val lazyListState = rememberLazyListState()
-    val chrome = rememberFoodDetailsChrome(lazyListState)
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(lazyListState)
 
     Scaffold(
         modifier = modifier,
         topBar = {
             FoodDetailsTopBar(
                 onBack = onBack,
-                iconButtonContainerColor = chrome.iconButtonContainerColor,
+                title = headline,
                 actions = {
-                    FavoriteIconButton(
-                        favorite = isFavorite ?: false,
-                        onChange = onSetFavorite,
-                        colors =
-                            IconButtonDefaults.iconButtonColors(
-                                containerColor = chrome.iconButtonContainerColor
-                            ),
-                    )
-                    LocalMenu(
-                        onEdit = { onEdit() },
-                        onDelete = { onDelete() },
-                        colors =
-                            IconButtonDefaults.iconButtonColors(
-                                containerColor = chrome.iconButtonContainerColor
-                            ),
-                    )
+                    FavoriteIconButton(favorite = isFavorite ?: false, onChange = onSetFavorite)
+                    LocalMenu(onEdit = { onEdit() }, onDelete = { onDelete() })
                 },
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { contentPadding ->
-        LazyColumn(state = lazyListState, contentPadding = contentPadding.add(bottom = 8.dp)) {
+        LazyColumn(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            state = lazyListState,
+            contentPadding = contentPadding.add(bottom = 8.dp),
+        ) {
             item { FoodDetailsHeadline(headline = headline) }
             item { FoodDetailsImage(image = userFood?.image, showPlaceholder = userFood == null) }
             item { Spacer(Modifier.height(8.dp)) }
@@ -165,9 +156,6 @@ private fun UserProductDetailsScreen(
                 }
             }
         }
-    }
-    StatusBarProtection(MaterialTheme.colorScheme.surfaceContainerHigh) {
-        chrome.statusBarProtection
     }
 }
 

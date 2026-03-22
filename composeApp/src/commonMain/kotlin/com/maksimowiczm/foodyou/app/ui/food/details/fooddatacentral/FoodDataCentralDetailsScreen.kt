@@ -8,14 +8,13 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
@@ -27,7 +26,6 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsUiState
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodSource
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodSourceDefaults
 import com.maksimowiczm.foodyou.app.ui.food.details.RefreshIconButton
-import com.maksimowiczm.foodyou.app.ui.food.details.rememberFoodDetailsChrome
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -108,35 +106,23 @@ private fun FoodDataCentralDetailsScreen(
         }
 
     val lazyListState = rememberLazyListState()
-    val chrome = rememberFoodDetailsChrome(lazyListState)
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(lazyListState)
 
     Scaffold(
         modifier = modifier,
         topBar = {
             FoodDetailsTopBar(
                 onBack = onBack,
-                iconButtonContainerColor = chrome.iconButtonContainerColor,
+                title = headline,
                 actions = {
-                    FavoriteIconButton(
-                        favorite = isFavorite,
-                        onChange = onSetFavorite,
-                        colors =
-                            IconButtonDefaults.iconButtonColors(
-                                containerColor = chrome.iconButtonContainerColor
-                            ),
-                    )
-                    RefreshIconButton(
-                        onRefresh = onRefresh,
-                        colors =
-                            IconButtonDefaults.iconButtonColors(
-                                containerColor = chrome.iconButtonContainerColor
-                            ),
-                    )
+                    FavoriteIconButton(favorite = isFavorite, onChange = onSetFavorite)
+                    RefreshIconButton(onRefresh = onRefresh)
                 },
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { contentPadding ->
-        Box {
+        Box(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
             FoodDetailsLoadingOverlay(
                 isLoading = isLoading,
                 topPadding = contentPadding.calculateTopPadding(),
@@ -179,8 +165,5 @@ private fun FoodDataCentralDetailsScreen(
                 }
             }
         }
-    }
-    StatusBarProtection(MaterialTheme.colorScheme.surfaceContainerHigh) {
-        chrome.statusBarProtection
     }
 }
