@@ -41,7 +41,7 @@ internal class AccountRepositoryImpl(private val accountDao: AccountDao) : Accou
         }
 
     override suspend fun save(account: Account) = coroutineScope {
-        account.profiles.map { it.id }.distinct().forEach { profileAvatarPersistence.delete(it) }
+        profileAvatarPersistence.deleteAllBut(account.profiles.map { it.id })
 
         val profileEntities =
             account.profiles

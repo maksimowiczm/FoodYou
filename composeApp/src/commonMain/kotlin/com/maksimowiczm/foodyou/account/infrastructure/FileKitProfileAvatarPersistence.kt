@@ -10,6 +10,8 @@ import io.github.vinceglb.filekit.compressImage
 import io.github.vinceglb.filekit.createDirectories
 import io.github.vinceglb.filekit.delete
 import io.github.vinceglb.filekit.div
+import io.github.vinceglb.filekit.list
+import io.github.vinceglb.filekit.nameWithoutExtension
 import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
@@ -47,5 +49,16 @@ internal class FileKitProfileAvatarPersistence {
     /** Removes any persisted avatar file for [id]. */
     suspend fun delete(id: ProfileId) {
         (accountDirectory() / "avatar" / "${id.value}.jpg").delete(mustExist = false)
+    }
+
+    /** Removes all persisted avatar files except for those with [ids]. */
+    suspend fun deleteAllBut(ids: List<ProfileId>) {
+        val directory = (accountDirectory() / "avatar")
+        directory.createDirectories()
+        directory.list().forEach { file ->
+            if (file.nameWithoutExtension !in ids.map { it.value }) {
+                file.delete()
+            }
+        }
     }
 }
