@@ -4,10 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
-import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
-import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter
+import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.TimeoutCancellationException
@@ -75,21 +74,14 @@ class AppViewModel(
                 initialValue = NutrientsOrder.defaultOrder,
             )
 
-    val energyFormatter: StateFlow<EnergyFormatter> =
+    val energyUnit: StateFlow<EnergyUnit> =
         primaryAccount
-            .map { it?.settings?.energyFormat }
+            .map { it?.settings?.energyUnit ?: EnergyUnit.Kilocalories }
             .distinctUntilChanged()
-            .map {
-                when (it) {
-                    EnergyFormat.Kilocalories -> EnergyFormatter.kilocalories
-                    EnergyFormat.Kilojoules -> EnergyFormatter.kilojoules
-                    null -> EnergyFormatter.kilocalories
-                }
-            }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
-                initialValue = EnergyFormatter.kilocalories,
+                initialValue = EnergyUnit.Kilocalories,
             )
 
     fun onFinishOnboarding() {

@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.common.domain.food
 
+import com.maksimowiczm.foodyou.common.domain.Div
+import com.maksimowiczm.foodyou.common.domain.Plus
+import com.maksimowiczm.foodyou.common.domain.Times
 import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 
@@ -16,9 +19,9 @@ import kotlin.jvm.JvmInline
  * - Incomplete + Incomplete = Incomplete (treats null as 0.0)
  * - Multiplication and division preserve completeness status
  */
-sealed interface NutrientValue {
+sealed interface NutrientValue<T> where T : Plus<T>, T : Times<T>, T : Div<T> {
     /** The numeric value, or null if unknown. */
-    val value: Double?
+    val value: T?
 
     /**
      * Represents a nutrient value that is known and complete.
@@ -26,12 +29,15 @@ sealed interface NutrientValue {
      * @property value The complete numeric value
      */
     @JvmInline
-    value class Complete(override val value: Double) : NutrientValue {
-        operator fun plus(other: Complete) = Complete(value + other.value)
+    value class Complete<T>(override val value: T) : NutrientValue<T>
+        where T : Plus<T>, T : Times<T>, T : Div<T> {
+        operator fun plus(other: Complete<T>): Complete<T> = Complete(value + other.value)
 
-        override operator fun times(other: Double) = Complete(value * other)
-
-        override operator fun div(other: Double) = Complete(value / other)
+        operator fun plus(other: Incomplete<T>): Incomplete<T> =
+            when {
+                other.value != null -> Incomplete(value + other.value)
+                else -> Incomplete(value)
+            }
     }
 
     /**
@@ -42,57 +48,46 @@ sealed interface NutrientValue {
      * @property value The partial numeric value, or null if completely unknown
      */
     @JvmInline
-    value class Incomplete(override val value: Double?) : NutrientValue {
-        operator fun plus(other: Incomplete) =
+    value class Incomplete<T>(override val value: T?) : NutrientValue<T>
+        where T : Plus<T>, T : Times<T>, T : Div<T> {
+        operator fun plus(other: Complete<T>): Incomplete<T> = other + this
+
+        operator fun plus(other: Incomplete<T>): Incomplete<T> =
             when {
-                value == null && other.value == null -> Incomplete(null)
-                else -> Incomplete((value ?: 0.0) + (other.value ?: 0.0))
+                value != null && other.value != null -> Incomplete(value + other.value)
+                value != null && other.value == null -> Incomplete(value)
+                value == null && other.value != null -> Incomplete(other.value)
+                else -> Incomplete(null)
             }
     }
 
-    operator fun plus(other: NutrientValue): NutrientValue =
-        when (this) {
-            is Complete ->
-                when (other) {
-                    is Complete -> this + other
-                    is Incomplete -> Incomplete(value + (other.value ?: 0.0))
-                }
-
-            is Incomplete ->
-                when (other) {
-                    is Complete -> Incomplete(other.value + (value ?: 0.0))
-                    is Incomplete -> this + other
-                }
+    operator fun plus(other: NutrientValue<T>): NutrientValue<T> =
+        when {
+            this is Complete && other is Complete -> this + other
+            this is Complete && other is Incomplete -> this + other
+            this is Incomplete && other is Complete -> this + other
+            this is Incomplete && other is Incomplete -> this + other
+            else -> error("unreachable")
         }
 
-    operator fun times(other: Double): NutrientValue =
+    operator fun times(other: Number): NutrientValue<T> =
         when (this) {
             is Complete -> Complete(value * other)
             is Incomplete -> Incomplete(value?.times(other))
         }
 
-    operator fun div(other: Double): NutrientValue =
+    operator fun div(other: Number): NutrientValue<T> =
         when (this) {
             is Complete -> Complete(value / other)
             is Incomplete -> Incomplete(value?.div(other))
         }
 
     companion object {
-        /** Creates a complete nutrient value from a non-null Double. */
-        fun from(value: Double) = Complete(value)
+        fun <T> T?.toNutrientValue(): NutrientValue<T> where T : Plus<T>, T : Times<T>, T : Div<T> =
+            if (this != null) Complete(this) else Incomplete(null)
 
-        /** Creates a nutrient value from a nullable Double. */
-        fun from(value: Double?) =
-            when (value) {
-                null -> Incomplete(value)
-                else -> Complete(value)
-            }
-
-        /** Converts a nullable Double to a NutrientValue. */
-        fun Double?.toNutrientValue() = from(this)
-
-        /** Converts a nullable Float to a NutrientValue. */
-        fun Float?.toNutrientValue() = from(this?.toDouble())
+        fun <T> from(value: T?): NutrientValue<T> where T : Plus<T>, T : Times<T>, T : Div<T> =
+            value.toNutrientValue()
     }
 }
 
@@ -101,7 +96,7 @@ sealed interface NutrientValue {
  *
  * Uses a contract to smart-cast the receiver to NutrientValue.Complete.
  */
-fun NutrientValue.isComplete(): Boolean {
+fun <T> NutrientValue<T>.isComplete(): Boolean where T : Plus<T>, T : Times<T>, T : Div<T> {
     contract { returns(true) implies (this@isComplete is NutrientValue.Complete) }
 
     return this is NutrientValue.Complete
@@ -112,10 +107,10 @@ fun NutrientValue.isComplete(): Boolean {
  *
  * Uses a contract to smart-cast the receiver to NutrientValue.Incomplete.
  */
-fun NutrientValue.isIncomplete(): Boolean {
-    contract { returns(true) implies (this@isIncomplete is NutrientValue.Incomplete) }
+fun <T> NutrientValue<T>.isIncomplete(): Boolean where T : Plus<T>, T : Times<T>, T : Div<T> {
+    contract { returns(true) implies (this@isIncomplete is NutrientValue.Incomplete<T>) }
 
-    return this is NutrientValue.Incomplete
+    return this is NutrientValue.Incomplete<T>
 }
 
 /**
@@ -123,7 +118,9 @@ fun NutrientValue.isIncomplete(): Boolean {
  *
  * @return Complete if all values are complete, otherwise Incomplete
  */
-fun List<NutrientValue>.sum(): NutrientValue =
-    this.fold<NutrientValue, NutrientValue>(NutrientValue.Complete(0.0)) { acc, nutrientValue ->
+fun <T> List<NutrientValue<T>>.sum(zero: T): NutrientValue<T>
+    where T : Plus<T>, T : Times<T>, T : Div<T> =
+    this.fold<NutrientValue<T>, NutrientValue<T>>(NutrientValue.Complete(zero)) { acc, nutrientValue
+        ->
         acc + nutrientValue
     }

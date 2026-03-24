@@ -1,18 +1,18 @@
 package com.maksimowiczm.foodyou.app.ui.userfood
 
-import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
+import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import kotlinx.coroutines.flow.first
 
-internal fun interface GetAppAccountEnergyFormatUseCase {
-    suspend fun getAppAccountEnergyFormat(): EnergyFormat
+internal fun interface GetAppAccountEnergyUnitUseCase {
+    suspend fun getAppAccountEnergyUnit(): EnergyUnit
 }
 
-internal class GetAppAccountEnergyFormatUseCaseImpl(
+internal class GetAppAccountEnergyUnitUseCaseImpl(
     private val appAccountManager: AppAccountManager
-) : GetAppAccountEnergyFormatUseCase {
-    override suspend fun getAppAccountEnergyFormat(): EnergyFormat {
+) : GetAppAccountEnergyUnitUseCase {
+    override suspend fun getAppAccountEnergyUnit(): EnergyUnit {
         val account = appAccountManager.observeAppAccount().first()
-        return account.settings.energyFormat
+        return account.settings.energyUnit
     }
 }

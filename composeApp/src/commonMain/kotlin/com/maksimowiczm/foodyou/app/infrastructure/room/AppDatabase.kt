@@ -6,11 +6,11 @@ import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDatabase
-import com.maksimowiczm.foodyou.account.infrastructure.room.EnergyFormatConverter
 import com.maksimowiczm.foodyou.account.infrastructure.room.FoodIdentityTypeConverter
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
+import com.maksimowiczm.foodyou.common.infrastructure.room.EnergyUnitConverter
 import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.FoodSearchDatabase
 import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.SearchHistoryEntity
 
@@ -25,7 +25,7 @@ import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.SearchHistoryEnti
     version = AppDatabase.VERSION,
     exportSchema = false,
 )
-@TypeConverters(EnergyFormatConverter::class, FoodIdentityTypeConverter::class)
+@TypeConverters(EnergyUnitConverter::class, FoodIdentityTypeConverter::class)
 @ConstructedBy(AppDatabaseConstructor::class)
 internal abstract class AppDatabase : RoomDatabase(), AccountDatabase, FoodSearchDatabase {
     companion object {

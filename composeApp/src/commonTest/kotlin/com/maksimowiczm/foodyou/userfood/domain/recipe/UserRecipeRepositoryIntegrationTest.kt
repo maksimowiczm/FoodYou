@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.userfood.domain.recipe
 import androidx.room.useReaderConnection
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.Grams
+import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.event.ListEventBus
 import com.maksimowiczm.foodyou.common.infrastructure.provideRoomDatabaseBuilder
@@ -54,7 +54,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserProduct("user-food-1"),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
             )
@@ -85,11 +85,11 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserProduct("food-1"),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
                         ),
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserProduct("food-2"),
-                            quantity = AbsoluteQuantity.Weight(Grams(50.0)),
+                            quantity = AbsoluteQuantity.Weight(50.grams),
                         ),
                     ),
             )
@@ -133,7 +133,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserProduct("food-1"),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
             )
@@ -152,11 +152,11 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserProduct("food-2"),
-                            quantity = AbsoluteQuantity.Weight(Grams(200.0)),
+                            quantity = AbsoluteQuantity.Weight(200.grams),
                         ),
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserProduct("food-3"),
-                            quantity = AbsoluteQuantity.Weight(Grams(150.0)),
+                            quantity = AbsoluteQuantity.Weight(150.grams),
                         ),
                     ),
             )
@@ -200,7 +200,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserProduct("food-1"),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
             )
@@ -223,7 +223,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserRecipe(recipeAId.id),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
             )
@@ -254,7 +254,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserProduct("food-1"),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
             )
@@ -272,7 +272,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserRecipe(recipeAId.id),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
             )
@@ -291,7 +291,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserRecipe(recipeBId.id),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
             )
@@ -330,7 +330,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserProduct("food-1"),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
             )
@@ -347,7 +347,7 @@ class UserRecipeRepositoryIntegrationTest {
                 listOf(
                     UserRecipeIngredient(
                         foodReference = FoodReference.UserRecipe(baseRecipeId.id),
-                        quantity = AbsoluteQuantity.Weight(Grams(50.0)),
+                        quantity = AbsoluteQuantity.Weight(50.grams),
                     )
                 ),
         )
@@ -362,7 +362,7 @@ class UserRecipeRepositoryIntegrationTest {
                 listOf(
                     UserRecipeIngredient(
                         foodReference = FoodReference.UserRecipe(baseRecipeId.id),
-                        quantity = AbsoluteQuantity.Weight(Grams(75.0)),
+                        quantity = AbsoluteQuantity.Weight(75.grams),
                     )
                 ),
         )
@@ -378,7 +378,7 @@ class UserRecipeRepositoryIntegrationTest {
                 listOf(
                     UserRecipeIngredient(
                         foodReference = FoodReference.UserProduct("food-2"),
-                        quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                        quantity = AbsoluteQuantity.Weight(100.grams),
                     )
                 ),
         )
@@ -410,7 +410,7 @@ class UserRecipeRepositoryIntegrationTest {
                 listOf(
                     UserRecipeIngredient(
                         foodReference = FoodReference.UserProduct(targetFoodId),
-                        quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                        quantity = AbsoluteQuantity.Weight(100.grams),
                     )
                 ),
         )
@@ -425,11 +425,11 @@ class UserRecipeRepositoryIntegrationTest {
                 listOf(
                     UserRecipeIngredient(
                         foodReference = FoodReference.UserProduct(targetFoodId),
-                        quantity = AbsoluteQuantity.Weight(Grams(50.0)),
+                        quantity = AbsoluteQuantity.Weight(50.grams),
                     ),
                     UserRecipeIngredient(
                         foodReference = FoodReference.UserProduct("other-food"),
-                        quantity = AbsoluteQuantity.Weight(Grams(50.0)),
+                        quantity = AbsoluteQuantity.Weight(50.grams),
                     ),
                 ),
         )
@@ -444,7 +444,7 @@ class UserRecipeRepositoryIntegrationTest {
                 listOf(
                     UserRecipeIngredient(
                         foodReference = FoodReference.UserProduct("different-food"),
-                        quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                        quantity = AbsoluteQuantity.Weight(100.grams),
                     )
                 ),
         )
@@ -473,7 +473,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserProduct("food-1"),
-                            quantity = AbsoluteQuantity.Weight(Grams(100.0)),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
             )
@@ -490,7 +490,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserRecipe(recipeAId.id),
-                            quantity = AbsoluteQuantity.Weight(Grams(50.0)),
+                            quantity = AbsoluteQuantity.Weight(50.grams),
                         )
                     ),
             )
@@ -507,7 +507,7 @@ class UserRecipeRepositoryIntegrationTest {
                     listOf(
                         UserRecipeIngredient(
                             foodReference = FoodReference.UserRecipe(recipeBId.id),
-                            quantity = AbsoluteQuantity.Weight(Grams(25.0)),
+                            quantity = AbsoluteQuantity.Weight(25.grams),
                         )
                     ),
             )

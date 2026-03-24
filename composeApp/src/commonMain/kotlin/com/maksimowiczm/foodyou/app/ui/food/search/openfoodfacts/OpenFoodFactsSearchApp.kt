@@ -28,7 +28,7 @@ import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.Grams
+import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.fold
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
@@ -124,7 +124,7 @@ private fun FoodSearchListItem(
 ) {
     val nameSelector = LocalFoodNameSelector.current
 
-    val absoluteQuantity = food.packageQuantity ?: AbsoluteQuantity.Weight(Grams(100.0))
+    val absoluteQuantity = food.packageQuantity ?: AbsoluteQuantity.Weight(100.grams)
 
     val measurementFacts =
         remember(food, absoluteQuantity) {

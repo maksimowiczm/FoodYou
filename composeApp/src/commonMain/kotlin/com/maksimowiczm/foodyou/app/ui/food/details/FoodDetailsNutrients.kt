@@ -18,9 +18,9 @@ internal fun FoodDetailsNutrients(
     expandingEnabled: Boolean,
 ) {
     NutrientsHeader(
-        proteins = nutritionFacts.proteins.value?.toFloat(),
-        carbohydrates = nutritionFacts.carbohydrates.value?.toFloat(),
-        fats = nutritionFacts.fats.value?.toFloat(),
+        proteins = nutritionFacts.proteins.value?.grams?.toFloat(),
+        carbohydrates = nutritionFacts.carbohydrates.value?.grams?.toFloat(),
+        fats = nutritionFacts.fats.value?.grams?.toFloat(),
         expanded = expanded,
         onExpandedChange = onExpandedChange,
         enabled = expandingEnabled,

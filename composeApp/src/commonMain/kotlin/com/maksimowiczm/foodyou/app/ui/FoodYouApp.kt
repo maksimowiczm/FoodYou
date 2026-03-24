@@ -12,7 +12,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.rememberFoodYouNavBackStack
 import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatterProvider
+import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyUnitProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.app.ui.onboarding.Onboarding
 import com.maksimowiczm.foodyou.common.domain.NetworkConfig
@@ -29,7 +29,7 @@ fun FoodYouApp(userQuery: String?) {
     val networkConfig: NetworkConfig = koinInject()
 
     val nutrientsOrder = appViewModel.nutrientsOrder.collectAsStateWithLifecycle().value
-    val energyFormatter = appViewModel.energyFormatter.collectAsStateWithLifecycle().value
+    val energyUnit = appViewModel.energyUnit.collectAsStateWithLifecycle().value
     val appPage by appViewModel.appPage.collectAsStateWithLifecycle()
 
     setSingletonImageLoaderFactory { context ->
@@ -45,7 +45,7 @@ fun FoodYouApp(userQuery: String?) {
     }
 
     NutrientsOrderProvider(nutrientsOrder) {
-        EnergyFormatterProvider(energyFormatter) {
+        EnergyUnitProvider(energyUnit) {
             FoodYouTheme {
                 Surface {
                     when (appPage) {

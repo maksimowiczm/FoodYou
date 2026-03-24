@@ -23,8 +23,8 @@ import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringRe
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.Grams
-import com.maksimowiczm.foodyou.common.domain.food.Milliliters
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.common.fold
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchItem
@@ -128,8 +128,8 @@ private fun FoodSearchListItem(
 
     val absoluteQuantity =
         when (food.isLiquid) {
-            false -> AbsoluteQuantity.Weight(Grams(100.0))
-            true -> AbsoluteQuantity.Volume(Milliliters(100.0))
+            false -> AbsoluteQuantity.Weight(100.grams)
+            true -> AbsoluteQuantity.Volume(100.milliliters)
         }
 
     val measurementFacts =

@@ -1,15 +1,17 @@
 package com.maksimowiczm.foodyou.account.domain
 
+import com.maksimowiczm.foodyou.common.domain.EnergyUnit
+
 data class AccountSettings(
     val onboardingFinished: Boolean,
-    val energyFormat: EnergyFormat,
+    val energyUnit: EnergyUnit,
     val nutrientsOrder: List<NutrientsOrder>,
 ) {
     companion object {
         val default =
             AccountSettings(
                 onboardingFinished = false,
-                energyFormat = EnergyFormat.Kilocalories,
+                energyUnit = EnergyUnit.Kilocalories,
                 nutrientsOrder = NutrientsOrder.defaultOrder,
             )
     }

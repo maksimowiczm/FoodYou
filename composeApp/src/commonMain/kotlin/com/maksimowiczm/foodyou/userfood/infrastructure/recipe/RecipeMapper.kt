@@ -1,14 +1,18 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.recipe
 
 import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.VolumeUnit
+import com.maksimowiczm.foodyou.common.domain.WeightUnit
+import com.maksimowiczm.foodyou.common.domain.fluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
-import com.maksimowiczm.foodyou.common.domain.food.Grams
-import com.maksimowiczm.foodyou.common.domain.food.Milliliters
-import com.maksimowiczm.foodyou.common.domain.food.Ounces
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.micrograms
+import com.maksimowiczm.foodyou.common.domain.milligrams
+import com.maksimowiczm.foodyou.common.domain.milliliters
+import com.maksimowiczm.foodyou.common.domain.ounces
 import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnit
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.recipe.FoodReference
@@ -71,23 +75,53 @@ internal class RecipeMapper {
 
     private fun toQuantityEntity(quantity: Quantity): RecipeQuantityEntity {
         return when (quantity) {
-            is AbsoluteQuantity.Weight -> {
-                val (amount, unit) =
-                    when (val weight = quantity.weight) {
-                        is Grams -> weight.grams to MeasurementUnit.Grams
-                        is Ounces -> weight.ounces to MeasurementUnit.Ounces
-                    }
-                RecipeQuantityEntity(type = RecipeQuantityType.Weight, amount = amount, unit = unit)
-            }
+            is AbsoluteQuantity.Weight ->
+                when (quantity.weight.unit) {
+                    WeightUnit.Micrograms ->
+                        RecipeQuantityEntity(
+                            RecipeQuantityType.Weight,
+                            quantity.weight.micrograms,
+                            MeasurementUnit.Micrograms,
+                        )
 
-            is AbsoluteQuantity.Volume -> {
-                val (amount, unit) =
-                    when (val volume = quantity.volume) {
-                        is Milliliters -> volume.milliliters to MeasurementUnit.Milliliters
-                        is FluidOunces -> volume.fluidOunces to MeasurementUnit.FluidOunces
-                    }
-                RecipeQuantityEntity(type = RecipeQuantityType.Volume, amount = amount, unit = unit)
-            }
+                    WeightUnit.Milligrams ->
+                        RecipeQuantityEntity(
+                            RecipeQuantityType.Weight,
+                            quantity.weight.milligrams,
+                            MeasurementUnit.Milligrams,
+                        )
+
+                    WeightUnit.Grams ->
+                        RecipeQuantityEntity(
+                            RecipeQuantityType.Weight,
+                            quantity.weight.grams,
+                            MeasurementUnit.Grams,
+                        )
+
+                    WeightUnit.Ounces ->
+                        RecipeQuantityEntity(
+                            RecipeQuantityType.Weight,
+                            quantity.weight.ounces,
+                            MeasurementUnit.Ounces,
+                        )
+                }
+
+            is AbsoluteQuantity.Volume ->
+                when (quantity.volume.unit) {
+                    VolumeUnit.Milliliters ->
+                        RecipeQuantityEntity(
+                            RecipeQuantityType.Volume,
+                            quantity.volume.milliliters,
+                            MeasurementUnit.Milliliters,
+                        )
+
+                    VolumeUnit.FluidOunces ->
+                        RecipeQuantityEntity(
+                            RecipeQuantityType.Volume,
+                            quantity.volume.fluidOunces,
+                            MeasurementUnit.FluidOunces,
+                        )
+                }
 
             is PackageQuantity ->
                 RecipeQuantityEntity(
@@ -105,35 +139,30 @@ internal class RecipeMapper {
         }
     }
 
-    private fun toQuantity(entity: RecipeQuantityEntity): Quantity {
-        return when (entity.type) {
-            RecipeQuantityType.Weight -> {
-                val weight =
-                    when (entity.unit) {
-                        MeasurementUnit.Grams -> Grams(entity.amount)
-                        MeasurementUnit.Ounces -> Ounces(entity.amount)
-                        MeasurementUnit.Milliliters,
-                        MeasurementUnit.FluidOunces,
-                        null -> error("Invalid unit for weight: ${entity.unit}")
-                    }
-                AbsoluteQuantity.Weight(weight)
-            }
+    private fun toQuantity(entity: RecipeQuantityEntity): Quantity =
+        when (entity.type) {
+            RecipeQuantityType.Weight ->
+                AbsoluteQuantity.Weight(
+                    weight =
+                        when (entity.unit) {
+                            MeasurementUnit.Micrograms -> entity.amount.micrograms
+                            MeasurementUnit.Grams -> entity.amount.grams
+                            MeasurementUnit.Ounces -> entity.amount.ounces
+                            else -> error("Unexpected unit ${entity.unit} for weight")
+                        }
+                )
 
-            RecipeQuantityType.Volume -> {
-                val volume =
-                    when (entity.unit) {
-                        MeasurementUnit.Milliliters -> Milliliters(entity.amount)
-                        MeasurementUnit.FluidOunces -> FluidOunces(entity.amount)
-                        MeasurementUnit.Grams,
-                        MeasurementUnit.Ounces,
-                        null -> error("Invalid unit for volume: ${entity.unit}")
-                    }
-                AbsoluteQuantity.Volume(volume)
-            }
+            RecipeQuantityType.Volume ->
+                AbsoluteQuantity.Volume(
+                    volume =
+                        when (entity.unit) {
+                            MeasurementUnit.Milliliters -> entity.amount.milliliters
+                            MeasurementUnit.FluidOunces -> entity.amount.fluidOunces
+                            else -> error("Unexpected unit ${entity.unit} for volume")
+                        }
+                )
 
-            RecipeQuantityType.Package -> PackageQuantity(entity.amount)
-
-            RecipeQuantityType.Serving -> ServingQuantity(entity.amount)
+            RecipeQuantityType.Package -> PackageQuantity(packages = entity.amount)
+            RecipeQuantityType.Serving -> ServingQuantity(servings = entity.amount)
         }
-    }
 }

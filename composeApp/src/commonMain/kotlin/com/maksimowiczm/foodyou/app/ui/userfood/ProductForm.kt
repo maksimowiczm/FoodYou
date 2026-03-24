@@ -59,7 +59,8 @@ import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
-import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
+import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter.stringResource
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
@@ -439,7 +440,7 @@ private fun Macronutrients(
         state.energy.OutlinedTextField(
             label = { Text(stringResource(Res.string.unit_energy)) },
             modifier = Modifier.fillMaxWidth(),
-            suffix = { Text(LocalEnergyFormatter.current.suffix()) },
+            suffix = { Text(LocalEnergyUnit.current.stringResource()) },
             enabled = !isLocked,
             keyboardOptions =
                 KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),

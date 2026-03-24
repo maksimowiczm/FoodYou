@@ -5,11 +5,9 @@ sealed interface Quantity
 
 /** Represents an absolute quantity, which can be either weight or volume. */
 sealed interface AbsoluteQuantity : Quantity {
-    data class Weight(val weight: com.maksimowiczm.foodyou.common.domain.food.Weight) :
-        AbsoluteQuantity
+    data class Weight(val weight: com.maksimowiczm.foodyou.common.domain.Weight) : AbsoluteQuantity
 
-    data class Volume(val volume: com.maksimowiczm.foodyou.common.domain.food.Volume) :
-        AbsoluteQuantity
+    data class Volume(val volume: com.maksimowiczm.foodyou.common.domain.Volume) : AbsoluteQuantity
 
     operator fun div(divisor: Double): AbsoluteQuantity =
         when (this) {

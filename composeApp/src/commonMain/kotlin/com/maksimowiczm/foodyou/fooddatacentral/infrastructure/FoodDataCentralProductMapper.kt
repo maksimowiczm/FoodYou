@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.fooddatacentral.infrastructure
 
+import com.maksimowiczm.foodyou.common.domain.fluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.Grams
-import com.maksimowiczm.foodyou.common.domain.food.Milliliters
-import com.maksimowiczm.foodyou.common.domain.food.Ounces
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.milliliters
+import com.maksimowiczm.foodyou.common.domain.ounces
 import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsEntity
 import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsMapper
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
@@ -114,18 +114,18 @@ private fun parseServing(weight: Double?, unit: String?): AbsoluteQuantity? {
 
     return when (unit) {
         "ml",
-        "mlt" -> AbsoluteQuantity.Volume(Milliliters(weight))
+        "mlt" -> AbsoluteQuantity.Volume(weight.milliliters)
 
         "g",
-        "grm" -> AbsoluteQuantity.Weight(Grams(weight))
+        "grm" -> AbsoluteQuantity.Weight(weight.grams)
 
         "oz",
-        "oz." -> AbsoluteQuantity.Weight(Ounces(weight))
+        "oz." -> AbsoluteQuantity.Weight(weight.ounces)
 
         "fl oz",
         "fl.oz",
         "fl. oz",
-        "fl.oz." -> AbsoluteQuantity.Volume(FluidOunces(weight))
+        "fl.oz." -> AbsoluteQuantity.Volume(weight.fluidOunces)
 
         else -> null
     }

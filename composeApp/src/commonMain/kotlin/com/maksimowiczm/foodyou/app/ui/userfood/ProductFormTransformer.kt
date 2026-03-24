@@ -1,24 +1,28 @@
 package com.maksimowiczm.foodyou.app.ui.userfood
 
-import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
+import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.Image
 import com.maksimowiczm.foodyou.common.domain.Language
+import com.maksimowiczm.foodyou.common.domain.fluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
-import com.maksimowiczm.foodyou.common.domain.food.Grams
-import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
-import com.maksimowiczm.foodyou.common.domain.food.Ounces
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.kilocalories
+import com.maksimowiczm.foodyou.common.domain.kilojoules
+import com.maksimowiczm.foodyou.common.domain.micrograms
+import com.maksimowiczm.foodyou.common.domain.milligrams
+import com.maksimowiczm.foodyou.common.domain.milliliters
+import com.maksimowiczm.foodyou.common.domain.ounces
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
 
 internal class ProductFormTransformer(
-    private val getAppAccountEnergyFormatUseCase: GetAppAccountEnergyFormatUseCase,
+    private val getAppAccountEnergyUnitUseCase: GetAppAccountEnergyUnitUseCase,
     private val foodNameSelector: FoodNameSelector,
 ) {
     data class Result(
@@ -36,7 +40,7 @@ internal class ProductFormTransformer(
     suspend fun transform(form: ProductFormState): Result {
         require(form.isValid) { "Form is not valid" }
 
-        val energyFormat = getAppAccountEnergyFormatUseCase.getAppAccountEnergyFormat()
+        val energyFormat = getAppAccountEnergyUnitUseCase.getAppAccountEnergyUnit()
         val language = foodNameSelector.select()
 
         val nameStr = form.name.textFieldState.text.toString()
@@ -97,8 +101,8 @@ internal class ProductFormTransformer(
                     when (form.servingUnit.value) {
                         QuantityUnit.Gram -> 100.0 / servingQuantity
                         QuantityUnit.Milliliter -> 100.0 / servingQuantity
-                        QuantityUnit.Ounce -> 100.0 / Ounces(servingQuantity).grams
-                        QuantityUnit.FluidOunce -> 100.0 / FluidOunces(servingQuantity).milliliters
+                        QuantityUnit.Ounce -> 100.0 / servingQuantity.ounces.grams
+                        QuantityUnit.FluidOunce -> 100.0 / servingQuantity.fluidOunces.milliliters
                     }
                 }
 
@@ -109,32 +113,32 @@ internal class ProductFormTransformer(
                     when (form.packageUnit.value) {
                         QuantityUnit.Gram -> 100.0 / packageQuantity
                         QuantityUnit.Milliliter -> 100.0 / packageQuantity
-                        QuantityUnit.Ounce -> 100.0 / Ounces(packageQuantity).grams
-                        QuantityUnit.FluidOunce -> 100.0 / FluidOunces(packageQuantity).milliliters
+                        QuantityUnit.Ounce -> 100.0 / packageQuantity.ounces.grams
+                        QuantityUnit.FluidOunce -> 100.0 / packageQuantity.fluidOunces.milliliters
                     }
                 }
             }
 
         val nutritionFacts =
-            form.toNutritionFacts(multiplier = multiplier, energyFormat = energyFormat)
+            form.toNutritionFacts(multiplier = multiplier, energyUnit = energyFormat)
 
         val boxedServingQuantity =
             servingQuantity?.let {
                 when (form.servingUnit.value) {
-                    QuantityUnit.Gram -> AbsoluteQuantity.Weight(Grams(it))
-                    QuantityUnit.Milliliter -> AbsoluteQuantity.Volume(Milliliters(it))
-                    QuantityUnit.Ounce -> AbsoluteQuantity.Weight(Ounces(it))
-                    QuantityUnit.FluidOunce -> AbsoluteQuantity.Volume(FluidOunces(it))
+                    QuantityUnit.Gram -> AbsoluteQuantity.Weight(it.grams)
+                    QuantityUnit.Milliliter -> AbsoluteQuantity.Volume(it.milliliters)
+                    QuantityUnit.Ounce -> AbsoluteQuantity.Weight(it.ounces)
+                    QuantityUnit.FluidOunce -> AbsoluteQuantity.Volume(it.fluidOunces)
                 }
             }
 
         val boxedPackageQuantity =
             packageQuantity?.let {
                 when (form.packageUnit.value) {
-                    QuantityUnit.Gram -> AbsoluteQuantity.Weight(Grams(it))
-                    QuantityUnit.Milliliter -> AbsoluteQuantity.Volume(Milliliters(it))
-                    QuantityUnit.Ounce -> AbsoluteQuantity.Weight(Ounces(it))
-                    QuantityUnit.FluidOunce -> AbsoluteQuantity.Volume(FluidOunces(it))
+                    QuantityUnit.Gram -> AbsoluteQuantity.Weight(it.grams)
+                    QuantityUnit.Milliliter -> AbsoluteQuantity.Volume(it.milliliters)
+                    QuantityUnit.Ounce -> AbsoluteQuantity.Weight(it.ounces)
+                    QuantityUnit.FluidOunce -> AbsoluteQuantity.Volume(it.fluidOunces)
                 }
             }
 
@@ -182,7 +186,7 @@ internal class ProductFormTransformer(
 
     private fun ProductFormState.toNutritionFacts(
         multiplier: Double,
-        energyFormat: EnergyFormat,
+        energyUnit: EnergyUnit,
     ): NutritionFacts {
         val energy = energy.toDouble()
         val proteins = proteins.toDouble()
@@ -230,55 +234,55 @@ internal class ProductFormTransformer(
 
         // Energy MUST be in kilocalories internally
         val kcal =
-            when (energyFormat) {
-                EnergyFormat.Kilocalories -> energy
-                EnergyFormat.Kilojoules -> energy?.let { it / 4.184 }
+            when (energyUnit) {
+                EnergyUnit.Kilocalories -> energy?.kilocalories
+                EnergyUnit.Kilojoules -> energy?.kilojoules
             }
 
         return NutritionFacts.requireAll(
-            proteins = proteins?.times(multiplier).toNutrientValue(),
-            carbohydrates = carbohydrates?.times(multiplier).toNutrientValue(),
-            fats = fats?.times(multiplier).toNutrientValue(),
+            proteins = proteins?.times(multiplier)?.grams.toNutrientValue(),
+            carbohydrates = carbohydrates?.times(multiplier)?.grams.toNutrientValue(),
+            fats = fats?.times(multiplier)?.grams.toNutrientValue(),
             energy = kcal?.times(multiplier).toNutrientValue(),
-            saturatedFats = saturatedFats?.times(multiplier).toNutrientValue(),
-            transFats = transFats?.times(multiplier).toNutrientValue(),
-            monounsaturatedFats = monounsaturatedFats?.times(multiplier).toNutrientValue(),
-            polyunsaturatedFats = polyunsaturatedFats?.times(multiplier).toNutrientValue(),
-            omega3 = omega3?.times(multiplier).toNutrientValue(),
-            omega6 = omega6?.times(multiplier).toNutrientValue(),
-            sugars = sugars?.times(multiplier).toNutrientValue(),
-            addedSugars = addedSugars?.times(multiplier).toNutrientValue(),
-            dietaryFiber = dietaryFiber?.times(multiplier).toNutrientValue(),
-            solubleFiber = solubleFiber?.times(multiplier).toNutrientValue(),
-            insolubleFiber = insolubleFiber?.times(multiplier).toNutrientValue(),
-            salt = salt?.times(multiplier).toNutrientValue(),
-            cholesterol = (cholesterolMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            caffeine = (caffeineMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            vitaminA = (vitaminAMicro?.times(multiplier)?.div(1_000_000)).toNutrientValue(),
-            vitaminB1 = (vitaminB1Milli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            vitaminB2 = (vitaminB2Milli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            vitaminB3 = (vitaminB3Milli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            vitaminB5 = (vitaminB5Milli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            vitaminB6 = (vitaminB6Milli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            vitaminB7 = (vitaminB7Micro?.times(multiplier)?.div(1_000_000)).toNutrientValue(),
-            vitaminB9 = (vitaminB9Micro?.times(multiplier)?.div(1_000_000)).toNutrientValue(),
-            vitaminB12 = (vitaminB12Micro?.times(multiplier)?.div(1_000_000)).toNutrientValue(),
-            vitaminC = (vitaminCMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            vitaminD = (vitaminDMicro?.times(multiplier)?.div(1_000_000)).toNutrientValue(),
-            vitaminE = (vitaminEMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            vitaminK = (vitaminKMicro?.times(multiplier)?.div(1_000_000)).toNutrientValue(),
-            manganese = (manganeseMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            magnesium = (magnesiumMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            potassium = (potassiumMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            calcium = (calciumMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            copper = (copperMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            zinc = (zincMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            sodium = (sodiumMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            iron = (ironMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            phosphorus = (phosphorusMilli?.times(multiplier)?.div(1_000)).toNutrientValue(),
-            selenium = (seleniumMicro?.times(multiplier)?.div(1_000_000)).toNutrientValue(),
-            iodine = (iodineMicro?.times(multiplier)?.div(1_000_000)).toNutrientValue(),
-            chromium = (chromiumMicro?.times(multiplier)?.div(1_000_000)).toNutrientValue(),
+            saturatedFats = saturatedFats?.times(multiplier)?.grams.toNutrientValue(),
+            transFats = transFats?.times(multiplier)?.grams.toNutrientValue(),
+            monounsaturatedFats = monounsaturatedFats?.times(multiplier)?.grams.toNutrientValue(),
+            polyunsaturatedFats = polyunsaturatedFats?.times(multiplier)?.grams.toNutrientValue(),
+            omega3 = omega3?.times(multiplier)?.grams.toNutrientValue(),
+            omega6 = omega6?.times(multiplier)?.grams.toNutrientValue(),
+            sugars = sugars?.times(multiplier)?.grams.toNutrientValue(),
+            addedSugars = addedSugars?.times(multiplier)?.grams.toNutrientValue(),
+            dietaryFiber = dietaryFiber?.times(multiplier)?.grams.toNutrientValue(),
+            solubleFiber = solubleFiber?.times(multiplier)?.grams.toNutrientValue(),
+            insolubleFiber = insolubleFiber?.times(multiplier)?.grams.toNutrientValue(),
+            salt = salt?.times(multiplier)?.grams.toNutrientValue(),
+            cholesterol = cholesterolMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            caffeine = caffeineMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            vitaminA = vitaminAMicro?.times(multiplier)?.micrograms.toNutrientValue(),
+            vitaminB1 = vitaminB1Milli?.times(multiplier)?.milligrams.toNutrientValue(),
+            vitaminB2 = vitaminB2Milli?.times(multiplier)?.milligrams.toNutrientValue(),
+            vitaminB3 = vitaminB3Milli?.times(multiplier)?.milligrams.toNutrientValue(),
+            vitaminB5 = vitaminB5Milli?.times(multiplier)?.milligrams.toNutrientValue(),
+            vitaminB6 = vitaminB6Milli?.times(multiplier)?.milligrams.toNutrientValue(),
+            vitaminB7 = vitaminB7Micro?.times(multiplier)?.micrograms.toNutrientValue(),
+            vitaminB9 = vitaminB9Micro?.times(multiplier)?.micrograms.toNutrientValue(),
+            vitaminB12 = vitaminB12Micro?.times(multiplier)?.micrograms.toNutrientValue(),
+            vitaminC = vitaminCMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            vitaminD = vitaminDMicro?.times(multiplier)?.micrograms.toNutrientValue(),
+            vitaminE = vitaminEMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            vitaminK = vitaminKMicro?.times(multiplier)?.micrograms.toNutrientValue(),
+            manganese = manganeseMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            magnesium = magnesiumMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            potassium = potassiumMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            calcium = calciumMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            copper = copperMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            zinc = zincMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            sodium = sodiumMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            iron = ironMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            phosphorus = phosphorusMilli?.times(multiplier)?.milligrams.toNutrientValue(),
+            selenium = seleniumMicro?.times(multiplier)?.micrograms.toNutrientValue(),
+            iodine = iodineMicro?.times(multiplier)?.micrograms.toNutrientValue(),
+            chromium = chromiumMicro?.times(multiplier)?.micrograms.toNutrientValue(),
         )
     }
 }

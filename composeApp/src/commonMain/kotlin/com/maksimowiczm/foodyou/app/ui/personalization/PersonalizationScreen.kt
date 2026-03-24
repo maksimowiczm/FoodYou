@@ -27,9 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -96,8 +96,8 @@ fun PersonalizationScreen(
             item {
                 val suffix =
                     when (energyFormat) {
-                        EnergyFormat.Kilocalories -> stringResource(Res.string.unit_kcal)
-                        EnergyFormat.Kilojoules -> stringResource(Res.string.unit_kilojoules)
+                        EnergyUnit.Kilocalories -> stringResource(Res.string.unit_kcal)
+                        EnergyUnit.Kilojoules -> stringResource(Res.string.unit_kilojoules)
                     }
                 var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -107,14 +107,14 @@ fun PersonalizationScreen(
                             DropdownMenuItem(
                                 text = { Text(stringResource(Res.string.unit_kcal)) },
                                 onClick = {
-                                    viewModel.updateEnergyFormat(EnergyFormat.Kilocalories)
+                                    viewModel.updateEnergyUnit(EnergyUnit.Kilocalories)
                                     expanded = false
                                 },
                             )
                             DropdownMenuItem(
                                 text = { Text(stringResource(Res.string.unit_kilojoules)) },
                                 onClick = {
-                                    viewModel.updateEnergyFormat(EnergyFormat.Kilojoules)
+                                    viewModel.updateEnergyUnit(EnergyUnit.Kilojoules)
                                     expanded = false
                                 },
                             )

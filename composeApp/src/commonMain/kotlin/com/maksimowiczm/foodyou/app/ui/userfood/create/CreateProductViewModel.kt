@@ -2,10 +2,10 @@ package com.maksimowiczm.foodyou.app.ui.userfood.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
+import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,11 +25,11 @@ internal class CreateProductViewModel(
     val energyFormat =
         appAccountManager
             .observeAppAccount()
-            .map { it.settings.energyFormat }
+            .map { it.settings.energyUnit }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
-                initialValue = EnergyFormat.Kilocalories,
+                initialValue = EnergyUnit.Kilocalories,
             )
 
     private val eventBus = Channel<CreateProductEvent>()

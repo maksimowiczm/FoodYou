@@ -65,7 +65,7 @@ private fun SettingsEntity.toDomain(): AccountSettings {
 
     return AccountSettings(
         onboardingFinished = this.onboardingFinished,
-        energyFormat = this.energyFormat,
+        energyUnit = this.energyUnit,
         nutrientsOrder = nutrientsOrder,
     )
 }
@@ -76,7 +76,7 @@ private fun AccountSettings.toEntity(): SettingsEntity {
     return SettingsEntity(
         id = 1,
         onboardingFinished = this.onboardingFinished,
-        energyFormat = this.energyFormat,
+        energyUnit = this.energyUnit,
         nutrientsOrder = nutrientsOrder,
     )
 }

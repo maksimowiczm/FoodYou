@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.common.domain.food
 
 enum class Nutrient {
-    Energy,
     Proteins,
     Carbohydrates,
     Fats,
@@ -47,6 +46,6 @@ enum class Nutrient {
 
     companion object {
         val all = entries.toSet()
-        val basic = setOf(Proteins, Carbohydrates, Fats, Energy)
+        val basic = setOf(Proteins, Carbohydrates, Fats)
     }
 }

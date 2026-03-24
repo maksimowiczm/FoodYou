@@ -5,4 +5,6 @@ enum class MeasurementUnit {
     Ounces,
     Milliliters,
     FluidOunces,
+    Micrograms,
+    Milligrams,
 }

@@ -10,6 +10,8 @@ class MeasurementUnitConverter {
             MeasurementUnit.Ounces -> OUNCES
             MeasurementUnit.Milliliters -> MILLILITERS
             MeasurementUnit.FluidOunces -> FLUID_OUNCES
+            MeasurementUnit.Milligrams -> MILLIGRAMS
+            MeasurementUnit.Micrograms -> MICROGRAMS
         }
 
     @TypeConverter
@@ -19,6 +21,8 @@ class MeasurementUnitConverter {
             OUNCES -> MeasurementUnit.Ounces
             MILLILITERS -> MeasurementUnit.Milliliters
             FLUID_OUNCES -> MeasurementUnit.FluidOunces
+            MILLIGRAMS -> MeasurementUnit.Milligrams
+            MICROGRAMS -> MeasurementUnit.Micrograms
             else -> error("Unknown measurement unit: $value")
         }
 
@@ -27,5 +31,7 @@ class MeasurementUnitConverter {
         private const val OUNCES = 1
         private const val MILLILITERS = 2
         private const val FLUID_OUNCES = 3
+        private const val MILLIGRAMS = 4
+        private const val MICROGRAMS = 5
     }
 }

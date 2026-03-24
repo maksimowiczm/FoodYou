@@ -1,13 +1,17 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
 import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.VolumeUnit
+import com.maksimowiczm.foodyou.common.domain.WeightUnit
+import com.maksimowiczm.foodyou.common.domain.fluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.Grams
-import com.maksimowiczm.foodyou.common.domain.food.Milliliters
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
-import com.maksimowiczm.foodyou.common.domain.food.Ounces
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.micrograms
+import com.maksimowiczm.foodyou.common.domain.milligrams
+import com.maksimowiczm.foodyou.common.domain.milliliters
+import com.maksimowiczm.foodyou.common.domain.ounces
 import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsMapper
 import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnit
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
@@ -51,8 +55,8 @@ internal class ProductMapper {
 
             val nutrients = nutrientsMapper.toNutritionFats(nutrients)
 
-            val servingQuantity = servingSize?.toQuantity()
-            val packageQuantity = packageSize?.toQuantity()
+            val servingQuantity = servingSize?.toAbsoluteQuantity()
+            val packageQuantity = packageSize?.toAbsoluteQuantity()
 
             val brand = brand?.let { UserProductBrand(it) }
 
@@ -123,68 +127,79 @@ internal class ProductMapper {
         )
     }
 
-    fun toQuantityEntity(quantity: AbsoluteQuantity): QuantityEntity =
-        when (quantity) {
-            is AbsoluteQuantity.Weight -> {
-                when (quantity.weight) {
-                    is Grams ->
+    private fun toQuantityEntity(quantity: AbsoluteQuantity): QuantityEntity {
+        return when (quantity) {
+            is AbsoluteQuantity.Weight ->
+                when (quantity.weight.unit) {
+                    WeightUnit.Micrograms ->
                         QuantityEntity(
-                            type = QuantityType.Weight,
-                            amount = quantity.weight.grams,
-                            unit = MeasurementUnit.Grams,
+                            QuantityType.Weight,
+                            quantity.weight.micrograms,
+                            MeasurementUnit.Micrograms,
                         )
 
-                    is Ounces ->
+                    WeightUnit.Milligrams ->
                         QuantityEntity(
-                            type = QuantityType.Weight,
-                            amount = quantity.weight.ounces,
-                            unit = MeasurementUnit.Ounces,
+                            QuantityType.Weight,
+                            quantity.weight.milligrams,
+                            MeasurementUnit.Milligrams,
+                        )
+
+                    WeightUnit.Grams ->
+                        QuantityEntity(
+                            QuantityType.Weight,
+                            quantity.weight.grams,
+                            MeasurementUnit.Grams,
+                        )
+
+                    WeightUnit.Ounces ->
+                        QuantityEntity(
+                            QuantityType.Weight,
+                            quantity.weight.ounces,
+                            MeasurementUnit.Ounces,
                         )
                 }
-            }
 
-            is AbsoluteQuantity.Volume -> {
-                when (quantity.volume) {
-                    is Milliliters ->
+            is AbsoluteQuantity.Volume ->
+                when (quantity.volume.unit) {
+                    VolumeUnit.Milliliters ->
                         QuantityEntity(
-                            type = QuantityType.Volume,
-                            amount = quantity.volume.milliliters,
-                            unit = MeasurementUnit.Milliliters,
+                            QuantityType.Volume,
+                            quantity.volume.milliliters,
+                            MeasurementUnit.Milliliters,
                         )
 
-                    is FluidOunces ->
+                    VolumeUnit.FluidOunces ->
                         QuantityEntity(
-                            type = QuantityType.Volume,
-                            amount = quantity.volume.fluidOunces,
-                            unit = MeasurementUnit.FluidOunces,
+                            QuantityType.Volume,
+                            quantity.volume.fluidOunces,
+                            MeasurementUnit.FluidOunces,
                         )
                 }
-            }
         }
+    }
 
-    private fun QuantityEntity.toQuantity(): AbsoluteQuantity =
+    private fun QuantityEntity.toAbsoluteQuantity(): AbsoluteQuantity =
         when (type) {
-            QuantityType.Weight -> {
-                val weight =
-                    when (unit) {
-                        MeasurementUnit.Grams -> Grams(amount)
-                        MeasurementUnit.Ounces -> Ounces(amount)
-                        MeasurementUnit.Milliliters,
-                        MeasurementUnit.FluidOunces -> error("Invalid unit for weight: $unit")
-                    }
-                AbsoluteQuantity.Weight(weight)
-            }
+            QuantityType.Weight ->
+                AbsoluteQuantity.Weight(
+                    weight =
+                        when (unit) {
+                            MeasurementUnit.Micrograms -> amount.micrograms
+                            MeasurementUnit.Grams -> amount.grams
+                            MeasurementUnit.Ounces -> amount.ounces
+                            else -> error("Unexpected unit $unit for weight")
+                        }
+                )
 
-            QuantityType.Volume -> {
-                val volume =
-                    when (unit) {
-                        MeasurementUnit.Grams,
-                        MeasurementUnit.Ounces -> error("Invalid unit for volume: $unit")
-
-                        MeasurementUnit.Milliliters -> Milliliters(amount)
-                        MeasurementUnit.FluidOunces -> FluidOunces(amount)
-                    }
-                AbsoluteQuantity.Volume(volume)
-            }
+            QuantityType.Volume ->
+                AbsoluteQuantity.Volume(
+                    volume =
+                        when (unit) {
+                            MeasurementUnit.Milliliters -> amount.milliliters
+                            MeasurementUnit.FluidOunces -> amount.fluidOunces
+                            else -> error("Unexpected unit $unit for volume")
+                        }
+                )
         }
 }

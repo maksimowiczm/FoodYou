@@ -3,15 +3,16 @@ package com.maksimowiczm.foodyou.app.ui.userfood
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.*
-import com.maksimowiczm.foodyou.account.domain.EnergyFormat
 import com.maksimowiczm.foodyou.account.domain.testAccount
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
+import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
-import com.maksimowiczm.foodyou.common.domain.food.Grams
-import com.maksimowiczm.foodyou.common.domain.food.Milliliters
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.kilocalories
+import com.maksimowiczm.foodyou.common.domain.milliliters
 import io.konform.validation.Validation
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,11 +30,11 @@ class ProductFormTransformerTest {
         }
 
     private fun createProductFormTransformer(
-        energyFormat: EnergyFormat = testAccount().settings.energyFormat,
+        energyUnit: EnergyUnit = testAccount().settings.energyUnit,
         selector: FoodNameSelector = createDefaultSelector(),
     ): ProductFormTransformer =
         ProductFormTransformer(
-            getAppAccountEnergyFormatUseCase = { energyFormat },
+            getAppAccountEnergyUnitUseCase = { energyUnit },
             foodNameSelector = selector,
         )
 
@@ -58,10 +59,10 @@ class ProductFormTransformerTest {
         assertNull(result.brand)
         assertNull(result.barcode)
         assertNull(result.note)
-        assertEquals(200.0, result.nutritionFacts.energy.value)
-        assertEquals(10.0, result.nutritionFacts.proteins.value)
-        assertEquals(20.0, result.nutritionFacts.carbohydrates.value)
-        assertEquals(5.0, result.nutritionFacts.fats.value)
+        assertEquals(200.kilocalories, result.nutritionFacts.energy.value)
+        assertEquals(10.grams, result.nutritionFacts.proteins.value)
+        assertEquals(20.grams, result.nutritionFacts.carbohydrates.value)
+        assertEquals(5.grams, result.nutritionFacts.fats.value)
         assertNull(result.servingQuantity)
         assertNull(result.packageQuantity)
         assertEquals(false, result.isLiquid)
@@ -156,7 +157,7 @@ class ProductFormTransformerTest {
 
     @Test
     fun should_convert_kilojoules_to_kilocalories() = runTest {
-        val transformer = createProductFormTransformer(energyFormat = EnergyFormat.Kilojoules)
+        val transformer = createProductFormTransformer(energyUnit = EnergyUnit.Kilojoules)
         val form = productFormState()
         form.fillRequiredFields()
         form.energy.textFieldState.setTextAndPlaceCursorAtEnd("836.8") // 836.8 kJ = ~200 kcal
@@ -164,7 +165,7 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals(200.0, result.nutritionFacts.energy.value!!, 0.1)
+        assertEquals(200.0, result.nutritionFacts.energy.value!!.kilocalories, 0.1)
     }
 
     @Test
@@ -183,10 +184,10 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals(10.0, result.nutritionFacts.proteins.value)
-        assertEquals(20.0, result.nutritionFacts.carbohydrates.value)
-        assertEquals(5.0, result.nutritionFacts.fats.value)
-        assertEquals(200.0, result.nutritionFacts.energy.value)
+        assertEquals(10.grams, result.nutritionFacts.proteins.value)
+        assertEquals(20.grams, result.nutritionFacts.carbohydrates.value)
+        assertEquals(5.grams, result.nutritionFacts.fats.value)
+        assertEquals(200.kilocalories, result.nutritionFacts.energy.value)
         assertEquals(false, result.isLiquid)
     }
 
@@ -207,10 +208,10 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals(10.0, result.nutritionFacts.proteins.value)
-        assertEquals(20.0, result.nutritionFacts.carbohydrates.value)
-        assertEquals(5.0, result.nutritionFacts.fats.value)
-        assertEquals(200.0, result.nutritionFacts.energy.value)
+        assertEquals(10.grams, result.nutritionFacts.proteins.value)
+        assertEquals(20.grams, result.nutritionFacts.carbohydrates.value)
+        assertEquals(5.grams, result.nutritionFacts.fats.value)
+        assertEquals(200.kilocalories, result.nutritionFacts.energy.value)
         assertEquals(true, result.isLiquid)
     }
 
@@ -230,10 +231,10 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals(10.0, result.nutritionFacts.proteins.value)
-        assertEquals(20.0, result.nutritionFacts.carbohydrates.value)
-        assertEquals(5.0, result.nutritionFacts.fats.value)
-        assertEquals(200.0, result.nutritionFacts.energy.value)
+        assertEquals(10.grams, result.nutritionFacts.proteins.value)
+        assertEquals(20.grams, result.nutritionFacts.carbohydrates.value)
+        assertEquals(5.grams, result.nutritionFacts.fats.value)
+        assertEquals(200.kilocalories, result.nutritionFacts.energy.value)
         assertEquals(false, result.isLiquid)
     }
 
@@ -265,7 +266,7 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals(AbsoluteQuantity.Weight(Grams(150.0)), result.servingQuantity)
+        assertEquals(AbsoluteQuantity.Weight(150.grams), result.servingQuantity)
         assertEquals(false, result.isLiquid)
     }
 
@@ -279,7 +280,7 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals(AbsoluteQuantity.Volume(Milliliters(250.0)), result.servingQuantity)
+        assertEquals(AbsoluteQuantity.Volume(250.milliliters), result.servingQuantity)
         assertEquals(true, result.isLiquid)
     }
 
@@ -293,7 +294,7 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals(AbsoluteQuantity.Weight(Grams(500.0)), result.packageQuantity)
+        assertEquals(AbsoluteQuantity.Weight(500.grams), result.packageQuantity)
         assertEquals(false, result.isLiquid)
     }
 
@@ -307,7 +308,7 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals(AbsoluteQuantity.Volume(Milliliters(750.0)), result.packageQuantity)
+        assertEquals(AbsoluteQuantity.Volume(750.milliliters), result.packageQuantity)
         assertEquals(true, result.isLiquid)
     }
 
@@ -324,7 +325,7 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals(10.0, result.nutritionFacts.proteins.value!!, 0.1)
+        assertEquals(10.0, result.nutritionFacts.proteins.value!!.grams, 0.1)
         assertEquals(false, result.isLiquid)
     }
 
@@ -342,7 +343,7 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals(10.0, result.nutritionFacts.proteins.value!!, 0.1)
+        assertEquals(10.0, result.nutritionFacts.proteins.value!!.grams, 0.1)
         assertEquals(true, result.isLiquid)
     }
 
@@ -375,8 +376,8 @@ class ProductFormTransformerTest {
         assertEquals("Brand", result.brand?.value)
         assertEquals("123456", result.barcode?.value)
         assertEquals("Note", result.note?.value)
-        assertEquals(AbsoluteQuantity.Weight(Grams(100.0)), result.servingQuantity)
-        assertEquals(AbsoluteQuantity.Weight(Grams(500.0)), result.packageQuantity)
+        assertEquals(AbsoluteQuantity.Weight(100.grams), result.servingQuantity)
+        assertEquals(AbsoluteQuantity.Weight(500.grams), result.packageQuantity)
         assertEquals(false, result.isLiquid)
     }
 }
@@ -403,7 +404,7 @@ private fun productFormState(
     carbohydrates: FormField = formField2(),
     fats: FormField = formField2(),
     energy: FormField = formField2(),
-    energyFormat: EnergyFormat = EnergyFormat.Kilocalories,
+    energyUnit: EnergyUnit = EnergyUnit.Kilocalories,
     saturatedFats: FormField = formField2(),
     transFats: FormField = formField2(),
     monounsaturatedFats: FormField = formField2(),
@@ -463,8 +464,8 @@ private fun productFormState(
         carbohydrates = carbohydrates,
         fats = fats,
         energy = energy,
-        defaultEnergyFormat = energyFormat,
-        energyFormat = mutableStateOf(energyFormat),
+        defaultEnergyUnit = energyUnit,
+        energyUnit = mutableStateOf(energyUnit),
         saturatedFats = saturatedFats,
         transFats = transFats,
         monounsaturatedFats = monounsaturatedFats,
