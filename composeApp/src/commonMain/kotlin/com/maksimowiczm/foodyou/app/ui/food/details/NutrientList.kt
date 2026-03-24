@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,7 +27,14 @@ import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter.stringReso
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.utility.WeightFormatter.stringResource
+import com.maksimowiczm.foodyou.common.domain.Div
+import com.maksimowiczm.foodyou.common.domain.Energy
+import com.maksimowiczm.foodyou.common.domain.EnergyUnit
+import com.maksimowiczm.foodyou.common.domain.Plus
+import com.maksimowiczm.foodyou.common.domain.Times
+import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.WeightUnit
+import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -35,37 +43,39 @@ import org.jetbrains.compose.resources.stringResource
 internal fun NutrientList(facts: NutritionFacts, expanded: Boolean, modifier: Modifier = Modifier) {
     val nutrientsOrder = LocalNutrientsOrder.current
 
-    Column(modifier = modifier) {
-        val energy = facts.energy.value
-        val energyText =
-            energy?.inUnit(LocalEnergyUnit.current)?.stringResource()
-                ?: stringResource(Res.string.not_available_short)
+    CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
+        Column(modifier) {
+            NutrientItem(
+                name = stringResource(Res.string.unit_energy),
+                amount = facts.energy,
+                unit = LocalEnergyUnit.current,
+                amountColor =
+                    if (facts.energy.value != null) MaterialTheme.colorScheme.onSurface
+                    else MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Spacer(Modifier.height(8.dp))
+            nutrientsOrder.forEachIndexed { i, order ->
+                val isLast = i == nutrientsOrder.lastIndex
+                val bottomSpacer: @Composable () -> Unit =
+                    if (isLast) {
+                        {}
+                    } else {
+                        { Spacer(Modifier.height(8.dp)) }
+                    }
+                when (order) {
+                    NutrientsOrder.Proteins -> Proteins(facts) { bottomSpacer() }
 
-        NutrientItem(
-            name = stringResource(Res.string.unit_energy),
-            amount = energyText,
-            amountColor =
-                if (energy != null) MaterialTheme.colorScheme.onSurface
-                else MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Spacer(Modifier.height(8.dp))
+                    NutrientsOrder.Fats -> Fats(facts, expanded) { bottomSpacer() }
 
-        nutrientsOrder.forEachIndexed { i, order ->
-            val isLast = i == nutrientsOrder.lastIndex
-            val bottomSpacer: @Composable () -> Unit =
-                if (isLast) {
-                    {}
-                } else {
-                    { Spacer(Modifier.height(8.dp)) }
+                    NutrientsOrder.Carbohydrates ->
+                        Carbohydrates(facts, expanded) { bottomSpacer() }
+
+                    NutrientsOrder.Other -> Other(facts, expanded) { bottomSpacer() }
+
+                    NutrientsOrder.Vitamins -> Vitamins(facts, expanded) { bottomSpacer() }
+
+                    NutrientsOrder.Minerals -> Minerals(facts, expanded) { bottomSpacer() }
                 }
-
-            when (order) {
-                NutrientsOrder.Proteins -> Proteins(facts) { bottomSpacer() }
-                NutrientsOrder.Fats -> Fats(facts, expanded) { bottomSpacer() }
-                NutrientsOrder.Carbohydrates -> Carbohydrates(facts, expanded) { bottomSpacer() }
-                NutrientsOrder.Other -> Other(facts, expanded) { bottomSpacer() }
-                NutrientsOrder.Vitamins -> Vitamins(facts, expanded) { bottomSpacer() }
-                NutrientsOrder.Minerals -> Minerals(facts, expanded) { bottomSpacer() }
             }
         }
     }
@@ -78,14 +88,12 @@ private fun Proteins(
     bottomSpacer: @Composable () -> Unit = { Spacer(Modifier.height(8.dp)) },
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
-
-    val amount = facts.proteins.value ?: return
-    val amountText = amount.stringResource()
+    if (facts.proteins.value == null) return
 
     Column {
         NutrientItem(
             name = stringResource(Res.string.nutriment_proteins),
-            amount = amountText,
+            amount = facts.proteins,
             color = nutrientsPalette.proteinsOnSurfaceContainer.copy(alpha = .33f),
             modifier = modifier,
         )
@@ -101,78 +109,76 @@ private fun Fats(
     bottomSpacer: @Composable () -> Unit = { Spacer(Modifier.height(8.dp)) },
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
-    val amount = facts.fats.value ?: return
+    val anyPresent =
+        sequenceOf(
+                facts.fats.value != null,
+                facts.sugars.value != null,
+                facts.addedSugars.value != null,
+                facts.dietaryFiber.value != null,
+                facts.solubleFiber.value != null,
+                facts.insolubleFiber.value != null,
+            )
+            .any { it }
 
-    val g = stringResource(Res.string.unit_gram_short)
+    if (!anyPresent) return
 
     Column {
         NutrientGroup(
             title = {
                 NutrientItem(
                     name = stringResource(Res.string.nutriment_fats),
-                    amount = amount.stringResource(),
+                    amount = facts.fats,
                     color = nutrientsPalette.fatsOnSurfaceContainer.copy(alpha = .33f),
                 )
             },
             expanded = expanded,
             modifier = modifier,
         ) {
-            val saturatedAmount = facts.saturatedFats.value
-            if (saturatedAmount != null) {
+            if (facts.saturatedFats.value != null) {
                 NutrientItem(
+                    amount = facts.saturatedFats,
                     name = stringResource(Res.string.nutriment_saturated_fats),
-                    amount = saturatedAmount.stringResource(),
                 )
             }
-
-            val transAmount = facts.transFats.value
-            if (transAmount != null) {
+            if (facts.transFats.value != null) {
                 NutrientItem(
+                    amount = facts.transFats,
                     name = stringResource(Res.string.nutriment_trans_fats),
-                    amount = transAmount.stringResource(),
                 )
             }
-
-            val monounsaturatedAmount = facts.monounsaturatedFats.value
-            if (monounsaturatedAmount != null) {
+            if (facts.monounsaturatedFats.value != null) {
                 NutrientItem(
+                    amount = facts.monounsaturatedFats,
                     name = stringResource(Res.string.nutriment_monounsaturated_fats),
-                    amount = monounsaturatedAmount.stringResource(),
                 )
             }
-
-            val polyunsaturatedAmount = facts.polyunsaturatedFats.value
-            val omega3Amount = facts.omega3.value
-            val omega6Amount = facts.omega6.value
-
-            if (polyunsaturatedAmount != null || omega3Amount != null || omega6Amount != null) {
-                val polyunsaturatedAmountText =
-                    polyunsaturatedAmount?.stringResource()
-                        ?: stringResource(Res.string.not_available_short)
-
+            if (
+                facts.polyunsaturatedFats.value != null ||
+                    facts.omega3.value != null ||
+                    facts.omega6.value != null
+            ) {
                 NutrientGroup(
                     title = {
                         NutrientItem(
+                            amount = facts.polyunsaturatedFats,
                             name = stringResource(Res.string.nutriment_polyunsaturated_fats),
-                            amount = polyunsaturatedAmountText,
                             amountColor =
-                                if (polyunsaturatedAmount != null)
+                                if (facts.polyunsaturatedFats.value != null)
                                     MaterialTheme.colorScheme.onSurface
                                 else MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 ) {
-                    if (omega3Amount != null) {
+                    if (facts.omega3.value != null) {
                         NutrientItem(
+                            amount = facts.omega3,
                             name = stringResource(Res.string.nutriment_omega_3),
-                            amount = omega3Amount.stringResource(),
                         )
                     }
-
-                    if (omega6Amount != null) {
+                    if (facts.omega6.value != null) {
                         NutrientItem(
+                            amount = facts.omega6,
                             name = stringResource(Res.string.nutriment_omega_6),
-                            amount = omega6Amount.stringResource(),
                         )
                     }
                 }
@@ -190,79 +196,78 @@ private fun Carbohydrates(
     bottomSpacer: @Composable () -> Unit = { Spacer(Modifier.height(8.dp)) },
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val anyPresent =
+        sequenceOf(
+                facts.carbohydrates.value != null,
+                facts.sugars.value != null,
+                facts.addedSugars.value != null,
+                facts.dietaryFiber.value != null,
+                facts.solubleFiber.value != null,
+                facts.insolubleFiber.value != null,
+            )
+            .any { it }
 
-    val amount = facts.carbohydrates.value ?: return
+    if (!anyPresent) return
+
     Column {
         NutrientGroup(
             title = {
                 NutrientItem(
+                    amount = facts.carbohydrates,
                     name = stringResource(Res.string.nutriment_carbohydrates),
-                    amount = amount.stringResource(),
                     color = nutrientsPalette.carbohydratesOnSurfaceContainer.copy(alpha = .33f),
                 )
             },
             modifier = modifier,
             expanded = expanded,
         ) {
-            val sugarAmount = facts.sugars.value
-            val addedSugars = facts.addedSugars.value
-            if (sugarAmount != null || addedSugars != null) {
-                val sugarAmountText =
-                    sugarAmount?.stringResource() ?: stringResource(Res.string.not_available_short)
-
+            if (facts.sugars.value != null || facts.addedSugars.value != null) {
                 NutrientGroup(
                     title = {
                         NutrientItem(
+                            amount = facts.sugars,
                             name = stringResource(Res.string.nutriment_sugars),
-                            amount = sugarAmountText,
                             amountColor =
-                                if (sugarAmount != null) MaterialTheme.colorScheme.onSurface
+                                if (facts.sugars.value != null) MaterialTheme.colorScheme.onSurface
                                 else MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 ) {
-                    if (addedSugars != null) {
+                    if (facts.addedSugars.value != null) {
                         NutrientItem(
+                            amount = facts.addedSugars,
                             name = stringResource(Res.string.nutriment_added_sugars),
-                            amount = addedSugars.stringResource(),
                         )
                     }
                 }
             }
-
-            val dietaryFiberAmount = facts.dietaryFiber.value
-            val solubleFiberAmount = facts.solubleFiber.value
-            val insolubleFiberAmount = facts.insolubleFiber.value
             if (
-                dietaryFiberAmount != null ||
-                    solubleFiberAmount != null ||
-                    insolubleFiberAmount != null
+                facts.dietaryFiber.value != null ||
+                    facts.solubleFiber.value != null ||
+                    facts.insolubleFiber.value != null
             ) {
-                val dietaryFiberAmountText =
-                    dietaryFiberAmount?.stringResource()
-                        ?: stringResource(Res.string.not_available_short)
-
                 NutrientGroup(
                     title = {
                         NutrientItem(
+                            amount = facts.dietaryFiber,
                             name = stringResource(Res.string.nutriment_fiber),
-                            amount = dietaryFiberAmountText,
                             amountColor =
-                                if (dietaryFiberAmount != null) MaterialTheme.colorScheme.onSurface
+                                if (facts.dietaryFiber.value != null)
+                                    MaterialTheme.colorScheme.onSurface
                                 else MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 ) {
-                    if (solubleFiberAmount != null) {
+                    if (facts.solubleFiber.value != null) {
                         NutrientItem(
+                            amount = facts.solubleFiber,
                             name = stringResource(Res.string.nutriment_soluble_fiber),
-                            amount = solubleFiberAmount.stringResource(),
                         )
                     }
-                    if (insolubleFiberAmount != null) {
+                    if (facts.insolubleFiber.value != null) {
                         NutrientItem(
+                            amount = facts.insolubleFiber,
                             name = stringResource(Res.string.nutriment_insoluble_fiber),
-                            amount = insolubleFiberAmount.stringResource(),
                         )
                     }
                 }
@@ -279,42 +284,40 @@ private fun Other(
     modifier: Modifier = Modifier,
     bottomSpacer: @Composable () -> Unit = { Spacer(Modifier.height(8.dp)) },
 ) {
-    val salt = facts.salt.value
-    val cholesterol = facts.cholesterol.value
-    val caffeine = facts.caffeine.value
+    val anyPresent =
+        sequenceOf(
+                facts.salt.value != null,
+                facts.cholesterol.value != null,
+                facts.caffeine.value != null,
+            )
+            .any { it }
 
-    if (salt != null || cholesterol != null || caffeine != null) {
-        val g = stringResource(Res.string.unit_gram_short)
-        val mg = stringResource(Res.string.unit_milligram_short)
+    if (!anyPresent) return
 
-        NutrientAnimatedVisibility(visible = expanded, modifier = modifier) {
-            Column {
-                Text(
-                    text = stringResource(Res.string.headline_other),
-                    modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                if (salt != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.nutriment_salt),
-                        amount = salt.stringResource(),
-                    )
-                }
-                if (cholesterol != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.nutriment_cholesterol),
-                        amount = cholesterol.inUnit(WeightUnit.Milligrams).stringResource(),
-                    )
-                }
-                if (caffeine != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.nutriment_caffeine),
-                        amount = caffeine.inUnit(WeightUnit.Milligrams).stringResource(),
-                    )
-                }
-                bottomSpacer()
+    NutrientAnimatedVisibility(visible = expanded, modifier = modifier) {
+        Column {
+            Text(
+                text = stringResource(Res.string.headline_other),
+                modifier = Modifier.padding(8.dp),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            if (facts.salt.value != null) {
+                NutrientItem(amount = facts.salt, name = stringResource(Res.string.nutriment_salt))
             }
+            if (facts.cholesterol.value != null) {
+                NutrientItem(
+                    amount = facts.cholesterol.inUnit(WeightUnit.Milligrams),
+                    name = stringResource(Res.string.nutriment_cholesterol),
+                )
+            }
+            if (facts.caffeine.value != null) {
+                NutrientItem(
+                    amount = facts.caffeine.inUnit(WeightUnit.Milligrams),
+                    name = stringResource(Res.string.nutriment_caffeine),
+                )
+            }
+            bottomSpacer()
         }
     }
 }
@@ -326,131 +329,113 @@ private fun Vitamins(
     modifier: Modifier = Modifier,
     bottomSpacer: @Composable () -> Unit = { Spacer(Modifier.height(8.dp)) },
 ) {
-    val vitaminA = facts.vitaminA.value
-    val vitaminB1 = facts.vitaminB1.value
-    val vitaminB2 = facts.vitaminB2.value
-    val vitaminB3 = facts.vitaminB3.value
-    val vitaminB5 = facts.vitaminB5.value
-    val vitaminB6 = facts.vitaminB6.value
-    val vitaminB7 = facts.vitaminB7.value
-    val vitaminB9 = facts.vitaminB9.value
-    val vitaminB12 = facts.vitaminB12.value
-    val vitaminC = facts.vitaminC.value
-    val vitaminD = facts.vitaminD.value
-    val vitaminE = facts.vitaminE.value
-    val vitaminK = facts.vitaminK.value
-
-    val anyVitamins =
-        listOf(
-                vitaminA,
-                vitaminB1,
-                vitaminB2,
-                vitaminB3,
-                vitaminB5,
-                vitaminB6,
-                vitaminB7,
-                vitaminB9,
-                vitaminB12,
-                vitaminC,
-                vitaminD,
-                vitaminE,
-                vitaminK,
+    val anyPresent =
+        sequenceOf(
+                facts.vitaminA.value != null,
+                facts.vitaminB1.value != null,
+                facts.vitaminB2.value != null,
+                facts.vitaminB3.value != null,
+                facts.vitaminB5.value != null,
+                facts.vitaminB6.value != null,
+                facts.vitaminB7.value != null,
+                facts.vitaminB9.value != null,
+                facts.vitaminB12.value != null,
+                facts.vitaminC.value != null,
+                facts.vitaminD.value != null,
+                facts.vitaminE.value != null,
+                facts.vitaminK.value != null,
             )
-            .any { it != null }
+            .any { it }
 
-    if (anyVitamins) {
-        val mg = stringResource(Res.string.unit_milligram_short)
-        val mcg = stringResource(Res.string.unit_microgram_short)
+    if (!anyPresent) return
 
-        NutrientAnimatedVisibility(visible = expanded, modifier = modifier) {
-            Column {
-                Text(
-                    text = stringResource(Res.string.headline_vitamins),
-                    modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
+    NutrientAnimatedVisibility(visible = expanded, modifier = modifier) {
+        Column {
+            Text(
+                text = stringResource(Res.string.headline_vitamins),
+                modifier = Modifier.padding(8.dp),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            if (facts.vitaminA.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminA.inUnit(WeightUnit.Micrograms),
+                    name = stringResource(Res.string.vitamin_a),
                 )
-
-                if (vitaminA != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_a),
-                        amount = vitaminA.inUnit(WeightUnit.Micrograms).stringResource(),
-                    )
-                }
-                if (vitaminB1 != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_b1),
-                        amount = vitaminB1.inUnit(WeightUnit.Milligrams).stringResource(),
-                    )
-                }
-                if (vitaminB2 != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_b2),
-                        amount = vitaminB2.inUnit(WeightUnit.Milligrams).stringResource(),
-                    )
-                }
-                if (vitaminB3 != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_b3),
-                        amount = vitaminB3.inUnit(WeightUnit.Milligrams).stringResource(),
-                    )
-                }
-                if (vitaminB5 != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_b5),
-                        amount = vitaminB5.inUnit(WeightUnit.Milligrams).stringResource(),
-                    )
-                }
-                if (vitaminB6 != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_b6),
-                        amount = vitaminB6.inUnit(WeightUnit.Milligrams).stringResource(),
-                    )
-                }
-                if (vitaminB7 != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_b7),
-                        amount = vitaminB7.inUnit(WeightUnit.Micrograms).stringResource(),
-                    )
-                }
-                if (vitaminB9 != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_b9),
-                        amount = vitaminB9.inUnit(WeightUnit.Micrograms).stringResource(),
-                    )
-                }
-                if (vitaminB12 != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_b12),
-                        amount = vitaminB12.inUnit(WeightUnit.Micrograms).stringResource(),
-                    )
-                }
-                if (vitaminC != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_c),
-                        amount = vitaminC.inUnit(WeightUnit.Milligrams).stringResource(),
-                    )
-                }
-                if (vitaminD != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_d),
-                        amount = vitaminD.inUnit(WeightUnit.Micrograms).stringResource(),
-                    )
-                }
-                if (vitaminE != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_e),
-                        amount = vitaminE.inUnit(WeightUnit.Milligrams).stringResource(),
-                    )
-                }
-                if (vitaminK != null) {
-                    NutrientItem(
-                        name = stringResource(Res.string.vitamin_k),
-                        amount = vitaminK.inUnit(WeightUnit.Micrograms).stringResource(),
-                    )
-                }
-                bottomSpacer()
             }
+            if (facts.vitaminB1.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminB1.inUnit(WeightUnit.Milligrams),
+                    name = stringResource(Res.string.vitamin_b1),
+                )
+            }
+            if (facts.vitaminB2.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminB2.inUnit(WeightUnit.Milligrams),
+                    name = stringResource(Res.string.vitamin_b2),
+                )
+            }
+            if (facts.vitaminB3.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminB3.inUnit(WeightUnit.Milligrams),
+                    name = stringResource(Res.string.vitamin_b3),
+                )
+            }
+            if (facts.vitaminB5.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminB5.inUnit(WeightUnit.Milligrams),
+                    name = stringResource(Res.string.vitamin_b5),
+                )
+            }
+            if (facts.vitaminB6.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminB6.inUnit(WeightUnit.Milligrams),
+                    name = stringResource(Res.string.vitamin_b6),
+                )
+            }
+            if (facts.vitaminB7.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminB7.inUnit(WeightUnit.Micrograms),
+                    name = stringResource(Res.string.vitamin_b7),
+                )
+            }
+            if (facts.vitaminB9.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminB9.inUnit(WeightUnit.Micrograms),
+                    name = stringResource(Res.string.vitamin_b9),
+                )
+            }
+            if (facts.vitaminB12.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminB12.inUnit(WeightUnit.Micrograms),
+                    name = stringResource(Res.string.vitamin_b12),
+                )
+            }
+            if (facts.vitaminC.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminC.inUnit(WeightUnit.Milligrams),
+                    name = stringResource(Res.string.vitamin_c),
+                )
+            }
+            if (facts.vitaminD.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminD.inUnit(WeightUnit.Micrograms),
+                    name = stringResource(Res.string.vitamin_d),
+                )
+            }
+            if (facts.vitaminE.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminE.inUnit(WeightUnit.Milligrams),
+                    name = stringResource(Res.string.vitamin_e),
+                )
+            }
+            if (facts.vitaminK.value != null) {
+                NutrientItem(
+                    amount = facts.vitaminK.inUnit(WeightUnit.Micrograms),
+                    name = stringResource(Res.string.vitamin_k),
+                )
+            }
+            bottomSpacer()
         }
     }
 }
@@ -462,38 +447,23 @@ private fun Minerals(
     modifier: Modifier = Modifier,
     bottomSpacer: @Composable () -> Unit = { Spacer(Modifier.height(8.dp)) },
 ) {
-    val manganese = facts.manganese.value
-    val magnesium = facts.magnesium.value
-    val potassium = facts.potassium.value
-    val calcium = facts.calcium.value
-    val copper = facts.copper.value
-    val zinc = facts.zinc.value
-    val sodium = facts.sodium.value
-    val iron = facts.iron.value
-    val phosphorus = facts.phosphorus.value
-    val selenium = facts.selenium.value
-    val chromium = facts.chromium.value
-
     val anyMinerals =
         listOf(
-                manganese,
-                magnesium,
-                potassium,
-                calcium,
-                copper,
-                zinc,
-                sodium,
-                iron,
-                phosphorus,
-                selenium,
-                chromium,
+                facts.manganese.value != null,
+                facts.magnesium.value != null,
+                facts.potassium.value != null,
+                facts.calcium.value != null,
+                facts.copper.value != null,
+                facts.zinc.value != null,
+                facts.sodium.value != null,
+                facts.iron.value != null,
+                facts.phosphorus.value != null,
+                facts.selenium.value != null,
+                facts.chromium.value != null,
             )
-            .any { it != null }
+            .any { it }
 
     if (anyMinerals) {
-        val mg = stringResource(Res.string.unit_milligram_short)
-        val mcg = stringResource(Res.string.unit_microgram_short)
-
         NutrientAnimatedVisibility(visible = expanded, modifier = modifier) {
             Column {
                 Text(
@@ -502,70 +472,70 @@ private fun Minerals(
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
-                if (manganese != null) {
+                if (facts.manganese.value != null) {
                     NutrientItem(
+                        amount = facts.manganese.inUnit(WeightUnit.Milligrams),
                         name = stringResource(Res.string.mineral_manganese),
-                        amount = manganese.inUnit(WeightUnit.Milligrams).stringResource(),
                     )
                 }
-                if (magnesium != null) {
+                if (facts.magnesium.value != null) {
                     NutrientItem(
+                        amount = facts.magnesium.inUnit(WeightUnit.Milligrams),
                         name = stringResource(Res.string.mineral_magnesium),
-                        amount = magnesium.inUnit(WeightUnit.Milligrams).stringResource(),
                     )
                 }
-                if (potassium != null) {
+                if (facts.potassium.value != null) {
                     NutrientItem(
+                        amount = facts.potassium.inUnit(WeightUnit.Milligrams),
                         name = stringResource(Res.string.mineral_potassium),
-                        amount = potassium.inUnit(WeightUnit.Milligrams).stringResource(),
                     )
                 }
-                if (calcium != null) {
+                if (facts.calcium.value != null) {
                     NutrientItem(
+                        amount = facts.calcium.inUnit(WeightUnit.Milligrams),
                         name = stringResource(Res.string.mineral_calcium),
-                        amount = calcium.inUnit(WeightUnit.Milligrams).stringResource(),
                     )
                 }
-                if (copper != null) {
+                if (facts.copper.value != null) {
                     NutrientItem(
+                        amount = facts.copper.inUnit(WeightUnit.Milligrams),
                         name = stringResource(Res.string.mineral_copper),
-                        amount = copper.inUnit(WeightUnit.Milligrams).stringResource(),
                     )
                 }
-                if (zinc != null) {
+                if (facts.zinc.value != null) {
                     NutrientItem(
+                        amount = facts.zinc.inUnit(WeightUnit.Milligrams),
                         name = stringResource(Res.string.mineral_zinc),
-                        amount = zinc.inUnit(WeightUnit.Milligrams).stringResource(),
                     )
                 }
-                if (sodium != null) {
+                if (facts.sodium.value != null) {
                     NutrientItem(
+                        amount = facts.sodium.inUnit(WeightUnit.Milligrams),
                         name = stringResource(Res.string.mineral_sodium),
-                        amount = sodium.inUnit(WeightUnit.Milligrams).stringResource(),
                     )
                 }
-                if (iron != null) {
+                if (facts.iron.value != null) {
                     NutrientItem(
+                        amount = facts.iron.inUnit(WeightUnit.Milligrams),
                         name = stringResource(Res.string.mineral_iron),
-                        amount = iron.inUnit(WeightUnit.Milligrams).stringResource(),
                     )
                 }
-                if (phosphorus != null) {
+                if (facts.phosphorus.value != null) {
                     NutrientItem(
+                        amount = facts.phosphorus.inUnit(WeightUnit.Milligrams),
                         name = stringResource(Res.string.mineral_phosphorus),
-                        amount = phosphorus.inUnit(WeightUnit.Milligrams).stringResource(),
                     )
                 }
-                if (selenium != null) {
+                if (facts.selenium.value != null) {
                     NutrientItem(
+                        amount = facts.selenium.inUnit(WeightUnit.Micrograms),
                         name = stringResource(Res.string.mineral_selenium),
-                        amount = selenium.inUnit(WeightUnit.Micrograms).stringResource(),
                     )
                 }
-                if (chromium != null) {
+                if (facts.chromium.value != null) {
                     NutrientItem(
+                        amount = facts.chromium.inUnit(WeightUnit.Micrograms),
                         name = stringResource(Res.string.mineral_chromium),
-                        amount = chromium.inUnit(WeightUnit.Micrograms).stringResource(),
                     )
                 }
                 bottomSpacer()
@@ -604,16 +574,49 @@ private fun NutrientGroup(
 @Composable
 private fun NutrientItem(
     name: String,
-    amount: String,
+    amount: NutrientValue<Weight>,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     amountColor: Color = LocalContentColor.current,
 ) {
     Surface(modifier = modifier, color = color, shape = MaterialTheme.shapes.small) {
         Row(modifier = Modifier.padding(8.dp)) {
-            Text(text = name, style = MaterialTheme.typography.bodyMedium)
+            Text(text = name)
             Spacer(Modifier.weight(1f).widthIn(min = 8.dp))
-            Text(text = amount, style = MaterialTheme.typography.bodyMedium, color = amountColor)
+            when (amount) {
+                is NutrientValue.Complete<Weight> ->
+                    Text(text = amount.value.stringResource(), color = amountColor)
+                is NutrientValue.Incomplete<Weight> -> IncompleteValue(amount)
+            }
+        }
+    }
+}
+
+@Composable
+private fun NutrientItem(
+    name: String,
+    amount: NutrientValue<Energy>,
+    unit: EnergyUnit,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    amountColor: Color = LocalContentColor.current,
+) {
+    Surface(modifier = modifier, color = color, shape = MaterialTheme.shapes.small) {
+        Row(Modifier.padding(8.dp)) {
+            Text(name)
+            Spacer(Modifier.weight(1f).widthIn(min = 8.dp))
+            when (amount) {
+                is NutrientValue.Complete<Energy> ->
+                    Text(text = amount.value.inUnit(unit).stringResource(), color = amountColor)
+
+                is NutrientValue.Incomplete<Energy> -> {
+                    val amountStr = amount.value?.inUnit(unit)?.stringResource()
+                    val str =
+                        if (amountStr != null) "$INCOMPLETE_PREFIX $amountStr"
+                        else stringResource(Res.string.not_available_short)
+                    Text(text = str, color = MaterialTheme.colorScheme.outline)
+                }
+            }
         }
     }
 }
@@ -638,4 +641,34 @@ private fun NutrientAnimatedVisibility(
     ) {
         content()
     }
+}
+
+@Composable
+private fun NutrientValue<Weight>.inUnit(unit: WeightUnit): NutrientValue<Weight> =
+    remember(this) { map { it?.inUnit(unit) } }
+
+private fun <T> NutrientValue<T>.map(transform: (T?) -> T?): NutrientValue<T>
+    where T : Plus<T>, T : Times<T>, T : Div<T> =
+    when (this) {
+        is NutrientValue.Complete<*> -> NutrientValue.Complete(transform(value)!!)
+        is NutrientValue.Incomplete<*> -> NutrientValue.Incomplete(transform(value))
+    }
+
+private const val INCOMPLETE_PREFIX: String = "*"
+
+@Composable
+private fun IncompleteValue(
+    value: NutrientValue.Incomplete<Weight>,
+    modifier: Modifier = Modifier,
+) {
+    val amountStr = value.value?.stringResource()
+    val str =
+        if (amountStr != null) "$INCOMPLETE_PREFIX $amountStr"
+        else stringResource(Res.string.not_available_short)
+    Text(
+        text = str,
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.outline,
+        style = MaterialTheme.typography.bodyMedium,
+    )
 }
