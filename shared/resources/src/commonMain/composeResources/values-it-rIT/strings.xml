@@ -153,6 +153,7 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mostra di più</string>
     <string name="action_download_product">Scarica prodotto</string>
     <string name="action_copy_and_open_bug_report">Copia e apri segnalazione bug</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Copia e segnala</string>
     <string name="action_show_details">Mostra dettagli</string>
     <string name="action_browse_usda">Sfoglia FoodData Central (USDA)</string>
     <string name="action_set_key">Imposta chiave</string>
@@ -218,6 +219,7 @@
     <string name="description_please_wait_while_exporting_products">Attendi durante l'esportazione dei prodotti</string>
     <string name="headline_launcher_icon_by_icons8">Icona del launcher di Icons8</string>
     <string name="description_open_food_facts">Un database collaborativo, gratuito e aperto di prodotti alimentari da tutto il mondo</string>
+    <string name="error_open_food_facts_rate_limit">Limite delle API di Open Food Facts superato</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Esportazione prodotti</string>
     <string name="notification_importing_products">Importazione prodotti</string>
@@ -390,4 +392,5 @@
     <string name="description_replacing_database">Sostituzione del database in corso, attendere…</string>
     <string name="headline_experimental">Sperimentale</string>
     <string name="description_privacy_policy">Scopri come vengono gestiti i tuoi dati</string>
+    <string name="error_open_food_facts_timeout">Open Food Facts sta impiegando molto tempo per rispondere. Il servizio potrebbe essere temporaneamente lento o non disponibile. Prova a scansionare il codice a barre del prodotto.</string>
 </resources>

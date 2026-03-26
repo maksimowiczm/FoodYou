@@ -232,6 +232,14 @@
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="description_open_food_facts">Wspólna, wolna i otwarta baza produktów spożywczych z całego świata</string>
     <string name="error_open_food_facts_rate_limit">Przekroczono limit Open Food Facts API</string>
+    <string name="error_open_food_facts_service_unavailable">Usługa Open Food Facts jest chwilowo niedostępna. Zarejestrowani użytkownicy nie mają limitów zapytań i mają priorytetowy dostęp w godzinach szczytu.</string>
+    <string name="action_register">Zarejestruj się</string>
+    <string name="description_open_food_facts_credentials_message">Twoje dane logowania są bezpiecznie przechowywane i szyfrowane tylko na Twoim urządzeniu. Nikt inny nie ma do nich dostępu.</string>
+    <string name="error_open_food_facts_failed_to_authenticate">Nie udało się uwierzytelnić z Open Food Facts</string>
+    <string name="headline_username">Nazwa użytkownika</string>
+    <string name="headline_password">Hasło</string>
+    <string name="action_show_password">Pokaż hasło</string>
+    <string name="action_hide_password">Ukryj hasło</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Eksportuje produkty</string>
     <string name="notification_importing_products">Importuje produkty</string>
@@ -369,6 +377,7 @@
     <string name="action_replace">Zastąp</string>
     <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Twoja baza danych zostanie ZASTĄPIONA, a wszystkie bieżące dane zostaną UTRACONE. Po zastąpieniu bazy danych aplikacja uruchomi się ponownie. Może być konieczne ponowne otwarcie aplikacji.</string>
     <string name="action_sign_in">Zaloguj się</string>
+    <string name="action_sign_out">Wyloguj</string>
     <string name="headline_terms_of_service">Warunki korzystania</string>
     <string name="headline_privacy_policy">Polityka prywatności</string>
     <string name="error_there_was_an_error_while_signing_in">Wystąpił błąd podczas logowania</string>
