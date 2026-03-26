@@ -28,6 +28,9 @@ sealed class RemoteFoodException(message: String?) : Exception(message) {
     sealed class OpenFoodFacts(message: String) : RemoteFoodException(message) {
         class RateLimit :
             OpenFoodFacts("OpenFoodFacts API rate limit exceeded. Please try again later.")
+
+        class ServiceUnavailable :
+            OpenFoodFacts("OpenFoodFacts API service unavailable. Please try again later.")
     }
 
     companion object {

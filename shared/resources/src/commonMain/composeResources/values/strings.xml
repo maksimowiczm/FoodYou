@@ -247,6 +247,17 @@
     <string name="description_open_food_facts">A collaborative, free and open database of food products from around the world</string>
     <string name="link_open_food_facts" translatable="false">https://world.openfoodfacts.org</string>
     <string name="error_open_food_facts_rate_limit">Open Food Facts API rate limit exceeded</string>
+    <string name="error_open_food_facts_service_unavailable">Open Food Facts service temporary unavailable. Registered users are not subject to request limits and get priority access during peak times.</string>
+    <string name="action_register">Register</string>
+    <string name="link_open_food_fats_register" translatable="false">https://world.openfoodfacts.org/cgi/user.pl</string>
+    <string name="description_open_food_facts_credentials_message">Login credentials are encrypted and stored only on your device. Sensitive data is not accessible to anyone else.</string>
+    <string name="error_open_food_facts_failed_to_authenticate">Failed to authenticate with Open Food Facts</string>
+
+    <string name="headline_username">Username</string>
+    <string name="headline_password">Password</string>
+
+    <string name="action_show_password">Show password</string>
+    <string name="action_hide_password">Hide password</string>
 
     <!-- Don't translate changelog strings -->
     <string name="changelog_new_features" translatable="false">New features</string>
@@ -456,6 +467,7 @@
     <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Your database will be REPLACED, and all current data will be LOST. The app will restart after the database is replaced. You may need to reopen the app.</string>
 
     <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_out">Sign out</string>
     <string name="headline_terms_of_service">Terms of service</string>
     <string name="headline_privacy_policy">Privacy policy</string>
     <string name="error_there_was_an_error_while_signing_in">There was an error while signing in</string>

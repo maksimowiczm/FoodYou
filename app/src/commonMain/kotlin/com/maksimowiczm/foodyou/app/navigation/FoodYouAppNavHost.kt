@@ -9,6 +9,7 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.database.exportcsvproducts.ExportCsvProductsScreen
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.ExternalDatabasesScreen
+import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.OpenFoodFactsLoginDialog
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiKeyDialog
 import com.maksimowiczm.foodyou.app.ui.database.importcsvproducts.ImportCsvProductsScreen
 import com.maksimowiczm.foodyou.app.ui.database.master.DatabaseSettingsScreen
@@ -159,6 +160,13 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                 onSave = { navController.popBackStackInclusive<UsdaApiKey>() },
             )
         }
+
+        dialog<OpenFoodFactsLogin> {
+            OpenFoodFactsLoginDialog(
+                onDismissRequest = { navController.popBackStackInclusive<OpenFoodFactsLogin>() },
+                onSave = { navController.popBackStackInclusive<OpenFoodFactsLogin>() },
+            )
+        }
         forwardBackwardComposable<FoodDiaryCreateQuickAdd> {
             val (epochDay, mealId) = it.toRoute<FoodDiaryCreateQuickAdd>()
 
@@ -200,6 +208,9 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                     )
                 },
                 onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKey) },
+                onUpdateOpenFoodFactsCredentials = {
+                    navController.navigateSingleTop(OpenFoodFactsLogin)
+                },
                 date = LocalDate.fromEpochDays(date),
                 mealId = mealId,
                 animatedVisibilityScope = this,
@@ -218,6 +229,9 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                 },
                 onUpdate = { navController.popBackStackInclusive<UpdateRecipe>() },
                 onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKey) },
+                onUpdateOpenFoodFactsCredentials = {
+                    navController.navigateSingleTop(OpenFoodFactsLogin)
+                },
                 recipeId = FoodId.Recipe(recipeId),
             )
         }
@@ -254,6 +268,9 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                     }
                 },
                 onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKey) },
+                onUpdateOpenFoodFactsCredentials = {
+                    navController.navigateSingleTop(OpenFoodFactsLogin)
+                },
             )
         }
         forwardBackwardComposable<FoodDiaryCreateProduct> {
@@ -274,6 +291,9 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
                     }
                 },
                 onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKey) },
+                onUpdateOpenFoodFactsCredentials = {
+                    navController.navigateSingleTop(OpenFoodFactsLogin)
+                },
             )
         }
         forwardBackwardComposable<FoodDiaryCreateEntry> {
@@ -387,6 +407,8 @@ fun FoodYouAppNavHost(onDatabaseBackup: () -> Unit, modifier: Modifier = Modifie
 @Serializable private object SwissFoodCompositionDatabase
 
 @Serializable private object UsdaApiKey
+
+@Serializable private object OpenFoodFactsLogin
 
 @Serializable private object ImportCsvProducts
 

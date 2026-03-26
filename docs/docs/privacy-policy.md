@@ -1,4 +1,4 @@
-*Effective date: 01.01.2026*
+*Effective date: 26.03.2026*
 
 This Privacy Policy applies to the Food You app (the "Application") developed by Mateusz
 Maksimowicz (the "Service Provider"). The Application is provided on an "AS IS" basis.
@@ -25,11 +25,14 @@ this policy.
 The Application may interact with the following third-party services, each governed by their own
 privacy policies:
 
-- [Open Food Facts](https://world.openfoodfacts.org/privacy)
+- [Open Food Facts](https://world.openfoodfacts.org/privacy)</br>
+  *You have the option to provide your own Open Food Facts account credentials. These are stored
+  locally on your device and are used exclusively to make requests to the service. The Service
+  Provider does not collect or store this data.*
 - [USDA FoodData Central (operated by the United States Department of Agriculture)](https://www.usda.gov/privacy-policy)</br>
-  *You may optionally provide your own USDA API key, which is stored locally on your device and used
-  solely to make requests to this service. The Service Provider does not collect or store this API
-  key.*
+  *You have the option to provide your own USDA API key. It is stored locally on your device and is
+  used exclusively to make requests to the service. The Service Provider does not collect or store
+  this API key.*
 - [GitHub](https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement)</br>
   *Used only if you choose to download sponsorship information in the Application.*
 
@@ -59,3 +62,12 @@ If you have any questions about this Privacy Policy or the Application's practic
 the Service Provider at:
 
 - [maksimowicz.dev@gmail.com](mailto:maksimowicz.dev@gmail.com?subject=Food%20You%20App%20Privacy%20Policy%20Inquiry)
+
+## Privacy Policy Changelog
+
+This section lists notable updates to this Privacy Policy to help you track what has changed over
+time.
+
+### 26.03.2026
+
+- Added third-party service credential handling for Open Food Facts.

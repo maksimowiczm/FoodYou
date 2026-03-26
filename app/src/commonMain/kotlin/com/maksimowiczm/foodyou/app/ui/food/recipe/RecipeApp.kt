@@ -53,6 +53,7 @@ internal fun RecipeApp(
     onSave: (RecipeFormState) -> Unit,
     onEditFood: (FoodId) -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     state: RecipeFormState,
     topBarTitle: String,
     mainRecipeId: FoodId.Recipe?,
@@ -168,6 +169,7 @@ internal fun RecipeApp(
                         }
                     },
                     onUpdateUsdaApiKey = onUpdateUsdaApiKey,
+                    onUpdateOpenFoodFactsCredentials = onUpdateOpenFoodFactsCredentials,
                     excludedRecipe = mainRecipeId,
                     modifier =
                         Modifier.fillMaxSize()

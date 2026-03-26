@@ -54,6 +54,7 @@ import org.koin.core.parameter.parametersOf
 fun FoodSearchApp(
     onFoodClick: (FoodSearch, Measurement) -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     modifier: Modifier = Modifier,
     excludedRecipe: FoodId.Recipe? = null,
 ) {
@@ -65,6 +66,7 @@ fun FoodSearchApp(
         onSourceChange = viewModel::changeSource,
         onFoodClick = onFoodClick,
         onUpdateUsdaApiKey = onUpdateUsdaApiKey,
+        onUpdateOpenFoodFactsCredentials = onUpdateOpenFoodFactsCredentials,
         modifier = modifier,
     )
 }
@@ -76,6 +78,7 @@ private fun FoodSearchApp(
     onSourceChange: (FoodFilter.Source) -> Unit,
     onFoodClick: (FoodSearch, Measurement) -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     modifier: Modifier = Modifier,
     appState: FoodSearchAppState = rememberFoodSearchAppState(),
 ) {
@@ -175,6 +178,7 @@ private fun FoodSearchApp(
                         error = ex,
                         onRetry = pages::retry,
                         onUsdaApiKey = onUpdateUsdaApiKey,
+                        onUpdateOpenFoodFactsCredentials = onUpdateOpenFoodFactsCredentials,
                         modifier =
                             Modifier.fillMaxWidth().padding(top = 8.dp).padding(horizontal = 16.dp),
                     )

@@ -65,6 +65,7 @@ fun DiaryFoodSearchScreen(
     onCreateProduct: () -> Unit,
     onMeasure: (FoodId, Measurement) -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     date: LocalDate,
     mealId: Long,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -124,6 +125,7 @@ fun DiaryFoodSearchScreen(
             FoodSearchApp(
                 onFoodClick = { model, measurement -> onMeasure(model.id, measurement) },
                 onUpdateUsdaApiKey = onUpdateUsdaApiKey,
+                onUpdateOpenFoodFactsCredentials = onUpdateOpenFoodFactsCredentials,
                 modifier =
                     Modifier.padding(paddingValues)
                         .consumeWindowInsets(paddingValues)

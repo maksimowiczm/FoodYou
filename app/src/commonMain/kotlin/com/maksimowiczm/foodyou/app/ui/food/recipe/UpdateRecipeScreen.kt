@@ -22,6 +22,7 @@ fun UpdateRecipeScreen(
     onEditFood: (FoodId) -> Unit,
     onUpdate: () -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     recipeId: FoodId.Recipe,
     modifier: Modifier = Modifier,
 ) {
@@ -82,6 +83,7 @@ fun UpdateRecipeScreen(
         onSave = viewModel::update,
         onEditFood = onEditFood,
         onUpdateUsdaApiKey = onUpdateUsdaApiKey,
+        onUpdateOpenFoodFactsCredentials = onUpdateOpenFoodFactsCredentials,
         state = formState,
         topBarTitle = stringResource(Res.string.headline_edit_recipe),
         mainRecipeId = recipeId,

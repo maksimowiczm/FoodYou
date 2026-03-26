@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.food.component.DownloadProductOpenFoodFactsUnavailableErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.component.DownloadProductUsdaErrorCard
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import com.maksimowiczm.foodyou.food.domain.usecase.DownloadProductError
@@ -26,6 +27,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun DownloadErrorCard(
     error: DownloadProductError,
     onUpdateUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (error) {
@@ -44,6 +46,7 @@ internal fun DownloadErrorCard(
         is DownloadProductError.RemoteFoodError ->
             DownloadErrorCard(
                 error = error.exception,
+                onUpdateOpenFoodFactsCredentials = onUpdateOpenFoodFactsCredentials,
                 onUpdateUsdaApiKey = onUpdateUsdaApiKey,
                 modifier = modifier,
             )
@@ -85,11 +88,18 @@ private fun DownloadErrorCard(message: String, modifier: Modifier = Modifier) {
 private fun DownloadErrorCard(
     error: RemoteFoodException,
     onUpdateUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val text =
         when (error) {
             is RemoteFoodException.OpenFoodFacts.RateLimit -> error.message
+
+            is RemoteFoodException.OpenFoodFacts.ServiceUnavailable ->
+                return DownloadProductOpenFoodFactsUnavailableErrorCard(
+                    onUpdateCredentials = onUpdateOpenFoodFactsCredentials,
+                    modifier = modifier,
+                )
 
             is RemoteFoodException.ProductNotFoundException ->
                 stringResource(Res.string.error_product_not_found)
