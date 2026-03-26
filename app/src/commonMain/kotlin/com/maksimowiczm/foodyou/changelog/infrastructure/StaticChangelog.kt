@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_4_6,
                 v_3_4_5,
                 v_3_4_4,
                 v_3_4_3,
@@ -50,6 +51,17 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_4_6 =
+        Version(
+            version = "3.4.6",
+            date = LocalDate(2026, 3, 26),
+            changes =
+                listOf(
+                    "Added Open Food Facts authentication to handle search API requiring authentication.",
+                    "Updated privacy policy regarding Open Food Facts credential handling."
+                ),
+        )
 
     val v_3_4_5 =
         Version(
