@@ -1,0 +1,6 @@
+Changes
+- Added Open Food Facts authentication to handle search API requiring authentication.
+- Updated privacy policy regarding Open Food Facts credential handling.
+
+Notes
+This is the same release as 3.4.6 due to a GitHub bug.

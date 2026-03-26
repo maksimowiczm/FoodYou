@@ -12,7 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
-                v_3_4_6,
+                v_3_4_7,
                 v_3_4_5,
                 v_3_4_4,
                 v_3_4_3,
@@ -52,9 +52,9 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_0_0,
             )
 
-    val v_3_4_6 =
+    val v_3_4_7 =
         Version(
-            version = "3.4.6",
+            version = "3.4.7",
             date = LocalDate(2026, 3, 26),
             changes =
                 listOf(
