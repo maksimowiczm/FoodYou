@@ -12,7 +12,13 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.Parameters
+import io.ktor.http.contentType
+import io.ktor.http.formUrlEncode
 import io.ktor.http.userAgent
 import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
@@ -22,6 +28,7 @@ internal class OpenFoodFactsRemoteDataSource(
     private val client: HttpClient,
     private val networkConfig: NetworkConfig,
     private val rateLimiter: OpenFoodFactsRateLimiter,
+    private val credentialsRepository: OpenFoodFactsCredentialsRepositoryImpl,
     private val logger: Logger,
 ) {
     suspend fun getProduct(
@@ -74,6 +81,21 @@ internal class OpenFoodFactsRemoteDataSource(
         page: Int? = null,
         pageSize: Int = 50,
     ): OpenFoodPageResponse =
+        queryProducts(
+            query = query,
+            shouldLogin = false,
+            countries = countries,
+            page = page,
+            pageSize = pageSize,
+        )
+
+    private suspend fun queryProducts(
+        query: String,
+        shouldLogin: Boolean,
+        countries: String? = null,
+        page: Int? = null,
+        pageSize: Int = 50,
+    ): OpenFoodPageResponse =
         try {
             if (!rateLimiter.canMakeSearchRequest()) {
                 logger.d(TAG) { "Rate limit exceeded for OpenFoodFacts API" }
@@ -82,8 +104,26 @@ internal class OpenFoodFactsRemoteDataSource(
 
             rateLimiter.recordSearchRequest()
 
-            client
-                .get("${API_URL}/cgi/search.pl?search_simple=1&json=1") {
+            if (shouldLogin) {
+                val credentials =
+                    credentialsRepository.loadCredentials()
+                        ?: throw RemoteFoodException.OpenFoodFacts.ServiceUnavailable()
+
+                client.post("${API_URL}/cgi/session.pl") {
+                    userAgent(networkConfig.userAgent)
+                    contentType(ContentType.Application.FormUrlEncoded)
+                    setBody(
+                        Parameters.build {
+                                append("user_id", credentials.first)
+                                append("password", credentials.second)
+                            }
+                            .formUrlEncode()
+                    )
+                }
+            }
+
+            val response =
+                client.get("${API_URL}/cgi/search.pl?search_simple=1&json=1") {
                     userAgent(networkConfig.userAgent)
                     parameter("search_terms", query)
                     parameter("countries", countries)
@@ -97,7 +137,22 @@ internal class OpenFoodFactsRemoteDataSource(
                         socketTimeoutMillis = TIMEOUT
                     }
                 }
-                .body<OpenFoodFactsPageResponseV1>()
+
+            if (response.status == HttpStatusCode.ServiceUnavailable) {
+                if (!shouldLogin) {
+                    queryProducts(
+                        query = query,
+                        shouldLogin = true,
+                        countries = countries,
+                        page = page,
+                        pageSize = pageSize,
+                    )
+                } else {
+                    throw RemoteFoodException.OpenFoodFacts.ServiceUnavailable()
+                }
+            } else {
+                response.body<OpenFoodFactsPageResponseV1>()
+            }
         } catch (e: Exception) {
             when (e) {
                 is CancellationException -> throw e

@@ -65,6 +65,7 @@ internal fun DownloadProductScreen(
     onOpenFoodFacts: () -> Unit,
     onUsda: () -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -192,7 +193,11 @@ internal fun DownloadProductScreen(
                 ) {
                     ref.value?.let {
                         Column {
-                            DownloadErrorCard(it, onUpdateUsdaApiKey)
+                            DownloadErrorCard(
+                                it,
+                                onUpdateUsdaApiKey,
+                                onUpdateOpenFoodFactsCredentials,
+                            )
                             Spacer(Modifier.height(16.dp))
                         }
                     }

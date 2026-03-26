@@ -28,6 +28,7 @@ internal fun CreateProductApp(
     onBack: () -> Unit,
     onCreate: (ProductFormState) -> Unit,
     onUpdateUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     modifier: Modifier = Modifier,
     url: String? = null,
 ) =
@@ -101,6 +102,7 @@ internal fun CreateProductApp(
                     onOpenFoodFacts = { uriHandler.openUri(openFoodFactsUrl) },
                     onUsda = { uriHandler.openUri(usdaUrl) },
                     onUpdateUsdaApiKey = onUpdateUsdaApiKey,
+                    onUpdateOpenFoodFactsCredentials = onUpdateOpenFoodFactsCredentials,
                 )
             }
         }

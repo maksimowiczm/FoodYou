@@ -7,7 +7,9 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.app.navigation.DownloadProductAppNavHost.CreateProduct
+import com.maksimowiczm.foodyou.app.navigation.DownloadProductAppNavHost.OpenFoodFactsLogin
 import com.maksimowiczm.foodyou.app.navigation.DownloadProductAppNavHost.UsdaApiKey
+import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.OpenFoodFactsLoginDialog
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiKeyDialog
 import com.maksimowiczm.foodyou.app.ui.food.product.CreateProductScreen
 import kotlinx.serialization.Serializable
@@ -32,6 +34,12 @@ fun DownloadProductAppNavHost(
                 onSave = { navController.popBackStackInclusive<UsdaApiKey>() },
             )
         }
+        dialog<OpenFoodFactsLogin> {
+            OpenFoodFactsLoginDialog(
+                onDismissRequest = { navController.popBackStackInclusive<OpenFoodFactsLogin>() },
+                onSave = { navController.popBackStackInclusive<OpenFoodFactsLogin>() },
+            )
+        }
         forwardBackwardComposable<CreateProduct> {
             val (url) = it.toRoute<CreateProduct>()
 
@@ -39,6 +47,9 @@ fun DownloadProductAppNavHost(
                 onBack = onBack,
                 onCreate = { onCreate() },
                 onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKey) },
+                onUpdateOpenFoodFactsCredentials = {
+                    navController.navigateSingleTop(OpenFoodFactsLogin)
+                },
                 url = url,
             )
         }
@@ -49,4 +60,6 @@ private object DownloadProductAppNavHost {
     @Serializable object UsdaApiKey
 
     @Serializable data class CreateProduct(val url: String)
+
+    @Serializable object OpenFoodFactsLogin
 }

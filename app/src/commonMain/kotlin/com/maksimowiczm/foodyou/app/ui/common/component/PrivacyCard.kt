@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
+import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.OpenFoodFactsLoginDialog
 import com.maksimowiczm.foodyou.app.ui.database.externaldatabases.UpdateUsdaApiKeyDialog
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -72,6 +74,13 @@ fun OpenFoodFactsPrivacyCard(
     privacyPolicyUri: String = LocalAppConfig.current.openFoodFactsPrivacyPolicyUri,
 ) {
     val uriHandler = LocalUriHandler.current
+    var showLoginDialog by rememberSaveable { mutableStateOf(false) }
+    if (showLoginDialog) {
+        OpenFoodFactsLoginDialog(
+            onDismissRequest = { showLoginDialog = false },
+            onSave = { showLoginDialog = false },
+        )
+    }
 
     PrivacyCard(
         title = {
@@ -110,6 +119,17 @@ fun OpenFoodFactsPrivacyCard(
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 TermsOfUseChip(onClick = { uriHandler.openUri(termsOfUseUri) })
                 PrivacyPolicyChip(onClick = { uriHandler.openUri(privacyPolicyUri) })
+                AssistChip(
+                    onClick = { showLoginDialog = true },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.Login,
+                            contentDescription = null,
+                            modifier = Modifier.size(AssistChipDefaults.IconSize),
+                        )
+                    },
+                    label = { Text(stringResource(Res.string.action_sign_in)) },
+                )
             }
         }
     }

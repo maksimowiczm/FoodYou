@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.food.component.DownloadProductOpenFoodFactsUnavailableErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.component.DownloadProductUsdaErrorCard
 import com.maksimowiczm.foodyou.food.domain.entity.RemoteFoodException
 import foodyou.app.generated.resources.*
@@ -29,6 +30,7 @@ internal fun FoodSearchErrorCard(
     error: RemoteFoodException,
     onRetry: () -> Unit,
     onUsdaApiKey: () -> Unit,
+    onUpdateOpenFoodFactsCredentials: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (error) {
@@ -37,6 +39,12 @@ internal fun FoodSearchErrorCard(
                 message = null,
                 detailedMessage = error.message,
                 onRetry = onRetry,
+                modifier = modifier,
+            )
+
+        is RemoteFoodException.OpenFoodFacts.ServiceUnavailable ->
+            DownloadProductOpenFoodFactsUnavailableErrorCard(
+                onUpdateCredentials = onUpdateOpenFoodFactsCredentials,
                 modifier = modifier,
             )
 
