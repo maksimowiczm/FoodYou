@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import kotlin.collections.first
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -78,7 +79,7 @@ internal class EditProfileViewModel(
     }
 
     fun delete() {
-        if (isLocked.compareAndSet(expect = false, update = true)) {
+        if (!isLocked.compareAndSet(expect = false, update = true)) {
             logger.w { "Delete profile called while already locked" }
             return
         }
@@ -89,6 +90,12 @@ internal class EditProfileViewModel(
             account.removeProfile(profileId)
 
             accountRepository.save(account)
+
+            val currentSelection = appAccountManager.observeAppProfileId().first()
+            if (currentSelection == profileId) {
+                val anotherProfile = account.profiles.first()
+                appAccountManager.setAppProfileId(anotherProfile.id)
+            }
 
             _uiEventBus.send(EditProfileEvent.Deleted)
         }

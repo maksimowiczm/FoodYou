@@ -16,11 +16,11 @@ internal abstract class AccountDao {
 
     @Query("SELECT * FROM AccountSettings") abstract fun observeSettings(): Flow<SettingsEntity?>
 
+    @Query("DELETE FROM AccountProfile") protected abstract suspend fun deleteProfiles()
+
     @Upsert protected abstract suspend fun upsertProfiles(profileEntity: List<ProfileEntity>)
 
     @Upsert protected abstract suspend fun upsertSettings(settingsEntity: SettingsEntity)
-
-    @Query("DELETE FROM ProfileFavoriteFood") protected abstract suspend fun deleteFavoriteFoods()
 
     @Insert
     protected abstract suspend fun insertFavoriteFoods(
@@ -33,8 +33,8 @@ internal abstract class AccountDao {
         favoriteFoods: List<ProfileFavoriteFoodEntity>,
         settings: SettingsEntity,
     ) {
+        deleteProfiles()
         upsertProfiles(profiles)
-        deleteFavoriteFoods()
         insertFavoriteFoods(favoriteFoods)
         upsertSettings(settings)
     }

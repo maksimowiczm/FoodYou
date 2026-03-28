@@ -79,6 +79,7 @@ internal fun ProfileForm(
                         onCheckedChange = { if (it) state.avatar = avatar },
                         shapes = IconButtonDefaults.toggleableShapes(),
                         modifier = modifier.size(56.dp),
+                        enabled = !isLocked,
                     ) {
                         avatar.Avatar(Modifier.size(24.dp).clip(CircleShape))
                     }
@@ -96,6 +97,7 @@ internal fun ProfileForm(
                         },
                         shapes = IconButtonDefaults.toggleableShapes(),
                         modifier = modifier.size(56.dp),
+                        enabled = !isLocked,
                     ) {
                         when (val avatar = state.avatar) {
                             is UiProfileAvatar.Photo ->
