@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.food.diary.quickadd
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.common.compose.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.fooddiary.domain.entity.ManualDiaryEntryId
 import org.koin.compose.viewmodel.koinViewModel
@@ -16,6 +17,7 @@ fun UpdateQuickAddScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: UpdateQuickAddViewModel = koinViewModel { parametersOf(ManualDiaryEntryId(id)) }
+    val energyFormatter = LocalEnergyFormatter.current
 
     val latestOnSave by rememberUpdatedState(onSave)
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
@@ -44,7 +46,7 @@ fun UpdateQuickAddScreen(
         onBack = onBack,
         onSave = {
             val name = formState.name.value
-            val energy = formState.energy.value ?: 0.0
+            val energy = formState.energy.value?.let(energyFormatter::toKcal) ?: 0.0
             val proteins = formState.proteins.value ?: 0.0
             val carbohydrates = formState.carbohydrates.value ?: 0.0
             val fats = formState.fats.value ?: 0.0

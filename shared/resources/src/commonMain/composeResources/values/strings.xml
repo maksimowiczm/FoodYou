@@ -319,7 +319,7 @@
     <string name="action_try_again">Try again</string>
 
     <string name="description_calories_are_calculated">Energy is automatically calculated from macronutrients. You can disable this feature and enter the value manually if needed. Alcohol is not included in the calculation.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
+    <string name="x_energy_unit_per_g" description="e.g. proteins 4 kcal/g; proteins 17 kj/g">%1$s %2$d %3$s/g</string>
 
     <string name="neutral_an_error_occurred">An error occurred</string>
     <string name="action_retry">Retry</string>

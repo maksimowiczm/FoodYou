@@ -43,6 +43,16 @@ interface EnergyFormatter {
      */
     @Composable fun energyExceeded(exceeded: Int): String
 
+    fun fromKcal(kcal: Double): Double
+
+    fun toKcal(energy: Double): Double
+
+    val proteinsEnergyDensity: Int
+
+    val carbohydratesEnergyDensity: Int
+
+    val fatsEnergyDensity: Int
+
     companion object {
         val kilocalories: EnergyFormatter
             get() = KilocaloriesFormatter()
@@ -82,6 +92,16 @@ private class KilocaloriesFormatter : EnergyFormatter {
     @Composable
     override fun energyExceeded(exceeded: Int): String =
         pluralStringResource(Res.plurals.negative_exceeded_by_calories, exceeded, exceeded)
+
+    override fun fromKcal(kcal: Double): Double = kcal
+
+    override fun toKcal(energy: Double): Double = energy
+
+    override val proteinsEnergyDensity: Int = 4
+
+    override val carbohydratesEnergyDensity: Int = 4
+
+    override val fatsEnergyDensity: Int = 9
 }
 
 private class KilojoulesFormatter : EnergyFormatter {
@@ -125,7 +145,19 @@ private class KilojoulesFormatter : EnergyFormatter {
             toKj(exceeded).roundToInt(),
         )
 
+    override fun fromKcal(kcal: Double): Double = toKj(kcal)
+
+    override fun toKcal(energy: Double): Double = fromKj(energy)
+
+    override val proteinsEnergyDensity: Int = 17
+
+    override val carbohydratesEnergyDensity: Int = 17
+
+    override val fatsEnergyDensity: Int = 37
+
     private fun toKj(energy: Number): Double = energy.toDouble() * KILOJOULE_CONVERSION_FACTOR
+
+    private fun fromKj(energy: Number): Double = energy.toDouble() / KILOJOULE_CONVERSION_FACTOR
 
     private companion object {
         private const val KILOJOULE_CONVERSION_FACTOR = 4.184 // 1 kcal = 4.184 kJ

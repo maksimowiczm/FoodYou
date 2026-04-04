@@ -5,6 +5,7 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
+import com.maksimowiczm.foodyou.app.ui.common.form.ParseResult
 import com.maksimowiczm.foodyou.app.ui.common.form.nonBlankStringValidator
 import com.maksimowiczm.foodyou.app.ui.common.form.nonNegativeFloatValidator
 import com.maksimowiczm.foodyou.app.ui.common.form.nullableFloatParser
@@ -12,6 +13,8 @@ import com.maksimowiczm.foodyou.app.ui.common.form.nullableStringParser
 import com.maksimowiczm.foodyou.app.ui.common.form.positiveFloatValidator
 import com.maksimowiczm.foodyou.app.ui.common.form.rememberFormField
 import com.maksimowiczm.foodyou.app.ui.common.form.stringParser
+import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.app.ui.common.utility.Saver
 import com.maksimowiczm.foodyou.common.compose.utility.formatClipZeros
 import com.maksimowiczm.foodyou.common.domain.food.FoodSource
@@ -106,7 +109,38 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     val proteins = rememberRequiredFormField(product?.nutritionFacts?.proteins?.value)
     val carbohydrates = rememberRequiredFormField(product?.nutritionFacts?.carbohydrates?.value)
     val fats = rememberRequiredFormField(product?.nutritionFacts?.fats?.value)
-    val energy = rememberRequiredFormField(product?.nutritionFacts?.energy?.value)
+    val energyFormatter = LocalEnergyFormatter.current
+    val energy =
+        rememberFormField(
+            initialValue =
+                product?.nutritionFacts?.energy?.value?.let {
+                    energyFormatter.fromKcal(it).toFloat()
+                },
+            parser = { input ->
+                if (input.isBlank()) {
+                    ParseResult.Failure(ProductFormFieldError.Required)
+                } else {
+                    val value = input.toFloatOrNull()
+
+                    if (value == null) {
+                        ParseResult.Failure(ProductFormFieldError.NotANumber)
+                    } else {
+                        ParseResult.Success(value)
+                    }
+                }
+            },
+            validator =
+                nonNegativeFloatValidator(
+                    onNegative = { ProductFormFieldError.Negative },
+                    onNull = { ProductFormFieldError.Required },
+                ),
+            textFieldState =
+                rememberTextFieldState(
+                    product?.nutritionFacts?.energy?.value?.let {
+                        energyFormatter.fromKcal(it).formatClipZeros()
+                    } ?: ""
+                ),
+        )
 
     val autoCalculateEnergyState =
         rememberSaveable(product) {
@@ -153,7 +187,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                                 fats = fatsValue,
                             )
 
-                        val text = kcal.formatClipZeros()
+                        val energyValue = energyFormatter.fromKcal(kcal.toDouble())
+                        val text = energyValue.formatClipZeros()
                         energy.textFieldState.setTextAndPlaceCursorAtEnd(text)
                     }
                 }
@@ -193,7 +228,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                 }
                 .filterNotNull()
                 .collectLatest { kcal ->
-                    val text = kcal.formatClipZeros()
+                    val energyValue = energyFormatter.fromKcal(kcal.toDouble())
+                    val text = energyValue.formatClipZeros()
                     energy.textFieldState.setTextAndPlaceCursorAtEnd(text)
                 }
         }
@@ -543,6 +579,7 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
             iodineMicro = iodine,
             isModifiedState = isModified,
             autoCalculateEnergyState = autoCalculateEnergyState,
+            energyFormatter = energyFormatter,
         )
     }
 }
@@ -624,7 +661,36 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
     val proteins = rememberRequiredFormField(product.nutritionFacts?.proteins)
     val carbohydrates = rememberRequiredFormField(product.nutritionFacts?.carbohydrates)
     val fats = rememberRequiredFormField(product.nutritionFacts?.fats)
-    val energy = rememberRequiredFormField(product.nutritionFacts?.energy)
+    val energyFormatter = LocalEnergyFormatter.current
+    val energy =
+        rememberFormField(
+            initialValue =
+                product.nutritionFacts?.energy?.let { energyFormatter.fromKcal(it).toFloat() },
+            parser = { input ->
+                if (input.isBlank()) {
+                    ParseResult.Failure(ProductFormFieldError.Required)
+                } else {
+                    val value = input.toFloatOrNull()
+
+                    if (value == null) {
+                        ParseResult.Failure(ProductFormFieldError.NotANumber)
+                    } else {
+                        ParseResult.Success(value)
+                    }
+                }
+            },
+            validator =
+                nonNegativeFloatValidator(
+                    onNegative = { ProductFormFieldError.Negative },
+                    onNull = { ProductFormFieldError.Required },
+                ),
+            textFieldState =
+                rememberTextFieldState(
+                    product.nutritionFacts?.energy?.let {
+                        energyFormatter.fromKcal(it).formatClipZeros()
+                    } ?: ""
+                ),
+        )
 
     val autoCalculateEnergyState =
         rememberSaveable(product) {
@@ -665,7 +731,8 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
                                 fats = fatsValue,
                             )
 
-                        val text = kcal.formatClipZeros()
+                        val energyValue = energyFormatter.fromKcal(kcal.toDouble())
+                        val text = energyValue.formatClipZeros()
                         energy.textFieldState.setTextAndPlaceCursorAtEnd(text)
                     }
                 }
@@ -705,7 +772,8 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
                 }
                 .filterNotNull()
                 .collectLatest { kcal ->
-                    val text = kcal.formatClipZeros()
+                    val energyValue = energyFormatter.fromKcal(kcal.toDouble())
+                    val text = energyValue.formatClipZeros()
                     energy.textFieldState.setTextAndPlaceCursorAtEnd(text)
                 }
         }
@@ -964,6 +1032,7 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
             iodineMicro = iodine,
             isModifiedState = isModified,
             autoCalculateEnergyState = autoCalculateEnergyState,
+            energyFormatter = energyFormatter,
         )
     }
 }
@@ -1010,6 +1079,7 @@ internal class ProductFormState(
     val servingWeight: FormField<Float?, ProductFormFieldError>,
     // Nutrients
     val energy: FormField<Float?, ProductFormFieldError>,
+    val energyFormatter: EnergyFormatter,
     // Proteins
     val proteins: FormField<Float?, ProductFormFieldError>,
     // Fats
@@ -1122,7 +1192,11 @@ internal fun ProductFormState.nutritionFacts(multiplier: Float) =
     NutritionFacts(
         proteins = proteins.value.applyMultiplier(multiplier).toNutrientValue(),
         carbohydrates = carbohydrates.value.applyMultiplier(multiplier).toNutrientValue(),
-        energy = energy.value.applyMultiplier(multiplier).toNutrientValue(),
+        energy =
+            energy.value
+                ?.let { energyFormatter.toKcal(it.toDouble()).toFloat() }
+                .applyMultiplier(multiplier)
+                .toNutrientValue(),
         fats = fats.value.applyMultiplier(multiplier).toNutrientValue(),
         saturatedFats = saturatedFats.value.applyMultiplier(multiplier).toNutrientValue(),
         transFats = transFats.value.applyMultiplier(multiplier).toNutrientValue(),

@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.app.ui.common.form.nonBlankStringValidator
 import com.maksimowiczm.foodyou.app.ui.common.form.nullableDoubleParser
 import com.maksimowiczm.foodyou.app.ui.common.form.rememberFormField
 import com.maksimowiczm.foodyou.app.ui.common.form.stringParser
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.common.compose.utility.formatClipZeros
 import com.maksimowiczm.foodyou.common.domain.food.NutrientsHelper
 import foodyou.app.generated.resources.*
@@ -38,6 +39,9 @@ internal fun rememberQuickAddFormState(
     fats: Double? = null,
     energy: Double? = null,
 ): QuickAddFormState {
+    val energyFormatter = LocalEnergyFormatter.current
+    val energyInUserUnit = energy?.let(energyFormatter::fromKcal)
+
     val nameForm =
         rememberFormField(
             initialValue = name,
@@ -78,12 +82,12 @@ internal fun rememberQuickAddFormState(
 
     val energyForm =
         rememberFormField(
-            initialValue = energy,
+            initialValue = energyInUserUnit,
             parser = nullableDoubleParser(onNotANumber = { QuickAddFormFieldError.InvalidNumber }),
             validator = {
                 if (it != null && it < 0) QuickAddFormFieldError.NegativeNumber else null
             },
-            textFieldState = rememberTextFieldState(energy?.formatClipZeros() ?: ""),
+            textFieldState = rememberTextFieldState(energyInUserUnit?.formatClipZeros() ?: ""),
         )
 
     val autoCalculateEnergyState =
@@ -102,7 +106,13 @@ internal fun rememberQuickAddFormState(
             mutableStateOf(initialState)
         }
 
-    LaunchedEffect(autoCalculateEnergyState, proteinsForm, carbohydratesForm, fatsForm) {
+    LaunchedEffect(
+        autoCalculateEnergyState,
+        proteinsForm,
+        carbohydratesForm,
+        fatsForm,
+        energyFormatter,
+    ) {
         snapshotFlow {
                 if (!autoCalculateEnergyState.value) {
                     return@snapshotFlow null
@@ -112,12 +122,14 @@ internal fun rememberQuickAddFormState(
                 val carbohydratesValue = carbohydratesForm.value ?: 0.0
                 val fatsValue = fatsForm.value ?: 0.0
 
-                NutrientsHelper.calculateEnergy(
+                val kcal =
+                    NutrientsHelper.calculateEnergy(
                         proteins = proteinsValue,
                         carbohydrates = carbohydratesValue,
                         fats = fatsValue,
                     )
-                    .formatClipZeros()
+
+                energyFormatter.fromKcal(kcal).formatClipZeros()
             }
             .filterNotNull()
             .collectLatest { energyForm.textFieldState.setTextAndPlaceCursorAtEnd(it) }
@@ -134,15 +146,18 @@ internal fun rememberQuickAddFormState(
             fatsForm,
             fats,
             energyForm,
-            energy,
+            energyInUserUnit,
         ) {
             derivedStateOf {
                 nameForm.value != name ||
                     proteinsForm.value != proteins ||
                     carbohydratesForm.value != carbohydrates ||
                     fatsForm.value != fats ||
-                    if (energy == null) energyForm.value != null && energyForm.value != 0.0
-                    else energyForm.value != energy
+                    if (energyInUserUnit == null) {
+                        energyForm.value != null && energyForm.value != 0.0
+                    } else {
+                        energyForm.value != energyInUserUnit
+                    }
             }
         }
 

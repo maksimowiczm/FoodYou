@@ -44,6 +44,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.utility.stringResource
 import com.maksimowiczm.foodyou.app.ui.food.component.Icon
@@ -681,6 +682,8 @@ private fun EnergyTextField(
     onAutoCalculateToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val energyFormatter = LocalEnergyFormatter.current
+
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedTextField(
             state = state.textFieldState,
@@ -727,7 +730,7 @@ private fun EnergyTextField(
             isError = state.error != null,
             keyboardOptions =
                 KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
-            suffix = { Text(stringResource(Res.string.unit_kcal)) },
+            suffix = { Text(energyFormatter.suffix()) },
         )
         Text(
             text = stringResource(Res.string.description_calories_are_calculated),
@@ -737,19 +740,22 @@ private fun EnergyTextField(
             text =
                 unorderedList(
                     stringResource(
-                        Res.string.x_kcal_per_g,
+                        Res.string.x_energy_unit_per_g,
                         stringResource(Res.string.nutriment_proteins),
-                        4,
+                        energyFormatter.proteinsEnergyDensity,
+                        energyFormatter.suffix(),
                     ),
                     stringResource(
-                        Res.string.x_kcal_per_g,
+                        Res.string.x_energy_unit_per_g,
                         stringResource(Res.string.nutriment_carbohydrates),
-                        4,
+                        energyFormatter.carbohydratesEnergyDensity,
+                        energyFormatter.suffix(),
                     ),
                     stringResource(
-                        Res.string.x_kcal_per_g,
+                        Res.string.x_energy_unit_per_g,
                         stringResource(Res.string.nutriment_fats),
-                        9,
+                        energyFormatter.fatsEnergyDensity,
+                        energyFormatter.suffix(),
                     ),
                 ),
             style = MaterialTheme.typography.bodySmall,

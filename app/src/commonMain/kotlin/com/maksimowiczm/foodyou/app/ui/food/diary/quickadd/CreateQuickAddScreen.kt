@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.food.diary.quickadd
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyFormatter
 import com.maksimowiczm.foodyou.common.compose.extension.LaunchedCollectWithLifecycle
 import kotlinx.datetime.LocalDate
 import org.koin.compose.viewmodel.koinViewModel
@@ -16,6 +17,7 @@ fun CreateQuickAddScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: CreateQuickAddViewModel = koinViewModel { parametersOf(date, mealId) }
+    val energyFormatter = LocalEnergyFormatter.current
 
     val latestOnSave by rememberUpdatedState(onSave)
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
@@ -30,7 +32,7 @@ fun CreateQuickAddScreen(
         onBack = onBack,
         onSave = {
             val name = formState.name.value
-            val energy = formState.energy.value ?: 0.0
+            val energy = formState.energy.value?.let(energyFormatter::toKcal) ?: 0.0
             val proteins = formState.proteins.value ?: 0.0
             val carbohydrates = formState.carbohydrates.value ?: 0.0
             val fats = formState.fats.value ?: 0.0
