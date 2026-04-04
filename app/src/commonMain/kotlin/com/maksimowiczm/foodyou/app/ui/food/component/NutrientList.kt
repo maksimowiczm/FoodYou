@@ -438,6 +438,13 @@ private fun Minerals(
             contentPadding = contentPadding,
         )
 
+        // Iodine
+        Nutrient(
+            label = { Text(stringResource(Res.string.mineral_iodine)) },
+            value = { NutrientDisplay(facts.iodine * 1_000_000.0, incompleteValue, mcg) },
+            contentPadding = contentPadding,
+        )
+
         // Chromium
         Nutrient(
             label = { Text(stringResource(Res.string.mineral_chromium)) },
