@@ -459,6 +459,7 @@ private fun Minerals(
                 facts.iron.value != null,
                 facts.phosphorus.value != null,
                 facts.selenium.value != null,
+                facts.iodine.value != null,
                 facts.chromium.value != null,
             )
             .any { it }
@@ -532,6 +533,12 @@ private fun Minerals(
                         name = stringResource(Res.string.mineral_selenium),
                     )
                 }
+                if (facts.iodine.value != null) {
+                    NutrientItem(
+                        amount = facts.iodine.inUnit(WeightUnit.Micrograms),
+                        name = stringResource(Res.string.mineral_iodine),
+                    )
+                }
                 if (facts.chromium.value != null) {
                     NutrientItem(
                         amount = facts.chromium.inUnit(WeightUnit.Micrograms),
@@ -586,6 +593,7 @@ private fun NutrientItem(
             when (amount) {
                 is NutrientValue.Complete<Weight> ->
                     Text(text = amount.value.stringResource(), color = amountColor)
+
                 is NutrientValue.Incomplete<Weight> -> IncompleteValue(amount)
             }
         }
