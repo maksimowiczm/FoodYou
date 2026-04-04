@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.app.ui.language
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -80,17 +82,28 @@ private fun LanguageScreen(
             item { TranslateButton(onClick = onHelpTranslate, modifier = Modifier.padding(8.dp)) }
 
             item {
+                val interactionSource = remember { MutableInteractionSource() }
                 ListItem(
                     headlineContent = { Text(stringResource(Res.string.headline_system)) },
                     leadingContent = {
-                        RadioButton(selected = false, onClick = { onLanguageSelect(null) })
+                        RadioButton(
+                            selected = false,
+                            onClick = null,
+                            interactionSource = interactionSource,
+                        )
                     },
-                    modifier = Modifier.clickable { onLanguageSelect(null) },
+                    modifier =
+                        Modifier.clickable(
+                            interactionSource = interactionSource,
+                            indication = LocalIndication.current,
+                            onClick = { onLanguageSelect(null) },
+                        ),
                 )
             }
 
             translations.forEach { translation ->
                 item {
+                    val interactionSource = remember { MutableInteractionSource() }
                     ListItem(
                         headlineContent = { Text(translation.languageName) },
                         supportingContent = {
@@ -105,10 +118,16 @@ private fun LanguageScreen(
                         leadingContent = {
                             RadioButton(
                                 selected = selectedTranslation == translation,
-                                onClick = { onLanguageSelect(translation) },
+                                onClick = null,
+                                interactionSource = interactionSource,
                             )
                         },
-                        modifier = Modifier.clickable { onLanguageSelect(translation) },
+                        modifier =
+                            Modifier.clickable(
+                                interactionSource = interactionSource,
+                                indication = LocalIndication.current,
+                                onClick = { onLanguageSelect(translation) },
+                            ),
                     )
                 }
             }
