@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -14,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -102,7 +102,8 @@ internal fun OpenFoodFactsSearchApp(
         if (pages.itemCount == 0 && isIdle) {
             Text(
                 text = stringResource(Res.string.neutral_no_food_found),
-                modifier = Modifier.safeContentPadding().align(Alignment.Center),
+                modifier = Modifier.align(Alignment.Center),
+                textAlign = TextAlign.Center,
             )
         }
 
