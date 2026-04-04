@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(private val appAccountManager: AppAccountManager) : ViewModel() {
+internal class ProfileViewModel(private val appAccountManager: AppAccountManager) : ViewModel() {
     val profiles =
         appAccountManager
             .observeAppAccount()
@@ -25,7 +25,7 @@ class ProfileViewModel(private val appAccountManager: AppAccountManager) : ViewM
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = emptyList(),
+                initialValue = null,
             )
 
     val selectedProfile =

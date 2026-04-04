@@ -45,7 +45,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
 fun HomePersonalizationScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val viewModel: HomeViewModel = koinInject()
+    val viewModel: HomeOrderViewModel = koinInject()
     val homeOrder by viewModel.homeOrder.collectAsStateWithLifecycle()
 
     HomePersonalizationScreen(

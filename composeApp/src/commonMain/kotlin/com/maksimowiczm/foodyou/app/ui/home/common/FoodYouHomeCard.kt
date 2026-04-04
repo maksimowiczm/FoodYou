@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.home
+package com.maksimowiczm.foodyou.app.ui.home.common
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun FoodYouHomeCard(
+internal fun FoodYouHomeCard(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.surfaceContainerLow,
     content: @Composable () -> Unit,
@@ -19,7 +19,7 @@ fun FoodYouHomeCard(
 }
 
 @Composable
-fun FoodYouHomeCard(
+internal fun FoodYouHomeCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     color: Color = FoodYouHomeCardDefaults.color,
@@ -33,7 +33,7 @@ fun FoodYouHomeCard(
     }
 }
 
-object FoodYouHomeCardDefaults {
+internal object FoodYouHomeCardDefaults {
 
     val color: Color
         @Composable get() = MaterialTheme.colorScheme.surfaceContainerLow

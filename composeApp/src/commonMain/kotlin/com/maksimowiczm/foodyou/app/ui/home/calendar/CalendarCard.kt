@@ -45,9 +45,9 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.segmentFrequentTick
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalClock
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalDateFormatter
-import com.maksimowiczm.foodyou.app.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.app.ui.home.FoodYouHomeCardDefaults
-import com.maksimowiczm.foodyou.app.ui.home.HomeState
+import com.maksimowiczm.foodyou.app.ui.home.common.FoodYouHomeCard
+import com.maksimowiczm.foodyou.app.ui.home.common.FoodYouHomeCardDefaults
+import com.maksimowiczm.foodyou.app.ui.home.common.HomeState
 import com.maksimowiczm.foodyou.common.clock.domain.observeDate
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.days
@@ -62,7 +62,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun CalendarCard(homeState: HomeState, modifier: Modifier = Modifier) {
+internal fun CalendarCard(homeState: HomeState, modifier: Modifier = Modifier) {
     val clock = LocalClock.current
     val today by clock.observeDate().collectAsStateWithLifecycle(LocalDate.now())
 

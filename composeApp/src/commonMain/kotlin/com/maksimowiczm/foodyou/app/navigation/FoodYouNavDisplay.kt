@@ -27,6 +27,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.NutritionFact
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.OpenFoodFactsProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Personalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.SwitchProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserProductDetails
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
@@ -35,6 +36,7 @@ import com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts.OpenFoodFactsD
 import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
+import com.maksimowiczm.foodyou.app.ui.home.SettingsScreen
 import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.ColorsScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
@@ -153,9 +155,21 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                 }
                 entry<Home> {
                     HomeScreen(
-                        onFoodDatabase = { backStack.add(FoodDatabase(null)) },
+                        onAvatar = { backStack.add(SwitchProfile) },
+                        onFoodDataCentralProduct = { id ->
+                            backStack.add(FoodDataCentralProductDetails.from(id))
+                        },
+                        onOpenFoodFactsProduct = { id ->
+                            backStack.add(OpenFoodFactsProductDetails.from(id))
+                        },
+                        onUserFood = { id -> backStack.add(UserProductDetails(id)) },
+                        onCreate = { backStack.add(CreateProduct) },
+                    )
+                }
+                entry<SwitchProfile> {
+                    SettingsScreen(
+                        onBack = { backStack.removeLastIf<SwitchProfile>() },
                         onPersonalization = { backStack.add(Personalization) },
-                        onDataBackupAndExport = { /* TODO */ },
                         onLanguage = { backStack.add(Language) },
                         onPrivacy = { backStack.add(Privacy) },
                         onAbout = { backStack.add(About) },
@@ -265,6 +279,8 @@ sealed interface FoodYouNavHostRoute : NavKey {
     }
 
     @Serializable data object Home : FoodYouNavHostRoute
+
+    @Serializable data object SwitchProfile : FoodYouNavHostRoute
 
     @Serializable data object HomePersonalization : FoodYouNavHostRoute
 

@@ -7,3 +7,6 @@ fun <T> MutableList<T>.removeLastIf(predicate: (T) -> Boolean) {
 }
 
 inline fun <reified T> MutableList<*>.removeLastIf(): Unit = removeLastIf { it is T }
+
+// Must use this because Android might not have virtual method removeLast
+fun <T> MutableList<T>.safeRemoveLast() = removeAt(lastIndex)

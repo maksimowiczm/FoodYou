@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.home
+package com.maksimowiczm.foodyou.app.ui.home.common
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
@@ -9,7 +9,7 @@ import com.valentinilk.shimmer.rememberShimmer
 import kotlinx.datetime.LocalDate
 
 @Composable
-fun rememberHomeState(initialSelectedDate: LocalDate): HomeState {
+internal fun rememberHomeState(initialSelectedDate: LocalDate): HomeState {
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.Window)
 
     return rememberSaveable(
@@ -27,7 +27,7 @@ fun rememberHomeState(initialSelectedDate: LocalDate): HomeState {
 }
 
 @Stable
-class HomeState(initialSelectedDate: LocalDate, val shimmer: Shimmer) {
+internal class HomeState(initialSelectedDate: LocalDate, val shimmer: Shimmer) {
     var selectedDate by mutableStateOf(initialSelectedDate)
         private set
 

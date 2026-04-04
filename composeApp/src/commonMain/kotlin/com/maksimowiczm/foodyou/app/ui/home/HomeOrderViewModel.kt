@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
+internal class HomeOrderViewModel(
     private val appAccountManager: AppAccountManager,
     private val accountRepository: AccountRepository,
     logger: Logger,
