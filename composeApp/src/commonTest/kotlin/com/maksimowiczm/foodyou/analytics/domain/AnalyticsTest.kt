@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
-import com.maksimowiczm.foodyou.common.clock.testClock
+import com.maksimowiczm.foodyou.common.clock.staticClock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -12,7 +12,7 @@ class AnalyticsTest {
         val analytics = Analytics()
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
-        val clock = testClock(now)
+        val clock = staticClock(now)
 
         analytics.recordAppLaunch(versionName = versionName, clock = clock)
 
@@ -31,8 +31,8 @@ class AnalyticsTest {
         val versionNameV2 = "4.1.0"
         val now1 = Instant.fromEpochSeconds(1_600_000_000)
         val now2 = Instant.fromEpochSeconds(1_600_000_100)
-        val clock1 = testClock(now1)
-        val clock2 = testClock(now2)
+        val clock1 = staticClock(now1)
+        val clock2 = staticClock(now2)
 
         analytics.recordAppLaunch(versionName = versionNameV1, clock = clock1)
 
@@ -51,7 +51,7 @@ class AnalyticsTest {
         val analytics = Analytics()
         val versionName = "4.0.0"
         val now = Instant.fromEpochSeconds(1_600_000_000)
-        val clock = testClock(now)
+        val clock = staticClock(now)
 
         analytics.recordAppLaunch(versionName = versionName, clock = clock)
 

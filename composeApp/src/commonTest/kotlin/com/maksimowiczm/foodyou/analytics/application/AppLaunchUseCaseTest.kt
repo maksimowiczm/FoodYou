@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.analytics.domain.AnalyticsRepository
 import com.maksimowiczm.foodyou.analytics.domain.FakeAnalyticsRepository
 import com.maksimowiczm.foodyou.analytics.domain.testAccountAnalytics
 import com.maksimowiczm.foodyou.app.domain.testAppConfig
-import com.maksimowiczm.foodyou.common.clock.testClock
+import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.event.ChannelEventBus
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.common.event.EventBus
@@ -105,7 +105,7 @@ class AppLaunchUseCaseTest {
         eventBus: EventBus<DomainEvent> = ChannelEventBus(),
     ) =
         AppLaunchUseCase(
-            clock = testClock(),
+            clock = staticClock(),
             analyticsRepository = analyticsRepository,
             appConfig = testAppConfig(),
             eventBus = eventBus,

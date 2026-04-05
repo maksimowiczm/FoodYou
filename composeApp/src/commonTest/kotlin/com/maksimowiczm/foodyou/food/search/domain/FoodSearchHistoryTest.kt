@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.food.search.domain
 
 import com.maksimowiczm.foodyou.account.domain.testProfileId
-import com.maksimowiczm.foodyou.common.clock.testClock
+import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchHistory
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import kotlin.test.Test
@@ -13,7 +13,7 @@ class FoodSearchHistoryTest {
     fun recordSearchQuery_storesOnlyTextQueries() {
         val history = FoodSearchHistory.of(profileId = testProfileId())
         val now = Instant.fromEpochSeconds(1_000_000_000)
-        val clock = testClock(now)
+        val clock = staticClock(now)
 
         history.recordSearchQuery(SearchQuery.Barcode("1234567890123"), clock)
         history.recordSearchQuery(
@@ -36,9 +36,9 @@ class FoodSearchHistoryTest {
     fun recordSearchQuery_updatesTimestampForExistingQuery() {
         val history = FoodSearchHistory.of(profileId = testProfileId())
         val now1 = Instant.fromEpochSeconds(1_000_000_000)
-        val clock1 = testClock(now1)
+        val clock1 = staticClock(now1)
         val now2 = Instant.fromEpochSeconds(1_000_000_100)
-        val clock2 = testClock(now2)
+        val clock2 = staticClock(now2)
 
         history.recordSearchQuery(SearchQuery.Text("banana"), clock1)
 
@@ -56,7 +56,7 @@ class FoodSearchHistoryTest {
     @Test
     fun recordSearchQuery_maintainsMaxHistorySize_oldestEntriesRemoved() {
         val history = FoodSearchHistory.of(profileId = testProfileId())
-        val clock = testClock(Instant.fromEpochSeconds(1_000_000_000))
+        val clock = staticClock(Instant.fromEpochSeconds(1_000_000_000))
         val lastIndex =
             (FoodSearchHistory.MAX_HISTORY_SIZE + 5) % FoodSearchHistory.MAX_HISTORY_SIZE + 1
 
