@@ -127,12 +127,14 @@ fun HomeScreen(
 
             HomeScreenTopBar(
                 profile = profile,
+                profiles = profiles ?: emptyList(),
                 homeSearchState = searchState,
                 onAvatar = onAvatar,
                 onSearch = {
                     scope.launch { searchState.goToSearch() }
                     homeSearchViewModel.search(it)
                 },
+                onSelectProfile = profileViewModel::selectProfile,
             )
         },
     ) { contentPadding ->

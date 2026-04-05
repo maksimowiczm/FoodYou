@@ -1,9 +1,17 @@
 package com.maksimowiczm.foodyou.app.ui.home
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,7 +51,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
@@ -57,6 +67,7 @@ import com.maksimowiczm.foodyou.app.ui.home.search.Search
 import com.maksimowiczm.foodyou.app.ui.home.search.SearchView
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
+import kotlin.math.abs
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -64,9 +75,11 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun HomeScreenTopBar(
     profile: ProfileUiState?,
+    profiles: List<ProfileUiState>,
     homeSearchState: HomeSearchState,
     onAvatar: () -> Unit,
     onSearch: (String?) -> Unit,
+    onSelectProfile: (ProfileUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -107,11 +120,45 @@ internal fun HomeScreenTopBar(
             }
         },
         endSlot = {
+            var profileSwitchDirection by remember { mutableIntStateOf(1) }
+            var animateProfileSwitch by remember { mutableStateOf(false) }
+
+            // Reset after changing the profile
+            LaunchedEffect(profile) { animateProfileSwitch = false }
+
             AnimatedContent(
                 targetState = profile,
                 modifier = Modifier.graphicsLayer { alpha = homeProgress.value },
+                transitionSpec = {
+                    if (!animateProfileSwitch) {
+                        EnterTransition.None.togetherWith(ExitTransition.None)
+                    } else if (profileSwitchDirection < 0) {
+                        slideInVertically(motionScheme.fastSpatialSpec()) { -it } +
+                            fadeIn(motionScheme.fastEffectsSpec()) togetherWith
+                            slideOutVertically(motionScheme.fastSpatialSpec()) { it } +
+                                fadeOut(motionScheme.fastEffectsSpec())
+                    } else {
+                        slideInVertically(motionScheme.fastSpatialSpec()) { it } +
+                            fadeIn(motionScheme.fastEffectsSpec()) togetherWith
+                            slideOutVertically(motionScheme.fastSpatialSpec()) { -it } +
+                                fadeOut(motionScheme.fastEffectsSpec())
+                    }
+                },
             ) { p ->
-                IconButton(onClick = onAvatar, shapes = IconButtonDefaults.shapes()) {
+                IconButton(
+                    onClick = onAvatar,
+                    shapes = IconButtonDefaults.shapes(),
+                    modifier =
+                        Modifier.swipeThroughList(
+                            items = profiles,
+                            currentItem = p,
+                            swipeThresholdPx = LocalDensity.current.run { 32.dp.toPx() },
+                        ) { direction, nextProfile ->
+                            profileSwitchDirection = direction
+                            animateProfileSwitch = true
+                            onSelectProfile(nextProfile)
+                        },
+                ) {
                     if (p != null) {
                         val avatarModifier =
                             when (p.avatar) {
@@ -340,4 +387,64 @@ private fun SearchInputField(
                 container = { Box(Modifier) },
             ),
     )
+}
+
+/**
+ * Detects a vertical swipe and switches to the previous or next item in [items] once the
+ * accumulated drag reaches [swipeThresholdPx].
+ *
+ * Positive drag selects the previous item, negative drag selects the next item. The list is treated
+ * as closed loop, so swiping past either end wraps around.
+ */
+private fun <T> Modifier.swipeThroughList(
+    items: List<T>,
+    currentItem: T?,
+    swipeThresholdPx: Float,
+    onItemSwitched: (direction: Int, nextItem: T) -> Unit,
+): Modifier =
+    pointerInput(items, currentItem, swipeThresholdPx) {
+        var totalDrag = 0f
+        var profileSwitched = false
+
+        detectVerticalDragGestures(
+            onDragStart = {
+                totalDrag = 0f
+                profileSwitched = false
+            },
+            onVerticalDrag = { change, dragAmount ->
+                totalDrag += dragAmount
+                if (!profileSwitched && abs(totalDrag) >= swipeThresholdPx) {
+                    val nextItem =
+                        adjacentItem(
+                            items = items,
+                            current = currentItem,
+                            movePrevious = totalDrag > 0f,
+                        )
+                    if (nextItem != null && nextItem != currentItem) {
+                        onItemSwitched(if (totalDrag > 0f) -1 else 1, nextItem)
+                        profileSwitched = true
+                    }
+                }
+                change.consume()
+            },
+        )
+    }
+
+private fun <T> adjacentItem(items: List<T>, current: T?, movePrevious: Boolean): T? {
+    if (items.isEmpty()) {
+        return null
+    }
+
+    if (items.size == 1) {
+        return items.first()
+    }
+
+    val currentIndex = current?.let(items::indexOf) ?: -1
+    if (currentIndex == -1) {
+        return if (movePrevious) items.last() else items.first()
+    }
+
+    val offset = if (movePrevious) -1 else 1
+    val nextIndex = (currentIndex + offset + items.size) % items.size
+    return items[nextIndex]
 }
