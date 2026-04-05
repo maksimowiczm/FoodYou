@@ -3,6 +3,9 @@ package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
+import com.maksimowiczm.foodyou.common.infrastructure.network.SimpleRateLimiter
+import com.maksimowiczm.foodyou.common.infrastructure.network.WindowedRequestLog
+import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.SearchaliciousResponse
 import io.ktor.client.HttpClient
@@ -44,12 +47,12 @@ internal class SearchaliciousRemoteDataSource(
         page: Int = 1,
         sortBy: String? = null,
     ): SearchaliciousResponse {
-        if (!rateLimiter.canMakeRequest()) {
-            logger.d { "Rate limit exceeded for OpenFoodFacts API" }
-            throw OpenFoodFactsApiError.RateLimitExceeded()
-        }
-
-        return try {
+        return rateLimiter.withRateLimit(
+            onRateLimit = {
+                logger.d { "Rate limit exceeded for OpenFoodFacts API" }
+                throw OpenFoodFactsApiError.RateLimitExceeded()
+            }
+        ) {
             client
                 .get("$API_URL/search") {
                     userAgent(networkConfig.userAgent)
@@ -66,8 +69,6 @@ internal class SearchaliciousRemoteDataSource(
                     sortBy?.let { parameter("sort_by", it) }
                 }
                 .body<SearchaliciousResponse>()
-        } finally {
-            rateLimiter.recordRequest()
         }
     }
 
@@ -76,6 +77,7 @@ internal class SearchaliciousRemoteDataSource(
         private const val TAG = "SearchaliciousRemoteDataSource"
         private const val TIMEOUT = 60_000L
 
-        fun rateLimiter(clock: Clock) = RateLimiter(clock, 20, 1.minutes)
+        fun rateLimiter(clock: Clock): RateLimiter =
+            SimpleRateLimiter(WindowedRequestLog(clock, 20, 1.minutes))
     }
 }

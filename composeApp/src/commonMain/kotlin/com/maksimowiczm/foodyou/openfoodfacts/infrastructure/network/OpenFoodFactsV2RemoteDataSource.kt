@@ -3,6 +3,9 @@ package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
+import com.maksimowiczm.foodyou.common.infrastructure.network.SimpleRateLimiter
+import com.maksimowiczm.foodyou.common.infrastructure.network.WindowedRequestLog
+import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsProductNetwork
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsProductResponseV2
@@ -31,12 +34,13 @@ internal class OpenFoodFactsV2RemoteDataSource(
         val countries = countries?.lowercase()
         val url = "$API_URL/api/v2/product/$barcode"
 
-        if (!rateLimiter.canMakeRequest()) {
-            logger.d { "Rate limit exceeded for OpenFoodFacts API" }
-            return Result.failure(OpenFoodFactsApiError.RateLimitExceeded())
-        }
-
-        return runCatching {
+        return rateLimiter.withRateLimit(
+            onRateLimit = {
+                logger.d { "Rate limit exceeded for OpenFoodFacts API" }
+                Result.failure(OpenFoodFactsApiError.RateLimitExceeded())
+            }
+        ) {
+            runCatching {
                 val response =
                     client.get(url) {
                         userAgent(networkConfig.userAgent)
@@ -50,14 +54,14 @@ internal class OpenFoodFactsV2RemoteDataSource(
 
                 if (response.status == HttpStatusCode.NotFound) {
                     logger.d { "Product not found for code: $barcode" }
-                    return Result.failure(OpenFoodFactsApiError.ProductNotFound())
+                    return@withRateLimit Result.failure(OpenFoodFactsApiError.ProductNotFound())
                 }
 
                 val product = response.body<OpenFoodFactsProductResponseV2>()
 
                 product.product
             }
-            .also { rateLimiter.recordRequest() }
+        }
     }
 
     companion object {
@@ -65,6 +69,7 @@ internal class OpenFoodFactsV2RemoteDataSource(
         private const val TAG = "OpenFoodFactsRemoteDataSource"
         private const val TIMEOUT = 60_000L
 
-        fun rateLimiter(clock: Clock) = RateLimiter(clock, 100, 1.minutes)
+        fun rateLimiter(clock: Clock): RateLimiter =
+            SimpleRateLimiter(WindowedRequestLog(clock, 100, 1.minutes))
     }
 }

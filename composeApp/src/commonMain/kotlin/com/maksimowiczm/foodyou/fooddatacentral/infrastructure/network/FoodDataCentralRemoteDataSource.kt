@@ -3,6 +3,9 @@ package com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
+import com.maksimowiczm.foodyou.common.infrastructure.network.SimpleRateLimiter
+import com.maksimowiczm.foodyou.common.infrastructure.network.WindowedRequestLog
+import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.DetailedFood
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.FoodDataCentralFoodPageResponse
@@ -28,12 +31,13 @@ internal class FoodDataCentralRemoteDataSource(
     suspend fun getProduct(id: Int, apiKey: String?): Result<DetailedFood> {
         val url = "$API_URL/v1/food/$id"
 
-        if (!rateLimiter.canMakeRequest()) {
-            logger.d { "Rate limit exceeded for FoodDataCentral API" }
-            return Result.failure(FoodDataCentralApiError.RateLimitExceeded())
-        }
-
-        return runCatching {
+        return rateLimiter.withRateLimit(
+            onRateLimit = {
+                logger.d { "Rate limit exceeded for FoodDataCentral API" }
+                Result.failure(FoodDataCentralApiError.RateLimitExceeded())
+            }
+        ) {
+            runCatching {
                 val response =
                     client.get(url) {
                         userAgent(networkConfig.userAgent)
@@ -44,23 +48,23 @@ internal class FoodDataCentralRemoteDataSource(
 
                 if (response.status == HttpStatusCode.NotFound) {
                     logger.d { "Product not found for code: $id" }
-                    return Result.failure(FoodDataCentralApiError.ProductNotFound())
+                    return@withRateLimit Result.failure(FoodDataCentralApiError.ProductNotFound())
                 }
 
                 if (response.status == HttpStatusCode.TooManyRequests) {
                     logger.w { "FoodDataCentral API rate limit exceeded for code: $id" }
-                    return Result.failure(FoodDataCentralApiError.RateLimitExceeded())
+                    return@withRateLimit Result.failure(FoodDataCentralApiError.RateLimitExceeded())
                 }
 
                 if (response.status == HttpStatusCode.Forbidden) {
                     val error = response.getError()
                     logger.e { "FoodDataCentral API error for code: $id - ${error.message}" }
-                    return Result.failure(error)
+                    return@withRateLimit Result.failure(error)
                 }
 
                 response.body<DetailedFood>()
             }
-            .also { rateLimiter.recordRequest() }
+        }
     }
 
     suspend fun queryProducts(
@@ -69,12 +73,12 @@ internal class FoodDataCentralRemoteDataSource(
         pageSize: Int,
         apiKey: String?,
     ): FoodDataCentralFoodPageResponse {
-        if (!rateLimiter.canMakeRequest()) {
-            logger.d { "Rate limit exceeded for FoodDataCentral API" }
-            throw FoodDataCentralApiError.RateLimitExceeded()
-        }
-
-        return try {
+        return rateLimiter.withRateLimit(
+            onRateLimit = {
+                logger.d { "Rate limit exceeded for FoodDataCentral API" }
+                throw FoodDataCentralApiError.RateLimitExceeded()
+            }
+        ) {
             val response =
                 client.get("$API_URL/v1/foods/search") {
                     userAgent(networkConfig.userAgent)
@@ -97,8 +101,6 @@ internal class FoodDataCentralRemoteDataSource(
             }
 
             response.body<FoodDataCentralFoodPageResponseImpl>()
-        } finally {
-            rateLimiter.recordRequest()
         }
     }
 
@@ -119,6 +121,7 @@ internal class FoodDataCentralRemoteDataSource(
         private const val TAG = "FoodDataCentralRemoteDataSourceImpl"
         private const val API_URL = "https://api.nal.usda.gov/fdc"
 
-        fun rateLimiter(clock: Clock) = RateLimiter(clock, 30, 1.hours)
+        fun rateLimiter(clock: Clock): RateLimiter =
+            SimpleRateLimiter(WindowedRequestLog(clock, 30, 1.hours))
     }
 }

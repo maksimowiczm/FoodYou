@@ -1,35 +1,22 @@
 package com.maksimowiczm.foodyou.common.infrastructure.network
 
-import kotlin.time.Clock
-import kotlin.time.Duration
-import kotlin.time.Instant
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+/** A rate limiter that controls access to a resource by limiting the number of requests. */
+interface RateLimiter {
+
+    /**
+     * Attempts to acquire a slot for a request.
+     *
+     * @return `true` if the request is allowed, `false` if the rate limit has been exceeded.
+     */
+    suspend fun acquire(): Boolean
+}
 
 /**
- * A simple rate limiter to limit the number of requests in a given time window.
+ * Executes [block] if the rate limit allows, otherwise executes [onRateLimit].
  *
- * @param maxRequests The maximum number of requests allowed in the time window.
- * @param timeWindow The duration of the time window.
+ * @param onRateLimit Called when the rate limit has been exceeded.
+ * @param block The action to perform if the request is allowed.
+ * @return The result of either [block] or [onRateLimit].
  */
-class RateLimiter(
-    private val clock: Clock,
-    private val maxRequests: Int,
-    private val timeWindow: Duration,
-) {
-    private val requests = mutableListOf<Instant>()
-    private val mutex = Mutex()
-
-    suspend fun canMakeRequest(): Boolean =
-        mutex.withLock {
-            val now = clock.now()
-            val windowStart = now - timeWindow
-
-            // Remove requests outside the time window
-            requests.removeAll { it < windowStart }
-
-            return requests.size < maxRequests
-        }
-
-    suspend fun recordRequest() = mutex.withLock { requests.add(clock.now()) }
-}
+suspend fun <T> RateLimiter.withRateLimit(onRateLimit: suspend () -> T, block: suspend () -> T): T =
+    if (acquire()) block() else onRateLimit()
