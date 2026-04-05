@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
-import com.maksimowiczm.foodyou.common.infrastructure.network.SimpleRateLimiter
+import com.maksimowiczm.foodyou.common.infrastructure.network.SuspendingRateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.WindowedRequestLog
 import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
@@ -17,7 +17,9 @@ import io.ktor.client.request.parameter
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 internal class OpenFoodFactsV2RemoteDataSource(
     private val client: HttpClient,
@@ -70,6 +72,11 @@ internal class OpenFoodFactsV2RemoteDataSource(
         private const val TIMEOUT = 60_000L
 
         fun rateLimiter(clock: Clock): RateLimiter =
-            SimpleRateLimiter(WindowedRequestLog(clock, 100, 1.minutes))
+            SuspendingRateLimiter(
+                clock = clock,
+                log = WindowedRequestLog(clock, 100, 1.minutes),
+                timeout = 1.seconds,
+                minWaitTime = 100.milliseconds,
+            )
     }
 }

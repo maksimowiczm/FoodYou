@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
-import com.maksimowiczm.foodyou.common.infrastructure.network.SimpleRateLimiter
+import com.maksimowiczm.foodyou.common.infrastructure.network.SuspendingRateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.WindowedRequestLog
 import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
@@ -19,6 +19,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 internal class FoodDataCentralRemoteDataSource(
     private val client: HttpClient,
@@ -122,6 +124,11 @@ internal class FoodDataCentralRemoteDataSource(
         private const val API_URL = "https://api.nal.usda.gov/fdc"
 
         fun rateLimiter(clock: Clock): RateLimiter =
-            SimpleRateLimiter(WindowedRequestLog(clock, 30, 1.hours))
+            SuspendingRateLimiter(
+                clock = clock,
+                log = WindowedRequestLog(clock, 30, 1.hours),
+                timeout = 1.seconds,
+                minWaitTime = 100.milliseconds,
+            )
     }
 }
