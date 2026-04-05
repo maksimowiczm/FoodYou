@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.home
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -47,7 +49,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfade
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
+import com.maksimowiczm.foodyou.app.ui.common.theme.brand
 import com.maksimowiczm.foodyou.app.ui.home.search.HomeSearchState
 import com.maksimowiczm.foodyou.app.ui.home.search.Search
 import com.maksimowiczm.foodyou.app.ui.home.search.SearchView
@@ -220,7 +224,17 @@ private fun SearchBarContent(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            if (!homeSearchState.isHome) {
+            if (homeSearchState.isHome) {
+                Box(
+                    modifier = Modifier.size(48.dp).align(Alignment.CenterStart),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Search,
+                        contentDescription = stringResource(Res.string.action_search),
+                    )
+                }
+            } else {
                 IconButton(
                     onClick = onBackClick,
                     shapes = IconButtonDefaults.shapes(),
@@ -235,15 +249,30 @@ private fun SearchBarContent(
                     )
                 }
             }
-            if (homeSearchState.isHome || homeSearchState.textFieldState.text.isEmpty()) {
-                Text(
-                    text = stringResource(Res.string.action_search_foods),
-                    modifier = Modifier.align(Alignment.Center).wrapContentSize(),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 1,
-                )
+            if (homeSearchState.textFieldState.text.isEmpty()) {
+                updateTransition(homeSearchState.isHome, "placeholder").AnimatedContent(
+                    modifier = Modifier.fillMaxWidth().align(Alignment.CenterStart),
+                    transitionSpec = { crossfade() },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (it)
+                        Text(
+                            text = stringResource(Res.string.app_name),
+                            modifier = Modifier.wrapContentSize(),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.brand.bodyLarge,
+                            maxLines = 1,
+                        )
+                    else
+                        Text(
+                            text = stringResource(Res.string.action_search_foods),
+                            modifier = Modifier.wrapContentSize(),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                        )
+                }
             }
             Row(
                 modifier = Modifier.align(Alignment.CenterEnd),
