@@ -90,7 +90,7 @@ internal fun rememberSearchState(): HomeSearchState {
     val backStack = rememberNavBackStack(config, Home)
 
     val collectionState = rememberSerializable {
-        mutableStateOf<CollectionFilter>(YourFoodCollectionFilter())
+        mutableStateOf<CollectionFilter>(FavoriteCollectionFilter)
     }
 
     val textFieldState = rememberTextFieldState()
