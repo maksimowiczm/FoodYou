@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.common.theme
 
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -9,30 +9,32 @@ import androidx.compose.ui.text.font.FontWeight
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.Font
 
-@Immutable data class BrandTypography(val brandName: TextStyle)
+@Immutable data class BrandTypography(val displayMedium: TextStyle, val bodyLarge: TextStyle)
 
-val brandTypography: BrandTypography
+val Typography.brand: BrandTypography
     @Composable
     get() {
-        val fontFamily =
-            FontFamily(
-                Font(
-                    Res.font.roboto_flex,
-                    variationSettings =
-                        FontVariation.Settings(
-                            FontVariation.weight(800),
-                            FontVariation.slant(-10f),
-                            FontVariation.width(150f),
-                            FontVariation.grade(0),
-                            FontVariation.Setting("XOPQ", 100f),
-                        ),
-                )
+        val font =
+            Font(
+                Res.font.roboto_flex,
+                variationSettings =
+                    FontVariation.Settings(
+                        FontVariation.weight(800),
+                        FontVariation.slant(-10f),
+                        FontVariation.width(150f),
+                        FontVariation.grade(0),
+                        FontVariation.Setting("XOPQ", 100f),
+                    ),
             )
 
-        return with(MaterialTheme.typography) {
+        val fontFamily = remember(font) { FontFamily(font) }
+
+        fun TextStyle.brand(weight: FontWeight) = copy(fontFamily = fontFamily, fontWeight = weight)
+
+        return remember(this, fontFamily) {
             BrandTypography(
-                brandName =
-                    displayMedium.copy(fontFamily = fontFamily, fontWeight = FontWeight.W900)
+                displayMedium = displayMedium.brand(FontWeight.W900),
+                bodyLarge = bodyLarge.brand(FontWeight.W800),
             )
         }
     }

@@ -45,7 +45,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
-import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
+import com.maksimowiczm.foodyou.app.ui.common.theme.brand
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -91,7 +91,7 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                 text = stringResource(Res.string.app_name),
                 modifier = Modifier.padding(horizontal = 16.dp),
                 textAlign = TextAlign.Center,
-                style = brandTypography.brandName,
+                style = MaterialTheme.typography.brand.displayMedium,
             )
             Text(
                 text =

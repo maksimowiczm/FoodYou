@@ -22,13 +22,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.InteractiveLogo
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
-import com.maksimowiczm.foodyou.app.ui.common.theme.brandTypography
+import com.maksimowiczm.foodyou.app.ui.common.theme.brand
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -90,7 +91,7 @@ private fun BeforeYouStartScreen(
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
                 ) {
                     InteractiveLogo(
                         modifier =
@@ -101,7 +102,9 @@ private fun BeforeYouStartScreen(
                     )
                     Text(
                         text = stringResource(Res.string.app_name),
-                        style = brandTypography.brandName,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.brand.displayMedium,
                     )
                 }
             }
