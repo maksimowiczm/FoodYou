@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsEntity
+import kotlin.uuid.Uuid
 
 @Entity(tableName = "Product", indices = [Index(value = ["uuid"], unique = true)])
 /**
@@ -14,7 +15,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsEntity
  */
 internal data class ProductEntity(
     @PrimaryKey(autoGenerate = true) val sqliteId: Long,
-    val uuid: String,
+    val uuid: Uuid,
     @Embedded(prefix = "name_") val name: FoodNameEntity,
     val brand: String?,
     val barcode: String?,

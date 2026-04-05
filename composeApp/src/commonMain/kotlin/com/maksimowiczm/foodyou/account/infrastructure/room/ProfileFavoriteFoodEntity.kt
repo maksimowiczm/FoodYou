@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlin.uuid.Uuid
 
 @Entity(
     tableName = "ProfileFavoriteFood",
@@ -20,7 +21,7 @@ import androidx.room.PrimaryKey
 )
 internal data class ProfileFavoriteFoodEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val profileId: String,
+    val profileId: Uuid,
     val identityType: FoodIdentityType,
     val extra: String,
 )

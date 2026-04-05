@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.foodsearch.infrastructure.room
 
 import androidx.room.Entity
 import androidx.room.Index
+import kotlin.uuid.Uuid
 
 @Entity(
     tableName = "SearchHistory",
@@ -9,7 +10,7 @@ import androidx.room.Index
     indices = [Index(value = ["profileId"])],
 )
 internal data class SearchHistoryEntity(
-    val profileId: String,
+    val profileId: Uuid,
     val query: String,
     val timestampMillis: Long,
 )

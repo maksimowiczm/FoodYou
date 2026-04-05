@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.userfood.domain.recipe
 
+import kotlin.uuid.Uuid
+
 /**
  * Exception thrown when a circular reference is detected in recipe ingredients.
  *
@@ -13,7 +15,7 @@ package com.maksimowiczm.foodyou.userfood.domain.recipe
  * - Make nutrition calculation impossible
  * - Create logical inconsistencies
  */
-class CircularUserRecipeReferenceError(val recipeId: String, val cyclePath: List<String>) {
+class CircularUserRecipeReferenceError(val recipeId: Uuid, val cyclePath: List<Uuid>) {
     val message
         get() = "Circular reference detected: ${cyclePath.joinToString(" → ")} → $recipeId"
 }

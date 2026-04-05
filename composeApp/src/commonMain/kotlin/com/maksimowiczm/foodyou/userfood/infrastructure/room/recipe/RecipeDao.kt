@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -32,7 +33,7 @@ internal abstract class RecipeDao {
         LIMIT 1
     """
     )
-    abstract fun observe(uuid: String): Flow<RecipeWithIngredients?>
+    abstract fun observe(uuid: Uuid): Flow<RecipeWithIngredients?>
 
     @Transaction
     @Query(

@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -47,7 +48,7 @@ class AppAccountManager(
     suspend fun setAppProfileId(profileId: ProfileId) {
         dataStore.updateData {
             it.toMutablePreferences().apply {
-                set(AppAccountManagerKeys.profileId, profileId.value)
+                set(AppAccountManagerKeys.profileId, profileId.value.toString())
             }
         }
     }
@@ -59,7 +60,9 @@ class AppAccountManager(
      *   profile is currently set as active.
      */
     fun observeAppProfileId(): Flow<ProfileId?> =
-        dataStore.data.map { prefs -> prefs[AppAccountManagerKeys.profileId]?.let(::ProfileId) }
+        dataStore.data.map { prefs ->
+            prefs[AppAccountManagerKeys.profileId]?.let(Uuid::parse)?.let(::ProfileId)
+        }
 
     /**
      * Observes changes to the currently active profile.

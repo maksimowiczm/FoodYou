@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -102,7 +103,7 @@ private fun ProfileEntity.toDomain(favoriteFoods: List<ProfileFavoriteFoodEntity
 
 private fun ProfileFavoriteFoodEntity.toDomain(): FavoriteFoodIdentity =
     when (this.identityType) {
-        FoodIdentityType.UserProduct -> FavoriteFoodIdentity.UserProduct(extra)
+        FoodIdentityType.UserProduct -> FavoriteFoodIdentity.UserProduct(Uuid.parse(extra))
         FoodIdentityType.OpenFoodFacts -> FavoriteFoodIdentity.OpenFoodFacts(extra)
         FoodIdentityType.FoodDataCentral -> FavoriteFoodIdentity.FoodDataCentral(extra.toInt())
     }
@@ -170,7 +171,7 @@ private fun Profile.toFavoriteFoodEntity(): List<ProfileFavoriteFoodEntity> =
                 ProfileFavoriteFoodEntity(
                     profileId = id.value,
                     identityType = FoodIdentityType.UserProduct,
-                    extra = identity.id,
+                    extra = identity.id.toString(),
                 )
 
             is FavoriteFoodIdentity.OpenFoodFacts ->

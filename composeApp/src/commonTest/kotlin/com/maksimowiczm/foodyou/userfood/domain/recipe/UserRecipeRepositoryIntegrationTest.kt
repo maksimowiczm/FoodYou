@@ -17,6 +17,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
@@ -53,7 +54,7 @@ class UserRecipeRepositoryIntegrationTest {
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("user-food-1"),
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
                             quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
@@ -84,11 +85,11 @@ class UserRecipeRepositoryIntegrationTest {
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-1"),
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
                             quantity = AbsoluteQuantity.Weight(100.grams),
                         ),
                         UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-2"),
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
                             quantity = AbsoluteQuantity.Weight(50.grams),
                         ),
                     ),
@@ -132,12 +133,15 @@ class UserRecipeRepositoryIntegrationTest {
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-1"),
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
                             quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
             )
         val identity = assertIs<Result.Success<UserRecipeIdentity, *>>(createResult).data
+
+        val reference1 = FoodReference.UserProduct(Uuid.random())
+        val reference2 = FoodReference.UserProduct(Uuid.random())
 
         // Act - Update with new ingredients
         val updateResult =
@@ -151,11 +155,11 @@ class UserRecipeRepositoryIntegrationTest {
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-2"),
+                            foodReference = reference1,
                             quantity = AbsoluteQuantity.Weight(200.grams),
                         ),
                         UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-3"),
+                            foodReference = reference2,
                             quantity = AbsoluteQuantity.Weight(150.grams),
                         ),
                     ),
@@ -168,11 +172,11 @@ class UserRecipeRepositoryIntegrationTest {
         assertNotNull(recipe)
         assertEquals(2, recipe.ingredients.size)
         assertEquals(
-            "food-2",
+            reference1.id,
             (recipe.ingredients[0].foodReference as FoodReference.UserProduct).id,
         )
         assertEquals(
-            "food-3",
+            reference2.id,
             (recipe.ingredients[1].foodReference as FoodReference.UserProduct).id,
         )
 
@@ -199,7 +203,7 @@ class UserRecipeRepositoryIntegrationTest {
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-1"),
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
                             quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
@@ -243,6 +247,7 @@ class UserRecipeRepositoryIntegrationTest {
     @Test
     fun update_withIndirectCircularReference_detectsCycleAndRollsBack() = runTest {
         // Arrange - Create Recipe A with UserFood
+        val recipeAFoodReference = FoodReference.UserProduct(Uuid.random())
         val recipeAResult =
             repository.create(
                 name = UserRecipeName("Recipe A"),
@@ -253,7 +258,7 @@ class UserRecipeRepositoryIntegrationTest {
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-1"),
+                            foodReference = recipeAFoodReference,
                             quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
@@ -303,7 +308,7 @@ class UserRecipeRepositoryIntegrationTest {
         val unchangedRecipeA = repository.observe(recipeAId).first()
         assertNotNull(unchangedRecipeA)
         assertEquals(
-            "food-1",
+            recipeAFoodReference.id,
             (unchangedRecipeA.ingredients[0].foodReference as FoodReference.UserProduct).id,
         )
 
@@ -329,7 +334,7 @@ class UserRecipeRepositoryIntegrationTest {
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-1"),
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
                             quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),
@@ -377,7 +382,7 @@ class UserRecipeRepositoryIntegrationTest {
             ingredients =
                 listOf(
                     UserRecipeIngredient(
-                        foodReference = FoodReference.UserProduct("food-2"),
+                        foodReference = FoodReference.UserProduct(Uuid.random()),
                         quantity = AbsoluteQuantity.Weight(100.grams),
                     )
                 ),
@@ -398,7 +403,7 @@ class UserRecipeRepositoryIntegrationTest {
     @Test
     fun findRecipesUsingFood_withUserFoodReference_findsAllDependencies() = runTest {
         // Arrange - Create recipes using specific user food
-        val targetFoodId = "target-user-food"
+        val targetFoodId = Uuid.random()
 
         repository.create(
             name = UserRecipeName("Direct User 1"),
@@ -428,7 +433,7 @@ class UserRecipeRepositoryIntegrationTest {
                         quantity = AbsoluteQuantity.Weight(50.grams),
                     ),
                     UserRecipeIngredient(
-                        foodReference = FoodReference.UserProduct("other-food"),
+                        foodReference = FoodReference.UserProduct(Uuid.random()),
                         quantity = AbsoluteQuantity.Weight(50.grams),
                     ),
                 ),
@@ -443,7 +448,7 @@ class UserRecipeRepositoryIntegrationTest {
             ingredients =
                 listOf(
                     UserRecipeIngredient(
-                        foodReference = FoodReference.UserProduct("different-food"),
+                        foodReference = FoodReference.UserProduct(Uuid.random()),
                         quantity = AbsoluteQuantity.Weight(100.grams),
                     )
                 ),
@@ -472,7 +477,7 @@ class UserRecipeRepositoryIntegrationTest {
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct("food-1"),
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
                             quantity = AbsoluteQuantity.Weight(100.grams),
                         )
                     ),

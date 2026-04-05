@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
 import com.maksimowiczm.foodyou.common.infrastructure.room.EnergyUnitConverter
+import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
 import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.FoodSearchDatabase
 import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.SearchHistoryEntity
 
@@ -25,7 +26,7 @@ import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.SearchHistoryEnti
     version = AppDatabase.VERSION,
     exportSchema = false,
 )
-@TypeConverters(EnergyUnitConverter::class, FoodIdentityTypeConverter::class)
+@TypeConverters(EnergyUnitConverter::class, FoodIdentityTypeConverter::class, UuidConverter::class)
 @ConstructedBy(AppDatabaseConstructor::class)
 internal abstract class AppDatabase : RoomDatabase(), AccountDatabase, FoodSearchDatabase {
     companion object {

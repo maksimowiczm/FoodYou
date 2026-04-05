@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -22,5 +23,5 @@ internal abstract class ProductDao {
         WHERE uuid = :uuid
         """
     )
-    abstract fun observe(uuid: String): Flow<ProductEntity?>
+    abstract fun observe(uuid: Uuid): Flow<ProductEntity?>
 }

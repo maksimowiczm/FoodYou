@@ -56,7 +56,7 @@ internal class FileKitProfileAvatarPersistence {
         val directory = (accountDirectory() / "avatar")
         directory.createDirectories()
         directory.list().forEach { file ->
-            if (file.nameWithoutExtension !in ids.map { it.value }) {
+            if (file.nameWithoutExtension !in ids.map { it.value.toString() }) {
                 file.delete()
             }
         }

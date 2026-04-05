@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.uuid.Uuid
 
 class AccountTest {
     @Test
@@ -38,7 +39,7 @@ class AccountTest {
 
         val account = Account.of(settings = AccountSettings.default, profiles = listOf(profile))
 
-        val nonExistentProfileId = ProfileId("non-existent-id")
+        val nonExistentProfileId = ProfileId(Uuid.random())
 
         assertFailsWith<IllegalArgumentException> {
             account.updateProfile(nonExistentProfileId) { it }
@@ -62,7 +63,7 @@ class AccountTest {
         val account =
             Account.of(settings = AccountSettings.default, profiles = listOf(profile1, profile2))
 
-        val nonExistentProfileId = ProfileId("non-existent-id")
+        val nonExistentProfileId = ProfileId(Uuid.random())
 
         assertFailsWith<IllegalArgumentException> { account.removeProfile(nonExistentProfileId) }
     }

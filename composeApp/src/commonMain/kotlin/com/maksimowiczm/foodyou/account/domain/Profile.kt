@@ -12,9 +12,8 @@ class Profile(
 ) {
     companion object {
         fun new(name: String, avatar: Avatar): Profile {
-            val id = Uuid.random()
             return Profile(
-                id = ProfileId(id.toString()),
+                id = ProfileId(Uuid.random()),
                 name = name,
                 avatar = avatar,
                 homeCardsOrder = HomeCard.defaultOrder,

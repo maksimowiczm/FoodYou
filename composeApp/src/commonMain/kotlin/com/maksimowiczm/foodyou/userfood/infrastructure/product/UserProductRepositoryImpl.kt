@@ -51,7 +51,7 @@ internal class UserProductRepositoryImpl(
         val foodDirectory = accountDirectory() / "food"
         foodDirectory.createDirectories()
 
-        val uuid = Uuid.random().toString()
+        val uuid = Uuid.random()
 
         val photoPath =
             if (image != null) {

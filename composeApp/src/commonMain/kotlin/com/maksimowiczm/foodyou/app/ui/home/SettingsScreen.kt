@@ -76,6 +76,7 @@ import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
+import kotlin.uuid.Uuid
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -498,17 +499,17 @@ private fun SettingsScreenPreview() {
     val profiles =
         listOf(
             ProfileUiState(
-                id = ProfileId("1"),
+                id = ProfileId(Uuid.random()),
                 name = "Mateusz",
                 avatar = UiProfileAvatar.Predefined(UiProfileAvatar.Predefined.Variant.ENGINEER),
             ),
             ProfileUiState(
-                id = ProfileId("2"),
+                id = ProfileId(Uuid.random()),
                 name = "Maksimowicz",
                 avatar = UiProfileAvatar.Predefined(UiProfileAvatar.Predefined.Variant.PERSON),
             ),
             ProfileUiState(
-                id = ProfileId("3"),
+                id = ProfileId(Uuid.random()),
                 name = "MaMa",
                 avatar = UiProfileAvatar.Predefined(UiProfileAvatar.Predefined.Variant.WOMAN),
             ),

@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.domain.recipe
 
+import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
 
 /**
@@ -17,7 +18,7 @@ sealed interface FoodReference {
      *
      * @property id The unique identifier within the local database
      */
-    @Serializable data class UserProduct(val id: String) : FoodReference
+    @Serializable data class UserProduct(val id: Uuid) : FoodReference
 
     /**
      * Reference to food from FoodDataCentral.
@@ -34,5 +35,5 @@ sealed interface FoodReference {
      *
      * @property id The unique identifier within the local database
      */
-    @Serializable data class UserRecipe(val id: String) : FoodReference
+    @Serializable data class UserRecipe(val id: Uuid) : FoodReference
 }

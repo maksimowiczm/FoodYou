@@ -56,7 +56,7 @@ internal class UserRecipeRepositoryImpl(
         require(servings > 0) { "Recipe must have a positive number of servings" }
         require(finalWeight == null || finalWeight > 0) { "Final weight must be a positive number" }
 
-        val recipeId = Uuid.random().toString()
+        val recipeId = Uuid.random()
 
         val recipeDirectory = accountDirectory() / "recipes"
         recipeDirectory.createDirectories()
@@ -223,11 +223,10 @@ internal class UserRecipeRepositoryImpl(
      *
      * @param recipeId The recipe being created/updated
      * @param ingredients The ingredients to check
-     * @param accountId The account ID for querying recipes
      * @throws CircularUserRecipeReferenceError if a circular reference is detected
      */
     private suspend fun checkCircularReference(
-        recipeId: String,
+        recipeId: Uuid,
         ingredients: List<UserRecipeIngredient>,
     ) {
         // Get all recipe references in ingredients
@@ -254,14 +253,13 @@ internal class UserRecipeRepositoryImpl(
      *
      * @param currentRecipeId The recipe currently being examined
      * @param targetRecipeId The original recipe we're checking (looking for cycle back to this)
-     * @param accountId The account ID
      * @param visitedPath The path of recipes visited so far (for error reporting)
      * @throws CircularUserRecipeReferenceError if a cycle is detected
      */
     private suspend fun checkCircularReferenceRecursive(
-        currentRecipeId: String,
-        targetRecipeId: String,
-        visitedPath: MutableList<String>,
+        currentRecipeId: Uuid,
+        targetRecipeId: Uuid,
+        visitedPath: MutableList<Uuid>,
     ) {
         // Check if we've found a cycle back to the target
         if (currentRecipeId == targetRecipeId) {
@@ -300,8 +298,6 @@ internal class UserRecipeRepositoryImpl(
         visitedPath.removeAt(visitedPath.size - 1)
     }
 
-    private class CircularRecipeReferenceException(
-        val recipeId: String,
-        val cyclePath: List<String>,
-    ) : Exception()
+    private class CircularRecipeReferenceException(val recipeId: Uuid, val cyclePath: List<Uuid>) :
+        Exception()
 }

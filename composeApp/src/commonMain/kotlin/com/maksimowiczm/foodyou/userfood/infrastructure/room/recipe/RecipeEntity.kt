@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlin.uuid.Uuid
 
 @Entity(tableName = "Recipe", indices = [Index(value = ["uuid"], unique = true)])
 /**
@@ -12,7 +13,7 @@ import androidx.room.PrimaryKey
  */
 internal data class RecipeEntity(
     @PrimaryKey(autoGenerate = true) val sqliteId: Long = 0,
-    val uuid: String,
+    val uuid: Uuid,
     val name: String,
     val servings: Double,
     val imagePath: String?,

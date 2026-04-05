@@ -6,6 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnitConverter
+import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductDao
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.QuantityTypeConverter
@@ -33,6 +34,7 @@ import com.maksimowiczm.foodyou.userfood.infrastructure.room.search.SearchDao
     QuantityTypeConverter::class,
     MeasurementUnitConverter::class,
     RecipeQuantityTypeConverter::class,
+    UuidConverter::class,
 )
 @ConstructedBy(UserFoodDatabaseConstructor::class)
 internal abstract class UserFoodDatabase : RoomDatabase() {

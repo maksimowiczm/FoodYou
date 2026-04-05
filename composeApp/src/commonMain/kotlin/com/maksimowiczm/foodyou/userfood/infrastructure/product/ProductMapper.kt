@@ -23,6 +23,7 @@ import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.FoodNameEnt
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.QuantityEntity
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.QuantityType
+import kotlin.uuid.Uuid
 
 internal class ProductMapper {
     private val nutrientsMapper = NutrientsMapper()
@@ -76,7 +77,7 @@ internal class ProductMapper {
 
     fun toEntity(
         id: Long = 0,
-        uuid: String,
+        uuid: Uuid,
         name: FoodName,
         brand: UserProductBrand?,
         barcode: UserProductBarcode?,

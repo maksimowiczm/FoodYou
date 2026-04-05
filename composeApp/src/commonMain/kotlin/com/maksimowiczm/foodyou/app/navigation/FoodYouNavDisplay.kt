@@ -51,6 +51,7 @@ import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
+import kotlin.uuid.Uuid
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -227,7 +228,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data object CreateProfile : FoodYouNavHostRoute
 
     @Serializable
-    data class EditUserProduct(val id: String) : FoodYouNavHostRoute {
+    data class EditUserProduct(val id: Uuid) : FoodYouNavHostRoute {
         companion object {
             fun from(identity: UserProductIdentity): EditUserProduct = EditUserProduct(identity.id)
         }
@@ -237,7 +238,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
     }
 
     @Serializable
-    data class EditProfile(val id: String) : FoodYouNavHostRoute {
+    data class EditProfile(val id: Uuid) : FoodYouNavHostRoute {
         companion object {
             fun from(profileId: ProfileId): EditProfile = EditProfile(profileId.value)
         }
@@ -249,7 +250,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data class FoodDatabase(val query: String?) : FoodYouNavHostRoute
 
     @Serializable
-    data class UserProductDetails(val id: String) : FoodYouNavHostRoute {
+    data class UserProductDetails(val id: Uuid) : FoodYouNavHostRoute {
         val identity: UserProductIdentity
             get() = UserProductIdentity(id)
 
