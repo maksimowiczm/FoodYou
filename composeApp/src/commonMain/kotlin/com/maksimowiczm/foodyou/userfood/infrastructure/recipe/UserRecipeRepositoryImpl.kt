@@ -4,12 +4,11 @@ import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.blob.BlobStorage
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.accountDirectory
+import com.maksimowiczm.foodyou.common.infrastructure.filekit.path
 import com.maksimowiczm.foodyou.common.infrastructure.room.immediateTransaction
-import com.maksimowiczm.foodyou.common.onError
-import com.maksimowiczm.foodyou.common.onSuccess
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.recipe.CircularUserRecipeReferenceError
 import com.maksimowiczm.foodyou.userfood.domain.recipe.FoodReference
@@ -20,17 +19,7 @@ import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIngredient
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeName
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeRepository
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.UserFoodDatabase
-import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.compressImage
-import io.github.vinceglb.filekit.createDirectories
-import io.github.vinceglb.filekit.delete
-import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.exists
-import io.github.vinceglb.filekit.path
-import io.github.vinceglb.filekit.readBytes
-import io.github.vinceglb.filekit.write
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -40,6 +29,7 @@ import kotlinx.serialization.json.Json
 internal class UserRecipeRepositoryImpl(
     private val database: UserFoodDatabase,
     private val integrationEventBus: EventBus<IntegrationEvent>,
+    private val blobStorage: BlobStorage,
 ) : UserRecipeRepository {
     private val mapper = RecipeMapper()
     private val dao = database.recipeDao
@@ -58,24 +48,9 @@ internal class UserRecipeRepositoryImpl(
 
         val recipeId = Uuid.random()
 
-        val recipeDirectory = accountDirectory() / "recipes"
-        recipeDirectory.createDirectories()
-
         val photoPath =
             if (image != null) {
-                val sourceFile = PlatformFile(image.uri)
-                require(sourceFile.exists()) { "Image file does not exist at path: ${image.uri}" }
-                val bytes = sourceFile.readBytes()
-
-                val compressed =
-                    FileKit.compressImage(
-                        bytes = bytes,
-                        quality = 85,
-                        imageFormat = ImageFormat.JPEG,
-                    )
-
-                val dest = (recipeDirectory / "$recipeId.jpg").apply { write(compressed) }
-                dest.path
+                blobStorage.path(PlatformFile(image.uri))
             } else {
                 null
             }
@@ -94,17 +69,17 @@ internal class UserRecipeRepositoryImpl(
         val recipeEntity = mapper.toEntity(recipe)
         val ingredientEntities = mapper.toIngredientEntities(ingredients)
 
-        return database
-            .immediateTransaction<Result<UserRecipeIdentity, CircularUserRecipeReferenceError>> {
-                try {
-                    checkCircularReference(recipeId, ingredients)
-                    dao.insertRecipeWithIngredients(recipeEntity, ingredientEntities)
-                    Ok(UserRecipeIdentity(recipeId))
-                } catch (e: CircularRecipeReferenceException) {
-                    Err(CircularUserRecipeReferenceError(e.recipeId, e.cyclePath))
-                }
+        return database.immediateTransaction<
+            Result<UserRecipeIdentity, CircularUserRecipeReferenceError>
+        > {
+            try {
+                checkCircularReference(recipeId, ingredients)
+                dao.insertRecipeWithIngredients(recipeEntity, ingredientEntities)
+                Ok(UserRecipeIdentity(recipeId))
+            } catch (e: CircularRecipeReferenceException) {
+                Err(CircularUserRecipeReferenceError(e.recipeId, e.cyclePath))
             }
-            .onError { PlatformFile("${recipeId}.jpg").delete(mustExist = false) }
+        }
     }
 
     override suspend fun update(
@@ -124,27 +99,10 @@ internal class UserRecipeRepositoryImpl(
 
         requireNotNull(existingEntity) { "Cannot edit non-existing recipe with id: ${identity.id}" }
 
-        val uuid = identity.id
-        val recipeDirectory = accountDirectory() / "recipes"
-        recipeDirectory.createDirectories()
-
         val oldImagePath = existingEntity.recipe.imagePath
         val imagePath: String? =
             if (image != null && existingEntity.recipe.imagePath != image.uri) {
-                val sourceFile = PlatformFile(image.uri)
-                require(sourceFile.exists()) { "Image file does not exist at path: ${image.uri}" }
-                val bytes = sourceFile.readBytes()
-
-                val compressed =
-                    FileKit.compressImage(
-                        bytes = bytes,
-                        quality = 85,
-                        imageFormat = ImageFormat.JPEG,
-                    )
-
-                val dest = (recipeDirectory / "$uuid.jpg").apply { write(compressed) }
-
-                dest.path
+                blobStorage.path(PlatformFile(image.uri))
             } else if (image == null && existingEntity.recipe.imagePath != null) {
                 null
             } else {
@@ -165,31 +123,15 @@ internal class UserRecipeRepositoryImpl(
         val updatedEntity = mapper.toEntity(recipe, sqliteId = existingEntity.recipe.sqliteId)
         val ingredientEntities = mapper.toIngredientEntities(ingredients)
 
-        return database
-            .immediateTransaction<Result<Unit, CircularUserRecipeReferenceError>> {
-                try {
-                    checkCircularReference(identity.id, ingredients)
-                    dao.updateRecipeWithIngredients(updatedEntity, ingredientEntities)
-                    Ok()
-                } catch (e: CircularRecipeReferenceException) {
-                    Err(CircularUserRecipeReferenceError(e.recipeId, e.cyclePath))
-                }
+        return database.immediateTransaction<Result<Unit, CircularUserRecipeReferenceError>> {
+            try {
+                checkCircularReference(identity.id, ingredients)
+                dao.updateRecipeWithIngredients(updatedEntity, ingredientEntities)
+                Ok()
+            } catch (e: CircularRecipeReferenceException) {
+                Err(CircularUserRecipeReferenceError(e.recipeId, e.cyclePath))
             }
-            .onError {
-                // Cleanup new image if transaction failed
-                if (imagePath != null && imagePath != oldImagePath) {
-                    PlatformFile(imagePath).delete(mustExist = false)
-                }
-            }
-            .onSuccess {
-                // Delete old image if it was replaced
-                if (imagePath != oldImagePath && oldImagePath != null) {
-                    val existingFile = PlatformFile(oldImagePath)
-                    if (existingFile.exists()) {
-                        existingFile.delete()
-                    }
-                }
-            }
+        }
     }
 
     override fun observe(identity: UserRecipeIdentity): Flow<UserRecipe?> =
@@ -203,7 +145,6 @@ internal class UserRecipeRepositoryImpl(
         }
 
         dao.deleteRecipe(existingEntity.recipe)
-        PlatformFile("${existingEntity.recipe.uuid}.jpg").delete(mustExist = false)
 
         integrationEventBus.publish(UserRecipeDeletedEvent(identity))
     }

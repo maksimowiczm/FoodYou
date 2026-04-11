@@ -77,6 +77,7 @@ kotlin {
             implementation(libs.konform)
             implementation(libs.materialKolor)
             implementation(libs.skydoves.colorpickerCompose)
+            implementation(libs.squareup.okio)
             implementation(libs.touchlab.kermit)
             implementation(libs.valentinilk.shimmer.composeShimmer)
         }

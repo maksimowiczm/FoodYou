@@ -13,6 +13,9 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import com.maksimowiczm.foodyou.common.domain.blob.BlobStorage
+import com.maksimowiczm.foodyou.common.infrastructure.filekit.path
+import io.github.vinceglb.filekit.PlatformFile
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -20,9 +23,10 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-internal class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountRepository {
-    private val profileAvatarPersistence = FileKitProfileAvatarPersistence()
-
+internal class AccountRepositoryImpl(
+    private val accountDao: AccountDao,
+    private val blobStorage: BlobStorage,
+) : AccountRepository {
     override fun observe(): Flow<Account?> =
         combine(
             accountDao.observeProfiles(),
@@ -42,12 +46,8 @@ internal class AccountRepositoryImpl(private val accountDao: AccountDao) : Accou
         }
 
     override suspend fun save(account: Account) = coroutineScope {
-        profileAvatarPersistence.deleteAllBut(account.profiles.map { it.id })
-
         val profileEntities =
-            account.profiles
-                .map { profile -> async { profile.toEntity(profileAvatarPersistence) } }
-                .awaitAll()
+            account.profiles.map { profile -> async { profile.toEntity(blobStorage) } }.awaitAll()
         val settingsEntity = account.settings.toEntity()
         val profileFavoriteFoodEntities = account.profiles.flatMap { it.toFavoriteFoodEntity() }
 
@@ -137,16 +137,15 @@ private fun Profile.Avatar.toEntityAvatar(): String =
         is Profile.Avatar.Predefined -> "predefined:$name"
     }
 
-private suspend fun Profile.toEntity(
-    profileAvatarPersistence: FileKitProfileAvatarPersistence
-): ProfileEntity {
+private suspend fun Profile.toEntity(blobStorage: BlobStorage): ProfileEntity {
     val persistedAvatar =
         when (val avatar = avatar) {
-            is Profile.Avatar.Photo -> profileAvatarPersistence.save(id, avatar)
-            is Profile.Avatar.Predefined -> {
-                profileAvatarPersistence.delete(id)
-                avatar
+            is Profile.Avatar.Photo -> {
+                val path = blobStorage.path(PlatformFile(avatar.uri))
+                Profile.Avatar.Photo(uri = path)
             }
+
+            is Profile.Avatar.Predefined -> avatar
         }
 
     return ProfileEntity(

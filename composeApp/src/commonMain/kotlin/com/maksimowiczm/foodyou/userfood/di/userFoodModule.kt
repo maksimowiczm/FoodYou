@@ -27,11 +27,21 @@ val userFoodModule = module {
     factory { get<UserFoodDatabase>().recipeDao }
     factory { get<UserFoodDatabase>().searchDao }
 
-    factory { UserProductRepositoryImpl(dao = get(), integrationEventBus = integrationEventBus()) }
+    factory {
+            UserProductRepositoryImpl(
+                dao = get(),
+                integrationEventBus = integrationEventBus(),
+                blobStorage = get(),
+            )
+        }
         .bind<UserProductRepository>()
 
     factory {
-            UserRecipeRepositoryImpl(database = get(), integrationEventBus = integrationEventBus())
+            UserRecipeRepositoryImpl(
+                database = get(),
+                integrationEventBus = integrationEventBus(),
+                blobStorage = get(),
+            )
         }
         .bind<UserRecipeRepository>()
 

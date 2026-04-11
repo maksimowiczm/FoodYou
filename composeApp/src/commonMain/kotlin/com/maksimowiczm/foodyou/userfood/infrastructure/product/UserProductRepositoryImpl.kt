@@ -1,12 +1,13 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
 import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.blob.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.accountDirectory
+import com.maksimowiczm.foodyou.common.infrastructure.filekit.path
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
@@ -15,17 +16,7 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductDao
-import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.compressImage
-import io.github.vinceglb.filekit.createDirectories
-import io.github.vinceglb.filekit.delete
-import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.exists
-import io.github.vinceglb.filekit.path
-import io.github.vinceglb.filekit.readBytes
-import io.github.vinceglb.filekit.write
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -34,6 +25,7 @@ import kotlinx.coroutines.flow.map
 internal class UserProductRepositoryImpl(
     private val dao: ProductDao,
     private val integrationEventBus: EventBus<IntegrationEvent>,
+    private val blobStorage: BlobStorage,
 ) : UserProductRepository {
     private val mapper = ProductMapper()
 
@@ -48,26 +40,11 @@ internal class UserProductRepositoryImpl(
         packageQuantity: AbsoluteQuantity?,
         isLiquid: Boolean,
     ): UserProductIdentity {
-        val foodDirectory = accountDirectory() / "food"
-        foodDirectory.createDirectories()
-
         val uuid = Uuid.random()
 
-        val photoPath =
+        val imageBlobPath =
             if (image != null) {
-                val sourceFile = PlatformFile(image.uri)
-                require(sourceFile.exists()) { "Image file does not exist at path: ${image.uri}" }
-                val bytes = sourceFile.readBytes()
-
-                val compressed =
-                    FileKit.compressImage(
-                        bytes = bytes,
-                        quality = 85,
-                        imageFormat = ImageFormat.JPEG,
-                    )
-
-                val dest = (foodDirectory / "$uuid.jpg").apply { write(compressed) }
-                dest.path
+                blobStorage.path(PlatformFile(image.uri))
             } else {
                 null
             }
@@ -79,7 +56,7 @@ internal class UserProductRepositoryImpl(
                 brand = brand,
                 barcode = barcode,
                 note = note,
-                imagePath = photoPath,
+                imagePath = imageBlobPath,
                 nutritionFacts = nutritionFacts,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
@@ -110,30 +87,12 @@ internal class UserProductRepositoryImpl(
         }
 
         val uuid = identity.id
-        val foodDirectory = accountDirectory() / "food"
-        foodDirectory.createDirectories()
 
         val imagePath: String? =
             if (existingEntity.photoPath != image?.uri) {
                 if (image != null) {
-                    val sourceFile = PlatformFile(image.uri)
-                    require(sourceFile.exists()) {
-                        "Image file does not exist at path: ${image.uri}"
-                    }
-                    val bytes = sourceFile.readBytes()
-
-                    val compressed =
-                        FileKit.compressImage(
-                            bytes = bytes,
-                            quality = 85,
-                            imageFormat = ImageFormat.JPEG,
-                        )
-
-                    val dest = (foodDirectory / "$uuid.jpg").apply { write(compressed) }
-
-                    dest.path
+                    blobStorage.path(PlatformFile(image.uri))
                 } else {
-                    existingEntity.photoPath?.let(::PlatformFile)?.delete(mustExist = false)
                     null
                 }
             } else {
@@ -169,7 +128,6 @@ internal class UserProductRepositoryImpl(
         }
 
         dao.delete(existingEntity)
-        existingEntity.photoPath?.let(::PlatformFile)?.delete(mustExist = false)
 
         integrationEventBus.publish(UserProductDeletedEvent(identity))
     }
