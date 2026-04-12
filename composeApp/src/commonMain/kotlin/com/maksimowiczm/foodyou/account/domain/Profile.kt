@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.account.domain
 
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlin.uuid.Uuid
 
@@ -62,7 +63,7 @@ class Profile(
     fun isFavorite(food: FavoriteFoodIdentity): Boolean = _favoriteFoods.contains(food)
 
     sealed interface Avatar {
-        data class Photo(val uri: String) : Avatar
+        data class Photo(val uri: ImageUri) : Avatar
 
         sealed interface Predefined : Avatar {
             val name: String

@@ -12,10 +12,10 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.FoodIdentityType
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.absolutePath
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -112,7 +112,7 @@ private fun String.toDomainAvatar(): Profile.Avatar =
     runCatching {
             when {
                 startsWith("photo:") -> {
-                    val uri = removePrefix("photo:")
+                    val uri = ImageUri(removePrefix("photo:"))
                     Profile.Avatar.Photo(uri = uri)
                 }
 
@@ -133,7 +133,7 @@ private fun String.toDomainAvatar(): Profile.Avatar =
 
 private fun Profile.Avatar.toEntityAvatar(): String =
     when (this) {
-        is Profile.Avatar.Photo -> "photo:$uri"
+        is Profile.Avatar.Photo -> "photo:${uri.value}"
         is Profile.Avatar.Predefined -> "predefined:$name"
     }
 
@@ -141,8 +141,8 @@ private suspend fun Profile.toEntity(blobStorage: FileKitBlobStorage): ProfileEn
     val persistedAvatar =
         when (val avatar = avatar) {
             is Profile.Avatar.Photo -> {
-                val digest = blobStorage.store(PlatformFile(avatar.uri))
-                val path = blobStorage.path(digest).absolutePath()
+                val digest = blobStorage.store(PlatformFile(avatar.uri.value))
+                val path = blobStorage.uri(digest)
                 Profile.Avatar.Photo(uri = path)
             }
 

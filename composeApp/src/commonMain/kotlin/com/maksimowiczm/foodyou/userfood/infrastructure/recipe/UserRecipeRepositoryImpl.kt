@@ -19,7 +19,6 @@ import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeName
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeRepository
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.UserFoodDatabase
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.absolutePath
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -51,7 +50,7 @@ internal class UserRecipeRepositoryImpl(
         val photoPath =
             if (image != null) {
                 val digest = blobStorage.store(PlatformFile(image.value))
-                blobStorage.path(digest).absolutePath()
+                blobStorage.uri(digest).value
             } else {
                 null
             }
@@ -103,7 +102,7 @@ internal class UserRecipeRepositoryImpl(
         val imagePath: String? =
             if (image != null && existingEntity.recipe.imagePath != image.value) {
                 val digest = blobStorage.store(PlatformFile(image.value))
-                blobStorage.path(digest).absolutePath()
+                blobStorage.uri(digest).value
             } else if (image == null && existingEntity.recipe.imagePath != null) {
                 null
             } else {

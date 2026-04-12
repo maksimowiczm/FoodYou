@@ -14,6 +14,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.maksimowiczm.foodyou.account.domain.Profile
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.coil.securelyAccessFile
@@ -89,7 +90,7 @@ sealed interface UiProfileAvatar {
 object ProfileAvatarMapper {
     fun toUiModel(model: Profile.Avatar): UiProfileAvatar =
         when (model) {
-            is Profile.Avatar.Photo -> UiProfileAvatar.Photo(model.uri)
+            is Profile.Avatar.Photo -> UiProfileAvatar.Photo(model.uri.value)
             Profile.Avatar.Predefined.Engineer ->
                 UiProfileAvatar.Predefined.Variant.ENGINEER.toAvatar()
 
@@ -100,7 +101,7 @@ object ProfileAvatarMapper {
 
     fun toModel(uiModel: UiProfileAvatar): Profile.Avatar =
         when (uiModel) {
-            is UiProfileAvatar.Photo -> Profile.Avatar.Photo(uiModel.uri)
+            is UiProfileAvatar.Photo -> Profile.Avatar.Photo(ImageUri(uiModel.uri))
             is UiProfileAvatar.Predefined ->
                 when (uiModel.variant) {
                     UiProfileAvatar.Predefined.Variant.PERSON -> Profile.Avatar.Predefined.Person
