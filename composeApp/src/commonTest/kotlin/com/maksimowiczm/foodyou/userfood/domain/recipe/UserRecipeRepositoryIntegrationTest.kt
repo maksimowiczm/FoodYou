@@ -4,15 +4,25 @@ import androidx.room.useReaderConnection
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.event.ListEventBus
+import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
 import com.maksimowiczm.foodyou.common.infrastructure.provideRoomDatabaseBuilder
 import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.UserRecipeRepositoryImpl
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.UserFoodDatabase
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.UserFoodDatabase.Companion.buildDatabase
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.absolutePath
+import io.github.vinceglb.filekit.div
+import io.github.vinceglb.filekit.filesDir
+import io.github.vinceglb.filekit.readBytes
+import io.github.vinceglb.filekit.write
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
@@ -21,17 +31,24 @@ import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
+import okio.ByteString.Companion.toByteString
 
 class UserRecipeRepositoryIntegrationTest {
     private lateinit var database: UserFoodDatabase
     private lateinit var repository: UserRecipeRepository
     private lateinit var eventBus: ListEventBus<IntegrationEvent>
+    private lateinit var blobStorage: FileKitBlobStorage
 
     @BeforeTest
     fun setup() {
         database = provideRoomDatabaseBuilder<UserFoodDatabase>().buildDatabase()
         eventBus = ListEventBus()
-        repository = UserRecipeRepositoryImpl(database = database, integrationEventBus = eventBus)
+        blobStorage = FileKitBlobStorage()
+        repository = UserRecipeRepositoryImpl(
+            database = database,
+            integrationEventBus = eventBus,
+            blobStorage = blobStorage
+        )
     }
 
     @AfterTest
@@ -465,6 +482,122 @@ class UserRecipeRepositoryIntegrationTest {
     }
 
     @Test
+    fun create_withImage_storesBlobAndPersistsDigestUri() = runTest {
+        val sourceBytes = "recipe-image-create-${Uuid.random()}".encodeToByteArray()
+        val sourceImageUri = createSourceImage(sourceBytes)
+
+        val createResult =
+            repository.create(
+                name = UserRecipeName("Recipe with image"),
+                servings = 1.0,
+                image = sourceImageUri,
+                note = null,
+                finalWeight = null,
+                ingredients =
+                    listOf(
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
+                        )
+                    ),
+            )
+
+        val identity = assertIs<Result.Success<UserRecipeIdentity, *>>(createResult).data
+        val storedRecipe = repository.observe(identity).first()
+        assertNotNull(storedRecipe)
+
+        val expectedDigest = sourceBytes.toByteString().sha256().hex()
+        val expectedUri = blobStorage.uri(expectedDigest)
+        assertEquals(expectedUri.value, storedRecipe.image?.value)
+
+        val storedBytes = PlatformFile(expectedUri.value).readBytes()
+        assertContentEquals(sourceBytes, storedBytes)
+    }
+
+    @Test
+    fun update_withNewImage_storesNewBlobAndUpdatesRecipeImage() = runTest {
+        val initialBytes = "recipe-image-initial-${Uuid.random()}".encodeToByteArray()
+        val initialImageUri = createSourceImage(initialBytes)
+
+        val createResult =
+            repository.create(
+                name = UserRecipeName("Recipe image update"),
+                servings = 1.0,
+                image = initialImageUri,
+                note = null,
+                finalWeight = null,
+                ingredients =
+                    listOf(
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
+                        )
+                    ),
+            )
+        val identity = assertIs<Result.Success<UserRecipeIdentity, *>>(createResult).data
+
+        val updatedBytes = "recipe-image-updated-${Uuid.random()}".encodeToByteArray()
+        val updatedImageUri = createSourceImage(updatedBytes)
+        val updateResult =
+            repository.update(
+                identity = identity,
+                name = UserRecipeName("Recipe image update"),
+                servings = 1.0,
+                image = updatedImageUri,
+                note = null,
+                finalWeight = null,
+                ingredients =
+                    listOf(
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
+                        )
+                    ),
+            )
+        val _ = assertIs<Result.Success<Unit, *>>(updateResult)
+
+        val storedRecipe = repository.observe(identity).first()
+        assertNotNull(storedRecipe)
+
+        val oldUri = blobStorage.uri(initialBytes.toByteString().sha256().hex())
+        val updatedUri = blobStorage.uri(updatedBytes.toByteString().sha256().hex())
+        assertEquals(updatedUri.value, storedRecipe.image?.value)
+        assertEquals(false, oldUri.value == updatedUri.value)
+        assertContentEquals(updatedBytes, PlatformFile(updatedUri.value).readBytes())
+    }
+
+    @Test
+    fun delete_withImage_keepsStoredBlobFileAvailable() = runTest {
+        val sourceBytes = "recipe-image-delete-${Uuid.random()}".encodeToByteArray()
+        val sourceImageUri = createSourceImage(sourceBytes)
+
+        val createResult =
+            repository.create(
+                name = UserRecipeName("Recipe image delete"),
+                servings = 1.0,
+                image = sourceImageUri,
+                note = null,
+                finalWeight = null,
+                ingredients =
+                    listOf(
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
+                        )
+                    ),
+            )
+        val identity = assertIs<Result.Success<UserRecipeIdentity, *>>(createResult).data
+
+        repository.delete(identity)
+
+        assertNull(repository.observe(identity).firstOrNull())
+
+        val storedUri = blobStorage.uri(sourceBytes.toByteString().sha256().hex())
+        val storedBytes = PlatformFile(storedUri.value).readBytes()
+        assertContentEquals(sourceBytes, storedBytes)
+    }
+
+    @Test
     fun delete_withNestedRecipeReferences_maintainsDataIntegrity() = runTest {
         // Arrange - Create a dependency chain: Recipe C uses Recipe B uses Recipe A
         val recipeAResult =
@@ -547,5 +680,12 @@ class UserRecipeRepositoryIntegrationTest {
         val events = eventBus.publishedEvents.filterIsInstance<UserRecipeDeletedEvent>()
         assertEquals(1, events.size)
         assertEquals(recipeBId.id, events[0].identity.id)
+    }
+
+    private suspend fun createSourceImage(bytes: ByteArray): ImageUri {
+        val sourceFilePath = (FileKit.filesDir / "test-source-${Uuid.random()}.img").absolutePath()
+        val sourceFile = PlatformFile(sourceFilePath)
+        sourceFile.write(bytes)
+        return ImageUri(sourceFilePath)
     }
 }
