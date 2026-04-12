@@ -30,7 +30,7 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FoodSource
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodSourceDefaults
 import com.maksimowiczm.foodyou.app.ui.food.details.RefreshIconButton
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
-import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
@@ -96,7 +96,7 @@ private fun OpenFoodFactsDetailsScreen(
     isLoading: Boolean,
     isFavorite: Boolean,
     headline: String?,
-    image: Image?,
+    image: ImageUri?,
     nutritionFacts: NutritionFacts?,
     url: String?,
     onBack: () -> Unit,

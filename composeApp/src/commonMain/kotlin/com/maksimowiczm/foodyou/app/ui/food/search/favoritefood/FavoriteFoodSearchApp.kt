@@ -21,7 +21,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem
-import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -119,7 +119,7 @@ private fun FoodSearchListItem(
     packageQuantity: AbsoluteQuantity?,
     servingQuantity: AbsoluteQuantity?,
     nutritionFacts: NutritionFacts,
-    image: Image?,
+    image: ImageUri?,
     shimmer: Shimmer,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -221,7 +221,7 @@ private fun RemoteData<Any>.nutritionFacts(): NutritionFacts? =
         is RemoteData.NotFound -> null
     }
 
-private fun Any.image(): Image? =
+private fun Any.image(): ImageUri? =
     when (this) {
         is UserProduct -> image
         is OpenFoodFactsProduct -> image
@@ -229,7 +229,7 @@ private fun Any.image(): Image? =
         else -> error("Unknown type ${this::class}")
     }
 
-private fun RemoteData<Any>.image(): Image? =
+private fun RemoteData<Any>.image(): ImageUri? =
     when (this) {
         is RemoteData.Success -> value.image()
         is RemoteData.Error -> partialValue?.image()

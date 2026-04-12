@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
-import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.VolumeUnit
 import com.maksimowiczm.foodyou.common.domain.WeightUnit
 import com.maksimowiczm.foodyou.common.domain.fluidOunces
@@ -67,7 +67,7 @@ internal class ProductMapper {
                 brand = brand,
                 barcode = entity.barcode?.let { UserProductBarcode(it) },
                 note = entity.note?.let { UserFoodNote(it) },
-                image = entity.photoPath?.let { Image.Local(it) },
+                image = entity.photoPath?.let { ImageUri(it) },
                 nutritionFacts = nutrients,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,

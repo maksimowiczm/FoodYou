@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.recipe
 
-import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.VolumeUnit
 import com.maksimowiczm.foodyou.common.domain.WeightUnit
 import com.maksimowiczm.foodyou.common.domain.fluidOunces
@@ -34,7 +34,7 @@ internal class RecipeMapper {
             identity = UserRecipeIdentity(entity.recipe.uuid),
             name = UserRecipeName(entity.recipe.name),
             servings = entity.recipe.servings,
-            image = entity.recipe.imagePath?.let { Image.Local(it) },
+            image = entity.recipe.imagePath?.let { ImageUri(it) },
             note = entity.recipe.note?.let { UserFoodNote(it) },
             finalWeight = entity.recipe.finalWeight,
             ingredients = entity.ingredients.map { toIngredient(it) },
@@ -47,7 +47,7 @@ internal class RecipeMapper {
             uuid = recipe.identity.id,
             name = recipe.name.value,
             servings = recipe.servings,
-            imagePath = recipe.image?.uri,
+            imagePath = recipe.image?.value,
             note = recipe.note?.value?.takeIf { it.isNotBlank() },
             finalWeight = recipe.finalWeight,
         )

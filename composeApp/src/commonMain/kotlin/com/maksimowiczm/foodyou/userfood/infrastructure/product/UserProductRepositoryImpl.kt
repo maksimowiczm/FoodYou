@@ -1,13 +1,12 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
-import com.maksimowiczm.foodyou.common.domain.Image
-import com.maksimowiczm.foodyou.common.domain.blob.BlobStorage
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.path
+import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
@@ -17,6 +16,7 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductDao
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.absolutePath
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.map
 internal class UserProductRepositoryImpl(
     private val dao: ProductDao,
     private val integrationEventBus: EventBus<IntegrationEvent>,
-    private val blobStorage: BlobStorage,
+    private val blobStorage: FileKitBlobStorage,
 ) : UserProductRepository {
     private val mapper = ProductMapper()
 
@@ -34,7 +34,7 @@ internal class UserProductRepositoryImpl(
         brand: UserProductBrand?,
         barcode: UserProductBarcode?,
         note: UserFoodNote?,
-        image: Image.Local?,
+        image: ImageUri?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
@@ -44,7 +44,8 @@ internal class UserProductRepositoryImpl(
 
         val imageBlobPath =
             if (image != null) {
-                blobStorage.path(PlatformFile(image.uri))
+                val digest = blobStorage.store(PlatformFile(image.value))
+                blobStorage.path(digest).absolutePath()
             } else {
                 null
             }
@@ -74,7 +75,7 @@ internal class UserProductRepositoryImpl(
         brand: UserProductBrand?,
         barcode: UserProductBarcode?,
         note: UserFoodNote?,
-        image: Image.Local?,
+        image: ImageUri?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
@@ -89,9 +90,10 @@ internal class UserProductRepositoryImpl(
         val uuid = identity.id
 
         val imagePath: String? =
-            if (existingEntity.photoPath != image?.uri) {
+            if (existingEntity.photoPath != image?.value) {
                 if (image != null) {
-                    blobStorage.path(PlatformFile(image.uri))
+                    val digest = blobStorage.store(PlatformFile(image.value))
+                    blobStorage.path(digest).absolutePath()
                 } else {
                     null
                 }

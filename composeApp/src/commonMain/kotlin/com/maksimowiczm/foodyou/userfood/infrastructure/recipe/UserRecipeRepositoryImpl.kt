@@ -3,11 +3,10 @@ package com.maksimowiczm.foodyou.userfood.infrastructure.recipe
 import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.Image
-import com.maksimowiczm.foodyou.common.domain.blob.BlobStorage
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.path
+import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
 import com.maksimowiczm.foodyou.common.infrastructure.room.immediateTransaction
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.recipe.CircularUserRecipeReferenceError
@@ -20,6 +19,7 @@ import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeName
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeRepository
 import com.maksimowiczm.foodyou.userfood.infrastructure.room.UserFoodDatabase
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.absolutePath
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -29,7 +29,7 @@ import kotlinx.serialization.json.Json
 internal class UserRecipeRepositoryImpl(
     private val database: UserFoodDatabase,
     private val integrationEventBus: EventBus<IntegrationEvent>,
-    private val blobStorage: BlobStorage,
+    private val blobStorage: FileKitBlobStorage,
 ) : UserRecipeRepository {
     private val mapper = RecipeMapper()
     private val dao = database.recipeDao
@@ -37,7 +37,7 @@ internal class UserRecipeRepositoryImpl(
     override suspend fun create(
         name: UserRecipeName,
         servings: Double,
-        image: Image.Local?,
+        image: ImageUri?,
         note: UserFoodNote?,
         finalWeight: Double?,
         ingredients: List<UserRecipeIngredient>,
@@ -50,7 +50,8 @@ internal class UserRecipeRepositoryImpl(
 
         val photoPath =
             if (image != null) {
-                blobStorage.path(PlatformFile(image.uri))
+                val digest = blobStorage.store(PlatformFile(image.value))
+                blobStorage.path(digest).absolutePath()
             } else {
                 null
             }
@@ -60,7 +61,7 @@ internal class UserRecipeRepositoryImpl(
                 identity = UserRecipeIdentity(recipeId),
                 name = name,
                 servings = servings,
-                image = photoPath?.let { Image.Local(it) },
+                image = photoPath?.let { ImageUri(it) },
                 note = note,
                 finalWeight = finalWeight,
                 ingredients = ingredients,
@@ -86,7 +87,7 @@ internal class UserRecipeRepositoryImpl(
         identity: UserRecipeIdentity,
         name: UserRecipeName,
         servings: Double,
-        image: Image.Local?,
+        image: ImageUri?,
         note: UserFoodNote?,
         finalWeight: Double?,
         ingredients: List<UserRecipeIngredient>,
@@ -99,10 +100,10 @@ internal class UserRecipeRepositoryImpl(
 
         requireNotNull(existingEntity) { "Cannot edit non-existing recipe with id: ${identity.id}" }
 
-        val oldImagePath = existingEntity.recipe.imagePath
         val imagePath: String? =
-            if (image != null && existingEntity.recipe.imagePath != image.uri) {
-                blobStorage.path(PlatformFile(image.uri))
+            if (image != null && existingEntity.recipe.imagePath != image.value) {
+                val digest = blobStorage.store(PlatformFile(image.value))
+                blobStorage.path(digest).absolutePath()
             } else if (image == null && existingEntity.recipe.imagePath != null) {
                 null
             } else {
@@ -114,7 +115,7 @@ internal class UserRecipeRepositoryImpl(
                 identity = identity,
                 name = name,
                 servings = servings,
-                image = imagePath?.let { Image.Local(it) },
+                image = imagePath?.let { ImageUri(it) },
                 note = note,
                 finalWeight = finalWeight,
                 ingredients = ingredients,

@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.userfood.domain.recipe
 
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import kotlinx.coroutines.flow.Flow
 
@@ -9,7 +9,7 @@ interface UserRecipeRepository {
     suspend fun create(
         name: UserRecipeName,
         servings: Double,
-        image: Image.Local?,
+        image: ImageUri?,
         note: UserFoodNote?,
         finalWeight: Double?,
         ingredients: List<UserRecipeIngredient>,
@@ -19,7 +19,7 @@ interface UserRecipeRepository {
         identity: UserRecipeIdentity,
         name: UserRecipeName,
         servings: Double,
-        image: Image.Local?,
+        image: ImageUri?,
         note: UserFoodNote?,
         finalWeight: Double?,
         ingredients: List<UserRecipeIngredient>,
@@ -33,7 +33,6 @@ interface UserRecipeRepository {
      * Finds all recipes that use the specified food reference.
      *
      * @param foodReference The food reference to search for
-     * @param accountId The account to search within
      * @return List of recipes containing the specified food
      */
     suspend fun findRecipesUsingFood(foodReference: FoodReference): List<UserRecipe>

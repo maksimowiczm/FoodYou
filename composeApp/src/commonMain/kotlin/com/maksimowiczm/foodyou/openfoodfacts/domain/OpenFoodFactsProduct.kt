@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.openfoodfacts.domain
 
-import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -12,7 +12,7 @@ data class OpenFoodFactsProduct(
     val nutritionFacts: NutritionFacts,
     val servingQuantity: AbsoluteQuantity?,
     val packageQuantity: AbsoluteQuantity?,
-    val thumbnail: Image?,
-    val image: Image?,
+    val thumbnail: ImageUri?,
+    val image: ImageUri?,
     val source: String,
 )

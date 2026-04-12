@@ -223,7 +223,7 @@ internal fun rememberProductForm2State(
         rememberFormField(product?.barcode?.value) {
             ifPresent { constrain(notABarcode) { it.all(Char::isDigit) } }
         }
-    val imageUri = rememberSaveable(product) { mutableStateOf(product?.image?.uri) }
+    val imageUri = rememberSaveable(product) { mutableStateOf(product?.image?.value) }
     val defaultValuesPer =
         if (product?.isLiquid == true) ValuesPer.Milliliters100 else ValuesPer.Grams100
     val valuesPer = rememberSaveable(defaultValuesPer) { mutableStateOf(defaultValuesPer) }
@@ -561,7 +561,7 @@ internal fun rememberProductForm2State(
             name = name,
             brand = brand,
             barcode = barcode,
-            defaultImageUri = product?.image?.uri,
+            defaultImageUri = product?.image?.value,
             imageUri = imageUri,
             defaultValuesPer = defaultValuesPer,
             valuesPer = valuesPer,

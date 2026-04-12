@@ -13,9 +13,9 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.blob.BlobStorage
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.path
+import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.absolutePath
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.combine
 
 internal class AccountRepositoryImpl(
     private val accountDao: AccountDao,
-    private val blobStorage: BlobStorage,
+    private val blobStorage: FileKitBlobStorage,
 ) : AccountRepository {
     override fun observe(): Flow<Account?> =
         combine(
@@ -137,11 +137,12 @@ private fun Profile.Avatar.toEntityAvatar(): String =
         is Profile.Avatar.Predefined -> "predefined:$name"
     }
 
-private suspend fun Profile.toEntity(blobStorage: BlobStorage): ProfileEntity {
+private suspend fun Profile.toEntity(blobStorage: FileKitBlobStorage): ProfileEntity {
     val persistedAvatar =
         when (val avatar = avatar) {
             is Profile.Avatar.Photo -> {
-                val path = blobStorage.path(PlatformFile(avatar.uri))
+                val digest = blobStorage.store(PlatformFile(avatar.uri))
+                val path = blobStorage.path(digest).absolutePath()
                 Profile.Avatar.Photo(uri = path)
             }
 

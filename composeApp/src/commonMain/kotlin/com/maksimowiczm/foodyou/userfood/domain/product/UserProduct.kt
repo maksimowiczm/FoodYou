@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.domain.product
 
-import com.maksimowiczm.foodyou.common.domain.Image
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -12,7 +12,7 @@ data class UserProduct(
     val brand: UserProductBrand?,
     val barcode: UserProductBarcode?,
     val note: UserFoodNote?,
-    val image: Image.Local?,
+    val image: ImageUri?,
     val nutritionFacts: NutritionFacts,
     val servingQuantity: AbsoluteQuantity?,
     val packageQuantity: AbsoluteQuantity?,
