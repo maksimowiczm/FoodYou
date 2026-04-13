@@ -1,40 +1,36 @@
 package com.maksimowiczm.foodyou.common.infrastructure.room.eventstore
 
+import com.maksimowiczm.foodyou.analytics.domain.AnalyticsEvent
 import com.maksimowiczm.foodyou.analytics.domain.AppLaunchedEvent
 import com.maksimowiczm.foodyou.analytics.domain.AppVersionChangedEvent
 import com.maksimowiczm.foodyou.analytics.domain.FirstAppLaunchRecordedEvent
 import com.maksimowiczm.foodyou.common.event.DomainEvent
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 import kotlinx.serialization.serializer
 
-object RoomEventStoreMapper {
-    fun toDomainEvent(entity: RoomEventStoreEntity): DomainEvent {
-        return DomainEventSerializer.deserialize(entity.eventType, entity.eventData)
-    }
+internal object RoomStoredEventMapper {
+    fun <E : DomainEvent> toDomainEvent(entity: RoomStoredEventEntity): E =
+        DomainEventSerializer.deserialize(entity.eventType, entity.payloadJson)
 
-    fun toRoomEventStoreEntity(event: DomainEvent): RoomEventStoreEntity {
-        return RoomEventStoreEntity(
+    fun <E : DomainEvent> toRoomStoredEventEntity(event: E, stream: String): RoomStoredEventEntity =
+        RoomStoredEventEntity(
             eventType = event::class.simpleName ?: error("Event class must have a name"),
-            eventData = DomainEventSerializer.serialize(event),
-            timestamp = event.timestamp.toEpochMilliseconds(),
+            eventStream = stream,
+            payloadJson = DomainEventSerializer.serialize(event),
+            occurredAtEpochMs = event.timestamp.toEpochMilliseconds(),
         )
-    }
 }
 
-@OptIn(InternalSerializationApi::class)
+@OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
 private object DomainEventSerializer {
     val json = Json {
         serializersModule = SerializersModule {
-            polymorphic(DomainEvent::class) {
-                subclass(AppLaunchedEvent.serializer())
-                subclass(AppVersionChangedEvent.serializer())
-                subclass(FirstAppLaunchRecordedEvent.serializer())
-            }
+            polymorphic(DomainEvent::class) { subclassesOfSealed<AnalyticsEvent>() }
         }
     }
 

@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.userfood.domain.recipe
 
 import androidx.room.useReaderConnection
 import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.event.ListEventBus
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
@@ -44,11 +44,12 @@ class UserRecipeRepositoryIntegrationTest {
         database = provideRoomDatabaseBuilder<UserFoodDatabase>().buildDatabase()
         eventBus = ListEventBus()
         blobStorage = FileKitBlobStorage()
-        repository = UserRecipeRepositoryImpl(
-            database = database,
-            integrationEventBus = eventBus,
-            blobStorage = blobStorage
-        )
+        repository =
+            UserRecipeRepositoryImpl(
+                database = database,
+                integrationEventBus = eventBus,
+                blobStorage = blobStorage,
+            )
     }
 
     @AfterTest

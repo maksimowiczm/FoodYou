@@ -5,10 +5,10 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import com.maksimowiczm.foodyou.common.infrastructure.room.eventstore.EventStoreDao
-import com.maksimowiczm.foodyou.common.infrastructure.room.eventstore.RoomEventStoreEntity
+import com.maksimowiczm.foodyou.common.infrastructure.room.eventstore.RoomStoredEventEntity
 
 @Database(
-    entities = [RoomEventStoreEntity::class],
+    entities = [RoomStoredEventEntity::class],
     version = EventStoreDatabase.VERSION,
     exportSchema = false,
 )

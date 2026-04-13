@@ -3,19 +3,15 @@ package com.maksimowiczm.foodyou.common.infrastructure.room.eventstore
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EventStoreDao {
-    @Query(
-        """
-        SELECT *
-        FROM EventStore
-        ORDER BY timestamp ASC
-        """
-    )
-    suspend fun getAllByAggregateId(): List<RoomEventStoreEntity>
+    @Query("SELECT * FROM StoredEvent WHERE eventStream = :stream")
+    suspend fun getAllByStream(stream: String): List<RoomStoredEventEntity>
 
-    @Insert suspend fun insert(event: RoomEventStoreEntity)
+    @Query("SELECT * FROM StoredEvent WHERE eventStream = :stream")
+    fun observeAllByStream(stream: String): Flow<List<RoomStoredEventEntity>>
 
-    @Insert suspend fun insertAll(events: List<RoomEventStoreEntity>)
+    @Insert suspend fun insertAll(events: List<RoomStoredEventEntity>)
 }

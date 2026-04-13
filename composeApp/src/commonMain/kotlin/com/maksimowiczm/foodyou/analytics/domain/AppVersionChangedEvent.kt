@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
-import com.maksimowiczm.foodyou.common.event.DomainEvent
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.InstantComponentSerializer
@@ -15,4 +14,4 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 data class AppVersionChangedEvent(
     val newVersionName: String,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
-) : DomainEvent
+) : AnalyticsEvent

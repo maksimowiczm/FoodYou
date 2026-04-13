@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.analytics.application
 
+import com.maksimowiczm.foodyou.analytics.domain.Analytics
 import com.maksimowiczm.foodyou.analytics.domain.AnalyticsRepository
 import com.maksimowiczm.foodyou.analytics.domain.FakeAnalyticsRepository
-import com.maksimowiczm.foodyou.analytics.domain.testAccountAnalytics
 import com.maksimowiczm.foodyou.app.domain.testAppConfig
 import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.event.ChannelEventBus
@@ -27,7 +27,7 @@ class AppLaunchUseCaseTest {
                     FakeAnalyticsRepository(
                         onLoad = {
                             wasCalled = true
-                            testAccountAnalytics()
+                            Analytics.of()
                         }
                     )
             )
@@ -39,7 +39,7 @@ class AppLaunchUseCaseTest {
 
     @Test
     fun execute_shouldSaveLoadedAccount() = runTest {
-        val testAccount = testAccountAnalytics()
+        val testAccount = Analytics.of()
         var wasCalled = false
         val useCase =
             appLaunchUseCase(
@@ -68,7 +68,7 @@ class AppLaunchUseCaseTest {
                     FakeAnalyticsRepository(
                         onLoad = {
                             channel.send("load")
-                            testAccountAnalytics()
+                            Analytics.of()
                         },
                         onSave = { channel.send("save") },
                     )
@@ -84,7 +84,7 @@ class AppLaunchUseCaseTest {
 
     @Test
     fun execute_shouldPublishAccountDomainEvents() = runTest {
-        val account = testAccountAnalytics()
+        val account = Analytics.of()
         val eventBus = ChannelEventBus<DomainEvent>()
         val useCase =
             appLaunchUseCase(
