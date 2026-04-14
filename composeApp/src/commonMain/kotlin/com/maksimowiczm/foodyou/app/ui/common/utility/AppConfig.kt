@@ -1,26 +1,11 @@
 package com.maksimowiczm.foodyou.app.ui.common.utility
 
 import androidx.compose.runtime.*
-import com.maksimowiczm.foodyou.app.domain.AppConfig
+import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 
-private val defaultAppConfig =
-    object : AppConfig {
-        override val versionName: String = "Default version"
-        override val privacyPolicyUri: String = "privacyPolicyUri"
-        override val openFoodFactsTermsOfUseUri: String = "openFoodFactsTermsOfUseUri"
-        override val openFoodFactsPrivacyPolicyUri: String = "openFoodFactsPrivacyPolicyUri"
-        override val foodDataCentralPrivacyPolicyUri: String = "foodDataCentralPrivacyPolicyUri"
-        override val sourceCodeUri: String = "sourceCodeUri"
-        override val featureRequestUri: String = "featureRequestUri"
-        override val bugReportUri: String = "bugReportUri"
-        override val emailContactUri: String = "emailContactUri"
-        override val translateUri: String = "translateUri"
-        override val changelogUri: String = "changelogUri"
-    }
-
-val LocalAppConfig = staticCompositionLocalOf<AppConfig> { defaultAppConfig }
+val LocalAppConfig = staticCompositionLocalOf { FoodYouConfig("0.0.0-test") }
 
 @Composable
-fun AppConfigProvider(energyFormatter: AppConfig, content: @Composable () -> Unit) {
+fun AppConfigProvider(energyFormatter: FoodYouConfig, content: @Composable () -> Unit) {
     CompositionLocalProvider(LocalAppConfig provides energyFormatter) { content() }
 }

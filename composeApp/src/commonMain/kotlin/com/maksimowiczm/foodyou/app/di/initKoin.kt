@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.di
 
 import com.maksimowiczm.foodyou.account.di.accountModule
 import com.maksimowiczm.foodyou.analytics.di.analyticsModule
-import com.maksimowiczm.foodyou.app.infrastructure.datastore.dataStoreModule
+import com.maksimowiczm.foodyou.app.infrastructure.dataStoreModule
 import com.maksimowiczm.foodyou.app.infrastructure.room.roomModule
 import com.maksimowiczm.foodyou.app.ui.appUiModule
 import com.maksimowiczm.foodyou.app.ui.common.theme.commonThemeModule

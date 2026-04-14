@@ -15,8 +15,8 @@ import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyUnitProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.app.ui.onboarding.Onboarding
-import com.maksimowiczm.foodyou.common.domain.NetworkConfig
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
+import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import io.github.vinceglb.filekit.coil.addPlatformFileSupport
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.UserAgent

@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.app.di
 
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
-import com.maksimowiczm.foodyou.app.domain.AppConfig
-import com.maksimowiczm.foodyou.app.infrastructure.config.FoodYouConfig
-import com.maksimowiczm.foodyou.common.domain.NetworkConfig
+import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
+import com.maksimowiczm.foodyou.common.application.AppConfig
+import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.infrastructure.datastore
+package com.maksimowiczm.foodyou.app.infrastructure
 
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import io.github.vinceglb.filekit.FileKit

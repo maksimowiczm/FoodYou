@@ -6,7 +6,7 @@ import android.os.Build
 import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
 import com.maksimowiczm.foodyou.app.di.AppModule
 import com.maksimowiczm.foodyou.app.di.initKoin
-import com.maksimowiczm.foodyou.app.infrastructure.config.FoodYouConfig
+import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope

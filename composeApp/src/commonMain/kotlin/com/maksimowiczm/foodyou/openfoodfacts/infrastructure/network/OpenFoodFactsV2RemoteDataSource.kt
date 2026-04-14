@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network
 
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.common.domain.NetworkConfig
+import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.SuspendingRateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.WindowedRequestLog

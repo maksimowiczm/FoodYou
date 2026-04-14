@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.analytics.application
 import com.maksimowiczm.foodyou.analytics.domain.Analytics
 import com.maksimowiczm.foodyou.analytics.domain.AnalyticsRepository
 import com.maksimowiczm.foodyou.analytics.domain.FakeAnalyticsRepository
-import com.maksimowiczm.foodyou.app.domain.testAppConfig
+import com.maksimowiczm.foodyou.common.application.testAppConfig
 import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.event.ChannelEventBus
 import com.maksimowiczm.foodyou.common.event.DomainEvent

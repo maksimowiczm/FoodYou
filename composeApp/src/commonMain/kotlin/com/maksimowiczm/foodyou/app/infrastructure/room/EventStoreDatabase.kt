@@ -13,7 +13,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.room.eventstore.RoomStored
     exportSchema = false,
 )
 @ConstructedBy(EventStoreDatabaseConstructor::class)
-abstract class EventStoreDatabase : RoomDatabase() {
+internal abstract class EventStoreDatabase : RoomDatabase() {
     abstract val eventStoreDao: EventStoreDao
 
     companion object {
@@ -24,6 +24,6 @@ abstract class EventStoreDatabase : RoomDatabase() {
 }
 
 @Suppress("KotlinNoActualForExpect")
-expect object EventStoreDatabaseConstructor : RoomDatabaseConstructor<EventStoreDatabase> {
+internal expect object EventStoreDatabaseConstructor : RoomDatabaseConstructor<EventStoreDatabase> {
     override fun initialize(): EventStoreDatabase
 }

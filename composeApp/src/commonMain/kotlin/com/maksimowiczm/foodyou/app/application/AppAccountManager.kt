@@ -16,9 +16,9 @@ import kotlinx.coroutines.flow.map
 /**
  * Manages the currently active account and profile for the application.
  *
- * This interface provides functionality to set and observe the application's current account and
- * profile. It serves as the central point for managing the active user context throughout the
- * application lifecycle.
+ * This interface provides functionality to set and observe the application's current profile. It
+ * serves as the central point for managing the active user context throughout the application
+ * lifecycle.
  */
 class AppAccountManager(
     private val accountRepository: AccountRepository,

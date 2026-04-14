@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.analytics.application
 
 import com.maksimowiczm.foodyou.analytics.domain.AnalyticsRepository
-import com.maksimowiczm.foodyou.app.domain.AppConfig
+import com.maksimowiczm.foodyou.common.application.AppConfig
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.common.event.EventBus
 import kotlin.time.Clock
