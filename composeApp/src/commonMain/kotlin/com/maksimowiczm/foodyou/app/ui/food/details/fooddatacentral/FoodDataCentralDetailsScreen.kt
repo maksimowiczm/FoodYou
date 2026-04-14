@@ -16,7 +16,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
-import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsLoadingOverlay

@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.fooddatacentral.domain
 
 import androidx.paging.PagingData
+import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.RemoteData
 import kotlinx.coroutines.flow.Flow
 
 interface FoodDataCentralRepository {

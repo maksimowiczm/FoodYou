@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsUiState
 import com.maksimowiczm.foodyou.app.ui.food.details.ObserveIsFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.ui.food.details.SetFavoriteFoodUseCase
-import com.maksimowiczm.foodyou.common.domain.RemoteData
+import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity

@@ -21,8 +21,8 @@ import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.error
 import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
-import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodDataCentralErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem

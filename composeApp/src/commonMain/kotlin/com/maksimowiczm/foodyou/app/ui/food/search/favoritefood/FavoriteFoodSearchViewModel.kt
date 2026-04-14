@@ -8,9 +8,9 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
-import com.maksimowiczm.foodyou.common.domain.RemoteData
+import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
+import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity

@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.common.domain.food
 
-import com.maksimowiczm.foodyou.common.domain.Div
-import com.maksimowiczm.foodyou.common.domain.Plus
-import com.maksimowiczm.foodyou.common.domain.Times
+import com.maksimowiczm.foodyou.common.Div
+import com.maksimowiczm.foodyou.common.Plus
+import com.maksimowiczm.foodyou.common.Times
 import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 

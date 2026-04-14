@@ -3,29 +3,33 @@ package com.maksimowiczm.foodyou.app.ui.food.search.userfood
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchParameters
 import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-internal class UserFoodSearchViewModel(private val repository: UserFoodSearchRepository) :
-    ViewModel() {
+internal class UserFoodSearchViewModel(
+    private val repository: UserFoodSearchRepository,
+    private val foodNameSelector: FoodNameSelector,
+) : ViewModel() {
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
 
     private val searchParameters =
-        searchQuery
-            .distinctUntilChanged()
-            .map { query ->
+        combine(searchQuery.distinctUntilChanged(), foodNameSelector.observeLanguage()) {
+                query,
+                language ->
                 UserFoodSearchParameters(
                     query = query,
                     orderBy = UserFoodSearchParameters.OrderBy.NameAscending,
+                    language = language,
                 )
             }
             .shareIn(

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.common.domain
+package com.maksimowiczm.foodyou.common
 
 sealed interface RemoteData<out T> {
     data class Loading<out T>(val partialValue: T?) : RemoteData<T>

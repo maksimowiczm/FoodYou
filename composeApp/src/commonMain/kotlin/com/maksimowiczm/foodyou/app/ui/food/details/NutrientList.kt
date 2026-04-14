@@ -27,11 +27,11 @@ import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter.stringReso
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.utility.WeightFormatter.stringResource
-import com.maksimowiczm.foodyou.common.domain.Div
+import com.maksimowiczm.foodyou.common.Div
+import com.maksimowiczm.foodyou.common.Plus
+import com.maksimowiczm.foodyou.common.Times
 import com.maksimowiczm.foodyou.common.domain.Energy
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
-import com.maksimowiczm.foodyou.common.domain.Plus
-import com.maksimowiczm.foodyou.common.domain.Times
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.WeightUnit
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue

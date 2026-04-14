@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.common.domain
+package com.maksimowiczm.foodyou.common
 
 fun interface Plus<T> {
     operator fun plus(other: T): T

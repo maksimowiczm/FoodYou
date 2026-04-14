@@ -10,8 +10,8 @@ import androidx.paging.map
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
+import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.RemoteData
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity

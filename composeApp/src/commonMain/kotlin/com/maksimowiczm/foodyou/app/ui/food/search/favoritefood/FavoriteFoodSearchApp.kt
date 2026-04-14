@@ -18,11 +18,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
 import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
-import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem
+import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.ImageUri
-import com.maksimowiczm.foodyou.common.domain.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts

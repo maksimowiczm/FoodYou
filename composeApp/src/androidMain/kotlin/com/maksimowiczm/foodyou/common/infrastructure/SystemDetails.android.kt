@@ -9,18 +9,19 @@ import androidx.lifecycle.LifecycleOwner
 import java.util.Locale
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 
 actual class SystemDetails(private val context: Context) : LifecycleEventObserver {
-    val defaultLocale: Locale
-        get() = context.defaultLocale
+    val defaultLocaleFlow: StateFlow<Locale>
+        field = MutableStateFlow(context.defaultLocale)
 
-    private val languageTagFlow = MutableStateFlow(defaultLocale.toLanguageTag())
+    private val languageTagFlow = defaultLocaleFlow.map { it.toLanguageTag() }
 
-    actual val languageTag: Flow<String> = languageTagFlow.asStateFlow()
+    actual val languageTag: Flow<String> = languageTagFlow
 
     actual fun setLanguage(tag: String) {
         val locale = LocaleListCompat.forLanguageTags(tag)
@@ -33,7 +34,7 @@ actual class SystemDetails(private val context: Context) : LifecycleEventObserve
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         if (event == Lifecycle.Event.ON_CREATE) {
-            languageTagFlow.value = defaultLocale.toLanguageTag()
+            defaultLocaleFlow.value = context.defaultLocale
         }
     }
 }

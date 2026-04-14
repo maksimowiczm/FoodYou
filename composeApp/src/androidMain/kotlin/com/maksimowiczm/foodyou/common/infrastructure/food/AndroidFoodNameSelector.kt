@@ -1,20 +1,22 @@
 package com.maksimowiczm.foodyou.common.infrastructure.food
 
+import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import java.util.Locale
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 internal class AndroidFoodNameSelector(private val systemDetails: SystemDetails) :
     FoodNameSelector {
     override fun select(foodName: FoodName): String {
-        val language = select()
+        val language = localizedLanguage(systemDetails.defaultLocaleFlow.value) ?: Language.English
         return foodName[language] ?: foodName.fallback
     }
 
-    override fun select(): Language =
-        localizedLanguage(systemDetails.defaultLocale) ?: Language.English
+    override fun observeLanguage(): Flow<Language> =
+        systemDetails.defaultLocaleFlow.map { localizedLanguage(it) ?: Language.English }
 
     private fun localizedLanguage(locale: Locale): Language? =
         when (locale.language) {

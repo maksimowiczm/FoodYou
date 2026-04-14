@@ -6,8 +6,8 @@ import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.form.rememberFormField
 import com.maksimowiczm.foodyou.app.ui.common.form.validateDouble
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyUnit
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
-import com.maksimowiczm.foodyou.app.ui.food.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.VolumeUnit
 import com.maksimowiczm.foodyou.common.domain.WeightUnit

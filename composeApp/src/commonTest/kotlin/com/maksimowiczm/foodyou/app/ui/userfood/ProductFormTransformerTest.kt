@@ -5,11 +5,11 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.account.domain.testAccount
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
+import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.common.domain.milliliters
@@ -18,6 +18,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 
@@ -26,7 +28,7 @@ class ProductFormTransformerTest {
         object : FoodNameSelector {
             override fun select(foodName: FoodName): String = ""
 
-            override fun select(): Language = language
+            override fun observeLanguage(): Flow<Language> = flowOf(language)
         }
 
     private fun createProductFormTransformer(

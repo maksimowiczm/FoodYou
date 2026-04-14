@@ -1,5 +1,9 @@
 package com.maksimowiczm.foodyou.common.domain
 
+import com.maksimowiczm.foodyou.common.Div
+import com.maksimowiczm.foodyou.common.Plus
+import com.maksimowiczm.foodyou.common.Times
+
 /**
  * Represents an energy amount.
  *

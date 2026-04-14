@@ -7,7 +7,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchItem
 import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchParameters
@@ -18,10 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-internal class UserFoodSearchRepositoryImpl(
-    private val dao: SearchDao,
-    private val nameSelector: FoodNameSelector,
-) : UserFoodSearchRepository {
+internal class UserFoodSearchRepositoryImpl(private val dao: SearchDao) : UserFoodSearchRepository {
     private val mapper = UserFoodSearchMapper(ProductMapper())
 
     @OptIn(ExperimentalPagingApi::class)
@@ -29,8 +25,6 @@ internal class UserFoodSearchRepositoryImpl(
         parameters: UserFoodSearchParameters,
         pageSize: Int,
     ): Flow<PagingData<UserFoodSearchItem>> {
-        val language = nameSelector.select()
-
         when (parameters.query) {
             SearchQuery.Blank,
             is SearchQuery.Barcode,
@@ -50,13 +44,13 @@ internal class UserFoodSearchRepositoryImpl(
         val config = PagingConfig(pageSize = pageSize)
         val factory = {
             when (parameters.query) {
-                SearchQuery.Blank -> dao.getPagingSource(language.tag)
+                SearchQuery.Blank -> dao.getPagingSource(parameters.language.tag)
 
                 is SearchQuery.Barcode ->
-                    dao.getPagingSourceByBarcode(parameters.query.barcode, language.tag)
+                    dao.getPagingSourceByBarcode(parameters.query.barcode, parameters.language.tag)
 
                 is SearchQuery.Text ->
-                    dao.getPagingSourceByQuery(parameters.query.query, language.tag)
+                    dao.getPagingSourceByQuery(parameters.query.query, parameters.language.tag)
 
                 is SearchQuery.OpenFoodFactsUrl,
                 is SearchQuery.FoodDataCentralUrl -> error("Unreachable")

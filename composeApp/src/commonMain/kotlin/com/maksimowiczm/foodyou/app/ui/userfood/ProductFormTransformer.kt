@@ -1,13 +1,13 @@
 package com.maksimowiczm.foodyou.app.ui.userfood
 
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
+import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.fluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
@@ -20,6 +20,7 @@ import com.maksimowiczm.foodyou.common.domain.ounces
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
+import kotlinx.coroutines.flow.first
 
 internal class ProductFormTransformer(
     private val getAppAccountEnergyUnitUseCase: GetAppAccountEnergyUnitUseCase,
@@ -41,7 +42,7 @@ internal class ProductFormTransformer(
         require(form.isValid) { "Form is not valid" }
 
         val energyFormat = getAppAccountEnergyUnitUseCase.getAppAccountEnergyUnit()
-        val language = foodNameSelector.select()
+        val language = foodNameSelector.observeLanguage().first()
 
         val nameStr = form.name.textFieldState.text.toString()
         val name =
