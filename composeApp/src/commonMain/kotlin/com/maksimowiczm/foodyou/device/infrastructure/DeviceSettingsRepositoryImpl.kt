@@ -7,24 +7,23 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
-import com.maksimowiczm.foodyou.device.domain.Device
-import com.maksimowiczm.foodyou.device.domain.DeviceDisplayNameProvider
-import com.maksimowiczm.foodyou.device.domain.DeviceRepository
+import com.maksimowiczm.foodyou.device.domain.DeviceSettings
+import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-internal class DeviceRepositoryImpl(
+internal class DeviceSettingsRepositoryImpl(
     private val dataStore: DataStore<Preferences>,
     private val deviceDisplayNameProvider: DeviceDisplayNameProvider,
     private val systemDetails: SystemDetails,
-) : DeviceRepository {
-    override fun observe(): Flow<Device> {
+) : DeviceSettingsRepository {
+    override fun observe(): Flow<DeviceSettings> {
         return combine(dataStore.data, systemDetails.languageTag) { preferences, languageTag ->
             preferences.toDevice(deviceDisplayNameProvider, languageTag)
         }
     }
 
-    override suspend fun save(device: Device) {
+    override suspend fun save(device: DeviceSettings) {
         dataStore.updateData { it.toMutablePreferences().applyDevice(device) }
 
         when (val language = device.language) {
@@ -37,10 +36,10 @@ internal class DeviceRepositoryImpl(
 private suspend fun Preferences.toDevice(
     deviceDisplayNameProvider: DeviceDisplayNameProvider,
     languageTag: String?,
-): Device {
+): DeviceSettings {
     val deviceName = this[OtherKeys.deviceName] ?: deviceDisplayNameProvider.provide()
     val hideScreen = this[OtherKeys.hideScreen] ?: false
-    return Device(
+    return DeviceSettings(
         name = deviceName,
         themeSettings = toThemeSettings(),
         nutrientsColors = toNutrientsColors(),
@@ -53,7 +52,7 @@ private suspend fun Preferences.toDevice(
     )
 }
 
-private fun MutablePreferences.applyDevice(device: Device): MutablePreferences = apply {
+private fun MutablePreferences.applyDevice(device: DeviceSettings): MutablePreferences = apply {
     this[OtherKeys.deviceName] = device.name
     this[OtherKeys.hideScreen] = device.hideScreen
     applyThemeSettings(device.themeSettings)

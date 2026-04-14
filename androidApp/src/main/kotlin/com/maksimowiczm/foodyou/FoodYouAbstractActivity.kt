@@ -18,7 +18,7 @@ import com.maksimowiczm.foodyou.app.ui.food.FoodNameSelectorProvider
 import com.maksimowiczm.foodyou.common.domain.food.FoodNameSelector
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.common.infrastructure.defaultLocale
-import com.maksimowiczm.foodyou.device.domain.DeviceRepository
+import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
 import foodyou.app.generated.resources.*
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
@@ -31,7 +31,7 @@ import org.koin.android.ext.android.inject
 
 abstract class FoodYouAbstractActivity : AppCompatActivity() {
     private val systemDetails: SystemDetails by inject()
-    private val deviceRepository: DeviceRepository by inject()
+    private val deviceSettingsRepository: DeviceSettingsRepository by inject()
     private val foodNameSelector: FoodNameSelector by inject()
     private val clock: Clock by inject()
     private val appConfig: AppConfig by inject()
@@ -77,7 +77,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     }
 
     private suspend fun observeShowContentSecurity() {
-        deviceRepository
+        deviceSettingsRepository
             .observe()
             .map { it.hideScreen }
             .collectLatest {

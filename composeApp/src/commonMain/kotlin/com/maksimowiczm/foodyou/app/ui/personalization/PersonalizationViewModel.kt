@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
-import com.maksimowiczm.foodyou.device.domain.DeviceRepository
+import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -15,11 +15,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class PersonalizationViewModel(
-    private val deviceRepository: DeviceRepository,
+    private val deviceSettingsRepository: DeviceSettingsRepository,
     private val accountRepository: AccountRepository,
     private val appAccountManager: AppAccountManager,
 ) : ViewModel() {
-    private val _device = deviceRepository.observe()
+    private val _device = deviceSettingsRepository.observe()
 
     private val _energyFormat =
         appAccountManager.observeAppAccount().filterNotNull().map { it.settings.energyUnit }
@@ -42,9 +42,7 @@ class PersonalizationViewModel(
 
     fun updateSecureScreen(secureScreen: Boolean) {
         viewModelScope.launch {
-            val device = _device.first()
-            device.updateHideScreen(secureScreen)
-            deviceRepository.save(device)
+            deviceSettingsRepository.update { it.copy(hideScreen = secureScreen) }
         }
     }
 

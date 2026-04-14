@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.language
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.device.domain.DeviceRepository
+import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -10,9 +10,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class LanguageViewModel(private val deviceRepository: DeviceRepository) : ViewModel() {
+class LanguageViewModel(private val deviceSettingsRepository: DeviceSettingsRepository) :
+    ViewModel() {
     private val translationFlow =
-        deviceRepository
+        deviceSettingsRepository
             .observe()
             .map { it.language }
             .map { language -> languages.firstOrNull { it.language == language } }
@@ -26,9 +27,7 @@ class LanguageViewModel(private val deviceRepository: DeviceRepository) : ViewMo
 
     fun onLanguageSelect(translation: Translation?) {
         viewModelScope.launch {
-            val device = deviceRepository.load()
-            device.updateLanguage(translation?.language)
-            deviceRepository.save(device)
+            deviceSettingsRepository.update { it.copy(language = translation?.language) }
         }
     }
 }
