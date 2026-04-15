@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.openfoodfacts.di
 
-import com.maksimowiczm.foodyou.common.infrastructure.databaseBuilder
+import com.maksimowiczm.foodyou.common.infrastructure.room.databaseBuilder
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.OpenFoodFactsRepositoryImpl
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsV2RemoteDataSource

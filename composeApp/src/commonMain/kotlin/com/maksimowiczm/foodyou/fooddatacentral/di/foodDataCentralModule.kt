@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.fooddatacentral.di
 
-import com.maksimowiczm.foodyou.common.infrastructure.databaseBuilder
+import com.maksimowiczm.foodyou.common.infrastructure.room.databaseBuilder
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.FoodDataCentralRepositoryImpl

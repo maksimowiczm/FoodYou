@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.common.infrastructure
+package com.maksimowiczm.foodyou.common.infrastructure.room
 
 import androidx.room.RoomDatabase
 import org.koin.core.scope.Scope

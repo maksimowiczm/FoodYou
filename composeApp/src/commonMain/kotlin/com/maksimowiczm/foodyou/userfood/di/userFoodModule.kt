@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.userfood.di
 
 import com.maksimowiczm.foodyou.common.event.di.integrationEventBus
 import com.maksimowiczm.foodyou.common.event.di.integrationEventHandler
-import com.maksimowiczm.foodyou.common.infrastructure.databaseBuilder
+import com.maksimowiczm.foodyou.common.infrastructure.room.databaseBuilder
 import com.maksimowiczm.foodyou.userfood.application.HandleRecipeDeletedEventHandler
 import com.maksimowiczm.foodyou.userfood.application.HandleUserProductDeletedEventHandler
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent

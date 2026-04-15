@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
-import com.maksimowiczm.foodyou.analytics.application.AppLaunchUseCase
 import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
@@ -22,7 +21,6 @@ import kotlinx.coroutines.launch
 internal class OnboardingViewModel(
     private val accountRepository: AccountRepository,
     private val accountManager: AppAccountManager,
-    private val appLaunchUseCase: AppLaunchUseCase,
     private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
 ) : ViewModel() {
     private val _finishingOnboarding = MutableStateFlow(false)
@@ -55,7 +53,6 @@ internal class OnboardingViewModel(
 
                 accountRepository.save(account)
                 accountManager.setAppProfileId(profile.id)
-                appLaunchUseCase.execute()
                 foodSearchPreferencesRepository.save(searchPreferences)
             }
             val minDelayTask = async { delay(2_000) }
