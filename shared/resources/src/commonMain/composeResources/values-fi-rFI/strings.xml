@@ -253,7 +253,6 @@
     <string name="description_add_note">Valinnaiset huomautukset (esim. ainesosat, vegaanisuuden tila, allergeenit, lisäaineet) tai muut ravintoaineisiin liittymättömät tiedot</string>
     <string name="action_try_again">Yritä uudelleen</string>
     <string name="description_calories_are_calculated">Energia lasketaan automaattisesti makroravintoineista. Voit poistaa tämän ominaisuuden käytöstä ja syöttää arvon manuaalisesti tarvittaessa. Alkoholi ei sisälly laskelmaan.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
     <string name="neutral_an_error_occurred">Tapahtui virhe</string>
     <string name="action_retry">Yritä uudelleen</string>
     <string name="action_import">Tuo</string>

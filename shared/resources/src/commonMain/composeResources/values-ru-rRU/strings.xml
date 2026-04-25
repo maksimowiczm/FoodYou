@@ -265,7 +265,6 @@
     <string name="description_add_note">Дополнительные примечания (например, ингредиенты, подходит ли для веганов, аллергены, добавки) или любые другие детали, не связанные с питательными веществами</string>
     <string name="action_try_again">Попробовать снова</string>
     <string name="description_calories_are_calculated">Энергетическая ценность автоматически рассчитывается из макронутриентов. Вы можете отключить эту функцию и ввести значение вручную, если это необходимо. Алкоголь при расчете не учитывается.</string>
-    <string name="x_kcal_per_g">%1$s %2$d ккал/г</string>
     <string name="neutral_an_error_occurred">Произошла ошибка</string>
     <string name="action_retry">Повторить</string>
     <string name="action_import">Импорт</string>

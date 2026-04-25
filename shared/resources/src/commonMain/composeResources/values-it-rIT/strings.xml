@@ -254,7 +254,6 @@
     <string name="description_add_note">Note facoltative (es. ingredienti, stato vegano, allergeni, additivi) o qualsiasi altro dettaglio non di nutrienti</string>
     <string name="action_try_again">Riprova</string>
     <string name="description_calories_are_calculated">L'energia è calcolata automaticamente dai macronutrienti. È possibile disattivare questa funzione e inserire il valore manualmente, se necessario. L'alcol non è incluso nel calcolo.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
     <string name="neutral_an_error_occurred">Si è verificato un errore</string>
     <string name="action_retry">Riprova</string>
     <string name="action_import">Importa</string>

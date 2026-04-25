@@ -220,6 +220,14 @@
     <string name="headline_launcher_icon_by_icons8">Az indító ikont az Icon8 készítette</string>
     <string name="description_open_food_facts">Egy kollaboráció, mely ingyenes, nyílt és az világot lefedő ételadatbázist használ</string>
     <string name="error_open_food_facts_rate_limit">Elérte az Open Food Fact API limitét</string>
+    <string name="error_open_food_facts_service_unavailable">Az Open Food Facts szolgáltatása ideiglenesen jelenleg nem elérhető. A regisztrált felhasználók számára nincs elérési korlát, és elsődleges hozzáférést kapnak csúcsidőben is.</string>
+    <string name="action_register">Regisztráció</string>
+    <string name="description_open_food_facts_credentials_message">A belépési adatok titkosítottak, és csak az Ön készülékén tárolódnak. Az érzékeny adatok nem elérhetőek más számára.</string>
+    <string name="error_open_food_facts_failed_to_authenticate">Sikertelen hitelesítés az Open Food Facts-el</string>
+    <string name="headline_username">Felhasználónév</string>
+    <string name="headline_password">Jelszó</string>
+    <string name="action_show_password">Jelszó megjelenítése</string>
+    <string name="action_hide_password">Jelszó elrejtése</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Termékek exportálása</string>
     <string name="notification_importing_products">Termékek importálása</string>
@@ -253,7 +261,6 @@
     <string name="description_add_note">Opcionális megjegyzések (pl. összetevők, vegán státusz, allergének, adalékanyagok) vagy bármely egyéb nem tápanyagokkal kapcsolatos részletek</string>
     <string name="action_try_again">Próbálja újra</string>
     <string name="description_calories_are_calculated">Az energia automatikusan kiszámolásra kerül a tápanyagokból. Kikapcsolhatja ezt a funkciót, és beállíthatja kézzel az értéket. Az alkohol nincs figyelembe véve.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
     <string name="neutral_an_error_occurred">Hiba lépett fel</string>
     <string name="action_retry">Újra</string>
     <string name="action_import">Importálás</string>
@@ -353,6 +360,7 @@
     <string name="action_replace">Kicserélés</string>
     <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Az adatbázisa KICSERÉLÉSRE KERÜL, és az összes eddigi adat EL FOG VESZNI. Az app újra fog indulni, miután az adatok fölülíródnak. Lehet hogy újra meg kell nyitnia az appot.</string>
     <string name="action_sign_in">Bejelentkezés</string>
+    <string name="action_sign_out">Kijelentkezés</string>
     <string name="headline_terms_of_service">Felhasználási feltételek</string>
     <string name="headline_privacy_policy">Adatkezelési tájékoztató</string>
     <string name="error_there_was_an_error_while_signing_in">Hiba lépett fel a bejelentkezés során</string>

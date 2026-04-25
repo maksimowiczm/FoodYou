@@ -265,7 +265,6 @@
     <string name="description_add_note">Nepovinné poznámky (např. přísady, stav vegan, alergeny, přísady) nebo jakékoli jiné údaje bez živin</string>
     <string name="action_try_again">Zkusit znovu</string>
     <string name="description_calories_are_calculated">Energie je automaticky počítána z makroživin. Tuto funkci můžete vypnout a zadat hodnotu ručně, pokud je to potřeba. Alcohol do výpočtu zahrnut není.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
     <string name="neutral_an_error_occurred">Došlo k chybě</string>
     <string name="action_retry">Zkusit znovu</string>
     <string name="action_import">Importovat</string>

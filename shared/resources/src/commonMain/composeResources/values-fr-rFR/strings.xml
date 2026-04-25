@@ -153,6 +153,7 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Montrer plus</string>
     <string name="action_download_product">Télécharger le produit</string>
     <string name="action_copy_and_open_bug_report">Copier et ouvrir un rapport de bug</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Copier le rapport &amp;</string>
     <string name="action_show_details">Montrer les détails</string>
     <string name="action_browse_usda">Parcourir FoodData Central (USDA)</string>
     <string name="action_set_key">Définir la clé</string>
@@ -218,6 +219,15 @@
     <string name="description_please_wait_while_exporting_products">Veuillez patienter pendant l'exportation des produits</string>
     <string name="headline_launcher_icon_by_icons8">Icône de démarrage fournie par Icons8</string>
     <string name="description_open_food_facts">Une base de données collaborative, gratuite et ouverte sur les produits alimentaires du monde entier.</string>
+    <string name="error_open_food_facts_rate_limit">Limite de requêtes de l'API Open Food Facts dépassée</string>
+    <string name="error_open_food_facts_service_unavailable">Le service Open Food Facts est temporairement indisponible. Les utilisateurs enregistrés ne sont pas soumis à des limites de demande et bénéficient d'un accès prioritaire pendant les heures de pointe.</string>
+    <string name="action_register">S'inscrire</string>
+    <string name="description_open_food_facts_credentials_message">Les identifiants de connexion sont chiffrés et stockés uniquement sur votre appareil. Personne d'autre ne peut accéder aux données sensibles.</string>
+    <string name="error_open_food_facts_failed_to_authenticate">Échec de l'authentification avec Open Food Facts</string>
+    <string name="headline_username">Nom d'utilisateur</string>
+    <string name="headline_password">Mot de passe</string>
+    <string name="action_show_password">Afficher le mot de passe</string>
+    <string name="action_hide_password">Cacher le mot de passe</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Exportation des produits</string>
     <string name="notification_importing_products">Importation de produits</string>
@@ -251,7 +261,7 @@
     <string name="description_add_note">Remarques facultatives (par exemple ingrédients, statut végétalien, allergènes, additifs) ou toute autre information non nutritionnelle</string>
     <string name="action_try_again">Essayer à nouveau</string>
     <string name="description_calories_are_calculated">L'énergie est automatiquement calculée à partir des macronutriments. Vous pouvez désactiver cette fonctionnalité et saisir la valeur manuellement si nécessaire. L'alcool n'est pas pris en compte dans le calcul.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
+    <string name="x_energy_unit_per_g" description="e.g. proteins 4 kcal/g; proteins 17 kj/g">%1$s %2$d %3$s/g</string>
     <string name="neutral_an_error_occurred">Une erreur s'est produite</string>
     <string name="action_retry">Réessayer</string>
     <string name="action_import">Importer</string>
@@ -351,6 +361,7 @@
     <string name="action_replace">Remplacer</string>
     <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Votre base de données sera REMPLACÉE et toutes les données actuelles seront PERDUES. L'application redémarrera après le remplacement de la base de données. Vous devrez peut-être rouvrir l'application.</string>
     <string name="action_sign_in">Se connecter</string>
+    <string name="action_sign_out">Se déconnecter</string>
     <string name="headline_terms_of_service">Conditions d'utilisation</string>
     <string name="headline_privacy_policy">Politique de confidentialité</string>
     <string name="error_there_was_an_error_while_signing_in">Une erreur s'est produite lors de la connexion</string>
@@ -389,4 +400,5 @@
     <string name="description_replacing_database">Remplacement de la base de données, veuillez patienter...</string>
     <string name="headline_experimental">Expérimental</string>
     <string name="description_privacy_policy">Découvrez comment vos données sont gérées</string>
+    <string name="error_open_food_facts_timeout">Open Food Facts prend trop de temps à répondre. Le service peut être temporairement lent ou indisponible. Essayez plutôt de scanner le code-barres du produit.</string>
 </resources>

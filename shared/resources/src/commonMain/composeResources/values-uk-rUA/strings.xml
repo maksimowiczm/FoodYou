@@ -244,7 +244,6 @@
     <string name="headline_note">Примітка</string>
     <string name="action_try_again">Спробувати ще раз</string>
     <string name="description_calories_are_calculated">Енергія автоматично розраховується на основі макронутрієнтів. Ви можете вимкнути цю функцію і ввести значення вручну за потреби. Алкоголь не використовується в розрахунках.</string>
-    <string name="x_kcal_per_g">%1$s %2$d ккал/г</string>
     <string name="neutral_an_error_occurred">Сталася помилка</string>
     <string name="action_retry">Повторити спробу</string>
     <string name="headline_today" description="Today, date">Сьогодні, %1$s</string>

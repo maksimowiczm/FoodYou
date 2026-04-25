@@ -273,7 +273,7 @@
     <string name="description_add_note">Uwagi opcjonalne (np. dotyczące składników, statusu wegańskiego, alergenów, dodatków) lub wszelkie inne szczegóły nieodżywcze</string>
     <string name="action_try_again">Spróbuj ponownie</string>
     <string name="description_calories_are_calculated">Energia jest obliczana automatycznie na podstawie makroskładników. W razie potrzeby możesz wyłączyć tę funkcję i wprowadzić wartość ręcznie. Alkohol nie jest uwzględniany w obliczeniach.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
+    <string name="x_energy_unit_per_g" description="e.g. proteins 4 kcal/g; proteins 17 kj/g">%1$s %2$d %3$s/g</string>
     <string name="neutral_an_error_occurred">Wystąpił błąd</string>
     <string name="action_retry">Spróbuj ponownie</string>
     <string name="action_import">Import</string>

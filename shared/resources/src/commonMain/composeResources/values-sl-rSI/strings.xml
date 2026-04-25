@@ -157,6 +157,7 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Pokaži več</string>
     <string name="action_download_product">Prenos izdelka</string>
     <string name="action_copy_and_open_bug_report">Kopiraj in odpri poročilo o hrošču</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Kopiraj &amp; prijavi</string>
     <string name="action_show_details">Prikaži podrobnosti</string>
     <string name="action_browse_usda">Brskanje po FoodData Central (USDA)</string>
     <string name="action_set_key">Nastavite tipko</string>
@@ -230,6 +231,9 @@
     <string name="description_please_wait_while_exporting_products">Počakajte dokler poteka izvoz izdelkov</string>
     <string name="headline_launcher_icon_by_icons8">Ikona aplikacije od Icons8</string>
     <string name="description_open_food_facts">Skupna, brezplačna in odprta zbirka podatkov o živilskih izdelkih z vsega sveta</string>
+    <string name="error_open_food_facts_service_unavailable">Storitev Open Food Facts začasno ni na voljo. Za registrirane uporabnike ne veljajo omejitve zahtev in imajo prednostni dostop v času konic.</string>
+    <string name="action_register">Registracija</string>
+    <string name="action_hide_password">Skrij geslo</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Izvažanje izdelkov</string>
     <string name="notification_importing_products">Uvažanje izdelkov</string>
@@ -263,7 +267,6 @@
     <string name="description_add_note">Neobvezne opombe (npr. sestavine, veganski status, alergeni, aditivi) ali druge podrobnosti, ki niso povezane s hranili.</string>
     <string name="action_try_again">Poskusite znova</string>
     <string name="description_calories_are_calculated">Energijska vrednost se samodejno izračuna iz makrohranil. Po potrebi lahko to funkcijo onemogočite in vrednost vnesete ročno. Energijska vrednost alkohola ni vključena v izračun.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
     <string name="neutral_an_error_occurred">Prišlo je do napake</string>
     <string name="action_retry">Ponovi</string>
     <string name="action_import">Uvozi</string>
@@ -405,4 +408,5 @@
     <string name="description_replacing_database">Zamenjujem podatkovno bazo, počakajte ...</string>
     <string name="headline_experimental">Eksperimentalni</string>
     <string name="description_privacy_policy">Preglej kako se upravlja s podatki</string>
+    <string name="error_open_food_facts_timeout">Odgovor Open Food Facts traja predolgo. Storitev je lahko začasno počasna ali nedosegljiva. Namesto tega poskusite skenirati črtno kodo izdelka.</string>
 </resources>
