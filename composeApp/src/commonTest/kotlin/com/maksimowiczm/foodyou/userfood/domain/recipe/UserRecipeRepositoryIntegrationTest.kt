@@ -9,9 +9,9 @@ import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.event.ListEventBus
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
 import com.maksimowiczm.foodyou.common.infrastructure.provideRoomDatabaseBuilder
+import com.maksimowiczm.foodyou.userfood.infrastructure.UserFoodDatabase
+import com.maksimowiczm.foodyou.userfood.infrastructure.UserFoodDatabase.Companion.buildDatabase
 import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.UserRecipeRepositoryImpl
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.UserFoodDatabase
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.UserFoodDatabase.Companion.buildDatabase
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.absolutePath

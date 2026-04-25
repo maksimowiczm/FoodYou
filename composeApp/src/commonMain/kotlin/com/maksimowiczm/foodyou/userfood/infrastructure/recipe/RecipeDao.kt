@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe
+package com.maksimowiczm.foodyou.userfood.infrastructure.recipe
 
 import androidx.room.Dao
 import androidx.room.Delete

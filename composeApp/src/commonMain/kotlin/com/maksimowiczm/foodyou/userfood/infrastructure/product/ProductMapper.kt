@@ -19,10 +19,6 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.FoodNameEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.QuantityEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.QuantityType
 import kotlin.uuid.Uuid
 
 internal class ProductMapper {

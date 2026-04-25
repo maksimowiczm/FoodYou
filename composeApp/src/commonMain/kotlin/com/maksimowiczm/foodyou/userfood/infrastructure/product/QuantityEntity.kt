@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.userfood.infrastructure.room.product
+package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
 import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnit
 

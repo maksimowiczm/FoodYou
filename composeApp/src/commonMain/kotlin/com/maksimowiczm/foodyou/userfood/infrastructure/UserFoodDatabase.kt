@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.userfood.infrastructure.room
+package com.maksimowiczm.foodyou.userfood.infrastructure
 
 import androidx.room.ConstructedBy
 import androidx.room.Database
@@ -7,16 +7,16 @@ import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnitConverter
 import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductDao
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.QuantityTypeConverter
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeDao
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeIngredientEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeQuantityTypeConverter
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.search.ProductFts
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.search.RecipeFts
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.search.SearchDao
+import com.maksimowiczm.foodyou.userfood.infrastructure.product.ProductDao
+import com.maksimowiczm.foodyou.userfood.infrastructure.product.ProductEntity
+import com.maksimowiczm.foodyou.userfood.infrastructure.product.QuantityTypeConverter
+import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.RecipeDao
+import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.RecipeEntity
+import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.RecipeIngredientEntity
+import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.RecipeQuantityTypeConverter
+import com.maksimowiczm.foodyou.userfood.infrastructure.search.ProductFts
+import com.maksimowiczm.foodyou.userfood.infrastructure.search.RecipeFts
+import com.maksimowiczm.foodyou.userfood.infrastructure.search.SearchDao
 
 @Database(
     entities =

@@ -17,7 +17,7 @@ import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIdentity
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIngredient
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeName
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeRepository
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.UserFoodDatabase
+import com.maksimowiczm.foodyou.userfood.infrastructure.UserFoodDatabase
 import io.github.vinceglb.filekit.PlatformFile
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow

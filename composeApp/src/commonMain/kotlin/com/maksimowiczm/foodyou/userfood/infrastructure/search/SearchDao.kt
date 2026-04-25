@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.userfood.infrastructure.room.search
+package com.maksimowiczm.foodyou.userfood.infrastructure.search
 
 import androidx.paging.PagingSource
 import androidx.room.Dao

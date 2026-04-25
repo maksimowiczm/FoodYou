@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.userfood.infrastructure.room.search
+package com.maksimowiczm.foodyou.userfood.infrastructure.search
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Fts4
 import androidx.room.FtsOptions
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.FoodNameEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.product.ProductEntity
+import com.maksimowiczm.foodyou.userfood.infrastructure.product.FoodNameEntity
+import com.maksimowiczm.foodyou.userfood.infrastructure.product.ProductEntity
 
 @Fts4(
     contentEntity = ProductEntity::class,

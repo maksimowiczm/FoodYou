@@ -12,7 +12,6 @@ import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchItem
 import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchParameters
 import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchRepository
 import com.maksimowiczm.foodyou.userfood.infrastructure.product.ProductMapper
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.search.SearchDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map

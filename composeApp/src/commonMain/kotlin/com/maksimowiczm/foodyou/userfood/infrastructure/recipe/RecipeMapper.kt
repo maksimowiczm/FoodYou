@@ -20,11 +20,6 @@ import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipe
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIdentity
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIngredient
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeName
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeIngredientEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeQuantityEntity
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeQuantityType
-import com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe.RecipeWithIngredients
 import kotlinx.serialization.json.Json
 
 internal class RecipeMapper {

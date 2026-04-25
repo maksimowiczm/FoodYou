@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.userfood.infrastructure.room.recipe
+package com.maksimowiczm.foodyou.userfood.infrastructure.recipe
 
 internal enum class RecipeQuantityType {
     Weight,
