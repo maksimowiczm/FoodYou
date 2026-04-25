@@ -1,0 +1,4 @@
+Bug Fixes
+- Added iodine to the nutrients list.
+- Fixed accessibility issues on the language selection screen.
+- Fixed preferred energy unit not being applied on the quick add screen and product form.

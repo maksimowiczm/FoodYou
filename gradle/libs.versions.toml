@@ -1,6 +1,6 @@
 [versions]
-version-name = "3.4.7"
-android-versionCode = "121"
+version-name = "3.4.8"
+android-versionCode = "122"
 android-compileSdk = "36"
 android-minSdk = "28"
 android-targetSdk = "36"
