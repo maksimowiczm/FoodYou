@@ -35,7 +35,7 @@ internal class AccountRepositoryImpl(
         ) { profiles, settings, favoriteFoods ->
             if (settings == null || profiles.isEmpty()) null
             else
-                Account.of(
+                Account(
                     settings = settings.toDomain(),
                     profiles =
                         profiles.map { pe ->
@@ -97,7 +97,7 @@ private fun ProfileEntity.toDomain(favoriteFoods: List<ProfileFavoriteFoodEntity
         name = name,
         avatar = avatar.toDomainAvatar(),
         homeCardsOrder = homeFeaturesOrder,
-        favoriteFoods = favoriteFoods.map { it.toDomain() },
+        favoriteFoods = favoriteFoods.map { it.toDomain() }.toSet(),
     )
 }
 
@@ -111,21 +111,8 @@ private fun ProfileFavoriteFoodEntity.toDomain(): FavoriteFoodIdentity =
 private fun String.toDomainAvatar(): Profile.Avatar =
     runCatching {
             when {
-                startsWith("photo:") -> {
-                    val uri = ImageUri(removePrefix("photo:"))
-                    Profile.Avatar.Photo(uri = uri)
-                }
-
-                startsWith("predefined:") -> {
-                    when (val name = removePrefix("predefined:")) {
-                        "Person" -> Profile.Avatar.Predefined.Person
-                        "Woman" -> Profile.Avatar.Predefined.Woman
-                        "Man" -> Profile.Avatar.Predefined.Man
-                        "Engineer" -> Profile.Avatar.Predefined.Engineer
-                        else -> error("Unknown predefined avatar name: $name")
-                    }
-                }
-
+                startsWith("photo:") -> Profile.Avatar.Photo(ImageUri(removePrefix("photo:")))
+                startsWith("predefined:") -> removePrefix("predefined:").avatar
                 else -> error("Unknown avatar format: $this")
             }
         }
@@ -136,6 +123,24 @@ private fun Profile.Avatar.toEntityAvatar(): String =
         is Profile.Avatar.Photo -> "photo:${uri.value}"
         is Profile.Avatar.Predefined -> "predefined:$name"
     }
+
+private val Profile.Avatar.Predefined.name: String
+    get() =
+        when (this) {
+            Profile.Avatar.Predefined.Engineer -> "engineer"
+            Profile.Avatar.Predefined.Man -> "man"
+            Profile.Avatar.Predefined.Person -> "person"
+            Profile.Avatar.Predefined.Woman -> "woman"
+        }
+private val String.avatar: Profile.Avatar.Predefined
+    get() =
+        when (this) {
+            "engineer" -> Profile.Avatar.Predefined.Engineer
+            "man" -> Profile.Avatar.Predefined.Man
+            "person" -> Profile.Avatar.Predefined.Person
+            "woman" -> Profile.Avatar.Predefined.Woman
+            else -> error("Unknown predefined avatar name: $this")
+        }
 
 private suspend fun Profile.toEntity(blobStorage: FileKitBlobStorage): ProfileEntity {
     val persistedAvatar =

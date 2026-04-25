@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.HomeCard
-import com.maksimowiczm.foodyou.app.application.AppAccountManager
+import com.maksimowiczm.foodyou.account.domain.update
+import com.maksimowiczm.foodyou.account.domain.updateProfile
+import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -14,14 +16,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class HomeOrderViewModel(
-    private val appAccountManager: AppAccountManager,
+    private val appProfileManager: AppProfileManager,
     private val accountRepository: AccountRepository,
     logger: Logger,
 ) : ViewModel() {
     private val logger = logger.withTag(TAG)
 
     private val profile =
-        appAccountManager
+        appProfileManager
             .observeAppProfile()
             .stateIn(
                 scope = viewModelScope,
@@ -40,12 +42,11 @@ internal class HomeOrderViewModel(
 
     fun reorder(newOrder: List<HomeCard>) {
         viewModelScope.launch {
-            val profileId = appAccountManager.observeAppProfileId().filterNotNull().first()
-            val account = appAccountManager.observeAppAccount().first()
+            val profileId = appProfileManager.observeAppProfileId().filterNotNull().first()
 
-            account.updateProfile(profileId) { it.apply { updateHomeCardsOrder(newOrder) } }
-
-            accountRepository.save(account)
+            accountRepository.update {
+                updateProfile(profileId) { it.copy(homeCardsOrder = newOrder) }
+            }
 
             logger.d { "Reordered home features: $newOrder" }
         }

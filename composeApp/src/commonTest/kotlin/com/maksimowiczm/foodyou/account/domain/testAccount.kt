@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.account.domain
 
 fun testAccount(
-    settings: AccountSettings = AccountSettings.default,
+    settings: AccountSettings = AccountSettings(),
     profiles: List<Profile> = listOf(testProfile()),
-): Account = Account.of(settings = settings, profiles = profiles)
+): Account = Account(settings = settings, profiles = profiles)

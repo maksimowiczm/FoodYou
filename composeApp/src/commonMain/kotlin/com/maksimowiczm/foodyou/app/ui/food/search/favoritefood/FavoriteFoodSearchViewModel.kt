@@ -7,7 +7,7 @@ import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
-import com.maksimowiczm.foodyou.app.application.AppAccountManager
+import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class FavoriteFoodSearchViewModel(
-    private val appAccountManager: AppAccountManager,
+    appProfileManager: AppProfileManager,
     private val foodDataCentralRepository: FoodDataCentralRepository,
     private val openFoodFactsRepository: OpenFoodFactsRepository,
     private val userProductRepository: UserProductRepository,
@@ -42,7 +42,7 @@ internal class FavoriteFoodSearchViewModel(
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
 
     private val favoriteFoodIdentities =
-        appAccountManager.observeAppProfile().map { it.favoriteFoods }
+        appProfileManager.observeAppProfile().map { it.favoriteFoods }
 
     private val foodList: Flow<List<RemoteData<Any>>> =
         favoriteFoodIdentities

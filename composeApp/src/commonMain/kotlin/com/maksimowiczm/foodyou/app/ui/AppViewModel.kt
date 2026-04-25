@@ -5,7 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.app.application.AppAccountManager
+import com.maksimowiczm.foodyou.account.domain.update
+import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.FlowPreview
@@ -23,20 +24,19 @@ import kotlinx.coroutines.runBlocking
 
 @OptIn(FlowPreview::class)
 class AppViewModel(
-    private val appAccountManager: AppAccountManager,
+    private val appProfileManager: AppProfileManager,
     private val accountRepository: AccountRepository,
 ) : ViewModel() {
     private val primaryAccount: StateFlow<Account?> =
-        appAccountManager
-            .observeAppAccount()
+        accountRepository
+            .observe()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
                 initialValue =
                     runBlocking {
-                        appAccountManager
-                            .observeAppAccount()
-                            .map<Account, Account?> { it }
+                        accountRepository
+                            .observe()
                             .timeout(1.seconds)
                             .catch {
                                 when (it) {
@@ -86,9 +86,7 @@ class AppViewModel(
 
     fun onFinishOnboarding() {
         viewModelScope.launch {
-            val account = accountRepository.load() ?: return@launch
-            account.updateSettings { it.copy(onboardingFinished = true) }
-            accountRepository.save(account)
+            accountRepository.update { copy(settings = settings.copy(onboardingFinished = true)) }
         }
     }
 }

@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.userfood.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.application.AppAccountManager
+import com.maksimowiczm.foodyou.app.ui.userfood.ObserveEnergyUnitUseCase
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
@@ -11,21 +11,19 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class CreateProductViewModel(
-    private val appAccountManager: AppAccountManager,
     private val userProductRepository: UserProductRepository,
     private val productFormTransformer: ProductFormTransformer,
+    observeEnergyUnitUseCase: ObserveEnergyUnitUseCase,
 ) : ViewModel() {
 
     val energyFormat =
-        appAccountManager
-            .observeAppAccount()
-            .map { it.settings.energyUnit }
+        observeEnergyUnitUseCase
+            .observe()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),

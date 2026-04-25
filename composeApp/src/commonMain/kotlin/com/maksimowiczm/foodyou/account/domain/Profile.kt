@@ -4,85 +4,25 @@ import com.maksimowiczm.foodyou.common.domain.ImageUri
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlin.uuid.Uuid
 
-class Profile(
-    val id: ProfileId,
-    name: String,
-    avatar: Avatar,
-    homeCardsOrder: List<HomeCard>,
-    favoriteFoods: List<FavoriteFoodIdentity>,
+data class Profile(
+    val id: ProfileId = ProfileId(Uuid.random()),
+    val name: String,
+    val avatar: Avatar,
+    val homeCardsOrder: List<HomeCard> = HomeCard.defaultOrder,
+    val favoriteFoods: Set<FavoriteFoodIdentity> = setOf(),
 ) {
-    companion object {
-        fun new(name: String, avatar: Avatar): Profile {
-            return Profile(
-                id = ProfileId(Uuid.random()),
-                name = name,
-                avatar = avatar,
-                homeCardsOrder = HomeCard.defaultOrder,
-                favoriteFoods = listOf(),
-            )
-        }
-    }
-
-    var name: String = name
-        private set
-
-    var avatar: Avatar = avatar
-        private set
-
-    private val _homeCardsOrder = homeCardsOrder.toMutableList()
-    val homeCardsOrder: List<HomeCard>
-        get() = _homeCardsOrder.toList()
-
-    private val _favoriteFoods = favoriteFoods.toMutableList()
-    val favoriteFoods: List<FavoriteFoodIdentity>
-        get() = _favoriteFoods
-
-    fun updateHomeCardsOrder(newOrder: List<HomeCard>) {
-        require(newOrder.containsAll(HomeCard.entries)) { "New order must contain all home cards" }
-
-        _homeCardsOrder.clear()
-        _homeCardsOrder.addAll(newOrder)
-    }
-
-    fun updateName(newName: String) {
-        name = newName
-    }
-
-    fun updateAvatar(newAvatar: Avatar) {
-        avatar = newAvatar
-    }
-
-    fun addFavoriteFood(food: FavoriteFoodIdentity) {
-        _favoriteFoods.add(food)
-    }
-
-    fun removeFavoriteFood(food: FavoriteFoodIdentity) {
-        _favoriteFoods.remove(food)
-    }
-
-    fun isFavorite(food: FavoriteFoodIdentity): Boolean = _favoriteFoods.contains(food)
-
     sealed interface Avatar {
         data class Photo(val uri: ImageUri) : Avatar
 
         sealed interface Predefined : Avatar {
-            val name: String
 
-            data object Person : Predefined {
-                override val name: String = "Person"
-            }
+            data object Person : Predefined
 
-            data object Woman : Predefined {
-                override val name: String = "Woman"
-            }
+            data object Woman : Predefined
 
-            data object Man : Predefined {
-                override val name: String = "Man"
-            }
+            data object Man : Predefined
 
-            data object Engineer : Predefined {
-                override val name: String = "Engineer"
-            }
+            data object Engineer : Predefined
         }
     }
 }

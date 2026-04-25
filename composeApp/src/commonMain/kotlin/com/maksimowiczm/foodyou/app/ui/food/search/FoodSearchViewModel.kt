@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.food.search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.application.AppAccountManager
+import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchHistoryRepository
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.foodsearch.domain.SearchQueryParser
@@ -24,7 +24,7 @@ internal class FoodSearchViewModel(
     private val searchQueryParser: SearchQueryParser,
     private val searchHistoryRepository: FoodSearchHistoryRepository,
     private val clock: Clock,
-    appAccountManager: AppAccountManager,
+    appProfileManager: AppProfileManager,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -33,7 +33,7 @@ internal class FoodSearchViewModel(
     val searchQuery: Flow<SearchQuery> = savedSearchQuery.map(searchQueryParser::parse)
 
     val searchHistory =
-        appAccountManager
+        appProfileManager
             .observeAppProfileId()
             .filterNotNull()
             .flatMapLatest { profileId ->
@@ -52,7 +52,7 @@ internal class FoodSearchViewModel(
         searchQuery
             .filterIsInstance<SearchQuery.NotBlank>()
             .onEach {
-                val profileId = appAccountManager.observeAppProfileId().filterNotNull().first()
+                val profileId = appProfileManager.observeAppProfileId().filterNotNull().first()
                 val history = searchHistoryRepository.observe(profileId).first()
                 history.recordSearchQuery(it, clock)
                 searchHistoryRepository.save(history)

@@ -1,3 +1,5 @@
+@file:MustUseReturnValues
+
 package com.maksimowiczm.foodyou.analytics.domain
 
 import kotlin.time.Clock

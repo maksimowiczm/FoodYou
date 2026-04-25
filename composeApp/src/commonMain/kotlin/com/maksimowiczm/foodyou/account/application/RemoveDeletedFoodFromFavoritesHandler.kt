@@ -1,7 +1,8 @@
 package com.maksimowiczm.foodyou.account.application
 
-import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.account.domain.removeFavoriteUserFood
+import com.maksimowiczm.foodyou.account.domain.update
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
 
@@ -12,16 +13,10 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
  * When a user food product is deleted, this handler ensures data consistency by removing the
  * reference from the owner's favorite list.
  */
-class RemoveDeletedFoodFromFavoritesHandler(
-    private val accountRepository: AccountRepository,
-    logger: Logger,
-) : EventHandler<UserProductDeletedEvent> {
-    private val logger = logger.withTag("RemoveDeletedFoodFromFavoritesHandler")
+class RemoveDeletedFoodFromFavoritesHandler(private val accountRepository: AccountRepository) :
+    EventHandler<UserProductDeletedEvent> {
 
     override suspend fun handle(event: UserProductDeletedEvent) {
-        accountRepository
-            .load()
-            ?.apply { removeFavoriteUserFood(event.identity) }
-            ?.also { accountRepository.save(it) } ?: logger.w { "Account not found" }
+        accountRepository.update { removeFavoriteUserFood(event.identity) }
     }
 }

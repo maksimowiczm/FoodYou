@@ -23,7 +23,7 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
 import kotlinx.coroutines.flow.first
 
 internal class ProductFormTransformer(
-    private val getAppAccountEnergyUnitUseCase: GetAppAccountEnergyUnitUseCase,
+    private val getAppAccountEnergyUnitUseCase: ObserveEnergyUnitUseCase,
     private val foodNameSelector: FoodNameSelector,
 ) {
     data class Result(
@@ -41,7 +41,7 @@ internal class ProductFormTransformer(
     suspend fun transform(form: ProductFormState): Result {
         require(form.isValid) { "Form is not valid" }
 
-        val energyFormat = getAppAccountEnergyUnitUseCase.getAppAccountEnergyUnit()
+        val energyFormat = getAppAccountEnergyUnitUseCase.observe().first()
         val language = foodNameSelector.observeLanguage().first()
 
         val nameStr = form.name.textFieldState.text.toString()

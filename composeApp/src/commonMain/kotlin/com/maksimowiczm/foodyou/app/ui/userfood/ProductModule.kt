@@ -20,5 +20,5 @@ val productModule = module {
     }
 
     factoryOf(::ProductFormTransformer)
-    factoryOf(::GetAppAccountEnergyUnitUseCaseImpl).bind<GetAppAccountEnergyUnitUseCase>()
+    factoryOf(::ObserveEnergyUnitUseCaseImpl).bind<ObserveEnergyUnitUseCase>()
 }

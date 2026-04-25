@@ -14,5 +14,5 @@ val accountModule = module {
 
     factory { get<AccountDatabase>().accountDao }
 
-    integrationEventHandler { RemoveDeletedFoodFromFavoritesHandler(get(), get()) }
+    integrationEventHandler { RemoveDeletedFoodFromFavoritesHandler(get()) }
 }

@@ -2,17 +2,23 @@ package com.maksimowiczm.foodyou.app.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.application.AppAccountManager
+import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-internal class ProfileViewModel(private val appAccountManager: AppAccountManager) : ViewModel() {
+internal class ProfileViewModel(
+    private val appProfileManager: AppProfileManager,
+    accountRepository: AccountRepository,
+) : ViewModel() {
     val profiles =
-        appAccountManager
-            .observeAppAccount()
+        accountRepository
+            .observe()
+            .filterNotNull()
             .map { account ->
                 account.profiles.map { profile ->
                     ProfileUiState(
@@ -29,7 +35,7 @@ internal class ProfileViewModel(private val appAccountManager: AppAccountManager
             )
 
     val selectedProfile =
-        appAccountManager
+        appProfileManager
             .observeAppProfileId()
             .stateIn(
                 scope = viewModelScope,
@@ -38,6 +44,6 @@ internal class ProfileViewModel(private val appAccountManager: AppAccountManager
             )
 
     fun selectProfile(profile: ProfileUiState) {
-        viewModelScope.launch { appAccountManager.setAppProfileId(profile.id) }
+        viewModelScope.launch { appProfileManager.setAppProfileId(profile.id) }
     }
 }

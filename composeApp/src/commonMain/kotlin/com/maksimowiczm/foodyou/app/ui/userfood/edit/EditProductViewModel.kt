@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.app.ui.userfood.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.application.AppAccountManager
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class EditProductViewModel(
-    private val appAccountManager: AppAccountManager,
     private val userProductRepository: UserProductRepository,
     private val productFormTransformer: ProductFormTransformer,
     private val identity: UserProductIdentity,

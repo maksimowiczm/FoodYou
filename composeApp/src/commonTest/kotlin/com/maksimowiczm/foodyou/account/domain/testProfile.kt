@@ -10,7 +10,7 @@ fun testProfile(
     name: String = "Test User",
     avatar: Profile.Avatar = Profile.Avatar.Predefined.Person,
     homeCardsOrder: List<HomeCard> = HomeCard.defaultOrder,
-    favoriteFoods: List<FavoriteFoodIdentity> = listOf(),
+    favoriteFoods: Set<FavoriteFoodIdentity> = setOf(),
 ): Profile =
     Profile(
         id = id,

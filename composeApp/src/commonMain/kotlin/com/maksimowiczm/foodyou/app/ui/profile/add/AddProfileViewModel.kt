@@ -5,18 +5,18 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
-import com.maksimowiczm.foodyou.app.application.AppAccountManager
+import com.maksimowiczm.foodyou.account.domain.update
+import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 internal class AddProfileViewModel(
-    private val appAccountManager: AppAccountManager,
+    private val appProfileManager: AppProfileManager,
     private val accountRepository: AccountRepository,
     logger: Logger,
 ) : ViewModel() {
@@ -36,15 +36,11 @@ internal class AddProfileViewModel(
 
         viewModelScope.launch {
             logger.d { "Loading primary account to add profile" }
-            val account = appAccountManager.observeAppAccount().first()
 
-            val profile = Profile.new(name = name, avatar = ProfileAvatarMapper.toModel(avatar))
+            val profile = Profile(name = name, avatar = ProfileAvatarMapper.toModel(avatar))
+            accountRepository.update { copy(profiles = profiles + profile) }
 
-            account.addProfile(profile)
-
-            accountRepository.save(account)
-
-            appAccountManager.setAppProfileId(profile.id)
+            appProfileManager.setAppProfileId(profile.id)
 
             _uiEventBus.send(AddProfileEvent.Created(profile.id))
         }
