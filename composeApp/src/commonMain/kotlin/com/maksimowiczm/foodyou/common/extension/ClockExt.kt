@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.common.clock.domain
+package com.maksimowiczm.foodyou.common.extension
 
 import kotlin.time.Clock
 import kotlin.time.Duration

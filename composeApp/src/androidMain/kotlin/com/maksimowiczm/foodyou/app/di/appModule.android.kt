@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.common.di
+package com.maksimowiczm.foodyou.app.di
 
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.infrastructure.food.AndroidFoodNameSelector

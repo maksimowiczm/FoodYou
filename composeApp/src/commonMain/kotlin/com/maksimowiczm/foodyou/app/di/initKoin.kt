@@ -14,9 +14,7 @@ import com.maksimowiczm.foodyou.app.ui.personalization.personalizationModule
 import com.maksimowiczm.foodyou.app.ui.privacy.privacyModule
 import com.maksimowiczm.foodyou.app.ui.profile.profileModule
 import com.maksimowiczm.foodyou.app.ui.userfood.productModule
-import com.maksimowiczm.foodyou.common.clock.di.clockModule
 import com.maksimowiczm.foodyou.common.di.commonModule
-import com.maksimowiczm.foodyou.common.di.foodModule
 import com.maksimowiczm.foodyou.common.event.di.inMemoryEventBusModule
 import com.maksimowiczm.foodyou.device.di.deviceModule
 import com.maksimowiczm.foodyou.fooddatacentral.di.foodDataCentralModule
@@ -31,14 +29,13 @@ fun initKoin(appModule: AppModule, config: KoinAppDeclaration? = null) = startKo
     modules(dataStoreModule, roomModule, appModule.module)
 
     // Common modules
-    modules(clockModule, inMemoryEventBusModule, commonModule)
+    modules(inMemoryEventBusModule, commonModule)
 
     // Feature modules
     modules(
         accountModule,
         analyticsModule,
         deviceModule,
-        foodModule,
         foodSearchModule,
         foodDataCentralModule,
         openFoodFactsModule,

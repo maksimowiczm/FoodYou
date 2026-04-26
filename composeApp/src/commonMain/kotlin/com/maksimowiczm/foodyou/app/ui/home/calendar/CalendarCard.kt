@@ -48,7 +48,7 @@ import com.maksimowiczm.foodyou.app.ui.common.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.app.ui.home.common.FoodYouHomeCard
 import com.maksimowiczm.foodyou.app.ui.home.common.FoodYouHomeCardDefaults
 import com.maksimowiczm.foodyou.app.ui.home.common.HomeState
-import com.maksimowiczm.foodyou.common.clock.domain.observeDate
+import com.maksimowiczm.foodyou.common.extension.observeDate
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Instant
