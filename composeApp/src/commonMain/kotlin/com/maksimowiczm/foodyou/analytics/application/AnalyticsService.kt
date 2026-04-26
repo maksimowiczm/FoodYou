@@ -4,8 +4,8 @@ import com.maksimowiczm.foodyou.analytics.domain.AnalyticsEvent
 import com.maksimowiczm.foodyou.analytics.domain.recordAppLaunch
 import com.maksimowiczm.foodyou.analytics.domain.toAnalytics
 import com.maksimowiczm.foodyou.common.application.AppConfig
-import com.maksimowiczm.foodyou.common.application.EventStore
-import com.maksimowiczm.foodyou.common.application.load
+import com.maksimowiczm.foodyou.common.domain.EventStore
+import com.maksimowiczm.foodyou.common.domain.load
 import kotlin.time.Clock
 
 /**
