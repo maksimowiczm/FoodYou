@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.userfood.infrastructure.recipe
 import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.ImageUri
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
@@ -36,7 +36,7 @@ internal class UserRecipeRepositoryImpl(
     override suspend fun create(
         name: UserRecipeName,
         servings: Double,
-        image: ImageUri?,
+        image: FileUri?,
         note: UserFoodNote?,
         finalWeight: Double?,
         ingredients: List<UserRecipeIngredient>,
@@ -60,7 +60,7 @@ internal class UserRecipeRepositoryImpl(
                 identity = UserRecipeIdentity(recipeId),
                 name = name,
                 servings = servings,
-                image = photoPath?.let { ImageUri(it) },
+                image = photoPath?.let { FileUri(it) },
                 note = note,
                 finalWeight = finalWeight,
                 ingredients = ingredients,
@@ -86,7 +86,7 @@ internal class UserRecipeRepositoryImpl(
         identity: UserRecipeIdentity,
         name: UserRecipeName,
         servings: Double,
-        image: ImageUri?,
+        image: FileUri?,
         note: UserFoodNote?,
         finalWeight: Double?,
         ingredients: List<UserRecipeIngredient>,
@@ -114,7 +114,7 @@ internal class UserRecipeRepositoryImpl(
                 identity = identity,
                 name = name,
                 servings = servings,
-                image = imagePath?.let { ImageUri(it) },
+                image = imagePath?.let { FileUri(it) },
                 note = note,
                 finalWeight = finalWeight,
                 ingredients = ingredients,

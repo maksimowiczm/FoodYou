@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure
 
-import com.maksimowiczm.foodyou.common.domain.ImageUri
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -106,8 +106,8 @@ private fun OpenFoodFactsProductNetwork.toModel(): OpenFoodFactsProduct {
         // TODO
         servingQuantity = null,
         packageQuantity = null,
-        thumbnail = thumbnail?.let(::ImageUri),
-        image = fullSize?.let(::ImageUri),
+        thumbnail = thumbnail?.let(::FileUri),
+        image = fullSize?.let(::FileUri),
         source = "https://world.openfoodfacts.org/product/$code",
     )
 }

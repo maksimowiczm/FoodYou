@@ -12,7 +12,7 @@ import com.maksimowiczm.foodyou.account.infrastructure.room.FoodIdentityType
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
-import com.maksimowiczm.foodyou.common.domain.ImageUri
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
 import io.github.vinceglb.filekit.PlatformFile
@@ -111,7 +111,7 @@ private fun ProfileFavoriteFoodEntity.toDomain(): FavoriteFoodIdentity =
 private fun String.toDomainAvatar(): Profile.Avatar =
     runCatching {
             when {
-                startsWith("photo:") -> Profile.Avatar.Photo(ImageUri(removePrefix("photo:")))
+                startsWith("photo:") -> Profile.Avatar.Photo(FileUri(removePrefix("photo:")))
                 startsWith("predefined:") -> removePrefix("predefined:").avatar
                 else -> error("Unknown avatar format: $this")
             }

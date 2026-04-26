@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.userfood
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
-import com.maksimowiczm.foodyou.common.domain.ImageUri
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.fluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
@@ -31,7 +31,7 @@ internal class ProductFormTransformer(
         val brand: UserProductBrand?,
         val barcode: UserProductBarcode?,
         val note: UserFoodNote?,
-        val image: ImageUri?,
+        val image: FileUri?,
         val nutritionFacts: NutritionFacts,
         val servingQuantity: AbsoluteQuantity?,
         val packageQuantity: AbsoluteQuantity?,
@@ -177,7 +177,7 @@ internal class ProductFormTransformer(
             nutritionFacts = nutritionFacts,
             servingQuantity = boxedServingQuantity,
             packageQuantity = boxedPackageQuantity,
-            image = form.imageUri.value?.let(::ImageUri),
+            image = form.imageUri.value?.let(::FileUri),
             isLiquid = isLiquid,
         )
     }

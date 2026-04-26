@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.userfood.domain.recipe
 
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.ImageUri
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import kotlinx.coroutines.flow.Flow
 
@@ -9,7 +9,7 @@ interface UserRecipeRepository {
     suspend fun create(
         name: UserRecipeName,
         servings: Double,
-        image: ImageUri?,
+        image: FileUri?,
         note: UserFoodNote?,
         finalWeight: Double?,
         ingredients: List<UserRecipeIngredient>,
@@ -19,7 +19,7 @@ interface UserRecipeRepository {
         identity: UserRecipeIdentity,
         name: UserRecipeName,
         servings: Double,
-        image: ImageUri?,
+        image: FileUri?,
         note: UserFoodNote?,
         finalWeight: Double?,
         ingredients: List<UserRecipeIngredient>,

@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
-import com.maksimowiczm.foodyou.common.domain.ImageUri
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -32,7 +32,7 @@ internal class UserProductRepositoryImpl(
         brand: UserProductBrand?,
         barcode: UserProductBarcode?,
         note: UserFoodNote?,
-        image: ImageUri?,
+        image: FileUri?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
@@ -73,7 +73,7 @@ internal class UserProductRepositoryImpl(
         brand: UserProductBrand?,
         barcode: UserProductBarcode?,
         note: UserFoodNote?,
-        image: ImageUri?,
+        image: FileUri?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,

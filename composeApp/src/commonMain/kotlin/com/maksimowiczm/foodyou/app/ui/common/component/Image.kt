@@ -18,7 +18,7 @@ import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
-import com.maksimowiczm.foodyou.common.domain.ImageUri
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 import io.github.vinceglb.filekit.PlatformFile
@@ -27,7 +27,7 @@ import io.github.vinceglb.filekit.coil.securelyAccessFile
 import io.github.vinceglb.filekit.lastModified
 
 @Composable
-fun ImageUri.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
+fun FileUri.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
     val platformContext = LocalPlatformContext.current
     val file = remember(value) { runCatching { PlatformFile(value) }.getOrNull() }
 

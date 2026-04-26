@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.domain.recipe
 
-import com.maksimowiczm.foodyou.common.domain.ImageUri
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 
 /**
@@ -22,7 +22,7 @@ data class UserRecipe(
     val identity: UserRecipeIdentity,
     val name: UserRecipeName,
     val servings: Double,
-    val image: ImageUri?,
+    val image: FileUri?,
     val note: UserFoodNote?,
     val finalWeight: Double?,
     val ingredients: List<UserRecipeIngredient>,

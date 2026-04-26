@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.userfood.domain.recipe
 
 import androidx.room.useReaderConnection
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.ImageUri
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.event.IntegrationEvent
@@ -683,10 +683,10 @@ class UserRecipeRepositoryIntegrationTest {
         assertEquals(recipeBId.id, events[0].identity.id)
     }
 
-    private suspend fun createSourceImage(bytes: ByteArray): ImageUri {
+    private suspend fun createSourceImage(bytes: ByteArray): FileUri {
         val sourceFilePath = (FileKit.filesDir / "test-source-${Uuid.random()}.img").absolutePath()
         val sourceFile = PlatformFile(sourceFilePath)
         sourceFile.write(bytes)
-        return ImageUri(sourceFilePath)
+        return FileUri(sourceFilePath)
     }
 }
