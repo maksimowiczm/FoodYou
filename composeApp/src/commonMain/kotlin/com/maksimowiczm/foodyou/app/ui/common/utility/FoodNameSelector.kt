@@ -31,13 +31,14 @@ interface FoodNameSelector {
     fun observeLanguage(): Flow<Language>
 }
 
-val LocalFoodNameSelector: ProvidableCompositionLocal<FoodNameSelector> = compositionLocalOf {
-    object : FoodNameSelector {
-        override fun select(foodName: FoodName): String = foodName.english ?: foodName.fallback
+val LocalFoodNameSelector =
+    staticCompositionLocalOf<FoodNameSelector> {
+        object : FoodNameSelector {
+            override fun select(foodName: FoodName): String = foodName.english ?: foodName.fallback
 
-        override fun observeLanguage(): StateFlow<Language> = MutableStateFlow(Language.English)
+            override fun observeLanguage(): StateFlow<Language> = MutableStateFlow(Language.English)
+        }
     }
-}
 
 @Composable
 fun FoodNameSelectorProvider(selector: FoodNameSelector, content: @Composable () -> Unit) {
