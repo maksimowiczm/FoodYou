@@ -6,9 +6,11 @@ import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
-import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
+import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchPreferencesRepository
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -22,6 +24,7 @@ internal class OnboardingViewModel(
     private val accountRepository: AccountRepository,
     private val accountManager: AppProfileManager,
     private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
+    private val blobStorage: BlobStorage,
 ) : ViewModel() {
     private val _finishingOnboarding = MutableStateFlow(false)
     val finishingOnboarding = _finishingOnboarding.asStateFlow()
@@ -39,7 +42,17 @@ internal class OnboardingViewModel(
             _finishingOnboarding.value = true
 
             val realTask = async {
-                val profile = Profile(name = name, avatar = ProfileAvatarMapper.toModel(avatar))
+                val profileAvatar =
+                    when (avatar) {
+                        is UiProfileAvatar.Predefined -> Profile.Avatar.Predefined(avatar.variant)
+                        is UiProfileAvatar.Uri -> {
+                            val file = PlatformFile(avatar.uri.value)
+                            val digest = blobStorage.store(file.readBytes())
+                            Profile.Avatar.Photo(digest)
+                        }
+                    }
+
+                val profile = Profile(name = name, avatar = profileAvatar)
                 val account = Account(profiles = listOf(profile))
 
                 val searchPreferences =

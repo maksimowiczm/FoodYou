@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
 import org.koin.dsl.binds
 import org.koin.dsl.module
 
@@ -15,7 +16,7 @@ class AppModule(foodYouConfig: Module.() -> KoinDefinition<out FoodYouConfig>) {
     val module = module {
         foodYouConfig().binds(arrayOf(AppConfig::class, NetworkConfig::class))
         factoryOf(::AppProfileManager)
-        foodNameSelector()
+        foodNameSelector().bind<FoodNameSelector>()
     }
 }
 

@@ -69,8 +69,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
+import com.maksimowiczm.foodyou.app.ui.common.component.Avatar
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.ProfileId
@@ -208,8 +209,9 @@ private fun Welcome(
                                     .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                             )
 
-                        is UiProfileAvatar.Photo -> avatar.Avatar(Modifier.matchParentSize())
-                        is UiProfileAvatar.Predefined ->
+                        is Profile.Avatar.Photo -> avatar.Avatar(Modifier.matchParentSize())
+
+                        is Profile.Avatar.Predefined ->
                             avatar.Avatar(Modifier.padding(8.dp).matchParentSize())
                     }
                 }
@@ -345,15 +347,16 @@ private fun ProfileSwitcher(
                         ) {
                             val modifier =
                                 when (selectedProfile.avatar) {
-                                    is UiProfileAvatar.Photo -> Modifier.size(40.dp)
-                                    is UiProfileAvatar.Predefined ->
+                                    is Profile.Avatar.Photo -> Modifier.size(40.dp)
+
+                                    is Profile.Avatar.Predefined ->
                                         Modifier.padding(8.dp).size(24.dp)
                                 }
                             when (val avatar = selectedProfile.avatar) {
-                                is UiProfileAvatar.Photo ->
+                                is Profile.Avatar.Photo ->
                                     AnimatedAvatar(avatar, headerInteractionSource, modifier)
 
-                                is UiProfileAvatar.Predefined -> avatar.Avatar(modifier)
+                                is Profile.Avatar.Predefined -> avatar.Avatar(modifier)
                             }
                             Text(
                                 text = selectedProfile.name,
@@ -384,16 +387,17 @@ private fun ProfileSwitcher(
                             leadingContent = {
                                 val modifier =
                                     when (profile.avatar) {
-                                        is UiProfileAvatar.Photo -> Modifier.size(40.dp)
-                                        is UiProfileAvatar.Predefined ->
+                                        is Profile.Avatar.Photo -> Modifier.size(40.dp)
+
+                                        is Profile.Avatar.Predefined ->
                                             Modifier.padding(8.dp).size(24.dp)
                                     }
 
                                 when (val avatar = profile.avatar) {
-                                    is UiProfileAvatar.Photo ->
+                                    is Profile.Avatar.Photo ->
                                         AnimatedAvatar(avatar, interactionSource, modifier)
 
-                                    is UiProfileAvatar.Predefined -> avatar.Avatar(modifier)
+                                    is Profile.Avatar.Predefined -> avatar.Avatar(modifier)
                                 }
                             },
                             content = {
@@ -433,7 +437,7 @@ private fun ProfileSwitcher(
 
 @Composable
 private fun AnimatedAvatar(
-    avatar: UiProfileAvatar.Photo,
+    avatar: Profile.Avatar,
     interactionSource: InteractionSource,
     modifier: Modifier = Modifier,
 ) {
@@ -441,11 +445,10 @@ private fun AnimatedAvatar(
     val animatedCorner = animateDpAsState(if (isPressed) 4.dp else 1000.dp)
 
     avatar.Avatar(
-        modifier =
-            modifier.graphicsLayer {
-                clip = true
-                shape = RoundedCornerShape(animatedCorner.value)
-            }
+        modifier.graphicsLayer {
+            clip = true
+            shape = RoundedCornerShape(animatedCorner.value)
+        }
     )
 }
 
@@ -501,17 +504,17 @@ private fun SettingsScreenPreview() {
             ProfileUiState(
                 id = ProfileId(Uuid.random()),
                 name = "Mateusz",
-                avatar = UiProfileAvatar.Predefined(UiProfileAvatar.Predefined.Variant.ENGINEER),
+                avatar = Profile.Avatar.Predefined.Variant.Engineer.toAvatar(),
             ),
             ProfileUiState(
                 id = ProfileId(Uuid.random()),
                 name = "Maksimowicz",
-                avatar = UiProfileAvatar.Predefined(UiProfileAvatar.Predefined.Variant.PERSON),
+                avatar = Profile.Avatar.Predefined.Variant.Person.toAvatar(),
             ),
             ProfileUiState(
                 id = ProfileId(Uuid.random()),
                 name = "MaMa",
-                avatar = UiProfileAvatar.Predefined(UiProfileAvatar.Predefined.Variant.WOMAN),
+                avatar = Profile.Avatar.Predefined.Variant.Woman.toAvatar(),
             ),
         )
     PreviewFoodYouTheme {

@@ -11,11 +11,13 @@ import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.app.ui.common.utility.AndroidClipboardManager
 import com.maksimowiczm.foodyou.app.ui.common.utility.AndroidDateFormatter
 import com.maksimowiczm.foodyou.app.ui.common.utility.AppConfigProvider
+import com.maksimowiczm.foodyou.app.ui.common.utility.BlobResolverProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClockProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.DateFormatterProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelectorProvider
+import com.maksimowiczm.foodyou.common.domain.BlobResolver
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.common.infrastructure.defaultLocale
 import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
@@ -35,6 +37,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     private val foodNameSelector: FoodNameSelector by inject()
     private val clock: Clock by inject()
     private val appConfig: FoodYouConfig by inject()
+    private val blobResolver: BlobResolver by inject()
 
     fun setContent(content: @Composable () -> Unit) {
         enableEdgeToEdge()
@@ -53,7 +56,9 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
                     DateFormatterProvider(dateFormatter) {
                         ClockProvider(clock) {
                             FoodNameSelectorProvider(foodNameSelector) {
-                                AppConfigProvider(appConfig) { content() }
+                                BlobResolverProvider(blobResolver) {
+                                    AppConfigProvider(appConfig) { content() }
+                                }
                             }
                         }
                     }

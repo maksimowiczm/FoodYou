@@ -8,9 +8,11 @@ import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.account.domain.update
 import com.maksimowiczm.foodyou.account.domain.updateProfile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
-import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
+import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,6 +28,7 @@ internal class EditProfileViewModel(
     private val profileId: ProfileId,
     private val appProfileManager: AppProfileManager,
     private val accountRepository: AccountRepository,
+    private val blobStorage: BlobStorage,
     logger: Logger,
 ) : ViewModel() {
     private val logger = logger.withTag(TAG)
@@ -67,10 +70,18 @@ internal class EditProfileViewModel(
         require(name.isNotBlank()) { "Name cannot be blank" }
 
         viewModelScope.launch {
-            accountRepository.update {
-                updateProfile(profileId) {
-                    it.copy(name = name, avatar = ProfileAvatarMapper.toModel(avatar))
+            val profileAvatar =
+                when (avatar) {
+                    is UiProfileAvatar.Predefined -> Profile.Avatar.Predefined(avatar.variant)
+                    is UiProfileAvatar.Uri -> {
+                        val file = PlatformFile(avatar.uri.value)
+                        val digest = blobStorage.store(file.readBytes())
+                        Profile.Avatar.Photo(digest)
+                    }
                 }
+
+            accountRepository.update {
+                updateProfile(profileId) { it.copy(name = name, avatar = profileAvatar) }
             }
             _uiEventBus.send(EditProfileEvent.Edited)
         }

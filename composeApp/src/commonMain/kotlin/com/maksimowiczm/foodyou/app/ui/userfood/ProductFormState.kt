@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.app.ui.common.form.validateDouble
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
+import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.VolumeUnit
 import com.maksimowiczm.foodyou.common.domain.WeightUnit
@@ -223,7 +224,9 @@ internal fun rememberProductForm2State(
         rememberFormField(product?.barcode?.value) {
             ifPresent { constrain(notABarcode) { it.all(Char::isDigit) } }
         }
-    val imageUri = rememberSaveable(product) { mutableStateOf(product?.image?.value) }
+
+    val imageUri = product?.image?.let { resolveBlob(it).value }
+    val imageUriState = rememberSaveable(imageUri) { mutableStateOf(imageUri) }
     val defaultValuesPer =
         if (product?.isLiquid == true) ValuesPer.Milliliters100 else ValuesPer.Grams100
     val valuesPer = rememberSaveable(defaultValuesPer) { mutableStateOf(defaultValuesPer) }
@@ -501,7 +504,7 @@ internal fun rememberProductForm2State(
         brand,
         barcode,
         product,
-        imageUri,
+        imageUriState,
         defaultValuesPer,
         valuesPer,
         servingQuantity,
@@ -561,8 +564,8 @@ internal fun rememberProductForm2State(
             name = name,
             brand = brand,
             barcode = barcode,
-            defaultImageUri = product?.image?.value,
-            imageUri = imageUri,
+            defaultImageUri = imageUri,
+            imageUri = imageUriState,
             defaultValuesPer = defaultValuesPer,
             valuesPer = valuesPer,
             servingQuantity = servingQuantity,

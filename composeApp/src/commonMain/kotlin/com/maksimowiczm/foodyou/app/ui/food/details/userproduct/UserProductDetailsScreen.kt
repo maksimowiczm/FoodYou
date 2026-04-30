@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
+import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
 import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsImage
@@ -134,7 +135,12 @@ private fun UserProductDetailsScreen(
             contentPadding = contentPadding.add(bottom = 8.dp),
         ) {
             item { FoodDetailsHeadline(headline = headline) }
-            item { FoodDetailsImage(image = userFood?.image, showPlaceholder = userFood == null) }
+            item {
+                FoodDetailsImage(
+                    image = userFood?.image?.let { resolveBlob(it) },
+                    showPlaceholder = userFood == null,
+                )
+            }
             item { Spacer(Modifier.height(8.dp)) }
             if (userFood?.nutritionFacts != null) {
                 item {

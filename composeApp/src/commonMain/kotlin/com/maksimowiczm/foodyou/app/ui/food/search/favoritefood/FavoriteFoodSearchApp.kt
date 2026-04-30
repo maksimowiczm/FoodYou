@@ -20,6 +20,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.Image
 import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
+import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.FileUri
@@ -221,14 +222,16 @@ private fun RemoteData<Any>.nutritionFacts(): NutritionFacts? =
         is RemoteData.NotFound -> null
     }
 
+@Composable
 private fun Any.image(): FileUri? =
     when (this) {
-        is UserProduct -> image
+        is UserProduct -> image?.let { resolveBlob(it) }
         is OpenFoodFactsProduct -> image
         is FoodDataCentralProduct -> null
         else -> error("Unknown type ${this::class}")
     }
 
+@Composable
 private fun RemoteData<Any>.image(): FileUri? =
     when (this) {
         is RemoteData.Success -> value.image()

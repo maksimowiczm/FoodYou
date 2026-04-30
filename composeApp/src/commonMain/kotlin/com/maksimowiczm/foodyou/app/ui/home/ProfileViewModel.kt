@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
-import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -21,11 +20,7 @@ internal class ProfileViewModel(
             .filterNotNull()
             .map { account ->
                 account.profiles.map { profile ->
-                    ProfileUiState(
-                        id = profile.id,
-                        name = profile.name,
-                        avatar = ProfileAvatarMapper.toUiModel(profile.avatar),
-                    )
+                    ProfileUiState(id = profile.id, name = profile.name, avatar = profile.avatar)
                 }
             }
             .stateIn(

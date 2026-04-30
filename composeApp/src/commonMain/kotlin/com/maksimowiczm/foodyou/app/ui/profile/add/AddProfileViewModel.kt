@@ -7,8 +7,10 @@ import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.account.domain.update
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
-import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
+import com.maksimowiczm.foodyou.common.domain.BlobStorage
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +20,7 @@ import kotlinx.coroutines.launch
 internal class AddProfileViewModel(
     private val appProfileManager: AppProfileManager,
     private val accountRepository: AccountRepository,
+    private val blobStorage: BlobStorage,
     logger: Logger,
 ) : ViewModel() {
     private val logger = logger.withTag(TAG)
@@ -37,7 +40,17 @@ internal class AddProfileViewModel(
         viewModelScope.launch {
             logger.d { "Loading primary account to add profile" }
 
-            val profile = Profile(name = name, avatar = ProfileAvatarMapper.toModel(avatar))
+            val profileAvatar =
+                when (avatar) {
+                    is UiProfileAvatar.Predefined -> Profile.Avatar.Predefined(avatar.variant)
+                    is UiProfileAvatar.Uri -> {
+                        val file = PlatformFile(avatar.uri.value)
+                        val digest = blobStorage.store(file.readBytes())
+                        Profile.Avatar.Photo(digest)
+                    }
+                }
+
+            val profile = Profile(name = name, avatar = profileAvatar)
             accountRepository.update { copy(profiles = profiles + profile) }
 
             appProfileManager.setAppProfileId(profile.id)

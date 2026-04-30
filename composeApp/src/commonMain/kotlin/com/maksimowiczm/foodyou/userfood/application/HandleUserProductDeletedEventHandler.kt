@@ -30,15 +30,7 @@ internal class HandleUserProductDeletedEventHandler(
             if (updatedIngredients.isEmpty()) {
                 userRecipeRepository.delete(recipe.identity)
             } else {
-                userRecipeRepository.update(
-                    identity = recipe.identity,
-                    name = recipe.name,
-                    servings = recipe.servings,
-                    image = recipe.image,
-                    note = recipe.note,
-                    finalWeight = recipe.finalWeight,
-                    ingredients = updatedIngredients,
-                )
+                userRecipeRepository.save(recipe.copy(ingredients = updatedIngredients))
             }
         }
     }

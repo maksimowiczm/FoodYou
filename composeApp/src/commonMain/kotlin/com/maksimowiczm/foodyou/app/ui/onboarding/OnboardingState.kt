@@ -5,6 +5,7 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSerializable
+import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 
 @Stable
@@ -26,7 +27,7 @@ internal fun rememberOnboardingState(): OnboardingState {
     val nameTextFieldState = rememberTextFieldState()
     val avatarState = rememberSerializable {
         mutableStateOf<UiProfileAvatar>(
-            UiProfileAvatar.Predefined(UiProfileAvatar.Predefined.Variant.PERSON)
+            UiProfileAvatar.Predefined(Profile.Avatar.Predefined.Variant.Person)
         )
     }
     val allowOpenFoodFactsState = rememberSaveable { mutableStateOf(false) }

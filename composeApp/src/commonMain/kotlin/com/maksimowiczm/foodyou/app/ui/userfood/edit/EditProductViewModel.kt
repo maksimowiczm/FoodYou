@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
+import com.maksimowiczm.foodyou.userfood.application.UserProductService
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import kotlinx.coroutines.channels.Channel
@@ -16,7 +17,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class EditProductViewModel(
-    private val userProductRepository: UserProductRepository,
+    private val userProductService: UserProductService,
+    userProductRepository: UserProductRepository,
     private val productFormTransformer: ProductFormTransformer,
     private val identity: UserProductIdentity,
 ) : ViewModel() {
@@ -52,13 +54,13 @@ internal class EditProductViewModel(
                 isLiquid) =
                 productFormTransformer.transform(form)
 
-            userProductRepository.edit(
+            userProductService.edit(
                 identity = identity,
                 name = foodName,
                 brand = brand,
                 barcode = barcode,
                 note = note,
-                image = image,
+                imageBytes = image,
                 nutritionFacts = nutritionFacts,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,

@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.domain.recipe
 
-import com.maksimowiczm.foodyou.common.domain.FileUri
+import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 
 /**
@@ -14,17 +14,14 @@ import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
  * @property servings Number of servings this recipe makes
  * @property image Optional recipe image
  * @property note Optional note for the recipe
- * @property finalWeight Optional final weight of the recipe, should be used to calculate final
- *   nutritional values
  * @property ingredients List of ingredients with quantities
  */
 data class UserRecipe(
     val identity: UserRecipeIdentity,
     val name: UserRecipeName,
     val servings: Double,
-    val image: FileUri?,
+    val image: BlobDigest?,
     val note: UserFoodNote?,
-    val finalWeight: Double?,
     val ingredients: List<UserRecipeIngredient>,
 ) {
     init {

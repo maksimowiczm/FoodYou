@@ -26,8 +26,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.common.component.Avatar
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
-import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar.Predefined.Variant
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import foodyou.app.generated.resources.*
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -73,7 +74,7 @@ internal fun ProfileForm(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp),
             ) {
-                items(items = Variant.entries.map { it.toAvatar() }) { avatar ->
+                items(items = UiProfileAvatar.Predefined.variants) { avatar ->
                     FilledIconToggleButton(
                         checked = state.avatar == avatar,
                         onCheckedChange = { if (it) state.avatar = avatar },
@@ -86,12 +87,12 @@ internal fun ProfileForm(
                 }
                 item {
                     FilledIconToggleButton(
-                        checked = state.avatar is UiProfileAvatar.Photo,
+                        checked = state.avatar is UiProfileAvatar.Uri,
                         onCheckedChange = {
                             scope.launch {
                                 val image = FileKit.openFilePicker(type = FileKitType.Image)
                                 if (image != null) {
-                                    state.avatar = UiProfileAvatar.Photo(image.path)
+                                    state.avatar = UiProfileAvatar.Uri(FileUri(image.path))
                                 }
                             }
                         },
@@ -100,7 +101,7 @@ internal fun ProfileForm(
                         enabled = !isLocked,
                     ) {
                         when (val avatar = state.avatar) {
-                            is UiProfileAvatar.Photo ->
+                            is UiProfileAvatar.Uri ->
                                 avatar.Avatar(Modifier.size(40.dp).clip(CircleShape))
 
                             else ->

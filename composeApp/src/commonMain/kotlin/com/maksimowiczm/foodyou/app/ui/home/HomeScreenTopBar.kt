@@ -59,8 +59,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfade
-import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
+import com.maksimowiczm.foodyou.app.ui.common.component.Avatar
 import com.maksimowiczm.foodyou.app.ui.common.theme.brand
 import com.maksimowiczm.foodyou.app.ui.home.search.HomeSearchState
 import com.maksimowiczm.foodyou.app.ui.home.search.Search
@@ -162,8 +163,8 @@ internal fun HomeScreenTopBar(
                     if (p != null) {
                         val avatarModifier =
                             when (p.avatar) {
-                                is UiProfileAvatar.Photo -> Modifier.size(40.dp)
-                                is UiProfileAvatar.Predefined ->
+                                is Profile.Avatar.Photo -> Modifier.size(40.dp)
+                                is Profile.Avatar.Predefined ->
                                     Modifier.padding(8.dp)
                                         .size(24.dp)
                                         .wrapContentSize(unbounded = true)

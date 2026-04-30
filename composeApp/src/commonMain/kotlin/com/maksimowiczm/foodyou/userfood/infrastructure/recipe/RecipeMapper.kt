@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.recipe
 
-import com.maksimowiczm.foodyou.common.domain.FileUri
+import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.VolumeUnit
 import com.maksimowiczm.foodyou.common.domain.WeightUnit
 import com.maksimowiczm.foodyou.common.domain.fluidOunces
@@ -29,9 +29,8 @@ internal class RecipeMapper {
             identity = UserRecipeIdentity(entity.recipe.uuid),
             name = UserRecipeName(entity.recipe.name),
             servings = entity.recipe.servings,
-            image = entity.recipe.imagePath?.let { FileUri(it) },
+            image = entity.recipe.imageDigest?.let { BlobDigest(it) },
             note = entity.recipe.note?.let { UserFoodNote(it) },
-            finalWeight = entity.recipe.finalWeight,
             ingredients = entity.ingredients.map { toIngredient(it) },
         )
     }
@@ -42,9 +41,8 @@ internal class RecipeMapper {
             uuid = recipe.identity.id,
             name = recipe.name.value,
             servings = recipe.servings,
-            imagePath = recipe.image?.value,
+            imageDigest = recipe.image?.digest,
             note = recipe.note?.value?.takeIf { it.isNotBlank() },
-            finalWeight = recipe.finalWeight,
         )
     }
 

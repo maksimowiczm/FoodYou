@@ -21,6 +21,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.Image
 import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
+import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
@@ -164,7 +165,10 @@ private fun FoodSearchListItem(
         fats = measurementFacts.fats.value,
         energy = measurementFacts.energy.value,
         quantity = { Text(measurementString) },
-        image = food.image?.let { @Composable { it.Image(shimmer, Modifier.size(56.dp)) } },
+        image =
+            food.image?.let {
+                @Composable { resolveBlob(it).Image(shimmer, Modifier.size(56.dp)) }
+            },
         onClick = onClick,
         modifier = modifier,
     )

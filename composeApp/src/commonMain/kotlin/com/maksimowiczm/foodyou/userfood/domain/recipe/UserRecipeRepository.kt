@@ -1,29 +1,10 @@
 package com.maksimowiczm.foodyou.userfood.domain.recipe
 
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.FileUri
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import kotlinx.coroutines.flow.Flow
 
 interface UserRecipeRepository {
-    suspend fun create(
-        name: UserRecipeName,
-        servings: Double,
-        image: FileUri?,
-        note: UserFoodNote?,
-        finalWeight: Double?,
-        ingredients: List<UserRecipeIngredient>,
-    ): Result<UserRecipeIdentity, CircularUserRecipeReferenceError>
-
-    suspend fun update(
-        identity: UserRecipeIdentity,
-        name: UserRecipeName,
-        servings: Double,
-        image: FileUri?,
-        note: UserFoodNote?,
-        finalWeight: Double?,
-        ingredients: List<UserRecipeIngredient>,
-    ): Result<Unit, CircularUserRecipeReferenceError>
+    suspend fun save(recipe: UserRecipe): Result<Unit, CircularUserRecipeReferenceError>
 
     fun observe(identity: UserRecipeIdentity): Flow<UserRecipe?>
 

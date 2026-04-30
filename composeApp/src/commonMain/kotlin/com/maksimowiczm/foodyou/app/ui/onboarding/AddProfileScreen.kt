@@ -44,9 +44,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.component.Avatar
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
-import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar.Predefined.Variant
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import foodyou.app.generated.resources.*
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -112,7 +113,7 @@ internal fun AddProfileScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp),
                 ) {
-                    items(items = Variant.entries.map { it.toAvatar() }) { avatar ->
+                    items(items = UiProfileAvatar.Predefined.variants) { avatar ->
                         FilledIconToggleButton(
                             checked = state.profileAvatar == avatar,
                             onCheckedChange = { if (it) state.profileAvatar = avatar },
@@ -124,12 +125,13 @@ internal fun AddProfileScreen(
                     }
                     item {
                         FilledIconToggleButton(
-                            checked = state.profileAvatar is UiProfileAvatar.Photo,
+                            checked = state.profileAvatar is UiProfileAvatar.Uri,
                             onCheckedChange = {
                                 scope.launch {
                                     val image = FileKit.openFilePicker(type = FileKitType.Image)
                                     if (image != null) {
-                                        state.profileAvatar = UiProfileAvatar.Photo(image.path)
+                                        state.profileAvatar =
+                                            UiProfileAvatar.Uri(FileUri(image.path))
                                     }
                                 }
                             },
@@ -137,7 +139,7 @@ internal fun AddProfileScreen(
                             modifier = modifier.size(56.dp),
                         ) {
                             when (val avatar = state.profileAvatar) {
-                                is UiProfileAvatar.Photo ->
+                                is UiProfileAvatar.Uri ->
                                     avatar.Avatar(Modifier.size(40.dp).clip(CircleShape))
 
                                 else ->

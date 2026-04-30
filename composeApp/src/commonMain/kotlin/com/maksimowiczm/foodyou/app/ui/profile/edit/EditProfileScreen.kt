@@ -29,12 +29,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
-import com.maksimowiczm.foodyou.app.ui.common.component.ProfileAvatarMapper
+import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
 import com.maksimowiczm.foodyou.app.ui.profile.ProfileForm
-import com.maksimowiczm.foodyou.app.ui.profile.ProfileFormState
 import com.maksimowiczm.foodyou.app.ui.profile.rememberProfileFormState
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import foodyou.app.generated.resources.*
@@ -66,12 +67,21 @@ fun EditProfileScreen(
     }
 
     val formState =
-        rememberProfileFormState(
-            defaultName = profile?.name ?: "",
-            defaultAvatar =
-                profile?.avatar?.let(ProfileAvatarMapper::toUiModel)
-                    ?: ProfileFormState.DEFAULT_AVATAR,
-        )
+        when (val avatar = profile?.avatar) {
+            is Profile.Avatar.Photo -> {
+                val uri = resolveBlob(avatar.digest)
+                rememberProfileFormState(
+                    defaultName = profile?.name ?: "",
+                    defaultAvatar = UiProfileAvatar.Uri(uri),
+                )
+            }
+            is Profile.Avatar.Predefined ->
+                rememberProfileFormState(
+                    defaultName = profile?.name ?: "",
+                    defaultAvatar = UiProfileAvatar.Predefined(avatar.variant),
+                )
+            null -> rememberProfileFormState(defaultName = profile?.name ?: "")
+        }
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     NavigationBackHandler(

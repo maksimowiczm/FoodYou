@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userfood.infrastructure.product
 
-import com.maksimowiczm.foodyou.common.domain.FileUri
+import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.VolumeUnit
 import com.maksimowiczm.foodyou.common.domain.WeightUnit
 import com.maksimowiczm.foodyou.common.domain.fluidOunces
@@ -61,9 +61,9 @@ internal class ProductMapper {
                 identity = UserProductIdentity(entity.uuid),
                 name = name,
                 brand = brand,
-                barcode = entity.barcode?.let { UserProductBarcode(it) },
-                note = entity.note?.let { UserFoodNote(it) },
-                image = entity.photoPath?.let { FileUri(it) },
+                barcode = entity.barcode?.let(::UserProductBarcode),
+                note = entity.note?.let(::UserFoodNote),
+                image = entity.imageDigest?.let(::BlobDigest),
                 nutritionFacts = nutrients,
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
@@ -78,7 +78,7 @@ internal class ProductMapper {
         brand: UserProductBrand?,
         barcode: UserProductBarcode?,
         note: UserFoodNote?,
-        imagePath: String?,
+        imageDigest: BlobDigest?,
         nutritionFacts: NutritionFacts,
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
@@ -116,7 +116,7 @@ internal class ProductMapper {
             brand = brand?.value,
             barcode = barcode?.value,
             note = note?.value,
-            photoPath = imagePath,
+            imageDigest = imageDigest?.digest,
             nutrients = nutrientsMapper.toNutrientsEntity(nutritionFacts),
             packageSize = packageSize,
             servingSize = servingSize,

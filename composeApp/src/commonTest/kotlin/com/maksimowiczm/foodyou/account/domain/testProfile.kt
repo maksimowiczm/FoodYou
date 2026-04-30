@@ -8,7 +8,7 @@ fun testProfileId(id: Uuid = Uuid.random()): ProfileId = ProfileId(id)
 fun testProfile(
     id: ProfileId = testProfileId(),
     name: String = "Test User",
-    avatar: Profile.Avatar = Profile.Avatar.Predefined.Person,
+    avatar: Profile.Avatar = Profile.Avatar.Predefined.Variant.Person.toAvatar(),
     homeCardsOrder: List<HomeCard> = HomeCard.defaultOrder,
     favoriteFoods: Set<FavoriteFoodIdentity> = setOf(),
 ): Profile =

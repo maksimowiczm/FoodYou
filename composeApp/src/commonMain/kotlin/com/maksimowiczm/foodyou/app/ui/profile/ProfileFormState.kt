@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSerializable
+import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 
 @Stable
@@ -22,7 +23,8 @@ internal class ProfileFormState(
     }
 
     companion object {
-        val DEFAULT_AVATAR = UiProfileAvatar.Predefined(UiProfileAvatar.Predefined.Variant.PERSON)
+        val DEFAULT_AVATAR: UiProfileAvatar =
+            UiProfileAvatar.Predefined(Profile.Avatar.Predefined.Variant.Person)
     }
 }
 

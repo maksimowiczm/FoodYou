@@ -7,26 +7,20 @@ import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.account.domain.Profile
+import com.maksimowiczm.foodyou.account.domain.Profile.Avatar.Predefined.Variant
 import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDao
 import com.maksimowiczm.foodyou.account.infrastructure.room.FoodIdentityType
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
 import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
-import com.maksimowiczm.foodyou.common.domain.FileUri
+import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
-import io.github.vinceglb.filekit.PlatformFile
 import kotlin.uuid.Uuid
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-internal class AccountRepositoryImpl(
-    private val accountDao: AccountDao,
-    private val blobStorage: FileKitBlobStorage,
-) : AccountRepository {
+internal class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountRepository {
     override fun observe(): Flow<Account?> =
         combine(
             accountDao.observeProfiles(),
@@ -46,8 +40,7 @@ internal class AccountRepositoryImpl(
         }
 
     override suspend fun save(account: Account) = coroutineScope {
-        val profileEntities =
-            account.profiles.map { profile -> async { profile.toEntity(blobStorage) } }.awaitAll()
+        val profileEntities = account.profiles.map { profile -> profile.toEntity() }
         val settingsEntity = account.settings.toEntity()
         val profileFavoriteFoodEntities = account.profiles.flatMap { it.toFavoriteFoodEntity() }
 
@@ -111,53 +104,24 @@ private fun ProfileFavoriteFoodEntity.toDomain(): FavoriteFoodIdentity =
 private fun String.toDomainAvatar(): Profile.Avatar =
     runCatching {
             when {
-                startsWith("photo:") -> Profile.Avatar.Photo(FileUri(removePrefix("photo:")))
-                startsWith("predefined:") -> removePrefix("predefined:").avatar
+                startsWith("digest:") -> Profile.Avatar.Photo(BlobDigest(removePrefix("digest:")))
+                startsWith("predefined:") ->
+                    Variant.entries[removePrefix("predefined:").toInt()].toAvatar()
+
                 else -> error("Unknown avatar format: $this")
             }
         }
-        .getOrElse { Profile.Avatar.Predefined.Person }
+        .getOrElse { Variant.Person.toAvatar() }
 
-private fun Profile.Avatar.toEntityAvatar(): String =
-    when (this) {
-        is Profile.Avatar.Photo -> "photo:${uri.value}"
-        is Profile.Avatar.Predefined -> "predefined:$name"
-    }
-
-private val Profile.Avatar.Predefined.name: String
-    get() =
-        when (this) {
-            Profile.Avatar.Predefined.Engineer -> "engineer"
-            Profile.Avatar.Predefined.Man -> "man"
-            Profile.Avatar.Predefined.Person -> "person"
-            Profile.Avatar.Predefined.Woman -> "woman"
-        }
-private val String.avatar: Profile.Avatar.Predefined
-    get() =
-        when (this) {
-            "engineer" -> Profile.Avatar.Predefined.Engineer
-            "man" -> Profile.Avatar.Predefined.Man
-            "person" -> Profile.Avatar.Predefined.Person
-            "woman" -> Profile.Avatar.Predefined.Woman
-            else -> error("Unknown predefined avatar name: $this")
-        }
-
-private suspend fun Profile.toEntity(blobStorage: FileKitBlobStorage): ProfileEntity {
-    val persistedAvatar =
-        when (val avatar = avatar) {
-            is Profile.Avatar.Photo -> {
-                val digest = blobStorage.store(PlatformFile(avatar.uri.value))
-                val path = blobStorage.uri(digest)
-                Profile.Avatar.Photo(uri = path)
-            }
-
-            is Profile.Avatar.Predefined -> avatar
-        }
-
+private fun Profile.toEntity(): ProfileEntity {
     return ProfileEntity(
         id = id.value,
         name = name,
-        avatar = persistedAvatar.toEntityAvatar(),
+        avatar =
+            when (avatar) {
+                is Profile.Avatar.Photo -> "digest:${avatar.digest.digest}"
+                is Profile.Avatar.Predefined -> "predefined:${avatar.variant.ordinal}"
+            },
         homeFeaturesOrder = homeCardsOrder.joinToString(",") { it.ordinal.toString() },
     )
 }

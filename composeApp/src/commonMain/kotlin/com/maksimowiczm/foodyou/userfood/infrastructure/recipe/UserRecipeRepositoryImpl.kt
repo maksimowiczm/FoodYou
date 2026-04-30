@@ -3,130 +3,40 @@ package com.maksimowiczm.foodyou.userfood.infrastructure.recipe
 import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.FileUri
-import com.maksimowiczm.foodyou.common.event.EventBus
-import com.maksimowiczm.foodyou.common.event.IntegrationEvent
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
 import com.maksimowiczm.foodyou.common.infrastructure.room.immediateTransaction
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.recipe.CircularUserRecipeReferenceError
 import com.maksimowiczm.foodyou.userfood.domain.recipe.FoodReference
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipe
-import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeDeletedEvent
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIdentity
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIngredient
-import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeName
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeRepository
 import com.maksimowiczm.foodyou.userfood.infrastructure.UserFoodDatabase
-import io.github.vinceglb.filekit.PlatformFile
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 
-internal class UserRecipeRepositoryImpl(
-    private val database: UserFoodDatabase,
-    private val integrationEventBus: EventBus<IntegrationEvent>,
-    private val blobStorage: FileKitBlobStorage,
-) : UserRecipeRepository {
+internal class UserRecipeRepositoryImpl(private val database: UserFoodDatabase) :
+    UserRecipeRepository {
     private val mapper = RecipeMapper()
     private val dao = database.recipeDao
 
-    override suspend fun create(
-        name: UserRecipeName,
-        servings: Double,
-        image: FileUri?,
-        note: UserFoodNote?,
-        finalWeight: Double?,
-        ingredients: List<UserRecipeIngredient>,
-    ): Result<UserRecipeIdentity, CircularUserRecipeReferenceError> {
-        require(ingredients.isNotEmpty()) { "Recipe must have at least one ingredient" }
-        require(servings > 0) { "Recipe must have a positive number of servings" }
-        require(finalWeight == null || finalWeight > 0) { "Final weight must be a positive number" }
+    override suspend fun save(recipe: UserRecipe): Result<Unit, CircularUserRecipeReferenceError> {
+        val recipeId = recipe.identity.id
+        val existingEntity = dao.observe(recipeId).first()
 
-        val recipeId = Uuid.random()
-
-        val photoPath =
-            if (image != null) {
-                val digest = blobStorage.store(PlatformFile(image.value))
-                blobStorage.uri(digest).value
-            } else {
-                null
-            }
-
-        val recipe =
-            UserRecipe(
-                identity = UserRecipeIdentity(recipeId),
-                name = name,
-                servings = servings,
-                image = photoPath?.let { FileUri(it) },
-                note = note,
-                finalWeight = finalWeight,
-                ingredients = ingredients,
-            )
-
-        val recipeEntity = mapper.toEntity(recipe)
-        val ingredientEntities = mapper.toIngredientEntities(ingredients)
-
-        return database.immediateTransaction<
-            Result<UserRecipeIdentity, CircularUserRecipeReferenceError>
-        > {
-            try {
-                checkCircularReference(recipeId, ingredients)
-                dao.insertRecipeWithIngredients(recipeEntity, ingredientEntities)
-                Ok(UserRecipeIdentity(recipeId))
-            } catch (e: CircularRecipeReferenceException) {
-                Err(CircularUserRecipeReferenceError(e.recipeId, e.cyclePath))
-            }
-        }
-    }
-
-    override suspend fun update(
-        identity: UserRecipeIdentity,
-        name: UserRecipeName,
-        servings: Double,
-        image: FileUri?,
-        note: UserFoodNote?,
-        finalWeight: Double?,
-        ingredients: List<UserRecipeIngredient>,
-    ): Result<Unit, CircularUserRecipeReferenceError> {
-        require(ingredients.isNotEmpty()) { "Recipe must have at least one ingredient" }
-        require(servings > 0) { "Recipe must have a positive number of servings" }
-        require(finalWeight == null || finalWeight > 0) { "Final weight must be a positive number" }
-
-        val existingEntity = dao.observe(identity.id).first()
-
-        requireNotNull(existingEntity) { "Cannot edit non-existing recipe with id: ${identity.id}" }
-
-        val imagePath: String? =
-            if (image != null && existingEntity.recipe.imagePath != image.value) {
-                val digest = blobStorage.store(PlatformFile(image.value))
-                blobStorage.uri(digest).value
-            } else if (image == null && existingEntity.recipe.imagePath != null) {
-                null
-            } else {
-                existingEntity.recipe.imagePath
-            }
-
-        val recipe =
-            UserRecipe(
-                identity = identity,
-                name = name,
-                servings = servings,
-                image = imagePath?.let { FileUri(it) },
-                note = note,
-                finalWeight = finalWeight,
-                ingredients = ingredients,
-            )
-
-        val updatedEntity = mapper.toEntity(recipe, sqliteId = existingEntity.recipe.sqliteId)
-        val ingredientEntities = mapper.toIngredientEntities(ingredients)
+        val recipeEntity = mapper.toEntity(recipe, sqliteId = existingEntity?.recipe?.sqliteId ?: 0)
+        val ingredientEntities = mapper.toIngredientEntities(recipe.ingredients)
 
         return database.immediateTransaction<Result<Unit, CircularUserRecipeReferenceError>> {
             try {
-                checkCircularReference(identity.id, ingredients)
-                dao.updateRecipeWithIngredients(updatedEntity, ingredientEntities)
+                checkCircularReference(recipeId, recipe.ingredients)
+                if (existingEntity == null) {
+                    dao.insertRecipeWithIngredients(recipeEntity, ingredientEntities)
+                } else {
+                    dao.updateRecipeWithIngredients(recipeEntity, ingredientEntities)
+                }
                 Ok()
             } catch (e: CircularRecipeReferenceException) {
                 Err(CircularUserRecipeReferenceError(e.recipeId, e.cyclePath))
@@ -145,8 +55,6 @@ internal class UserRecipeRepositoryImpl(
         }
 
         dao.deleteRecipe(existingEntity.recipe)
-
-        integrationEventBus.publish(UserRecipeDeletedEvent(identity))
     }
 
     override suspend fun findRecipesUsingFood(foodReference: FoodReference): List<UserRecipe> {

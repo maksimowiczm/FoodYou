@@ -2,27 +2,15 @@ package com.maksimowiczm.foodyou.userfood.domain.recipe
 
 import androidx.room.useReaderConnection
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.common.event.IntegrationEvent
-import com.maksimowiczm.foodyou.common.event.ListEventBus
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
 import com.maksimowiczm.foodyou.common.infrastructure.provideRoomDatabaseBuilder
 import com.maksimowiczm.foodyou.userfood.infrastructure.UserFoodDatabase
 import com.maksimowiczm.foodyou.userfood.infrastructure.UserFoodDatabase.Companion.buildDatabase
 import com.maksimowiczm.foodyou.userfood.infrastructure.recipe.UserRecipeRepositoryImpl
-import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.absolutePath
-import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.filesDir
-import io.github.vinceglb.filekit.readBytes
-import io.github.vinceglb.filekit.write
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
@@ -31,25 +19,15 @@ import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
-import okio.ByteString.Companion.toByteString
 
 class UserRecipeRepositoryIntegrationTest {
     private lateinit var database: UserFoodDatabase
     private lateinit var repository: UserRecipeRepository
-    private lateinit var eventBus: ListEventBus<IntegrationEvent>
-    private lateinit var blobStorage: FileKitBlobStorage
 
     @BeforeTest
     fun setup() {
         database = provideRoomDatabaseBuilder<UserFoodDatabase>().buildDatabase()
-        eventBus = ListEventBus()
-        blobStorage = FileKitBlobStorage()
-        repository =
-            UserRecipeRepositoryImpl(
-                database = database,
-                integrationEventBus = eventBus,
-                blobStorage = blobStorage,
-            )
+        repository = UserRecipeRepositoryImpl(database = database)
     }
 
     @AfterTest
@@ -60,46 +38,16 @@ class UserRecipeRepositoryIntegrationTest {
     }
 
     @Test
-    fun delete_publishesRecipeDeletedEvent() = runTest {
-        // Arrange - Create recipe
-        val createResult =
-            repository.create(
-                name = UserRecipeName("Recipe to Delete"),
-                servings = 1.0,
-                image = null,
-                note = null,
-                finalWeight = null,
-                ingredients =
-                    listOf(
-                        UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct(Uuid.random()),
-                            quantity = AbsoluteQuantity.Weight(100.grams),
-                        )
-                    ),
-            )
-        val identity = assertIs<Result.Success<UserRecipeIdentity, *>>(createResult).data
-
-        // Act - Delete recipe
-        repository.delete(identity)
-
-        // Assert - Event was published with correct data
-        val publishedEvents = eventBus.publishedEvents
-        assertEquals(1, publishedEvents.size)
-        val event = assertIs<UserRecipeDeletedEvent>(publishedEvents[0])
-        assertEquals(identity, event.identity)
-        assertEquals(identity.id, event.identity.id)
-    }
-
-    @Test
     fun delete_recipeWithIngredients_cascadesDelete() = runTest {
         // Arrange - Create recipe with ingredients
-        val createResult =
-            repository.create(
+        val identity = UserRecipeIdentity(Uuid.random())
+        val recipe =
+            UserRecipe(
+                identity = identity,
                 name = UserRecipeName("Recipe with Ingredients"),
                 servings = 1.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -112,7 +60,7 @@ class UserRecipeRepositoryIntegrationTest {
                         ),
                     ),
             )
-        val identity = assertIs<Result.Success<UserRecipeIdentity, *>>(createResult).data
+        repository.save(recipe)
 
         // Verify ingredients were created
         database.useReaderConnection { transactor ->
@@ -139,15 +87,16 @@ class UserRecipeRepositoryIntegrationTest {
     }
 
     @Test
-    fun update_replacesIngredients() = runTest {
+    fun save_replacesIngredients() = runTest {
         // Arrange - Create recipe with initial ingredients
-        val createResult =
-            repository.create(
+        val identity = UserRecipeIdentity(Uuid.random())
+        val initialRecipe =
+            UserRecipe(
+                identity = identity,
                 name = UserRecipeName("Original Recipe"),
                 servings = 1.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -156,20 +105,19 @@ class UserRecipeRepositoryIntegrationTest {
                         )
                     ),
             )
-        val identity = assertIs<Result.Success<UserRecipeIdentity, *>>(createResult).data
+        repository.save(initialRecipe)
 
         val reference1 = FoodReference.UserProduct(Uuid.random())
         val reference2 = FoodReference.UserProduct(Uuid.random())
 
         // Act - Update with new ingredients
-        val updateResult =
-            repository.update(
+        val updatedRecipe =
+            UserRecipe(
                 identity = identity,
                 name = UserRecipeName("Updated Recipe"),
                 servings = 2.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -182,9 +130,10 @@ class UserRecipeRepositoryIntegrationTest {
                         ),
                     ),
             )
+        val updateResult = repository.save(updatedRecipe)
 
         // Assert - Update succeeded and ingredients were replaced atomically
-        val _ = assertIs<Result.Success<Unit, *>>(updateResult)
+        assertIs<Result.Success<UserRecipeIdentity, *>>(updateResult)
 
         val recipe = repository.observe(identity).first()
         assertNotNull(recipe)
@@ -209,15 +158,16 @@ class UserRecipeRepositoryIntegrationTest {
     }
 
     @Test
-    fun update_withCircularReference_rollsBackTransaction() = runTest {
+    fun save_withCircularReference_rollsBackTransaction() = runTest {
         // Arrange - Create Recipe A
-        val recipeAResult =
-            repository.create(
+        val recipeAId = UserRecipeIdentity(Uuid.random())
+        val recipeA =
+            UserRecipe(
+                identity = recipeAId,
                 name = UserRecipeName("Recipe A"),
                 servings = 1.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -226,21 +176,20 @@ class UserRecipeRepositoryIntegrationTest {
                         )
                     ),
             )
-        val recipeAId = assertIs<Result.Success<UserRecipeIdentity, *>>(recipeAResult).data
+        repository.save(recipeA)
 
         // Store original recipe state
         val originalRecipe = repository.observe(recipeAId).first()
         assertNotNull(originalRecipe)
 
         // Act - Try to update Recipe A to include itself (circular reference)
-        val updateResult =
-            repository.update(
+        val circularRecipe =
+            UserRecipe(
                 identity = recipeAId,
                 name = UserRecipeName("Recipe A Updated"),
                 servings = 2.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -249,6 +198,7 @@ class UserRecipeRepositoryIntegrationTest {
                         )
                     ),
             )
+        val updateResult = repository.save(circularRecipe)
 
         // Assert - Update failed with circular reference error
         val error = assertIs<Result.Error<*, CircularUserRecipeReferenceError>>(updateResult).error
@@ -263,16 +213,17 @@ class UserRecipeRepositoryIntegrationTest {
     }
 
     @Test
-    fun update_withIndirectCircularReference_detectsCycleAndRollsBack() = runTest {
+    fun save_withIndirectCircularReference_detectsCycleAndRollsBack() = runTest {
         // Arrange - Create Recipe A with UserFood
         val recipeAFoodReference = FoodReference.UserProduct(Uuid.random())
-        val recipeAResult =
-            repository.create(
+        val recipeAId = UserRecipeIdentity(Uuid.random())
+        val recipeA =
+            UserRecipe(
+                identity = recipeAId,
                 name = UserRecipeName("Recipe A"),
                 servings = 1.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -281,16 +232,17 @@ class UserRecipeRepositoryIntegrationTest {
                         )
                     ),
             )
-        val recipeAId = assertIs<Result.Success<UserRecipeIdentity, *>>(recipeAResult).data
+        repository.save(recipeA)
 
         // Create Recipe B that includes Recipe A
-        val recipeBResult =
-            repository.create(
+        val recipeBId = UserRecipeIdentity(Uuid.random())
+        val recipeB =
+            UserRecipe(
+                identity = recipeBId,
                 name = UserRecipeName("Recipe B"),
                 servings = 1.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -299,17 +251,16 @@ class UserRecipeRepositoryIntegrationTest {
                         )
                     ),
             )
-        val recipeBId = assertIs<Result.Success<UserRecipeIdentity, *>>(recipeBResult).data
+        repository.save(recipeB)
 
         // Act - Try to update Recipe A to include Recipe B (creates cycle: A -> B -> A)
-        val updateResult =
-            repository.update(
+        val circularRecipeA =
+            UserRecipe(
                 identity = recipeAId,
                 name = UserRecipeName("Recipe A Updated"),
                 servings = 1.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -318,9 +269,10 @@ class UserRecipeRepositoryIntegrationTest {
                         )
                     ),
             )
+        val updateResult = repository.save(circularRecipeA)
 
         // Assert - Update failed and transaction rolled back
-        val _ = assertIs<Result.Error<*, CircularUserRecipeReferenceError>>(updateResult)
+        assertIs<Result.Error<*, CircularUserRecipeReferenceError>>(updateResult)
 
         // Verify Recipe A is unchanged
         val unchangedRecipeA = repository.observe(recipeAId).first()
@@ -331,24 +283,25 @@ class UserRecipeRepositoryIntegrationTest {
         )
 
         // Verify Recipe B is also unchanged
-        val recipeB = repository.observe(recipeBId).first()
-        assertNotNull(recipeB)
+        val recipeBUnchanged = repository.observe(recipeBId).first()
+        assertNotNull(recipeBUnchanged)
         assertEquals(
             recipeAId.id,
-            (recipeB.ingredients[0].foodReference as FoodReference.UserRecipe).id,
+            (recipeBUnchanged.ingredients[0].foodReference as FoodReference.UserRecipe).id,
         )
     }
 
     @Test
     fun findRecipesUsingFood_detectsDependencies() = runTest {
         // Arrange - Create a base recipe
-        val baseRecipeResult =
-            repository.create(
+        val baseRecipeId = UserRecipeIdentity(Uuid.random())
+        val baseRecipe =
+            UserRecipe(
+                identity = baseRecipeId,
                 name = UserRecipeName("Base Recipe"),
                 servings = 1.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -357,53 +310,59 @@ class UserRecipeRepositoryIntegrationTest {
                         )
                     ),
             )
-        val baseRecipeId = assertIs<Result.Success<UserRecipeIdentity, *>>(baseRecipeResult).data
+        repository.save(baseRecipe)
 
         // Create recipes that depend on base recipe
-        repository.create(
-            name = UserRecipeName("Dependent Recipe 1"),
-            servings = 1.0,
-            image = null,
-            note = null,
-            finalWeight = null,
-            ingredients =
-                listOf(
-                    UserRecipeIngredient(
-                        foodReference = FoodReference.UserRecipe(baseRecipeId.id),
-                        quantity = AbsoluteQuantity.Weight(50.grams),
-                    )
-                ),
+        repository.save(
+            UserRecipe(
+                identity = UserRecipeIdentity(Uuid.random()),
+                name = UserRecipeName("Dependent Recipe 1"),
+                servings = 1.0,
+                image = null,
+                note = null,
+                ingredients =
+                    listOf(
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserRecipe(baseRecipeId.id),
+                            quantity = AbsoluteQuantity.Weight(50.grams),
+                        )
+                    ),
+            )
         )
 
-        repository.create(
-            name = UserRecipeName("Dependent Recipe 2"),
-            servings = 1.0,
-            image = null,
-            note = null,
-            finalWeight = null,
-            ingredients =
-                listOf(
-                    UserRecipeIngredient(
-                        foodReference = FoodReference.UserRecipe(baseRecipeId.id),
-                        quantity = AbsoluteQuantity.Weight(75.grams),
-                    )
-                ),
+        repository.save(
+            UserRecipe(
+                identity = UserRecipeIdentity(Uuid.random()),
+                name = UserRecipeName("Dependent Recipe 2"),
+                servings = 1.0,
+                image = null,
+                note = null,
+                ingredients =
+                    listOf(
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserRecipe(baseRecipeId.id),
+                            quantity = AbsoluteQuantity.Weight(75.grams),
+                        )
+                    ),
+            )
         )
 
         // Create a recipe that doesn't depend on base recipe
-        repository.create(
-            name = UserRecipeName("Independent Recipe"),
-            servings = 1.0,
-            image = null,
-            note = null,
-            finalWeight = null,
-            ingredients =
-                listOf(
-                    UserRecipeIngredient(
-                        foodReference = FoodReference.UserProduct(Uuid.random()),
-                        quantity = AbsoluteQuantity.Weight(100.grams),
-                    )
-                ),
+        repository.save(
+            UserRecipe(
+                identity = UserRecipeIdentity(Uuid.random()),
+                name = UserRecipeName("Independent Recipe"),
+                servings = 1.0,
+                image = null,
+                note = null,
+                ingredients =
+                    listOf(
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
+                        )
+                    ),
+            )
         )
 
         // Act - Find recipes that use the base recipe
@@ -423,53 +382,59 @@ class UserRecipeRepositoryIntegrationTest {
         // Arrange - Create recipes using specific user food
         val targetFoodId = Uuid.random()
 
-        repository.create(
-            name = UserRecipeName("Direct User 1"),
-            servings = 1.0,
-            image = null,
-            note = null,
-            finalWeight = null,
-            ingredients =
-                listOf(
-                    UserRecipeIngredient(
-                        foodReference = FoodReference.UserProduct(targetFoodId),
-                        quantity = AbsoluteQuantity.Weight(100.grams),
-                    )
-                ),
+        repository.save(
+            UserRecipe(
+                identity = UserRecipeIdentity(Uuid.random()),
+                name = UserRecipeName("Direct User 1"),
+                servings = 1.0,
+                image = null,
+                note = null,
+                ingredients =
+                    listOf(
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserProduct(targetFoodId),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
+                        )
+                    ),
+            )
         )
 
-        repository.create(
-            name = UserRecipeName("Direct User 2"),
-            servings = 1.0,
-            image = null,
-            note = null,
-            finalWeight = null,
-            ingredients =
-                listOf(
-                    UserRecipeIngredient(
-                        foodReference = FoodReference.UserProduct(targetFoodId),
-                        quantity = AbsoluteQuantity.Weight(50.grams),
+        repository.save(
+            UserRecipe(
+                identity = UserRecipeIdentity(Uuid.random()),
+                name = UserRecipeName("Direct User 2"),
+                servings = 1.0,
+                image = null,
+                note = null,
+                ingredients =
+                    listOf(
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserProduct(targetFoodId),
+                            quantity = AbsoluteQuantity.Weight(50.grams),
+                        ),
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
+                            quantity = AbsoluteQuantity.Weight(50.grams),
+                        ),
                     ),
-                    UserRecipeIngredient(
-                        foodReference = FoodReference.UserProduct(Uuid.random()),
-                        quantity = AbsoluteQuantity.Weight(50.grams),
-                    ),
-                ),
+            )
         )
 
-        repository.create(
-            name = UserRecipeName("Non-User"),
-            servings = 1.0,
-            image = null,
-            note = null,
-            finalWeight = null,
-            ingredients =
-                listOf(
-                    UserRecipeIngredient(
-                        foodReference = FoodReference.UserProduct(Uuid.random()),
-                        quantity = AbsoluteQuantity.Weight(100.grams),
-                    )
-                ),
+        repository.save(
+            UserRecipe(
+                identity = UserRecipeIdentity(Uuid.random()),
+                name = UserRecipeName("Non-User"),
+                servings = 1.0,
+                image = null,
+                note = null,
+                ingredients =
+                    listOf(
+                        UserRecipeIngredient(
+                            foodReference = FoodReference.UserProduct(Uuid.random()),
+                            quantity = AbsoluteQuantity.Weight(100.grams),
+                        )
+                    ),
+            )
         )
 
         // Act
@@ -483,131 +448,16 @@ class UserRecipeRepositoryIntegrationTest {
     }
 
     @Test
-    fun create_withImage_storesBlobAndPersistsDigestUri() = runTest {
-        val sourceBytes = "recipe-image-create-${Uuid.random()}".encodeToByteArray()
-        val sourceImageUri = createSourceImage(sourceBytes)
-
-        val createResult =
-            repository.create(
-                name = UserRecipeName("Recipe with image"),
-                servings = 1.0,
-                image = sourceImageUri,
-                note = null,
-                finalWeight = null,
-                ingredients =
-                    listOf(
-                        UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct(Uuid.random()),
-                            quantity = AbsoluteQuantity.Weight(100.grams),
-                        )
-                    ),
-            )
-
-        val identity = assertIs<Result.Success<UserRecipeIdentity, *>>(createResult).data
-        val storedRecipe = repository.observe(identity).first()
-        assertNotNull(storedRecipe)
-
-        val expectedDigest = sourceBytes.toByteString().sha256().hex()
-        val expectedUri = blobStorage.uri(expectedDigest)
-        assertEquals(expectedUri.value, storedRecipe.image?.value)
-
-        val storedBytes = PlatformFile(expectedUri.value).readBytes()
-        assertContentEquals(sourceBytes, storedBytes)
-    }
-
-    @Test
-    fun update_withNewImage_storesNewBlobAndUpdatesRecipeImage() = runTest {
-        val initialBytes = "recipe-image-initial-${Uuid.random()}".encodeToByteArray()
-        val initialImageUri = createSourceImage(initialBytes)
-
-        val createResult =
-            repository.create(
-                name = UserRecipeName("Recipe image update"),
-                servings = 1.0,
-                image = initialImageUri,
-                note = null,
-                finalWeight = null,
-                ingredients =
-                    listOf(
-                        UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct(Uuid.random()),
-                            quantity = AbsoluteQuantity.Weight(100.grams),
-                        )
-                    ),
-            )
-        val identity = assertIs<Result.Success<UserRecipeIdentity, *>>(createResult).data
-
-        val updatedBytes = "recipe-image-updated-${Uuid.random()}".encodeToByteArray()
-        val updatedImageUri = createSourceImage(updatedBytes)
-        val updateResult =
-            repository.update(
-                identity = identity,
-                name = UserRecipeName("Recipe image update"),
-                servings = 1.0,
-                image = updatedImageUri,
-                note = null,
-                finalWeight = null,
-                ingredients =
-                    listOf(
-                        UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct(Uuid.random()),
-                            quantity = AbsoluteQuantity.Weight(100.grams),
-                        )
-                    ),
-            )
-        val _ = assertIs<Result.Success<Unit, *>>(updateResult)
-
-        val storedRecipe = repository.observe(identity).first()
-        assertNotNull(storedRecipe)
-
-        val oldUri = blobStorage.uri(initialBytes.toByteString().sha256().hex())
-        val updatedUri = blobStorage.uri(updatedBytes.toByteString().sha256().hex())
-        assertEquals(updatedUri.value, storedRecipe.image?.value)
-        assertEquals(false, oldUri.value == updatedUri.value)
-        assertContentEquals(updatedBytes, PlatformFile(updatedUri.value).readBytes())
-    }
-
-    @Test
-    fun delete_withImage_keepsStoredBlobFileAvailable() = runTest {
-        val sourceBytes = "recipe-image-delete-${Uuid.random()}".encodeToByteArray()
-        val sourceImageUri = createSourceImage(sourceBytes)
-
-        val createResult =
-            repository.create(
-                name = UserRecipeName("Recipe image delete"),
-                servings = 1.0,
-                image = sourceImageUri,
-                note = null,
-                finalWeight = null,
-                ingredients =
-                    listOf(
-                        UserRecipeIngredient(
-                            foodReference = FoodReference.UserProduct(Uuid.random()),
-                            quantity = AbsoluteQuantity.Weight(100.grams),
-                        )
-                    ),
-            )
-        val identity = assertIs<Result.Success<UserRecipeIdentity, *>>(createResult).data
-
-        repository.delete(identity)
-
-        assertNull(repository.observe(identity).firstOrNull())
-
-        val storedUri = blobStorage.uri(sourceBytes.toByteString().sha256().hex())
-        val storedBytes = PlatformFile(storedUri.value).readBytes()
-        assertContentEquals(sourceBytes, storedBytes)
-    }
-
-    @Test
     fun delete_withNestedRecipeReferences_maintainsDataIntegrity() = runTest {
         // Arrange - Create a dependency chain: Recipe C uses Recipe B uses Recipe A
-        val recipeAResult =
-            repository.create(
+        val recipeAId = UserRecipeIdentity(Uuid.random())
+        repository.save(
+            UserRecipe(
+                identity = recipeAId,
                 name = UserRecipeName("Recipe A"),
                 servings = 1.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -616,15 +466,16 @@ class UserRecipeRepositoryIntegrationTest {
                         )
                     ),
             )
-        val recipeAId = assertIs<Result.Success<UserRecipeIdentity, *>>(recipeAResult).data
+        )
 
-        val recipeBResult =
-            repository.create(
+        val recipeBId = UserRecipeIdentity(Uuid.random())
+        repository.save(
+            UserRecipe(
+                identity = recipeBId,
                 name = UserRecipeName("Recipe B"),
                 servings = 1.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -633,15 +484,16 @@ class UserRecipeRepositoryIntegrationTest {
                         )
                     ),
             )
-        val recipeBId = assertIs<Result.Success<UserRecipeIdentity, *>>(recipeBResult).data
+        )
 
-        val recipeCResult =
-            repository.create(
+        val recipeCId = UserRecipeIdentity(Uuid.random())
+        repository.save(
+            UserRecipe(
+                identity = recipeCId,
                 name = UserRecipeName("Recipe C"),
                 servings = 1.0,
                 image = null,
                 note = null,
-                finalWeight = null,
                 ingredients =
                     listOf(
                         UserRecipeIngredient(
@@ -650,7 +502,7 @@ class UserRecipeRepositoryIntegrationTest {
                         )
                     ),
             )
-        val recipeCId = assertIs<Result.Success<UserRecipeIdentity, *>>(recipeCResult).data
+        )
 
         // Verify dependency chain
         val recipesUsingA = repository.findRecipesUsingFood(FoodReference.UserRecipe(recipeAId.id))
@@ -676,17 +528,5 @@ class UserRecipeRepositoryIntegrationTest {
             recipeBId.id,
             (recipeC.ingredients[0].foodReference as FoodReference.UserRecipe).id,
         )
-
-        // Event was published
-        val events = eventBus.publishedEvents.filterIsInstance<UserRecipeDeletedEvent>()
-        assertEquals(1, events.size)
-        assertEquals(recipeBId.id, events[0].identity.id)
-    }
-
-    private suspend fun createSourceImage(bytes: ByteArray): FileUri {
-        val sourceFilePath = (FileKit.filesDir / "test-source-${Uuid.random()}.img").absolutePath()
-        val sourceFile = PlatformFile(sourceFilePath)
-        sourceFile.write(bytes)
-        return FileUri(sourceFilePath)
     }
 }

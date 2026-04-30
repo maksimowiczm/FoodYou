@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.account.domain
 
-import com.maksimowiczm.foodyou.common.domain.FileUri
+import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlin.uuid.Uuid
 
@@ -12,17 +12,17 @@ data class Profile(
     val favoriteFoods: Set<FavoriteFoodIdentity> = setOf(),
 ) {
     sealed interface Avatar {
-        data class Photo(val uri: FileUri) : Avatar
+        data class Photo(val digest: BlobDigest) : Avatar
 
-        sealed interface Predefined : Avatar {
+        data class Predefined(val variant: Variant) : Avatar {
+            enum class Variant {
+                Person,
+                Woman,
+                Man,
+                Engineer;
 
-            data object Person : Predefined
-
-            data object Woman : Predefined
-
-            data object Man : Predefined
-
-            data object Engineer : Predefined
+                fun toAvatar() = Predefined(this)
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.app.ui.food.details.ObserveIsFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.ui.food.details.SetFavoriteFoodUseCase
+import com.maksimowiczm.foodyou.userfood.application.UserProductService
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import kotlinx.coroutines.channels.Channel
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 
 internal class UserProductDetailsViewModel(
     private val identity: UserProductIdentity,
-    private val userProductRepository: UserProductRepository,
+    private val userProductService: UserProductService,
+    userProductRepository: UserProductRepository,
     observeIsFavoriteFoodUseCase: ObserveIsFavoriteFoodUseCase,
     private val setFavoriteFoodUseCase: SetFavoriteFoodUseCase,
 ) : ViewModel() {
@@ -51,7 +53,7 @@ internal class UserProductDetailsViewModel(
 
     fun delete() {
         viewModelScope.launch {
-            userProductRepository.delete(identity)
+            userProductService.delete(identity)
             eventChannel.send(UserProductDetailsUiEvent.Deleted)
         }
     }

@@ -5,6 +5,8 @@ import com.maksimowiczm.foodyou.common.event.di.integrationEventHandler
 import com.maksimowiczm.foodyou.common.infrastructure.room.databaseBuilder
 import com.maksimowiczm.foodyou.userfood.application.HandleRecipeDeletedEventHandler
 import com.maksimowiczm.foodyou.userfood.application.HandleUserProductDeletedEventHandler
+import com.maksimowiczm.foodyou.userfood.application.UserProductService
+import com.maksimowiczm.foodyou.userfood.application.UserRecipeService
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeDeletedEvent
@@ -27,23 +29,25 @@ val userFoodModule = module {
     factory { get<UserFoodDatabase>().recipeDao }
     factory { get<UserFoodDatabase>().searchDao }
 
-    factory {
-            UserProductRepositoryImpl(
-                dao = get(),
-                integrationEventBus = integrationEventBus(),
-                blobStorage = get(),
-            )
-        }
-        .bind<UserProductRepository>()
+    factory { UserProductRepositoryImpl(dao = get()) }.bind<UserProductRepository>()
 
     factory {
-            UserRecipeRepositoryImpl(
-                database = get(),
-                integrationEventBus = integrationEventBus(),
-                blobStorage = get(),
-            )
-        }
-        .bind<UserRecipeRepository>()
+        UserProductService(
+            repository = get(),
+            blobStorage = get(),
+            integrationEventBus = integrationEventBus(),
+        )
+    }
+
+    factory { UserRecipeRepositoryImpl(database = get()) }.bind<UserRecipeRepository>()
+
+    factory {
+        UserRecipeService(
+            repository = get(),
+            blobStorage = get(),
+            integrationEventBus = integrationEventBus(),
+        )
+    }
 
     factoryOf(::UserFoodSearchRepositoryImpl).bind<UserFoodSearchRepository>()
 
