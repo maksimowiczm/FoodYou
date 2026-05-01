@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Intent
 import android.os.Build
 import com.maksimowiczm.foodyou.analytics.application.AnalyticsService
+import com.maksimowiczm.foodyou.analytics.domain.recordAppLaunch
 import com.maksimowiczm.foodyou.app.di.AppModule
 import com.maksimowiczm.foodyou.app.di.initKoin
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
@@ -41,7 +42,11 @@ class FoodYouApplication : Application() {
             defaultHandler?.uncaughtException(t, e)
         }
 
-        coroutineScope.launch { koin.get<AnalyticsService>().recordAppLaunch() }
+        coroutineScope.launch {
+            koin.get<AnalyticsService>().update {
+                recordAppLaunch(versionName = BuildConfig.VERSION_NAME)
+            }
+        }
     }
 
     private fun handleUncaughtException(e: Throwable) {

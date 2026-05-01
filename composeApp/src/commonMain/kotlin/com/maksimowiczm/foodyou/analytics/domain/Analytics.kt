@@ -31,7 +31,7 @@ data class Analytics(
  * @param versionName The version name of the application at the time of launch (e.g. `"1.4.2"`).
  * @param clock A [Clock] used to obtain the current timestamp.
  */
-fun Analytics.recordAppLaunch(versionName: String, clock: Clock) = buildList {
+fun Analytics.recordAppLaunch(versionName: String, clock: Clock = Clock.System) = buildList {
     val now = clock.now()
 
     add(AppLaunchedEvent(versionName = versionName, timestamp = now))
