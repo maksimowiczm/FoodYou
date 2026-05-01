@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.app.ui.profile.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.account.domain.Profile
-import com.maksimowiczm.foodyou.account.domain.update
+import com.maksimowiczm.foodyou.account.domain.removeProfile
 import com.maksimowiczm.foodyou.account.domain.updateProfile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 internal class EditProfileViewModel(
     private val profileId: ProfileId,
     private val appProfileManager: AppProfileManager,
-    private val accountRepository: AccountRepository,
+    private val accountService: AccountService,
     private val blobStorage: BlobStorage,
     logger: Logger,
 ) : ViewModel() {
@@ -37,7 +37,7 @@ internal class EditProfileViewModel(
         field = MutableStateFlow(false)
 
     val canDelete: StateFlow<Boolean> =
-        accountRepository
+        accountService
             .observe()
             .filterNotNull()
             .map { it.profiles.size > 1 }
@@ -48,7 +48,7 @@ internal class EditProfileViewModel(
             )
 
     val profile: StateFlow<Profile?> =
-        accountRepository
+        accountService
             .observe()
             .filterNotNull()
             .map { account -> account.profiles.find { it.id == profileId } }
@@ -80,9 +80,11 @@ internal class EditProfileViewModel(
                     }
                 }
 
-            accountRepository.update {
+            val profileId = profile.filterNotNull().first().id
+            accountService.update {
                 updateProfile(profileId) { it.copy(name = name, avatar = profileAvatar) }
             }
+
             _uiEventBus.send(EditProfileEvent.Edited)
         }
     }
@@ -94,13 +96,11 @@ internal class EditProfileViewModel(
         }
 
         viewModelScope.launch {
-            val account =
-                accountRepository.update {
-                    copy(profiles = profiles.filterNot { it.id == profileId })
-                }
+            accountService.update { removeProfile(profileId) }
 
             val currentSelection = appProfileManager.observeAppProfileId().first()
             if (currentSelection == profileId) {
+                val account = accountService.observe().filterNotNull().first()
                 val anotherProfile = account.profiles.first()
                 appProfileManager.setAppProfileId(anotherProfile.id)
             }

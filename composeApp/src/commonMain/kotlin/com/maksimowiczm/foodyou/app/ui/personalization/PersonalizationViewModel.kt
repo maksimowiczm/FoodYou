@@ -2,9 +2,8 @@ package com.maksimowiczm.foodyou.app.ui.personalization
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.account.domain.AccountRepository
-import com.maksimowiczm.foodyou.account.domain.update
-import com.maksimowiczm.foodyou.app.application.AppProfileManager
+import com.maksimowiczm.foodyou.account.application.AccountService
+import com.maksimowiczm.foodyou.account.domain.changeEnergyUnit
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,13 +16,11 @@ import kotlinx.coroutines.runBlocking
 
 class PersonalizationViewModel(
     private val deviceSettingsRepository: DeviceSettingsRepository,
-    private val accountRepository: AccountRepository,
-    appProfileManager: AppProfileManager,
+    private val accountService: AccountService,
 ) : ViewModel() {
     private val _device = deviceSettingsRepository.observe()
 
-    private val _energyFormat =
-        accountRepository.observe().filterNotNull().map { it.settings.energyUnit }
+    private val _energyFormat = accountService.observe().filterNotNull().map { it.energyUnit }
 
     val energyFormat =
         _energyFormat.stateIn(
@@ -48,8 +45,6 @@ class PersonalizationViewModel(
     }
 
     fun updateEnergyUnit(energyUnit: EnergyUnit) {
-        viewModelScope.launch {
-            accountRepository.update { copy(settings = settings.copy(energyUnit = energyUnit)) }
-        }
+        viewModelScope.launch { accountService.update { changeEnergyUnit(energyUnit) } }
     }
 }

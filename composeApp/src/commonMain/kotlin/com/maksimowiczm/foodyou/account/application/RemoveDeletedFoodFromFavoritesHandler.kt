@@ -1,8 +1,6 @@
 package com.maksimowiczm.foodyou.account.application
 
-import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.removeFavoriteUserFood
-import com.maksimowiczm.foodyou.account.domain.update
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
 
@@ -13,10 +11,10 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
  * When a user food product is deleted, this handler ensures data consistency by removing the
  * reference from the owner's favorite list.
  */
-class RemoveDeletedFoodFromFavoritesHandler(private val accountRepository: AccountRepository) :
+class RemoveDeletedFoodFromFavoritesHandler(private val accountService: AccountService) :
     EventHandler<UserProductDeletedEvent> {
 
     override suspend fun handle(event: UserProductDeletedEvent) {
-        accountRepository.update { removeFavoriteUserFood(event.identity) }
+        accountService.update { removeFavoriteUserFood(event.identity) }
     }
 }

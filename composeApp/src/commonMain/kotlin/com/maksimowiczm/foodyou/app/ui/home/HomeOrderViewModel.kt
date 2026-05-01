@@ -3,9 +3,8 @@ package com.maksimowiczm.foodyou.app.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.account.domain.HomeCard
-import com.maksimowiczm.foodyou.account.domain.update
 import com.maksimowiczm.foodyou.account.domain.updateProfile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,7 +16,7 @@ import kotlinx.coroutines.launch
 
 internal class HomeOrderViewModel(
     private val appProfileManager: AppProfileManager,
-    private val accountRepository: AccountRepository,
+    private val accountService: AccountService,
     logger: Logger,
 ) : ViewModel() {
     private val logger = logger.withTag(TAG)
@@ -43,8 +42,7 @@ internal class HomeOrderViewModel(
     fun reorder(newOrder: List<HomeCard>) {
         viewModelScope.launch {
             val profileId = appProfileManager.observeAppProfileId().filterNotNull().first()
-
-            accountRepository.update {
+            accountService.update {
                 updateProfile(profileId) { it.copy(homeCardsOrder = newOrder) }
             }
 

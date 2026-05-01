@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
@@ -12,10 +12,10 @@ import kotlinx.coroutines.launch
 
 internal class ProfileViewModel(
     private val appProfileManager: AppProfileManager,
-    accountRepository: AccountRepository,
+    accountService: AccountService,
 ) : ViewModel() {
     val profiles =
-        accountRepository
+        accountService
             .observe()
             .filterNotNull()
             .map { account ->

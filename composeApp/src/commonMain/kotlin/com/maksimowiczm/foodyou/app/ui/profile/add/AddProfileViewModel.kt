@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.app.ui.profile.add
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.account.domain.Profile
-import com.maksimowiczm.foodyou.account.domain.update
+import com.maksimowiczm.foodyou.account.domain.addProfile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 internal class AddProfileViewModel(
     private val appProfileManager: AppProfileManager,
-    private val accountRepository: AccountRepository,
+    private val accountService: AccountService,
     private val blobStorage: BlobStorage,
     logger: Logger,
 ) : ViewModel() {
@@ -51,7 +51,7 @@ internal class AddProfileViewModel(
                 }
 
             val profile = Profile(name = name, avatar = profileAvatar)
-            accountRepository.update { copy(profiles = profiles + profile) }
+            accountService.update { addProfile(profile) }
 
             appProfileManager.setAppProfileId(profile.id)
 

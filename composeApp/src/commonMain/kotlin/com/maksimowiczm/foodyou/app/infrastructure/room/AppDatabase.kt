@@ -5,30 +5,19 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
-import com.maksimowiczm.foodyou.account.infrastructure.room.AccountDatabase
-import com.maksimowiczm.foodyou.account.infrastructure.room.FoodIdentityTypeConverter
-import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileEntity
-import com.maksimowiczm.foodyou.account.infrastructure.room.ProfileFavoriteFoodEntity
-import com.maksimowiczm.foodyou.account.infrastructure.room.SettingsEntity
 import com.maksimowiczm.foodyou.common.infrastructure.room.EnergyUnitConverter
 import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
 import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.FoodSearchDatabase
 import com.maksimowiczm.foodyou.foodsearch.infrastructure.room.SearchHistoryEntity
 
 @Database(
-    entities =
-        [
-            ProfileEntity::class,
-            ProfileFavoriteFoodEntity::class,
-            SettingsEntity::class,
-            SearchHistoryEntity::class,
-        ],
+    entities = [SearchHistoryEntity::class],
     version = AppDatabase.VERSION,
     exportSchema = false,
 )
-@TypeConverters(EnergyUnitConverter::class, FoodIdentityTypeConverter::class, UuidConverter::class)
+@TypeConverters(EnergyUnitConverter::class, UuidConverter::class)
 @ConstructedBy(AppDatabaseConstructor::class)
-internal abstract class AppDatabase : RoomDatabase(), AccountDatabase, FoodSearchDatabase {
+internal abstract class AppDatabase : RoomDatabase(), FoodSearchDatabase {
     companion object {
         const val VERSION = 1
 

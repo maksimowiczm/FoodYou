@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.room
 
+import com.maksimowiczm.foodyou.account.domain.AccountEvent
 import com.maksimowiczm.foodyou.analytics.domain.AnalyticsEvent
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -22,6 +23,9 @@ internal object RoomStoredEventMapper {
 @OptIn(ExperimentalSerializationApi::class)
 private val roomEventJson = Json {
     serializersModule = SerializersModule {
-        polymorphic(DomainEvent::class) { subclassesOfSealed<AnalyticsEvent>() }
+        polymorphic(DomainEvent::class) {
+            subclassesOfSealed<AnalyticsEvent>()
+            subclassesOfSealed<AccountEvent>()
+        }
     }
 }

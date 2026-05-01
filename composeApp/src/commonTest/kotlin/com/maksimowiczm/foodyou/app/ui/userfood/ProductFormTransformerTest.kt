@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.app.ui.userfood
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.mutableStateOf
-import com.maksimowiczm.foodyou.account.domain.testAccount
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
@@ -32,7 +31,7 @@ class ProductFormTransformerTest {
         }
 
     private fun createProductFormTransformer(
-        energyUnit: EnergyUnit = testAccount().settings.energyUnit,
+        energyUnit: EnergyUnit = EnergyUnit.Kilocalories,
         selector: FoodNameSelector = createDefaultSelector(),
     ): ProductFormTransformer =
         ProductFormTransformer(

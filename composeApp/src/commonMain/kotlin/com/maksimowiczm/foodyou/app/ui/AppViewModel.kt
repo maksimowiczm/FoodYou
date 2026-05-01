@@ -2,11 +2,10 @@ package com.maksimowiczm.foodyou.app.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.account.domain.Account
-import com.maksimowiczm.foodyou.account.domain.AccountRepository
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.account.domain.update
-import com.maksimowiczm.foodyou.app.application.AppProfileManager
+import com.maksimowiczm.foodyou.account.domain.finishOnboarding
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.FlowPreview
@@ -23,19 +22,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @OptIn(FlowPreview::class)
-class AppViewModel(
-    private val appProfileManager: AppProfileManager,
-    private val accountRepository: AccountRepository,
-) : ViewModel() {
+class AppViewModel(private val accountService: AccountService) : ViewModel() {
     private val primaryAccount: StateFlow<Account?> =
-        accountRepository
+        accountService
             .observe()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
                 initialValue =
                     runBlocking {
-                        accountRepository
+                        accountService
                             .observe()
                             .timeout(1.seconds)
                             .catch {
@@ -51,7 +47,7 @@ class AppViewModel(
     val appPage: StateFlow<AppPage> =
         primaryAccount
             .map { account ->
-                if (account == null || !account.settings.onboardingFinished) {
+                if (account == null || !account.onboardingFinished) {
                     AppPage.Onboarding
                 } else {
                     AppPage.Main
@@ -66,7 +62,7 @@ class AppViewModel(
 
     val nutrientsOrder: StateFlow<List<NutrientsOrder>> =
         primaryAccount
-            .map { account -> account?.settings?.nutrientsOrder ?: NutrientsOrder.defaultOrder }
+            .map { account -> account?.nutrientsOrder ?: NutrientsOrder.defaultOrder }
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
@@ -76,7 +72,7 @@ class AppViewModel(
 
     val energyUnit: StateFlow<EnergyUnit> =
         primaryAccount
-            .map { it?.settings?.energyUnit ?: EnergyUnit.Kilocalories }
+            .map { it?.energyUnit ?: EnergyUnit.Kilocalories }
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
@@ -85,8 +81,6 @@ class AppViewModel(
             )
 
     fun onFinishOnboarding() {
-        viewModelScope.launch {
-            accountRepository.update { copy(settings = settings.copy(onboardingFinished = true)) }
-        }
+        viewModelScope.launch { accountService.update { finishOnboarding() } }
     }
 }

@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.application
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import kotlin.uuid.Uuid
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.map
  * lifecycle.
  */
 class AppProfileManager(
-    private val accountRepository: AccountRepository,
+    private val accountService: AccountService,
     // It leaks DataStore into application layer, but this seems fine in application package
     private val dataStore: DataStore<Preferences>,
 ) {
@@ -55,7 +55,7 @@ class AppProfileManager(
      */
     fun observeAppProfile(): Flow<Profile> =
         observeAppProfileId().filterNotNull().flatMapLatest { profileId ->
-            accountRepository
+            accountService
                 .observe()
                 .filterNotNull()
                 .map { account -> account.profiles.find { it.id == profileId } }

@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.app.ui.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.account.domain.Account
-import com.maksimowiczm.foodyou.account.domain.AccountRepository
+import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.account.domain.Profile
+import com.maksimowiczm.foodyou.account.domain.addProfile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 internal class OnboardingViewModel(
-    private val accountRepository: AccountRepository,
+    private val accountService: AccountService,
     private val accountManager: AppProfileManager,
     private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
     private val blobStorage: BlobStorage,
@@ -53,7 +53,6 @@ internal class OnboardingViewModel(
                     }
 
                 val profile = Profile(name = name, avatar = profileAvatar)
-                val account = Account(profiles = listOf(profile))
 
                 val searchPreferences =
                     foodSearchPreferencesRepository
@@ -64,7 +63,7 @@ internal class OnboardingViewModel(
                             allowFoodDataCentralUSDA = allowFoodDataCentral,
                         )
 
-                accountRepository.save(account)
+                accountService.update { addProfile(profile) }
                 accountManager.setAppProfileId(profile.id)
                 foodSearchPreferencesRepository.save(searchPreferences)
             }
