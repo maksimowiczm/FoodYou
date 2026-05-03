@@ -11,19 +11,12 @@ internal interface SearchDao {
         """
         SELECT $PRODUCT_SELECT
         FROM Product p
-
-        UNION ALL
-
-        SELECT $RECIPE_SELECT
-        FROM Recipe r
-
         ORDER BY simpleName
         """
     )
     fun getPagingSource(languageCode: String): PagingSource<Int, UserFoodSearchEntity>
 
-    @Query("""SELECT (SELECT COUNT(*) FROM Product) + (SELECT COUNT(*) FROM Recipe)""")
-    fun observeCount(): Flow<Int>
+    @Query("""SELECT COUNT(*) FROM Product""") fun observeCount(): Flow<Int>
 
     @Query(
         """
@@ -32,15 +25,6 @@ internal interface SearchDao {
         JOIN ProductFts fts ON p.sqliteId = fts.rowid
         WHERE
             ProductFts MATCH :query || '*'
-
-        UNION ALL
-
-        SELECT $RECIPE_SELECT
-        FROM Recipe r 
-        JOIN RecipeFts fts ON r.sqliteId = fts.rowid
-        WHERE
-            RecipeFts MATCH :query || '*'
-
         ORDER BY simpleName
         """
     )
@@ -51,17 +35,11 @@ internal interface SearchDao {
 
     @Query(
         """
-        SELECT 
-            (SELECT COUNT(*) 
-             FROM Product p 
-             JOIN ProductFts fts ON p.sqliteId = fts.rowid
-             WHERE
-                ProductFts MATCH :query || '*') +
-            (SELECT COUNT(*) 
-             FROM Recipe r 
-             JOIN RecipeFts fts ON r.sqliteId = fts.rowid
-             WHERE
-                RecipeFts MATCH :query || '*')
+         SELECT COUNT(*) 
+         FROM Product p 
+         JOIN ProductFts fts ON p.sqliteId = fts.rowid
+         WHERE
+            ProductFts MATCH :query || '*'
         """
     )
     fun observeCountByQuery(query: String): Flow<Int>
@@ -265,90 +243,4 @@ CASE
             p.`name_zh-CN`
         )
 END as simpleName
-"""
-
-private const val RECIPE_SELECT =
-    """
-NULL as p_sqliteId,
-NULL as p_uuid,
-NULL as p_name_en,
-NULL as p_name_ca,
-NULL as p_name_cs,
-NULL as p_name_da,
-NULL as p_name_de,
-NULL as p_name_es,
-NULL as p_name_fr,
-NULL as p_name_it,
-NULL as p_name_id,
-NULL as p_name_hu,
-NULL as p_name_nl,
-NULL as p_name_pl,
-NULL as p_name_sl,
-NULL as `p_name_pt-BR`,
-NULL as p_name_tr,
-NULL as p_name_ru,
-NULL as p_name_uk,
-NULL as p_name_ar,
-NULL as `p_name_zh-CN`,
-NULL as p_brand,
-NULL as p_barcode,
-NULL as p_note,
-NULL as p_imageDigest,
-NULL as p_energy,
-NULL as p_proteins,
-NULL as p_fats,
-NULL as p_saturatedFats,
-NULL as p_transFats,
-NULL as p_monounsaturatedFats,
-NULL as p_polyunsaturatedFats,
-NULL as p_omega3,
-NULL as p_omega6,
-NULL as p_carbohydrates,
-NULL as p_sugars,
-NULL as p_addedSugars,
-NULL as p_dietaryFiber,
-NULL as p_solubleFiber,
-NULL as p_insolubleFiber,
-NULL as p_salt,
-NULL as p_cholesterol,
-NULL as p_caffeine,
-NULL as p_manganese,
-NULL as p_magnesium,
-NULL as p_potassium,
-NULL as p_calcium,
-NULL as p_copper,
-NULL as p_zinc,
-NULL as p_sodium,
-NULL as p_iron,
-NULL as p_phosphorus,
-NULL as p_selenium,
-NULL as p_iodine,
-NULL as p_chromium,
-NULL as p_vitaminA,
-NULL as p_vitaminB1,
-NULL as p_vitaminB2,
-NULL as p_vitaminB3,
-NULL as p_vitaminB5,
-NULL as p_vitaminB6,
-NULL as p_vitaminB7,
-NULL as p_vitaminB9,
-NULL as p_vitaminB12,
-NULL as p_vitaminC,
-NULL as p_vitaminD,
-NULL as p_vitaminE,
-NULL as p_vitaminK,
-NULL as p_package_type,
-NULL as p_package_amount,
-NULL as p_package_unit,
-NULL as p_serving_type,
-NULL as p_serving_amount,
-NULL as p_serving_unit,
-NULL as p_isLiquid,
-r.sqliteId as r_sqliteId,
-r.uuid as r_uuid,
-r.name as r_name,
-r.servings as r_servings,
-r.imageDigest as r_imageDigest,
-r.note as r_note,
-r.name as simpleName
 """

@@ -54,7 +54,6 @@ internal fun UserFoodSearchApp(
                     pages.itemKey {
                         when (it) {
                             is UserFoodSearchItem.Product -> it.product.identity.toString()
-                            is UserFoodSearchItem.Recipe -> TODO()
                         }
                     },
             ) { i ->
@@ -66,7 +65,6 @@ internal fun UserFoodSearchApp(
                             onClick = {
                                 when (food) {
                                     is UserFoodSearchItem.Product -> onUserProduct(food.product)
-                                    is UserFoodSearchItem.Recipe -> TODO()
                                 }
                             },
                             shimmer = shimmer,
@@ -114,8 +112,6 @@ private fun FoodSearchListItem(
                 shimmer = shimmer,
                 modifier = modifier,
             )
-
-        is UserFoodSearchItem.Recipe -> TODO()
     }
 }
 
