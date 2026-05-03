@@ -5,7 +5,6 @@ import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.event.ListEventBus
 import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
 import com.maksimowiczm.foodyou.common.infrastructure.provideRoomDatabaseBuilder
@@ -38,7 +37,7 @@ class UserRecipeServiceIntegrationTest {
     private lateinit var database: UserFoodDatabase
     private lateinit var repository: UserRecipeRepository
     private lateinit var service: UserRecipeService
-    private lateinit var eventBus: ListEventBus<IntegrationEvent>
+    private lateinit var eventBus: ListEventBus
     private lateinit var blobStorage: BlobStorage
 
     @BeforeTest
@@ -51,7 +50,7 @@ class UserRecipeServiceIntegrationTest {
             UserRecipeService(
                 repository = repository,
                 blobStorage = blobStorage,
-                integrationEventBus = eventBus,
+                eventBus = eventBus,
             )
     }
 

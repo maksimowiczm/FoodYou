@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
  * ```
  */
 @OptIn(DelicateCoroutinesApi::class)
-class ChannelEventBus<E>(val channel: Channel<E> = Channel(Channel.UNLIMITED)) : EventBus<E> {
+class ChannelEventBus(val channel: Channel<DomainEvent> = Channel(Channel.UNLIMITED)) : EventBus {
 
     /**
      * A cold Flow that emits all events published to this event bus.
@@ -40,14 +40,14 @@ class ChannelEventBus<E>(val channel: Channel<E> = Channel(Channel.UNLIMITED)) :
      * Collectors will receive events published after they start collecting. The flow completes when
      * the underlying channel is closed.
      */
-    override val events: Flow<E> = channel.receiveAsFlow()
+    override val events: Flow<DomainEvent> = channel.receiveAsFlow()
 
-    override suspend fun publish(event: E) {
+    override suspend fun publish(event: DomainEvent) {
         assertOpen()
         channel.send(event)
     }
 
-    override suspend fun publish(events: List<E>) {
+    override suspend fun publish(events: List<DomainEvent>) {
         events.forEach { channel.send(it) }
     }
 
@@ -78,19 +78,19 @@ class ChannelEventBus<E>(val channel: Channel<E> = Channel(Channel.UNLIMITED)) :
         assertTrue("Channel should not be closed") { !channel.isClosedForSend }
 }
 
-class ListEventBus<E> : EventBus<E> {
-    private val _events = mutableListOf<E>()
-    val publishedEvents: List<E>
+class ListEventBus : EventBus {
+    private val _events = mutableListOf<DomainEvent>()
+    val publishedEvents: List<DomainEvent>
         get() = _events.toList()
 
-    override val events: Flow<E>
+    override val events: Flow<DomainEvent>
         get() = error("Not implemented")
 
-    override suspend fun publish(event: E) {
+    override suspend fun publish(event: DomainEvent) {
         _events.add(event)
     }
 
-    override suspend fun publish(events: List<E>) {
+    override suspend fun publish(events: List<DomainEvent>) {
         _events.addAll(events)
     }
 }

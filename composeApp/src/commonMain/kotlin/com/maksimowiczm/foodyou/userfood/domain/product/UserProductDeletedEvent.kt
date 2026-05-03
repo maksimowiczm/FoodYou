@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.userfood.domain.product
 
-import com.maksimowiczm.foodyou.common.event.IntegrationEvent
+import com.maksimowiczm.foodyou.common.event.DomainEvent
+import kotlin.time.Instant
 
 /**
  * Integration event emitted when a user food product is deleted.
@@ -10,4 +11,7 @@ import com.maksimowiczm.foodyou.common.event.IntegrationEvent
  *
  * @property identity The identity of the deleted user food product
  */
-data class UserProductDeletedEvent(val identity: UserProductIdentity) : IntegrationEvent
+data class UserProductDeletedEvent(
+    val identity: UserProductIdentity,
+    override val timestamp: Instant,
+) : DomainEvent

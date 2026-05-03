@@ -5,13 +5,9 @@ import com.maksimowiczm.foodyou.analytics.domain.AnalyticsEvent
 import com.maksimowiczm.foodyou.analytics.domain.toAnalytics
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.load
-import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.common.event.EventBus
 
-class AnalyticsService(
-    private val eventStore: EventStore,
-    private val eventBus: EventBus<DomainEvent>,
-) {
+class AnalyticsService(private val eventStore: EventStore, private val eventBus: EventBus) {
     suspend fun update(block: Analytics.() -> List<AnalyticsEvent>) {
         val analytics = eventStore.load<AnalyticsEvent>(EVENT_STREAM).toAnalytics()
         val newEvents = analytics.block()

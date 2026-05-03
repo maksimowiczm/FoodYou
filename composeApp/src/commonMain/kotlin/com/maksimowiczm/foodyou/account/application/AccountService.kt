@@ -6,15 +6,11 @@ import com.maksimowiczm.foodyou.account.domain.toAccount
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.load
 import com.maksimowiczm.foodyou.common.domain.observe
-import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.common.event.EventBus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class AccountService(
-    private val eventStore: EventStore,
-    private val eventBus: EventBus<DomainEvent>,
-) {
+class AccountService(private val eventStore: EventStore, private val eventBus: EventBus) {
     fun observe(): Flow<Account?> =
         eventStore.observe<AccountEvent>(EVENT_STREAM).map { events ->
             if (events.none()) null else events.toAccount()

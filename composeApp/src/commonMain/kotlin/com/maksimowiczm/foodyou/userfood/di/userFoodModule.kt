@@ -1,15 +1,12 @@
 package com.maksimowiczm.foodyou.userfood.di
 
-import com.maksimowiczm.foodyou.common.event.di.integrationEventBus
-import com.maksimowiczm.foodyou.common.event.di.integrationEventHandler
+import com.maksimowiczm.foodyou.common.event.di.eventHandlerOf
 import com.maksimowiczm.foodyou.common.infrastructure.room.databaseBuilder
 import com.maksimowiczm.foodyou.userfood.application.HandleRecipeDeletedEventHandler
 import com.maksimowiczm.foodyou.userfood.application.HandleUserProductDeletedEventHandler
 import com.maksimowiczm.foodyou.userfood.application.UserProductService
 import com.maksimowiczm.foodyou.userfood.application.UserRecipeService
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
-import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeDeletedEvent
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeRepository
 import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchRepository
 import com.maksimowiczm.foodyou.userfood.infrastructure.UserFoodDatabase
@@ -31,32 +28,15 @@ val userFoodModule = module {
 
     factory { UserProductRepositoryImpl(dao = get()) }.bind<UserProductRepository>()
 
-    factory {
-        UserProductService(
-            repository = get(),
-            blobStorage = get(),
-            integrationEventBus = integrationEventBus(),
-        )
-    }
+    factoryOf(::UserProductService)
 
     factory { UserRecipeRepositoryImpl(database = get()) }.bind<UserRecipeRepository>()
 
-    factory {
-        UserRecipeService(
-            repository = get(),
-            blobStorage = get(),
-            integrationEventBus = integrationEventBus(),
-        )
-    }
+    factoryOf(::UserRecipeService)
 
     factoryOf(::UserFoodSearchRepositoryImpl).bind<UserFoodSearchRepository>()
 
     // Event handlers
-    integrationEventHandler<UserProductDeletedEvent, HandleUserProductDeletedEventHandler> {
-        HandleUserProductDeletedEventHandler(get())
-    }
-
-    integrationEventHandler<UserRecipeDeletedEvent, HandleRecipeDeletedEventHandler> {
-        HandleRecipeDeletedEventHandler(get())
-    }
+    eventHandlerOf(::HandleUserProductDeletedEventHandler)
+    eventHandlerOf(::HandleRecipeDeletedEventHandler)
 }

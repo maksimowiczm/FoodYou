@@ -5,7 +5,6 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.event.EventBus
-import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
@@ -13,12 +12,13 @@ import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
 import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
+import kotlin.time.Clock
 import kotlin.uuid.Uuid
 
 class UserProductService(
     private val repository: UserProductRepository,
     private val blobStorage: BlobStorage,
-    private val integrationEventBus: EventBus<IntegrationEvent>,
+    private val eventBus: EventBus,
 ) {
     suspend fun create(
         name: FoodName,
@@ -86,6 +86,8 @@ class UserProductService(
 
     suspend fun delete(identity: UserProductIdentity) {
         repository.delete(identity)
-        integrationEventBus.publish(UserProductDeletedEvent(identity))
+        eventBus.publish(
+            UserProductDeletedEvent(identity = identity, timestamp = Clock.System.now())
+        )
     }
 }

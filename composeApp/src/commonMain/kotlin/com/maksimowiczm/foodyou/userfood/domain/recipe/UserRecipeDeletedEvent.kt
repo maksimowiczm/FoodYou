@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.userfood.domain.recipe
 
-import com.maksimowiczm.foodyou.common.event.IntegrationEvent
+import com.maksimowiczm.foodyou.common.event.DomainEvent
+import kotlin.time.Instant
 
 /**
  * Integration event emitted when a recipe is deleted.
@@ -10,4 +11,7 @@ import com.maksimowiczm.foodyou.common.event.IntegrationEvent
  *
  * @property identity The identity of the deleted recipe
  */
-data class UserRecipeDeletedEvent(val identity: UserRecipeIdentity) : IntegrationEvent
+data class UserRecipeDeletedEvent(
+    val identity: UserRecipeIdentity,
+    override val timestamp: Instant,
+) : DomainEvent

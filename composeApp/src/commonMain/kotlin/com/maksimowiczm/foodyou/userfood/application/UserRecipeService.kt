@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.userfood.application
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.event.EventBus
-import com.maksimowiczm.foodyou.common.event.IntegrationEvent
 import com.maksimowiczm.foodyou.common.map
 import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
 import com.maksimowiczm.foodyou.userfood.domain.recipe.CircularUserRecipeReferenceError
@@ -13,12 +12,13 @@ import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIdentity
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeIngredient
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeName
 import com.maksimowiczm.foodyou.userfood.domain.recipe.UserRecipeRepository
+import kotlin.time.Clock
 import kotlin.uuid.Uuid
 
 class UserRecipeService(
     private val repository: UserRecipeRepository,
     private val blobStorage: BlobStorage,
-    private val integrationEventBus: EventBus<IntegrationEvent>,
+    private val eventBus: EventBus,
 ) {
     suspend fun create(
         name: UserRecipeName,
@@ -70,6 +70,8 @@ class UserRecipeService(
 
     suspend fun delete(identity: UserRecipeIdentity) {
         repository.delete(identity)
-        integrationEventBus.publish(UserRecipeDeletedEvent(identity))
+        eventBus.publish(
+            UserRecipeDeletedEvent(identity = identity, timestamp = Clock.System.now())
+        )
     }
 }
