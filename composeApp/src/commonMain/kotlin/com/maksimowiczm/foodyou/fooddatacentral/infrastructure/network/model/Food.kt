@@ -14,8 +14,9 @@ internal interface Food {
 
     val foodNutrients: List<FoodNutrient>
 
-    fun getNutrient(nutrient: Nutrient): FoodNutrient? =
-        foodNutrients.firstOrNull { it.number == nutrient.number }
+    fun getNutrient(nutrient: Nutrient): FoodNutrient? = foodNutrients.firstOrNull {
+        it.number == nutrient.number
+    }
 
     val url: String
         get() = "https://fdc.nal.usda.gov/food-details/$fdcId/nutrients"

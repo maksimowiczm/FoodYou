@@ -21,10 +21,9 @@ fun MultiColorProgressIndicator(
     trackColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     gapSize: Dp = 2.dp,
 ) {
-    val gaps =
-        items.map {
-            animateDpAsState(targetValue = if (it.progress > 0.01) gapSize else 0.dp).value
-        }
+    val gaps = items.map {
+        animateDpAsState(targetValue = if (it.progress > 0.01) gapSize else 0.dp).value
+    }
 
     Canvas(
         modifier =

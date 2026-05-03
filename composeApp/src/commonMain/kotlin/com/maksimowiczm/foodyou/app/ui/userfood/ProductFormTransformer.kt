@@ -124,25 +124,23 @@ internal class ProductFormTransformer(
         val nutritionFacts =
             form.toNutritionFacts(multiplier = multiplier, energyUnit = energyFormat)
 
-        val boxedServingQuantity =
-            servingQuantity?.let {
-                when (form.servingUnit.value) {
-                    QuantityUnit.Gram -> AbsoluteQuantity.Weight(it.grams)
-                    QuantityUnit.Milliliter -> AbsoluteQuantity.Volume(it.milliliters)
-                    QuantityUnit.Ounce -> AbsoluteQuantity.Weight(it.ounces)
-                    QuantityUnit.FluidOunce -> AbsoluteQuantity.Volume(it.fluidOunces)
-                }
+        val boxedServingQuantity = servingQuantity?.let {
+            when (form.servingUnit.value) {
+                QuantityUnit.Gram -> AbsoluteQuantity.Weight(it.grams)
+                QuantityUnit.Milliliter -> AbsoluteQuantity.Volume(it.milliliters)
+                QuantityUnit.Ounce -> AbsoluteQuantity.Weight(it.ounces)
+                QuantityUnit.FluidOunce -> AbsoluteQuantity.Volume(it.fluidOunces)
             }
+        }
 
-        val boxedPackageQuantity =
-            packageQuantity?.let {
-                when (form.packageUnit.value) {
-                    QuantityUnit.Gram -> AbsoluteQuantity.Weight(it.grams)
-                    QuantityUnit.Milliliter -> AbsoluteQuantity.Volume(it.milliliters)
-                    QuantityUnit.Ounce -> AbsoluteQuantity.Weight(it.ounces)
-                    QuantityUnit.FluidOunce -> AbsoluteQuantity.Volume(it.fluidOunces)
-                }
+        val boxedPackageQuantity = packageQuantity?.let {
+            when (form.packageUnit.value) {
+                QuantityUnit.Gram -> AbsoluteQuantity.Weight(it.grams)
+                QuantityUnit.Milliliter -> AbsoluteQuantity.Volume(it.milliliters)
+                QuantityUnit.Ounce -> AbsoluteQuantity.Weight(it.ounces)
+                QuantityUnit.FluidOunce -> AbsoluteQuantity.Volume(it.fluidOunces)
             }
+        }
 
         val possibleIsLiquid =
             when (form.valuesPer.value) {

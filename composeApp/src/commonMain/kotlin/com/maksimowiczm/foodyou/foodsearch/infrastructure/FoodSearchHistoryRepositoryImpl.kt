@@ -18,17 +18,16 @@ internal class FoodSearchHistoryRepositoryImpl(
 ) : FoodSearchHistoryRepository {
     override fun observe(profileId: ProfileId): Flow<FoodSearchHistory> {
         return dao.observeHistory(profileId.value, 10).map { list ->
-            val history =
-                list.mapNotNull {
-                    val query =
-                        searchQueryParser.parse(it.query) as? SearchQuery.NotBlank
-                            ?: return@mapNotNull null
+            val history = list.mapNotNull {
+                val query =
+                    searchQueryParser.parse(it.query) as? SearchQuery.NotBlank
+                        ?: return@mapNotNull null
 
-                    SearchHistory(
-                        query = query,
-                        timestamp = Instant.fromEpochMilliseconds(it.timestampMillis),
-                    )
-                }
+                SearchHistory(
+                    query = query,
+                    timestamp = Instant.fromEpochMilliseconds(it.timestampMillis),
+                )
+            }
 
             FoodSearchHistory.of(profileId, history)
         }

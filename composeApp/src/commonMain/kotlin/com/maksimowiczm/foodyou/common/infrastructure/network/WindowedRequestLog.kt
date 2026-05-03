@@ -30,17 +30,16 @@ class WindowedRequestLog(
      * @return `null` if the slot was acquired, or the [Duration] until the next slot opens if the
      *   limit has been reached.
      */
-    suspend fun tryAcquire(): Duration? =
-        mutex.withLock {
-            val now = clock.now()
-            val windowStart = now - timeWindow
-            requests.removeAll { it < windowStart }
+    suspend fun tryAcquire(): Duration? = mutex.withLock {
+        val now = clock.now()
+        val windowStart = now - timeWindow
+        requests.removeAll { it < windowStart }
 
-            if (requests.size < maxRequests) {
-                requests.add(now)
-                null
-            } else {
-                requests.first() + timeWindow - now
-            }
+        if (requests.size < maxRequests) {
+            requests.add(now)
+            null
+        } else {
+            requests.first() + timeWindow - now
         }
+    }
 }

@@ -86,10 +86,9 @@ internal class FoodDataCentralRemoteMediator(
                 )
 
             val entities = response.foods.map(mapper::foodDataCentralProductEntity)
-            val pagingKeys =
-                entities.map {
-                    FoodDataCentralPagingKeyEntity(queryString = query.query, fdcId = it.fdcId)
-                }
+            val pagingKeys = entities.map {
+                FoodDataCentralPagingKeyEntity(queryString = query.query, fdcId = it.fdcId)
+            }
 
             database.immediateTransaction {
                 dao.upsertProducts(entities)

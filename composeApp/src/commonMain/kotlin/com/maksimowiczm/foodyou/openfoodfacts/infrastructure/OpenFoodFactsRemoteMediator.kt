@@ -87,13 +87,9 @@ internal class OpenFoodFactsRemoteMediator(
             val response = search.search(query = query.query, page = page, pageSize = pageSize)
 
             val entities = response.hits.map(mapper::toEntity)
-            val pagingKeys =
-                entities.map {
-                    OpenFoodFactsPagingKeyEntity(
-                        queryString = query.query,
-                        productBarcode = it.barcode,
-                    )
-                }
+            val pagingKeys = entities.map {
+                OpenFoodFactsPagingKeyEntity(queryString = query.query, productBarcode = it.barcode)
+            }
 
             database.immediateTransaction {
                 dao.upsertProducts(entities)
