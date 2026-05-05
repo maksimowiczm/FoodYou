@@ -15,13 +15,13 @@ import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
-import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
+import com.maksimowiczm.foodyou.search.domain.SearchQuery
+import com.maksimowiczm.foodyou.userproduct.application.UserProductService
+import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,7 +36,7 @@ internal class FavoriteFoodSearchViewModel(
     appProfileManager: AppProfileManager,
     private val foodDataCentralRepository: FoodDataCentralRepository,
     private val openFoodFactsRepository: OpenFoodFactsRepository,
-    private val userProductRepository: UserProductRepository,
+    private val userProductService: UserProductService,
     private val nameSelector: FoodNameSelector,
 ) : ViewModel() {
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
@@ -63,14 +63,13 @@ internal class FavoriteFoodSearchViewModel(
                                 )
 
                             is FavoriteFoodIdentity.UserProduct ->
-                                userProductRepository
-                                    .observe(UserProductIdentity(identity.id))
-                                    .map { food ->
-                                        when (food) {
-                                            null -> RemoteData.NotFound
-                                            else -> RemoteData.Success(food)
-                                        }
+                                userProductService.observe(UserProductIdentity(identity.id)).map {
+                                    food ->
+                                    when (food) {
+                                        null -> RemoteData.NotFound
+                                        else -> RemoteData.Success(food)
                                     }
+                                }
                         }
                     }
                     .combine()
@@ -182,7 +181,7 @@ private fun RemoteData<Any>.name(): FoodName? =
 
 private fun Any.brand(): String? =
     when (this) {
-        is UserProduct -> brand?.value
+        is UserProduct -> brand
         is OpenFoodFactsProduct -> brand
         is FoodDataCentralProduct -> brand
         else -> error("Unknown type ${this::class}")

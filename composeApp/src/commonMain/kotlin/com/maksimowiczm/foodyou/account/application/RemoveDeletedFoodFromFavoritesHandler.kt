@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.account.application
 
 import com.maksimowiczm.foodyou.account.domain.removeFavoriteUserFood
 import com.maksimowiczm.foodyou.common.event.EventHandler
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductDeletedEvent
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductDeletedEvent
 
 /**
  * Handles the [UserProductDeletedEvent] by removing the deleted food from the owner's account

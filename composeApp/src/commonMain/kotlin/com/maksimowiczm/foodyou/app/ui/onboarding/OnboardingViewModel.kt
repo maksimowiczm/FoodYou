@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.account.domain.addProfile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
-import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.search.domain.preferences.FoodSearchPreferencesRepository
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.async

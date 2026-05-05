@@ -7,7 +7,6 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchParameters
 import foodyou.app.generated.resources.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
@@ -38,10 +37,7 @@ internal data object FavoriteCollectionFilter : CollectionFilter {
 
 @Immutable
 @Serializable
-internal data class YourFoodCollectionFilter(
-    val order: UserFoodSearchParameters.OrderBy = UserFoodSearchParameters.OrderBy.NameAscending,
-    val isFavorite: Boolean = false,
-) : CollectionFilter {
+internal data object YourFoodCollectionFilter : CollectionFilter {
     @Composable
     override fun Icon(modifier: Modifier) {
         Icon(imageVector = Icons.Outlined.Person, contentDescription = null, modifier = modifier)
@@ -53,8 +49,7 @@ internal data class YourFoodCollectionFilter(
 }
 
 @Serializable
-internal data class OpenFoodFactsCollectionFilter(val isFavorite: Boolean = false) :
-    CollectionFilter {
+internal data object OpenFoodFactsCollectionFilter : CollectionFilter {
     @Composable
     override fun Icon(modifier: Modifier) {
         Image(
@@ -70,8 +65,7 @@ internal data class OpenFoodFactsCollectionFilter(val isFavorite: Boolean = fals
 }
 
 @Serializable
-internal data class FoodDataCentralCollectionFilter(val isFavorite: Boolean = false) :
-    CollectionFilter {
+internal data object FoodDataCentralCollectionFilter : CollectionFilter {
     @Composable
     override fun Icon(modifier: Modifier) {
         Image(

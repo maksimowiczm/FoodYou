@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.app.ui.privacy
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchPreferencesRepository
-import com.maksimowiczm.foodyou.foodsearch.domain.update
+import com.maksimowiczm.foodyou.search.domain.preferences.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.search.domain.preferences.update
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn

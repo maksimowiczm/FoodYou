@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.roomModule
 import com.maksimowiczm.foodyou.app.ui.appUiModule
 import com.maksimowiczm.foodyou.app.ui.common.theme.commonThemeModule
 import com.maksimowiczm.foodyou.app.ui.food.details.foodDetailsModule
+import com.maksimowiczm.foodyou.app.ui.food.search.foodSearchModule
 import com.maksimowiczm.foodyou.app.ui.home.homeModule
 import com.maksimowiczm.foodyou.app.ui.language.languageModule
 import com.maksimowiczm.foodyou.app.ui.onboarding.onboardingModule
@@ -18,9 +19,9 @@ import com.maksimowiczm.foodyou.common.di.commonModule
 import com.maksimowiczm.foodyou.common.event.di.inMemoryEventBusModule
 import com.maksimowiczm.foodyou.device.di.deviceModule
 import com.maksimowiczm.foodyou.fooddatacentral.di.foodDataCentralModule
-import com.maksimowiczm.foodyou.foodsearch.di.foodSearchModule
 import com.maksimowiczm.foodyou.openfoodfacts.di.openFoodFactsModule
-import com.maksimowiczm.foodyou.userfood.di.userFoodModule
+import com.maksimowiczm.foodyou.search.di.searchModule
+import com.maksimowiczm.foodyou.userproduct.di.userProductModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
@@ -36,10 +37,10 @@ fun initKoin(appModule: AppModule, config: KoinAppDeclaration? = null) = startKo
         accountModule,
         analyticsModule,
         deviceModule,
-        foodSearchModule,
         foodDataCentralModule,
         openFoodFactsModule,
-        userFoodModule,
+        userProductModule,
+        searchModule,
     )
 
     // Ui modules
@@ -50,7 +51,7 @@ fun initKoin(appModule: AppModule, config: KoinAppDeclaration? = null) = startKo
         homeModule,
         languageModule,
         personalizationModule,
-        com.maksimowiczm.foodyou.app.ui.food.search.foodSearchModule,
+        foodSearchModule,
         foodDetailsModule,
         privacyModule,
         profileModule,

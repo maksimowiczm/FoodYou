@@ -1,7 +1,9 @@
 package com.maksimowiczm.foodyou.common.domain.food
 
 import com.maksimowiczm.foodyou.common.domain.Language
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class FoodName(
     val english: String? = null,
     val catalan: String? = null,

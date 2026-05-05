@@ -45,8 +45,8 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsNutrients
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -107,7 +107,7 @@ private fun UserProductDetailsScreen(
             userFood?.let { food ->
                 buildString {
                     append(nameSelector.select(food.name))
-                    append(food.brand?.value?.let { " ($it)" } ?: "")
+                    append(food.brand?.let { " ($it)" } ?: "")
                 }
             }
         }
@@ -156,7 +156,7 @@ private fun UserProductDetailsScreen(
                 item {
                     HorizontalDivider(Modifier.fillMaxWidth().padding(16.dp))
                     Note(
-                        note = userFood.note.value,
+                        note = userFood.note,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
                 }

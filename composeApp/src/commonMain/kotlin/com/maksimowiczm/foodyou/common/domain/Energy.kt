@@ -3,13 +3,15 @@ package com.maksimowiczm.foodyou.common.domain
 import com.maksimowiczm.foodyou.common.Div
 import com.maksimowiczm.foodyou.common.Plus
 import com.maksimowiczm.foodyou.common.Times
+import kotlinx.serialization.Serializable
 
 /**
  * Represents an energy amount.
  *
  * Internally, energy is always stored in kilocalories and converted at boundaries.
  */
-class Energy private constructor(val kilocalories: Double, val unit: EnergyUnit) :
+@Serializable
+class Energy(val kilocalories: Double, val unit: EnergyUnit) :
     Comparable<Energy>, Plus<Energy>, Times<Energy>, Div<Energy> {
     fun toDouble(unit: EnergyUnit): Double = unit.fromKilocalories(kilocalories)
 
@@ -65,6 +67,7 @@ class Energy private constructor(val kilocalories: Double, val unit: EnergyUnit)
     }
 }
 
+@Serializable
 enum class EnergyUnit {
     Kilocalories,
     Kilojoules;

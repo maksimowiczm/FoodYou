@@ -1,12 +1,14 @@
 package com.maksimowiczm.foodyou.common.domain
 
+import kotlinx.serialization.Serializable
+
 /**
  * Represents a volume amount.
  *
  * Internally, volume is stored as milliliters.
  */
-class Volume private constructor(val milliliters: Double, val unit: VolumeUnit) :
-    Comparable<Volume> {
+@Serializable
+class Volume(val milliliters: Double, val unit: VolumeUnit) : Comparable<Volume> {
     fun toDouble(unit: VolumeUnit): Double = unit.fromMilliliters(milliliters)
 
     fun inUnit(unit: VolumeUnit): Volume = ofMilliliters(milliliters, unit)
@@ -56,6 +58,7 @@ class Volume private constructor(val milliliters: Double, val unit: VolumeUnit) 
     }
 }
 
+@Serializable
 enum class VolumeUnit {
     Milliliters,
     FluidOunces;

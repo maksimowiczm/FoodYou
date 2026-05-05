@@ -1,0 +1,69 @@
+@file:MustUseReturnValues
+
+package com.maksimowiczm.foodyou.userproduct.domain
+
+import com.maksimowiczm.foodyou.common.domain.BlobDigest
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import kotlin.jvm.JvmInline
+import kotlin.time.Clock
+import kotlin.uuid.Uuid
+import kotlinx.serialization.Serializable
+
+@Serializable data class UserProductIdentity(val id: Uuid)
+
+@Serializable
+data class UserProduct(
+    val identity: UserProductIdentity,
+    val name: FoodName,
+    val brand: String?,
+    val barcode: UserProductBarcode?,
+    val note: String?,
+    val image: BlobDigest?,
+    val nutritionFacts: NutritionFacts,
+    val servingQuantity: AbsoluteQuantity?,
+    val packageQuantity: AbsoluteQuantity?,
+    val isLiquid: Boolean,
+) {
+    init {
+        require(brand == null || brand.isNotBlank()) { "Brand name cannot be blank" }
+        require(note == null || note.isNotBlank()) { "Note cannot be blank" }
+    }
+
+    companion object {
+        fun create(product: UserProduct, clock: Clock = Clock.System): List<UserProductEvent> =
+            listOf(UserProductCreatedEvent(product = product, timestamp = clock.now()))
+    }
+}
+
+@Serializable
+@JvmInline
+value class UserProductBarcode(val value: String) {
+    init {
+        require(value.isNotBlank()) { "Barcode cannot be blank" }
+        require(value.all { it.isDigit() }) { "Barcode must contain only digits" }
+    }
+}
+
+inline fun UserProduct.update(
+    clock: Clock = Clock.System,
+    transform: (UserProduct) -> UserProduct,
+): List<UserProductEvent> = buildList {
+    val updated = transform(this@update)
+    if (updated != this@update)
+        add(UserProductUpdatedEvent(product = updated, timestamp = clock.now()))
+}
+
+fun UserProduct.remove(clock: Clock = Clock.System): List<UserProductEvent> =
+    listOf(UserProductDeletedEvent(identity = identity, timestamp = clock.now()))
+
+fun UserProduct?.apply(event: UserProductEvent): UserProduct? =
+    when (event) {
+        is UserProductCreatedEvent -> event.product
+        is UserProductUpdatedEvent -> event.product
+        is UserProductDeletedEvent -> null
+    }
+
+fun Iterable<UserProductEvent>.toUserProduct(): UserProduct? =
+    fold(null) { state, event -> state.apply(event) }

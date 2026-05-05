@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

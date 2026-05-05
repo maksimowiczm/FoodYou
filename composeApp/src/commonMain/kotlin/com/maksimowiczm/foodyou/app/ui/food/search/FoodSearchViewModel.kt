@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
-import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchHistoryRepository
-import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
-import com.maksimowiczm.foodyou.foodsearch.domain.SearchQueryParser
+import com.maksimowiczm.foodyou.search.domain.SearchQuery
+import com.maksimowiczm.foodyou.search.domain.SearchQueryParser
+import com.maksimowiczm.foodyou.search.domain.history.FoodSearchHistoryRepository
 import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted

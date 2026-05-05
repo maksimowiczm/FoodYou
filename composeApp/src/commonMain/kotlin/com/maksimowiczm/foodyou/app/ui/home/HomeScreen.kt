@@ -60,7 +60,7 @@ import com.maksimowiczm.foodyou.app.ui.home.search.rememberSearchState
 import com.maksimowiczm.foodyou.common.extension.safeRemoveLast
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.koin.compose.viewmodel.koinViewModel
@@ -269,9 +269,9 @@ private fun rememberCollectionFilters(): List<CollectionFilter> {
     return remember(showOpenFoodFacts, showFoodDataCentral) {
         buildList {
             add(FavoriteCollectionFilter)
-            add(YourFoodCollectionFilter())
-            if (showOpenFoodFacts) add(OpenFoodFactsCollectionFilter())
-            if (showFoodDataCentral) add(FoodDataCentralCollectionFilter())
+            add(YourFoodCollectionFilter)
+            if (showOpenFoodFacts) add(OpenFoodFactsCollectionFilter)
+            if (showFoodDataCentral) add(FoodDataCentralCollectionFilter)
         }
     }
 }

@@ -21,8 +21,8 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRe
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.FoodDataCentralRemoteDataSource
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDao
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDatabase
-import com.maksimowiczm.foodyou.foodsearch.domain.FoodSearchPreferencesRepository
-import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
+import com.maksimowiczm.foodyou.search.domain.SearchQuery
+import com.maksimowiczm.foodyou.search.domain.preferences.FoodSearchPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest

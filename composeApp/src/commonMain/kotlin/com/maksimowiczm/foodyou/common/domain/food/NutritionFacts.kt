@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.common.domain.Energy
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
+import kotlinx.serialization.Serializable
 
 /**
  * Comprehensive nutritional information for a food product.
@@ -14,6 +15,7 @@ import com.maksimowiczm.foodyou.common.domain.kilocalories
  *
  * By default, all nutrient values are incomplete (null), indicating missing data.
  */
+@Serializable
 data class NutritionFacts(
     val proteins: NutrientValue<Weight> = NutrientValue.Incomplete(null),
     val carbohydrates: NutrientValue<Weight> = NutrientValue.Incomplete(null),

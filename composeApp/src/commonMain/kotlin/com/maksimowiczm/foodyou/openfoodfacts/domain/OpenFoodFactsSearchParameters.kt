@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.openfoodfacts.domain
 
-import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
+import com.maksimowiczm.foodyou.search.domain.SearchQuery
 
 /**
  * Search parameters for Open Food Facts API.

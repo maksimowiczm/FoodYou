@@ -16,9 +16,7 @@ import com.maksimowiczm.foodyou.common.domain.micrograms
 import com.maksimowiczm.foodyou.common.domain.milligrams
 import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.common.domain.ounces
-import com.maksimowiczm.foodyou.userfood.domain.UserFoodNote
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBarcode
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductBrand
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.flow.first
@@ -29,9 +27,9 @@ internal class ProductFormTransformer(
 ) {
     data class Result(
         val name: FoodName,
-        val brand: UserProductBrand?,
+        val brand: String?,
         val barcode: UserProductBarcode?,
-        val note: UserFoodNote?,
+        val note: String?,
         val imageBytes: ByteArray?,
         val nutritionFacts: NutritionFacts,
         val servingQuantity: AbsoluteQuantity?,
@@ -70,11 +68,7 @@ internal class ProductFormTransformer(
                 fallback = nameStr,
             )
 
-        val brand =
-            form.brand.textFieldState.text
-                .takeIf { it.isNotBlank() }
-                ?.toString()
-                ?.let(::UserProductBrand)
+        val brand = form.brand.textFieldState.text.takeIf { it.isNotBlank() }?.toString()
 
         val barcode =
             form.barcode.textFieldState.text
@@ -82,11 +76,7 @@ internal class ProductFormTransformer(
                 ?.toString()
                 ?.let(::UserProductBarcode)
 
-        val note =
-            form.note.textFieldState.text
-                .takeIf { it.isNotBlank() }
-                ?.toString()
-                ?.let(::UserFoodNote)
+        val note = form.note.textFieldState.text.takeIf { it.isNotBlank() }?.toString()
 
         val servingQuantity = form.servingQuantity.toDouble()
         val packageQuantity = form.packageQuantity.toDouble()

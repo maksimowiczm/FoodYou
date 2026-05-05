@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.common.Plus
 import com.maksimowiczm.foodyou.common.Times
 import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
+import kotlinx.serialization.Serializable
 
 /**
  * Sealed interface representing a nutrient value with completeness tracking.
@@ -19,6 +20,7 @@ import kotlin.jvm.JvmInline
  * - Incomplete + Incomplete = Incomplete (treats null as 0.0)
  * - Multiplication and division preserve completeness status
  */
+@Serializable
 sealed interface NutrientValue<T> where T : Plus<T>, T : Times<T>, T : Div<T> {
     /** The numeric value, or null if unknown. */
     val value: T?
@@ -28,6 +30,7 @@ sealed interface NutrientValue<T> where T : Plus<T>, T : Times<T>, T : Div<T> {
      *
      * @property value The complete numeric value
      */
+    @Serializable
     @JvmInline
     value class Complete<T>(override val value: T) : NutrientValue<T>
         where T : Plus<T>, T : Times<T>, T : Div<T> {
@@ -47,6 +50,7 @@ sealed interface NutrientValue<T> where T : Plus<T>, T : Times<T>, T : Div<T> {
      *
      * @property value The partial numeric value, or null if completely unknown
      */
+    @Serializable
     @JvmInline
     value class Incomplete<T>(override val value: T?) : NutrientValue<T>
         where T : Plus<T>, T : Times<T>, T : Div<T> {

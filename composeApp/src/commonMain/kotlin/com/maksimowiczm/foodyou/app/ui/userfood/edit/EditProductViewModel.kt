@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
-import com.maksimowiczm.foodyou.userfood.application.UserProductService
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductRepository
+import com.maksimowiczm.foodyou.userproduct.application.UserProductService
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +17,6 @@ import kotlinx.coroutines.launch
 
 internal class EditProductViewModel(
     private val userProductService: UserProductService,
-    userProductRepository: UserProductRepository,
     private val productFormTransformer: ProductFormTransformer,
     private val identity: UserProductIdentity,
 ) : ViewModel() {
@@ -29,8 +27,8 @@ internal class EditProductViewModel(
         field = MutableStateFlow(true)
 
     val product =
-        userProductRepository
-            .observe(identity = identity)
+        userProductService
+            .observe(identity)
             .onEach { isLocked.value = false }
             .stateIn(
                 scope = viewModelScope,

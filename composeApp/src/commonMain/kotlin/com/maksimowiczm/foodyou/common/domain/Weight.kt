@@ -3,13 +3,15 @@ package com.maksimowiczm.foodyou.common.domain
 import com.maksimowiczm.foodyou.common.Div
 import com.maksimowiczm.foodyou.common.Plus
 import com.maksimowiczm.foodyou.common.Times
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a weight amount.
  *
  * Internally, weight is always stored in grams and converted at boundaries.
  */
-class Weight private constructor(val grams: Double, val unit: WeightUnit) :
+@Serializable
+class Weight(val grams: Double, val unit: WeightUnit) :
     Comparable<Weight>, Plus<Weight>, Times<Weight>, Div<Weight> {
     fun toDouble(unit: WeightUnit): Double = unit.fromGrams(grams)
 
@@ -66,6 +68,7 @@ class Weight private constructor(val grams: Double, val unit: WeightUnit) :
     }
 }
 
+@Serializable
 enum class WeightUnit {
     Micrograms,
     Milligrams,

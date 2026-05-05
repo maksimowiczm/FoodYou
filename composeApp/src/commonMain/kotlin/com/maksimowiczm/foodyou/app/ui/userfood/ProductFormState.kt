@@ -18,7 +18,7 @@ import com.maksimowiczm.foodyou.common.domain.kilojoules
 import com.maksimowiczm.foodyou.common.domain.micrograms
 import com.maksimowiczm.foodyou.common.domain.milligrams
 import com.maksimowiczm.foodyou.common.domain.ounces
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
+import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import foodyou.app.generated.resources.*
 import io.konform.validation.ifPresent
 import org.jetbrains.compose.resources.stringResource
@@ -219,7 +219,7 @@ internal fun rememberProductForm2State(
         rememberFormField(defaultValue = product?.name?.let(nameSelector::select)) {
             constrain(required) { !it.isNullOrBlank() }
         }
-    val brand = rememberFormField(product?.brand?.value)
+    val brand = rememberFormField(product?.brand)
     val barcode =
         rememberFormField(product?.barcode?.value) {
             ifPresent { constrain(notABarcode) { it.all(Char::isDigit) } }

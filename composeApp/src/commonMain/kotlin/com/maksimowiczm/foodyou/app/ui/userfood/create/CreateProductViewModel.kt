@@ -6,7 +6,7 @@ import com.maksimowiczm.foodyou.app.ui.userfood.ObserveEnergyUnitUseCase
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
-import com.maksimowiczm.foodyou.userfood.application.UserProductService
+import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

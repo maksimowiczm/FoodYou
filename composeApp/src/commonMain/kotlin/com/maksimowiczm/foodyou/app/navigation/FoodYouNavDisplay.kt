@@ -50,7 +50,7 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import kotlin.uuid.Uuid
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable

@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.app.infrastructure.room
 import com.maksimowiczm.foodyou.account.domain.AccountEvent
 import com.maksimowiczm.foodyou.analytics.domain.AnalyticsEvent
 import com.maksimowiczm.foodyou.common.event.DomainEvent
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductEvent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -26,6 +27,8 @@ private val roomEventJson = Json {
         polymorphic(DomainEvent::class) {
             subclassesOfSealed<AnalyticsEvent>()
             subclassesOfSealed<AccountEvent>()
+            subclassesOfSealed<UserProductEvent>()
         }
     }
+    explicitNulls = false
 }

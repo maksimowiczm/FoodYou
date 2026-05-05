@@ -27,8 +27,8 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.common.fold
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProduct
-import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchItem
+import com.maksimowiczm.foodyou.search.domain.SearchResult
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -39,7 +39,7 @@ internal fun UserFoodSearchApp(
     shimmer: Shimmer,
     contentPadding: PaddingValues,
     lazyListState: LazyListState,
-    onUserProduct: (UserProduct) -> Unit,
+    onUserProduct: (UserProductIdentity) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UserFoodSearchViewModel = koinViewModel(),
 ) {
@@ -53,20 +53,16 @@ internal fun UserFoodSearchApp(
                 key =
                     pages.itemKey {
                         when (it) {
-                            is UserFoodSearchItem.Product -> it.product.identity.toString()
+                            is SearchResult.UserProduct -> it.identity.toString()
                         }
                     },
             ) { i ->
                 when (val food = pages[i]) {
                     null -> FoodListItemSkeleton(shimmer)
-                    else ->
+                    is SearchResult.UserProduct ->
                         FoodSearchListItem(
                             food = food,
-                            onClick = {
-                                when (food) {
-                                    is UserFoodSearchItem.Product -> onUserProduct(food.product)
-                                }
-                            },
+                            onClick = { onUserProduct(food.identity) },
                             shimmer = shimmer,
                         )
                 }
@@ -99,25 +95,7 @@ internal fun UserFoodSearchApp(
 
 @Composable
 private fun FoodSearchListItem(
-    food: UserFoodSearchItem,
-    onClick: () -> Unit,
-    shimmer: Shimmer,
-    modifier: Modifier = Modifier,
-) {
-    when (food) {
-        is UserFoodSearchItem.Product ->
-            FoodSearchListItem(
-                food = food.product,
-                onClick = onClick,
-                shimmer = shimmer,
-                modifier = modifier,
-            )
-    }
-}
-
-@Composable
-private fun FoodSearchListItem(
-    food: UserProduct,
+    food: SearchResult.UserProduct,
     onClick: () -> Unit,
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
@@ -150,7 +128,7 @@ private fun FoodSearchListItem(
         remember(food, nameSelector) {
             buildString {
                 append(nameSelector.select(food.name))
-                append(food.brand?.value?.let { " ($it)" } ?: "")
+                append(food.brand?.let { " ($it)" } ?: "")
             }
         }
 

@@ -4,46 +4,33 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
-import com.maksimowiczm.foodyou.foodsearch.domain.SearchQuery
-import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchParameters
-import com.maksimowiczm.foodyou.userfood.domain.search.UserFoodSearchRepository
+import com.maksimowiczm.foodyou.search.domain.SearchQuery
+import com.maksimowiczm.foodyou.search.domain.SearchRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class UserFoodSearchViewModel(
-    private val repository: UserFoodSearchRepository,
-    private val foodNameSelector: FoodNameSelector,
+    private val repository: SearchRepository,
+    foodNameSelector: FoodNameSelector,
 ) : ViewModel() {
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
 
-    private val searchParameters =
-        combine(searchQuery.distinctUntilChanged(), foodNameSelector.observeLanguage()) {
-                query,
-                language ->
-                UserFoodSearchParameters(
-                    query = query,
-                    orderBy = UserFoodSearchParameters.OrderBy.NameAscending,
-                    language = language,
-                )
-            }
-            .shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
-                replay = 1,
-            )
-
     val pages =
-        searchParameters.flatMapLatest { repository.search(it, PAGE_SIZE) }.cachedIn(viewModelScope)
+        combine(searchQuery, foodNameSelector.observeLanguage()) { query, language ->
+                repository.search(query, language)
+            }
+            .flatMapLatest { it }
+            .cachedIn(viewModelScope)
 
     val count =
-        searchParameters
-            .flatMapLatest(repository::count)
+        combine(searchQuery, foodNameSelector.observeLanguage()) { query, language ->
+                repository.count(query, language)
+            }
+            .flatMapLatest { it }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -52,9 +39,5 @@ internal class UserFoodSearchViewModel(
 
     fun search(query: SearchQuery) {
         viewModelScope.launch { searchQuery.emit(query) }
-    }
-
-    private companion object {
-        private const val PAGE_SIZE = 50
     }
 }

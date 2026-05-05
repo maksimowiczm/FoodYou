@@ -4,7 +4,7 @@ package com.maksimowiczm.foodyou.account.domain
 
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.userfood.domain.product.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import kotlin.time.Clock
 
 data class Account(

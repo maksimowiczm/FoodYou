@@ -99,7 +99,7 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals("Test Brand", result.brand?.value)
+        assertEquals("Test Brand", result.brand)
     }
 
     @Test
@@ -125,7 +125,7 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals("Test note", result.note?.value)
+        assertEquals("Test note", result.note)
     }
 
     @Test
@@ -374,9 +374,9 @@ class ProductFormTransformerTest {
         val result = transformer.transform(form)
         advanceUntilIdle()
 
-        assertEquals("Brand", result.brand?.value)
+        assertEquals("Brand", result.brand)
         assertEquals("123456", result.barcode?.value)
-        assertEquals("Note", result.note?.value)
+        assertEquals("Note", result.note)
         assertEquals(AbsoluteQuantity.Weight(100.grams), result.servingQuantity)
         assertEquals(AbsoluteQuantity.Weight(500.grams), result.packageQuantity)
         assertEquals(false, result.isLiquid)
