@@ -1,11 +1,14 @@
 package com.maksimowiczm.foodyou.search.domain
 
+import kotlinx.serialization.Serializable
+
 /**
  * Sealed interface representing different types of food product search queries.
  *
  * Supports various query formats including text search, barcode lookup, and URL parsing for Open
  * Food Facts and FoodData Central.
  */
+@Serializable
 sealed interface SearchQuery {
     /** The raw query string, or null for blank queries. */
     val query: String?
@@ -15,6 +18,7 @@ sealed interface SearchQuery {
      *
      * Used when no search term is provided.
      */
+    @Serializable
     data object Blank : SearchQuery {
         override val query: String? = null
     }
@@ -24,6 +28,7 @@ sealed interface SearchQuery {
      *
      * Guarantees that the query string is non-null.
      */
+    @Serializable
     sealed interface NotBlank : SearchQuery {
         override val query: String
     }
@@ -33,6 +38,7 @@ sealed interface SearchQuery {
      *
      * @property barcode The product barcode
      */
+    @Serializable
     data class Barcode(val barcode: String) : NotBlank {
         override val query: String = barcode
     }
@@ -42,7 +48,7 @@ sealed interface SearchQuery {
      *
      * @property query The search text
      */
-    data class Text(override val query: String) : NotBlank
+    @Serializable data class Text(override val query: String) : NotBlank
 
     /**
      * Search query parsed from an Open Food Facts URL.
@@ -54,6 +60,7 @@ sealed interface SearchQuery {
      * @property barcode The extracted product barcode
      * @throws IllegalStateException if the URL format is invalid
      */
+    @Serializable
     data class OpenFoodFactsUrl(val url: String) : NotBlank {
         override val query: String = url
 
@@ -78,6 +85,7 @@ sealed interface SearchQuery {
      * @property fdcId The extracted FoodData Central ID
      * @throws IllegalStateException if the URL format is invalid
      */
+    @Serializable
     data class FoodDataCentralUrl(val url: String) : NotBlank {
         override val query: String = url
 

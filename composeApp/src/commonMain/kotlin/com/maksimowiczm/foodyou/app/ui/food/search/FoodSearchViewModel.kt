@@ -4,10 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
+import com.maksimowiczm.foodyou.search.application.SearchHistoryService
 import com.maksimowiczm.foodyou.search.domain.SearchQuery
 import com.maksimowiczm.foodyou.search.domain.SearchQueryParser
-import com.maksimowiczm.foodyou.search.domain.history.FoodSearchHistoryRepository
-import kotlin.time.Clock
+import com.maksimowiczm.foodyou.search.domain.recordSearchQuery
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterIsInstance
@@ -22,8 +22,7 @@ import kotlinx.coroutines.flow.stateIn
 internal class FoodSearchViewModel(
     initialQuery: String?,
     private val searchQueryParser: SearchQueryParser,
-    private val searchHistoryRepository: FoodSearchHistoryRepository,
-    private val clock: Clock,
+    private val searchHistoryService: SearchHistoryService,
     appProfileManager: AppProfileManager,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -37,8 +36,8 @@ internal class FoodSearchViewModel(
             .observeAppProfileId()
             .filterNotNull()
             .flatMapLatest { profileId ->
-                searchHistoryRepository.observe(profileId).map { history ->
-                    history.history.map { it.query.query }
+                searchHistoryService.observe(profileId).map { history ->
+                    history.history.map { it.query }
                 }
             }
             .stateIn(
@@ -51,11 +50,9 @@ internal class FoodSearchViewModel(
     init {
         searchQuery
             .filterIsInstance<SearchQuery.NotBlank>()
-            .onEach {
+            .onEach { query ->
                 val profileId = appProfileManager.observeAppProfileId().filterNotNull().first()
-                val history = searchHistoryRepository.observe(profileId).first()
-                history.recordSearchQuery(it, clock)
-                searchHistoryRepository.save(history)
+                searchHistoryService.transact(profileId) { it.recordSearchQuery(query) }
             }
             .launchIn(viewModelScope)
     }
