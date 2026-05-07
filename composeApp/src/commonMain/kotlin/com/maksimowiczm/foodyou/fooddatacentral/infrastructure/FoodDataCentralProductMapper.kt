@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.fooddatacentral.infrastructure
 
 import com.maksimowiczm.foodyou.common.domain.fluidOunces
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.common.domain.ounces
@@ -87,23 +86,16 @@ internal class FoodDataCentralProductMapper {
         with(entity) {
             val servingQuantity = parseServing(servingSize, servingSizeUnit)
             val packageQuantity = parsePackage(packageWeight)
-            val isLiquid =
-                when {
-                    servingQuantity is AbsoluteQuantity.Volume -> true
-                    packageQuantity is AbsoluteQuantity.Volume -> true
-                    else -> false
-                }
 
             FoodDataCentralProduct(
                 identity = FoodDataCentralProductIdentity(fdcId),
-                name = FoodName(english = description, fallback = description),
+                name = description,
                 brand = brandOwner,
                 barcode = gtinUpc,
                 source = "https://fdc.nal.usda.gov/food-details/$fdcId/nutrients",
                 nutritionFacts = nutrientsMapper.toNutritionFats(entity.nutrients),
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
-                isLiquid = isLiquid,
             )
         }
 }

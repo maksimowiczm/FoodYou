@@ -60,7 +60,7 @@ fun FoodDataCentralDetailsScreen(
                     if (name == null) null
                     else
                         buildString {
-                            append(nameSelector.select(name))
+                            append(name)
                             append(brand?.let { " ($it)" } ?: "")
                         }
                 }

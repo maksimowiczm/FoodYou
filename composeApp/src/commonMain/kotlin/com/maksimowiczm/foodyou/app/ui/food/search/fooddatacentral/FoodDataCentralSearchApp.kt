@@ -138,7 +138,7 @@ private fun FoodSearchListItem(
     val headline =
         remember(food, nameSelector) {
             buildString {
-                append(nameSelector.select(food.name))
+                append(food.name)
                 append(food.brand?.let { " ($it)" } ?: "")
             }
         }

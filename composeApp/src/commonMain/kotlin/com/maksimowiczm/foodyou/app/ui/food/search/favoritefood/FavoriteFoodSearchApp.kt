@@ -162,7 +162,7 @@ private fun Any.name(): FoodName =
     when (this) {
         is UserProduct -> name
         is OpenFoodFactsProduct -> name
-        is FoodDataCentralProduct -> name
+        is FoodDataCentralProduct -> FoodName(english = name, fallback = name)
         else -> error("Unknown type ${this::class}")
     }
 
