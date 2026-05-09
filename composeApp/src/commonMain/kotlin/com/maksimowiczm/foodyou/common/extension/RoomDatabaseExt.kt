@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.common.infrastructure.room
+package com.maksimowiczm.foodyou.common.extension
 
 import androidx.room.RoomDatabase
 import androidx.room.TransactionScope

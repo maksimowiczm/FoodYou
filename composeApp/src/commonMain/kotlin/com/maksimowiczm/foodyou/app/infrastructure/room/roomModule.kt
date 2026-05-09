@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.app.infrastructure.room
 import com.maksimowiczm.foodyou.app.infrastructure.room.EventStoreDatabase.Companion.buildDatabase
 import com.maksimowiczm.foodyou.app.infrastructure.room.ReadModelDatabase.Companion.buildDatabase
 import com.maksimowiczm.foodyou.common.domain.EventStore
-import com.maksimowiczm.foodyou.common.infrastructure.room.databaseBuilder
+import com.maksimowiczm.foodyou.common.extension.databaseBuilder
 import com.maksimowiczm.foodyou.search.infrastructure.SearchDatabase
 import org.koin.dsl.bind
 import org.koin.dsl.binds

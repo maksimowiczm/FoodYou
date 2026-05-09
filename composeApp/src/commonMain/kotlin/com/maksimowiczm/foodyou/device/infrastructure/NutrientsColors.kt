@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.device.infrastructure
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.longPreferencesKey
-import com.maksimowiczm.foodyou.common.infrastructure.datastore.set
+import com.maksimowiczm.foodyou.common.extension.set
 import com.maksimowiczm.foodyou.device.domain.NutrientsColors
 
 internal fun MutablePreferences.applyNutrientsColors(

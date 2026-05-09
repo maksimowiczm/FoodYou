@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.search.infrastructure
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsEntity
+import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
 import kotlin.uuid.Uuid
 
 @Entity(tableName = "Search")

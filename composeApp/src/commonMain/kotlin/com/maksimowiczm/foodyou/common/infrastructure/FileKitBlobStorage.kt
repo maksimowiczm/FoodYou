@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.common.infrastructure.filekit
+package com.maksimowiczm.foodyou.common.infrastructure
 
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.BlobStorage

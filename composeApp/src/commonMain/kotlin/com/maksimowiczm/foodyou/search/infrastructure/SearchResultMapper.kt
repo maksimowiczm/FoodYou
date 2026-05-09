@@ -11,8 +11,8 @@ import com.maksimowiczm.foodyou.common.domain.micrograms
 import com.maksimowiczm.foodyou.common.domain.milligrams
 import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.common.domain.ounces
-import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsMapper
 import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnit
+import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsMapper
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity

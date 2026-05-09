@@ -5,8 +5,8 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.common.domain.ounces
-import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsEntity
-import com.maksimowiczm.foodyou.common.infrastructure.food.NutrientsMapper
+import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
+import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsMapper
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.Food

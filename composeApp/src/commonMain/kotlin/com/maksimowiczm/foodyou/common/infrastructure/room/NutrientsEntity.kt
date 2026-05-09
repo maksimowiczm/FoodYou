@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.common.infrastructure.food
+package com.maksimowiczm.foodyou.common.infrastructure.room
 
 data class NutrientsEntity(
     val energy: Double?,

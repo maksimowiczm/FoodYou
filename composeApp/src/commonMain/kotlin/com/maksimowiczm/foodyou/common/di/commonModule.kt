@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.common.di
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.BlobResolver
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
-import com.maksimowiczm.foodyou.common.infrastructure.filekit.FileKitBlobStorage
+import com.maksimowiczm.foodyou.common.infrastructure.FileKitBlobStorage
 import com.maksimowiczm.foodyou.common.infrastructure.systemDetails
 import kotlin.time.Clock
 import org.koin.core.module.dsl.factoryOf
