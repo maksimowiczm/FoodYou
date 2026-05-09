@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.FileKitBlobStorage
 import com.maksimowiczm.foodyou.common.infrastructure.systemDetails
 import kotlin.time.Clock
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.binds
 import org.koin.dsl.module
@@ -18,6 +19,6 @@ val commonModule = module {
     factoryOf(::FileKitBlobStorage).binds(arrayOf(BlobStorage::class, BlobResolver::class))
     single { Logger.Companion }.bind<Logger>()
     single { Clock.System }.bind<Clock>()
-    single { SearchQuery.Barcode.recognizer }
+    single(named(SearchQuery.Barcode::class.qualifiedName!!)) { SearchQuery.Barcode.recognizer }
     factory { SearchQueryParser(getAll()) }
 }

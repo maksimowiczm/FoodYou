@@ -51,5 +51,7 @@ val foodDataCentralModule = module {
 
     factoryOf(::FoodDataCentralSettingsRepositoryImpl).bind<FoodDataCentralSettingsRepository>()
 
-    single { FoodDataCentralUrlSearchQuery.recognizer }
+    single(named(FoodDataCentralUrlSearchQuery::class.qualifiedName!!)) {
+        FoodDataCentralUrlSearchQuery.recognizer
+    }
 }

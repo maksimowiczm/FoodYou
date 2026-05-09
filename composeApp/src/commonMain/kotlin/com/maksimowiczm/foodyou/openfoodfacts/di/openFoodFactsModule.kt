@@ -57,5 +57,7 @@ val openFoodFactsModule = module {
 
     factoryOf(::OpenFoodFactsRepositoryImpl).bind<OpenFoodFactsRepository>()
 
-    single { OpenFoodFactsUrlSearchQuery.recognizer }
+    single(named(OpenFoodFactsUrlSearchQuery::class.qualifiedName!!)) {
+        OpenFoodFactsUrlSearchQuery.recognizer
+    }
 }
