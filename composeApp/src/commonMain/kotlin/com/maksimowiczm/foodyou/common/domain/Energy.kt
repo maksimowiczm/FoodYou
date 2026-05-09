@@ -67,7 +67,6 @@ class Energy(val kilocalories: Double, val unit: EnergyUnit) :
     }
 }
 
-@Serializable
 enum class EnergyUnit {
     Kilocalories,
     Kilojoules;
