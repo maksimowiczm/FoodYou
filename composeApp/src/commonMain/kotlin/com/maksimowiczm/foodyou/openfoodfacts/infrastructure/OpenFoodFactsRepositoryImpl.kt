@@ -12,6 +12,7 @@ import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
@@ -21,7 +22,6 @@ import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFac
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.SearchaliciousRemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase
-import com.maksimowiczm.foodyou.search.domain.SearchQuery
 import com.maksimowiczm.foodyou.search.domain.preferences.FoodSearchPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow

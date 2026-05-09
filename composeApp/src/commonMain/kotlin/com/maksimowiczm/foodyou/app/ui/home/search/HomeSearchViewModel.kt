@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.app.ui.home.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
+import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
+import com.maksimowiczm.foodyou.common.domain.search.SearchQueryParser
 import com.maksimowiczm.foodyou.search.application.SearchHistoryService
-import com.maksimowiczm.foodyou.search.domain.SearchQuery
-import com.maksimowiczm.foodyou.search.domain.SearchQueryParser
 import com.maksimowiczm.foodyou.search.domain.recordSearchQuery
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

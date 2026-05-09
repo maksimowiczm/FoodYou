@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
-import com.maksimowiczm.foodyou.search.domain.SearchQuery
 import com.maksimowiczm.foodyou.search.domain.preferences.FoodSearchPreferencesRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted

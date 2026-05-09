@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -18,7 +19,6 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
-import com.maksimowiczm.foodyou.search.domain.SearchQuery
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity

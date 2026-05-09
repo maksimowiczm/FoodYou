@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.search.domain
 
 import com.maksimowiczm.foodyou.common.clock.staticClock
+import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

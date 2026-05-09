@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.search.domain
+package com.maksimowiczm.foodyou.common.domain.search
 
 import kotlinx.serialization.Serializable
 

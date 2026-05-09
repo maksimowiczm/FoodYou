@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.search.domain
 
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.common.domain.Language
+import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import kotlinx.coroutines.flow.Flow
 

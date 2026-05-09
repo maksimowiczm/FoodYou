@@ -7,7 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.maksimowiczm.foodyou.common.domain.Language
-import com.maksimowiczm.foodyou.search.domain.SearchQuery
+import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.search.domain.SearchRepository
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
