@@ -17,31 +17,20 @@ data class SearchHistory(val history: List<SearchQuery.NotBlank> = emptyList()) 
     }
 }
 
-/**
- * Records a search query if it's a text query.
- *
- * Non-text queries (barcode, URLs) are ignored for history.
- */
+/** Records a search query if it's a text query. */
 fun SearchHistory.recordSearchQuery(
     query: SearchQuery.NotBlank,
     clock: Clock = Clock.System,
 ): List<SearchHistoryEvent> = buildList {
-    when (query) {
-        is SearchQuery.Barcode,
-        is SearchQuery.OpenFoodFactsUrl,
-        is SearchQuery.FoodDataCentralUrl -> return@buildList
-
-        is SearchQuery.Text -> Unit
-    }
-
-    if (history.firstOrNull() != query) add(SearchQueryRecordedEvent(query, clock.now()))
+    if (query is SearchQuery.Text && history.firstOrNull() != query)
+        add(SearchQueryRecordedEvent(query, clock.now()))
 }
 
 /** Applies a [SearchHistoryEvent] and returns a new immutable [SearchHistory] instance. */
 fun SearchHistory.apply(event: SearchHistoryEvent): SearchHistory =
     when (event) {
         is SearchQueryRecordedEvent -> {
-            val newHistory = listOf(event.query) + history.filterNot { it == event }
+            val newHistory = listOf(event.query) + history.filterNot { it == event.query }
             copy(history = newHistory.take(MAX_HISTORY_SIZE))
         }
     }

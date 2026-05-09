@@ -8,6 +8,7 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.extension.immediateTransaction
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsV2RemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.SearchaliciousRemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase
@@ -47,11 +48,12 @@ internal class OpenFoodFactsRemoteMediator(
                     LoadType.APPEND ->
                         when (query) {
                             is SearchQuery.Barcode,
-                            is SearchQuery.OpenFoodFactsUrl -> {
+                            is OpenFoodFactsUrlSearchQuery -> {
                                 val barcode =
                                     when (query) {
                                         is SearchQuery.Barcode -> query.barcode
-                                        is SearchQuery.OpenFoodFactsUrl -> query.barcode
+                                        is OpenFoodFactsUrlSearchQuery -> query.barcode
+                                        else -> error("Unreachable")
                                     }
 
                                 val existingProduct = dao.observeCountByBarcode(barcode).first()
@@ -71,14 +73,11 @@ internal class OpenFoodFactsRemoteMediator(
                                 return MediatorResult.Success(endOfPaginationReached = true)
                             }
 
-                            is SearchQuery.Text -> {
+                            is SearchQuery.NotBlank -> {
                                 val count = dao.getPagingKeyCountByQuery(query.query)
                                 val nextPage = (count / pageSize) + 1
                                 nextPage
                             }
-
-                            is SearchQuery.FoodDataCentralUrl ->
-                                return MediatorResult.Success(endOfPaginationReached = true)
                         }
                 }
 

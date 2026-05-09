@@ -8,6 +8,7 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.extension.immediateTransaction
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.FoodDataCentralRemoteDataSource
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDatabase
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralPagingKeyEntity
@@ -45,17 +46,7 @@ internal class FoodDataCentralRemoteMediator(
 
                     LoadType.APPEND ->
                         when (query) {
-                            is SearchQuery.Text,
-                            is SearchQuery.Barcode -> {
-                                val count = dao.getPagingKeyCountByQuery(query.query)
-                                val nextPage = (count / pageSize) + 1
-                                nextPage
-                            }
-
-                            is SearchQuery.OpenFoodFactsUrl ->
-                                return MediatorResult.Success(endOfPaginationReached = true)
-
-                            is SearchQuery.FoodDataCentralUrl -> {
+                            is FoodDataCentralUrlSearchQuery -> {
                                 val existingProduct = dao.observeCountByFdcId(query.fdcId).first()
                                 if (existingProduct > 0) {
                                     return MediatorResult.Success(endOfPaginationReached = true)
@@ -71,6 +62,12 @@ internal class FoodDataCentralRemoteMediator(
                                 val product = mapper.foodDataCentralProductEntity(response)
                                 dao.upsertProduct(product)
                                 return MediatorResult.Success(endOfPaginationReached = true)
+                            }
+
+                            is SearchQuery.NotBlank -> {
+                                val count = dao.getPagingKeyCountByQuery(query.query)
+                                val nextPage = (count / pageSize) + 1
+                                nextPage
                             }
                         }
                 }

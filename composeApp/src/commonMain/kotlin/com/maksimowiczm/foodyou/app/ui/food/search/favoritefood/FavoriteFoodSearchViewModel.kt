@@ -16,9 +16,11 @@ import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
@@ -81,17 +83,18 @@ internal class FavoriteFoodSearchViewModel(
                     is SearchQuery.Barcode ->
                         list.filter { it.barcode()?.contains(query.barcode) ?: false }
 
-                    is SearchQuery.FoodDataCentralUrl ->
+                    is FoodDataCentralUrlSearchQuery ->
                         list.filterIsInstance<RemoteData.Success<FoodDataCentralProduct>>().filter {
                             it.value.identity.fdcId == query.fdcId
                         }
 
-                    is SearchQuery.OpenFoodFactsUrl ->
+                    is OpenFoodFactsUrlSearchQuery ->
                         list.filterIsInstance<RemoteData.Success<OpenFoodFactsProduct>>().filter {
                             it.value.identity.barcode == query.barcode
                         }
 
-                    is SearchQuery.Text -> list.filter { it.name()?.contains(query.query) ?: false }
+                    is SearchQuery.NotBlank ->
+                        list.filter { it.name()?.contains(query.query) ?: false }
                 }.sortedWith { a, b ->
                     val nameA =
                         a.name()?.let(nameSelector::select) ?: return@sortedWith Int.MAX_VALUE

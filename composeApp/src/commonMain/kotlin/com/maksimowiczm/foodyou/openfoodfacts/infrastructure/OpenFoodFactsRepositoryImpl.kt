@@ -1,8 +1,6 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure
 
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -18,6 +16,7 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsV2RemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.SearchaliciousRemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDao
@@ -29,7 +28,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 internal class OpenFoodFactsRepositoryImpl(
@@ -49,29 +47,12 @@ internal class OpenFoodFactsRepositoryImpl(
     ): Flow<PagingData<OpenFoodFactsProduct>> {
         val config = PagingConfig(pageSize = pageSize)
 
-        if (parameters.query is SearchQuery.FoodDataCentralUrl) {
-            return flowOf(
-                PagingData.Companion.empty(
-                    sourceLoadStates =
-                        LoadStates(
-                            LoadState.NotLoading(true),
-                            LoadState.NotLoading(true),
-                            LoadState.NotLoading(true),
-                        )
-                )
-            )
-        }
-
         val factory = {
-            when (parameters.query) {
-                SearchQuery.Blank -> dao.getPagingSource()
-                is SearchQuery.Barcode -> dao.getPagingSourceByBarcode(parameters.query.barcode)
-
-                is SearchQuery.Text -> dao.getPagingSourceByQuery(parameters.query.query)
-                is SearchQuery.OpenFoodFactsUrl ->
-                    dao.getPagingSourceByBarcode(parameters.query.barcode)
-
-                is SearchQuery.FoodDataCentralUrl -> error("Unreachable")
+            when (val query = parameters.query) {
+                is OpenFoodFactsUrlSearchQuery -> dao.getPagingSourceByBarcode(query.barcode)
+                is SearchQuery.Barcode -> dao.getPagingSourceByBarcode(query.barcode)
+                is SearchQuery.Blank -> dao.getPagingSource()
+                is SearchQuery.NotBlank -> dao.getPagingSourceByQuery(query.query)
             }
         }
 
@@ -96,12 +77,11 @@ internal class OpenFoodFactsRepositoryImpl(
     }
 
     override fun count(parameters: OpenFoodFactsSearchParameters): Flow<Int> {
-        return when (parameters.query) {
+        return when (val query = parameters.query) {
+            is OpenFoodFactsUrlSearchQuery -> dao.observeCountByBarcode(query.barcode)
+            is SearchQuery.Barcode -> dao.observeCountByBarcode(query.barcode)
             is SearchQuery.Blank -> dao.observeCount()
-            is SearchQuery.Barcode -> dao.observeCountByBarcode(parameters.query.barcode)
-            is SearchQuery.Text -> dao.observeCountByQuery(parameters.query.query)
-            is SearchQuery.OpenFoodFactsUrl -> dao.observeCountByBarcode(parameters.query.barcode)
-            is SearchQuery.FoodDataCentralUrl -> flowOf(0)
+            is SearchQuery.NotBlank -> dao.observeCountByQuery(query.query)
         }
     }
 

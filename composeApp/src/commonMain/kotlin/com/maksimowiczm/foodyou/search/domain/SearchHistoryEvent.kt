@@ -10,6 +10,6 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 
 @Serializable
 data class SearchQueryRecordedEvent(
-    val query: SearchQuery.NotBlank,
+    val query: SearchQuery.Text,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : SearchHistoryEvent

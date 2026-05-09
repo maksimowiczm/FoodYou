@@ -1,16 +1,10 @@
 package com.maksimowiczm.foodyou.common.domain.search
 
-/**
- * Parser for converting raw search input into typed SearchQuery instances.
- *
- * Automatically detects the query type based on the input format:
- * - Blank/null input → SearchQuery.Blank
- * - All digits → SearchQuery.Barcode
- * - Open Food Facts URL → SearchQuery.OpenFoodFactsUrl
- * - FoodData Central URL → SearchQuery.FoodDataCentralUrl
- * - Everything else → SearchQuery.Text
- */
-class SearchQueryParser {
+/** Parser for converting raw search input into typed SearchQuery instances. */
+class SearchQueryParser(private val recognizers: List<SearchQueryRecognizer>) {
+
+    constructor(vararg recognizer: SearchQueryRecognizer) : this(recognizer.asList())
+
     /**
      * Parses a raw query string into a typed SearchQuery.
      *
@@ -19,25 +13,15 @@ class SearchQueryParser {
      * @param query The raw search input from the user
      * @return A typed SearchQuery instance based on the detected format
      */
-    fun parse(query: String?): SearchQuery = internalParse(query?.trim())
-
-    private fun internalParse(query: String?): SearchQuery {
-        when {
-            query.isNullOrBlank() -> return SearchQuery.Blank
-            query.all(Char::isDigit) -> return SearchQuery.Barcode(query)
-            else -> {
-                val openFoodFactsMatch = SearchQuery.OpenFoodFactsUrl.regex.find(query)
-                if (openFoodFactsMatch != null) {
-                    return SearchQuery.OpenFoodFactsUrl(openFoodFactsMatch.value)
-                }
-
-                val foodDataCentralMatch = SearchQuery.FoodDataCentralUrl.regex.find(query)
-                if (foodDataCentralMatch != null) {
-                    return SearchQuery.FoodDataCentralUrl(foodDataCentralMatch.value)
-                }
-
-                return SearchQuery.Text(query)
-            }
-        }
+    fun parse(query: String?): SearchQuery {
+        if (query.isNullOrBlank()) return SearchQuery.Blank
+        val trimmed = query.trim()
+        return recognizers.firstNotNullOfOrNull { it.recognize(trimmed) } ?: fallbackParse(trimmed)
     }
+
+    private fun fallbackParse(query: String?) =
+        when {
+            query.isNullOrBlank() -> SearchQuery.Blank
+            else -> SearchQuery.Text(query)
+        }
 }

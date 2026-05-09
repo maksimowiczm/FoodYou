@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.common.di
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.BlobResolver
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
+import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.domain.search.SearchQueryParser
 import com.maksimowiczm.foodyou.common.infrastructure.FileKitBlobStorage
 import com.maksimowiczm.foodyou.common.infrastructure.systemDetails
@@ -17,5 +18,6 @@ val commonModule = module {
     factoryOf(::FileKitBlobStorage).binds(arrayOf(BlobStorage::class, BlobResolver::class))
     single { Logger.Companion }.bind<Logger>()
     single { Clock.System }.bind<Clock>()
-    factoryOf(::SearchQueryParser)
+    single { SearchQuery.Barcode.recognizer }
+    factory { SearchQueryParser(getAll()) }
 }
