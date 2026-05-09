@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 
 @Database(
-    entities = [RoomStoredEventEntity::class],
+    entities = [DomainEventEntity::class],
     version = EventStoreDatabase.VERSION,
     exportSchema = false,
 )

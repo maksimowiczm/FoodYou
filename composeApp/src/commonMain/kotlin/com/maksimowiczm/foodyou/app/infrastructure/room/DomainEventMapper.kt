@@ -10,12 +10,12 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
-internal object RoomStoredEventMapper {
-    fun toDomainEvent(entity: RoomStoredEventEntity): DomainEvent =
+internal object DomainEventMapper {
+    fun toDomainEvent(entity: DomainEventEntity): DomainEvent =
         roomEventJson.decodeFromString(entity.payloadJson)
 
-    fun toRoomStoredEventEntity(event: DomainEvent, stream: String): RoomStoredEventEntity =
-        RoomStoredEventEntity(
+    fun toRoomStoredEventEntity(event: DomainEvent, stream: String): DomainEventEntity =
+        DomainEventEntity(
             eventStream = stream,
             payloadJson = roomEventJson.encodeToString(event),
             occurredAtEpochMs = event.timestamp.toEpochMilliseconds(),

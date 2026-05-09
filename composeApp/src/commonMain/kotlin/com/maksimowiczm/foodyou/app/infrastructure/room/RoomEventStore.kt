@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class RoomEventStore(private val eventStoreDao: EventStoreDao) : EventStore {
-    private val mapper = RoomStoredEventMapper
+    private val mapper = DomainEventMapper
 
     override suspend fun load(stream: String): Iterable<DomainEvent> =
         eventStoreDao.getAllByStream(stream).map(mapper::toDomainEvent)
