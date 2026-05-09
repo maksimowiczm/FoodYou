@@ -6,7 +6,6 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
-import com.maksimowiczm.foodyou.common.extension.immediateTransaction
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsV2RemoteDataSource
@@ -21,7 +20,7 @@ import kotlinx.coroutines.flow.first
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediator(
     private val query: SearchQuery.NotBlank,
-    private val database: OpenFoodFactsDatabase,
+    database: OpenFoodFactsDatabase,
     private val search: SearchaliciousRemoteDataSource,
     private val apiV2: OpenFoodFactsV2RemoteDataSource,
     private val mapper: OpenFoodFactsProductMapper,
@@ -90,10 +89,7 @@ internal class OpenFoodFactsRemoteMediator(
                 OpenFoodFactsPagingKeyEntity(queryString = query.query, productBarcode = it.barcode)
             }
 
-            database.immediateTransaction {
-                dao.upsertProducts(entities)
-                dao.insertPagingKeys(pagingKeys)
-            }
+            dao.insertProductsWithPagingKeys(entities, pagingKeys)
 
             return MediatorResult.Success(response.hits.size < response.pageSize)
         } catch (e: Exception) {

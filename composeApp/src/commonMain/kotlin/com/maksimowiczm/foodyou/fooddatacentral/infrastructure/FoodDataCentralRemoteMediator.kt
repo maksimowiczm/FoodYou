@@ -6,7 +6,6 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
-import com.maksimowiczm.foodyou.common.extension.immediateTransaction
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.FoodDataCentralRemoteDataSource
@@ -87,10 +86,7 @@ internal class FoodDataCentralRemoteMediator(
                 FoodDataCentralPagingKeyEntity(queryString = query.query, fdcId = it.fdcId)
             }
 
-            database.immediateTransaction {
-                dao.upsertProducts(entities)
-                dao.insertPagingKeys(pagingKeys)
-            }
+            dao.insertProductsWithPagingKeys(entities, pagingKeys)
 
             return MediatorResult.Success(response.foods.size < pageSize)
         } catch (e: Exception) {

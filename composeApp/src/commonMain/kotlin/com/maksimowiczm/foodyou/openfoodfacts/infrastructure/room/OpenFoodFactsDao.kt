@@ -5,11 +5,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal interface OpenFoodFactsDao {
+internal abstract class OpenFoodFactsDao {
     @Query(
         """
         SELECT p.*
@@ -20,7 +21,9 @@ internal interface OpenFoodFactsDao {
         ORDER BY MIN(pk.id) ASC
         """
     )
-    fun getPagingSourceByQuery(query: String): PagingSource<Int, OpenFoodFactsProductEntity>
+    abstract fun getPagingSourceByQuery(
+        query: String
+    ): PagingSource<Int, OpenFoodFactsProductEntity>
 
     @Query(
         """
@@ -30,7 +33,7 @@ internal interface OpenFoodFactsDao {
         WHERE pk.queryString = :query
         """
     )
-    fun observeCountByQuery(query: String): Flow<Int>
+    abstract fun observeCountByQuery(query: String): Flow<Int>
 
     @Query(
         """
@@ -39,7 +42,7 @@ internal interface OpenFoodFactsDao {
         WHERE queryString = :query
         """
     )
-    suspend fun getPagingKeyCountByQuery(query: String): Int
+    abstract suspend fun getPagingKeyCountByQuery(query: String): Int
 
     @Query(
         """
@@ -48,7 +51,7 @@ internal interface OpenFoodFactsDao {
         GROUP BY p.barcode
         """
     )
-    fun getPagingSource(): PagingSource<Int, OpenFoodFactsProductEntity>
+    abstract fun getPagingSource(): PagingSource<Int, OpenFoodFactsProductEntity>
 
     @Query(
         """
@@ -56,7 +59,7 @@ internal interface OpenFoodFactsDao {
         FROM OpenFoodFactsProduct
         """
     )
-    fun observeCount(): Flow<Int>
+    abstract fun observeCount(): Flow<Int>
 
     @Query(
         """
@@ -66,7 +69,9 @@ internal interface OpenFoodFactsDao {
         LIMIT 1
         """
     )
-    fun getPagingSourceByBarcode(barcode: String): PagingSource<Int, OpenFoodFactsProductEntity>
+    abstract fun getPagingSourceByBarcode(
+        barcode: String
+    ): PagingSource<Int, OpenFoodFactsProductEntity>
 
     @Query(
         """
@@ -76,14 +81,24 @@ internal interface OpenFoodFactsDao {
         LIMIT 1
         """
     )
-    fun observeCountByBarcode(barcode: String): Flow<Int>
+    abstract fun observeCountByBarcode(barcode: String): Flow<Int>
 
-    @Upsert suspend fun upsertProducts(products: List<OpenFoodFactsProductEntity>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract suspend fun insertProducts(products: List<OpenFoodFactsProductEntity>)
 
-    @Upsert suspend fun upsertProduct(product: OpenFoodFactsProductEntity)
+    @Upsert abstract suspend fun upsertProduct(product: OpenFoodFactsProductEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPagingKeys(keys: List<OpenFoodFactsPagingKeyEntity>)
+    protected abstract suspend fun insertPagingKeys(keys: List<OpenFoodFactsPagingKeyEntity>)
+
+    @Transaction
+    open suspend fun insertProductsWithPagingKeys(
+        products: List<OpenFoodFactsProductEntity>,
+        keys: List<OpenFoodFactsPagingKeyEntity>,
+    ) {
+        insertProducts(products)
+        insertPagingKeys(keys)
+    }
 
     @Query(
         """
@@ -93,5 +108,5 @@ internal interface OpenFoodFactsDao {
         LIMIT 1
         """
     )
-    fun observe(barcode: String): Flow<OpenFoodFactsProductEntity?>
+    abstract fun observe(barcode: String): Flow<OpenFoodFactsProductEntity?>
 }

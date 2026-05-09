@@ -5,11 +5,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal interface FoodDataCentralDao {
+internal abstract class FoodDataCentralDao {
     @Query(
         """
         SELECT p.*
@@ -20,7 +21,9 @@ internal interface FoodDataCentralDao {
         ORDER BY MIN(pk.id) ASC
         """
     )
-    fun getPagingSourceByQuery(query: String): PagingSource<Int, FoodDataCentralProductEntity>
+    abstract fun getPagingSourceByQuery(
+        query: String
+    ): PagingSource<Int, FoodDataCentralProductEntity>
 
     @Query(
         """
@@ -30,7 +33,7 @@ internal interface FoodDataCentralDao {
         WHERE pk.queryString = :query
         """
     )
-    fun observeCountByQuery(query: String): Flow<Int>
+    abstract fun observeCountByQuery(query: String): Flow<Int>
 
     @Query(
         """
@@ -39,7 +42,7 @@ internal interface FoodDataCentralDao {
         WHERE queryString = :query
         """
     )
-    suspend fun getPagingKeyCountByQuery(query: String): Int
+    abstract suspend fun getPagingKeyCountByQuery(query: String): Int
 
     @Query(
         """
@@ -48,7 +51,7 @@ internal interface FoodDataCentralDao {
         GROUP BY p.fdcId
         """
     )
-    fun getPagingSource(): PagingSource<Int, FoodDataCentralProductEntity>
+    abstract fun getPagingSource(): PagingSource<Int, FoodDataCentralProductEntity>
 
     @Query(
         """
@@ -56,7 +59,7 @@ internal interface FoodDataCentralDao {
         FROM FoodDataCentralProduct
         """
     )
-    fun observeCount(): Flow<Int>
+    abstract fun observeCount(): Flow<Int>
 
     @Query(
         """
@@ -66,7 +69,9 @@ internal interface FoodDataCentralDao {
         LIMIT 1
         """
     )
-    fun getPagingSourceByBarcode(barcode: String): PagingSource<Int, FoodDataCentralProductEntity>
+    abstract fun getPagingSourceByBarcode(
+        barcode: String
+    ): PagingSource<Int, FoodDataCentralProductEntity>
 
     @Query(
         """
@@ -76,7 +81,7 @@ internal interface FoodDataCentralDao {
         LIMIT 1
         """
     )
-    fun observeCountByBarcode(barcode: String): Flow<Int>
+    abstract fun observeCountByBarcode(barcode: String): Flow<Int>
 
     @Query(
         """
@@ -85,7 +90,7 @@ internal interface FoodDataCentralDao {
         WHERE fdcId = :fdcId
         """
     )
-    fun getPagingSourceByFdcId(fdcId: Int): PagingSource<Int, FoodDataCentralProductEntity>
+    abstract fun getPagingSourceByFdcId(fdcId: Int): PagingSource<Int, FoodDataCentralProductEntity>
 
     @Query(
         """
@@ -94,14 +99,24 @@ internal interface FoodDataCentralDao {
         WHERE fdcId = :fdcId
         """
     )
-    fun observeCountByFdcId(fdcId: Int): Flow<Int>
-
-    @Upsert suspend fun upsertProducts(products: List<FoodDataCentralProductEntity>)
-
-    @Upsert suspend fun upsertProduct(product: FoodDataCentralProductEntity)
+    abstract fun observeCountByFdcId(fdcId: Int): Flow<Int>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertPagingKeys(keys: List<FoodDataCentralPagingKeyEntity>)
+    protected abstract suspend fun insertProducts(products: List<FoodDataCentralProductEntity>)
+
+    @Upsert abstract suspend fun upsertProduct(product: FoodDataCentralProductEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    protected abstract suspend fun insertPagingKeys(keys: List<FoodDataCentralPagingKeyEntity>)
+
+    @Transaction
+    open suspend fun insertProductsWithPagingKeys(
+        products: List<FoodDataCentralProductEntity>,
+        keys: List<FoodDataCentralPagingKeyEntity>,
+    ) {
+        insertProducts(products)
+        insertPagingKeys(keys)
+    }
 
     @Query(
         """
@@ -110,5 +125,5 @@ internal interface FoodDataCentralDao {
         WHERE fdcId = :fdcId
         """
     )
-    fun observe(fdcId: Int): Flow<FoodDataCentralProductEntity?>
+    abstract fun observe(fdcId: Int): Flow<FoodDataCentralProductEntity?>
 }
