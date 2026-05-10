@@ -1,34 +1,55 @@
 package com.maksimowiczm.foodyou.app.ui.personalization
 
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.Bolt
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
-import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedListItem
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
+import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter.stringResource
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -47,7 +68,39 @@ fun PersonalizationScreen(
     val secureScreen by viewModel.secureScreen.collectAsStateWithLifecycle()
     val energyFormat by viewModel.energyFormat.collectAsStateWithLifecycle()
 
+    PersonalizationScreen(
+        secureScreen = secureScreen,
+        energyFormat = energyFormat,
+        onBack = onBack,
+        onHome = onHome,
+        onNutritionFacts = onNutritionFacts,
+        onColors = onColors,
+        onUpdateEnergyUnit = viewModel::updateEnergyUnit,
+        onUpdateSecureScreen = viewModel::updateSecureScreen,
+        modifier = modifier,
+    )
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun PersonalizationScreen(
+    secureScreen: Boolean,
+    energyFormat: EnergyUnit,
+    onBack: () -> Unit,
+    onHome: () -> Unit,
+    onNutritionFacts: () -> Unit,
+    onColors: () -> Unit,
+    onUpdateEnergyUnit: (EnergyUnit) -> Unit,
+    onUpdateSecureScreen: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    var energyExpanded by rememberSaveable { mutableStateOf(false) }
+    val expandedEdges =
+        animateDpAsState(
+            targetValue = if (energyExpanded) 16.dp else 4.dp,
+            animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+        )
 
     Scaffold(
         modifier = modifier,
@@ -60,111 +113,221 @@ fun PersonalizationScreen(
             )
         },
     ) { paddingValues ->
+        val colors =
+            ListItemDefaults.segmentedColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            )
+
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues.add(bottom = 8.dp),
+            contentPadding = paddingValues.add(8.dp),
         ) {
             item {
-                ListItem(
-                    headlineContent = { Text(stringResource(Res.string.headline_home)) },
-                    modifier = Modifier.clickable { onHome() },
-                    supportingContent = {
-                        Text(stringResource(Res.string.description_home_settings))
-                    },
-                    leadingContent = {
-                        Icon(imageVector = Icons.Outlined.Home, contentDescription = null)
-                    },
-                )
-            }
-            item {
-                ListItem(
-                    headlineContent = { Text(stringResource(Res.string.headline_nutrition_facts)) },
-                    modifier = Modifier.clickable { onNutritionFacts() },
-                    supportingContent = {
-                        Text(
-                            stringResource(Res.string.description_personalize_nutrition_facts_short)
-                        )
-                    },
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.List,
-                            contentDescription = null,
-                        )
-                    },
-                )
-            }
-            item {
-                val suffix =
-                    when (energyFormat) {
-                        EnergyUnit.Kilocalories -> stringResource(Res.string.unit_kcal)
-                        EnergyUnit.Kilojoules -> stringResource(Res.string.unit_kilojoules)
-                    }
-                var expanded by rememberSaveable { mutableStateOf(false) }
-
-                val menu =
-                    @Composable {
-                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(Res.string.unit_kcal)) },
-                                onClick = {
-                                    viewModel.updateEnergyUnit(EnergyUnit.Kilocalories)
-                                    expanded = false
-                                },
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    modifier =
+                        Modifier.graphicsLayer {
+                            val edges = expandedEdges.value
+                            shape =
+                                RoundedCornerShape(
+                                    topStart = 16.dp,
+                                    topEnd = 16.dp,
+                                    bottomStart = edges,
+                                    bottomEnd = edges,
+                                )
+                            clip = true
+                        },
+                ) {
+                    SegmentedListItem(
+                        onClick = onHome,
+                        shapes = ListItemDefaults.shapes(),
+                        colors = colors,
+                        leadingContent = {
+                            Icon(imageVector = Icons.Outlined.Home, contentDescription = null)
+                        },
+                        supportingContent = {
+                            Text(stringResource(Res.string.description_home_settings))
+                        },
+                        content = { Text(stringResource(Res.string.headline_home)) },
+                    )
+                    SegmentedListItem(
+                        onClick = onNutritionFacts,
+                        shapes = ListItemDefaults.shapes(),
+                        colors = colors,
+                        leadingContent = {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.List,
+                                contentDescription = null,
                             )
-                            DropdownMenuItem(
-                                text = { Text(stringResource(Res.string.unit_kilojoules)) },
-                                onClick = {
-                                    viewModel.updateEnergyUnit(EnergyUnit.Kilojoules)
-                                    expanded = false
-                                },
-                            )
-                        }
-                    }
-                ListItem(
-                    headlineContent = { Text(stringResource(Res.string.headline_energy_unit)) },
-                    modifier = Modifier.clickable { expanded = true },
-                    supportingContent = {
-                        Text(stringResource(Res.string.description_energy_unit))
-                    },
-                    leadingContent = {
-                        Icon(imageVector = Icons.Outlined.Bolt, contentDescription = null)
-                    },
-                    trailingContent = {
-                        Box {
+                        },
+                        supportingContent = {
                             Text(
-                                text = suffix,
-                                modifier = Modifier.padding(horizontal = 8.dp),
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.bodyMedium,
+                                stringResource(
+                                    Res.string.description_personalize_nutrition_facts_short
+                                )
                             )
-                            menu()
-                        }
-                    },
-                )
+                        },
+                        content = { Text(stringResource(Res.string.headline_nutrition_facts)) },
+                    )
+                }
             }
             item {
-                ListItem(
-                    headlineContent = { Text(stringResource(Res.string.headline_colors)) },
-                    modifier = Modifier.clickable { onColors() },
-                    supportingContent = { Text(stringResource(Res.string.description_colors)) },
-                    leadingContent = {
-                        Icon(imageVector = Icons.Outlined.Palette, contentDescription = null)
-                    },
+                val spacerHeight by
+                    animateDpAsState(
+                        targetValue = if (energyExpanded) 16.dp else 2.dp,
+                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+                    )
+                Spacer(Modifier.height(spacerHeight))
+                EnergyUnitSection(
+                    expanded = energyExpanded,
+                    onExpandedChange = { energyExpanded = it },
+                    energyUnit = energyFormat,
+                    onUpdateEnergyUnit = onUpdateEnergyUnit,
+                    colors = colors,
+                    modifier =
+                        Modifier.graphicsLayer {
+                            val edges = expandedEdges.value
+                            shape = RoundedCornerShape(edges)
+                            clip = true
+                        },
                 )
+                Spacer(Modifier.height(spacerHeight))
             }
             item {
-                ListItem(
-                    headlineContent = { Text(stringResource(Res.string.headline_secure_screen)) },
-                    modifier = Modifier.clickable { viewModel.updateSecureScreen(!secureScreen) },
-                    supportingContent = {
-                        Text(stringResource(Res.string.action_prevent_screen_capture))
-                    },
-                    leadingContent = {
-                        Icon(imageVector = Icons.Outlined.Lock, contentDescription = null)
-                    },
-                    trailingContent = { Switch(checked = secureScreen, onCheckedChange = null) },
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    modifier =
+                        Modifier.graphicsLayer {
+                            val edges = expandedEdges.value
+                            shape =
+                                RoundedCornerShape(
+                                    topStart = edges,
+                                    topEnd = edges,
+                                    bottomEnd = 16.dp,
+                                    bottomStart = 16.dp,
+                                )
+                            clip = true
+                        },
+                ) {
+                    SegmentedListItem(
+                        onClick = onColors,
+                        shapes = ListItemDefaults.shapes(),
+                        colors = colors,
+                        leadingContent = {
+                            Icon(imageVector = Icons.Outlined.Palette, contentDescription = null)
+                        },
+                        supportingContent = { Text(stringResource(Res.string.description_colors)) },
+                        content = { Text(stringResource(Res.string.headline_colors)) },
+                    )
+                    SegmentedListItem(
+                        checked = secureScreen,
+                        onCheckedChange = { onUpdateSecureScreen(!secureScreen) },
+                        shapes = ListItemDefaults.shapes(),
+                        colors = colors,
+                        leadingContent = {
+                            Icon(imageVector = Icons.Outlined.Lock, contentDescription = null)
+                        },
+                        supportingContent = {
+                            Text(stringResource(Res.string.action_prevent_screen_capture))
+                        },
+                        trailingContent = {
+                            Switch(checked = secureScreen, onCheckedChange = null)
+                        },
+                        verticalAlignment = Alignment.CenterVertically,
+                        content = { Text(stringResource(Res.string.headline_secure_screen)) },
+                    )
+                }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun EnergyUnitSection(
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    energyUnit: EnergyUnit,
+    onUpdateEnergyUnit: (EnergyUnit) -> Unit,
+    colors: ListItemColors,
+    modifier: Modifier = Modifier,
+) {
+    val transition = updateTransition(expanded, label = "EnergyExpanded")
+
+    Column(modifier) {
+        SegmentedListItem(
+            onClick = { onExpandedChange(!expanded) },
+            shapes = ListItemDefaults.shapes(),
+            colors = colors,
+            leadingContent = { Icon(Icons.Outlined.Bolt, contentDescription = null) },
+            supportingContent = {
+                transition.Crossfade { isExpanded ->
+                    if (isExpanded) Text(stringResource(Res.string.description_energy_unit))
+                    else
+                        Text(
+                            text = energyUnit.stringResource(),
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                }
+            },
+            trailingContent = {
+                val containerColor by
+                    animateColorAsState(
+                        if (expanded) MaterialTheme.colorScheme.surfaceContainer
+                        else MaterialTheme.colorScheme.surface
+                    )
+                val rotation by animateFloatAsState(if (expanded) 180f else 0f)
+                Surface(
+                    color = containerColor,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    shape = CircleShape,
+                ) {
+                    Box(
+                        modifier = Modifier.width(32.dp).height(40.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.KeyboardArrowDown,
+                            contentDescription = null,
+                            modifier = Modifier.graphicsLayer { rotationZ = rotation },
+                        )
+                    }
+                }
+            },
+            content = { Text(stringResource(Res.string.headline_energy_unit)) },
+        )
+        transition.AnimatedVisibility(visible = { it }, modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                EnergyUnit.entries.forEach { unit ->
+                    SegmentedListItem(
+                        onClick = { onUpdateEnergyUnit(unit) },
+                        selected = energyUnit == unit,
+                        shapes = ListItemDefaults.shapes(),
+                        colors = colors,
+                        content = { Text(unit.stringResource()) },
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PersonalizationScreenPreview() {
+    PreviewFoodYouTheme {
+        PersonalizationScreen(
+            secureScreen = false,
+            energyFormat = EnergyUnit.Kilocalories,
+            onBack = {},
+            onHome = {},
+            onNutritionFacts = {},
+            onColors = {},
+            onUpdateEnergyUnit = {},
+            onUpdateSecureScreen = {},
+        )
     }
 }
