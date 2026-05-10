@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.common.component
 
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -17,10 +18,16 @@ fun ResetToDefaultDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        confirmButton = { TextButton(onConfirm) { Text(stringResource(Res.string.action_reset)) } },
+        confirmButton = {
+            TextButton(onClick = onConfirm, shapes = ButtonDefaults.shapes()) {
+                Text(stringResource(Res.string.action_reset))
+            }
+        },
         modifier = modifier,
         dismissButton = {
-            TextButton(onDismissRequest) { Text(stringResource(Res.string.action_cancel)) }
+            TextButton(onClick = onDismissRequest, shapes = ButtonDefaults.shapes()) {
+                Text(stringResource(Res.string.action_cancel))
+            }
         },
         title = { Text(stringResource(Res.string.headline_reset_to_default)) },
         text = text,
