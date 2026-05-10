@@ -1,23 +1,24 @@
 package com.maksimowiczm.foodyou.app.ui.personalization
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.common.component.ResetToDefaultDialog
-import com.maksimowiczm.foodyou.app.ui.common.extension.horizontal
-import com.maksimowiczm.foodyou.app.ui.common.extension.vertical
+import com.maksimowiczm.foodyou.app.ui.common.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
+import com.maksimowiczm.foodyou.app.ui.common.utility.rememberContrastContentColor
+import com.materialkolor.ktx.toHex
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -30,7 +31,6 @@ internal fun NutrientsColors(
     fatsColor: Color,
     onFatsColorChange: (Color) -> Unit,
     onReset: () -> Unit,
-    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     var proteinsDialog by rememberSaveable { mutableStateOf(false) }
@@ -82,43 +82,84 @@ internal fun NutrientsColors(
         }
     }
 
-    Column(modifier = modifier.padding(contentPadding.vertical())) {
-        Text(
-            text = stringResource(Res.string.headline_nutrients_colors),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(contentPadding.horizontal()),
-        )
-        ListItem(
-            headlineContent = { Text(stringResource(Res.string.nutriment_proteins)) },
-            modifier = Modifier.clickable { proteinsDialog = true },
-            leadingContent = {
-                Canvas(Modifier.size(24.dp).clip(MaterialTheme.shapes.small)) {
-                    drawRect(proteinsColor)
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        LocalNutrientsOrder.current
+            .filter { it.isMacronutrient() }
+            .forEachIndexed { index, order ->
+                when (order) {
+                    NutrientsOrder.Proteins ->
+                        SegmentedListItem(
+                            onClick = { proteinsDialog = true },
+                            shapes = ListItemDefaults.segmentedShapes(index = index, count = 4),
+                            content = { Text(stringResource(Res.string.nutriment_proteins)) },
+                            supportingContent = { Text(proteinsColor.toHex()) },
+                            colors =
+                                ListItemDefaults.segmentedColors(
+                                    containerColor = proteinsColor,
+                                    contentColor = proteinsColor.rememberContrastContentColor(),
+                                    supportingContentColor =
+                                        proteinsColor.rememberContrastContentColor(),
+                                ),
+                        )
+
+                    NutrientsOrder.Fats ->
+                        SegmentedListItem(
+                            onClick = { fatsDialog = true },
+                            shapes = ListItemDefaults.segmentedShapes(index = index, count = 4),
+                            content = { Text(stringResource(Res.string.nutriment_fats)) },
+                            supportingContent = { Text(fatsColor.toHex()) },
+                            colors =
+                                ListItemDefaults.segmentedColors(
+                                    containerColor = fatsColor,
+                                    contentColor = fatsColor.rememberContrastContentColor(),
+                                    supportingContentColor =
+                                        fatsColor.rememberContrastContentColor(),
+                                ),
+                        )
+
+                    NutrientsOrder.Carbohydrates ->
+                        SegmentedListItem(
+                            onClick = { carbsDialog = true },
+                            shapes = ListItemDefaults.segmentedShapes(index = index, count = 4),
+                            content = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
+                            supportingContent = { Text(carbsColor.toHex()) },
+                            colors =
+                                ListItemDefaults.segmentedColors(
+                                    containerColor = carbsColor,
+                                    contentColor = carbsColor.rememberContrastContentColor(),
+                                    supportingContentColor =
+                                        carbsColor.rememberContrastContentColor(),
+                                ),
+                        )
+
+                    else -> Unit
                 }
-            },
+            }
+        SegmentedListItem(
+            onClick = { resetDialog = true },
+            shapes = ListItemDefaults.segmentedShapes(index = 3, count = 4),
+            content = { Text(stringResource(Res.string.headline_reset_to_default)) },
+            colors =
+                ListItemDefaults.segmentedColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                ),
         )
-        ListItem(
-            headlineContent = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
-            modifier = Modifier.clickable { carbsDialog = true },
-            leadingContent = {
-                Canvas(Modifier.size(24.dp).clip(MaterialTheme.shapes.small)) {
-                    drawRect(carbsColor)
-                }
-            },
-        )
-        ListItem(
-            headlineContent = { Text(stringResource(Res.string.nutriment_fats)) },
-            modifier = Modifier.clickable { fatsDialog = true },
-            leadingContent = {
-                Canvas(Modifier.size(24.dp).clip(MaterialTheme.shapes.small)) {
-                    drawRect(fatsColor)
-                }
-            },
-        )
-        ListItem(
-            headlineContent = { Text(stringResource(Res.string.headline_reset_to_default)) },
-            modifier = Modifier.clickable { resetDialog = true },
+    }
+}
+
+@Preview
+@Composable
+private fun NutrientsColorsPreview() {
+    PreviewFoodYouTheme {
+        val nutrientsPalette = LocalNutrientsPalette.current
+        NutrientsColors(
+            proteinsColor = nutrientsPalette.proteinsOnSurfaceContainer,
+            onProteinsColorChange = {},
+            carbsColor = nutrientsPalette.carbohydratesOnSurfaceContainer,
+            onCarbsColorChange = {},
+            fatsColor = nutrientsPalette.fatsOnSurfaceContainer,
+            onFatsColorChange = {},
+            onReset = {},
         )
     }
 }

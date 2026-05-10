@@ -46,7 +46,10 @@ class ColorsViewModel(
     fun updateTheme(theme: Theme) {
         viewModelScope.launch {
             deviceSettingsRepository.update { device ->
-                device.copy(themeSettings = device.themeSettings.copy(theme = theme))
+                device.copy(
+                    themeSettings =
+                        device.themeSettings.copy(theme = theme, randomizeOnLaunch = false)
+                )
             }
         }
     }
