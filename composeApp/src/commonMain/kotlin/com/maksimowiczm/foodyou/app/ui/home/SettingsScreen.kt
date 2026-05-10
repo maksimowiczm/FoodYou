@@ -299,7 +299,7 @@ private fun ProfileSwitcher(
     onAddProfile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var expanded by rememberSaveable { mutableStateOf(true) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     val expandedTransition = updateTransition(expanded)
     val iconRotationState by animateFloatAsState(if (expanded) 0f else 180f)
@@ -342,27 +342,31 @@ private fun ProfileSwitcher(
                         }
                     } else {
                         Row(
+                            modifier = Modifier.height(40.dp),
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            val modifier =
-                                when (selectedProfile.avatar) {
-                                    is Profile.Avatar.Photo -> Modifier.size(40.dp)
-
-                                    is Profile.Avatar.Predefined ->
-                                        Modifier.padding(8.dp).size(24.dp)
-                                }
-                            when (val avatar = selectedProfile.avatar) {
-                                is Profile.Avatar.Photo ->
-                                    AnimatedAvatar(avatar, headerInteractionSource, modifier)
-
-                                is Profile.Avatar.Predefined -> avatar.Avatar(modifier)
+                            Text(stringResource(Res.string.action_switch_profile))
+                            Spacer(Modifier.weight(1f))
+                            Row(
+                                modifier = Modifier.height(40.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                profiles
+                                    ?.filter { it != selectedProfile }
+                                    ?.take(3)
+                                    ?.forEach { avatar ->
+                                        when (val avatar = avatar.avatar) {
+                                            is Profile.Avatar.Photo ->
+                                                avatar.Avatar(
+                                                    Modifier.size(24.dp).clip(CircleShape)
+                                                )
+                                            is Profile.Avatar.Predefined ->
+                                                avatar.Avatar(Modifier.size(24.dp))
+                                        }
+                                    }
                             }
-                            Text(
-                                text = selectedProfile.name,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                            )
                         }
                     }
                 }
