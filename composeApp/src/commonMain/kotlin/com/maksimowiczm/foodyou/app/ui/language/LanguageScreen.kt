@@ -1,30 +1,34 @@
 package com.maksimowiczm.foodyou.app.ui.language
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ListItem
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
-import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.headline_language
+import foodyou.app.generated.resources.headline_system
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -36,6 +40,23 @@ fun LanguageScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 
     val currentTranslation by viewModel.translation.collectAsStateWithLifecycle()
 
+    LanguageScreen(
+        onBack = onBack,
+        onTranslate = { uriHandler.openUri(appConfig.translateUri) },
+        onSelectTranslation = viewModel::onLanguageSelect,
+        currentTranslation = currentTranslation,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun LanguageScreen(
+    onBack: () -> Unit,
+    onTranslate: () -> Unit,
+    onSelectTranslation: (Translation?) -> Unit,
+    currentTranslation: Translation?,
+    modifier: Modifier = Modifier,
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
@@ -50,50 +71,67 @@ fun LanguageScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues.add(vertical = 8.dp),
+            contentPadding = paddingValues.add(8.dp),
         ) {
             item {
                 TranslateButton(
-                    onClick = { uriHandler.openUri(appConfig.translateUri) },
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    onClick = onTranslate,
+                    modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }
             item { Spacer(Modifier.height(8.dp)) }
             item {
-                LanguageListItem(
-                    languageName = stringResource(Res.string.headline_system),
+                SegmentedListItem(
                     selected = currentTranslation == null,
-                    onSelect = { viewModel.onLanguageSelect(null) },
+                    onClick = { onSelectTranslation(null) },
+                    shapes =
+                        ListItemDefaults.segmentedShapes(index = 0, count = languages.size + 1),
+                    modifier = modifier,
+                    leadingContent = {
+                        RadioButton(selected = currentTranslation == null, onClick = null)
+                    },
+                    colors =
+                        ListItemDefaults.segmentedColors(
+                            selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                        ),
+                    content = { Text(stringResource(Res.string.headline_system)) },
                 )
             }
-            items(languages) { translation ->
-                LanguageListItem(
-                    languageName = translation.languageName,
-                    selected = translation == currentTranslation,
-                    onSelect = { viewModel.onLanguageSelect(translation) },
-                    authors = translation.authorsStrings,
+            itemsIndexed(languages) { index, translation ->
+                SegmentedListItem(
+                    selected = currentTranslation == translation,
+                    onClick = { onSelectTranslation(translation) },
+                    shapes =
+                        ListItemDefaults.segmentedShapes(
+                            index = index + 1,
+                            count = languages.size + 1,
+                        ),
+                    modifier = modifier,
+                    leadingContent = {
+                        RadioButton(selected = currentTranslation == translation, onClick = null)
+                    },
+                    colors =
+                        ListItemDefaults.segmentedColors(
+                            selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                        ),
+                    content = { Text(translation.languageName) },
                 )
             }
         }
     }
 }
 
+@Preview
 @Composable
-private fun LanguageListItem(
-    languageName: String,
-    selected: Boolean,
-    onSelect: () -> Unit,
-    modifier: Modifier = Modifier,
-    authors: List<Author> = listOf(),
-) {
-    ListItem(
-        headlineContent = { Text(languageName) },
-        modifier = modifier.heightIn(min = 56.dp).clickable { onSelect() },
-        supportingContent = {
-            authors
-                .takeIf { it.isNotEmpty() }
-                ?.let { Column { it.forEach { author -> Text(author.toAnnotatedString()) } } }
-        },
-        leadingContent = { RadioButton(selected = selected, onClick = null) },
-    )
+private fun LanguageScreenPreview() {
+    PreviewFoodYouTheme {
+        LanguageScreen(
+            onBack = {},
+            onTranslate = {},
+            onSelectTranslation = {},
+            currentTranslation = null,
+        )
+    }
 }
