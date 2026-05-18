@@ -7,22 +7,20 @@ import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.app.ui.FoodYouApp
 
 class MainActivity : FoodYouAbstractActivity() {
-    private var sharedText: String? = null
-    private val sharedClock = mutableIntStateOf(0)
+    private var sharedText = mutableStateOf<String?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
+        sharedText.value = intent.getStringExtra(Intent.EXTRA_TEXT)
 
         enableEdgeToEdge()
-        setContent { key(sharedClock.intValue) { FoodYouApp(sharedText) } }
+        setContent { FoodYouApp(sharedText.value) }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
-        sharedClock.intValue = (sharedClock.intValue + 1) % Int.MAX_VALUE
+        sharedText.value = intent.getStringExtra(Intent.EXTRA_TEXT)
     }
 }

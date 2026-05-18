@@ -14,6 +14,7 @@ import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyUnitProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.app.ui.onboarding.Onboarding
+import com.maksimowiczm.foodyou.common.extension.safeRemoveLast
 import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import io.github.vinceglb.filekit.coil.addPlatformFileSupport
 import io.ktor.client.HttpClient
@@ -53,11 +54,23 @@ fun FoodYouApp(userQuery: String?) {
                             Onboarding(onFinish = appViewModel::onFinishOnboarding)
 
                         AppPage.Main -> {
-                            val backStack = rememberFoodYouNavBackStack(FoodYouNavHostRoute.Home)
+                            val backStack =
+                                rememberFoodYouNavBackStack(FoodYouNavHostRoute.Home(null))
 
                             LaunchedEffect(backStack, userQuery) {
-                                if (userQuery != null) {
-                                    TODO()
+                                if (userQuery == null) return@LaunchedEffect
+
+                                val home =
+                                    backStack.first() as? FoodYouNavHostRoute.Home
+                                        ?: return@LaunchedEffect
+
+                                if (home.initialQuery != userQuery) {
+                                    while (backStack.last() !is FoodYouNavHostRoute.Home) {
+                                        backStack.safeRemoveLast()
+                                    }
+
+                                    backStack.safeRemoveLast()
+                                    backStack.add(FoodYouNavHostRoute.Home(userQuery))
                                 }
                             }
 

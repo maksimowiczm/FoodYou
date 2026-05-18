@@ -147,6 +147,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         },
                         onUserFood = { id -> backStack.add(UserProductDetails(id)) },
                         onCreate = { backStack.add(CreateProduct) },
+                        initialQuery = it.initialQuery,
                     )
                 }
                 entry<SwitchProfile> {
@@ -187,7 +188,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
 @OptIn(ExperimentalSerializationApi::class)
 @Composable
 fun rememberFoodYouNavBackStack(
-    vararg elements: FoodYouNavHostRoute = arrayOf(Home)
+    vararg elements: FoodYouNavHostRoute = arrayOf(Home(null))
 ): NavBackStack<NavKey> {
     val config = SavedStateConfiguration {
         serializersModule = SerializersModule {
@@ -259,7 +260,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
         }
     }
 
-    @Serializable data object Home : FoodYouNavHostRoute
+    @Serializable data class Home(val initialQuery: String?) : FoodYouNavHostRoute
 
     @Serializable data object SwitchProfile : FoodYouNavHostRoute
 

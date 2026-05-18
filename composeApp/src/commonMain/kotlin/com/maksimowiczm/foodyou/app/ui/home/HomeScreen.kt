@@ -103,6 +103,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun HomeScreen(
@@ -111,6 +112,7 @@ fun HomeScreen(
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
     onUserFood: (UserProductIdentity) -> Unit,
     onCreate: () -> Unit,
+    initialQuery: String?,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -121,9 +123,14 @@ fun HomeScreen(
     val topBarHeight = density.run { 64.dp.toPx() }
     val scrollConnection = rememberScrollConnection { offset.floatValue -= it.y }
 
-    val textFieldState = rememberTextFieldState()
+    val textFieldState = rememberTextFieldState(initialQuery ?: "")
 
-    val backStack = rememberNavBackStack(config, HomeNavKey.Home)
+    val elements =
+        remember(initialQuery) {
+            listOfNotNull(HomeNavKey.Home, if (initialQuery != null) HomeNavKey.Search else null)
+        }
+    val backStack = rememberNavBackStack(config, *elements.toTypedArray())
+
     val isHome by remember { derivedStateOf { backStack.last() is HomeNavKey.Home } }
     val backProgress = remember { Animatable(0f) }
     val homeProgress = remember { Animatable(if (isHome) 1f else 0f) }
@@ -147,7 +154,9 @@ fun HomeScreen(
 
     val railState = rememberWideNavigationRailState()
 
-    val homeSearchViewModel: HomeSearchViewModel = koinViewModel()
+    val homeSearchViewModel: HomeSearchViewModel = koinViewModel {
+        parametersOf(initialQuery ?: "")
+    }
     val userFoodSearchViewModel: UserFoodSearchViewModel = koinViewModel()
     val openFoodFactsSearchViewModel: OpenFoodFactsSearchViewModel = koinViewModel()
     val foodDataCentralSearchViewModel: FoodDataCentralSearchViewModel = koinViewModel()

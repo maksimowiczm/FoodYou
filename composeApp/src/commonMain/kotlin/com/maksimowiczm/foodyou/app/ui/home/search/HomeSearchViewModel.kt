@@ -20,12 +20,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 
 internal class HomeSearchViewModel(
+    initialQuery: String?,
     private val searchQueryParser: SearchQueryParser,
     private val searchHistoryService: SearchHistoryService,
     savedStateHandle: SavedStateHandle,
     appProfileManager: AppProfileManager,
 ) : ViewModel() {
-    private val _searchQuery = savedStateHandle.getMutableStateFlow<String?>(SEARCH_QUERY_KEY, null)
+    private val _searchQuery = savedStateHandle.getMutableStateFlow(SEARCH_QUERY_KEY, initialQuery)
 
     val searchQuery =
         _searchQuery
