@@ -2,8 +2,19 @@ default:
     @just --list
 
 # $KTFMT_JAR - path to the ktfmt jar file
+
+# Format only changed files (git diff)
 format:
-    @find . -type f \( -name "*.kt" -o -name "*.kts" \) -not -path "*/build/*" | xargs java -jar $KTFMT_JAR --kotlinlang-style
+    @{ git diff --name-only --diff-filter=ACMR HEAD; \
+       git diff --name-only --diff-filter=ACMR --cached; } | \
+        sort -u | \
+        grep -E '\.kts?$' | \
+        xargs --no-run-if-empty java -jar $KTFMT_JAR --kotlinlang-style
+
+# Format every Kotlin file in the project
+format-all:
+    @find . -type f \( -name "*.kt" -o -name "*.kts" \) -not -path "*/build/*" | \
+        xargs java -jar $KTFMT_JAR --kotlinlang-style
 
 release:
     @./gradlew --no-daemon --no-build-cache clean
