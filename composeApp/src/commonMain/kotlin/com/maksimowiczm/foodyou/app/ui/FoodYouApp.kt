@@ -9,13 +9,11 @@ import coil3.compose.setSingletonImageLoaderFactory
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavDisplay
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.rememberFoodYouNavBackStack
 import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyUnitProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.app.ui.onboarding.Onboarding
-import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import io.github.vinceglb.filekit.coil.addPlatformFileSupport
 import io.ktor.client.HttpClient
@@ -59,8 +57,7 @@ fun FoodYouApp(userQuery: String?) {
 
                             LaunchedEffect(backStack, userQuery) {
                                 if (userQuery != null) {
-                                    backStack.removeLastIf<FoodDatabase>()
-                                    backStack.add(FoodDatabase(userQuery))
+                                    TODO()
                                 }
                             }
 

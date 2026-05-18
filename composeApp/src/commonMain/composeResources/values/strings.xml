@@ -522,6 +522,7 @@
     <string name="error_open_food_facts_timeout">Open Food Facts is taking too long to respond. The service may be temporarily slow or unavailable. Try scanning the product barcode instead.</string>
 
     <string name="headline_collections" description="Collections of food products, e.g. favorite foods, Open Food Facts, recipes">Collections</string>
+    <string name="headline_collection" description="Collection of food products, e.g. favorite foods, Open Food Facts, recipes">Collection</string>
     <string name="action_choose_collection">Choose collection</string>
     <string name="action_search_foods">Search foods</string>
 

@@ -9,7 +9,6 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
@@ -19,7 +18,6 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditUserProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDataCentralProductDetails
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDatabase
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.HomePersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Language
@@ -30,7 +28,6 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.SwitchProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserProductDetails
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
-import com.maksimowiczm.foodyou.app.ui.food.FoodDatabaseScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.fooddatacentral.FoodDataCentralDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts.OpenFoodFactsDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsScreen
@@ -117,21 +114,6 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onBack = { backStack.removeLastIf<EditProfile>() },
                         onEdit = { backStack.removeLastIf<EditProfile>() },
                         onDelete = { backStack.removeLastIf<EditProfile>() },
-                    )
-                }
-                entry<FoodDatabase> {
-                    FoodDatabaseScreen(
-                        onBack = { backStack.removeLastIf<FoodDatabase>() },
-                        onCreateProduct = { backStack.add(CreateProduct) },
-                        onFoodDataCentralProduct = { id ->
-                            backStack.add(FoodDataCentralProductDetails.from(id))
-                        },
-                        onOpenFoodFactsProduct = { id ->
-                            backStack.add(OpenFoodFactsProductDetails.from(id))
-                        },
-                        onUserFood = { id -> backStack.add(UserProductDetails(id)) },
-                        query = it.query,
-                        animatedVisibilityScope = LocalNavAnimatedContentScope.current,
                     )
                 }
                 entry<UserProductDetails> {
@@ -246,8 +228,6 @@ sealed interface FoodYouNavHostRoute : NavKey {
         val profileId: ProfileId
             get() = ProfileId(id)
     }
-
-    @Serializable data class FoodDatabase(val query: String?) : FoodYouNavHostRoute
 
     @Serializable
     data class UserProductDetails(val id: Uuid) : FoodYouNavHostRoute {

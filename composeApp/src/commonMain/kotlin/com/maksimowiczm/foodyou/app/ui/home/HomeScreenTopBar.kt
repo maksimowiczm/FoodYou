@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.app.ui.home
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -29,6 +28,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -47,8 +47,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -63,13 +61,9 @@ import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfade
 import com.maksimowiczm.foodyou.app.ui.common.component.Avatar
 import com.maksimowiczm.foodyou.app.ui.common.theme.brand
-import com.maksimowiczm.foodyou.app.ui.home.search.HomeSearchState
-import com.maksimowiczm.foodyou.app.ui.home.search.Search
-import com.maksimowiczm.foodyou.app.ui.home.search.SearchView
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.abs
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -77,41 +71,27 @@ import org.jetbrains.compose.resources.stringResource
 internal fun HomeScreenTopBar(
     profile: ProfileUiState?,
     profiles: List<ProfileUiState>,
-    homeSearchState: HomeSearchState,
+    textFieldState: TextFieldState,
+    homeProgress: () -> Float,
     onAvatar: () -> Unit,
     onSearch: (String?) -> Unit,
+    onSearchBar: () -> Unit,
+    onBack: () -> Unit,
     onSelectProfile: (ProfileUiState) -> Unit,
+    onBarcodeScanner: () -> Unit,
+    onMenu: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
     val motionScheme = MaterialTheme.motionScheme
-
-    val homeAnimatable = remember { Animatable(if (homeSearchState.isHome) 1f else 0f) }
-    LaunchedEffect(homeSearchState.isHome) {
-        if (homeSearchState.backProgressAnimatable.value != 0f) {
-            homeAnimatable.snapTo(homeSearchState.backProgressAnimatable.value)
-        }
-        homeAnimatable.animateTo(
-            targetValue = if (homeSearchState.isHome) 1f else 0f,
-            animationSpec = motionScheme.fastSpatialSpec(),
-        )
-    }
-
-    val homeProgress = remember {
-        derivedStateOf {
-            val gesture = homeSearchState.backProgressAnimatable.value
-            if (gesture != 0f) gesture else homeAnimatable.value
-        }
-    }
 
     TopBarLayout(
         modifier = modifier.windowInsetsPadding(TopAppBarDefaults.windowInsets),
-        progress = { homeProgress.value },
+        progress = homeProgress,
         startSlot = {
             IconButton(
-                onClick = { scope.launch { homeSearchState.railState.expand() } },
+                onClick = onMenu,
                 shapes = IconButtonDefaults.shapes(),
-                modifier = Modifier.graphicsLayer { alpha = homeProgress.value },
+                modifier = Modifier.graphicsLayer { alpha = homeProgress() },
             ) {
                 Icon(
                     imageVector = Icons.Default.Menu,
@@ -129,7 +109,7 @@ internal fun HomeScreenTopBar(
 
             AnimatedContent(
                 targetState = profile,
-                modifier = Modifier.graphicsLayer { alpha = homeProgress.value },
+                modifier = Modifier.graphicsLayer { alpha = homeProgress() },
                 transitionSpec = {
                     if (!animateProfileSwitch) {
                         EnterTransition.None.togetherWith(ExitTransition.None)
@@ -150,7 +130,7 @@ internal fun HomeScreenTopBar(
                     onClick = onAvatar,
                     shapes = IconButtonDefaults.shapes(),
                     modifier =
-                        Modifier.swipeThroughList(
+                        Modifier.wrapContentSize(unbounded = true).swipeThroughList(
                             items = profiles,
                             currentItem = p,
                             swipeThresholdPx = LocalDensity.current.run { 32.dp.toPx() },
@@ -182,18 +162,13 @@ internal fun HomeScreenTopBar(
         },
     ) {
         SearchBarContent(
-            homeSearchState = homeSearchState,
-            homeProgress = { homeProgress.value },
-            onSearchClick = { scope.launch { homeSearchState.goToSearchView() } },
-            onBackClick = { scope.launch { homeSearchState.popToHome() } },
-            onSearchAction = { onSearch(homeSearchState.textFieldState.text.toString()) },
-            onClearClick = {
-                homeSearchState.textFieldState.clearText()
-                if (homeSearchState.backStack.last() is Search) {
-                    onSearch(null)
-                }
-            },
-            onBarcodeScannerClick = { homeSearchState.showBarcodeScanner = true },
+            textFieldState = textFieldState,
+            homeProgress = homeProgress,
+            onClick = onSearchBar,
+            onBack = onBack,
+            onSearch = onSearch,
+            onClear = { onSearch(null) },
+            onBarcodeScanner = onBarcodeScanner,
         )
     }
 }
@@ -206,12 +181,17 @@ private fun TopBarLayout(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
+    // We have to use it in composable scope, because if we do it in layout scope then weird things
+    // happen with icon button shape, might be a bug in material library. It still happens, but it's
+    // not as extreme as it would be without this guard
+    val showSlots by remember(progress) { derivedStateOf { progress() > 0f } }
+
     Layout(
         modifier = modifier.height(64.dp),
         content = {
-            Box(contentAlignment = Alignment.Center) { startSlot() }
+            if (showSlots) Box(contentAlignment = Alignment.Center) { startSlot() }
             Box(contentAlignment = Alignment.Center) { content() }
-            Box(contentAlignment = Alignment.Center) { endSlot() }
+            if (showSlots) Box(contentAlignment = Alignment.Center) { endSlot() }
         },
     ) { measurables, constraints ->
         val p = progress()
@@ -223,35 +203,40 @@ private fun TopBarLayout(
         val hPadPx = lerp(12.dp, 4.dp, p).roundToPx().coerceAtLeast(0)
         val gapPx = lerp(0.dp, 4.dp, p).roundToPx().coerceAtLeast(0)
 
-        val (startM, centerM, endM) = measurables
+        val startM = if (measurables.size == 3) measurables[0] else null
+        val centerM = if (measurables.size == 3) measurables[1] else measurables[0]
+        val endM = if (measurables.size == 3) measurables[2] else null
 
-        val startP = startM.measure(Constraints.fixed(slotPx, height))
-        val endP = endM.measure(Constraints.fixed(slotPx, height))
+        val startP = startM?.measure(Constraints.fixed(slotPx, height))
+        val endP = endM?.measure(Constraints.fixed(slotPx, height))
 
         val centerWidth = (totalWidth - slotPx * 2 - hPadPx * 2 - gapPx * 2).coerceAtLeast(0)
         val centerP = centerM.measure(Constraints.fixed(centerWidth, height))
 
         layout(totalWidth, height) {
-            startP.placeRelative(hPadPx, 0)
+            startP?.placeRelative(hPadPx, 0)
             centerP.placeRelative(hPadPx + slotPx + gapPx, 0)
-            endP.placeRelative(totalWidth - hPadPx - slotPx, 0)
+            endP?.placeRelative(totalWidth - hPadPx - slotPx, 0)
         }
     }
 }
 
 @Composable
 private fun SearchBarContent(
-    homeSearchState: HomeSearchState,
+    textFieldState: TextFieldState,
     homeProgress: () -> Float,
-    onSearchClick: () -> Unit,
-    onBackClick: () -> Unit,
-    onSearchAction: () -> Unit,
-    onClearClick: () -> Unit,
-    onBarcodeScannerClick: () -> Unit,
+    onClick: () -> Unit,
+    onBack: () -> Unit,
+    onSearch: (String) -> Unit,
+    onClear: () -> Unit,
+    onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val homeProgress = homeProgress()
+    val isHome = homeProgress == 1f
+
     Surface(
-        onClick = onSearchClick,
+        onClick = onClick,
         modifier = modifier,
         shape = MaterialTheme.shapes.extraLarge,
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -265,14 +250,14 @@ private fun SearchBarContent(
                 )
                 .padding(horizontal = 4.dp)
         ) {
-            if (homeSearchState.showSearchField) {
+            if (!isHome) {
                 SearchInputField(
-                    homeSearchState = homeSearchState,
-                    onSearchAction = onSearchAction,
+                    textFieldState = textFieldState,
+                    onSearch = onSearch,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            if (homeSearchState.isHome) {
+            if (isHome) {
                 Box(
                     modifier = Modifier.size(48.dp).align(Alignment.CenterStart),
                     contentAlignment = Alignment.Center,
@@ -284,7 +269,7 @@ private fun SearchBarContent(
                 }
             } else {
                 IconButton(
-                    onClick = onBackClick,
+                    onClick = onBack,
                     shapes = IconButtonDefaults.shapes(),
                     modifier =
                         Modifier.align(Alignment.CenterStart).graphicsLayer {
@@ -297,8 +282,8 @@ private fun SearchBarContent(
                     )
                 }
             }
-            if (homeSearchState.textFieldState.text.isEmpty()) {
-                updateTransition(homeSearchState.isHome, "placeholder").AnimatedContent(
+            if (textFieldState.text.isEmpty() || isHome) {
+                updateTransition(isHome, "placeholder").AnimatedContent(
                     modifier = Modifier.fillMaxWidth().align(Alignment.CenterStart),
                     transitionSpec = { crossfade() },
                     contentAlignment = Alignment.Center,
@@ -327,15 +312,21 @@ private fun SearchBarContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End,
             ) {
-                if (!homeSearchState.isHome && homeSearchState.textFieldState.text.isNotEmpty()) {
-                    IconButton(onClick = onClearClick, shapes = IconButtonDefaults.shapes()) {
+                if (!isHome && textFieldState.text.isNotEmpty()) {
+                    IconButton(
+                        onClick = {
+                            textFieldState.clearText()
+                            onClear()
+                        },
+                        shapes = IconButtonDefaults.shapes(),
+                    ) {
                         Icon(
                             imageVector = Icons.Outlined.Clear,
                             contentDescription = stringResource(Res.string.action_clear),
                         )
                     }
                 }
-                IconButton(onClick = onBarcodeScannerClick, shapes = IconButtonDefaults.shapes()) {
+                IconButton(onClick = onBarcodeScanner, shapes = IconButtonDefaults.shapes()) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_barcode_scanner),
                         contentDescription = stringResource(Res.string.action_scan_barcode),
@@ -348,37 +339,27 @@ private fun SearchBarContent(
 
 @Composable
 private fun SearchInputField(
-    homeSearchState: HomeSearchState,
-    onSearchAction: () -> Unit,
+    textFieldState: TextFieldState,
+    onSearch: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val focusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(homeSearchState.backStack) {
-        if (homeSearchState.backStack.last() is SearchView) {
-            focusRequester.requestFocus()
-        }
-    }
 
     val colors = SearchBarDefaults.inputFieldColors()
 
     BasicTextField(
-        state = homeSearchState.textFieldState,
-        modifier =
-            modifier
-                .focusRequester(focusRequester)
-                .sizeIn(minHeight = SearchBarDefaults.InputFieldHeight),
+        state = textFieldState,
+        modifier = modifier.sizeIn(minHeight = SearchBarDefaults.InputFieldHeight),
         lineLimits = TextFieldLineLimits.SingleLine,
         textStyle = MaterialTheme.typography.bodyLarge.merge(MaterialTheme.colorScheme.onSurface),
         cursorBrush = SolidColor(colors.cursorColor(isError = false)),
         keyboardOptions =
             KeyboardOptions.Default.merge(KeyboardOptions(imeAction = ImeAction.Search)),
-        onKeyboardAction = { onSearchAction() },
+        onKeyboardAction = { onSearch(textFieldState.text.toString()) },
         interactionSource = interactionSource,
         decorator =
             TextFieldDefaults.decorator(
-                state = homeSearchState.textFieldState,
+                state = textFieldState,
                 lineLimits = TextFieldLineLimits.SingleLine,
                 enabled = true,
                 outputTransformation = null,

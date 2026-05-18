@@ -1,23 +1,11 @@
 package com.maksimowiczm.foodyou.app.ui.food.search.favoritefood
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
-import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
@@ -33,98 +21,22 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.valentinilk.shimmer.Shimmer
-import foodyou.app.generated.resources.*
-import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun FavoriteFoodSearchApp(
-    shimmer: Shimmer,
-    contentPadding: PaddingValues,
-    lazyListState: LazyListState,
-    onClick: (Any) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: FavoriteFoodSearchViewModel = koinViewModel(),
-) {
-    val pages = viewModel.pages.collectAsLazyPagingItems()
-    val isIdle = pages.rememberDebounceIsIdle()
-
-    Box(modifier) {
-        LazyColumn(state = lazyListState, contentPadding = contentPadding) {
-            items(count = pages.itemCount) { i ->
-                when (val food = pages[i]) {
-                    null -> FoodListItemSkeleton(shimmer)
-                    else -> {
-                        val name = food.name()
-                        val image = food.image()
-                        val packageQuantity = food.packageQuantity()
-                        val servingQuantity = food.servingQuantity()
-                        val nutritionFacts = food.nutritionFacts()
-
-                        if (name == null || nutritionFacts == null) {
-                            FoodListItemSkeleton(shimmer)
-                        } else {
-                            FoodSearchListItem(
-                                name = name,
-                                packageQuantity = packageQuantity,
-                                servingQuantity = servingQuantity,
-                                nutritionFacts = nutritionFacts,
-                                image = image,
-                                shimmer = shimmer,
-                                onClick = {
-                                    when (food) {
-                                        is RemoteData.Success -> onClick(food.value)
-                                        is RemoteData.Error ->
-                                            food.partialValue?.let { onClick(it) }
-
-                                        is RemoteData.Loading ->
-                                            food.partialValue?.let { onClick(it) }
-
-                                        is RemoteData.NotFound -> Unit
-                                    }
-                                },
-                            )
-                        }
-                    }
-                }
-            }
-
-            if (
-                pages.loadState.append is LoadState.Loading ||
-                    pages.loadState.refresh is LoadState.Loading
-            ) {
-                items(10) { FoodListItemSkeleton(shimmer) }
-            }
-        }
-
-        if (pages.itemCount == 0 && isIdle) {
-            Text(
-                text = stringResource(Res.string.neutral_no_food_found),
-                modifier = Modifier.align(Alignment.Center),
-                textAlign = TextAlign.Center,
-            )
-        }
-
-        if (!isIdle) {
-            ContainedLoadingIndicator(
-                Modifier.align(Alignment.TopCenter)
-                    .padding(top = contentPadding.calculateTopPadding())
-            )
-        }
-    }
-}
-
-@Composable
-private fun FoodSearchListItem(
-    name: FoodName,
-    packageQuantity: AbsoluteQuantity?,
-    servingQuantity: AbsoluteQuantity?,
-    nutritionFacts: NutritionFacts,
-    image: FileUri?,
+internal fun FavoriteFoodListItem(
+    food: RemoteData<Any>,
     shimmer: Shimmer,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    fallback: @Composable () -> Unit,
 ) {
+    val name = food.name() ?: return fallback()
+    val nutritionFacts = food.nutritionFacts() ?: return fallback()
+
+    val image = food.image()
+    val packageQuantity = food.packageQuantity()
+    val servingQuantity = food.servingQuantity()
+
     val nameSelector = LocalFoodNameSelector.current
 
     val absoluteQuantity = packageQuantity ?: AbsoluteQuantity.Weight(100.grams)
@@ -152,7 +64,7 @@ private fun FoodSearchListItem(
         fats = measurementFacts.fats.value,
         energy = measurementFacts.energy.value,
         quantity = { Text(measurementString) },
-        image = image?.let { @Composable { it.Image(shimmer, Modifier.size(56.dp)) } },
+        image = image?.let { @Composable { it.Image(shimmer, Modifier.Companion.size(56.dp)) } },
         onClick = onClick,
         modifier = modifier,
     )

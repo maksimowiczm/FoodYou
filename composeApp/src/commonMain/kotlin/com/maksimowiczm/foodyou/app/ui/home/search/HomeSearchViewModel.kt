@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.home.search
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
@@ -7,8 +8,6 @@ import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.domain.search.SearchQueryParser
 import com.maksimowiczm.foodyou.search.application.SearchHistoryService
 import com.maksimowiczm.foodyou.search.domain.recordSearchQuery
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterIsInstance
@@ -19,18 +18,26 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 internal class HomeSearchViewModel(
     private val searchQueryParser: SearchQueryParser,
     private val searchHistoryService: SearchHistoryService,
+    savedStateHandle: SavedStateHandle,
     appProfileManager: AppProfileManager,
 ) : ViewModel() {
-    val searchQuery: SharedFlow<SearchQuery>
-        field = MutableSharedFlow<SearchQuery>(replay = 1).apply { tryEmit(SearchQuery.Blank) }
+    private val _searchQuery = savedStateHandle.getMutableStateFlow<String?>(SEARCH_QUERY_KEY, null)
+
+    val searchQuery =
+        _searchQuery
+            .map(searchQueryParser::parse)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = searchQueryParser.parse(_searchQuery.value),
+            )
 
     fun search(query: String?) {
-        viewModelScope.launch { searchQuery.emit(searchQueryParser.parse(query)) }
+        _searchQuery.value = query
     }
 
     val searchHistory: StateFlow<List<String>?> =
@@ -57,5 +64,9 @@ internal class HomeSearchViewModel(
                 searchHistoryService.transact(profileId) { it.recordSearchQuery(query) }
             }
             .launchIn(viewModelScope)
+    }
+
+    companion object {
+        private const val SEARCH_QUERY_KEY = "search_query"
     }
 }

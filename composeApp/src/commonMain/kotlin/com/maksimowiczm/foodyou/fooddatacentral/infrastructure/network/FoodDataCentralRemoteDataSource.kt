@@ -9,7 +9,6 @@ import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.DetailedFood
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.FoodDataCentralFoodPageResponse
-import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.FoodDataCentralFoodPageResponseImpl
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -102,7 +101,7 @@ internal class FoodDataCentralRemoteDataSource(
                 throw error
             }
 
-            response.body<FoodDataCentralFoodPageResponseImpl>()
+            response.body<FoodDataCentralFoodPageResponse>()
         }
     }
 
