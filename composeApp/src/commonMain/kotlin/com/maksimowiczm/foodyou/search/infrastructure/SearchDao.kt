@@ -27,7 +27,7 @@ interface SearchDao {
         """
         SELECT $SIMPLE_NAME_SELECT
         FROM Search s
-        JOIN SearchFts fts ON s.productId = fts.rowid
+        JOIN SearchFts fts ON s.sqliteId = fts.rowid
         WHERE
             SearchFts MATCH :query || '*'
         ORDER BY simpleName
@@ -39,7 +39,7 @@ interface SearchDao {
         """
         SELECT COUNT(*)
         FROM Search s
-        JOIN SearchFts fts ON s.productId = fts.rowid
+        JOIN SearchFts fts ON s.sqliteId = fts.rowid
         WHERE
             SearchFts MATCH :query || '*'
         """
