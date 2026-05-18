@@ -19,7 +19,7 @@ data class OpenFoodFactsUrlSearchQuery private constructor(val url: String, val 
 
     companion object {
         private val regex =
-            "https://\\w+\\.openfoodfacts\\.org/product/(?<barcode>\\d+)(?:/[^/]*)?".toRegex()
+            "https://\\w+\\.openfoodfacts\\.org/.+/(?<barcode>\\d+)(?:/[^/]*)?".toRegex()
 
         /** Recognizes Open Food Facts product URLs and extracts the barcode. */
         val recognizer = SearchQueryRecognizer { query ->
