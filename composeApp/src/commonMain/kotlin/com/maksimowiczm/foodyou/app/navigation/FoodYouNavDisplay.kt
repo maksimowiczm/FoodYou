@@ -63,6 +63,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
             listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator(),
+                rememberPredictiveBackRoundedCornersDecorator(),
             ),
         transitionSpec = {
             ContentTransform(
