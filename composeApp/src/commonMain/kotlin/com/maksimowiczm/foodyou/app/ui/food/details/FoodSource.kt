@@ -13,8 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalClipboardManager
-import foodyou.app.generated.resources.*
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FoodSource(
@@ -26,40 +24,32 @@ internal fun FoodSource(
     val uriHandler = LocalUriHandler.current
     val clipboardManager = LocalClipboardManager.current
 
-    Column(
+    Row(
         modifier =
-            modifier.combinedClickable(
-                interactionSource = null,
-                indication = null,
-                onClick = { uriHandler.openUri(url) },
-                onLongClick = { clipboardManager.copy("url", url) },
-            ),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier
+                .fillMaxWidth()
+                .combinedClickable(
+                    interactionSource = null,
+                    indication = null,
+                    onClick = { uriHandler.openUri(url) },
+                    onLongClick = { clipboardManager.copy("url", url) },
+                ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Text(
-            text = stringResource(Res.string.headline_source),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            logo()
-            Column {
-                Text(
-                    text = headline,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                Text(
-                    text = url,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
-                )
-            }
+        logo()
+        Column {
+            Text(
+                text = headline,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                text = url,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 2,
+            )
         }
     }
 }

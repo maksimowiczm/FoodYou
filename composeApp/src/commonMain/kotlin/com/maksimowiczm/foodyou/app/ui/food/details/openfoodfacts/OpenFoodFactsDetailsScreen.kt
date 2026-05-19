@@ -1,15 +1,13 @@
 package com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
@@ -136,10 +134,10 @@ private fun OpenFoodFactsDetailsScreen(
             LazyColumn(
                 contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
                 state = lazyListState,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item { FoodDetailsHeadline(headline = headline) }
                 item { FoodDetailsImage(image = image, showPlaceholder = isLoading) }
-                item { Spacer(Modifier.height(8.dp)) }
                 if (nutritionFacts != null) {
                     item {
                         FoodDetailsNutrients(
@@ -152,7 +150,6 @@ private fun OpenFoodFactsDetailsScreen(
                 }
                 if (url != null) {
                     item {
-                        HorizontalDivider(Modifier.fillMaxWidth().padding(16.dp))
                         FoodSource(
                             url = url,
                             logo = {

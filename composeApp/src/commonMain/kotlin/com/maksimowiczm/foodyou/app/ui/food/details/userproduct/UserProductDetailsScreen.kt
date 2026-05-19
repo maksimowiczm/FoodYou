@@ -1,11 +1,10 @@
 package com.maksimowiczm.foodyou.app.ui.food.details.userproduct
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -18,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
@@ -36,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalClipboardManager
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
 import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
@@ -133,6 +132,7 @@ private fun UserProductDetailsScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             state = lazyListState,
             contentPadding = contentPadding.add(bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item { FoodDetailsHeadline(headline = headline) }
             item {
@@ -141,7 +141,6 @@ private fun UserProductDetailsScreen(
                     showPlaceholder = userFood == null,
                 )
             }
-            item { Spacer(Modifier.height(8.dp)) }
             if (userFood?.nutritionFacts != null) {
                 item {
                     FoodDetailsNutrients(
@@ -154,7 +153,6 @@ private fun UserProductDetailsScreen(
             }
             if (userFood?.note != null) {
                 item {
-                    HorizontalDivider(Modifier.fillMaxWidth().padding(16.dp))
                     Note(
                         note = userFood.note,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -239,12 +237,18 @@ private fun LocalMenu(
 
 @Composable
 private fun Note(note: String, modifier: Modifier = Modifier) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = stringResource(Res.string.headline_note),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-        )
+    val clipboardManager = LocalClipboardManager.current
+
+    Column(
+        modifier =
+            modifier.combinedClickable(
+                interactionSource = null,
+                indication = null,
+                onClick = {},
+                onLongClick = { clipboardManager.copy("note", note) },
+            ),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         Text(text = note, style = MaterialTheme.typography.bodyMedium)
     }
 }
