@@ -204,7 +204,7 @@ internal class ProductFormState(
 }
 
 @Composable
-internal fun rememberProductForm2State(
+internal fun rememberProductFormState(
     product: UserProduct? = null,
     defaultEnergyUnit: EnergyUnit = LocalEnergyUnit.current,
 ): ProductFormState {
@@ -325,18 +325,18 @@ internal fun rememberProductForm2State(
         }
     val packageUnit = rememberSaveable(defaultPackageUnit) { mutableStateOf(defaultPackageUnit) }
 
-    val note = rememberFormField()
+    val note = rememberFormField(product?.note)
 
     val proteins =
-        rememberDoubleFormField2(product?.nutritionFacts?.proteins?.value?.grams?.formatClipZeros())
+        rememberDoubleFormField(product?.nutritionFacts?.proteins?.value?.grams?.formatClipZeros())
     val carbs =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.carbohydrates?.value?.grams?.formatClipZeros()
         )
     val fats =
-        rememberDoubleFormField2(product?.nutritionFacts?.fats?.value?.grams?.formatClipZeros())
+        rememberDoubleFormField(product?.nutritionFacts?.fats?.value?.grams?.formatClipZeros())
     val energy =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.energy?.value?.let {
                 when (defaultEnergyUnit) {
                     EnergyUnit.Kilocalories -> it.kilocalories
@@ -347,155 +347,149 @@ internal fun rememberProductForm2State(
     val energyUnit = rememberSaveable(defaultEnergyUnit) { mutableStateOf(defaultEnergyUnit) }
 
     val saturatedFats =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.saturatedFats?.value?.grams?.formatClipZeros()
         )
     val transFats =
-        rememberDoubleFormField2(
-            product?.nutritionFacts?.transFats?.value?.grams?.formatClipZeros()
-        )
+        rememberDoubleFormField(product?.nutritionFacts?.transFats?.value?.grams?.formatClipZeros())
     val monounsaturatedFats =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.monounsaturatedFats?.value?.grams?.formatClipZeros()
         )
     val polyunsaturatedFats =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.polyunsaturatedFats?.value?.grams?.formatClipZeros()
         )
     val omega3 =
-        rememberDoubleFormField2(product?.nutritionFacts?.omega3?.value?.grams?.formatClipZeros())
+        rememberDoubleFormField(product?.nutritionFacts?.omega3?.value?.grams?.formatClipZeros())
     val omega6 =
-        rememberDoubleFormField2(product?.nutritionFacts?.omega6?.value?.grams?.formatClipZeros())
+        rememberDoubleFormField(product?.nutritionFacts?.omega6?.value?.grams?.formatClipZeros())
 
     val sugars =
-        rememberDoubleFormField2(product?.nutritionFacts?.sugars?.value?.grams?.formatClipZeros())
+        rememberDoubleFormField(product?.nutritionFacts?.sugars?.value?.grams?.formatClipZeros())
     val addedSugars =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.addedSugars?.value?.grams?.formatClipZeros()
         )
     val dietaryFiber =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.dietaryFiber?.value?.grams?.formatClipZeros()
         )
     val solubleFiber =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.solubleFiber?.value?.grams?.formatClipZeros()
         )
     val insolubleFiber =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.insolubleFiber?.value?.grams?.formatClipZeros()
         )
 
     val salt =
-        rememberDoubleFormField2(product?.nutritionFacts?.salt?.value?.grams?.formatClipZeros())
+        rememberDoubleFormField(product?.nutritionFacts?.salt?.value?.grams?.formatClipZeros())
     val cholesterolMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.cholesterol?.value?.milligrams?.formatClipZeros()
         )
     val caffeineMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.caffeine?.value?.milligrams?.formatClipZeros()
         )
 
     val vitaminAMicro =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminA?.value?.micrograms?.formatClipZeros()
         )
     val vitaminB1Milli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminB1?.value?.milligrams?.formatClipZeros()
         )
     val vitaminB2Milli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminB2?.value?.milligrams?.formatClipZeros()
         )
     val vitaminB3Milli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminB3?.value?.milligrams?.formatClipZeros()
         )
     val vitaminB5Milli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminB5?.value?.milligrams?.formatClipZeros()
         )
     val vitaminB6Milli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminB6?.value?.milligrams?.formatClipZeros()
         )
     val vitaminB7Micro =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminB7?.value?.micrograms?.formatClipZeros()
         )
     val vitaminB9Micro =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminB9?.value?.micrograms?.formatClipZeros()
         )
     val vitaminB12Micro =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminB12?.value?.micrograms?.formatClipZeros()
         )
     val vitaminCMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminC?.value?.milligrams?.formatClipZeros()
         )
     val vitaminDMicro =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminD?.value?.micrograms?.formatClipZeros()
         )
     val vitaminEMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminE?.value?.milligrams?.formatClipZeros()
         )
     val vitaminKMicro =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.vitaminK?.value?.micrograms?.formatClipZeros()
         )
 
     val manganeseMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.manganese?.value?.milligrams?.formatClipZeros()
         )
     val magnesiumMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.magnesium?.value?.milligrams?.formatClipZeros()
         )
     val potassiumMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.potassium?.value?.milligrams?.formatClipZeros()
         )
     val calciumMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.calcium?.value?.milligrams?.formatClipZeros()
         )
     val copperMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.copper?.value?.milligrams?.formatClipZeros()
         )
     val zincMilli =
-        rememberDoubleFormField2(
-            product?.nutritionFacts?.zinc?.value?.milligrams?.formatClipZeros()
-        )
+        rememberDoubleFormField(product?.nutritionFacts?.zinc?.value?.milligrams?.formatClipZeros())
     val sodiumMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.sodium?.value?.milligrams?.formatClipZeros()
         )
     val ironMilli =
-        rememberDoubleFormField2(
-            product?.nutritionFacts?.iron?.value?.milligrams?.formatClipZeros()
-        )
+        rememberDoubleFormField(product?.nutritionFacts?.iron?.value?.milligrams?.formatClipZeros())
     val phosphorusMilli =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.phosphorus?.value?.milligrams?.formatClipZeros()
         )
     val seleniumMicro =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.selenium?.value?.micrograms?.formatClipZeros()
         )
     val iodineMicro =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.iodine?.value?.micrograms?.formatClipZeros()
         )
     val chromiumMicro =
-        rememberDoubleFormField2(
+        rememberDoubleFormField(
             product?.nutritionFacts?.chromium?.value?.micrograms?.formatClipZeros()
         )
 
@@ -625,7 +619,7 @@ internal fun rememberProductForm2State(
 }
 
 @Composable
-private fun rememberDoubleFormField2(defaultValue: String?): FormField {
+private fun rememberDoubleFormField(defaultValue: String?): FormField {
     val invalidNumber = stringResource(Res.string.error_invalid_number)
     val valueMustBePositive = stringResource(Res.string.error_value_must_be_positive)
 

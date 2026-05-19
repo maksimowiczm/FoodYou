@@ -30,7 +30,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifec
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.userfood.FillSuggestedFieldsDialog
 import com.maksimowiczm.foodyou.app.ui.userfood.ProductForm
-import com.maksimowiczm.foodyou.app.ui.userfood.rememberProductForm2State
+import com.maksimowiczm.foodyou.app.ui.userfood.rememberProductFormState
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
@@ -46,7 +46,7 @@ fun CreateProductScreen(
 ) {
     val viewModel: CreateProductViewModel = koinViewModel()
     val energyFormat by viewModel.energyFormat.collectAsStateWithLifecycle()
-    val formState = rememberProductForm2State(defaultEnergyUnit = energyFormat)
+    val formState = rememberProductFormState(defaultEnergyUnit = energyFormat)
     val isLocked by viewModel.isLocked.collectAsStateWithLifecycle()
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
