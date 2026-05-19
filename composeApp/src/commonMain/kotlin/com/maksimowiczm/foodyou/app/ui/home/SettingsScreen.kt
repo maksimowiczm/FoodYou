@@ -12,6 +12,8 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.InteractionSource
@@ -33,6 +35,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
@@ -130,6 +133,8 @@ private fun SettingsScreen(
     val lazyListState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(lazyListState)
 
+    var profileExpanded by rememberSaveable { mutableStateOf(true) }
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -146,18 +151,38 @@ private fun SettingsScreen(
             contentPadding = contentPadding,
         ) {
             item {
-                Welcome(
-                    profileUiState = selectedProfile,
-                    onEdit = { onEditProfile(selectedProfile!!) },
-                    modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
-                )
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    AnimatedVisibility(
+                        visible = profileExpanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically(),
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            AnimatedAvatar(
+                                profileUiState = selectedProfile,
+                                onEditProfile = { onEditProfile(it) },
+                            )
+                            Spacer(Modifier.height(8.dp))
+                        }
+                    }
+                    AnimatedName(selectedProfile)
+                }
             }
             item {
                 ProfileSwitcher(
                     profiles = profiles,
                     selectedProfile = selectedProfile,
+                    expanded = !profileExpanded,
+                    onExpandedChange = { profileExpanded = !it },
                     onSelectProfile = onSelectProfile,
                     onAddProfile = onAddProfile,
+                    onEditProfile = { onEditProfile(it) },
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
             }
@@ -176,117 +201,123 @@ private fun SettingsScreen(
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-private fun Welcome(
+private fun AnimatedAvatar(
     profileUiState: ProfileUiState?,
-    onEdit: (ProfileUiState) -> Unit,
+    onEditProfile: (ProfileUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        updateTransition(targetState = profileUiState).Crossfade { profile ->
-            val interactionSource = remember { MutableInteractionSource() }
+    updateTransition(targetState = profileUiState).Crossfade(modifier) { profile ->
+        val interactionSource = remember { MutableInteractionSource() }
+        val isPressed = interactionSource.collectIsPressedAsState()
+        val cornerDp = animateDpAsState(if (isPressed.value) 8.dp else 32.dp)
 
+        Box(
+            Modifier.size(64.dp)
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                    enabled = profile != null,
+                    onClick = { if (profile != null) onEditProfile(profile) },
+                    onClickLabel = stringResource(Res.string.action_edit),
+                    role = Role.Button,
+                )
+        ) {
             Box(
-                Modifier.size(64.dp)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        enabled = profile != null,
-                        onClick = { if (profile != null) onEdit(profile) },
-                        onClickLabel = stringResource(Res.string.action_edit),
-                        role = Role.Button,
-                    )
-            ) {
-                Box(Modifier.matchParentSize().clip(CircleShape).align(Alignment.Center)) {
-                    when (val avatar = profile?.avatar) {
-                        null ->
-                            Spacer(
-                                Modifier.shimmer()
-                                    .matchParentSize()
-                                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                            )
-
-                        is Profile.Avatar.Photo -> avatar.Avatar(Modifier.matchParentSize())
-
-                        is Profile.Avatar.Predefined ->
-                            avatar.Avatar(Modifier.padding(8.dp).matchParentSize())
-                    }
+                Modifier.matchParentSize().align(Alignment.Center).graphicsLayer {
+                    clip = true
+                    shape = RoundedCornerShape(cornerDp.value)
                 }
-                if (profile != null) {
-                    IconButton(
-                        onClick = { onEdit(profile) },
-                        modifier =
-                            Modifier.size(24.dp).align(Alignment.BottomEnd).clearAndSetSemantics {},
-                        colors =
-                            IconButtonDefaults.iconButtonColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            ),
-                        shapes = IconButtonDefaults.shapes(),
-                        interactionSource = interactionSource,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Edit,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
+            ) {
+                when (val avatar = profile?.avatar) {
+                    null ->
+                        Spacer(
+                            Modifier.shimmer()
+                                .matchParentSize()
+                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                        )
+
+                    is Profile.Avatar.Photo -> avatar.Avatar(Modifier.matchParentSize())
+
+                    is Profile.Avatar.Predefined ->
+                        avatar.Avatar(Modifier.padding(8.dp).matchParentSize())
+                }
+            }
+            if (profile != null) {
+                IconButton(
+                    onClick = { onEditProfile(profile) },
+                    modifier =
+                        Modifier.size(24.dp).align(Alignment.BottomEnd).clearAndSetSemantics {},
+                    colors =
+                        IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                    shapes = IconButtonDefaults.shapes(),
+                    interactionSource = interactionSource,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AnimatedName(profileUiState: ProfileUiState?, modifier: Modifier = Modifier) {
+    if (profileUiState != null) {
+        val colorScheme = MaterialTheme.colorScheme
+        val colors =
+            remember(colorScheme) {
+                listOf(colorScheme.primary, colorScheme.secondary, colorScheme.tertiary)
+            }
+
+        val infiniteTransition = rememberInfiniteTransition()
+        val offset =
+            infiniteTransition.animateFloat(
+                initialValue = 0f,
+                targetValue = 2f,
+                animationSpec =
+                    infiniteRepeatable(
+                        animation = tween(durationMillis = 10_000, easing = LinearEasing),
+                        repeatMode = RepeatMode.Reverse,
+                    ),
+            )
+        val brush =
+            remember(offset) {
+                object : ShaderBrush() {
+                    override fun createShader(size: Size): Shader {
+                        val widthOffset = size.width * offset.value
+                        val heightOffset = size.height * offset.value
+                        return LinearGradientShader(
+                            colors = colors,
+                            from = Offset(widthOffset, heightOffset),
+                            to = Offset(widthOffset + size.width, heightOffset + size.height),
+                            tileMode = TileMode.Mirror,
                         )
                     }
                 }
             }
-        }
-        if (profileUiState != null) {
-            val colorScheme = MaterialTheme.colorScheme
-            val colors =
-                remember(colorScheme) {
-                    listOf(colorScheme.primary, colorScheme.secondary, colorScheme.tertiary)
-                }
 
-            val infiniteTransition = rememberInfiniteTransition()
-            val offset =
-                infiniteTransition.animateFloat(
-                    initialValue = 0f,
-                    targetValue = 2f,
-                    animationSpec =
-                        infiniteRepeatable(
-                            animation = tween(durationMillis = 10_000, easing = LinearEasing),
-                            repeatMode = RepeatMode.Reverse,
-                        ),
-                )
-            val brush =
-                remember(offset) {
-                    object : ShaderBrush() {
-                        override fun createShader(size: Size): Shader {
-                            val widthOffset = size.width * offset.value
-                            val heightOffset = size.height * offset.value
-                            return LinearGradientShader(
-                                colors = colors,
-                                from = Offset(widthOffset, heightOffset),
-                                to = Offset(widthOffset + size.width, heightOffset + size.height),
-                                tileMode = TileMode.Mirror,
-                            )
-                        }
-                    }
-                }
-
-            Text(
-                text =
-                    stringResource(Res.string.headline_welcome_user_message, profileUiState.name),
-                style = MaterialTheme.typography.titleLarge.copy(brush = brush),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
-        } else {
-            Box(
-                Modifier.shimmer()
-                    .height(MaterialTheme.typography.titleLarge.toDp())
-                    .width(150.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            )
-        }
+        Text(
+            text = stringResource(Res.string.headline_welcome_user_message, profileUiState.name),
+            modifier = modifier,
+            style = MaterialTheme.typography.titleLarge.copy(brush = brush),
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+        )
+    } else {
+        Box(
+            modifier
+                .shimmer()
+                .height(MaterialTheme.typography.titleLarge.toDp())
+                .width(150.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+        )
     }
 }
 
@@ -295,12 +326,13 @@ private fun Welcome(
 private fun ProfileSwitcher(
     profiles: List<ProfileUiState>?,
     selectedProfile: ProfileUiState?,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
     onSelectProfile: (ProfileUiState) -> Unit,
+    onEditProfile: (ProfileUiState) -> Unit,
     onAddProfile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
-
     val expandedTransition = updateTransition(expanded)
     val iconRotationState by animateFloatAsState(if (expanded) 0f else 180f)
 
@@ -314,7 +346,7 @@ private fun ProfileSwitcher(
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         val headerInteractionSource = remember { MutableInteractionSource() }
         SegmentedListItem(
-            onClick = { expanded = !expanded },
+            onClick = { onExpandedChange(!expanded) },
             shapes =
                 ListItemDefaults.segmentedShapes(
                     index = 0,
@@ -362,6 +394,7 @@ private fun ProfileSwitcher(
                                                 avatar.Avatar(
                                                     Modifier.size(24.dp).clip(CircleShape)
                                                 )
+
                                             is Profile.Avatar.Predefined ->
                                                 avatar.Avatar(Modifier.size(24.dp))
                                         }
@@ -380,7 +413,10 @@ private fun ProfileSwitcher(
                     key(profile.id.value) {
                         val interactionSource = remember { MutableInteractionSource() }
                         SegmentedListItem(
-                            onClick = { onSelectProfile(profile) },
+                            onClick = {
+                                if (profile == selectedProfile) onEditProfile(profile)
+                                else onSelectProfile(profile)
+                            },
                             selected = profile == selectedProfile,
                             colors = colors,
                             shapes =
@@ -404,6 +440,16 @@ private fun ProfileSwitcher(
                                     is Profile.Avatar.Predefined -> avatar.Avatar(modifier)
                                 }
                             },
+                            trailingContent =
+                                if (profile == selectedProfile) {
+                                    {
+                                        Icon(
+                                            imageVector = Icons.Filled.MoreVert,
+                                            contentDescription =
+                                                stringResource(Res.string.action_show_more),
+                                        )
+                                    }
+                                } else null,
                             content = {
                                 Text(
                                     text = profile.name,
