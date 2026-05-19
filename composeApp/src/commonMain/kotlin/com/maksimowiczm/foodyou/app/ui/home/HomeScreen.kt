@@ -265,7 +265,7 @@ fun HomeScreen(
         val sceneState =
             rememberSceneState(
                 entries = entries,
-                sceneStrategy = SinglePaneSceneStrategy(),
+                sceneStrategies = listOf(SinglePaneSceneStrategy()),
                 onBack = { backStack.safeRemoveLast() },
             )
 
