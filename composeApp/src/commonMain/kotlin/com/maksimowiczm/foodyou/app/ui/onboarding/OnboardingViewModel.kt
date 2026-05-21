@@ -8,22 +8,24 @@ import com.maksimowiczm.foodyou.account.domain.addProfile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
-import com.maksimowiczm.foodyou.search.domain.preferences.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 internal class OnboardingViewModel(
     private val accountService: AccountService,
     private val accountManager: AppProfileManager,
-    private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository,
+    private val openFoodFacts: OpenFoodFactsSettingsRepository,
+    private val foodDataCentral: FoodDataCentralSettingsRepository,
     private val blobStorage: BlobStorage,
 ) : ViewModel() {
     private val _finishingOnboarding = MutableStateFlow(false)
@@ -54,18 +56,16 @@ internal class OnboardingViewModel(
 
                 val profile = Profile(name = name, avatar = profileAvatar)
 
-                val searchPreferences =
-                    foodSearchPreferencesRepository
-                        .observe()
-                        .first()
-                        .copy(
-                            allowOpenFoodFacts = allowOpenFoodFacts,
-                            allowFoodDataCentralUSDA = allowFoodDataCentral,
-                        )
-
-                accountService.update { addProfile(profile) }
-                accountManager.setAppProfileId(profile.id)
-                foodSearchPreferencesRepository.save(searchPreferences)
+                awaitAll(
+                    async {
+                        accountService.update { addProfile(profile) }
+                        accountManager.setAppProfileId(profile.id)
+                    },
+                    async { openFoodFacts.update { it.copy(remoteEnabled = allowOpenFoodFacts) } },
+                    async {
+                        foodDataCentral.update { it.copy(remoteEnabled = allowFoodDataCentral) }
+                    },
+                )
             }
             val minDelayTask = async { delay(2_000) }
 

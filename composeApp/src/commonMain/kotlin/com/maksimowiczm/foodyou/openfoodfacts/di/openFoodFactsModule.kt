@@ -2,8 +2,10 @@ package com.maksimowiczm.foodyou.openfoodfacts.di
 
 import com.maksimowiczm.foodyou.common.extension.databaseBuilder
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.OpenFoodFactsRepositoryImpl
+import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.OpenFoodFactsSettingsRepositoryImpl
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsV2RemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.SearchaliciousRemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase
@@ -60,4 +62,6 @@ val openFoodFactsModule = module {
     single(named(OpenFoodFactsUrlSearchQuery::class.qualifiedName!!)) {
         OpenFoodFactsUrlSearchQuery.recognizer
     }
+
+    factoryOf(::OpenFoodFactsSettingsRepositoryImpl).bind<OpenFoodFactsSettingsRepository>()
 }

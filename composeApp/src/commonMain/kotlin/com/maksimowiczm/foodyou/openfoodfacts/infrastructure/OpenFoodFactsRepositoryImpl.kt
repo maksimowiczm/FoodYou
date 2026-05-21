@@ -16,12 +16,12 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsV2RemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.SearchaliciousRemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase
-import com.maksimowiczm.foodyou.search.domain.preferences.FoodSearchPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.map
 internal class OpenFoodFactsRepositoryImpl(
     private val searchApi: SearchaliciousRemoteDataSource,
     private val apiV2: OpenFoodFactsV2RemoteDataSource,
-    private val searchPreferencesRepository: FoodSearchPreferencesRepository,
+    private val settingsRepository: OpenFoodFactsSettingsRepository,
     private val database: OpenFoodFactsDatabase,
     private val dao: OpenFoodFactsDao,
     private val logger: Logger,
@@ -56,9 +56,9 @@ internal class OpenFoodFactsRepositoryImpl(
             }
         }
 
-        return searchPreferencesRepository.observe().flatMapLatest { prefs ->
+        return settingsRepository.observe().flatMapLatest { prefs ->
             val remoteMediator =
-                if (prefs.allowOpenFoodFacts && parameters.query is SearchQuery.NotBlank) {
+                if (prefs.remoteEnabled && parameters.query is SearchQuery.NotBlank) {
                     OpenFoodFactsRemoteMediator(
                         query = parameters.query,
                         database = database,

@@ -21,7 +21,6 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQ
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.FoodDataCentralRemoteDataSource
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDao
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDatabase
-import com.maksimowiczm.foodyou.search.domain.preferences.FoodSearchPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -32,7 +31,6 @@ import kotlinx.coroutines.flow.map
 
 internal class FoodDataCentralRepositoryImpl(
     private val networkDataSource: FoodDataCentralRemoteDataSource,
-    private val searchPreferencesRepository: FoodSearchPreferencesRepository,
     private val settingsRepository: FoodDataCentralSettingsRepository,
     private val database: FoodDataCentralDatabase,
     private val dao: FoodDataCentralDao,
@@ -56,15 +54,15 @@ internal class FoodDataCentralRepositoryImpl(
             }
         }
 
-        return searchPreferencesRepository.observe().flatMapLatest { prefs ->
+        return settingsRepository.observe().flatMapLatest { prefs ->
             val remoteMediator =
-                if (prefs.allowFoodDataCentralUSDA && parameters.query is SearchQuery.NotBlank) {
+                if (prefs.remoteEnabled && parameters.query is SearchQuery.NotBlank) {
                     FoodDataCentralRemoteMediator(
                         query = parameters.query,
                         database = database,
                         remote = networkDataSource,
                         mapper = mapper,
-                        apiKey = settingsRepository.load().apiKey,
+                        apiKey = prefs.apiKey,
                         pageSize = pageSize,
                         logger = logger,
                     )
@@ -98,7 +96,7 @@ internal class FoodDataCentralRepositoryImpl(
 
         if (localProduct == null) {
             try {
-                val apiKey = settingsRepository.load().apiKey
+                val apiKey = settingsRepository.observe().first().apiKey
                 val openFoodFactsProduct = networkDataSource.getProduct(fdcId, apiKey).getOrThrow()
                 val entity = mapper.foodDataCentralProductEntity(openFoodFactsProduct)
                 dao.upsertProduct(entity)

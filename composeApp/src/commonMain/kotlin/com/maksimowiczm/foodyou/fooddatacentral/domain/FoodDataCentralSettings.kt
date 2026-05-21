@@ -1,3 +1,3 @@
 package com.maksimowiczm.foodyou.fooddatacentral.domain
 
-data class FoodDataCentralSettings(val apiKey: String?)
+data class FoodDataCentralSettings(val remoteEnabled: Boolean, val apiKey: String?)

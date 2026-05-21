@@ -6,7 +6,7 @@ import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
-import com.maksimowiczm.foodyou.search.domain.preferences.FoodSearchPreferencesRepository
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 internal class OpenFoodFactsSearchViewModel(
     private val repository: OpenFoodFactsRepository,
-    searchPreferencesRepository: FoodSearchPreferencesRepository,
+    settingsRepository: OpenFoodFactsSettingsRepository,
 ) : ViewModel() {
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
 
@@ -50,7 +50,7 @@ internal class OpenFoodFactsSearchViewModel(
                 initialValue = null,
             )
 
-    private val enabled = searchPreferencesRepository.observe().map { it.allowOpenFoodFacts }
+    private val enabled = settingsRepository.observe().map { it.remoteEnabled }
 
     val shouldShowFilter =
         combine(count, enabled) { count, enabled -> enabled || (count != null && count > 0) }

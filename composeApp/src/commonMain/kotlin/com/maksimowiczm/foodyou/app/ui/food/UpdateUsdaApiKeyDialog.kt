@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
@@ -33,7 +34,10 @@ fun UpdateUsdaApiKeyDialog(
     val obtainKeyUrl = "https://fdc.nal.usda.gov/api-key-signup"
 
     val settings =
-        repository.observe().collectAsStateWithLifecycle(runBlocking { repository.load() }).value
+        repository
+            .observe()
+            .collectAsStateWithLifecycle(runBlocking { repository.observe().first() })
+            .value
 
     val focusRequester = remember { FocusRequester() }
     val textFieldState = rememberTextFieldState(settings.apiKey ?: "")

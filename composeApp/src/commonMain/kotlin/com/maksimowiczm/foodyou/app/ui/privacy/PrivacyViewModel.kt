@@ -2,18 +2,28 @@ package com.maksimowiczm.foodyou.app.ui.privacy
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.search.domain.preferences.FoodSearchPreferencesRepository
-import com.maksimowiczm.foodyou.search.domain.preferences.update
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class PrivacyViewModel(
-    private val foodSearchPreferencesRepository: FoodSearchPreferencesRepository
+    private val openFoodFacts: OpenFoodFactsSettingsRepository,
+    private val foodDataCentral: FoodDataCentralSettingsRepository,
 ) : ViewModel() {
-    private val _foodSearchPreferences = foodSearchPreferencesRepository.observe()
+    private val _foodSearchPreferences =
+        combine(foodDataCentral.observe(), openFoodFacts.observe()) { usda, off ->
+            PrivacyPreferences(
+                allowOpenFoodFacts = off.remoteEnabled,
+                allowFoodDataCentralUSDA = usda.remoteEnabled,
+            )
+        }
 
     val foodSearchPreferences =
         _foodSearchPreferences.stateIn(
@@ -27,13 +37,23 @@ class PrivacyViewModel(
         allowFoodDataCentralUSDA: Boolean? = null,
     ) {
         viewModelScope.launch {
-            foodSearchPreferencesRepository.update { prefs ->
-                prefs.copy(
-                    allowOpenFoodFacts = allowOpenFoodFacts ?: prefs.allowOpenFoodFacts,
-                    allowFoodDataCentralUSDA =
-                        allowFoodDataCentralUSDA ?: prefs.allowFoodDataCentralUSDA,
+            val jobs =
+                listOfNotNull(
+                    allowOpenFoodFacts?.let {
+                        async {
+                            openFoodFacts.update { it.copy(remoteEnabled = allowOpenFoodFacts) }
+                        }
+                    },
+                    allowFoodDataCentralUSDA?.let {
+                        async {
+                            foodDataCentral.update {
+                                it.copy(remoteEnabled = allowFoodDataCentralUSDA)
+                            }
+                        }
+                    },
                 )
-            }
+
+            awaitAll(*jobs.toTypedArray())
         }
     }
 }
