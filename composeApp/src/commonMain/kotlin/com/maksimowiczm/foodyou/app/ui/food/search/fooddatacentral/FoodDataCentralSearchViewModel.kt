@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
+import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class FoodDataCentralSearchViewModel(
-    private val repository: FoodDataCentralRepository,
+    private val service: FoodDataCentralService,
     settingsRepository: FoodDataCentralSettingsRepository,
 ) : ViewModel() {
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
@@ -39,11 +39,11 @@ internal class FoodDataCentralSearchViewModel(
             )
 
     val pages =
-        searchParameters.flatMapLatest { repository.search(it, PAGE_SIZE) }.cachedIn(viewModelScope)
+        searchParameters.flatMapLatest { service.search(it, PAGE_SIZE) }.cachedIn(viewModelScope)
 
     val count =
         searchParameters
-            .flatMapLatest(repository::count)
+            .flatMapLatest(service::count)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),

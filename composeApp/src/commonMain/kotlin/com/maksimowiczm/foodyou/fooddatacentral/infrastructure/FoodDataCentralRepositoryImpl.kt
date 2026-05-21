@@ -16,7 +16,6 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.FoodDataCentralRemoteDataSource
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDao
@@ -26,12 +25,10 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
 internal class FoodDataCentralRepositoryImpl(
     private val networkDataSource: FoodDataCentralRemoteDataSource,
-    private val settingsRepository: FoodDataCentralSettingsRepository,
     private val database: FoodDataCentralDatabase,
     private val dao: FoodDataCentralDao,
     private val logger: Logger,
@@ -42,6 +39,8 @@ internal class FoodDataCentralRepositoryImpl(
     override fun search(
         parameters: FoodDataCentralSearchParameters,
         pageSize: Int,
+        remoteEnabled: Boolean,
+        apiKey: String?,
     ): Flow<PagingData<FoodDataCentralProduct>> {
         val config = PagingConfig(pageSize = pageSize)
 
@@ -54,26 +53,28 @@ internal class FoodDataCentralRepositoryImpl(
             }
         }
 
-        return settingsRepository.observe().flatMapLatest { prefs ->
-            val remoteMediator =
-                if (prefs.remoteEnabled && parameters.query is SearchQuery.NotBlank) {
-                    FoodDataCentralRemoteMediator(
-                        query = parameters.query,
-                        database = database,
-                        remote = networkDataSource,
-                        mapper = mapper,
-                        apiKey = prefs.apiKey,
-                        pageSize = pageSize,
-                        logger = logger,
-                    )
-                } else null
+        val remoteMediator =
+            if (remoteEnabled && parameters.query is SearchQuery.NotBlank) {
+                FoodDataCentralRemoteMediator(
+                    query = parameters.query,
+                    database = database,
+                    remote = networkDataSource,
+                    mapper = mapper,
+                    apiKey = apiKey,
+                    pageSize = pageSize,
+                    logger = logger,
+                )
+            } else null
 
-            Pager(config = config, remoteMediator = remoteMediator, pagingSourceFactory = factory)
-                .flow
-                .map { pagingData ->
-                    pagingData.map { entity -> mapper.foodDataCentralProduct(entity) }
-                }
-        }
+        return Pager(
+                config = config,
+                remoteMediator = remoteMediator,
+                pagingSourceFactory = factory,
+            )
+            .flow
+            .map { pagingData ->
+                pagingData.map { entity -> mapper.foodDataCentralProduct(entity) }
+            }
     }
 
     override fun count(parameters: FoodDataCentralSearchParameters): Flow<Int> {
@@ -86,7 +87,9 @@ internal class FoodDataCentralRepositoryImpl(
     }
 
     override fun observe(
-        identity: FoodDataCentralProductIdentity
+        identity: FoodDataCentralProductIdentity,
+        remoteEnabled: Boolean,
+        apiKey: String?,
     ): Flow<RemoteData<FoodDataCentralProduct>> = channelFlow {
         send(RemoteData.Loading(null))
 
@@ -95,18 +98,22 @@ internal class FoodDataCentralRepositoryImpl(
         val localProduct = dao.observe(fdcId).first()
 
         if (localProduct == null) {
-            try {
-                val apiKey = settingsRepository.observe().first().apiKey
-                val openFoodFactsProduct = networkDataSource.getProduct(fdcId, apiKey).getOrThrow()
-                val entity = mapper.foodDataCentralProductEntity(openFoodFactsProduct)
-                dao.upsertProduct(entity)
-                send(RemoteData.Success(mapper.foodDataCentralProduct(entity)))
-            } catch (e: FoodDataCentralApiError) {
-                when (e) {
-                    is FoodDataCentralApiError.ProductNotFound -> send(RemoteData.NotFound)
+            if (remoteEnabled) {
+                try {
+                    val openFoodFactsProduct =
+                        networkDataSource.getProduct(fdcId, apiKey).getOrThrow()
+                    val entity = mapper.foodDataCentralProductEntity(openFoodFactsProduct)
+                    dao.upsertProduct(entity)
+                    send(RemoteData.Success(mapper.foodDataCentralProduct(entity)))
+                } catch (e: FoodDataCentralApiError) {
+                    when (e) {
+                        is FoodDataCentralApiError.ProductNotFound -> send(RemoteData.NotFound)
 
-                    else -> send(RemoteData.Error(e, null))
+                        else -> send(RemoteData.Error(e, null))
+                    }
                 }
+            } else {
+                send(RemoteData.NotFound)
             }
         } else {
             send(RemoteData.Success(mapper.foodDataCentralProduct(localProduct)))
@@ -121,12 +128,13 @@ internal class FoodDataCentralRepositoryImpl(
     }
 
     override suspend fun refresh(
-        identity: FoodDataCentralProductIdentity
+        identity: FoodDataCentralProductIdentity,
+        apiKey: String?,
     ): Result<FoodDataCentralProduct, FoodDataCentralApiError> {
         val fdcId = identity.fdcId
 
         return try {
-            val remote = networkDataSource.getProduct(id = fdcId, apiKey = "DEMO_KEY").getOrThrow()
+            val remote = networkDataSource.getProduct(id = fdcId, apiKey = apiKey).getOrThrow()
             val entity = mapper.foodDataCentralProductEntity(remote)
             dao.upsertProduct(entity)
             Ok(mapper.foodDataCentralProduct(entity))

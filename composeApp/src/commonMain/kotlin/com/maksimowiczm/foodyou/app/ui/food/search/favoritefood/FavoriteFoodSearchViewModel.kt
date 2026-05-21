@@ -13,9 +13,9 @@ import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.extension.combine
+import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 
 internal class FavoriteFoodSearchViewModel(
     appProfileManager: AppProfileManager,
-    private val foodDataCentralRepository: FoodDataCentralRepository,
+    private val foodDataCentralService: FoodDataCentralService,
     private val openFoodFactsService: OpenFoodFactsService,
     private val userProductService: UserProductService,
     private val nameSelector: FoodNameSelector,
@@ -55,7 +55,7 @@ internal class FavoriteFoodSearchViewModel(
                     .map { identity ->
                         when (identity) {
                             is FavoriteFoodIdentity.FoodDataCentral ->
-                                foodDataCentralRepository.observe(
+                                foodDataCentralService.observe(
                                     FoodDataCentralProductIdentity(identity.fdcId)
                                 )
 

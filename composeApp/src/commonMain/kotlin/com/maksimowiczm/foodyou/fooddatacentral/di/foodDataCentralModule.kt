@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.fooddatacentral.di
 
 import com.maksimowiczm.foodyou.common.extension.databaseBuilder
+import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
@@ -48,6 +49,8 @@ val foodDataCentralModule = module {
     }
 
     factoryOf(::FoodDataCentralRepositoryImpl).bind<FoodDataCentralRepository>()
+
+    factoryOf(::FoodDataCentralService)
 
     factoryOf(::FoodDataCentralSettingsRepositoryImpl).bind<FoodDataCentralSettingsRepository>()
 

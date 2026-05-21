@@ -9,13 +9,20 @@ interface FoodDataCentralRepository {
     fun search(
         parameters: FoodDataCentralSearchParameters,
         pageSize: Int,
+        remoteEnabled: Boolean,
+        apiKey: String?,
     ): Flow<PagingData<FoodDataCentralProduct>>
 
     fun count(parameters: FoodDataCentralSearchParameters): Flow<Int>
 
-    fun observe(identity: FoodDataCentralProductIdentity): Flow<RemoteData<FoodDataCentralProduct>>
+    fun observe(
+        identity: FoodDataCentralProductIdentity,
+        remoteEnabled: Boolean,
+        apiKey: String?,
+    ): Flow<RemoteData<FoodDataCentralProduct>>
 
     suspend fun refresh(
-        identity: FoodDataCentralProductIdentity
+        identity: FoodDataCentralProductIdentity,
+        apiKey: String?,
     ): Result<FoodDataCentralProduct, FoodDataCentralApiError>
 }
