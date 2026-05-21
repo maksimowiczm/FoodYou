@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.device.domain
 import kotlin.test.Test
 import kotlin.test.assertNotSame
 
-class RandomizeThemeTests {
+class DeviceSettingsTests {
     @Test
     fun randomizeTheme_updatesThemeSettings() {
         val settings =
