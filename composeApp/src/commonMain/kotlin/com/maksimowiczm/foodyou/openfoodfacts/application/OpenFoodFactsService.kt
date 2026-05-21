@@ -1,0 +1,53 @@
+package com.maksimowiczm.foodyou.openfoodfacts.application
+
+import androidx.paging.PagingData
+import com.maksimowiczm.foodyou.common.RemoteData
+import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+
+class OpenFoodFactsService(
+    private val repository: OpenFoodFactsRepository,
+    private val settingsRepository: OpenFoodFactsSettingsRepository,
+) {
+    fun search(
+        parameters: OpenFoodFactsSearchParameters,
+        pageSize: Int,
+    ): Flow<PagingData<OpenFoodFactsProduct>> {
+        return settingsRepository.observe().flatMapLatest { settings ->
+            repository.search(
+                parameters = parameters,
+                pageSize = pageSize,
+                remoteEnabled = settings.remoteEnabled,
+            )
+        }
+    }
+
+    fun count(parameters: OpenFoodFactsSearchParameters): Flow<Int> {
+        return repository.count(parameters)
+    }
+
+    fun observe(identity: OpenFoodFactsProductIdentity): Flow<RemoteData<OpenFoodFactsProduct>> {
+        return settingsRepository
+            .observe()
+            .map { it.remoteEnabled }
+            .distinctUntilChanged()
+            .flatMapLatest { remoteEnabled ->
+                repository.observe(identity = identity, remoteEnabled = remoteEnabled)
+            }
+    }
+
+    suspend fun refresh(
+        identity: OpenFoodFactsProductIdentity
+    ): Result<OpenFoodFactsProduct, OpenFoodFactsApiError> {
+        return repository.refresh(identity)
+    }
+}

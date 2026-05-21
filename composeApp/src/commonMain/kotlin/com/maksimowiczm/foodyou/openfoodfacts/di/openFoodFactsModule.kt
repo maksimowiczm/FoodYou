@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.openfoodfacts.di
 
 import com.maksimowiczm.foodyou.common.extension.databaseBuilder
+import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
@@ -58,6 +59,7 @@ val openFoodFactsModule = module {
     }
 
     factoryOf(::OpenFoodFactsRepositoryImpl).bind<OpenFoodFactsRepository>()
+    factoryOf(::OpenFoodFactsService)
 
     single(named(OpenFoodFactsUrlSearchQuery::class.qualifiedName!!)) {
         OpenFoodFactsUrlSearchQuery.recognizer

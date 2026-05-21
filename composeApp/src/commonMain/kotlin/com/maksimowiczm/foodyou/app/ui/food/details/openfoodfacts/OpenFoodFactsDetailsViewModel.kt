@@ -9,9 +9,9 @@ import com.maksimowiczm.foodyou.app.ui.food.details.ObserveIsFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.ui.food.details.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.onError
+import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 internal class OpenFoodFactsDetailsViewModel(
     private val identity: OpenFoodFactsProductIdentity,
-    private val openFoodFactsRepository: OpenFoodFactsRepository,
+    private val openFoodFactsService: OpenFoodFactsService,
     observeIsFavoriteFoodUseCase: ObserveIsFavoriteFoodUseCase,
     private val setFavoriteFoodUseCase: SetFavoriteFoodUseCase,
     logger: Logger,
@@ -32,7 +32,7 @@ internal class OpenFoodFactsDetailsViewModel(
 
     val uiState: StateFlow<FoodDetailsUiState<OpenFoodFactsProduct>> =
         combine(
-                openFoodFactsRepository.observe(identity),
+                openFoodFactsService.observe(identity),
                 observeIsFavoriteFoodUseCase.observe(identity),
                 isRefreshing,
             ) { remoteData, isFavorite, isRefreshing ->
@@ -69,7 +69,7 @@ internal class OpenFoodFactsDetailsViewModel(
         viewModelScope.launch {
             isRefreshing.value = true
             delay(500)
-            openFoodFactsRepository.refresh(identity).onError { error ->
+            openFoodFactsService.refresh(identity).onError { error ->
                 logger.e("Error refreshing OpenFoodFacts product: $identity", error)
             }
             isRefreshing.value = false

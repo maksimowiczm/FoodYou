@@ -9,11 +9,15 @@ interface OpenFoodFactsRepository {
     fun search(
         parameters: OpenFoodFactsSearchParameters,
         pageSize: Int,
+        remoteEnabled: Boolean,
     ): Flow<PagingData<OpenFoodFactsProduct>>
 
     fun count(parameters: OpenFoodFactsSearchParameters): Flow<Int>
 
-    fun observe(identity: OpenFoodFactsProductIdentity): Flow<RemoteData<OpenFoodFactsProduct>>
+    fun observe(
+        identity: OpenFoodFactsProductIdentity,
+        remoteEnabled: Boolean,
+    ): Flow<RemoteData<OpenFoodFactsProduct>>
 
     suspend fun refresh(
         identity: OpenFoodFactsProductIdentity
