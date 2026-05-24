@@ -264,6 +264,9 @@ data class NutritionFacts(
             Nutrient.Chromium -> chromium
         }
 
+    fun hasMacronutrientsValues(): Boolean =
+        proteins.value != null && carbohydrates.value != null && fats.value != null
+
     companion object {
         /**
          * Creates a NutritionFacts instance requiring all nutrient values to be explicitly

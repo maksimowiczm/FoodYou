@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -27,8 +28,16 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FoodSource
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodSourceDefaults
 import com.maksimowiczm.foodyou.app.ui.food.details.RefreshIconButton
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
+import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
+import com.maksimowiczm.foodyou.common.domain.food.scale
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.milliliters
+import com.maksimowiczm.foodyou.common.expect
+import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import foodyou.app.generated.resources.*
@@ -74,6 +83,9 @@ fun FoodDataCentralDetailsScreen(
                 isFavorite = uiState.isFavorite,
                 headline = headline,
                 nutritionFacts = uiState.food?.nutritionFacts,
+                servingQuantity = uiState.food?.servingQuantity,
+                packageQuantity = uiState.food?.packageQuantity,
+                isLiquid = false, // TODO
                 url = uiState.food?.source,
                 onBack = onBack,
                 onRefresh = viewModel::refresh,
@@ -92,6 +104,9 @@ private fun FoodDataCentralDetailsScreen(
     isFavorite: Boolean,
     headline: String?,
     nutritionFacts: NutritionFacts?,
+    servingQuantity: AbsoluteQuantity?,
+    packageQuantity: AbsoluteQuantity?,
+    isLiquid: Boolean,
     url: String?,
     onBack: () -> Unit,
     onRefresh: () -> Unit,
@@ -103,6 +118,26 @@ private fun FoodDataCentralDetailsScreen(
         remember(nutritionFacts) {
             if (nutritionFacts == null) return@remember false
             (Nutrient.all - Nutrient.basic).any { nutritionFacts[it].value != null }
+        }
+
+    var quantity by
+        rememberSerializable(servingQuantity, packageQuantity, isLiquid) {
+            val default =
+                if (servingQuantity != null) ServingQuantity(1.0)
+                else if (packageQuantity != null) PackageQuantity(1.0)
+                else if (isLiquid) AbsoluteQuantity.Volume(100.milliliters)
+                else AbsoluteQuantity.Weight(100.grams)
+
+            mutableStateOf(default)
+        }
+    val quantitySuggestions =
+        remember(servingQuantity, packageQuantity, isLiquid) {
+            buildList {
+                if (isLiquid) add(AbsoluteQuantity.Volume(100.milliliters))
+                else add(AbsoluteQuantity.Weight(100.grams))
+                if (servingQuantity != null) add(ServingQuantity(1.0))
+                if (packageQuantity != null) add(PackageQuantity(1.0))
+            }
         }
 
     val lazyListState = rememberLazyListState()
@@ -135,8 +170,23 @@ private fun FoodDataCentralDetailsScreen(
                 item { FoodDetailsHeadline(headline = headline) }
                 if (nutritionFacts != null) {
                     item {
+                        val facts =
+                            remember(servingQuantity, packageQuantity, quantity) {
+                                nutritionFacts
+                                    .scale(packageQuantity, servingQuantity, quantity)
+                                    .onError {
+                                        return@remember NutritionFacts()
+                                    }
+                                    .expect("Can't be error at this point")
+                            }
+
                         FoodDetailsNutrients(
-                            nutritionFacts = nutritionFacts,
+                            nutritionFacts = facts,
+                            quantities = quantitySuggestions,
+                            selectedQuantity = quantity,
+                            servingQuantity = servingQuantity,
+                            packageQuantity = packageQuantity,
+                            onSelectQuantity = { quantity = it },
                             expanded = expanded,
                             onExpandedChange = { expanded = it },
                             expandingEnabled = expandingEnabled,

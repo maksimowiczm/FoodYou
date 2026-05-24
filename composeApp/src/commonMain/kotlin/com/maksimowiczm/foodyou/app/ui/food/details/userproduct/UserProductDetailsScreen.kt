@@ -28,6 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -43,7 +44,17 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsImage
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsNutrients
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
+import com.maksimowiczm.foodyou.common.domain.food.scale
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.milliliters
+import com.maksimowiczm.foodyou.common.expect
+import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import foodyou.app.generated.resources.*
@@ -101,6 +112,28 @@ private fun UserProductDetailsScreen(
             (Nutrient.all - Nutrient.basic).any { userFood.nutritionFacts[it].value != null }
         }
 
+    var quantity by
+        rememberSerializable(userFood) {
+            val default =
+                if (userFood?.servingQuantity != null) ServingQuantity(1.0)
+                else if (userFood?.packageQuantity != null) PackageQuantity(1.0)
+                else if (userFood?.isLiquid == true) AbsoluteQuantity.Volume(100.milliliters)
+                else AbsoluteQuantity.Weight(100.grams)
+
+            mutableStateOf(default)
+        }
+    val quantitySuggestions =
+        remember(userFood) {
+            if (userFood == null) return@remember emptyList<Quantity>()
+            else
+                buildList {
+                    if (userFood.isLiquid) add(AbsoluteQuantity.Volume(100.milliliters))
+                    else add(AbsoluteQuantity.Weight(100.grams))
+                    if (userFood.servingQuantity != null) add(ServingQuantity(1.0))
+                    if (userFood.packageQuantity != null) add(PackageQuantity(1.0))
+                }
+        }
+
     val headline =
         remember(userFood, nameSelector) {
             userFood?.let { food ->
@@ -143,8 +176,23 @@ private fun UserProductDetailsScreen(
             }
             if (userFood?.nutritionFacts != null) {
                 item {
+                    val facts =
+                        remember(userFood, quantity) {
+                            userFood.nutritionFacts
+                                .scale(userFood.packageQuantity, userFood.servingQuantity, quantity)
+                                .onError {
+                                    return@remember NutritionFacts()
+                                }
+                                .expect("Can't be error at this point")
+                        }
+
                     FoodDetailsNutrients(
-                        nutritionFacts = userFood.nutritionFacts,
+                        nutritionFacts = facts,
+                        quantities = quantitySuggestions,
+                        selectedQuantity = quantity,
+                        servingQuantity = userFood.servingQuantity,
+                        packageQuantity = userFood.packageQuantity,
+                        onSelectQuantity = { quantity = it },
                         expanded = expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
