@@ -2,7 +2,9 @@ package com.maksimowiczm.foodyou.fooddatacentral.domain
 
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class FoodDataCentralProduct(
     val identity: FoodDataCentralProductIdentity,
     val name: String,

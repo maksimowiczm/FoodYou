@@ -4,7 +4,9 @@ import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class OpenFoodFactsProduct(
     val identity: OpenFoodFactsProductIdentity,
     val name: FoodName,

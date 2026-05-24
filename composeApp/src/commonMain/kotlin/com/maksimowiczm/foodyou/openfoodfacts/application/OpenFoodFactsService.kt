@@ -3,12 +3,16 @@ package com.maksimowiczm.foodyou.openfoodfacts.application
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.onSuccess
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductUpdatedEvent
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -17,6 +21,8 @@ import kotlinx.coroutines.flow.map
 class OpenFoodFactsService(
     private val repository: OpenFoodFactsRepository,
     private val settingsRepository: OpenFoodFactsSettingsRepository,
+    private val eventBus: EventBus,
+    private val clock: Clock = Clock.System,
 ) {
     fun search(
         parameters: OpenFoodFactsSearchParameters,
@@ -48,6 +54,10 @@ class OpenFoodFactsService(
     suspend fun refresh(
         identity: OpenFoodFactsProductIdentity
     ): Result<OpenFoodFactsProduct, OpenFoodFactsApiError> {
-        return repository.refresh(identity)
+        return repository.refresh(identity).onSuccess {
+            eventBus.publish(
+                OpenFoodFactsProductUpdatedEvent(product = it, timestamp = clock.now())
+            )
+        }
     }
 }
