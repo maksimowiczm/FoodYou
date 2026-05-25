@@ -1,21 +1,26 @@
 package com.maksimowiczm.foodyou.app.ui.home.search
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
+import androidx.compose.material3.DropdownMenuGroup
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenuPopup
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.headline_favorite
-import foodyou.app.generated.resources.headline_fooddata_central
-import foodyou.app.generated.resources.headline_open_food_facts
-import foodyou.app.generated.resources.headline_your_food
-import foodyou.app.generated.resources.openfoodfacts_logo
-import foodyou.app.generated.resources.usda_logo
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
+import foodyou.app.generated.resources.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 
@@ -25,6 +30,8 @@ internal sealed interface SearchCollection {
     @Composable fun Icon(selected: Boolean, modifier: Modifier = Modifier)
 
     @Composable fun stringResource(): String
+
+    fun LazyListScope.suffixFilters(onUpdate: (SearchCollection) -> Unit) = Unit
 
     @Immutable
     @Serializable
@@ -80,7 +87,9 @@ internal sealed interface SearchCollection {
 
     @Immutable
     @Serializable
-    class FoodDataCentral : SearchCollection {
+    data class FoodDataCentral(
+        val dataTypes: Set<FoodDataCentralSearchParameters.DataType> = setOf()
+    ) : SearchCollection {
         @Composable
         override fun Icon(selected: Boolean, modifier: Modifier) {
             Image(
@@ -93,5 +102,65 @@ internal sealed interface SearchCollection {
         @Composable
         override fun stringResource(): String =
             org.jetbrains.compose.resources.stringResource(Res.string.headline_fooddata_central)
+
+        override fun LazyListScope.suffixFilters(onUpdate: (SearchCollection) -> Unit) {
+            item {
+                var expanded by rememberSaveable { mutableStateOf(false) }
+                val entries = FoodDataCentralSearchParameters.DataType.entries
+
+                // Don't localize here as FoodData Central is English only
+                FilterChip(
+                    selected = dataTypes.isNotEmpty(),
+                    onClick = { expanded = true },
+                    label = {
+                        if (dataTypes.isEmpty()) {
+                            Text("Data type")
+                        } else {
+                            val text =
+                                remember(dataTypes) {
+                                    buildString {
+                                        append(dataTypes.first().filter)
+                                        if (dataTypes.size > 1) {
+                                            append(" + ${dataTypes.size - 1}")
+                                        }
+                                    }
+                                }
+                            Text(text)
+                        }
+                        DropdownMenuPopup(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                        ) {
+                            DropdownMenuGroup(shapes = MenuDefaults.groupShape(0, entries.size)) {
+                                entries.forEachIndexed { i, entry ->
+                                    val checked = dataTypes.contains(entry)
+
+                                    DropdownMenuItem(
+                                        checked = checked,
+                                        onCheckedChange = {
+                                            if (checked)
+                                                onUpdate(copy(dataTypes = dataTypes - entry))
+                                            else onUpdate(copy(dataTypes = dataTypes + entry))
+                                        },
+                                        text = { Text(entry.filter) },
+                                        shapes = MenuDefaults.itemShape(i, entries.size),
+                                        checkedLeadingIcon = {
+                                            androidx.compose.material3.Icon(
+                                                imageVector = Icons.Outlined.Check,
+                                                contentDescription = null,
+                                            )
+                                        },
+                                    )
+                                }
+                            }
+                        }
+                    },
+                    colors =
+                        FilterChipDefaults.filterChipColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                )
+            }
+        }
     }
 }

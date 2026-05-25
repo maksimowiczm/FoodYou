@@ -4,12 +4,14 @@ import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
+import androidx.room.TypeConverters
 
 @Database(
     entities = [FoodDataCentralProductEntity::class, FoodDataCentralPagingKeyEntity::class],
     version = FoodDataCentralDatabase.VERSION,
     exportSchema = false,
 )
+@TypeConverters(FoodDataCentralTypeConverters::class)
 @ConstructedBy(FoodDataCentralDatabaseConstructor::class)
 internal abstract class FoodDataCentralDatabase : RoomDatabase() {
     abstract val dao: FoodDataCentralDao

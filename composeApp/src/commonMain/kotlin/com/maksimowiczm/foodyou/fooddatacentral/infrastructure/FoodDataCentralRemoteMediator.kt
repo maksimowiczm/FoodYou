@@ -7,6 +7,7 @@ import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters.DataType
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.FoodDataCentralRemoteDataSource
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralDatabase
@@ -19,15 +20,17 @@ import kotlinx.coroutines.flow.first
 @OptIn(ExperimentalPagingApi::class)
 internal class FoodDataCentralRemoteMediator(
     private val query: SearchQuery.NotBlank,
-    private val database: FoodDataCentralDatabase,
+    database: FoodDataCentralDatabase,
     private val remote: FoodDataCentralRemoteDataSource,
     private val mapper: FoodDataCentralProductMapper,
     private val apiKey: String?,
     private val pageSize: Int,
+    private val dataTypes: Set<DataType>?,
     logger: Logger,
 ) : RemoteMediator<Int, FoodDataCentralProductEntity>() {
     private val logger = logger.withTag(TAG)
     private val dao = database.dao
+    private val dataTypeFilters = dataTypes?.map { it.filter }
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
 
@@ -64,7 +67,7 @@ internal class FoodDataCentralRemoteMediator(
                             }
 
                             is SearchQuery.NotBlank -> {
-                                val count = dao.getPagingKeyCountByQuery(query.query)
+                                val count = dao.getPagingKeyCountByQuery(query.query, dataTypes)
                                 val nextPage = (count / pageSize) + 1
                                 nextPage
                             }
@@ -79,11 +82,16 @@ internal class FoodDataCentralRemoteMediator(
                     page = page,
                     apiKey = apiKey,
                     pageSize = pageSize,
+                    dataTypes = dataTypeFilters,
                 )
 
             val entities = response.foods.map(mapper::foodDataCentralProductEntity)
             val pagingKeys = entities.map {
-                FoodDataCentralPagingKeyEntity(queryString = query.query, fdcId = it.fdcId)
+                FoodDataCentralPagingKeyEntity(
+                    queryString = query.query,
+                    dataTypes = dataTypes,
+                    fdcId = it.fdcId,
+                )
             }
 
             dao.insertProductsWithPagingKeys(entities, pagingKeys)

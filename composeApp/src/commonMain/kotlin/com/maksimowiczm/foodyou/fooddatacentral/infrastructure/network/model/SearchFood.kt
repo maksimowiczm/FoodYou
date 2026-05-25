@@ -10,6 +10,7 @@ internal data class SearchFood(
     @SerialName("brandOwner") override val brandOwner: String? = null,
     @SerialName("brandName") override val brandName: String? = null,
     @SerialName("gtinUpc") override val gtinUpc: String? = null,
+    @SerialName("dataType") override val dataType: String? = null,
     @SerialName("servingSize") override val servingSize: Double? = null,
     @SerialName("servingSizeUnit") override val servingSizeUnit: String? = null,
     @SerialName("packageWeight") override val packageWeight: String? = null,
@@ -20,6 +21,6 @@ internal data class SearchFood(
 internal data class SearchFoodNutrient(
     @SerialName("nutrientNumber") override val number: String,
     @SerialName("nutrientName") override val name: String,
-    @SerialName("value") override val amount: Double,
+    @SerialName("value") override val amount: Double? = null,
     @SerialName("unitName") override val unit: String,
 ) : FoodNutrient

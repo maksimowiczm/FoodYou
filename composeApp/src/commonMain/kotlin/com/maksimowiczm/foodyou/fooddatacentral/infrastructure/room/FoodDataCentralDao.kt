@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters.DataType
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,13 +17,14 @@ internal abstract class FoodDataCentralDao {
         SELECT p.*
         FROM FoodDataCentralPagingKey pk
         LEFT JOIN FoodDataCentralProduct p ON p.fdcId = pk.fdcId
-        WHERE pk.queryString = :query
+        WHERE pk.queryString = :query AND pk.dataTypes IS :dataTypes
         GROUP BY p.fdcId
         ORDER BY MIN(pk.id) ASC
         """
     )
     abstract fun getPagingSourceByQuery(
-        query: String
+        query: String,
+        dataTypes: Set<DataType>?,
     ): PagingSource<Int, FoodDataCentralProductEntity>
 
     @Query(
@@ -30,36 +32,40 @@ internal abstract class FoodDataCentralDao {
         SELECT COUNT(DISTINCT pk.fdcId)
         FROM FoodDataCentralPagingKey pk
         LEFT JOIN FoodDataCentralProduct p ON p.fdcId = pk.fdcId
-        WHERE pk.queryString = :query
+        WHERE pk.queryString = :query AND pk.dataTypes IS :dataTypes
         """
     )
-    abstract fun observeCountByQuery(query: String): Flow<Int>
+    abstract fun observeCountByQuery(query: String, dataTypes: Set<DataType>?): Flow<Int>
 
     @Query(
         """
         SELECT COUNT(*)
         FROM FoodDataCentralPagingKey
-        WHERE queryString = :query
+        WHERE queryString = :query AND dataTypes IS :dataTypes
         """
     )
-    abstract suspend fun getPagingKeyCountByQuery(query: String): Int
+    abstract suspend fun getPagingKeyCountByQuery(query: String, dataTypes: Set<DataType>?): Int
 
     @Query(
         """
         SELECT p.*
         FROM FoodDataCentralProduct p
+        WHERE p.dataType IN (:dataTypeOrdinals)
         GROUP BY p.fdcId
         """
     )
-    abstract fun getPagingSource(): PagingSource<Int, FoodDataCentralProductEntity>
+    abstract fun getPagingSource(
+        dataTypeOrdinals: Set<Int>
+    ): PagingSource<Int, FoodDataCentralProductEntity>
 
     @Query(
         """
         SELECT COUNT(*)
         FROM FoodDataCentralProduct
+        WHERE dataType IN (:dataTypeOrdinals)
         """
     )
-    abstract fun observeCount(): Flow<Int>
+    abstract fun observeCount(dataTypeOrdinals: Set<Int>): Flow<Int>
 
     @Query(
         """

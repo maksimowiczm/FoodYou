@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.home.search
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
@@ -45,8 +46,8 @@ internal fun SearchFilters(
     modifier: Modifier = Modifier,
 ) {
     SharedTransitionLayout(modifier) {
-        AnimatedContent(
-            targetState = selected,
+        updateTransition(selected).AnimatedContent(
+            contentKey = { if (it != null) it::class else "null" },
             modifier = Modifier.fillMaxWidth(),
             transitionSpec = { crossfade() },
         ) { currentSelected ->
@@ -87,6 +88,7 @@ internal fun SearchFilters(
                             },
                         )
                     }
+                    with(currentSelected) { suffixFilters(onCollection) }
                 }
             else
                 LazyHorizontalStaggeredGrid(

@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters.DataType
 
 @Entity(tableName = "FoodDataCentralProduct", indices = [Index("gtinUpc")])
 internal data class FoodDataCentralProductEntity(
@@ -17,4 +18,5 @@ internal data class FoodDataCentralProductEntity(
     val description: String,
     val packageWeight: String?,
     @Embedded val nutrients: NutrientsEntity,
+    val dataType: DataType,
 )

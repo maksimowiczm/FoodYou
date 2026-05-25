@@ -48,8 +48,11 @@ internal class FoodDataCentralRepositoryImpl(
             when (val query = parameters.query) {
                 is FoodDataCentralUrlSearchQuery -> dao.getPagingSourceByFdcId(query.fdcId)
                 is SearchQuery.Barcode -> dao.getPagingSourceByBarcode(query.barcode)
-                is SearchQuery.Blank -> dao.getPagingSource()
-                is SearchQuery.NotBlank -> dao.getPagingSourceByQuery(query.query)
+                is SearchQuery.Blank ->
+                    dao.getPagingSource(parameters.dataTypes.orAll().map { it.ordinal }.toSet())
+
+                is SearchQuery.NotBlank ->
+                    dao.getPagingSourceByQuery(query.query, parameters.dataTypes)
             }
         }
 
@@ -62,6 +65,7 @@ internal class FoodDataCentralRepositoryImpl(
                     mapper = mapper,
                     apiKey = apiKey,
                     pageSize = pageSize,
+                    dataTypes = parameters.dataTypes,
                     logger = logger,
                 )
             } else null
@@ -81,8 +85,11 @@ internal class FoodDataCentralRepositoryImpl(
         return when (parameters.query) {
             is FoodDataCentralUrlSearchQuery -> dao.observeCountByFdcId(parameters.query.fdcId)
             is SearchQuery.Barcode -> dao.observeCountByBarcode(parameters.query.barcode)
-            is SearchQuery.Blank -> dao.observeCount()
-            is SearchQuery.NotBlank -> dao.observeCountByQuery(parameters.query.query)
+            is SearchQuery.Blank ->
+                dao.observeCount(parameters.dataTypes.orAll().map { it.ordinal }.toSet())
+
+            is SearchQuery.NotBlank ->
+                dao.observeCountByQuery(parameters.query.query, parameters.dataTypes)
         }
     }
 
@@ -142,4 +149,7 @@ internal class FoodDataCentralRepositoryImpl(
             Err(e)
         }
     }
+
+    private fun Set<FoodDataCentralSearchParameters.DataType>?.orAll() =
+        this ?: FoodDataCentralSearchParameters.DataType.entries
 }

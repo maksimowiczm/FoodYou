@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralServi
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -23,13 +24,14 @@ internal class FoodDataCentralSearchViewModel(
 ) : ViewModel() {
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
 
+    private val dataTypes = MutableStateFlow<Set<FoodDataCentralSearchParameters.DataType>?>(null)
+
     private val searchParameters =
-        searchQuery
-            .distinctUntilChanged()
-            .map { query ->
+        combine(searchQuery.distinctUntilChanged(), dataTypes) { query, dataTypes ->
                 FoodDataCentralSearchParameters(
                     query = query,
                     orderBy = FoodDataCentralSearchParameters.OrderBy.NameAscending,
+                    dataTypes = dataTypes,
                 )
             }
             .shareIn(
@@ -62,6 +64,10 @@ internal class FoodDataCentralSearchViewModel(
 
     fun search(query: SearchQuery) {
         viewModelScope.launch { searchQuery.emit(query) }
+    }
+
+    fun dataTypes(types: Set<FoodDataCentralSearchParameters.DataType>) {
+        viewModelScope.launch { dataTypes.emit(types.takeIf { it.isNotEmpty() }) }
     }
 
     private companion object {

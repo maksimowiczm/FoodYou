@@ -167,6 +167,14 @@ fun HomeScreen(
         foodDataCentralSearchViewModel.search(it)
         favoriteFoodSearchViewModel.search(it)
     }
+    LaunchedEffect(selectedCollection.value) {
+        when (val collection = selectedCollection.value) {
+            is SearchCollection.FoodDataCentral ->
+                foodDataCentralSearchViewModel.dataTypes(collection.dataTypes)
+
+            else -> Unit
+        }
+    }
 
     val showBarcodeScanner = rememberSaveable { mutableStateOf(false) }
     FullScreenCameraBarcodeScanner(

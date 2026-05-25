@@ -73,6 +73,7 @@ internal class FoodDataCentralRemoteDataSource(
         page: Int?,
         pageSize: Int,
         apiKey: String?,
+        dataTypes: List<String>?,
     ): FoodDataCentralFoodPageResponse {
         return rateLimiter.withRateLimit(
             onRateLimit = {
@@ -84,12 +85,12 @@ internal class FoodDataCentralRemoteDataSource(
                 client.get("$API_URL/v1/foods/search") {
                     userAgent(networkConfig.userAgent)
                     parameter("query", query)
-                    parameter("dataType", "Branded,Foundation")
                     parameter("pageSize", pageSize)
                     parameter("pageNumber", page)
                     parameter("api_key", apiKey ?: "DEMO_KEY")
                     parameter("sortBy", "dataType.keyword")
                     parameter("sortOrder", "asc")
+                    dataTypes?.let { parameter("dataType", dataTypes.joinToString(",")) }
                 }
 
             if (response.status == HttpStatusCode.TooManyRequests) {

@@ -6,6 +6,7 @@ internal interface Food {
     val brandOwner: String?
     val brandName: String?
     val gtinUpc: String?
+    val dataType: String?
 
     val servingSize: Double?
     val servingSizeUnit: String?

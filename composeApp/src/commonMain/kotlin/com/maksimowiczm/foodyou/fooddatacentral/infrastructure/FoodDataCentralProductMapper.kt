@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsMapper
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.Food
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.FoodNutrient
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.Nutrient
@@ -78,6 +79,10 @@ internal class FoodDataCentralProductMapper {
                 servingSize = servingSize,
                 servingSizeUnit = servingSizeUnit,
                 packageWeight = packageWeight.takeIfNotBlank(),
+                dataType =
+                    FoodDataCentralSearchParameters.DataType.entries.first {
+                        it.filter == dataType
+                    },
                 nutrients = nutrients,
             )
         }
@@ -131,7 +136,7 @@ private fun parsePackage(weight: String?): AbsoluteQuantity? {
 private fun FoodNutrient.normalize(): Double? {
     val amount = amount ?: return null
     val from = UnitType.fromString(unit) ?: return null
-    return (amount * multiplier(UnitType.GRAMS, from))
+    return (amount * multiplier(UnitType.GRAMS, from)).takeIf { it >= 0 }
 }
 
 /**
