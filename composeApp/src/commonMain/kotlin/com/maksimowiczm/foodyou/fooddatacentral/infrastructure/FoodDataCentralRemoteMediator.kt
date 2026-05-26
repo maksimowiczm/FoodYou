@@ -7,6 +7,7 @@ import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters.DataType
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.FoodDataCentralRemoteDataSource
@@ -27,6 +28,7 @@ internal class FoodDataCentralRemoteMediator(
     private val pageSize: Int,
     private val dataTypes: Set<DataType>?,
     logger: Logger,
+    private val onNewProduct: suspend (Set<FoodDataCentralProduct>) -> Unit,
 ) : RemoteMediator<Int, FoodDataCentralProductEntity>() {
     private val logger = logger.withTag(TAG)
     private val dao = database.dao
@@ -62,7 +64,9 @@ internal class FoodDataCentralRemoteMediator(
                                     }
 
                                 val product = mapper.foodDataCentralProductEntity(response)
-                                dao.upsertProduct(product)
+                                dao.upsertProductAndGet(product)?.let {
+                                    onNewProduct(setOf(mapper.foodDataCentralProduct(it)))
+                                }
                                 return MediatorResult.Success(endOfPaginationReached = true)
                             }
 
@@ -94,7 +98,8 @@ internal class FoodDataCentralRemoteMediator(
                 )
             }
 
-            dao.insertProductsWithPagingKeys(entities, pagingKeys)
+            val changed = dao.insertProductsWithPagingKeys(entities, pagingKeys)
+            onNewProduct(changed.map(mapper::foodDataCentralProduct).toSet())
 
             return MediatorResult.Success(response.foods.size < pageSize)
         } catch (e: Exception) {

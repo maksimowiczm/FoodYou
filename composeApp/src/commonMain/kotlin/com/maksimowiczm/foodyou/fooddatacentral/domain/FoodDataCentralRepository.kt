@@ -11,6 +11,7 @@ interface FoodDataCentralRepository {
         pageSize: Int,
         remoteEnabled: Boolean,
         apiKey: String?,
+        onNewProduct: suspend (Set<FoodDataCentralProduct>) -> Unit,
     ): Flow<PagingData<FoodDataCentralProduct>>
 
     fun count(parameters: FoodDataCentralSearchParameters): Flow<Int>

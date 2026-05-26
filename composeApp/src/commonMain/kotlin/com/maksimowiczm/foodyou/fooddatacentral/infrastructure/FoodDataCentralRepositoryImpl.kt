@@ -41,6 +41,7 @@ internal class FoodDataCentralRepositoryImpl(
         pageSize: Int,
         remoteEnabled: Boolean,
         apiKey: String?,
+        onNewProduct: suspend (Set<FoodDataCentralProduct>) -> Unit,
     ): Flow<PagingData<FoodDataCentralProduct>> {
         val config = PagingConfig(pageSize = pageSize)
 
@@ -67,6 +68,7 @@ internal class FoodDataCentralRepositoryImpl(
                     pageSize = pageSize,
                     dataTypes = parameters.dataTypes,
                     logger = logger,
+                    onNewProduct = onNewProduct,
                 )
             } else null
 

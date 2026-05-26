@@ -112,6 +112,18 @@ internal abstract class FoodDataCentralDao {
 
     @Upsert abstract suspend fun upsertProduct(product: FoodDataCentralProductEntity)
 
+    @Transaction
+    open suspend fun upsertProductAndGet(
+        product: FoodDataCentralProductEntity
+    ): FoodDataCentralProductEntity? {
+        val existing = getProduct(product.fdcId)
+        if (existing == null || existing != product) {
+            upsertProduct(product)
+            return product
+        }
+        return null
+    }
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     protected abstract suspend fun insertPagingKeys(keys: List<FoodDataCentralPagingKeyEntity>)
 
@@ -119,10 +131,21 @@ internal abstract class FoodDataCentralDao {
     open suspend fun insertProductsWithPagingKeys(
         products: List<FoodDataCentralProductEntity>,
         keys: List<FoodDataCentralPagingKeyEntity>,
-    ) {
-        insertProducts(products)
+    ): List<FoodDataCentralProductEntity> {
+        val changed = mutableListOf<FoodDataCentralProductEntity>()
+        for (product in products) upsertProductAndGet(product)?.let(changed::add)
         insertPagingKeys(keys)
+        return changed
     }
+
+    @Query(
+        """
+        SELECT *
+        FROM FoodDataCentralProduct
+        WHERE fdcId = :fdcId
+        """
+    )
+    protected abstract suspend fun getProduct(fdcId: Int): FoodDataCentralProductEntity?
 
     @Query(
         """

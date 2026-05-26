@@ -35,6 +35,18 @@ class FoodDataCentralService(
                 pageSize = pageSize,
                 remoteEnabled = settings.remoteEnabled,
                 apiKey = settings.apiKey,
+                onNewProduct = { products ->
+                    if (products.isNotEmpty()) {
+                        eventBus.publish(
+                            products.map {
+                                FoodDataCentralProductUpdatedEvent(
+                                    product = it,
+                                    timestamp = clock.now(),
+                                )
+                            }
+                        )
+                    }
+                },
             )
         }
     }
