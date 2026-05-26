@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou
 
 import android.app.Application
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.os.Build
 import com.maksimowiczm.foodyou.analytics.application.AnalyticsService
 import com.maksimowiczm.foodyou.analytics.domain.recordAppLaunch
@@ -9,12 +10,16 @@ import com.maksimowiczm.foodyou.app.di.AppModule
 import com.maksimowiczm.foodyou.app.di.initKoin
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
+import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.InMemoryEventBus
+import com.maksimowiczm.foodyou.common.event.LoggingEventBus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 class FoodYouApplication : Application() {
@@ -32,7 +37,15 @@ class FoodYouApplication : Application() {
                         )
                 ) {
                     androidContext(this@FoodYouApplication)
-                    modules(module { applicationCoroutineScope { coroutineScope } })
+                    modules(
+                        module {
+                            applicationCoroutineScope { coroutineScope }
+                            if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
+                                single { LoggingEventBus(get<InMemoryEventBus>(), get()) }
+                                    .bind<EventBus>()
+                            }
+                        }
+                    )
                 }
                 .koin
 
