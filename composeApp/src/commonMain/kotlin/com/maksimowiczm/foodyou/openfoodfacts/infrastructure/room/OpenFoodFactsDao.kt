@@ -83,10 +83,19 @@ internal abstract class OpenFoodFactsDao {
     )
     abstract fun observeCountByBarcode(barcode: String): Flow<Int>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    protected abstract suspend fun insertProducts(products: List<OpenFoodFactsProductEntity>)
-
     @Upsert abstract suspend fun upsertProduct(product: OpenFoodFactsProductEntity)
+
+    @Transaction
+    open suspend fun upsertProductAndGet(
+        product: OpenFoodFactsProductEntity
+    ): OpenFoodFactsProductEntity? {
+        val existing = getProduct(product.barcode)
+        if (existing == null || existing != product) {
+            upsertProduct(product)
+            return product
+        }
+        return null
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     protected abstract suspend fun insertPagingKeys(keys: List<OpenFoodFactsPagingKeyEntity>)
@@ -95,10 +104,21 @@ internal abstract class OpenFoodFactsDao {
     open suspend fun insertProductsWithPagingKeys(
         products: List<OpenFoodFactsProductEntity>,
         keys: List<OpenFoodFactsPagingKeyEntity>,
-    ) {
-        insertProducts(products)
+    ): List<OpenFoodFactsProductEntity> {
+        val changed = mutableListOf<OpenFoodFactsProductEntity>()
+        for (product in products) upsertProductAndGet(product)?.let(changed::add)
         insertPagingKeys(keys)
+        return changed
     }
+
+    @Query(
+        """
+        SELECT *
+        FROM OpenFoodFactsProduct
+        WHERE barcode = :barcode
+        """
+    )
+    protected abstract suspend fun getProduct(barcode: String): OpenFoodFactsProductEntity?
 
     @Query(
         """

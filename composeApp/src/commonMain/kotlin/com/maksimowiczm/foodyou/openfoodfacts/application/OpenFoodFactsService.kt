@@ -33,6 +33,18 @@ class OpenFoodFactsService(
                 parameters = parameters,
                 pageSize = pageSize,
                 remoteEnabled = settings.remoteEnabled,
+                onNewProduct = { products ->
+                    if (products.isNotEmpty()) {
+                        eventBus.publish(
+                            products.map {
+                                OpenFoodFactsProductUpdatedEvent(
+                                    product = it,
+                                    timestamp = clock.now(),
+                                )
+                            }
+                        )
+                    }
+                },
             )
         }
     }

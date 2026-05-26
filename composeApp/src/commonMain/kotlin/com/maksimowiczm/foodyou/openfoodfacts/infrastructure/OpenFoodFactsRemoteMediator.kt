@@ -7,6 +7,7 @@ import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsV2RemoteDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.SearchaliciousRemoteDataSource
@@ -15,7 +16,6 @@ import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsP
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsProductEntity
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediator(
@@ -26,6 +26,7 @@ internal class OpenFoodFactsRemoteMediator(
     private val mapper: OpenFoodFactsProductMapper,
     private val pageSize: Int,
     logger: Logger,
+    private val onNewProduct: suspend (Set<OpenFoodFactsProduct>) -> Unit,
 ) : RemoteMediator<Int, OpenFoodFactsProductEntity>() {
     private val logger = logger.withTag(TAG)
     private val dao = database.dao
@@ -55,11 +56,6 @@ internal class OpenFoodFactsRemoteMediator(
                                         else -> error("Unreachable")
                                     }
 
-                                val existingProduct = dao.observeCountByBarcode(barcode).first()
-                                if (existingProduct > 0) {
-                                    return MediatorResult.Success(endOfPaginationReached = true)
-                                }
-
                                 val response =
                                     apiV2.getProduct(barcode).getOrElse {
                                         return if (it is OpenFoodFactsApiError.ProductNotFound)
@@ -68,7 +64,9 @@ internal class OpenFoodFactsRemoteMediator(
                                     }
 
                                 val product = mapper.toEntity(response)
-                                dao.upsertProduct(product)
+                                dao.upsertProductAndGet(product)?.let {
+                                    onNewProduct(setOf(mapper.toModel(it)))
+                                }
                                 return MediatorResult.Success(endOfPaginationReached = true)
                             }
 
@@ -89,7 +87,8 @@ internal class OpenFoodFactsRemoteMediator(
                 OpenFoodFactsPagingKeyEntity(queryString = query.query, productBarcode = it.barcode)
             }
 
-            dao.insertProductsWithPagingKeys(entities, pagingKeys)
+            val changed = dao.insertProductsWithPagingKeys(entities, pagingKeys)
+            onNewProduct(changed.map(mapper::toModel).toSet())
 
             return MediatorResult.Success(response.hits.size < response.pageSize)
         } catch (e: Exception) {

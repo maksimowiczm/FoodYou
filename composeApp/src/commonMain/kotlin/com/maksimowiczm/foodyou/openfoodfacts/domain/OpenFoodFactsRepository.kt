@@ -10,6 +10,7 @@ interface OpenFoodFactsRepository {
         parameters: OpenFoodFactsSearchParameters,
         pageSize: Int,
         remoteEnabled: Boolean,
+        onNewProduct: suspend (Set<OpenFoodFactsProduct>) -> Unit,
     ): Flow<PagingData<OpenFoodFactsProduct>>
 
     fun count(parameters: OpenFoodFactsSearchParameters): Flow<Int>

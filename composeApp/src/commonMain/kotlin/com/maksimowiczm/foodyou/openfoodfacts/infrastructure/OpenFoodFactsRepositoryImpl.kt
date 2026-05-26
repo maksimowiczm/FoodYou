@@ -41,6 +41,7 @@ internal class OpenFoodFactsRepositoryImpl(
         parameters: OpenFoodFactsSearchParameters,
         pageSize: Int,
         remoteEnabled: Boolean,
+        onNewProduct: suspend (Set<OpenFoodFactsProduct>) -> Unit,
     ): Flow<PagingData<OpenFoodFactsProduct>> {
         val config = PagingConfig(pageSize = pageSize)
 
@@ -63,6 +64,7 @@ internal class OpenFoodFactsRepositoryImpl(
                     mapper = mapper,
                     pageSize = pageSize,
                     logger = logger,
+                    onNewProduct = onNewProduct,
                 )
             } else null
 
