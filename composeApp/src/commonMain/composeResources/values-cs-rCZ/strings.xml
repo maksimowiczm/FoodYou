@@ -236,7 +236,7 @@
     <string name="notification_exporting_products">Exportuji produkty</string>
     <string name="notification_importing_products">Importuji produkty</string>
     <string name="notification_importing_products_success">Produkty byly importovány</string>
-    <string name="description_food_data_central_usda">FoodData Central je komplexní zdroj údajů od USDA, obsahující mnoho typů údajů</string>
+    <string name="description_fooddata_central">FoodData Central je komplexní zdroj údajů od USDA, obsahující mnoho typů údajů</string>
     <string name="error_usda_rate_limit">Byl překročen API limit FoodData Central (USDA)</string>
     <string name="description_swiss_food_composition_database_short">Švýcarská databáze o složení potravin zahrnuje informace o výživě pro více než 1,100 obecných potravinářských výrobků</string>
     <string name="description2_swiss_food_composition_database">Švýcarská databáze o složení potravin zahrnuje informace o výživě pro více než 1,100 běžných potravinářských výrobků. Je k dispozici ve čtyřech jazycích. Chcete-li tyto produkty importovat do seznamu potravin, vyberte prosím preferované jazyky.</string>

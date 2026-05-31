@@ -224,7 +224,7 @@
     <string name="notification_exporting_products">Tuotteita viedään</string>
     <string name="notification_importing_products">Tuotteita tuodaan</string>
     <string name="notification_importing_products_success">Tuotteiden tuonti valmis</string>
-    <string name="description_food_data_central_usda">FoodData Central on USDA:n kattava elintarvikkeiden koostumustietolähde, jossa on useita erillisiä tietotyyppejä</string>
+    <string name="description_fooddata_central">FoodData Central on USDA:n kattava elintarvikkeiden koostumustietolähde, jossa on useita erillisiä tietotyyppejä</string>
     <string name="error_usda_rate_limit">FoodData Central (USDA) API-raja ylittynyt</string>
     <string name="description_swiss_food_composition_database_short">Swiss Food Composition Database sisältää ravitsemustietoa yli 1100 yleisestä elintarvikkeesta</string>
     <string name="description2_swiss_food_composition_database">Swiss Food Composition Database sisältää ravitsemustietoa yli 1100 yleisestä elintarviketuotteesta. Se on saatavilla neljällä kielellä. Tuodaksesi nämä tuotteet ruokapäiväkirjaan, valitse haluamasi kielet.</string>

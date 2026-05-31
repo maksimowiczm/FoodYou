@@ -222,7 +222,7 @@
     <string name="notification_exporting_products">Ürünler dışa aktarılıyor</string>
     <string name="notification_importing_products">Ürünler içe aktarılıyor</string>
     <string name="notification_importing_products_success">Ürünlerin içe aktarımı tamamlandı</string>
-    <string name="description_food_data_central_usda">FoodData Central, USDA'nın birden çok farklı veri türüne sahip kapsamlı gıda bileşimi veri kaynağıdır</string>
+    <string name="description_fooddata_central">FoodData Central, USDA'nın birden çok farklı veri türüne sahip kapsamlı gıda bileşimi veri kaynağıdır</string>
     <string name="error_usda_rate_limit">FoodData Central (USDA) API istek limiti aşıldı</string>
     <string name="description_swiss_food_composition_database_short">İsviçre Gıda Bileşimi Veritabanı, 1.100'den fazla genel gıda ürünü için besin bilgileri içerir</string>
     <string name="description2_swiss_food_composition_database">İsviçre Gıda Bileşimi Veritabanı, 1.100'den fazla genel gıda ürünü için besin bilgileri içerir. Dört dilde mevcuttur. Bu ürünleri yemek günlüğünüze aktarmak için lütfen tercih ettiğiniz dilleri seçin.</string>

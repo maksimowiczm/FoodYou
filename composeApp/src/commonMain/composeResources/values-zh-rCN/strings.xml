@@ -217,7 +217,7 @@
     <string name="notification_exporting_products">导出产品</string>
     <string name="notification_importing_products">进口商品</string>
     <string name="notification_importing_products_success">产品导入完成</string>
-    <string name="description_food_data_central_usda">FoodData Central 是美国农业部的综合食品成分数据源，具有多种不同的数据类型</string>
+    <string name="description_fooddata_central">FoodData Central 是美国农业部的综合食品成分数据源，具有多种不同的数据类型</string>
     <string name="error_usda_rate_limit">FoodData Central (USDA) API 速率限制已超额</string>
     <string name="description_swiss_food_composition_database_short">瑞士食品成分数据库收录了1,100余种常见食品的营养信息</string>
     <string name="description2_swiss_food_composition_database">瑞士食品成分数据库（Swiss Food Composition Database）收录了 1,100 余种常见食品的营养信息，提供四种语言版本。如需将这些食品导入您的饮食记录，请选择您偏好的语言版本。</string>

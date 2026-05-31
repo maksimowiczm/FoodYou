@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.common.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,15 +9,17 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Key
+import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ChipColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -41,22 +44,25 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PrivacyCard(
+    selected: Boolean,
     title: @Composable () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PrivacyCardDefaults.contentPadding,
     shape: Shape = PrivacyCardDefaults.shape,
-    color: Color = PrivacyCardDefaults.color,
-    contentColor: Color = PrivacyCardDefaults.contentColor,
-    content: @Composable () -> Unit,
+    color: Color = PrivacyCardDefaults.color(selected),
+    contentColor: Color = PrivacyCardDefaults.contentColor(selected),
+    content: @Composable PrivacyCardScope.() -> Unit,
 ) {
+    val scope = remember(selected) { PrivacyCardScope(selected) }
+
     val inner =
         @Composable {
             CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
                 Column(Modifier.padding(contentPadding)) {
                     title()
                     Spacer(Modifier.height(8.dp))
-                    content()
+                    content(scope)
                 }
             }
         }
@@ -77,9 +83,10 @@ fun PrivacyCard(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PrivacyCardDefaults.contentPadding,
     shape: Shape = PrivacyCardDefaults.shape,
-    color: Color = PrivacyCardDefaults.color,
-    contentColor: Color = PrivacyCardDefaults.contentColor,
-    content: @Composable () -> Unit,
+    color: Color = PrivacyCardDefaults.color(true),
+    contentColor: Color = PrivacyCardDefaults.contentColor(true),
+    scope: PrivacyCardScope = remember { PrivacyCardScope(true) },
+    content: @Composable PrivacyCardScope.() -> Unit,
 ) {
     val inner =
         @Composable {
@@ -87,7 +94,7 @@ fun PrivacyCard(
                 Column(Modifier.padding(contentPadding)) {
                     title()
                     Spacer(Modifier.height(8.dp))
-                    content()
+                    content(scope)
                 }
             }
         }
@@ -101,17 +108,80 @@ fun PrivacyCard(
     )
 }
 
+class PrivacyCardScope(val selected: Boolean) {
+    @Composable
+    fun Chip(
+        onClick: () -> Unit,
+        label: @Composable () -> Unit,
+        leadingIcon: @Composable (() -> Unit)? = null,
+        modifier: Modifier = Modifier,
+        colors: ChipColors =
+            AssistChipDefaults.assistChipColors(
+                labelColor = PrivacyCardDefaults.contentColor(selected)
+            ),
+        border: BorderStroke? =
+            AssistChipDefaults.assistChipBorder(
+                enabled = true,
+                borderColor =
+                    if (selected) MaterialTheme.colorScheme.inversePrimary
+                    else MaterialTheme.colorScheme.outlineVariant,
+            ),
+    ) {
+        AssistChip(
+            onClick = onClick,
+            modifier = modifier,
+            leadingIcon = leadingIcon,
+            label = label,
+            colors = colors,
+            border = border,
+        )
+    }
+}
+
 object PrivacyCardDefaults {
     val contentPadding = PaddingValues(16.dp)
 
     val shape: Shape
-        @Composable get() = MaterialTheme.shapes.medium
+        @ReadOnlyComposable @Composable get() = MaterialTheme.shapes.medium
 
-    val color: Color
-        @Composable get() = MaterialTheme.colorScheme.surfaceContainer
+    @Composable
+    fun color(selected: Boolean): Color =
+        if (selected) MaterialTheme.colorScheme.primaryContainer
+        else MaterialTheme.colorScheme.surfaceContainer
 
-    val contentColor: Color
-        @Composable get() = contentColorFor(color)
+    @Composable fun contentColor(selected: Boolean): Color = contentColorFor(color(selected))
+}
+
+@Composable
+fun PrivacyCardScope.PrivacyPolicyChip(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Chip(
+        onClick = onClick,
+        modifier = modifier,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Outlined.PrivacyTip,
+                contentDescription = null,
+                modifier = Modifier.size(AssistChipDefaults.IconSize),
+            )
+        },
+        label = { Text(stringResource(Res.string.headline_privacy_policy)) },
+    )
+}
+
+@Composable
+fun PrivacyCardScope.TermsOfUseChip(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Chip(
+        onClick = onClick,
+        modifier = modifier,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
+                contentDescription = null,
+                modifier = Modifier.size(AssistChipDefaults.IconSize),
+            )
+        },
+        label = { Text(stringResource(Res.string.headline_terms_of_use)) },
+    )
 }
 
 @Composable
@@ -119,15 +189,14 @@ fun OpenFoodFactsPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    termsOfUseUri: String = LocalAppConfig.current.openFoodFactsTermsOfUseUri,
-    privacyPolicyUri: String = LocalAppConfig.current.openFoodFactsPrivacyPolicyUri,
 ) {
     val uriHandler = LocalUriHandler.current
+    val appConfig = LocalAppConfig.current
 
     PrivacyCard(
+        selected = selected,
         title = {
             Row(
-                modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
@@ -153,27 +222,29 @@ fun OpenFoodFactsPrivacyCard(
         onClick = { onSelectedChange(!selected) },
     ) {
         Column {
-            Text(
-                text = stringResource(Res.string.description_open_food_facts),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Text(text = stringResource(Res.string.description_open_food_facts))
             Spacer(Modifier.height(8.dp))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                TermsOfUseChip(onClick = { uriHandler.openUri(termsOfUseUri) })
-                PrivacyPolicyChip(onClick = { uriHandler.openUri(privacyPolicyUri) })
+                TermsOfUseChip(
+                    onClick = { uriHandler.openUri(appConfig.openFoodFactsTermsOfUseUri) }
+                )
+                PrivacyPolicyChip(
+                    onClick = { uriHandler.openUri(appConfig.openFoodFactsPrivacyPolicyUri) }
+                )
             }
         }
     }
 }
 
 @Composable
-fun UsdaPrivacyCard(
+fun FoodDataCentralPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    privacyPolicyUri: String = LocalAppConfig.current.foodDataCentralPrivacyPolicyUri,
 ) {
     val uriHandler = LocalUriHandler.current
+    val appConfig = LocalAppConfig.current
+
     var showApiKeyDialog by rememberSaveable { mutableStateOf(false) }
     if (showApiKeyDialog) {
         UpdateUsdaApiKeyDialog(
@@ -184,9 +255,9 @@ fun UsdaPrivacyCard(
     }
 
     PrivacyCard(
+        selected = selected,
         title = {
             Row(
-                modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
@@ -198,7 +269,7 @@ fun UsdaPrivacyCard(
                     )
                 }
                 Text(
-                    text = stringResource(Res.string.headline_food_data_central_usda),
+                    text = stringResource(Res.string.headline_fooddata_central),
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.weight(1f),
                 )
@@ -212,14 +283,13 @@ fun UsdaPrivacyCard(
         onClick = { onSelectedChange(!selected) },
     ) {
         Column {
-            Text(
-                text = stringResource(Res.string.description_food_data_central_usda),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Text(text = stringResource(Res.string.description_fooddata_central))
             Spacer(Modifier.height(8.dp))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                PrivacyPolicyChip(onClick = { uriHandler.openUri(privacyPolicyUri) })
-                AssistChip(
+                PrivacyPolicyChip(
+                    onClick = { uriHandler.openUri(appConfig.foodDataCentralPrivacyPolicyUri) }
+                )
+                Chip(
                     onClick = { showApiKeyDialog = true },
                     leadingIcon = {
                         Icon(
@@ -243,8 +313,6 @@ private fun OpenFoodFactsPrivacyCardPreview() {
 
 @Preview
 @Composable
-private fun UsdaPrivacyCardPreview() {
-    PreviewFoodYouTheme {
-        UsdaPrivacyCard(selected = false, onSelectedChange = {}, privacyPolicyUri = "")
-    }
+private fun FoodDataCentralPrivacyCardPreview() {
+    PreviewFoodYouTheme { FoodDataCentralPrivacyCard(selected = false, onSelectedChange = {}) }
 }

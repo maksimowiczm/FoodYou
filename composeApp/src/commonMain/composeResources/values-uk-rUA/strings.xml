@@ -221,7 +221,7 @@
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Експорт продуктів</string>
     <string name="notification_importing_products">Імпорт продуктів</string>
-    <string name="description_food_data_central_usda">FoodData Central — це всеосяжне джерело даних про склад харчових продуктів від USDA з кількома різними типами даних</string>
+    <string name="description_fooddata_central">FoodData Central — це всеосяжне джерело даних про склад харчових продуктів від USDA з кількома різними типами даних</string>
     <string name="error_usda_rate_limit">Перевищено ліміт API FoodData Central (USDA)</string>
     <string name="headline_external_databases">Зовнішні бази даних</string>
     <string name="feature_manual_database_import">Ручний імпорт бази даних</string>

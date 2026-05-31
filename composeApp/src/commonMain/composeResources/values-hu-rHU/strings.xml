@@ -222,7 +222,7 @@
     <string name="notification_exporting_products">Termékek exportálása</string>
     <string name="notification_importing_products">Termékek importálása</string>
     <string name="notification_importing_products_success">Termékek importálása sikeres</string>
-    <string name="description_food_data_central_usda">A FoodData Central az USDA átfogó táplálkozás-összetételi adatforrása több különálló adattípussal</string>
+    <string name="description_fooddata_central">A FoodData Central az USDA átfogó táplálkozás-összetételi adatforrása több különálló adattípussal</string>
     <string name="error_usda_rate_limit">FoodData Central (USDA) API sebességkorlátja túllépve</string>
     <string name="description_swiss_food_composition_database_short">A Svájci Élelmiszer-összetétel Adatbázis több mint 1100 általános élelmiszer termék tápanyagtartalmát tartalmazza.</string>
     <string name="description2_swiss_food_composition_database">A Svájci Élelmiszer-összetétel Adatbázis több mint 1100 általános élelmiszer termék tápanyagtartalmát tartalmazza. Négy nyelven érhető el. Ha ezeket a termékeket szeretné bevinni az élelmiszernaplójába, kérjük, válassza ki az előnyben részesített nyelveket.</string>

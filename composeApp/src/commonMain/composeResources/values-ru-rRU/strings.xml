@@ -236,7 +236,7 @@
     <string name="notification_exporting_products">Продукты экспортируются</string>
     <string name="notification_importing_products">Продукты импортируются</string>
     <string name="notification_importing_products_success">Импорт продуктов завершен</string>
-    <string name="description_food_data_central_usda">FoodData Central — это всеобъемлющий источник данных о составе продуктов питания Министерства сельского хозяйства США, содержащий несколько различных типов данных</string>
+    <string name="description_fooddata_central">FoodData Central — это всеобъемлющий источник данных о составе продуктов питания Министерства сельского хозяйства США, содержащий несколько различных типов данных</string>
     <string name="error_usda_rate_limit">Превышен лимит запросов к FoodData Central (USDA) API</string>
     <string name="description_swiss_food_composition_database_short">Швейцарская база данных состава продуктов питания включает информацию о пищевой ценности более 1100 распространенных продуктов</string>
     <string name="description2_swiss_food_composition_database">Швейцарская база данных состава продуктов питания включает информацию о пищевой ценности более 1100 распространенных продуктов. Она доступна на четырех языках. Чтобы импортировать эти продукты в свой дневник питания, пожалуйста, выберите предпочитаемые языки.</string>

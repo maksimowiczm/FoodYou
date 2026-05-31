@@ -215,7 +215,7 @@
     <string name="notification_exporting_products">Produkte werden exportiert</string>
     <string name="notification_importing_products">Produkte werden importiert</string>
     <string name="notification_importing_products_success">Import der Produkte abgeschlossen</string>
-    <string name="description_food_data_central_usda">FoodData Central ist USDA's umfassende Quelle von Daten zur Lebensmittelzusammensetzung mit mehreren unterschiedlichen Datentypen</string>
+    <string name="description_fooddata_central">FoodData Central ist USDA's umfassende Quelle von Daten zur Lebensmittelzusammensetzung mit mehreren unterschiedlichen Datentypen</string>
     <string name="error_usda_rate_limit">FoodData Central (USDA) API-Rate-Limit überschritten</string>
     <string name="description_swiss_food_composition_database_short">Die Schweizer Lebensmittelzusammensetzungsdatenbank enthält Nährwertangaben zu über 1.100 allgemeinen Lebensmitteln</string>
     <string name="headline_external_databases">Externe Datenbanken</string>

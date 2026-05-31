@@ -224,7 +224,7 @@
     <string name="notification_exporting_products">Producten aan het exporteren</string>
     <string name="notification_importing_products">Producten aan het importeren</string>
     <string name="notification_importing_products_success">Importeren van producten voltooid</string>
-    <string name="description_food_data_central_usda">FoodData Central is de uitgebreide bron van USDA voor gegevens over voedselsamenstelling met meerdere afzonderlijke gegevenstypen</string>
+    <string name="description_fooddata_central">FoodData Central is de uitgebreide bron van USDA voor gegevens over voedselsamenstelling met meerdere afzonderlijke gegevenstypen</string>
     <string name="error_usda_rate_limit">API limiet van FoodData Central (USDA) overschreden</string>
     <string name="description_swiss_food_composition_database_short">De Swiss Food Composition Database bevat voedingsinformatie van meer dan 1100 algemene voedingsproducten</string>
     <string name="description2_swiss_food_composition_database">De Swiss Food Composition Database bevat voedingsinformatie van meer dan 1100 algemene voedingsproducten. De database is beschikbaar in vier talen. Om deze producten in uw voedingsdagboek te importeren, selecteert u uw voorkeurstaal.</string>

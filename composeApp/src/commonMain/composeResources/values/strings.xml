@@ -262,7 +262,7 @@
 
     <string name="headline_fooddata_central" translatable="false">FoodData Central</string>
     <string name="headline_food_data_central_usda" translatable="false">FoodData Central (USDA)</string>
-    <string name="description_food_data_central_usda">FoodData Central is USDA's comprehensive source of food composition data with multiple distinct data types</string>
+    <string name="description_fooddata_central">FoodData Central is USDA's comprehensive source of food composition data with multiple distinct data types</string>
     <string name="link_usda" translatable="false">https://fdc.nal.usda.gov</string>
     <string name="link_usda_obtain_key" translatable="false">https://fdc.nal.usda.gov/api-key-signup</string>
     <string name="error_usda_rate_limit">FoodData Central (USDA) API rate limit exceeded</string>
@@ -465,7 +465,7 @@
     <string name="description_random_theme">A random theme will be applied each time the app is started</string>
 
     <string name="headline_terms_of_use">Terms of use</string>
-    <string name="onboarding_privacy_tip">This app is open-source and built for you. We respect your privacy, your information stays private.</string>
+    <string name="onboarding_privacy_tip">This app is open-source and built for you. It respects your privacy, your information stays private.</string>
 
     <string name="headline_add_profile">Add profile</string>
     <string name="headline_how_do_you_want_to_be_called">How do you want to be called?</string>

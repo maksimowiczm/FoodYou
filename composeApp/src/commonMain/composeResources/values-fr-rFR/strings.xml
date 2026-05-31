@@ -222,7 +222,7 @@
     <string name="notification_exporting_products">Exportation des produits</string>
     <string name="notification_importing_products">Importation de produits</string>
     <string name="notification_importing_products_success">Importation des produits terminée</string>
-    <string name="description_food_data_central_usda">FoodData Central est une source complète de données sur la composition des aliments de l'USDA, qui regroupe plusieurs types de données distincts</string>
+    <string name="description_fooddata_central">FoodData Central est une source complète de données sur la composition des aliments de l'USDA, qui regroupe plusieurs types de données distincts</string>
     <string name="error_usda_rate_limit">Limite d'utilisation de l'API FoodData Central (USDA) dépassée</string>
     <string name="description_swiss_food_composition_database_short">La Base de données Suisse des valeurs nutritives contient des informations nutritionnelles sur plus de 1100 produits alimentaires courants</string>
     <string name="description2_swiss_food_composition_database">La Base de données Suisse des valeurs nutritives contient des informations nutritionnelles sur plus de 1100 produits alimentaires courants. Elle est disponible en quatre langues. Pour importer ces produits dans votre journal alimentaire, veuillez sélectionner vos langues préférées.</string>
