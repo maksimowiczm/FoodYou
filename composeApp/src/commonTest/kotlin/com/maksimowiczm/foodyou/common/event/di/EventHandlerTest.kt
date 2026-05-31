@@ -14,11 +14,10 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.koin.core.Koin
 import org.koin.core.annotation.KoinInternalApi
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
 import org.koin.core.definition.Kind
 import org.koin.core.module.Module
 import org.koin.core.qualifier.qualifier
+import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 
 @OptIn(KoinInternalApi::class)
@@ -83,17 +82,11 @@ class EventHandlerTest {
         vararg modules: Module,
         block: suspend Koin.() -> Unit,
     ) {
+        val koin = koinApplication { modules(*modules) }
         try {
-            // It's possible that koin is already running. On Android it will be already running
-            stopKoin()
+            block(koin.koin)
         } finally {
-            val koin = startKoin { modules(*modules) }
-            try {
-                block(koin.koin)
-                koin.close()
-            } finally {
-                stopKoin()
-            }
+            koin.close()
         }
     }
 
