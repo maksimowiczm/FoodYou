@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.ReadModelDatabase.Compan
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.extension.databaseBuilder
 import com.maksimowiczm.foodyou.search.infrastructure.SearchDatabase
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.binds
 import org.koin.dsl.module
@@ -17,7 +18,7 @@ val roomModule = module {
     single<EventStoreDatabase> {
         databaseBuilder<EventStoreDatabase>(EVENT_STORE_DATABASE_NAME).buildDatabase()
     }
-    factory { RoomEventStore(get<EventStoreDatabase>().eventStoreDao) }.bind<EventStore>()
+    factoryOf(::RoomEventStore).bind<EventStore>()
 
     single<ReadModelDatabase> {
             databaseBuilder<ReadModelDatabase>(READ_MODEL_DATABASE_NAME).buildDatabase()
