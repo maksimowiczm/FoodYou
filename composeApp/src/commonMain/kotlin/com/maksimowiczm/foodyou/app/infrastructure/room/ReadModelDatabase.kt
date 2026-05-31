@@ -10,15 +10,18 @@ import com.maksimowiczm.foodyou.search.infrastructure.QuantityTypeConverter
 import com.maksimowiczm.foodyou.search.infrastructure.SearchDatabase
 import com.maksimowiczm.foodyou.search.infrastructure.SearchEntity
 import com.maksimowiczm.foodyou.search.infrastructure.SearchEntityFts
+import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeCompositionReferenceEntity
+import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeDatabase
 
 @Database(
-    entities = [SearchEntityFts::class, SearchEntity::class],
+    entities =
+        [SearchEntityFts::class, SearchEntity::class, UserRecipeCompositionReferenceEntity::class],
     version = ReadModelDatabase.VERSION,
     exportSchema = false,
 )
 @TypeConverters(UuidConverter::class, QuantityTypeConverter::class)
 @ConstructedBy(ReadModelDatabaseConstructor::class)
-internal abstract class ReadModelDatabase : RoomDatabase(), SearchDatabase {
+internal abstract class ReadModelDatabase : RoomDatabase(), SearchDatabase, UserRecipeDatabase {
     companion object {
         const val VERSION = 1
 

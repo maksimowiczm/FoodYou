@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.analytics.domain.AnalyticsEvent
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.search.domain.SearchHistoryEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductEvent
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeEvent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -29,6 +30,7 @@ private val roomEventJson = Json {
             subclassesOfSealed<AnalyticsEvent>()
             subclassesOfSealed<AccountEvent>()
             subclassesOfSealed<UserProductEvent>()
+            subclassesOfSealed<UserRecipeEvent>()
             subclassesOfSealed<SearchHistoryEvent>()
         }
     }
