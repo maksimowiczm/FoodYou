@@ -140,3 +140,6 @@ inline val Int.ounces: Weight
 
 inline val Double.ounces: Weight
     get() = Weight.ounces(this)
+
+fun Iterable<Weight>.sum(unit: WeightUnit = WeightUnit.Grams) =
+    fold(Weight.from(0.0, unit)) { acc, weight -> acc + weight.inUnit(unit) }
