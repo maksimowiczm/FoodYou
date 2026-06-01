@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.userfood
+package com.maksimowiczm.foodyou.app.ui.userproduct
 
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector

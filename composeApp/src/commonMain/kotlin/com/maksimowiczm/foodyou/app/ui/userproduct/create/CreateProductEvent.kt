@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.userfood.create
+package com.maksimowiczm.foodyou.app.ui.userproduct.create
 
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 

@@ -23,9 +23,7 @@ class LoggingEventBus(private val delegate: EventBus, logger: Logger) : EventBus
                 appendLine(
                     "Publishing ${events.size} events: ${events.map { it::class.simpleName }}"
                 )
-                events.forEachIndexed { i, event ->
-                    appendLine("[$i] $event")
-                }
+                events.forEachIndexed { i, event -> appendLine("[$i] $event") }
             }
         }
         delegate.publish(events)

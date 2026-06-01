@@ -1,9 +1,9 @@
-package com.maksimowiczm.foodyou.app.ui.userfood.edit
+package com.maksimowiczm.foodyou.app.ui.userproduct.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
-import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
+import com.maksimowiczm.foodyou.app.ui.userproduct.ProductFormState
+import com.maksimowiczm.foodyou.app.ui.userproduct.ProductFormTransformer
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import kotlinx.coroutines.channels.Channel

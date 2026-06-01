@@ -1,10 +1,10 @@
-package com.maksimowiczm.foodyou.app.ui.userfood.create
+package com.maksimowiczm.foodyou.app.ui.userproduct.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.ui.userfood.ObserveEnergyUnitUseCase
-import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
-import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormTransformer
+import com.maksimowiczm.foodyou.app.ui.userproduct.ObserveEnergyUnitUseCase
+import com.maksimowiczm.foodyou.app.ui.userproduct.ProductFormState
+import com.maksimowiczm.foodyou.app.ui.userproduct.ProductFormTransformer
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import kotlinx.coroutines.channels.Channel

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.userfood
+package com.maksimowiczm.foodyou.app.ui.userproduct
 
 import androidx.compose.runtime.*
 import foodyou.app.generated.resources.*

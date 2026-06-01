@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.userfood.edit
+package com.maksimowiczm.foodyou.app.ui.userproduct.create
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -28,60 +28,36 @@ import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
-import com.maksimowiczm.foodyou.app.ui.userfood.FillSuggestedFieldsDialog
-import com.maksimowiczm.foodyou.app.ui.userfood.ProductForm
-import com.maksimowiczm.foodyou.app.ui.userfood.ProductFormState
-import com.maksimowiczm.foodyou.app.ui.userfood.rememberProductFormState
+import com.maksimowiczm.foodyou.app.ui.userproduct.FillSuggestedFieldsDialog
+import com.maksimowiczm.foodyou.app.ui.userproduct.ProductForm
+import com.maksimowiczm.foodyou.app.ui.userproduct.rememberProductFormState
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
-fun EditProductScreen(
-    identity: UserProductIdentity,
+fun CreateProductScreen(
     onBack: () -> Unit,
-    onEdit: () -> Unit,
+    onCreate: (UserProductIdentity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: EditProductViewModel = koinViewModel { parametersOf(identity) }
+    val viewModel: CreateProductViewModel = koinViewModel()
+    val energyFormat by viewModel.energyFormat.collectAsStateWithLifecycle()
+    val formState = rememberProductFormState(defaultEnergyUnit = energyFormat)
+    val isLocked by viewModel.isLocked.collectAsStateWithLifecycle()
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {
-            EditProductEvent.Edited -> onEdit()
+            is CreateProductEvent.Created -> onCreate(it.id)
         }
     }
 
-    val isLocked by viewModel.isLocked.collectAsStateWithLifecycle()
-    val product by viewModel.product.collectAsStateWithLifecycle()
-
-    if (product != null) {
-        val formState = rememberProductFormState(product)
-
-        EditProductScreen(
-            onBack = onBack,
-            onSave = viewModel::save,
-            formState = formState,
-            isLocked = isLocked,
-            modifier = modifier,
-        )
-    }
-}
-
-@Composable
-private fun EditProductScreen(
-    onBack: () -> Unit,
-    onSave: (ProductFormState) -> Unit,
-    formState: ProductFormState,
-    isLocked: Boolean,
-    modifier: Modifier = Modifier,
-) {
     val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     if (showDiscardDialog) {
@@ -115,7 +91,7 @@ private fun EditProductScreen(
             },
             onSkip = {
                 showFillSuggestedFieldsDialog = false
-                onSave(formState)
+                viewModel.create(formState)
             },
         )
     }
@@ -124,7 +100,7 @@ private fun EditProductScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(Res.string.headline_edit_product)) },
+                title = { Text(stringResource(Res.string.headline_create_product)) },
                 navigationIcon = {
                     ArrowBackIconButton(
                         onClick = {
@@ -140,7 +116,7 @@ private fun EditProductScreen(
                             if (!formState.hasSuggestedFieldsFilled) {
                                 showFillSuggestedFieldsDialog = true
                             } else {
-                                onSave(formState)
+                                viewModel.create(formState)
                             }
                         },
                         shapes = ButtonDefaults.shapesFor(buttonHeight),
@@ -151,7 +127,7 @@ private fun EditProductScreen(
                         contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
                     ) {
                         Text(
-                            text = stringResource(Res.string.action_save),
+                            text = stringResource(Res.string.action_create),
                             style = ButtonDefaults.textStyleFor(buttonHeight),
                         )
                     }

@@ -14,7 +14,7 @@ import com.maksimowiczm.foodyou.app.ui.onboarding.onboardingModule
 import com.maksimowiczm.foodyou.app.ui.personalization.personalizationModule
 import com.maksimowiczm.foodyou.app.ui.privacy.privacyModule
 import com.maksimowiczm.foodyou.app.ui.profile.profileModule
-import com.maksimowiczm.foodyou.app.ui.userfood.productModule
+import com.maksimowiczm.foodyou.app.ui.userproduct.productModule
 import com.maksimowiczm.foodyou.common.di.commonModule
 import com.maksimowiczm.foodyou.common.event.di.inMemoryEventBusModule
 import com.maksimowiczm.foodyou.device.di.deviceModule

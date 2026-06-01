@@ -41,8 +41,8 @@ import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFacts
 import com.maksimowiczm.foodyou.app.ui.privacy.PrivacyScreen
 import com.maksimowiczm.foodyou.app.ui.profile.add.AddProfileScreen
 import com.maksimowiczm.foodyou.app.ui.profile.edit.EditProfileScreen
-import com.maksimowiczm.foodyou.app.ui.userfood.create.CreateProductScreen
-import com.maksimowiczm.foodyou.app.ui.userfood.edit.EditProductScreen
+import com.maksimowiczm.foodyou.app.ui.userproduct.create.CreateProductScreen
+import com.maksimowiczm.foodyou.app.ui.userproduct.edit.EditProductScreen
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity

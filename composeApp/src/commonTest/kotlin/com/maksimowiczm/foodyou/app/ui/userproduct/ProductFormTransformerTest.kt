@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.userfood
+package com.maksimowiczm.foodyou.app.ui.userproduct
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd

@@ -1,8 +1,8 @@
-package com.maksimowiczm.foodyou.app.ui.userfood
+package com.maksimowiczm.foodyou.app.ui.userproduct
 
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
-import com.maksimowiczm.foodyou.app.ui.userfood.create.CreateProductViewModel
-import com.maksimowiczm.foodyou.app.ui.userfood.edit.EditProductViewModel
+import com.maksimowiczm.foodyou.app.ui.userproduct.create.CreateProductViewModel
+import com.maksimowiczm.foodyou.app.ui.userproduct.edit.EditProductViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.scopedOf
 import org.koin.core.module.dsl.viewModelOf
