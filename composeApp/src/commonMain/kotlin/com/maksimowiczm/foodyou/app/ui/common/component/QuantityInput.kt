@@ -49,7 +49,6 @@ import com.maksimowiczm.foodyou.app.ui.common.form.rememberFormField
 import com.maksimowiczm.foodyou.app.ui.common.form.validateDouble
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import foodyou.app.generated.resources.*
-import io.konform.validation.ifPresent
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -190,16 +189,14 @@ enum class QuantityType {
 }
 
 @Composable
-fun rememberQuantityFormField(): FormField {
+fun rememberQuantityFormField(vararg keys: Any?, defaultValue: String? = null): FormField {
     val invalidNumber = stringResource(Res.string.error_invalid_number)
     val valueMustBePositive = stringResource(Res.string.error_value_must_be_positive)
 
-    return rememberFormField {
-        ifPresent {
-            validateDouble {
-                constrain(invalidNumber) { it != null }
-                constrain(valueMustBePositive) { it?.let { it > 0 } ?: true }
-            }
+    return rememberFormField(*keys, defaultValue = defaultValue) {
+        validateDouble {
+            constrain(invalidNumber) { it != null }
+            constrain(valueMustBePositive) { it?.let { it > 0 } ?: true }
         }
     }
 }
