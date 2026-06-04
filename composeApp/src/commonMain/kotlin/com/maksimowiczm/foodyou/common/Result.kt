@@ -7,9 +7,9 @@ import kotlin.contracts.contract
 
 sealed interface Result<out R, out E> {
 
-    data class Success<out R, out E>(val data: R) : Result<R, E>
+    data class Success<out R>(val data: R) : Result<R, Nothing>
 
-    data class Error<out R, out E>(val error: E) : Result<R, E>
+    data class Error<out E>(val error: E) : Result<Nothing, E>
 }
 
 @OptIn(ExperimentalContracts::class)
@@ -31,6 +31,12 @@ fun Result<*, *>.isError(): Boolean {
 
     return this is Error
 }
+
+fun <R> Result<R, *>.getOrNull(): R? =
+    when (this) {
+        is Error<*> -> null
+        is Success<R> -> data
+    }
 
 inline fun <R, E> Result<R, E>.onSuccess(action: (R) -> Unit): Result<R, E> {
     if (this is Success) {
@@ -60,7 +66,7 @@ inline fun <R, E, R2> Result<R, E>.map(transform: (R) -> R2): Result<R2, E> =
         is Error -> Error(error)
     }
 
-fun <R, E> Result<R, E>.expect(message: String): R =
+fun <R> Result<R, *>.expect(message: String): R =
     when (this) {
         is Success -> data
         is Error -> error(message)
@@ -72,8 +78,8 @@ inline fun <R, E, R1> Result<R, E>.fold(onSuccess: (R) -> R1, onError: (E) -> R1
         is Error -> onError(error)
     }
 
-@Suppress("FunctionName") fun <R, E> Ok(data: R): Result<R, E> = Success(data)
+@Suppress("FunctionName") fun <R> Ok(data: R): Result<R, Nothing> = Success(data)
 
-@Suppress("FunctionName") fun <E> Ok(): Result<Unit, E> = Success(Unit)
+@Suppress("FunctionName") fun Ok(): Result<Unit, Nothing> = Success(Unit)
 
-@Suppress("FunctionName") fun <R, E> Err(error: E): Result<R, E> = Error(error)
+@Suppress("FunctionName") fun <E> Err(error: E): Result<Nothing, E> = Error(error)
