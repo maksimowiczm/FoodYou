@@ -120,7 +120,6 @@ private fun General(state: ProductFormState, isLocked: Boolean, modifier: Modifi
             modifier = Modifier.fillMaxWidth(),
             enabled = !isLocked,
             label = { Text(requiredStringResource(stringResource(Res.string.product_name))) },
-            supportingText = { Text(requiredStringResource()) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
         state.brand.OutlinedTextField(
@@ -188,7 +187,7 @@ private fun General(state: ProductFormState, isLocked: Boolean, modifier: Modifi
 }
 
 @Composable
-private fun PhotoPicker(
+internal fun PhotoPicker(
     imageUri: String?,
     setImageUri: (String?) -> Unit,
     isLocked: Boolean,
@@ -927,7 +926,7 @@ private fun FormField.QuantityOutlinedTextField(
 }
 
 @Composable
-private fun FormField.OutlinedTextField(
+internal fun FormField.OutlinedTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     label: @Composable TextFieldLabelScope.() -> Unit,
@@ -962,13 +961,10 @@ private fun FormField.OutlinedTextField(
 }
 
 @Composable
-private fun requiredStringResource(): String = buildString {
-    append("* ")
-    append(stringResource(Res.string.neutral_required))
-}
-
-@Composable
-private fun requiredStringResource(str: String): String = buildString {
-    append(str)
-    append(" *")
-}
+internal fun requiredStringResource(str: String): String =
+    remember(str) {
+        buildString {
+            append(str)
+            append(" *")
+        }
+    }

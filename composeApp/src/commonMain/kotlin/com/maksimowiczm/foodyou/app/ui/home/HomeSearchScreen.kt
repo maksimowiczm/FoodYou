@@ -50,8 +50,8 @@ import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentr
 import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsListItem
 import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchViewModel
-import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodListItem
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserProductListItem
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
@@ -190,8 +190,8 @@ private fun HomeSearchScreen(
                                     )
 
                                 is SearchResult.UserProduct ->
-                                    UserFoodListItem(
-                                        food = product,
+                                    UserProductListItem(
+                                        product = product,
                                         onClick = { onUserProduct(product.identity) },
                                         shimmer = shimmer,
                                         modifier = Modifier.animateItem(),
@@ -267,8 +267,8 @@ private fun HomeSearchScreen(
                                 )
 
                             is SearchResult.UserProduct ->
-                                UserFoodListItem(
-                                    food = food,
+                                UserProductListItem(
+                                    product = food,
                                     onClick = { onUserProduct(food.identity) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),

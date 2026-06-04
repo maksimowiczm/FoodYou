@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +57,42 @@ fun FoodListItemSkeleton(
         energy = energy,
         quantity = quantity,
         modifier = modifier,
+        onClick = onClick,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        shape = shape,
+        contentPadding = contentPadding,
+    )
+}
+
+@Composable
+fun TwoRowFoodListItemSkeleton(
+    shimmer: Shimmer,
+    modifier: Modifier = Modifier,
+    headline: @Composable () -> Unit = { FoodListItemSkeletonDefaults.Headline(shimmer) },
+    image: @Composable (() -> Unit)? = { FoodListItemSkeletonDefaults.Image(shimmer) },
+    proteins: @Composable () -> Unit = { FoodListItemSkeletonDefaults.Nutrient(shimmer) },
+    carbohydrates: @Composable () -> Unit = { FoodListItemSkeletonDefaults.Nutrient(shimmer) },
+    fats: @Composable () -> Unit = { FoodListItemSkeletonDefaults.Nutrient(shimmer) },
+    energy: @Composable () -> Unit = { FoodListItemSkeletonDefaults.Energy(shimmer) },
+    quantity: @Composable () -> Unit = { FoodListItemSkeletonDefaults.Quantity(shimmer) },
+    trailingContent: (@Composable () -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
+    containerColor: Color = Color.Transparent,
+    contentColor: Color = LocalContentColor.current,
+    shape: Shape = RectangleShape,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+) {
+    TwoRowFoodListItem(
+        headline = headline,
+        image = image,
+        proteins = proteins,
+        carbohydrates = carbohydrates,
+        fats = fats,
+        energy = energy,
+        quantity = quantity,
+        modifier = modifier,
+        trailingContent = trailingContent,
         onClick = onClick,
         containerColor = containerColor,
         contentColor = contentColor,
@@ -134,6 +174,21 @@ private fun HeadlinedFoodListItemSkeletonPreview() {
         FoodListItemSkeleton(
             headline = { Text("Food name") },
             shimmer = rememberShimmer(ShimmerBounds.View),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun TwoRowFoodListItemSkeletonPreview() {
+    PreviewFoodYouTheme {
+        TwoRowFoodListItemSkeleton(
+            shimmer = rememberShimmer(ShimmerBounds.View),
+            trailingContent = {
+                IconButton(onClick = {}, enabled = false) {
+                    Icon(imageVector = Icons.Outlined.Edit, contentDescription = null)
+                }
+            },
         )
     }
 }
