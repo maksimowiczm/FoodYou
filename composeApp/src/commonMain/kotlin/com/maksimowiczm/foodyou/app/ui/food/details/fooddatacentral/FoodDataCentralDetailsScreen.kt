@@ -17,7 +17,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
-import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsLoadingOverlay
@@ -36,8 +35,7 @@ import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.food.scale
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.milliliters
-import com.maksimowiczm.foodyou.common.expect
-import com.maksimowiczm.foodyou.common.onError
+import com.maksimowiczm.foodyou.common.getOrNull
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import foodyou.app.generated.resources.*
@@ -57,22 +55,12 @@ fun FoodDataCentralDetailsScreen(
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
-    val nameSelector = LocalFoodNameSelector.current
     val headline =
-        remember(uiState, nameSelector) {
+        remember(uiState) {
             when (uiState) {
                 is FoodDetailsUiState.Error -> null
                 FoodDetailsUiState.NotFound -> null
-                is FoodDetailsUiState.Details<FoodDataCentralProduct> -> {
-                    val name = uiState.food?.name
-                    val brand = uiState.food?.brand
-                    if (name == null) null
-                    else
-                        buildString {
-                            append(name)
-                            append(brand?.let { " ($it)" } ?: "")
-                        }
-                }
+                is FoodDetailsUiState.Details<FoodDataCentralProduct> -> uiState.food?.headline
             }
         }
 
@@ -140,6 +128,11 @@ private fun FoodDataCentralDetailsScreen(
             }
         }
 
+    val scaledNutritionFacts =
+        remember(nutritionFacts, quantity) {
+            nutritionFacts?.scale(packageQuantity, servingQuantity, quantity)?.getOrNull()
+        }
+
     val lazyListState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(lazyListState)
 
@@ -168,20 +161,10 @@ private fun FoodDataCentralDetailsScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item { FoodDetailsHeadline(headline = headline) }
-                if (nutritionFacts != null) {
+                if (scaledNutritionFacts != null) {
                     item {
-                        val facts =
-                            remember(servingQuantity, packageQuantity, quantity) {
-                                nutritionFacts
-                                    .scale(packageQuantity, servingQuantity, quantity)
-                                    .onError {
-                                        return@remember NutritionFacts()
-                                    }
-                                    .expect("Can't be error at this point")
-                            }
-
                         FoodDetailsNutrients(
-                            nutritionFacts = facts,
+                            nutritionFacts = scaledNutritionFacts,
                             quantities = quantitySuggestions,
                             selectedQuantity = quantity,
                             servingQuantity = servingQuantity,

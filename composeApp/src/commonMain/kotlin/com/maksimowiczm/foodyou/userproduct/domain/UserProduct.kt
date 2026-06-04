@@ -31,6 +31,13 @@ data class UserProduct(
         require(note == null || note.isNotBlank()) { "Note cannot be blank" }
     }
 
+    val headline: String = buildString {
+        append(name)
+        if (brand != null) {
+            append(brand.let { " ($it)" })
+        }
+    }
+
     companion object {
         fun create(product: UserProduct, clock: Clock = Clock.System): List<UserProductEvent> =
             listOf(UserProductCreatedEvent(product = product, timestamp = clock.now()))

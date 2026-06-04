@@ -14,4 +14,11 @@ data class FoodDataCentralProduct(
     val nutritionFacts: NutritionFacts,
     val servingQuantity: AbsoluteQuantity?,
     val packageQuantity: AbsoluteQuantity?,
-)
+) {
+    val headline: String = buildString {
+        append(name)
+        if (brand != null) {
+            append(brand.let { " ($it)" })
+        }
+    }
+}

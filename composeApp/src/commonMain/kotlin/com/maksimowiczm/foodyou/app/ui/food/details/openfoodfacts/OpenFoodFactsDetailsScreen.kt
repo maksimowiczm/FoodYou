@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
+import com.maksimowiczm.foodyou.app.ui.common.utility.headline
 import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsImage
@@ -38,8 +39,7 @@ import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.food.scale
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.milliliters
-import com.maksimowiczm.foodyou.common.expect
-import com.maksimowiczm.foodyou.common.onError
+import com.maksimowiczm.foodyou.common.getOrNull
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import foodyou.app.generated.resources.*
@@ -65,16 +65,8 @@ fun OpenFoodFactsDetailsScreen(
             when (uiState) {
                 is FoodDetailsUiState.Error -> null
                 FoodDetailsUiState.NotFound -> null
-                is FoodDetailsUiState.Details<OpenFoodFactsProduct> -> {
-                    val name = uiState.food?.name
-                    val brand = uiState.food?.brand
-                    if (name == null) null
-                    else
-                        buildString {
-                            append(nameSelector.select(name))
-                            append(brand?.let { " ($it)" } ?: "")
-                        }
-                }
+                is FoodDetailsUiState.Details<OpenFoodFactsProduct> ->
+                    uiState.food?.headline(nameSelector)
             }
         }
 
@@ -144,6 +136,11 @@ private fun OpenFoodFactsDetailsScreen(
             }
         }
 
+    val scaledNutritionFacts =
+        remember(nutritionFacts, quantity) {
+            nutritionFacts?.scale(packageQuantity, servingQuantity, quantity)?.getOrNull()
+        }
+
     val lazyListState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(lazyListState)
 
@@ -173,20 +170,10 @@ private fun OpenFoodFactsDetailsScreen(
             ) {
                 item { FoodDetailsHeadline(headline = headline) }
                 item { FoodDetailsImage(image = image, showPlaceholder = isLoading) }
-                if (nutritionFacts != null) {
+                if (scaledNutritionFacts != null) {
                     item {
-                        val facts =
-                            remember(servingQuantity, packageQuantity, quantity) {
-                                nutritionFacts
-                                    .scale(packageQuantity, servingQuantity, quantity)
-                                    .onError {
-                                        return@remember NutritionFacts()
-                                    }
-                                    .expect("Can't be error at this point")
-                            }
-
                         FoodDetailsNutrients(
-                            nutritionFacts = facts,
+                            nutritionFacts = scaledNutritionFacts,
                             quantities = quantitySuggestions,
                             selectedQuantity = quantity,
                             servingQuantity = servingQuantity,
