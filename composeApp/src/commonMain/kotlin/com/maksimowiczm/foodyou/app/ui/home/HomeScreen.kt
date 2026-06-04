@@ -75,18 +75,17 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.horizontal
 import com.maksimowiczm.foodyou.app.ui.common.extension.now
 import com.maksimowiczm.foodyou.app.ui.common.extension.plus
 import com.maksimowiczm.foodyou.app.ui.common.saveable.jsonSaver
+import com.maksimowiczm.foodyou.app.ui.food.search.CollectionFilter
+import com.maksimowiczm.foodyou.app.ui.food.search.SearchCollection
+import com.maksimowiczm.foodyou.app.ui.food.search.SearchFilters
+import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.rememberCollectionFilter
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
 import com.maksimowiczm.foodyou.app.ui.home.calendar.CalendarCard
 import com.maksimowiczm.foodyou.app.ui.home.common.rememberHomeState
-import com.maksimowiczm.foodyou.app.ui.home.search.CollectionFilter
-import com.maksimowiczm.foodyou.app.ui.home.search.HomeSearchScreen
-import com.maksimowiczm.foodyou.app.ui.home.search.HomeSearchViewModel
-import com.maksimowiczm.foodyou.app.ui.home.search.SearchCollection
-import com.maksimowiczm.foodyou.app.ui.home.search.SearchFilters
-import com.maksimowiczm.foodyou.app.ui.home.search.rememberCollectionFilter
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.common.extension.safeRemoveLast
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -110,7 +109,7 @@ fun HomeScreen(
     onAvatar: () -> Unit,
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
-    onUserFood: (UserProductIdentity) -> Unit,
+    onUserProduct: (UserProductIdentity) -> Unit,
     onCreate: () -> Unit,
     initialQuery: String?,
     modifier: Modifier = Modifier,
@@ -154,14 +153,12 @@ fun HomeScreen(
 
     val railState = rememberWideNavigationRailState()
 
-    val homeSearchViewModel: HomeSearchViewModel = koinViewModel {
-        parametersOf(initialQuery ?: "")
-    }
+    val searchViewModel: SearchViewModel = koinViewModel { parametersOf(initialQuery ?: "") }
     val userFoodSearchViewModel: UserFoodSearchViewModel = koinViewModel()
     val openFoodFactsSearchViewModel: OpenFoodFactsSearchViewModel = koinViewModel()
     val foodDataCentralSearchViewModel: FoodDataCentralSearchViewModel = koinViewModel()
     val favoriteFoodSearchViewModel: FavoriteFoodSearchViewModel = koinViewModel()
-    LaunchedCollectWithLifecycle(homeSearchViewModel.searchQuery) {
+    LaunchedCollectWithLifecycle(searchViewModel.searchQuery) {
         userFoodSearchViewModel.search(it)
         openFoodFactsSearchViewModel.search(it)
         foodDataCentralSearchViewModel.search(it)
@@ -182,7 +179,7 @@ fun HomeScreen(
         onClose = { showBarcodeScanner.value = false },
         onBarcodeScan = {
             showBarcodeScanner.value = false
-            homeSearchViewModel.search(it)
+            searchViewModel.search(it)
             textFieldState.setTextAndPlaceCursorAtEnd(it)
             if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
         },
@@ -207,7 +204,7 @@ fun HomeScreen(
                 onAvatar = onAvatar,
                 onSearch = {
                     if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
-                    homeSearchViewModel.search(it)
+                    searchViewModel.search(it)
                 },
                 onSearchBar = {
                     if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
@@ -255,10 +252,10 @@ fun HomeScreen(
                                 selectedCollection = selectedCollection.value,
                                 onFoodDataCentralProduct = onFoodDataCentralProduct,
                                 onOpenFoodFactsProduct = onOpenFoodFactsProduct,
-                                onUserFood = onUserFood,
+                                onUserProduct = onUserProduct,
                                 lazyListState = lazyListState,
                                 onSearch = {
-                                    homeSearchViewModel.search(it)
+                                    searchViewModel.search(it)
                                     textFieldState.setTextAndPlaceCursorAtEnd(it)
                                     if (backStack.last() !is HomeNavKey.Search)
                                         backStack.add(HomeNavKey.Search)
@@ -420,7 +417,7 @@ private fun HomeModalWideNavigationRail(
 }
 
 @Composable
-private fun rememberCollectionFilters(): List<CollectionFilter> {
+internal fun rememberCollectionFilters(): List<CollectionFilter> {
     val favorite = run {
         val viewModel: FavoriteFoodSearchViewModel = koinViewModel()
         rememberCollectionFilter(

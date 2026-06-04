@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.home.search
+package com.maksimowiczm.foodyou.app.ui.food.search
 
 import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable

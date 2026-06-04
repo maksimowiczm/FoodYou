@@ -528,4 +528,6 @@
 
     <string name="headline_no_recent_searches">No recent searches yet</string>
 
+    <string name="headline_search_ingredients">Search ingredients</string>
+
 </resources>

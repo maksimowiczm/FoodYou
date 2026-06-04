@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.home.search
+package com.maksimowiczm.foodyou.app.ui.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +42,8 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.error
 import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodDataCentralErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchErrorCard
+import com.maksimowiczm.foodyou.app.ui.food.search.SearchCollection
+import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodListItem
 import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralListItem
@@ -74,20 +76,20 @@ internal fun HomeSearchScreen(
     contentPadding: PaddingValues,
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
-    onUserFood: (UserProductIdentity) -> Unit,
+    onUserProduct: (UserProductIdentity) -> Unit,
     onSearch: (String) -> Unit,
     onFill: (String) -> Unit,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
-    val homeSearchViewModel: HomeSearchViewModel = koinViewModel()
+    val searchViewModel: SearchViewModel = koinViewModel()
     val userFoodSearchViewModel: UserFoodSearchViewModel = koinViewModel()
     val openFoodFactsSearchViewModel: OpenFoodFactsSearchViewModel = koinViewModel()
     val foodDataCentralSearchViewModel: FoodDataCentralSearchViewModel = koinViewModel()
     val favoriteFoodSearchViewModel: FavoriteFoodSearchViewModel = koinViewModel()
 
-    val searchQuery = homeSearchViewModel.searchQuery.collectAsStateWithLifecycle().value
-    val history = homeSearchViewModel.searchHistory.collectAsStateWithLifecycle().value
+    val searchQuery = searchViewModel.searchQuery.collectAsStateWithLifecycle().value
+    val history = searchViewModel.searchHistory.collectAsStateWithLifecycle().value
 
     val userFood = userFoodSearchViewModel.pages.collectAsLazyPagingItems()
     val openFoodFacts = openFoodFactsSearchViewModel.pages.collectAsLazyPagingItems()
@@ -131,7 +133,7 @@ internal fun HomeSearchScreen(
         lazyListState = lazyListState,
         onFoodDataCentralProduct = onFoodDataCentralProduct,
         onOpenFoodFactsProduct = onOpenFoodFactsProduct,
-        onUserFood = onUserFood,
+        onUserProduct = onUserProduct,
         onSearch = onSearch,
         onFill = onFill,
         modifier = modifier,
@@ -153,7 +155,7 @@ private fun HomeSearchScreen(
     lazyListState: LazyListState,
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
-    onUserFood: (UserProductIdentity) -> Unit,
+    onUserProduct: (UserProductIdentity) -> Unit,
     onSearch: (String) -> Unit,
     onFill: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -190,7 +192,7 @@ private fun HomeSearchScreen(
                                 is SearchResult.UserProduct ->
                                     UserFoodListItem(
                                         food = product,
-                                        onClick = { onUserFood(product.identity) },
+                                        onClick = { onUserProduct(product.identity) },
                                         shimmer = shimmer,
                                         modifier = Modifier.animateItem(),
                                     )
@@ -267,7 +269,7 @@ private fun HomeSearchScreen(
                             is SearchResult.UserProduct ->
                                 UserFoodListItem(
                                     food = food,
-                                    onClick = { onUserFood(food.identity) },
+                                    onClick = { onUserProduct(food.identity) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )
@@ -334,7 +336,7 @@ private fun HomeSearchScreen(
                                         when (food) {
                                             is RemoteData.Success -> {
                                                 when (val value = food.value) {
-                                                    is UserProduct -> onUserFood(value.identity)
+                                                    is UserProduct -> onUserProduct(value.identity)
                                                     is OpenFoodFactsProduct ->
                                                         onOpenFoodFactsProduct(value.identity)
 
@@ -346,7 +348,8 @@ private fun HomeSearchScreen(
                                             is RemoteData.Error -> {
                                                 food.partialValue?.let { value ->
                                                     when (value) {
-                                                        is UserProduct -> onUserFood(value.identity)
+                                                        is UserProduct ->
+                                                            onUserProduct(value.identity)
 
                                                         is OpenFoodFactsProduct ->
                                                             onOpenFoodFactsProduct(value.identity)
@@ -360,7 +363,8 @@ private fun HomeSearchScreen(
                                             is RemoteData.Loading -> {
                                                 food.partialValue?.let { value ->
                                                     when (value) {
-                                                        is UserProduct -> onUserFood(value.identity)
+                                                        is UserProduct ->
+                                                            onUserProduct(value.identity)
 
                                                         is OpenFoodFactsProduct ->
                                                             onOpenFoodFactsProduct(value.identity)

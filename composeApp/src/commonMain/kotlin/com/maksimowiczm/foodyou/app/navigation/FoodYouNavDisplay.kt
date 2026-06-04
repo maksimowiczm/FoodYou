@@ -146,7 +146,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onOpenFoodFactsProduct = { id ->
                             backStack.add(OpenFoodFactsProductDetails.from(id))
                         },
-                        onUserFood = { id -> backStack.add(UserProductDetails(id)) },
+                        onUserProduct = { id -> backStack.add(UserProductDetails(id)) },
                         onCreate = { backStack.add(CreateProduct) },
                         initialQuery = it.initialQuery,
                     )

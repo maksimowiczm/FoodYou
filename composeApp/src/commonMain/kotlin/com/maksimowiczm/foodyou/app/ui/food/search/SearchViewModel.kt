@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.home.search
+package com.maksimowiczm.foodyou.app.ui.food.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 
-internal class HomeSearchViewModel(
+internal class SearchViewModel(
     initialQuery: String?,
     private val searchQueryParser: SearchQueryParser,
     private val searchHistoryService: SearchHistoryService,
