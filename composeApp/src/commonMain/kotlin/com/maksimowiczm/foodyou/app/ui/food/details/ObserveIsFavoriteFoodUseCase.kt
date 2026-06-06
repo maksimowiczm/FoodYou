@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -17,6 +18,9 @@ internal class ObserveIsFavoriteFoodUseCase(private val appProfileManager: AppPr
 
     fun observe(identity: UserProductIdentity): Flow<Boolean> =
         observe(FavoriteFoodIdentity.UserProduct(identity.id))
+
+    fun observe(identity: UserRecipeIdentity): Flow<Boolean> =
+        observe(FavoriteFoodIdentity.Recipe(identity.id))
 
     fun observe(identity: FavoriteFoodIdentity): Flow<Boolean> =
         appProfileManager.observeAppProfile().map { it.favoriteFoods.contains(identity) }

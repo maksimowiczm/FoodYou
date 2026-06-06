@@ -17,6 +17,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateRecipe
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProfile
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditRecipe
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditUserProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDataCentralProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
@@ -33,6 +34,7 @@ import com.maksimowiczm.foodyou.app.ui.food.details.fooddatacentral.FoodDataCent
 import com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts.OpenFoodFactsDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.food.recipe.create.CreateRecipeScreen
+import com.maksimowiczm.foodyou.app.ui.food.recipe.edit.EditRecipeScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.app.ui.home.SettingsScreen
@@ -50,6 +52,7 @@ import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -148,6 +151,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                             backStack.add(OpenFoodFactsProductDetails(id))
                         },
                         onUserProduct = { id -> backStack.add(UserProductDetails(id)) },
+                        onUserRecipe = { id -> backStack.add(EditRecipe(id)) },
                         onCreateProduct = { backStack.add(CreateProduct) },
                         onCreateRecipe = { backStack.add(CreateRecipe) },
                         initialQuery = it.initialQuery,
@@ -188,6 +192,13 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                     CreateRecipeScreen(
                         onBack = { backStack.removeLastIf<CreateRecipe>() },
                         onEditUserProduct = { backStack.add(EditUserProduct(it)) },
+                    )
+                }
+                entry<EditRecipe> {
+                    EditRecipeScreen(
+                        identity = it.identity,
+                        onBack = { backStack.removeLastIf<EditRecipe>() },
+                        onEditUserProduct = { id -> backStack.add(EditUserProduct(id)) },
                     )
                 }
             },
@@ -250,4 +261,6 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data object Privacy : FoodYouNavHostRoute
 
     @Serializable data object CreateRecipe : FoodYouNavHostRoute
+
+    @Serializable data class EditRecipe(val identity: UserRecipeIdentity) : FoodYouNavHostRoute
 }

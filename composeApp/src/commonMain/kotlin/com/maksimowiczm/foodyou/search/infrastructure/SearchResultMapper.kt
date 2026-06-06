@@ -16,12 +16,17 @@ import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsMapper
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 
 class SearchResultMapper {
     private val nutrientsMapper = NutrientsMapper()
 
     fun toDomain(entity: SearchEntity): SearchResult =
         with(entity) {
+            check(productId != null || recipeId != null) {
+                "Either productId or recipeId must be non-null"
+            }
+
             val name =
                 FoodName.requireAll(
                     english = name.english,
@@ -46,6 +51,28 @@ class SearchResultMapper {
                     fallback = name.fallback,
                 )
 
+            val nutritionFacts = nutrientsMapper.toNutritionFats(nutrients)
+
+            if (recipeId != null) {
+                return SearchResult.UserRecipe(
+                    identity = UserRecipeIdentity(recipeId),
+                    name = name,
+                    note = note,
+                    image = imageDigest?.let(::BlobDigest),
+                    nutritionFacts = nutritionFacts,
+                    servingWeight =
+                        servingSize?.toAbsoluteQuantity()?.let {
+                            (it as? AbsoluteQuantity.Weight)?.weight
+                        } ?: 0.grams,
+                    totalWeight =
+                        packageSize?.toAbsoluteQuantity()?.let {
+                            (it as? AbsoluteQuantity.Weight)?.weight
+                        } ?: 0.grams,
+                )
+            }
+
+            checkNotNull(productId)
+
             val servingQuantity = servingSize?.toAbsoluteQuantity()
             val packageQuantity = packageSize?.toAbsoluteQuantity()
 
@@ -56,11 +83,17 @@ class SearchResultMapper {
                 barcode = barcode?.let(::UserProductBarcode),
                 note = note,
                 image = imageDigest?.let(::BlobDigest),
-                nutritionFacts = nutrientsMapper.toNutritionFats(nutrients),
+                nutritionFacts = nutritionFacts,
                 packageQuantity = packageQuantity,
                 servingQuantity = servingQuantity,
                 isLiquid = isLiquid,
             )
+        }
+
+    fun toEntity(domain: SearchResult): SearchEntity =
+        when (domain) {
+            is SearchResult.UserProduct -> toEntity(domain)
+            is SearchResult.UserRecipe -> toEntity(domain)
         }
 
     fun toEntity(domain: SearchResult.UserProduct): SearchEntity =
@@ -68,30 +101,11 @@ class SearchResultMapper {
             val servingSize = servingQuantity?.let { toQuantityEntity(it) }
             val packageSize = packageQuantity?.let { toQuantityEntity(it) }
 
-            val foodName =
-                FoodNameEntity(
-                    english = name.english,
-                    catalan = name.catalan,
-                    danish = name.danish,
-                    german = name.german,
-                    spanish = name.spanish,
-                    french = name.french,
-                    indonesian = name.indonesian,
-                    italian = name.italian,
-                    hungarian = name.hungarian,
-                    dutch = name.dutch,
-                    polish = name.polish,
-                    portugueseBrazil = name.portugueseBrazil,
-                    slovenian = name.slovenian,
-                    turkish = name.turkish,
-                    russian = name.russian,
-                    ukrainian = name.ukrainian,
-                    arabic = name.arabic,
-                    chineseSimplified = name.chineseSimplified,
-                )
+            val foodName = toFoodNameEntity(name)
 
             return SearchEntity(
                 productId = identity.id,
+                recipeId = null,
                 name = foodName,
                 brand = brand,
                 barcode = barcode?.value,
@@ -101,8 +115,51 @@ class SearchResultMapper {
                 packageSize = packageSize,
                 servingSize = servingSize,
                 isLiquid = isLiquid,
+                servings = null,
             )
         }
+
+    fun toEntity(domain: SearchResult.UserRecipe): SearchEntity =
+        with(domain) {
+            val foodName = toFoodNameEntity(name)
+
+            return SearchEntity(
+                productId = null,
+                recipeId = identity.id,
+                name = foodName,
+                brand = null,
+                barcode = null,
+                note = note,
+                imageDigest = image?.digest,
+                nutrients = nutrientsMapper.toNutrientsEntity(nutritionFacts),
+                packageSize = toQuantityEntity(AbsoluteQuantity.Weight(totalWeight)),
+                servingSize = toQuantityEntity(AbsoluteQuantity.Weight(servingWeight)),
+                isLiquid = false,
+                servings = null,
+            )
+        }
+
+    private fun toFoodNameEntity(name: FoodName) =
+        FoodNameEntity(
+            english = name.english,
+            catalan = name.catalan,
+            danish = name.danish,
+            german = name.german,
+            spanish = name.spanish,
+            french = name.french,
+            indonesian = name.indonesian,
+            italian = name.italian,
+            hungarian = name.hungarian,
+            dutch = name.dutch,
+            polish = name.polish,
+            portugueseBrazil = name.portugueseBrazil,
+            slovenian = name.slovenian,
+            turkish = name.turkish,
+            russian = name.russian,
+            ukrainian = name.ukrainian,
+            arabic = name.arabic,
+            chineseSimplified = name.chineseSimplified,
+        )
 
     private fun toQuantityEntity(quantity: AbsoluteQuantity): QuantityEntity {
         return when (quantity) {

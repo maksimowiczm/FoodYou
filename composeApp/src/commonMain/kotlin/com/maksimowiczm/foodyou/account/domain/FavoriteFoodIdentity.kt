@@ -10,4 +10,6 @@ sealed interface FavoriteFoodIdentity {
     @Serializable data class OpenFoodFacts(val barcode: String) : FavoriteFoodIdentity
 
     @Serializable data class UserProduct(val id: Uuid) : FavoriteFoodIdentity
+
+    @Serializable data class Recipe(val id: Uuid) : FavoriteFoodIdentity
 }

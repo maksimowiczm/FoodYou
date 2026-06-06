@@ -24,6 +24,8 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,6 +41,7 @@ internal class FavoriteFoodSearchViewModel(
     private val foodDataCentralService: FoodDataCentralService,
     private val openFoodFactsService: OpenFoodFactsService,
     private val userProductService: UserProductService,
+    private val userRecipeService: UserRecipeService,
     private val nameSelector: FoodNameSelector,
 ) : ViewModel() {
     private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
@@ -66,11 +69,12 @@ internal class FavoriteFoodSearchViewModel(
 
                             is FavoriteFoodIdentity.UserProduct ->
                                 userProductService.observe(UserProductIdentity(identity.id)).map {
-                                    food ->
-                                    when (food) {
-                                        null -> RemoteData.NotFound
-                                        else -> RemoteData.Success(food)
-                                    }
+                                    RemoteData.fromNullable(it)
+                                }
+
+                            is FavoriteFoodIdentity.Recipe ->
+                                userRecipeService.observe(UserRecipeIdentity(identity.id)).map {
+                                    RemoteData.fromNullable(it)
                                 }
                         }
                     }

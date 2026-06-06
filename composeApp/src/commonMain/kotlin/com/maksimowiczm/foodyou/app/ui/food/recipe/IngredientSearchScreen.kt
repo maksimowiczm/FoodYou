@@ -91,6 +91,7 @@ import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsLi
 import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserProductListItem
+import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserRecipeListItem
 import com.maksimowiczm.foodyou.app.ui.home.rememberCollectionFilters
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
@@ -104,6 +105,8 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentit
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
@@ -121,6 +124,7 @@ fun IngredientSearchScreen(
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity, Quantity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity, Quantity) -> Unit,
     onUserProduct: (UserProductIdentity, Quantity) -> Unit,
+    onUserRecipe: (UserRecipeIdentity, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -262,6 +266,7 @@ fun IngredientSearchScreen(
             onFoodDataCentralProduct = onFoodDataCentralProduct,
             onOpenFoodFactsProduct = onOpenFoodFactsProduct,
             onUserProduct = onUserProduct,
+            onUserRecipe = onUserRecipe,
             shimmer = shimmer,
             modifier = Modifier.fillMaxSize(),
         )
@@ -313,6 +318,7 @@ private fun SearchList(
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity, Quantity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity, Quantity) -> Unit,
     onUserProduct: (UserProductIdentity, Quantity) -> Unit,
+    onUserRecipe: (UserRecipeIdentity, Quantity) -> Unit,
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
 ) {
@@ -346,6 +352,7 @@ private fun SearchList(
                             userFood.itemKey {
                                 when (it) {
                                     is SearchResult.UserProduct -> it.identity.id.toString()
+                                    is SearchResult.UserRecipe -> it.identity.id.toString()
                                 }
                             },
                     ) { i ->
@@ -363,24 +370,11 @@ private fun SearchList(
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )
-                        }
-                    }
 
-                    items(
-                        count = openFoodFacts.itemCount.coerceAtMost(5),
-                        key = openFoodFacts.itemKey { it.identity.barcode },
-                    ) { i ->
-                        when (val product = openFoodFacts[i]) {
-                            null ->
-                                FoodListItemSkeleton(
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-
-                            else ->
-                                OpenFoodFactsListItem(
-                                    food = product,
-                                    onClick = { onOpenFoodFactsProduct(product.identity, it) },
+                            is SearchResult.UserRecipe ->
+                                UserRecipeListItem(
+                                    recipe = product,
+                                    onClick = { onUserRecipe(product.identity, it) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )
@@ -415,6 +409,7 @@ private fun SearchList(
                             userFood.itemKey {
                                 when (it) {
                                     is SearchResult.UserProduct -> it.identity.id.toString()
+                                    is SearchResult.UserRecipe -> it.identity.id.toString()
                                 }
                             },
                     ) { i ->
@@ -429,6 +424,14 @@ private fun SearchList(
                                 UserProductListItem(
                                     product = food,
                                     onClick = { onUserProduct(food.identity, it) },
+                                    shimmer = shimmer,
+                                    modifier = Modifier.animateItem(),
+                                )
+
+                            is SearchResult.UserRecipe ->
+                                UserRecipeListItem(
+                                    recipe = food,
+                                    onClick = { onUserRecipe(food.identity, it) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )
@@ -497,6 +500,10 @@ private fun SearchList(
                                                 when (val value = food.value) {
                                                     is UserProduct ->
                                                         onUserProduct(value.identity, it)
+
+                                                    is UserRecipe ->
+                                                        onUserRecipe(value.identity, it)
+
                                                     is OpenFoodFactsProduct ->
                                                         onOpenFoodFactsProduct(value.identity, it)
 
@@ -510,6 +517,9 @@ private fun SearchList(
                                                     when (value) {
                                                         is UserProduct ->
                                                             onUserProduct(value.identity, it)
+
+                                                        is UserRecipe ->
+                                                            onUserRecipe(value.identity, it)
 
                                                         is OpenFoodFactsProduct ->
                                                             onOpenFoodFactsProduct(
@@ -531,6 +541,9 @@ private fun SearchList(
                                                     when (value) {
                                                         is UserProduct ->
                                                             onUserProduct(value.identity, it)
+
+                                                        is UserRecipe ->
+                                                            onUserRecipe(value.identity, it)
 
                                                         is OpenFoodFactsProduct ->
                                                             onOpenFoodFactsProduct(

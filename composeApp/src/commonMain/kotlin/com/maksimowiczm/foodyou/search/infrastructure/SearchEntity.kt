@@ -9,7 +9,8 @@ import kotlin.uuid.Uuid
 @Entity(tableName = "Search")
 data class SearchEntity(
     @PrimaryKey(autoGenerate = true) val sqliteId: Long = 0,
-    val productId: Uuid,
+    val productId: Uuid?,
+    val recipeId: Uuid?,
     @Embedded(prefix = "name_") val name: FoodNameEntity,
     val brand: String?,
     val barcode: String?,
@@ -19,4 +20,5 @@ data class SearchEntity(
     @Embedded(prefix = "package_") val packageSize: QuantityEntity?,
     @Embedded(prefix = "serving_") val servingSize: QuantityEntity?,
     val isLiquid: Boolean,
+    val servings: Double?,
 )

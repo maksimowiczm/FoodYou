@@ -24,6 +24,7 @@ import com.maksimowiczm.foodyou.common.expect
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.valentinilk.shimmer.Shimmer
 
 @Composable
@@ -95,6 +96,7 @@ internal fun FavoriteFoodListItem(
 private fun Any.name(): FoodName =
     when (this) {
         is UserProduct -> name
+        is UserRecipe -> name
         is OpenFoodFactsProduct -> name
         is FoodDataCentralProduct -> FoodName(english = name, fallback = name)
         else -> error("Unknown type ${this::class}")
@@ -103,6 +105,7 @@ private fun Any.name(): FoodName =
 private fun Any.brand(): String? =
     when (this) {
         is UserProduct -> brand
+        is UserRecipe -> null
         is OpenFoodFactsProduct -> brand
         is FoodDataCentralProduct -> brand
         else -> error("Unknown type ${this::class}")
@@ -125,6 +128,7 @@ private fun RemoteData<Any>.headline(nameSelector: FoodNameSelector): String? =
 private fun Any.packageQuantity(): AbsoluteQuantity? =
     when (this) {
         is UserProduct -> packageQuantity
+        is UserRecipe -> AbsoluteQuantity.Weight(totalWeight)
         is OpenFoodFactsProduct -> packageQuantity
         is FoodDataCentralProduct -> packageQuantity
         else -> error("Unknown type ${this::class}")
@@ -141,6 +145,7 @@ private fun RemoteData<Any>.packageQuantity(): AbsoluteQuantity? =
 private fun Any.servingQuantity(): AbsoluteQuantity? =
     when (this) {
         is UserProduct -> servingQuantity
+        is UserRecipe -> AbsoluteQuantity.Weight(servingWeight)
         is OpenFoodFactsProduct -> servingQuantity
         is FoodDataCentralProduct -> servingQuantity
         else -> error("Unknown type ${this::class}")
@@ -157,6 +162,7 @@ private fun RemoteData<Any>.servingQuantity(): AbsoluteQuantity? =
 private fun Any.nutritionFacts(): NutritionFacts =
     when (this) {
         is UserProduct -> nutritionFacts
+        is UserRecipe -> nutritionFacts
         is OpenFoodFactsProduct -> nutritionFacts
         is FoodDataCentralProduct -> nutritionFacts
         else -> error("Unknown type ${this::class}")
@@ -174,6 +180,7 @@ private fun RemoteData<Any>.nutritionFacts(): NutritionFacts? =
 private fun Any.image(): FileUri? =
     when (this) {
         is UserProduct -> image?.let { resolveBlob(it) }
+        is UserRecipe -> image?.let { resolveBlob(it) }
         is OpenFoodFactsProduct -> image
         is FoodDataCentralProduct -> null
         else -> error("Unknown type ${this::class}")

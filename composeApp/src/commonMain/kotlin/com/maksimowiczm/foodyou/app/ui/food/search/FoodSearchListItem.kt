@@ -22,8 +22,33 @@ internal fun FoodSearchListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    FoodListItem(
+    FoodSearchListItem(
         headline = { Text(text = headline) },
+        image = image,
+        proteins = proteins,
+        carbohydrates = carbohydrates,
+        fats = fats,
+        energy = energy,
+        quantity = quantity,
+        modifier = modifier,
+        onClick = onClick,
+    )
+}
+
+@Composable
+internal fun FoodSearchListItem(
+    headline: @Composable () -> Unit,
+    proteins: Weight?,
+    carbohydrates: Weight?,
+    fats: Weight?,
+    energy: Energy?,
+    quantity: @Composable () -> Unit,
+    image: @Composable (() -> Unit)?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FoodListItem(
+        headline = headline,
         image = image,
         proteins = { Text(proteins?.stringResource() ?: "?") },
         carbohydrates = { Text(carbohydrates?.stringResource() ?: "?") },

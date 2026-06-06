@@ -49,6 +49,8 @@ fun SearchResult.UserProduct.headline(nameSelector: FoodNameSelector) = buildStr
     if (brand != null) append(brand.let { " ($it)" })
 }
 
+fun SearchResult.UserRecipe.headline(nameSelector: FoodNameSelector) = nameSelector.select(name)
+
 val LocalFoodNameSelector =
     staticCompositionLocalOf<FoodNameSelector> {
         object : FoodNameSelector {

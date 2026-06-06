@@ -137,7 +137,12 @@ internal fun RecipeApp(
                         onOpenFoodFactsProduct = { id, quantity ->
                             backStack.add(OpenFoodFacts(id, quantity))
                         },
-                        onUserProduct = { id, quantity -> backStack.add(UserProduct(id, quantity)) },
+                        onUserProduct = { id, quantity ->
+                            backStack.add(UserProduct(id, quantity))
+                        },
+                        onUserRecipe = { id, quantity ->
+                            // TODO
+                        },
                     )
                 }
                 entry<OpenFoodFacts> {

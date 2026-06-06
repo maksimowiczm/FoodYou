@@ -103,6 +103,7 @@ import com.maksimowiczm.foodyou.common.extension.safeRemoveLast
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
@@ -122,6 +123,7 @@ fun HomeScreen(
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
     onUserProduct: (UserProductIdentity) -> Unit,
+    onUserRecipe: (UserRecipeIdentity) -> Unit,
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
     initialQuery: String?,
@@ -307,6 +309,7 @@ fun HomeScreen(
                                     onFoodDataCentralProduct = onFoodDataCentralProduct,
                                     onOpenFoodFactsProduct = onOpenFoodFactsProduct,
                                     onUserProduct = onUserProduct,
+                                    onUserRecipe = onUserRecipe,
                                     lazyListState = lazyListState,
                                     onSearch = {
                                         searchViewModel.search(it)

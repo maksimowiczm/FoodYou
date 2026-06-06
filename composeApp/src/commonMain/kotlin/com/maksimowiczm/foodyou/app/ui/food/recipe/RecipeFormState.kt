@@ -5,6 +5,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.form.rememberFormField
 import com.maksimowiczm.foodyou.app.ui.common.form.validateDouble
+import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
 import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import foodyou.app.generated.resources.*
@@ -41,7 +42,7 @@ fun rememberRecipeFormState(recipe: UserRecipe?): RecipeFormState {
         }
 
     val servings =
-        rememberFormField(defaultValue = recipe?.servings?.toString() ?: "1") {
+        rememberFormField(defaultValue = recipe?.servings?.formatClipZeros() ?: "1") {
             constrain(required) { !it.isNullOrBlank() }
             ifPresent {
                 validateDouble {

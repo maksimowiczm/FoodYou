@@ -52,6 +52,7 @@ import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsLi
 import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserProductListItem
+import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserRecipeListItem
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
@@ -63,9 +64,12 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentit
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -77,6 +81,7 @@ internal fun HomeSearchScreen(
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
     onUserProduct: (UserProductIdentity) -> Unit,
+    onUserRecipe: (UserRecipeIdentity) -> Unit,
     onSearch: (String) -> Unit,
     onFill: (String) -> Unit,
     lazyListState: LazyListState,
@@ -114,7 +119,7 @@ internal fun HomeSearchScreen(
         if (searchQuery is SearchQuery.Blank) {
             showQuickResults.value = false
         } else {
-            delay(100)
+            delay(100.milliseconds)
             showQuickResults.value = true
         }
     }
@@ -134,6 +139,7 @@ internal fun HomeSearchScreen(
         onFoodDataCentralProduct = onFoodDataCentralProduct,
         onOpenFoodFactsProduct = onOpenFoodFactsProduct,
         onUserProduct = onUserProduct,
+        onUserRecipe = onUserRecipe,
         onSearch = onSearch,
         onFill = onFill,
         modifier = modifier,
@@ -156,6 +162,7 @@ private fun HomeSearchScreen(
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
     onUserProduct: (UserProductIdentity) -> Unit,
+    onUserRecipe: (UserRecipeIdentity) -> Unit,
     onSearch: (String) -> Unit,
     onFill: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -179,6 +186,7 @@ private fun HomeSearchScreen(
                                 userFood.itemKey {
                                     when (it) {
                                         is SearchResult.UserProduct -> it.identity.id.toString()
+                                        is SearchResult.UserRecipe -> it.identity.id.toString()
                                     }
                                 },
                         ) { i ->
@@ -193,6 +201,14 @@ private fun HomeSearchScreen(
                                     UserProductListItem(
                                         product = product,
                                         onClick = { onUserProduct(product.identity) },
+                                        shimmer = shimmer,
+                                        modifier = Modifier.animateItem(),
+                                    )
+
+                                is SearchResult.UserRecipe ->
+                                    UserRecipeListItem(
+                                        recipe = product,
+                                        onClick = { onUserRecipe(product.identity) },
                                         shimmer = shimmer,
                                         modifier = Modifier.animateItem(),
                                     )
@@ -256,6 +272,7 @@ private fun HomeSearchScreen(
                             userFood.itemKey {
                                 when (it) {
                                     is SearchResult.UserProduct -> it.identity.id.toString()
+                                    is SearchResult.UserRecipe -> it.identity.id.toString()
                                 }
                             },
                     ) { i ->
@@ -270,6 +287,14 @@ private fun HomeSearchScreen(
                                 UserProductListItem(
                                     product = food,
                                     onClick = { onUserProduct(food.identity) },
+                                    shimmer = shimmer,
+                                    modifier = Modifier.animateItem(),
+                                )
+
+                            is SearchResult.UserRecipe ->
+                                UserRecipeListItem(
+                                    recipe = food,
+                                    onClick = { onUserRecipe(food.identity) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )
@@ -337,6 +362,7 @@ private fun HomeSearchScreen(
                                             is RemoteData.Success -> {
                                                 when (val value = food.value) {
                                                     is UserProduct -> onUserProduct(value.identity)
+                                                    is UserRecipe -> onUserRecipe(value.identity)
                                                     is OpenFoodFactsProduct ->
                                                         onOpenFoodFactsProduct(value.identity)
 
@@ -350,6 +376,9 @@ private fun HomeSearchScreen(
                                                     when (value) {
                                                         is UserProduct ->
                                                             onUserProduct(value.identity)
+
+                                                        is UserRecipe ->
+                                                            onUserRecipe(value.identity)
 
                                                         is OpenFoodFactsProduct ->
                                                             onOpenFoodFactsProduct(value.identity)
@@ -365,6 +394,9 @@ private fun HomeSearchScreen(
                                                     when (value) {
                                                         is UserProduct ->
                                                             onUserProduct(value.identity)
+
+                                                        is UserRecipe ->
+                                                            onUserRecipe(value.identity)
 
                                                         is OpenFoodFactsProduct ->
                                                             onOpenFoodFactsProduct(value.identity)

@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.search.domain.SearchRepository
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -38,15 +39,14 @@ class SearchRepositoryImpl(database: SearchDatabase) : SearchRepository {
         }
 
     override suspend fun save(searchResult: SearchResult) {
-        when (searchResult) {
-            is SearchResult.UserProduct -> {
-                dao.deleteByProductId(searchResult.identity.id)
-                dao.insert(mapper.toEntity(searchResult))
-            }
-        }
+        dao.deleteAndInsert(mapper.toEntity(searchResult))
     }
 
     override suspend fun delete(identity: UserProductIdentity) {
         dao.deleteByProductId(identity.id)
+    }
+
+    override suspend fun delete(identity: UserRecipeIdentity) {
+        dao.deleteByRecipeId(identity.id)
     }
 }

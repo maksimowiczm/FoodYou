@@ -8,4 +8,12 @@ sealed interface RemoteData<out T> {
     data class Error<out T>(val error: Throwable, val partialValue: T?) : RemoteData<T>
 
     data object NotFound : RemoteData<Nothing>
+
+    companion object {
+        fun <T> fromNullable(value: T?): RemoteData<T> =
+            when (value) {
+                null -> NotFound
+                else -> Success(value)
+            }
+    }
 }

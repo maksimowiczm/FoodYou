@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.flow.Flow
 
 interface SearchRepository {
@@ -14,4 +15,6 @@ interface SearchRepository {
     suspend fun save(searchResult: SearchResult)
 
     suspend fun delete(identity: UserProductIdentity)
+
+    suspend fun delete(identity: UserRecipeIdentity)
 }
