@@ -15,6 +15,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Colors
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProfile
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateRecipe
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditUserProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDataCentralProductDetails
@@ -31,6 +32,7 @@ import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.fooddatacentral.FoodDataCentralDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts.OpenFoodFactsDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsScreen
+import com.maksimowiczm.foodyou.app.ui.food.recipe.create.CreateRecipeScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.app.ui.home.SettingsScreen
@@ -48,11 +50,11 @@ import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import kotlin.uuid.Uuid
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+import kotlin.uuid.Uuid
 
 @Composable
 fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modifier) {
@@ -120,7 +122,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                 entry<UserProductDetails> {
                     UserProductDetailsScreen(
                         identity = it.identity,
-                        onEdit = { backStack.add(EditUserProduct.from(it.identity)) },
+                        onEdit = { backStack.add(EditUserProduct(it.identity)) },
                         onBack = { backStack.removeLastIf<UserProductDetails>() },
                         onDelete = { backStack.removeLastIf<UserProductDetails>() },
                     )
@@ -147,7 +149,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                             backStack.add(OpenFoodFactsProductDetails.from(id))
                         },
                         onUserProduct = { id -> backStack.add(UserProductDetails(id)) },
-                        onCreate = { backStack.add(CreateProduct) },
+                        onCreate = { backStack.add(CreateRecipe) },
                         initialQuery = it.initialQuery,
                     )
                 }
@@ -182,6 +184,12 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                     )
                 }
                 entry<Privacy> { PrivacyScreen(onBack = { backStack.removeLastIf<Privacy>() }) }
+                entry<CreateRecipe> {
+                    CreateRecipeScreen(
+                        onBack = { backStack.removeLastIf<CreateRecipe>() },
+                        onEditUserProduct = { backStack.add(EditUserProduct(it)) },
+                    )
+                }
             },
     )
 }
@@ -212,14 +220,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data object CreateProfile : FoodYouNavHostRoute
 
     @Serializable
-    data class EditUserProduct(val id: Uuid) : FoodYouNavHostRoute {
-        companion object {
-            fun from(identity: UserProductIdentity): EditUserProduct = EditUserProduct(identity.id)
-        }
-
-        val identity: UserProductIdentity
-            get() = UserProductIdentity(id)
-    }
+    data class EditUserProduct(val identity: UserProductIdentity) : FoodYouNavHostRoute
 
     @Serializable
     data class EditProfile(val id: Uuid) : FoodYouNavHostRoute {
@@ -274,4 +275,6 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data object Personalization : FoodYouNavHostRoute
 
     @Serializable data object Privacy : FoodYouNavHostRoute
+
+    @Serializable data object CreateRecipe : FoodYouNavHostRoute
 }

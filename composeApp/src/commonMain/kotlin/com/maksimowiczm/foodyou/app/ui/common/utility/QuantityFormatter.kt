@@ -12,6 +12,7 @@ import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
+import com.maksimowiczm.foodyou.common.expect
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -90,6 +91,16 @@ object QuantityFormatter {
             }
         }
     }
+
+    @Composable
+    fun ServingQuantity.stringResource(servingQuantity: AbsoluteQuantity): String =
+        this.stringResource(packageQuantity = null, servingQuantity = servingQuantity)
+            .expect("Serving quantity is calculated when serving quantity is provided.")
+
+    @Composable
+    fun PackageQuantity.stringResource(packageQuantity: AbsoluteQuantity): String =
+        this.stringResource(packageQuantity = packageQuantity, servingQuantity = packageQuantity)
+            .expect("Package quantity is calculated when package quantity is provided.")
 
     /**
      * Converts an [AbsoluteQuantity] to its localized string representation.

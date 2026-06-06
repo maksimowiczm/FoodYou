@@ -19,6 +19,8 @@ class FormField(
 
     val error: String? by derivedStateOf { validationResult.errors.firstOrNull()?.message }
 
+    val isValid: Boolean by derivedStateOf { validationResult.errors.isEmpty() }
+
     val isModified: Boolean by derivedStateOf {
         textFieldState.text.takeIf { it.isNotBlank() } != defaultValue
     }

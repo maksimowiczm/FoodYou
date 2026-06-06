@@ -6,7 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.FileUri
-import com.maksimowiczm.foodyou.common.domain.food.*
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
+import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.common.extension.combine
@@ -23,20 +32,29 @@ import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
-import kotlin.uuid.Uuid
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlin.uuid.Uuid
 
 class RecipeFormViewModel(
+    initialIngredients: List<Pair<FoodCompositionComponentIdentity, Quantity>> = emptyList(),
     private val fdc: FoodDataCentralService,
     private val off: OpenFoodFactsService,
     private val up: UserProductService,
-    private val ur: UserRecipeService,
+    private val recipeService: UserRecipeService,
     private val savedStateHandle: SavedStateHandle,
-    initialIngredients: List<Pair<FoodCompositionComponentIdentity, Quantity>>,
 ) : ViewModel() {
-
     private val ingredients =
         MutableStateFlow(
             savedStateHandle.get<String>(INGREDIENTS_KEY)?.let {
@@ -104,13 +122,27 @@ class RecipeFormViewModel(
         ingredients.update { current -> current.toMutableList().apply { removeAt(index) } }
     }
 
+    fun addIngredient(identity: FoodCompositionComponentIdentity, quantity: Quantity) {
+        ingredients.update { current ->
+            current.toMutableList().apply {
+                add(IngredientEntry(identity = identity, quantity = quantity))
+            }
+        }
+    }
+
+    fun updateIngredient(index: Int, quantity: Quantity) {
+        ingredients.update { current ->
+            current.toMutableList().apply { this[index] = this[index].copy(quantity = quantity) }
+        }
+    }
+
     private fun observeComponent(
         id: FoodCompositionComponentIdentity,
         quantity: Quantity,
     ): Flow<ResolvedIngredient?> =
         when (id) {
             is FoodCompositionComponentIdentity.Recipe ->
-                ur.observe(UserRecipeIdentity(id.id)).map { recipe ->
+                recipeService.observe(UserRecipeIdentity(id.id)).map { recipe ->
                     recipe?.let {
                         ResolvedIngredient(
                             component =

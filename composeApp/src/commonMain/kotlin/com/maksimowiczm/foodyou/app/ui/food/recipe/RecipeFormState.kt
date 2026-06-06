@@ -16,8 +16,18 @@ class RecipeFormState(
     val name: FormField,
     val servings: FormField,
     val note: FormField,
+    private val defaultImageUri: String?,
     val imageUri: MutableState<String?>,
-)
+) {
+    val isValid: Boolean by derivedStateOf { name.isValid && servings.isValid && note.isValid }
+
+    val isModified: Boolean by derivedStateOf {
+        name.isModified ||
+            servings.isModified ||
+            note.isModified ||
+            imageUri.value != defaultImageUri
+    }
+}
 
 @Composable
 fun rememberRecipeFormState(recipe: UserRecipe?): RecipeFormState {
@@ -46,7 +56,7 @@ fun rememberRecipeFormState(recipe: UserRecipe?): RecipeFormState {
     val imageUri = recipe?.image?.let { resolveBlob(it).value }
     val imageUriState = rememberSaveable(imageUri) { mutableStateOf(imageUri) }
 
-    return remember(name, servings, note, imageUriState) {
-        RecipeFormState(name, servings, note, imageUriState)
+    return remember(name, servings, note, imageUriState, imageUri) {
+        RecipeFormState(name, servings, note, imageUri, imageUriState)
     }
 }
