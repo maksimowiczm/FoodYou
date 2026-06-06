@@ -50,7 +50,6 @@ import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import kotlin.uuid.Uuid
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -143,10 +142,10 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                     HomeScreen(
                         onAvatar = { backStack.add(SwitchProfile) },
                         onFoodDataCentralProduct = { id ->
-                            backStack.add(FoodDataCentralProductDetails.from(id))
+                            backStack.add(FoodDataCentralProductDetails(id))
                         },
                         onOpenFoodFactsProduct = { id ->
-                            backStack.add(OpenFoodFactsProductDetails.from(id))
+                            backStack.add(OpenFoodFactsProductDetails(id))
                         },
                         onUserProduct = { id -> backStack.add(UserProductDetails(id)) },
                         onCreateProduct = { backStack.add(CreateProduct) },
@@ -162,7 +161,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onPrivacy = { backStack.add(Privacy) },
                         onAbout = { backStack.add(About) },
                         onAddProfile = { backStack.add(CreateProfile) },
-                        onEditProfile = { backStack.add(EditProfile.from(it)) },
+                        onEditProfile = { backStack.add(EditProfile(it)) },
                     )
                 }
                 entry<HomePersonalization> {
@@ -223,45 +222,18 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable
     data class EditUserProduct(val identity: UserProductIdentity) : FoodYouNavHostRoute
 
-    @Serializable
-    data class EditProfile(val id: Uuid) : FoodYouNavHostRoute {
-        companion object {
-            fun from(profileId: ProfileId): EditProfile = EditProfile(profileId.value)
-        }
-
-        val profileId: ProfileId
-            get() = ProfileId(id)
-    }
+    @Serializable data class EditProfile(val profileId: ProfileId) : FoodYouNavHostRoute
 
     @Serializable
-    data class UserProductDetails(val id: Uuid) : FoodYouNavHostRoute {
-        val identity: UserProductIdentity
-            get() = UserProductIdentity(id)
-
-        constructor(identity: UserProductIdentity) : this(identity.id)
-    }
+    data class UserProductDetails(val identity: UserProductIdentity) : FoodYouNavHostRoute
 
     @Serializable
-    data class OpenFoodFactsProductDetails(val barcode: String) : FoodYouNavHostRoute {
-        val identity: OpenFoodFactsProductIdentity
-            get() = OpenFoodFactsProductIdentity(barcode)
-
-        companion object {
-            fun from(identity: OpenFoodFactsProductIdentity) =
-                OpenFoodFactsProductDetails(identity.barcode)
-        }
-    }
+    data class OpenFoodFactsProductDetails(val identity: OpenFoodFactsProductIdentity) :
+        FoodYouNavHostRoute
 
     @Serializable
-    data class FoodDataCentralProductDetails(val fdcId: Int) : FoodYouNavHostRoute {
-        val identity: FoodDataCentralProductIdentity
-            get() = FoodDataCentralProductIdentity(fdcId)
-
-        companion object {
-            fun from(identity: FoodDataCentralProductIdentity) =
-                FoodDataCentralProductDetails(identity.fdcId)
-        }
-    }
+    data class FoodDataCentralProductDetails(val identity: FoodDataCentralProductIdentity) :
+        FoodYouNavHostRoute
 
     @Serializable data class Home(val initialQuery: String?) : FoodYouNavHostRoute
 
