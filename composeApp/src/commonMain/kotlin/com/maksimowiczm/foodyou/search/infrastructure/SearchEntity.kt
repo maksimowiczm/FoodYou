@@ -2,11 +2,16 @@ package com.maksimowiczm.foodyou.search.infrastructure
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
 import kotlin.uuid.Uuid
 
-@Entity(tableName = "Search")
+@Entity(
+    tableName = "Search",
+    indices =
+        [Index(value = ["productId"], unique = true), Index(value = ["recipeId"], unique = true)],
+)
 data class SearchEntity(
     @PrimaryKey(autoGenerate = true) val sqliteId: Long = 0,
     val productId: Uuid?,

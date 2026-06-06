@@ -2,10 +2,10 @@ package com.maksimowiczm.foodyou.search.infrastructure
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
+import androidx.room.Upsert
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 
@@ -75,19 +75,30 @@ abstract class SearchDao {
     )
     abstract fun observeCountByBarcode(barcode: String): Flow<Int>
 
-    @Insert protected abstract suspend fun insert(searchEntity: SearchEntity)
-
     @Query("DELETE FROM Search WHERE productId = :productId")
     abstract suspend fun deleteByProductId(productId: Uuid)
 
     @Query("DELETE FROM Search WHERE recipeId = :recipeId")
     abstract suspend fun deleteByRecipeId(recipeId: Uuid)
 
+    @Upsert protected abstract suspend fun upsertInternal(searchEntity: SearchEntity)
+
+    @Query("SELECT sqliteId FROM Search WHERE productId = :productId")
+    protected abstract suspend fun getIdByProductId(productId: Uuid): Long
+
+    @Query("SELECT sqliteId FROM Search WHERE recipeId = :recipeId")
+    protected abstract suspend fun getIdByRecipeId(recipeId: Uuid): Long
+
     @Transaction
-    open suspend fun deleteAndInsert(searchEntity: SearchEntity) {
-        searchEntity.productId?.let { deleteByProductId(it) }
-        searchEntity.productId?.let { deleteByRecipeId(it) }
-        insert(searchEntity)
+    open suspend fun upsert(searchEntity: SearchEntity) {
+        val id =
+            when {
+                searchEntity.productId != null -> getIdByProductId(searchEntity.productId)
+                searchEntity.recipeId != null -> getIdByRecipeId(searchEntity.recipeId)
+                else -> 0L
+            }
+
+        upsertInternal(searchEntity.copy(sqliteId = id))
     }
 }
 

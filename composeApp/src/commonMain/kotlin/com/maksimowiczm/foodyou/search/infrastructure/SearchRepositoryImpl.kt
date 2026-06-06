@@ -39,7 +39,7 @@ class SearchRepositoryImpl(database: SearchDatabase) : SearchRepository {
         }
 
     override suspend fun save(searchResult: SearchResult) {
-        dao.deleteAndInsert(mapper.toEntity(searchResult))
+        dao.upsert(mapper.toEntity(searchResult))
     }
 
     override suspend fun delete(identity: UserProductIdentity) {
