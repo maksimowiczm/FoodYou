@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +40,11 @@ fun OpenFoodFactsProduct.headline(nameSelector: FoodNameSelector) = buildString 
 }
 
 fun UserProduct.headline(nameSelector: FoodNameSelector) = buildString {
+    append(nameSelector.select(name))
+    if (brand != null) append(brand.let { " ($it)" })
+}
+
+fun SearchResult.UserProduct.headline(nameSelector: FoodNameSelector) = buildString {
     append(nameSelector.select(name))
     if (brand != null) append(brand.let { " ($it)" })
 }

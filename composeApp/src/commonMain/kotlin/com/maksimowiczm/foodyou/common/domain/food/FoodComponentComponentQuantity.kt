@@ -54,3 +54,10 @@ sealed interface FoodComponentComponentQuantity {
             servingWeight * quantity
     }
 }
+
+fun FoodComponentComponentQuantity.toQuantity(): Quantity =
+    when (this) {
+        is FoodComponentComponentQuantity.Weight -> AbsoluteQuantity.Weight(weight)
+        is FoodComponentComponentQuantity.Package -> PackageQuantity(quantity)
+        is FoodComponentComponentQuantity.Serving -> ServingQuantity(quantity)
+    }

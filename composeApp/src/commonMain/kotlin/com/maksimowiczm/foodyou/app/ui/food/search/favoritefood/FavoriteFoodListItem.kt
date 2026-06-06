@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
+import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
@@ -15,8 +16,11 @@ import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.common.fold
+import com.maksimowiczm.foodyou.common.expect
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
@@ -26,46 +30,64 @@ import com.valentinilk.shimmer.Shimmer
 internal fun FavoriteFoodListItem(
     food: RemoteData<Any>,
     shimmer: Shimmer,
-    onClick: () -> Unit,
+    onClick: (Quantity) -> Unit,
     modifier: Modifier = Modifier,
     fallback: @Composable () -> Unit,
+    preferredQuantity: Quantity =
+        remember(food) {
+            val sq = food.servingQuantity()
+            val pq = food.packageQuantity()
+            when {
+                sq != null -> ServingQuantity(1.0)
+                pq != null -> PackageQuantity(1.0)
+                else -> AbsoluteQuantity.Weight(100.grams)
+            }
+        },
 ) {
-    val name = food.name() ?: return fallback()
+    val nameSelector = LocalFoodNameSelector.current
+    val headline = food.headline(nameSelector) ?: return fallback()
     val nutritionFacts = food.nutritionFacts() ?: return fallback()
 
     val image = food.image()
     val packageQuantity = food.packageQuantity()
     val servingQuantity = food.servingQuantity()
 
-    val nameSelector = LocalFoodNameSelector.current
-
-    val absoluteQuantity = packageQuantity ?: AbsoluteQuantity.Weight(100.grams)
-
-    val measurementFacts =
-        remember(absoluteQuantity, nutritionFacts) {
-            val factor =
-                when (absoluteQuantity) {
-                    is AbsoluteQuantity.Volume -> absoluteQuantity.volume.milliliters / 100.0
-                    is AbsoluteQuantity.Weight -> absoluteQuantity.weight.grams / 100.0
-                }
-
-            nutritionFacts * factor
+    val factor =
+        remember(preferredQuantity, packageQuantity, servingQuantity) {
+            when (preferredQuantity) {
+                is AbsoluteQuantity.Volume -> preferredQuantity.volume.milliliters / 100.0
+                is AbsoluteQuantity.Weight -> preferredQuantity.weight.grams / 100.0
+                is PackageQuantity ->
+                    when (packageQuantity) {
+                        is AbsoluteQuantity.Volume -> packageQuantity.volume.milliliters / 100.0
+                        is AbsoluteQuantity.Weight -> packageQuantity.weight.grams / 100.0
+                        null -> error("Unreachable")
+                    }
+                is ServingQuantity ->
+                    when (servingQuantity) {
+                        is AbsoluteQuantity.Volume -> servingQuantity.volume.milliliters / 100.0
+                        is AbsoluteQuantity.Weight -> servingQuantity.weight.grams / 100.0
+                        null -> error("Unreachable")
+                    }
+            }
         }
 
+    val measurementFacts = remember(nutritionFacts, factor) { nutritionFacts * factor }
+
     val measurementString =
-        absoluteQuantity
+        preferredQuantity
             .stringResource(packageQuantity, servingQuantity)
-            .fold(onSuccess = { it }, onError = { absoluteQuantity.stringResource() })
+            .expect("PreferredQuantity string can't be null")
 
     FoodSearchListItem(
-        headline = nameSelector.select(name),
+        headline = headline,
         proteins = measurementFacts.proteins.value,
         carbohydrates = measurementFacts.carbohydrates.value,
         fats = measurementFacts.fats.value,
         energy = measurementFacts.energy.value,
         quantity = { Text(measurementString) },
-        image = image?.let { @Composable { it.Image(shimmer, Modifier.Companion.size(56.dp)) } },
-        onClick = onClick,
+        image = image?.let { @Composable { it.Image(shimmer, Modifier.size(56.dp)) } },
+        onClick = { onClick(preferredQuantity) },
         modifier = modifier,
     )
 }
@@ -78,11 +100,25 @@ private fun Any.name(): FoodName =
         else -> error("Unknown type ${this::class}")
     }
 
-private fun RemoteData<Any>.name(): FoodName? =
+private fun Any.brand(): String? =
     when (this) {
-        is RemoteData.Success -> value.name()
-        is RemoteData.Error -> partialValue?.name()
-        is RemoteData.Loading -> partialValue?.name()
+        is UserProduct -> brand
+        is OpenFoodFactsProduct -> brand
+        is FoodDataCentralProduct -> brand
+        else -> error("Unknown type ${this::class}")
+    }
+
+private fun Any.headline(nameSelector: FoodNameSelector): String {
+    val name = nameSelector.select(name())
+    val brand = brand()
+    return if (brand != null) "$name ($brand)" else name
+}
+
+private fun RemoteData<Any>.headline(nameSelector: FoodNameSelector): String? =
+    when (this) {
+        is RemoteData.Success -> value.headline(nameSelector)
+        is RemoteData.Error -> partialValue?.headline(nameSelector)
+        is RemoteData.Loading -> partialValue?.headline(nameSelector)
         is RemoteData.NotFound -> null
     }
 

@@ -94,7 +94,10 @@ internal class FavoriteFoodSearchViewModel(
                         }
 
                     is SearchQuery.NotBlank ->
-                        list.filter { it.name()?.contains(query.query) ?: false }
+                        list.filter {
+                            (it.name()?.contains(query.query) ?: false) ||
+                                (it.brand()?.contains(query.query, ignoreCase = true) ?: false)
+                        }
                 }.sortedWith { a, b ->
                     val nameA =
                         a.name()?.let(nameSelector::select) ?: return@sortedWith Int.MAX_VALUE
