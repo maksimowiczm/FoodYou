@@ -10,13 +10,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CornerSize
@@ -40,6 +46,7 @@ import androidx.compose.material3.WideNavigationRailState
 import androidx.compose.material3.rememberWideNavigationRailState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -47,6 +54,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -57,8 +65,10 @@ import androidx.navigation3.scene.SceneInfo
 import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.scene.rememberSceneState
 import androidx.navigation3.ui.NavDisplay
+import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.NavigationEventTransitionState
 import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.NavigationEventHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.savedstate.serialization.SavedStateConfiguration
@@ -67,6 +77,7 @@ import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfade
 import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfadeIn
 import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfadeOut
 import com.maksimowiczm.foodyou.app.ui.common.barcodescanner.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.app.ui.common.component.Scrim
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefaults.rememberScrollConnection
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
@@ -76,6 +87,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.now
 import com.maksimowiczm.foodyou.app.ui.common.extension.plus
 import com.maksimowiczm.foodyou.app.ui.common.saveable.jsonSaver
 import com.maksimowiczm.foodyou.app.ui.food.search.CollectionFilter
+import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchFloatingActionButton
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchCollection
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchFilters
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
@@ -110,7 +122,8 @@ fun HomeScreen(
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
     onUserProduct: (UserProductIdentity) -> Unit,
-    onCreate: () -> Unit,
+    onCreateProduct: () -> Unit,
+    onCreateRecipe: () -> Unit,
     initialQuery: String?,
     modifier: Modifier = Modifier,
 ) {
@@ -131,6 +144,8 @@ fun HomeScreen(
     val backStack = rememberNavBackStack(config, *elements.toTypedArray())
 
     val isHome by remember { derivedStateOf { backStack.last() is HomeNavKey.Home } }
+    val isSearch = animateFloatAsState(if (!isHome) 1f else 0f)
+
     val backProgress = remember { Animatable(0f) }
     val homeProgress = remember { Animatable(if (isHome) 1f else 0f) }
     LaunchedEffect(isHome, backProgress.value) {
@@ -185,152 +200,197 @@ fun HomeScreen(
         },
     )
 
-    Scaffold(
-        modifier = modifier.nestedScroll(scrollConnection),
-        topBar = {
-            val profileViewModel: ProfileViewModel = koinViewModel()
-            val profiles by profileViewModel.profiles.collectAsStateWithLifecycle()
-            val selectedProfileId by profileViewModel.selectedProfile.collectAsStateWithLifecycle()
-            val profile =
-                remember(profiles, selectedProfileId) {
-                    profiles?.find { it.id == selectedProfileId }
-                }
+    var fabExpanded by rememberSaveable { mutableStateOf(false) }
+    val fabInsets =
+        WindowInsets.systemBars
+            .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+            .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
-            HomeScreenTopBar(
-                profile = profile,
-                profiles = profiles ?: emptyList(),
-                textFieldState = textFieldState,
-                homeProgress = { homeProgress.value },
-                onAvatar = onAvatar,
-                onSearch = {
-                    if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
-                    searchViewModel.search(it)
-                },
-                onSearchBar = {
-                    if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
-                    scope.launch {
-                        delay(DefaultDurationMillis.milliseconds)
-                        focusRequester.requestFocus()
-                    }
-                },
-                onBack = { backStack.removeLastIf { it !is HomeNavKey.Home } },
-                onSelectProfile = profileViewModel::selectProfile,
-                onBarcodeScanner = { showBarcodeScanner.value = true },
-                onMenu = { scope.launch { railState.expand() } },
-                modifier = Modifier.focusRequester(focusRequester),
-            )
-        },
-    ) { contentPadding ->
-        val entries =
-            rememberDecoratedNavEntries(
-                backStack = backStack,
-                entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator()),
-                entryProvider =
-                    entryProvider {
-                        entry<HomeNavKey.Home>(metadata = crossfadeTransitionMetadata) {
-                            val homeState = rememberHomeState(LocalDate.now())
-
-                            LazyColumn(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = contentPadding.add(vertical = 8.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                item {
-                                    CalendarCard(
-                                        homeState = homeState,
-                                        modifier = Modifier.padding(horizontal = 8.dp),
-                                    )
-                                }
+    Box(modifier) {
+        FoodSearchFloatingActionButton(
+            fabExpanded = fabExpanded,
+            onFabExpandedChange = { fabExpanded = it },
+            onCreateRecipe = onCreateRecipe,
+            onCreateProduct = onCreateProduct,
+            modifier =
+                Modifier.zIndex(100f)
+                    .align(Alignment.BottomEnd)
+                    .windowInsetsPadding(fabInsets)
+                    .consumeWindowInsets(fabInsets)
+                    .graphicsLayer {
+                        val progress = 1f - homeProgress.value
+                        alpha =
+                            when {
+                                isHome -> 0f
+                                backProgress.value != 0f ->
+                                    (1 - backProgress.value / Crossfade.PROGRESS_THRESHOLD)
+                                else -> isSearch.value
                             }
-                        }
-                        entry<HomeNavKey.Search>(metadata = transitionSearchMetadata) {
-                            HomeSearchScreen(
-                                contentPadding =
-                                    contentPadding.add(
-                                        top = density.run { filterChipsHeight.floatValue.toDp() }
-                                    ),
-                                selectedCollection = selectedCollection.value,
-                                onFoodDataCentralProduct = onFoodDataCentralProduct,
-                                onOpenFoodFactsProduct = onOpenFoodFactsProduct,
-                                onUserProduct = onUserProduct,
-                                lazyListState = lazyListState,
-                                onSearch = {
-                                    searchViewModel.search(it)
-                                    textFieldState.setTextAndPlaceCursorAtEnd(it)
-                                    if (backStack.last() !is HomeNavKey.Search)
-                                        backStack.add(HomeNavKey.Search)
-                                },
-                                onFill = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
-                                modifier = Modifier.fillMaxSize(),
-                            )
+                        scaleX = 0.2f + 0.8f * progress
+                        scaleY = 0.2f + 0.8f * progress
+                        translationY = (1f - progress) * size.height / 4
+                        translationX = (1f - progress) * size.width / 4
+                    },
+        )
+        Scrim(
+            visible = fabExpanded,
+            onDismiss = { fabExpanded = false },
+            modifier = Modifier.fillMaxSize().zIndex(10f),
+        )
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollConnection),
+            topBar = {
+                val profileViewModel: ProfileViewModel = koinViewModel()
+                val profiles by profileViewModel.profiles.collectAsStateWithLifecycle()
+                val selectedProfileId by
+                    profileViewModel.selectedProfile.collectAsStateWithLifecycle()
+                val profile =
+                    remember(profiles, selectedProfileId) {
+                        profiles?.find { it.id == selectedProfileId }
+                    }
+
+                HomeScreenTopBar(
+                    profile = profile,
+                    profiles = profiles ?: emptyList(),
+                    textFieldState = textFieldState,
+                    homeProgress = { homeProgress.value },
+                    onAvatar = onAvatar,
+                    onSearch = {
+                        if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
+                        searchViewModel.search(it)
+                    },
+                    onSearchBar = {
+                        if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
+                        scope.launch {
+                            delay(DefaultDurationMillis.milliseconds)
+                            focusRequester.requestFocus()
                         }
                     },
-            )
-
-        val sceneState =
-            rememberSceneState(
-                entries = entries,
-                sceneStrategies = listOf(SinglePaneSceneStrategy()),
-                onBack = { backStack.safeRemoveLast() },
-            )
-
-        val navigationEventState =
-            rememberNavigationEventState(
-                currentInfo = SceneInfo(sceneState.currentScene),
-                backInfo = sceneState.previousScenes.map(::SceneInfo),
-            )
-
-        val animationSpec = motionScheme.fastSpatialSpec<Float>()
-        NavigationBackHandler(
-            state = navigationEventState,
-            isBackEnabled = sceneState.currentScene.previousEntries.isNotEmpty(),
-            onBackCancelled = { scope.launch { backProgress.animateTo(0f, animationSpec) } },
-            onBackCompleted = {
-                scope.launch {
-                    backProgress.animateTo(1f, animationSpec) { scope.launch { snapTo(0f) } }
-                }
-                backStack.removeLastIf { true }
+                    onBack = { backStack.removeLastIf { it !is HomeNavKey.Home } },
+                    onSelectProfile = profileViewModel::selectProfile,
+                    onBarcodeScanner = { showBarcodeScanner.value = true },
+                    onMenu = { scope.launch { railState.expand() } },
+                    modifier = Modifier.focusRequester(focusRequester),
+                )
             },
-        )
+        ) { contentPadding ->
+            val entries =
+                rememberDecoratedNavEntries(
+                    backStack = backStack,
+                    entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator()),
+                    entryProvider =
+                        entryProvider {
+                            entry<HomeNavKey.Home>(metadata = crossfadeTransitionMetadata) {
+                                val homeState = rememberHomeState(LocalDate.now())
 
-        LaunchedEffect(navigationEventState.transitionState) {
-            val transitionState = navigationEventState.transitionState
-            if (transitionState is NavigationEventTransitionState.InProgress) {
-                backProgress.snapTo(transitionState.latestEvent.progress)
-            }
-        }
+                                LazyColumn(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentPadding = contentPadding.add(vertical = 8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
+                                    item {
+                                        CalendarCard(
+                                            homeState = homeState,
+                                            modifier = Modifier.padding(horizontal = 8.dp),
+                                        )
+                                    }
+                                }
+                            }
+                            entry<HomeNavKey.Search>(metadata = transitionSearchMetadata) {
+                                HomeSearchScreen(
+                                    contentPadding =
+                                        contentPadding.add(
+                                            top =
+                                                density.run { filterChipsHeight.floatValue.toDp() }
+                                        ),
+                                    selectedCollection = selectedCollection.value,
+                                    onFoodDataCentralProduct = onFoodDataCentralProduct,
+                                    onOpenFoodFactsProduct = onOpenFoodFactsProduct,
+                                    onUserProduct = onUserProduct,
+                                    lazyListState = lazyListState,
+                                    onSearch = {
+                                        searchViewModel.search(it)
+                                        textFieldState.setTextAndPlaceCursorAtEnd(it)
+                                        if (backStack.last() !is HomeNavKey.Search)
+                                            backStack.add(HomeNavKey.Search)
+                                    },
+                                    onFill = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                            }
+                        },
+                )
 
-        NavDisplay(sceneState = sceneState, navigationEventState = navigationEventState)
+            val sceneState =
+                rememberSceneState(
+                    entries = entries,
+                    sceneStrategies = listOf(SinglePaneSceneStrategy()),
+                    onBack = { backStack.safeRemoveLast() },
+                )
 
-        val isSearch = animateFloatAsState(if (!isHome) 1f else 0f)
-        Box(
-            Modifier.fillMaxWidth()
-                .padding(top = contentPadding.calculateTopPadding())
-                .graphicsLayer {
-                    alpha =
-                        when {
-                            isHome -> 0f
-                            backProgress.value != 0f ->
-                                (1 - backProgress.value / Crossfade.PROGRESS_THRESHOLD)
+            val navigationEventState =
+                rememberNavigationEventState(
+                    currentInfo = SceneInfo(sceneState.currentScene),
+                    backInfo = sceneState.previousScenes.map(::SceneInfo),
+                )
 
-                            else -> isSearch.value
-                        }
-                    translationY = (1 - isSearch.value) * size.height
-                    filterChipsHeight.floatValue = size.height
-                }
-        ) {
-            SearchFilters(
-                collections = collections,
-                selected = selectedCollection.value,
-                onCollection = {
-                    selectedCollection.value = it
-                    if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
+            val animationSpec = motionScheme.fastSpatialSpec<Float>()
+            NavigationBackHandler(
+                state = navigationEventState,
+                isBackEnabled =
+                    sceneState.currentScene.previousEntries.isNotEmpty() && !fabExpanded,
+                onBackCancelled = { scope.launch { backProgress.animateTo(0f, animationSpec) } },
+                onBackCompleted = {
+                    scope.launch {
+                        backProgress.animateTo(1f, animationSpec) { scope.launch { snapTo(0f) } }
+                    }
+                    backStack.removeLastIf { true }
                 },
-                contentPadding =
-                    PaddingValues(horizontal = 16.dp) +
-                        WindowInsets.statusBars.asPaddingValues().horizontal() +
-                        WindowInsets.displayCutout.asPaddingValues().horizontal(),
             )
+            NavigationEventHandler(
+                state = rememberNavigationEventState(NavigationEventInfo.None),
+                isBackEnabled = fabExpanded,
+                onBackCompleted = { fabExpanded = false },
+            )
+
+            LaunchedEffect(navigationEventState.transitionState) {
+                val transitionState = navigationEventState.transitionState
+                if (transitionState is NavigationEventTransitionState.InProgress) {
+                    backProgress.snapTo(transitionState.latestEvent.progress)
+                }
+            }
+
+            NavDisplay(sceneState = sceneState, navigationEventState = navigationEventState)
+
+            Box(
+                Modifier.fillMaxWidth()
+                    .padding(top = contentPadding.calculateTopPadding())
+                    .graphicsLayer {
+                        alpha =
+                            when {
+                                isHome -> 0f
+                                backProgress.value != 0f ->
+                                    (1 - backProgress.value / Crossfade.PROGRESS_THRESHOLD)
+
+                                else -> isSearch.value
+                            }
+                        translationY = (1 - isSearch.value) * size.height
+                        filterChipsHeight.floatValue = size.height
+                    }
+            ) {
+                SearchFilters(
+                    collections = collections,
+                    selected = selectedCollection.value,
+                    onCollection = {
+                        selectedCollection.value = it
+                        if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
+                    },
+                    contentPadding =
+                        PaddingValues(horizontal = 16.dp) +
+                            WindowInsets.statusBars.asPaddingValues().horizontal() +
+                            WindowInsets.displayCutout.asPaddingValues().horizontal(),
+                )
+            }
         }
     }
 
@@ -344,7 +404,7 @@ fun HomeScreen(
         },
         onCreate = {
             scope.launch { railState.collapse() }
-            onCreate()
+            onCreateProduct()
         },
     )
 

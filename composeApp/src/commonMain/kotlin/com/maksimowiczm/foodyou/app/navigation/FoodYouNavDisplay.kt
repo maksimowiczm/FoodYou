@@ -50,11 +50,11 @@ import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import kotlin.uuid.Uuid
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import kotlin.uuid.Uuid
 
 @Composable
 fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modifier) {
@@ -149,7 +149,8 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                             backStack.add(OpenFoodFactsProductDetails.from(id))
                         },
                         onUserProduct = { id -> backStack.add(UserProductDetails(id)) },
-                        onCreate = { backStack.add(CreateRecipe) },
+                        onCreateProduct = { backStack.add(CreateProduct) },
+                        onCreateRecipe = { backStack.add(CreateRecipe) },
                         initialQuery = it.initialQuery,
                     )
                 }
