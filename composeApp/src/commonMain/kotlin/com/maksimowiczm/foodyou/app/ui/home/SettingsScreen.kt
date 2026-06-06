@@ -13,6 +13,8 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -157,8 +159,12 @@ private fun SettingsScreen(
                 ) {
                     AnimatedVisibility(
                         visible = profileExpanded,
-                        enter = expandVertically(),
-                        exit = shrinkVertically(),
+                        enter =
+                            fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                                expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()),
+                        exit =
+                            fadeOut(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                                shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()),
                     ) {
                         Column(
                             modifier = Modifier.fillMaxWidth(),
@@ -334,7 +340,11 @@ private fun ProfileSwitcher(
     modifier: Modifier = Modifier,
 ) {
     val expandedTransition = updateTransition(expanded)
-    val iconRotationState by animateFloatAsState(if (expanded) 0f else 180f)
+    val iconRotationState =
+        animateFloatAsState(
+            if (expanded) 0f else 180f,
+            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        )
 
     val colors =
         ListItemDefaults.segmentedColors(
@@ -343,7 +353,7 @@ private fun ProfileSwitcher(
 
     val listItemCount = remember(profiles) { (profiles?.size ?: 0) + 2 }
 
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+    Column(modifier) {
         val headerInteractionSource = remember { MutableInteractionSource() }
         SegmentedListItem(
             onClick = { onExpandedChange(!expanded) },
@@ -360,7 +370,7 @@ private fun ProfileSwitcher(
                 Icon(
                     imageVector = Icons.Outlined.KeyboardArrowDown,
                     contentDescription = null,
-                    modifier = Modifier.graphicsLayer { rotationZ = iconRotationState },
+                    modifier = Modifier.graphicsLayer { rotationZ = iconRotationState.value },
                 )
             },
             content = {
@@ -407,8 +417,17 @@ private fun ProfileSwitcher(
             modifier = Modifier.heightIn(min = 60.dp),
             interactionSource = headerInteractionSource,
         )
-        AnimatedVisibility(expanded) {
+        AnimatedVisibility(
+            visible = expanded,
+            enter =
+                fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                    expandVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
+            exit =
+                fadeOut(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                    shrinkVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
+        ) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Spacer(Modifier)
                 profiles?.forEachIndexed { index, profile ->
                     key(profile.id.value) {
                         val interactionSource = remember { MutableInteractionSource() }

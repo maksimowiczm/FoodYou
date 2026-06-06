@@ -1,6 +1,10 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -76,7 +80,15 @@ internal fun FoodSearchErrorCard(
             }
             Spacer(Modifier.height(8.dp))
 
-            AnimatedVisibility(showDetails) {
+            AnimatedVisibility(
+                visible = showDetails,
+                enter =
+                    fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                        expandVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
+                exit =
+                    fadeOut(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                        shrinkVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
+            ) {
                 Text(
                     text = message,
                     style = MaterialTheme.typography.bodySmall,

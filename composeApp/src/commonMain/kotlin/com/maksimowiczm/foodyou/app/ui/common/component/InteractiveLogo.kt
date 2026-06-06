@@ -8,7 +8,6 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
@@ -135,7 +134,7 @@ fun InteractiveLogo(
                     rotationZ = rotation
                 }
                 .clickable(interactionSource = null, indication = ripple(bounded = true)) {
-                    coroutineScope.launch { progress.increment(motionScheme.slowSpatialSpec()) }
+                    coroutineScope.launch { progress.increment(motionScheme.defaultSpatialSpec()) }
                 }
         ) {
             drawRect(brush)
@@ -192,7 +191,7 @@ private class WrapAroundCounter(
 ) {
     val value: Float by derivedStateOf { animatable.value % maxValue }
 
-    suspend fun increment(animationSpec: AnimationSpec<Float> = spring()) {
+    suspend fun increment(animationSpec: AnimationSpec<Float>) {
         animatable.animateTo(
             targetValue = (animatable.value + 1f).roundToInt().toFloat(),
             animationSpec = animationSpec,

@@ -181,12 +181,14 @@ internal fun CameraBarcodeScanner(onBarcodeScan: (String) -> Unit, modifier: Mod
 private fun FlashlightButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val background by
         animateColorAsState(
-            if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+            if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
         )
     val content by
         animateColorAsState(
             if (enabled) MaterialTheme.colorScheme.onPrimary
-            else MaterialTheme.colorScheme.onSurface
+            else MaterialTheme.colorScheme.onSurface,
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
         )
 
     FilledIconButton(

@@ -31,7 +31,7 @@ internal fun NutrientsHeader(
     val rotationState =
         animateFloatAsState(
             targetValue = if (expanded || !enabled) 180f else 0f,
-            animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
         )
 
     Row(
@@ -51,11 +51,9 @@ internal fun NutrientsHeader(
             )
         } else {
             EnergyProgressIndicator(
-                energy = 1f,
                 proteins = 0f,
                 carbohydrates = 0f,
                 fats = 0f,
-                goal = 1f,
                 modifier = Modifier.weight(1f),
             )
         }

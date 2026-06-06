@@ -1,13 +1,13 @@
 package com.maksimowiczm.foodyou.app.ui.food.details
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -21,6 +21,7 @@ internal fun RefreshIconButton(
     modifier: Modifier = Modifier,
     colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
 ) {
+    val motionScheme = MaterialTheme.motionScheme
     val animatable = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
 
@@ -28,7 +29,7 @@ internal fun RefreshIconButton(
         onClick = {
             scope.launch {
                 animatable.snapTo(0f)
-                animatable.animateTo(360f, tween(500))
+                animatable.animateTo(360f, motionScheme.slowSpatialSpec())
             }
             onRefresh()
         },

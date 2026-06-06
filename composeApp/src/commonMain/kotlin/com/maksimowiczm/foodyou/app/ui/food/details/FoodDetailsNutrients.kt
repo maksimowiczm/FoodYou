@@ -24,7 +24,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
-import com.maksimowiczm.foodyou.common.onSuccess
+import com.maksimowiczm.foodyou.common.getOrNull
 
 @Composable
 internal fun FoodDetailsNutrients(
@@ -39,6 +39,12 @@ internal fun FoodDetailsNutrients(
     expandingEnabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val stringifiedQuantities = quantities.mapNotNull { quantity ->
+        quantity.stringResource(packageQuantity, servingQuantity).getOrNull()?.let {
+            quantity to it
+        }
+    }
+
     Column(modifier) {
         if (nutritionFacts.hasMacronutrientsValues()) {
             NutrientsHeader(
@@ -51,19 +57,17 @@ internal fun FoodDetailsNutrients(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
             )
         }
-        if (quantities.isNotEmpty()) {
+        if (stringifiedQuantities.isNotEmpty()) {
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                items(quantities) {
-                    it.stringResource(packageQuantity, servingQuantity).onSuccess { text ->
-                        FilterChip(
-                            selected = it == selectedQuantity,
-                            onClick = { onSelectQuantity(it) },
-                            label = { Text(text) },
-                        )
-                    }
+                items(stringifiedQuantities) { (quantity, text) ->
+                    FilterChip(
+                        selected = quantity == selectedQuantity,
+                        onClick = { onSelectQuantity(quantity) },
+                        label = { Text(text) },
+                    )
                 }
             }
         }

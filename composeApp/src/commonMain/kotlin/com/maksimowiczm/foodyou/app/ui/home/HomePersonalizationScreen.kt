@@ -145,7 +145,8 @@ private fun HomePersonalizationScreen(
                     val containerColor by
                         animateColorAsState(
                             if (isDragging) MaterialTheme.colorScheme.surfaceContainerHighest
-                            else MaterialTheme.colorScheme.surfaceContainer
+                            else MaterialTheme.colorScheme.surfaceContainer,
+                            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
                         )
 
                     when (card) {

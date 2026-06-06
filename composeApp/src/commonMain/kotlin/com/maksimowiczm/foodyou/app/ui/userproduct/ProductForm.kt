@@ -349,13 +349,17 @@ private fun ValuesPerPicker(
                     onCheckedChange = { expanded = it },
                     enabled = !isLocked,
                 ) {
-                    val rotation by animateFloatAsState(targetValue = if (expanded) 180f else 0f)
+                    val rotation =
+                        animateFloatAsState(
+                            targetValue = if (expanded) 180f else 0f,
+                            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+                        )
 
                     Icon(
                         Icons.Filled.KeyboardArrowDown,
                         modifier =
                             Modifier.size(SplitButtonDefaults.TrailingIconSize).graphicsLayer {
-                                this.rotationZ = rotation
+                                this.rotationZ = rotation.value
                             },
                         contentDescription = null,
                     )

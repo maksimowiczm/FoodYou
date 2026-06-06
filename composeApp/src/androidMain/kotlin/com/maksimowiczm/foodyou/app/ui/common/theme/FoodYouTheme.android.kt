@@ -7,6 +7,7 @@ import android.os.Build
 import android.view.View
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -108,6 +109,6 @@ private fun FoodYouTheme(
         }
 
     CompositionLocalProvider(LocalNutrientsPalette provides nutrientsPalette) {
-        MaterialTheme(colorScheme = animatedColorScheme, content = content)
+        MaterialExpressiveTheme(colorScheme = animatedColorScheme, content = content)
     }
 }

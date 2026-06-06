@@ -642,10 +642,10 @@ private fun NutrientAnimatedVisibility(
         modifier = modifier,
         enter =
             fadeIn(motionScheme.defaultEffectsSpec()) +
-                expandVertically(motionScheme.slowSpatialSpec()),
+                expandVertically(motionScheme.defaultSpatialSpec()),
         exit =
             fadeOut(motionScheme.defaultEffectsSpec()) +
-                shrinkVertically(motionScheme.slowSpatialSpec()),
+                shrinkVertically(motionScheme.defaultSpatialSpec()),
     ) {
         content()
     }

@@ -47,6 +47,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.hapticDraggableHandle
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import foodyou.app.generated.resources.*
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -88,7 +89,7 @@ private fun PersonalizeNutritionFactsScreen(
     LaunchedEffect(localOrder) {
         snapshotFlow { localOrder.value }
             .drop(1)
-            .debounce(50)
+            .debounce(50.milliseconds)
             .distinctUntilChanged()
             .collectLatest { latestOnReorder(it) }
     }
@@ -182,12 +183,19 @@ private fun PersonalizeNutritionFactsScreen(
                     val containerColor by
                         animateColorAsState(
                             if (isDragging) MaterialTheme.colorScheme.primaryContainer
-                            else MaterialTheme.colorScheme.surfaceContainer
+                            else MaterialTheme.colorScheme.surfaceContainer,
+                            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
                         )
 
                     val elevation =
                         ListItemDefaults.elevation(
-                            elevation = animateDpAsState(if (isDragging) 8.dp else 0.dp).value
+                            elevation =
+                                animateDpAsState(
+                                        if (isDragging) 8.dp else 0.dp,
+                                        animationSpec =
+                                            MaterialTheme.motionScheme.defaultEffectsSpec(),
+                                    )
+                                    .value
                         )
                     val colors =
                         ListItemDefaults.segmentedColors(

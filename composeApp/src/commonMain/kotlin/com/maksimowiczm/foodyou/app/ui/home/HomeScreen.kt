@@ -146,7 +146,11 @@ fun HomeScreen(
     val backStack = rememberNavBackStack(config, *elements.toTypedArray())
 
     val isHome by remember { derivedStateOf { backStack.last() is HomeNavKey.Home } }
-    val isSearch = animateFloatAsState(if (!isHome) 1f else 0f)
+    val isSearch =
+        animateFloatAsState(
+            if (!isHome) 1f else 0f,
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
+        )
 
     val backProgress = remember { Animatable(0f) }
     val homeProgress = remember { Animatable(if (isHome) 1f else 0f) }

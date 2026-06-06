@@ -60,7 +60,8 @@ fun FileUri.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
                 is AsyncImagePainter.State.Loading -> MaterialTheme.colorScheme.surfaceContainer
 
                 is AsyncImagePainter.State.Error -> MaterialTheme.colorScheme.errorContainer
-            }
+            },
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
         )
     val contentColor by
         animateColorAsState(
@@ -70,7 +71,8 @@ fun FileUri.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
                 is AsyncImagePainter.State.Loading -> MaterialTheme.colorScheme.onSurface
 
                 is AsyncImagePainter.State.Error -> MaterialTheme.colorScheme.onErrorContainer
-            }
+            },
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
         )
 
     Surface(

@@ -64,12 +64,14 @@ fun QuantityInput(
     val inputColor by
         animateColorAsState(
             if (formField.error == null) MaterialTheme.colorScheme.primaryContainer
-            else MaterialTheme.colorScheme.errorContainer
+            else MaterialTheme.colorScheme.errorContainer,
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
         )
     val contentColor by
         animateColorAsState(
             if (formField.error == null) MaterialTheme.colorScheme.onPrimaryContainer
-            else MaterialTheme.colorScheme.onErrorContainer
+            else MaterialTheme.colorScheme.onErrorContainer,
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
         )
 
     val focusRequester = remember { FocusRequester() }

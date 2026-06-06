@@ -188,7 +188,8 @@ private fun CalendarLazyRowItem(
                 state.selectedDate -> MaterialTheme.colorScheme.primary
                 state.referenceDate -> MaterialTheme.colorScheme.secondaryContainer
                 else -> FoodYouHomeCardDefaults.color
-            }
+            },
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
         )
     val contentColor by
         animateColorAsState(
@@ -196,7 +197,8 @@ private fun CalendarLazyRowItem(
                 state.selectedDate -> MaterialTheme.colorScheme.onPrimary
                 state.referenceDate -> MaterialTheme.colorScheme.onSecondaryContainer
                 else -> FoodYouHomeCardDefaults.contentColor
-            }
+            },
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
         )
 
     CalendarDayItem(

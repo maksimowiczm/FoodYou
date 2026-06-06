@@ -7,6 +7,10 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -274,9 +278,14 @@ private fun EnergyUnitSection(
                 val containerColor by
                     animateColorAsState(
                         if (expanded) MaterialTheme.colorScheme.surfaceContainer
-                        else MaterialTheme.colorScheme.surface
+                        else MaterialTheme.colorScheme.surface,
+                        animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
                     )
-                val rotation by animateFloatAsState(if (expanded) 180f else 0f)
+                val rotationState =
+                    animateFloatAsState(
+                        if (expanded) 180f else 0f,
+                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+                    )
                 Surface(
                     color = containerColor,
                     contentColor = MaterialTheme.colorScheme.onSurface,
@@ -289,14 +298,23 @@ private fun EnergyUnitSection(
                         Icon(
                             imageVector = Icons.Outlined.KeyboardArrowDown,
                             contentDescription = null,
-                            modifier = Modifier.graphicsLayer { rotationZ = rotation },
+                            modifier = Modifier.graphicsLayer { rotationZ = rotationState.value },
                         )
                     }
                 }
             },
             content = { Text(stringResource(Res.string.headline_energy_unit)) },
         )
-        transition.AnimatedVisibility(visible = { it }, modifier = Modifier.fillMaxWidth()) {
+        transition.AnimatedVisibility(
+            visible = { it },
+            enter =
+                fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                    expandIn(MaterialTheme.motionScheme.defaultSpatialSpec()),
+            exit =
+                fadeOut(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                    shrinkOut(MaterialTheme.motionScheme.fastSpatialSpec()),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             Column(
                 modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
                 verticalArrangement = Arrangement.spacedBy(2.dp),
