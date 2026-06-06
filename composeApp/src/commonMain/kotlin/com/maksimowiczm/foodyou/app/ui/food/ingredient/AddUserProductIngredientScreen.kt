@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.food.ingredient
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -204,7 +205,10 @@ private fun AddUserProductIngredientScreen(
             if (product?.note != null) {
                 item {
                     Spacer(Modifier.height(8.dp))
-                    UserFoodNote(note = product.note)
+                    UserFoodNote(
+                        note = product.note,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    )
                 }
             }
         }
