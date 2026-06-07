@@ -64,6 +64,7 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantit
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
+import com.maksimowiczm.foodyou.common.domain.food.isIncomplete
 import com.maksimowiczm.foodyou.common.domain.food.scale
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.getOrNull
@@ -133,6 +134,12 @@ fun RecipeForm(
                 )
                 ?.getOrNull()
         }
+    val anyNutrientIsMissing =
+        remember(nutritionFacts) {
+            if (nutritionFacts == null) return@remember false
+            nutritionFacts.asMap().any { it.value.isIncomplete() } ||
+                nutritionFacts.energy.isIncomplete()
+        }
 
     Column(modifier = modifier.padding(contentPadding.vertical())) {
         General(state = state, isLocked = isLocked, modifier = Modifier.padding(horizontalPadding))
@@ -143,7 +150,7 @@ fun RecipeForm(
             isLocked = isLocked,
             onAdd = onAddIngredient,
             onIngredientClick = onIngredientClick,
-            contentPadding = contentPadding.horizontal(),
+            contentPadding = horizontalPadding,
         )
         if (scaled != null) {
             if (quantities.isNotEmpty()) {
@@ -157,7 +164,7 @@ fun RecipeForm(
                         ?.let { quantity to it }
                 }
                 LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    contentPadding = horizontalPadding,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     items(stringedQuantities) { (quantity, text) ->
@@ -177,7 +184,7 @@ fun RecipeForm(
                     expanded = expanded,
                     onExpandedChange = { expanded = it },
                     enabled = true,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontalPadding),
                 )
             }
             NutrientList(
@@ -192,6 +199,15 @@ fun RecipeForm(
                             onClick = { expanded = !expanded },
                         ),
             )
+            if (anyNutrientIsMissing) {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "* " + stringResource(Res.string.description_incomplete_nutrition_data),
+                    modifier = Modifier.padding(horizontalPadding),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
         }
     }
 }

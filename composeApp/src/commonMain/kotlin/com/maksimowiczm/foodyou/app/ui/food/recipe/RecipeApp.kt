@@ -26,6 +26,7 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.ForwardBackwardTransition
 import com.maksimowiczm.foodyou.app.navigation.rememberPredictiveBackRoundedCornersDecorator
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddFoodDataCentralIngredientScreen
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddOpenFoodFactsIngredientScreen
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddUserProductIngredientScreen
@@ -281,7 +282,7 @@ private fun RecipeFormScreen(
             )
         },
     ) { paddingValues ->
-        LazyColumn(contentPadding = paddingValues) {
+        LazyColumn(contentPadding = paddingValues.add(vertical = 8.dp)) {
             item {
                 RecipeForm(
                     state = recipeForm,

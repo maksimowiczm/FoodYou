@@ -264,6 +264,8 @@ data class NutritionFacts(
             Nutrient.Chromium -> chromium
         }
 
+    fun asMap(): Map<Nutrient, NutrientValue<Weight>> = Nutrient.entries.associateWith { this[it] }
+
     fun hasMacronutrientsValues(): Boolean =
         proteins.value != null && carbohydrates.value != null && fats.value != null
 
