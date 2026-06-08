@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.userrecipe.domain
 
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository for tracking which user products and sub-recipes are used in user recipes.
@@ -19,6 +20,15 @@ interface UserRecipeCompositionRepository {
     suspend fun findRecipesUsing(
         identity: FoodCompositionComponentIdentity
     ): List<UserRecipeIdentity>
+
+    /**
+     * Finds all recipes that (recursively) contain the given recipe identity.
+     *
+     * @param identity The identity of the recipe.
+     * @return A flow of sets of identities for recipes that (directly or indirectly) use the
+     *   specified recipe.
+     */
+    fun observeAncestors(identity: UserRecipeIdentity): Flow<Set<UserRecipeIdentity>>
 
     /**
      * Saves the association between a recipe and its component identities.

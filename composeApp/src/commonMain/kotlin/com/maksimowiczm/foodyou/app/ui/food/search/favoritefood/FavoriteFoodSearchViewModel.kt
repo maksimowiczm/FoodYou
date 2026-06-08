@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class FavoriteFoodSearchViewModel(
+    avoidCircularDependencyWith: UserRecipeIdentity?,
     appProfileManager: AppProfileManager,
     private val foodDataCentralService: FoodDataCentralService,
     private val openFoodFactsService: OpenFoodFactsService,
@@ -50,8 +51,22 @@ internal class FavoriteFoodSearchViewModel(
     private val favoriteFoodIdentities =
         appProfileManager.observeAppProfile().map { it.favoriteFoods }
 
+    private val excludedIds =
+        avoidCircularDependencyWith?.let { identity ->
+            userRecipeService.observeAncestors(identity).map { ancestors ->
+                ancestors.map { it.id }.toSet() + identity.id
+            }
+        } ?: flowOf(emptySet())
+
+    private val filteredIdentities =
+        combine(excludedIds, favoriteFoodIdentities) { excluded, identities ->
+            identities.filter {
+                if (it is FavoriteFoodIdentity.Recipe) it.id !in excluded else true
+            }
+        }
+
     private val foodList: Flow<List<RemoteData<Any>>> =
-        favoriteFoodIdentities
+        filteredIdentities
             .map { list ->
                 if (list.isEmpty()) return@map flowOf(listOf())
 

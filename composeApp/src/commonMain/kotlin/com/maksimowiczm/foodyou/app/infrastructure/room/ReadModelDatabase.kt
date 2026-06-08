@@ -12,10 +12,12 @@ import com.maksimowiczm.foodyou.search.infrastructure.SearchEntity
 import com.maksimowiczm.foodyou.search.infrastructure.SearchEntityFts
 import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeCompositionReferenceEntity
 import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeDatabase
+import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlattenedCompositionView
 
 @Database(
     entities =
         [SearchEntityFts::class, SearchEntity::class, UserRecipeCompositionReferenceEntity::class],
+    views = [UserRecipeFlattenedCompositionView::class],
     version = ReadModelDatabase.VERSION,
     exportSchema = false,
 )

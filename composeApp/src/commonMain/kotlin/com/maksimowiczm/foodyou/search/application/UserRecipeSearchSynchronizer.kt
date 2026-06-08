@@ -15,7 +15,7 @@ class UserRecipeSearchSynchronizer(private val searchRepository: SearchRepositor
             is UserRecipeCreatedEvent ->
                 searchRepository.save(
                     SearchResult.UserRecipe(
-                        identity = event.recipe.identity,
+                        id = event.recipe.identity.id,
                         name = event.recipe.name,
                         note = event.recipe.note,
                         image = event.recipe.image,
@@ -28,7 +28,7 @@ class UserRecipeSearchSynchronizer(private val searchRepository: SearchRepositor
             is UserRecipeUpdatedEvent ->
                 searchRepository.save(
                     SearchResult.UserRecipe(
-                        identity = event.recipe.identity,
+                        id = event.recipe.identity.id,
                         name = event.recipe.name,
                         note = event.recipe.note,
                         image = event.recipe.image,
@@ -38,7 +38,7 @@ class UserRecipeSearchSynchronizer(private val searchRepository: SearchRepositor
                     )
                 )
 
-            is UserRecipeDeletedEvent -> searchRepository.delete(event.identity)
+            is UserRecipeDeletedEvent -> searchRepository.deleteRecipe(event.identity.id)
         }
     }
 }

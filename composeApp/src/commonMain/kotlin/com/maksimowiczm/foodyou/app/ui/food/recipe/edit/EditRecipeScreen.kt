@@ -78,6 +78,7 @@ fun EditRecipeScreen(
     )
 
     RecipeApp(
+        identity = recipe.identity,
         onBack = { if (isModified) showDiscardDialog = true else onBack() },
         onSave = { viewModel.save(form = recipeFormState, state = uiState) },
         onEditUserProduct = onEditUserProduct,

@@ -15,8 +15,6 @@ import com.maksimowiczm.foodyou.common.infrastructure.room.MeasurementUnit
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsMapper
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 
 class SearchResultMapper {
     private val nutrientsMapper = NutrientsMapper()
@@ -55,7 +53,7 @@ class SearchResultMapper {
 
             if (recipeId != null) {
                 return SearchResult.UserRecipe(
-                    identity = UserRecipeIdentity(recipeId),
+                    id = recipeId,
                     name = name,
                     note = note,
                     image = imageDigest?.let(::BlobDigest),
@@ -77,7 +75,7 @@ class SearchResultMapper {
             val packageQuantity = packageSize?.toAbsoluteQuantity()
 
             return SearchResult.UserProduct(
-                identity = UserProductIdentity(productId),
+                id = productId,
                 name = name,
                 brand = brand,
                 barcode = barcode?.let(::UserProductBarcode),
@@ -104,7 +102,7 @@ class SearchResultMapper {
             val foodName = toFoodNameEntity(name)
 
             return SearchEntity(
-                productId = identity.id,
+                productId = id,
                 recipeId = null,
                 name = foodName,
                 brand = brand,
@@ -125,7 +123,7 @@ class SearchResultMapper {
 
             return SearchEntity(
                 productId = null,
-                recipeId = identity.id,
+                recipeId = id,
                 name = foodName,
                 brand = null,
                 barcode = null,

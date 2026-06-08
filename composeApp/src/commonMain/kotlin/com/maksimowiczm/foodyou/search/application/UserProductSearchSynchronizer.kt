@@ -15,7 +15,7 @@ class UserProductSearchSynchronizer(private val searchRepository: SearchReposito
             is UserProductCreatedEvent ->
                 searchRepository.save(
                     SearchResult.UserProduct(
-                        identity = event.product.identity,
+                        id = event.product.identity.id,
                         name = event.product.name,
                         brand = event.product.brand,
                         barcode = event.product.barcode,
@@ -31,7 +31,7 @@ class UserProductSearchSynchronizer(private val searchRepository: SearchReposito
             is UserProductUpdatedEvent ->
                 searchRepository.save(
                     SearchResult.UserProduct(
-                        identity = event.product.identity,
+                        id = event.product.identity.id,
                         name = event.product.name,
                         brand = event.product.brand,
                         barcode = event.product.barcode,
@@ -44,7 +44,7 @@ class UserProductSearchSynchronizer(private val searchRepository: SearchReposito
                     )
                 )
 
-            is UserProductDeletedEvent -> searchRepository.delete(event.identity)
+            is UserProductDeletedEvent -> searchRepository.deleteProduct(event.identity.id)
         }
     }
 }

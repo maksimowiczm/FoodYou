@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserRecipeCompositionDao {
@@ -12,7 +13,7 @@ interface UserRecipeCompositionDao {
     @Query(
         """
             SELECT recipeId
-            FROM UserRecipeCompositionReference
+            FROM UserRecipeFlattenedComposition
             WHERE
                 componentType = :type
                 AND
@@ -20,6 +21,18 @@ interface UserRecipeCompositionDao {
             """
     )
     suspend fun findRecipesByComponent(type: String, value: String): List<Uuid>
+
+    @Query(
+        """
+            SELECT recipeId
+            FROM UserRecipeFlattenedComposition
+            WHERE
+                componentType = 'RECIPE'
+                AND
+                componentValue = :recipeId
+            """
+    )
+    fun observeAncestors(recipeId: String): Flow<List<Uuid>>
 
     @Query(
         """

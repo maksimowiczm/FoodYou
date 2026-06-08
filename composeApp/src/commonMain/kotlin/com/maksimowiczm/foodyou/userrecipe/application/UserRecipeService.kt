@@ -48,6 +48,9 @@ class UserRecipeService(
     fun observe(identity: UserRecipeIdentity): Flow<UserRecipe?> =
         eventStore.observe<UserRecipeEvent>(streamId(identity)).map { it.toUserRecipe() }
 
+    fun observeAncestors(identity: UserRecipeIdentity): Flow<Set<UserRecipeIdentity>> =
+        compositionRepository.observeAncestors(identity)
+
     suspend fun create(
         name: FoodName,
         note: String?,

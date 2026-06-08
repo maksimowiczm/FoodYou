@@ -30,6 +30,8 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddFoodDataCentralIngredientScreen
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddOpenFoodFactsIngredientScreen
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddUserProductIngredientScreen
+import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
@@ -37,6 +39,7 @@ import com.maksimowiczm.foodyou.common.extension.removeWhile
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import foodyou.app.generated.resources.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -44,9 +47,11 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun RecipeApp(
+    identity: UserRecipeIdentity?,
     onBack: () -> Unit,
     onSave: () -> Unit,
     onEditUserProduct: (UserProductIdentity) -> Unit,
@@ -130,6 +135,9 @@ internal fun RecipeApp(
                     )
                 }
                 entry<Search> {
+                    koinViewModel<UserFoodSearchViewModel> { parametersOf(identity) }
+                    koinViewModel<FavoriteFoodSearchViewModel> { parametersOf(identity) }
+
                     IngredientSearchScreen(
                         onBack = { backStack.removeLastIf<Search>() },
                         onFoodDataCentralProduct = { id, quantity ->

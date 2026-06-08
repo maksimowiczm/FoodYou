@@ -185,8 +185,8 @@ private fun HomeSearchScreen(
                             key =
                                 userFood.itemKey {
                                     when (it) {
-                                        is SearchResult.UserProduct -> it.identity.id.toString()
-                                        is SearchResult.UserRecipe -> it.identity.id.toString()
+                                        is SearchResult.UserProduct -> it.id.toString()
+                                        is SearchResult.UserRecipe -> it.id.toString()
                                     }
                                 },
                         ) { i ->
@@ -200,7 +200,9 @@ private fun HomeSearchScreen(
                                 is SearchResult.UserProduct ->
                                     UserProductListItem(
                                         product = product,
-                                        onClick = { onUserProduct(product.identity) },
+                                        onClick = {
+                                            onUserProduct(UserProductIdentity(product.id))
+                                        },
                                         shimmer = shimmer,
                                         modifier = Modifier.animateItem(),
                                     )
@@ -208,7 +210,7 @@ private fun HomeSearchScreen(
                                 is SearchResult.UserRecipe ->
                                     UserRecipeListItem(
                                         recipe = product,
-                                        onClick = { onUserRecipe(product.identity) },
+                                        onClick = { onUserRecipe(UserRecipeIdentity(product.id)) },
                                         shimmer = shimmer,
                                         modifier = Modifier.animateItem(),
                                     )
@@ -271,8 +273,8 @@ private fun HomeSearchScreen(
                         key =
                             userFood.itemKey {
                                 when (it) {
-                                    is SearchResult.UserProduct -> it.identity.id.toString()
-                                    is SearchResult.UserRecipe -> it.identity.id.toString()
+                                    is SearchResult.UserProduct -> it.id.toString()
+                                    is SearchResult.UserRecipe -> it.id.toString()
                                 }
                             },
                     ) { i ->
@@ -286,7 +288,7 @@ private fun HomeSearchScreen(
                             is SearchResult.UserProduct ->
                                 UserProductListItem(
                                     product = food,
-                                    onClick = { onUserProduct(food.identity) },
+                                    onClick = { onUserProduct(UserProductIdentity(food.id)) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )
@@ -294,7 +296,7 @@ private fun HomeSearchScreen(
                             is SearchResult.UserRecipe ->
                                 UserRecipeListItem(
                                     recipe = food,
-                                    onClick = { onUserRecipe(food.identity) },
+                                    onClick = { onUserRecipe(UserRecipeIdentity(food.id)) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )

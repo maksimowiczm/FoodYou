@@ -8,8 +8,7 @@ import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.search.domain.SearchRepository
 import com.maksimowiczm.foodyou.search.domain.SearchResult
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -17,12 +16,19 @@ class SearchRepositoryImpl(database: SearchDatabase) : SearchRepository {
     private val mapper = SearchResultMapper()
     private val dao: SearchDao = database.searchDao
 
-    override fun search(query: SearchQuery, language: Language): Flow<PagingData<SearchResult>> {
+    override fun search(
+        query: SearchQuery,
+        language: Language,
+        excludedRecipeIds: Set<Uuid>,
+    ): Flow<PagingData<SearchResult>> {
         val factory = {
             when (query) {
-                is SearchQuery.Blank -> dao.getPagingSource(language.tag)
-                is SearchQuery.Barcode -> dao.getPagingSourceByBarcode(query.barcode, language.tag)
-                is SearchQuery.NotBlank -> dao.getPagingSourceByQuery(query.query, language.tag)
+                is SearchQuery.Blank -> dao.getPagingSource(language.tag, excludedRecipeIds)
+                is SearchQuery.Barcode ->
+                    dao.getPagingSourceByBarcode(query.barcode, language.tag, excludedRecipeIds)
+
+                is SearchQuery.NotBlank ->
+                    dao.getPagingSourceByQuery(query.query, language.tag, excludedRecipeIds)
             }
         }
 
@@ -31,22 +37,27 @@ class SearchRepositoryImpl(database: SearchDatabase) : SearchRepository {
             .map { data -> data.map(mapper::toDomain) }
     }
 
-    override fun count(query: SearchQuery, language: Language): Flow<Int> =
+    override fun count(
+        query: SearchQuery,
+        language: Language,
+        excludedRecipeIds: Set<Uuid>,
+    ): Flow<Int> =
         when (query) {
-            is SearchQuery.Blank -> dao.observeCount()
-            is SearchQuery.Barcode -> dao.observeCountByBarcode(query.barcode)
-            is SearchQuery.NotBlank -> dao.observeCountByQuery(query.query)
+            is SearchQuery.Blank -> dao.observeCount(excludedRecipeIds)
+            is SearchQuery.Barcode -> dao.observeCountByBarcode(query.barcode, excludedRecipeIds)
+
+            is SearchQuery.NotBlank -> dao.observeCountByQuery(query.query, excludedRecipeIds)
         }
 
     override suspend fun save(searchResult: SearchResult) {
         dao.upsert(mapper.toEntity(searchResult))
     }
 
-    override suspend fun delete(identity: UserProductIdentity) {
-        dao.deleteByProductId(identity.id)
+    override suspend fun deleteProduct(id: Uuid) {
+        dao.deleteByProductId(id)
     }
 
-    override suspend fun delete(identity: UserRecipeIdentity) {
-        dao.deleteByRecipeId(identity.id)
+    override suspend fun deleteRecipe(id: Uuid) {
+        dao.deleteByRecipeId(id)
     }
 }

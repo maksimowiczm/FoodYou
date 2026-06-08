@@ -6,12 +6,11 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import kotlin.uuid.Uuid
 
 sealed interface SearchResult {
     data class UserProduct(
-        val identity: UserProductIdentity,
+        val id: Uuid,
         val name: FoodName,
         val brand: String?,
         val barcode: UserProductBarcode?,
@@ -24,7 +23,7 @@ sealed interface SearchResult {
     ) : SearchResult
 
     data class UserRecipe(
-        val identity: UserRecipeIdentity,
+        val id: Uuid,
         val name: FoodName,
         val note: String?,
         val image: BlobDigest?,

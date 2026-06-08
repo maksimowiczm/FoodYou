@@ -28,10 +28,28 @@ val foodUiModule = module {
     viewModelOf(::UserProductDetailsViewModel)
     viewModelOf(::UserRecipeDetailsViewModel)
 
-    viewModelOf(::UserFoodSearchViewModel)
+    viewModel { params ->
+        UserFoodSearchViewModel(
+            avoidCircularDependencyWith = params.getOrNull(),
+            get(),
+            get(),
+            get(),
+        )
+    }
+
     viewModelOf(::OpenFoodFactsSearchViewModel)
     viewModelOf(::FoodDataCentralSearchViewModel)
-    viewModelOf(::FavoriteFoodSearchViewModel)
+    viewModel { params ->
+        FavoriteFoodSearchViewModel(
+            avoidCircularDependencyWith = params.getOrNull(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+        )
+    }
 
     viewModelOf(::CreateRecipeViewModel)
     viewModelOf(::EditRecipeViewModel)

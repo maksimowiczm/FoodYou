@@ -351,8 +351,8 @@ private fun SearchList(
                         key =
                             userFood.itemKey {
                                 when (it) {
-                                    is SearchResult.UserProduct -> it.identity.id.toString()
-                                    is SearchResult.UserRecipe -> it.identity.id.toString()
+                                    is SearchResult.UserProduct -> it.id.toString()
+                                    is SearchResult.UserRecipe -> it.id.toString()
                                 }
                             },
                     ) { i ->
@@ -366,7 +366,9 @@ private fun SearchList(
                             is SearchResult.UserProduct ->
                                 UserProductListItem(
                                     product = product,
-                                    onClick = { onUserProduct(product.identity, it) },
+                                    onClick = {
+                                        onUserProduct(UserProductIdentity(product.id), it)
+                                    },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )
@@ -374,7 +376,7 @@ private fun SearchList(
                             is SearchResult.UserRecipe ->
                                 UserRecipeListItem(
                                     recipe = product,
-                                    onClick = { onUserRecipe(product.identity, it) },
+                                    onClick = { onUserRecipe(UserRecipeIdentity(product.id), it) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )
@@ -408,8 +410,8 @@ private fun SearchList(
                         key =
                             userFood.itemKey {
                                 when (it) {
-                                    is SearchResult.UserProduct -> it.identity.id.toString()
-                                    is SearchResult.UserRecipe -> it.identity.id.toString()
+                                    is SearchResult.UserProduct -> it.id.toString()
+                                    is SearchResult.UserRecipe -> it.id.toString()
                                 }
                             },
                     ) { i ->
@@ -423,7 +425,7 @@ private fun SearchList(
                             is SearchResult.UserProduct ->
                                 UserProductListItem(
                                     product = food,
-                                    onClick = { onUserProduct(food.identity, it) },
+                                    onClick = { onUserProduct(UserProductIdentity(food.id), it) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )
@@ -431,7 +433,7 @@ private fun SearchList(
                             is SearchResult.UserRecipe ->
                                 UserRecipeListItem(
                                     recipe = food,
-                                    onClick = { onUserRecipe(food.identity, it) },
+                                    onClick = { onUserRecipe(UserRecipeIdentity(food.id), it) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem(),
                                 )
