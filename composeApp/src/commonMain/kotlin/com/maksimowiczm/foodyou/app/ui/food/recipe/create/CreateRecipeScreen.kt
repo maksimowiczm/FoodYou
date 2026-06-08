@@ -14,6 +14,7 @@ import com.maksimowiczm.foodyou.app.ui.food.recipe.RecipeApp
 import com.maksimowiczm.foodyou.app.ui.food.recipe.RecipeFormViewModel
 import com.maksimowiczm.foodyou.app.ui.food.recipe.rememberRecipeFormState
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -21,6 +22,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CreateRecipeScreen(
     onBack: () -> Unit,
+    onCreate: (UserRecipeIdentity) -> Unit,
     onEditUserProduct: (UserProductIdentity) -> Unit,
     modifier: Modifier = Modifier.Companion,
 ) {
@@ -29,7 +31,7 @@ fun CreateRecipeScreen(
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {
-            is CreateRecipeEvent.Created -> onBack()
+            is CreateRecipeEvent.Created -> onCreate(it.id)
         }
     }
 

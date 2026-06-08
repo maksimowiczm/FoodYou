@@ -29,10 +29,12 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Personalizati
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.SwitchProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserProductDetails
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserRecipeDetails
 import com.maksimowiczm.foodyou.app.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.fooddatacentral.FoodDataCentralDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts.OpenFoodFactsDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsScreen
+import com.maksimowiczm.foodyou.app.ui.food.details.userrecipe.UserRecipeDetailsScreen
 import com.maksimowiczm.foodyou.app.ui.food.recipe.create.CreateRecipeScreen
 import com.maksimowiczm.foodyou.app.ui.food.recipe.edit.EditRecipeScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomePersonalizationScreen
@@ -48,6 +50,7 @@ import com.maksimowiczm.foodyou.app.ui.profile.edit.EditProfileScreen
 import com.maksimowiczm.foodyou.app.ui.userproduct.create.CreateProductScreen
 import com.maksimowiczm.foodyou.app.ui.userproduct.edit.EditProductScreen
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
@@ -129,6 +132,35 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onDelete = { backStack.removeLastIf<UserProductDetails>() },
                     )
                 }
+                entry<UserRecipeDetails> {
+                    UserRecipeDetailsScreen(
+                        identity = it.identity,
+                        onEdit = { backStack.add(EditRecipe(it.identity)) },
+                        onBack = { backStack.removeLastIf<UserRecipeDetails>() },
+                        onDelete = { backStack.removeLastIf<UserRecipeDetails>() },
+                        onNavigateToIngredient = { identity ->
+                            val route =
+                                when (identity) {
+                                    is FoodCompositionComponentIdentity.UserProduct ->
+                                        UserProductDetails(UserProductIdentity(identity.id))
+
+                                    is FoodCompositionComponentIdentity.OpenFoodFacts ->
+                                        OpenFoodFactsProductDetails(
+                                            OpenFoodFactsProductIdentity(identity.barcode)
+                                        )
+
+                                    is FoodCompositionComponentIdentity.FoodDataCentral ->
+                                        FoodDataCentralProductDetails(
+                                            FoodDataCentralProductIdentity(identity.fdcId)
+                                        )
+
+                                    is FoodCompositionComponentIdentity.Recipe ->
+                                        UserRecipeDetails(UserRecipeIdentity(identity.id))
+                                }
+                            backStack.add(route)
+                        },
+                    )
+                }
                 entry<OpenFoodFactsProductDetails> {
                     OpenFoodFactsDetailsScreen(
                         identity = it.identity,
@@ -151,7 +183,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                             backStack.add(OpenFoodFactsProductDetails(id))
                         },
                         onUserProduct = { id -> backStack.add(UserProductDetails(id)) },
-                        onUserRecipe = { id -> backStack.add(EditRecipe(id)) },
+                        onUserRecipe = { id -> backStack.add(UserRecipeDetails(id)) },
                         onCreateProduct = { backStack.add(CreateProduct) },
                         onCreateRecipe = { backStack.add(CreateRecipe) },
                         initialQuery = it.initialQuery,
@@ -191,6 +223,10 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                 entry<CreateRecipe> {
                     CreateRecipeScreen(
                         onBack = { backStack.removeLastIf<CreateRecipe>() },
+                        onCreate = { id ->
+                            backStack.removeLastIf<CreateRecipe>()
+                            backStack.add(UserRecipeDetails(id))
+                        },
                         onEditUserProduct = { backStack.add(EditUserProduct(it)) },
                     )
                 }
@@ -237,6 +273,9 @@ sealed interface FoodYouNavHostRoute : NavKey {
 
     @Serializable
     data class UserProductDetails(val identity: UserProductIdentity) : FoodYouNavHostRoute
+
+    @Serializable
+    data class UserRecipeDetails(val identity: UserRecipeIdentity) : FoodYouNavHostRoute
 
     @Serializable
     data class OpenFoodFactsProductDetails(val identity: OpenFoodFactsProductIdentity) :

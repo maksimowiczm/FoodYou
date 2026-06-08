@@ -25,6 +25,7 @@ import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -160,6 +161,7 @@ internal class FavoriteFoodSearchViewModel(
 private fun Any.barcode(): String? =
     when (this) {
         is UserProduct -> barcode?.value
+        is UserRecipe -> null
         is OpenFoodFactsProduct -> identity.barcode
         is FoodDataCentralProduct -> barcode
         else -> error("Unknown type ${this::class}")
@@ -176,6 +178,7 @@ private fun RemoteData<Any>.barcode(): String? =
 private fun Any.name(): FoodName =
     when (this) {
         is UserProduct -> name
+        is UserRecipe -> name
         is OpenFoodFactsProduct -> name
         is FoodDataCentralProduct -> FoodName(english = name, fallback = name)
         else -> error("Unknown type ${this::class}")
@@ -192,6 +195,7 @@ private fun RemoteData<Any>.name(): FoodName? =
 private fun Any.brand(): String? =
     when (this) {
         is UserProduct -> brand
+        is UserRecipe -> null
         is OpenFoodFactsProduct -> brand
         is FoodDataCentralProduct -> brand
         else -> error("Unknown type ${this::class}")

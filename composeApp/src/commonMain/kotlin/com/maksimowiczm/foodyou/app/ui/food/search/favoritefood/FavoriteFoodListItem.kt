@@ -1,8 +1,13 @@
 package com.maksimowiczm.foodyou.app.ui.food.search.favoritefood
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
@@ -26,6 +31,8 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.valentinilk.shimmer.Shimmer
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 internal fun FavoriteFoodListItem(
@@ -52,6 +59,7 @@ internal fun FavoriteFoodListItem(
     val image = food.image()
     val packageQuantity = food.packageQuantity()
     val servingQuantity = food.servingQuantity()
+    val isRecipe = food.isRecipe()
 
     val factor =
         remember(preferredQuantity, packageQuantity, servingQuantity) {
@@ -81,7 +89,18 @@ internal fun FavoriteFoodListItem(
             .expect("PreferredQuantity string can't be null")
 
     FoodSearchListItem(
-        headline = headline,
+        headline = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(headline)
+                if (isRecipe) {
+                    Spacer(Modifier.width(8.dp))
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_skillet_filled),
+                        contentDescription = null,
+                    )
+                }
+            }
+        },
         proteins = measurementFacts.proteins.value,
         carbohydrates = measurementFacts.carbohydrates.value,
         fats = measurementFacts.fats.value,
@@ -123,6 +142,16 @@ private fun RemoteData<Any>.headline(nameSelector: FoodNameSelector): String? =
         is RemoteData.Error -> partialValue?.headline(nameSelector)
         is RemoteData.Loading -> partialValue?.headline(nameSelector)
         is RemoteData.NotFound -> null
+    }
+
+private fun Any.isRecipe(): Boolean = this is UserRecipe
+
+private fun RemoteData<Any>.isRecipe(): Boolean =
+    when (this) {
+        is RemoteData.Success -> value.isRecipe()
+        is RemoteData.Error -> partialValue?.isRecipe() ?: false
+        is RemoteData.Loading -> partialValue?.isRecipe() ?: false
+        is RemoteData.NotFound -> false
     }
 
 private fun Any.packageQuantity(): AbsoluteQuantity? =

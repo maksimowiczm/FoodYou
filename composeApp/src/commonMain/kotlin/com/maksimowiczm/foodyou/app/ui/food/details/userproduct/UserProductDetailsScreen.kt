@@ -23,6 +23,8 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsImage
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsNutrients
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
+import com.maksimowiczm.foodyou.app.ui.food.details.UserFoodMenu
+import com.maksimowiczm.foodyou.app.ui.food.details.UserFoodNote
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient

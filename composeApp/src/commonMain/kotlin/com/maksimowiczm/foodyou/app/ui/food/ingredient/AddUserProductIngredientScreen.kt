@@ -33,9 +33,9 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsImage
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
+import com.maksimowiczm.foodyou.app.ui.food.details.UserFoodMenu
+import com.maksimowiczm.foodyou.app.ui.food.details.UserFoodNote
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
-import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserFoodMenu
-import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserFoodNote
 import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsUiEvent
 import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsViewModel
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient

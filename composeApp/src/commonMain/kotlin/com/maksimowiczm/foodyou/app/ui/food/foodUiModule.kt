@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.app.ui.food.details.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.ui.food.details.fooddatacentral.FoodDataCentralDetailsViewModel
 import com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts.OpenFoodFactsDetailsViewModel
 import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsViewModel
+import com.maksimowiczm.foodyou.app.ui.food.details.userrecipe.UserRecipeDetailsViewModel
 import com.maksimowiczm.foodyou.app.ui.food.recipe.RecipeFormTransformer
 import com.maksimowiczm.foodyou.app.ui.food.recipe.RecipeFormViewModel
 import com.maksimowiczm.foodyou.app.ui.food.recipe.create.CreateRecipeViewModel
@@ -25,6 +26,7 @@ val foodUiModule = module {
     viewModelOf(::OpenFoodFactsDetailsViewModel)
     viewModelOf(::FoodDataCentralDetailsViewModel)
     viewModelOf(::UserProductDetailsViewModel)
+    viewModelOf(::UserRecipeDetailsViewModel)
 
     viewModelOf(::UserFoodSearchViewModel)
     viewModelOf(::OpenFoodFactsSearchViewModel)

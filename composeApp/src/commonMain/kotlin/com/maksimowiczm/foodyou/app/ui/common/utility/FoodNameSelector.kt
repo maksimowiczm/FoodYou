@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -50,6 +51,8 @@ fun SearchResult.UserProduct.headline(nameSelector: FoodNameSelector) = buildStr
 }
 
 fun SearchResult.UserRecipe.headline(nameSelector: FoodNameSelector) = nameSelector.select(name)
+
+fun UserRecipe.headline(nameSelector: FoodNameSelector) = nameSelector.select(name)
 
 val LocalFoodNameSelector =
     staticCompositionLocalOf<FoodNameSelector> {
