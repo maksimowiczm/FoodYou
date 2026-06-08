@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.privacy
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 
 @Immutable
 data class PrivacyPreferences(

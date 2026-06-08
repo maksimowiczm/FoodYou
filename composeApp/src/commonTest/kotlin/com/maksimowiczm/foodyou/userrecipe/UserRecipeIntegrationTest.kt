@@ -43,7 +43,6 @@ import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
 import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.RoomUserRecipeCompositionRepository
 import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeDatabase
-import kotlin.collections.first
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

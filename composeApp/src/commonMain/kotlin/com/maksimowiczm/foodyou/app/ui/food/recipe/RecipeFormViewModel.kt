@@ -32,6 +32,7 @@ import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -45,7 +46,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlin.uuid.Uuid
 
 class RecipeFormViewModel(
     initialIngredients: List<Pair<FoodCompositionComponentIdentity, Quantity>> = emptyList(),

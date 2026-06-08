@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.userproduct
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit

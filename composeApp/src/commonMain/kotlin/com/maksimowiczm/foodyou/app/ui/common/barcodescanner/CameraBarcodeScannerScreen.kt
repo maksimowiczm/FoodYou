@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.common.barcodescanner
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 
 @Composable

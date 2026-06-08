@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.app.ui.common.utility
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import com.maksimowiczm.foodyou.app.ui.common.utility.ContrastContentColor.hslToColor
 import kotlin.math.pow
 
 @Composable

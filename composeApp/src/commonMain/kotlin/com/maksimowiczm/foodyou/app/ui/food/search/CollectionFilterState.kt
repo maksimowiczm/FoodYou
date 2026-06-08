@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 import kotlinx.serialization.Serializable
 
 @Immutable
