@@ -16,7 +16,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.valentinilk.shimmer.shimmer
 
 @Composable
-internal fun FoodDetailsHeadline(headline: String?, modifier: Modifier = Modifier.Companion) {
+internal fun FoodDetailsHeadline(headline: String?, modifier: Modifier = Modifier) {
     Box(modifier.fillMaxWidth().padding(16.dp)) {
         if (headline != null) {
             Text(text = headline, style = MaterialTheme.typography.displaySmall)

@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.maksimowiczm.foodyou.app.ui.common.component.QuantityInput
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
@@ -165,7 +166,10 @@ private fun AddOpenFoodFactsIngredientScreen(
                 onClick = onAdd,
                 modifier =
                     Modifier.animateFloatingActionButton(
-                        visible = quantityState.formField.error == null,
+                        visible =
+                            !isLoading &&
+                                !LocalNavAnimatedContentScope.current.transition.isRunning &&
+                                quantityState.formField.error == null,
                         alignment = Alignment.BottomEnd,
                     ),
             ) {

@@ -61,6 +61,7 @@ import com.maksimowiczm.foodyou.common.domain.Energy
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
@@ -73,6 +74,7 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -330,6 +332,7 @@ private fun IngredientListItem(
 
     RecipeIngredientListItem(
         headline = headline,
+        isRecipe = component.identity is FoodCompositionComponentIdentity.Recipe,
         proteins = measurementFacts.proteins.value,
         carbohydrates = measurementFacts.carbohydrates.value,
         fats = measurementFacts.fats.value,
@@ -358,6 +361,7 @@ private fun DeleteIngredientDialog(onDelete: () -> Unit, onDismiss: () -> Unit) 
 @Composable
 internal fun RecipeIngredientListItem(
     headline: String,
+    isRecipe: Boolean,
     proteins: Weight?,
     carbohydrates: Weight?,
     fats: Weight?,
@@ -370,7 +374,18 @@ internal fun RecipeIngredientListItem(
     modifier: Modifier = Modifier,
 ) {
     TwoRowFoodListItem(
-        headline = { Text(text = headline) },
+        headline = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(text = headline)
+                if (isRecipe) {
+                    Spacer(Modifier.width(8.dp))
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_skillet_filled),
+                        contentDescription = null,
+                    )
+                }
+            }
+        },
         image = image,
         proteins = { Text(proteins?.stringResource() ?: "?") },
         carbohydrates = { Text(carbohydrates?.stringResource() ?: "?") },
