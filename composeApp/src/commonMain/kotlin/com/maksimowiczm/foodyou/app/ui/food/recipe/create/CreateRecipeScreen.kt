@@ -24,6 +24,7 @@ fun CreateRecipeScreen(
     onBack: () -> Unit,
     onCreate: (UserRecipeIdentity) -> Unit,
     onEditUserProduct: (UserProductIdentity) -> Unit,
+    onEditUserRecipe: (UserRecipeIdentity) -> Unit,
     modifier: Modifier = Modifier.Companion,
 ) {
     val viewModel: CreateRecipeViewModel = koinViewModel()
@@ -63,6 +64,7 @@ fun CreateRecipeScreen(
         onBack = { if (isModified) showDiscardDialog = true else onBack() },
         onSave = { viewModel.create(form = recipeFormState, state = uiState) },
         onEditUserProduct = onEditUserProduct,
+        onEditUserRecipe = onEditUserRecipe,
         recipeForm = recipeFormState,
         title = { Text(stringResource(Res.string.headline_create_recipe)) },
         isLocked = isLocked,

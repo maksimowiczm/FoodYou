@@ -30,6 +30,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddFoodDataCentralIngredientScreen
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddOpenFoodFactsIngredientScreen
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddUserProductIngredientScreen
+import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddUserRecipeIngredientScreen
 import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
@@ -55,6 +56,7 @@ internal fun RecipeApp(
     onBack: () -> Unit,
     onSave: () -> Unit,
     onEditUserProduct: (UserProductIdentity) -> Unit,
+    onEditUserRecipe: (UserRecipeIdentity) -> Unit,
     recipeForm: RecipeFormState,
     title: @Composable () -> Unit,
     isLocked: Boolean,
@@ -123,7 +125,12 @@ internal fun RecipeApp(
                                             entry.quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.Recipe -> TODO()
+                                    is FoodCompositionComponentIdentity.Recipe ->
+                                        EditUserRecipe(
+                                            index,
+                                            UserRecipeIdentity(id.id),
+                                            entry.quantity,
+                                        )
                                 }
 
                             backStack.add(backStackEntry)
@@ -149,9 +156,7 @@ internal fun RecipeApp(
                         onUserProduct = { id, quantity ->
                             backStack.add(UserProduct(id, quantity))
                         },
-                        onUserRecipe = { id, quantity ->
-                            // TODO
-                        },
+                        onUserRecipe = { id, quantity -> backStack.add(UserRecipe(id, quantity)) },
                     )
                 }
                 entry<OpenFoodFacts> {
@@ -198,6 +203,22 @@ internal fun RecipeApp(
                         initialQuantity = it.quantity,
                     )
                 }
+                entry<UserRecipe> {
+                    AddUserRecipeIngredientScreen(
+                        onBack = { backStack.removeLastIf<UserRecipe>() },
+                        onAdd = { quantity ->
+                            recipeFormViewModel.addIngredient(
+                                FoodCompositionComponentIdentity.Recipe(it.identity.id),
+                                quantity,
+                            )
+                            backStack.removeWhile { r -> r !is RecipeForm }
+                        },
+                        onEdit = { onEditUserRecipe(it.identity) },
+                        onDelete = { backStack.removeLastIf<UserRecipe>() },
+                        identity = it.identity,
+                        initialQuantity = it.quantity,
+                    )
+                }
                 entry<EditOpenFoodFacts> {
                     AddOpenFoodFactsIngredientScreen(
                         onBack = { backStack.removeLastIf<EditOpenFoodFacts>() },
@@ -228,6 +249,22 @@ internal fun RecipeApp(
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
                         onEdit = { onEditUserProduct(it.identity) },
+                        onDelete = {
+                            recipeFormViewModel.removeIngredient(it.index)
+                            backStack.removeWhile { r -> r !is RecipeForm }
+                        },
+                        identity = it.identity,
+                        initialQuantity = it.quantity,
+                    )
+                }
+                entry<EditUserRecipe> {
+                    AddUserRecipeIngredientScreen(
+                        onBack = { backStack.removeLastIf<EditUserRecipe>() },
+                        onAdd = { quantity ->
+                            recipeFormViewModel.updateIngredient(it.index, quantity)
+                            backStack.removeWhile { r -> r !is RecipeForm }
+                        },
+                        onEdit = { onEditUserRecipe(it.identity) },
                         onDelete = {
                             recipeFormViewModel.removeIngredient(it.index)
                             backStack.removeWhile { r -> r !is RecipeForm }
@@ -335,6 +372,10 @@ private data class UserProduct(val identity: UserProductIdentity, val quantity: 
     RecipeNavKey
 
 @Serializable
+private data class UserRecipe(val identity: UserRecipeIdentity, val quantity: Quantity) :
+    RecipeNavKey
+
+@Serializable
 private data class EditOpenFoodFacts(
     val index: Int,
     val identity: OpenFoodFactsProductIdentity,
@@ -352,5 +393,12 @@ private data class EditFoodDataCentral(
 private data class EditUserProduct(
     val index: Int,
     val identity: UserProductIdentity,
+    val quantity: Quantity,
+) : RecipeNavKey
+
+@Serializable
+private data class EditUserRecipe(
+    val index: Int,
+    val identity: UserRecipeIdentity,
     val quantity: Quantity,
 ) : RecipeNavKey

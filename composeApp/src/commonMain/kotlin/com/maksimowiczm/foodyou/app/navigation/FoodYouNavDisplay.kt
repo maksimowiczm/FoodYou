@@ -228,6 +228,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                             backStack.add(UserRecipeDetails(id))
                         },
                         onEditUserProduct = { backStack.add(EditUserProduct(it)) },
+                        onEditUserRecipe = { backStack.add(EditRecipe(it)) },
                     )
                 }
                 entry<EditRecipe> {
@@ -235,6 +236,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         identity = it.identity,
                         onBack = { backStack.removeLastIf<EditRecipe>() },
                         onEditUserProduct = { id -> backStack.add(EditUserProduct(id)) },
+                        onEditUserRecipe = { id -> backStack.add(EditRecipe(id)) },
                     )
                 }
             },
