@@ -107,6 +107,7 @@ class UserRecipeIntegrationTest {
                         FoodCompositionComponent.Simple(
                             identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
                             name = initialProductName,
+                            image = null,
                             nutritionFacts = initialNutrition,
                             quantity = FoodComponentComponentQuantity.Weight(100.grams),
                         )
@@ -181,6 +182,7 @@ class UserRecipeIntegrationTest {
                                 identity =
                                     FoodCompositionComponentIdentity.UserProduct(productId.id),
                                 name = product.name,
+                                image = null,
                                 nutritionFacts = product.nutritionFacts,
                                 quantity =
                                     FoodComponentComponentQuantity.Serving(
@@ -239,6 +241,7 @@ class UserRecipeIntegrationTest {
                         FoodCompositionComponent.Simple(
                             identity = FoodCompositionComponentIdentity.OpenFoodFacts(barcode),
                             name = initialProductName,
+                            image = null,
                             nutritionFacts = initialNutrition,
                             quantity = FoodComponentComponentQuantity.Weight(100.grams),
                         )
@@ -305,6 +308,7 @@ class UserRecipeIntegrationTest {
                         FoodCompositionComponent.Simple(
                             identity = FoodCompositionComponentIdentity.FoodDataCentral(fdcId),
                             name = FoodName(fallback = initialProductName),
+                            image = null,
                             nutritionFacts = initialNutrition,
                             quantity = FoodComponentComponentQuantity.Weight(100.grams),
                         )
@@ -369,6 +373,7 @@ class UserRecipeIntegrationTest {
                         FoodCompositionComponent.Simple(
                             identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
                             name = FoodName(fallback = "Ingredient"),
+                            image = null,
                             nutritionFacts = childNutrition,
                             quantity = FoodComponentComponentQuantity.Weight(100.grams),
                         )
@@ -391,6 +396,7 @@ class UserRecipeIntegrationTest {
                         FoodCompositionComponent.Composite(
                             identity = FoodCompositionComponentIdentity.Recipe(childId.id),
                             name = childInitialName,
+                            image = null,
                             quantity = FoodComponentComponentQuantity.Weight(100.grams),
                             composition = childComposition,
                         )
@@ -443,6 +449,7 @@ class UserRecipeIntegrationTest {
                             FoodCompositionComponent.Simple(
                                 identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
                                 name = FoodName(fallback = "Ingredient"),
+                                image = null,
                                 nutritionFacts = NutritionFacts(),
                                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
                             )
@@ -465,6 +472,7 @@ class UserRecipeIntegrationTest {
                             FoodCompositionComponent.Composite(
                                 identity = FoodCompositionComponentIdentity.Recipe(childId.id),
                                 name = FoodName(fallback = "Child"),
+                                image = null,
                                 quantity =
                                     FoodComponentComponentQuantity.Serving(
                                         quantity = 2.0,
@@ -526,12 +534,14 @@ class UserRecipeIntegrationTest {
                         FoodCompositionComponent.Simple(
                             identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
                             name = FoodName(fallback = "To Delete"),
+                            image = null,
                             nutritionFacts = NutritionFacts(),
                             quantity = FoodComponentComponentQuantity.Weight(100.grams),
                         ),
                         FoodCompositionComponent.Simple(
                             identity = otherIngredientId,
                             name = FoodName(fallback = "Keep Me"),
+                            image = null,
                             nutritionFacts = NutritionFacts(),
                             quantity = FoodComponentComponentQuantity.Weight(100.grams),
                         ),
@@ -574,6 +584,7 @@ class UserRecipeIntegrationTest {
                         FoodCompositionComponent.Simple(
                             identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
                             name = FoodName(fallback = "Ingredient"),
+                            image = null,
                             nutritionFacts = NutritionFacts(),
                             quantity = FoodComponentComponentQuantity.Weight(100.grams),
                         )
@@ -597,12 +608,14 @@ class UserRecipeIntegrationTest {
                         FoodCompositionComponent.Composite(
                             identity = FoodCompositionComponentIdentity.Recipe(childId.id),
                             name = FoodName(fallback = "Child"),
+                            image = null,
                             quantity = FoodComponentComponentQuantity.Weight(100.grams),
                             composition = childComposition,
                         ),
                         FoodCompositionComponent.Simple(
                             identity = otherIngredientId,
                             name = FoodName(fallback = "Other"),
+                            image = null,
                             nutritionFacts = NutritionFacts(),
                             quantity = FoodComponentComponentQuantity.Weight(100.grams),
                         ),

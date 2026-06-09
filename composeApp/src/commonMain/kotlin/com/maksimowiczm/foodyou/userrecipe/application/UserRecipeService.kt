@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -109,6 +110,7 @@ class UserRecipeService(
         nutritionFacts: NutritionFacts,
         servingWeight: Weight? = null,
         packageWeight: Weight? = null,
+        image: FoodCompositionComponentImage? = null,
     ) = coroutineScope {
         compositionRepository
             .findRecipesUsing(identity)
@@ -125,6 +127,7 @@ class UserRecipeService(
                                         nutritionFacts = nutritionFacts,
                                         servingWeight = servingWeight,
                                         packageWeight = packageWeight,
+                                        image = image,
                                     )
                             )
                         } ?: emptyList()
@@ -140,6 +143,7 @@ class UserRecipeService(
         composition: FoodComposition,
         servingWeight: Weight? = null,
         packageWeight: Weight? = null,
+        image: FoodCompositionComponentImage? = null,
     ) = coroutineScope {
         compositionRepository
             .findRecipesUsing(identity)
@@ -156,6 +160,7 @@ class UserRecipeService(
                                         newComposition = composition,
                                         servingWeight = servingWeight,
                                         packageWeight = packageWeight,
+                                        image = image,
                                     )
                             )
                         } ?: emptyList()

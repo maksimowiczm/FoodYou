@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.common.domain.food
 
+import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.grams
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -18,11 +19,13 @@ class FoodCompositionUpdateServiceTest {
 
         val newName = FoodName(fallback = "Updated Name")
         val newNutrition = NutritionFacts(proteins = NutrientValue.Complete(50.grams))
+        val newImage = BlobDigest("new-image")
 
         val componentToUpdate =
             FoodCompositionComponent.Simple(
                 identity = targetId,
                 name = FoodName(fallback = "Old Name"),
+                image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -31,6 +34,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Simple(
                 identity = otherId,
                 name = FoodName(fallback = "Other"),
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -41,6 +45,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Composite(
                 identity = compositeId,
                 name = FoodName(fallback = "Composite"),
+                image = null,
                 quantity = FoodComponentComponentQuantity.Weight(200.grams),
                 composition = subComposition,
             )
@@ -52,6 +57,7 @@ class FoodCompositionUpdateServiceTest {
                 composition = mainComposition,
                 identity = targetId,
                 name = newName,
+                image = FoodCompositionComponentImage.Blob(newImage),
                 nutritionFacts = newNutrition,
                 servingWeight = null,
                 packageWeight = null,
@@ -64,11 +70,13 @@ class FoodCompositionUpdateServiceTest {
 
         assertEquals(newName, updatedSubSimple.name)
         assertEquals(newNutrition, updatedSubSimple.nutritionFacts)
+        assertEquals(FoodCompositionComponentImage.Blob(newImage), updatedSubSimple.image)
         // Verify other component remained unchanged
         val unchangedSubSimple =
             updatedComposite.composition.components[1] as FoodCompositionComponent.Simple
         assertEquals(otherId, unchangedSubSimple.identity)
         assertEquals("Other", unchangedSubSimple.name.fallback)
+        assertEquals(null, unchangedSubSimple.image)
     }
 
     @Test
@@ -80,6 +88,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Simple(
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -88,6 +97,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Simple(
                 identity = otherId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -107,6 +117,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Simple(
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -126,6 +137,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Simple(
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -135,6 +147,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Composite(
                 identity = compositeId,
                 name = dummyName,
+                image = null,
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
                 composition = subComposition,
             )
@@ -156,6 +169,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Simple(
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity =
                     FoodComponentComponentQuantity.Serving(quantity = 2.0, servingWeight = 30.grams),
@@ -168,6 +182,7 @@ class FoodCompositionUpdateServiceTest {
                 composition = composition,
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 servingWeight = newServingWeight,
                 packageWeight = null,
@@ -186,6 +201,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Simple(
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity =
                     FoodComponentComponentQuantity.Package(
@@ -201,6 +217,7 @@ class FoodCompositionUpdateServiceTest {
                 composition = composition,
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 servingWeight = null,
                 packageWeight = newPackageWeight,
@@ -221,6 +238,7 @@ class FoodCompositionUpdateServiceTest {
                     FoodCompositionComponent.Simple(
                         identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
                         name = dummyName,
+                        image = null,
                         nutritionFacts = NutritionFacts(),
                         quantity = FoodComponentComponentQuantity.Weight(100.grams),
                     )
@@ -230,6 +248,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Composite(
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 quantity =
                     FoodComponentComponentQuantity.Serving(
                         quantity = 1.0,
@@ -245,6 +264,7 @@ class FoodCompositionUpdateServiceTest {
                 composition = composition,
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 newComposition = subComposition,
                 servingWeight = newServingWeight,
                 packageWeight = null,
@@ -263,6 +283,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Simple(
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity =
                     FoodComponentComponentQuantity.Serving(quantity = 2.0, servingWeight = 30.grams),
@@ -274,6 +295,7 @@ class FoodCompositionUpdateServiceTest {
                 composition = composition,
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 servingWeight = null,
                 packageWeight = null,
@@ -292,6 +314,7 @@ class FoodCompositionUpdateServiceTest {
             FoodCompositionComponent.Simple(
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity =
                     FoodComponentComponentQuantity.Package(
@@ -306,6 +329,7 @@ class FoodCompositionUpdateServiceTest {
                 composition = composition,
                 identity = targetId,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 servingWeight = null,
                 packageWeight = null,

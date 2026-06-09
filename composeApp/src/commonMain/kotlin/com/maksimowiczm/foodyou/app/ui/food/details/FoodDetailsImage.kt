@@ -20,25 +20,21 @@ import com.valentinilk.shimmer.shimmer
 internal fun FoodDetailsImage(
     image: FileUri?,
     showPlaceholder: Boolean,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
 ) {
+    val imageModifier =
+        modifier
+            .fillMaxWidth()
+            .aspectRatio(16f / 9f)
+            .padding(horizontal = 32.dp)
+            .clip(MaterialTheme.shapes.medium)
+
     when {
         image != null ->
-            image.Image(
-                shimmer = rememberShimmer(ShimmerBounds.View),
-                modifier = modifier.fillMaxWidth().aspectRatio(16f / 9f).padding(horizontal = 32.dp),
-            )
+            image.Image(shimmer = rememberShimmer(ShimmerBounds.View), modifier = imageModifier)
 
         showPlaceholder ->
-            Spacer(
-                modifier
-                    .shimmer()
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-                    .padding(horizontal = 32.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
-            )
+            Spacer(imageModifier.shimmer().background(MaterialTheme.colorScheme.secondaryContainer))
 
         else -> Unit
     }

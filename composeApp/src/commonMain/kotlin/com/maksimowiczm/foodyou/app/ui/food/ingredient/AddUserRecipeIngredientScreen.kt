@@ -178,7 +178,7 @@ private fun AddUserRecipeIngredientScreen(
             state = lazyListState,
             contentPadding = contentPadding.add(bottom = 128.dp),
         ) {
-            item { FoodDetailsHeadline(headline = headline, isRecipe = true) }
+            item { FoodDetailsHeadline(headline = headline) }
             item { Spacer(Modifier.height(16.dp)) }
             item {
                 FoodDetailsImage(

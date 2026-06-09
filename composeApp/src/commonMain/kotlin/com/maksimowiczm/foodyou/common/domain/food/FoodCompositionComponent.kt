@@ -15,6 +15,8 @@ sealed interface FoodCompositionComponent {
     val identity: FoodCompositionComponentIdentity
     val name: FoodName
 
+    val image: FoodCompositionComponentImage?
+
     val nutritionFacts: NutritionFacts
 
     val measuredNutritionFacts: NutritionFacts
@@ -28,6 +30,7 @@ sealed interface FoodCompositionComponent {
     data class Simple(
         override val identity: FoodCompositionComponentIdentity.Leaf,
         override val name: FoodName,
+        override val image: FoodCompositionComponentImage?,
         override val nutritionFacts: NutritionFacts,
         override val quantity: FoodComponentComponentQuantity,
     ) : FoodCompositionComponent {
@@ -42,6 +45,7 @@ sealed interface FoodCompositionComponent {
     data class Composite(
         override val identity: FoodCompositionComponentIdentity.Composite,
         override val name: FoodName,
+        override val image: FoodCompositionComponentImage?,
         override val quantity: FoodComponentComponentQuantity,
         val composition: FoodComposition,
     ) : FoodCompositionComponent {

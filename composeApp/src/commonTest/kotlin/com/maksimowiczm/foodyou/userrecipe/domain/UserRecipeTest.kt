@@ -26,6 +26,7 @@ class UserRecipeTest {
                     FoodCompositionComponent.Simple(
                         identity = FoodCompositionComponentIdentity.OpenFoodFacts("123"),
                         name = FoodName(fallback = "Apple"),
+                        image = null,
                         nutritionFacts = NutritionFacts(),
                         quantity = FoodComponentComponentQuantity.Weight(100.grams),
                     )
@@ -145,6 +146,7 @@ class UserRecipeTest {
                     FoodCompositionComponent.Composite(
                         identity = FoodCompositionComponentIdentity.Recipe(recipeId),
                         name = FoodName(fallback = "Self"),
+                        image = null,
                         quantity = FoodComponentComponentQuantity.Weight(100.grams),
                         composition = composition, // This composition is fine by itself
                     )

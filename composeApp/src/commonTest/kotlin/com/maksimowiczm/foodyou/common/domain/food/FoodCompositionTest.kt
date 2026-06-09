@@ -17,6 +17,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Simple(
                 identity = dummyIdentity,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -24,6 +25,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Simple(
                 identity = dummyIdentity,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(250.grams),
             )
@@ -40,6 +42,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Simple(
                 identity = dummyIdentity,
                 name = FoodName(fallback = "A"),
+                image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(50.grams),
             )
@@ -48,6 +51,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Simple(
                 identity = dummyIdentity,
                 name = FoodName(fallback = "B"),
+                image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(20.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(150.grams),
             )
@@ -73,6 +77,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Simple(
                 identity = dummyIdentity,
                 name = FoodName(fallback = "Sub"),
+                image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -83,6 +88,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Composite(
                 identity = FoodCompositionComponentIdentity.Recipe(Uuid.random()),
                 name = FoodName(fallback = "Composite"),
+                image = null,
                 quantity = FoodComponentComponentQuantity.Weight(50.grams),
                 composition = subComposition,
             )
@@ -90,6 +96,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Simple(
                 identity = dummyIdentity,
                 name = FoodName(fallback = "Other"),
+                image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(20.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(50.grams),
             )
@@ -119,6 +126,7 @@ class FoodCompositionTest {
                     FoodCompositionComponent.Simple(
                         identity = id1,
                         name = dummyName,
+                        image = null,
                         nutritionFacts = NutritionFacts(),
                         quantity = FoodComponentComponentQuantity.Weight(100.grams),
                     )
@@ -129,6 +137,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Composite(
                 identity = id3,
                 name = dummyName,
+                image = null,
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
                 composition = subComposition,
             )
@@ -137,6 +146,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Simple(
                 identity = id2,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -145,6 +155,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Simple(
                 identity = id4,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -162,6 +173,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Simple(
                 identity = dummyIdentity,
                 name = dummyName,
+                image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
             )
@@ -174,6 +186,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Composite(
                 identity = recipeId,
                 name = dummyName,
+                image = null,
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
                 composition = compositionWithCyclePlaceholder,
             )
@@ -186,6 +199,7 @@ class FoodCompositionTest {
             FoodCompositionComponent.Composite(
                 identity = recipeId,
                 name = dummyName,
+                image = null,
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
                 composition = compositionContainingRecipeId,
             )

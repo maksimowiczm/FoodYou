@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCreatedEvent
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeDeletedEvent
@@ -21,6 +22,7 @@ class NestedRecipeSynchronizer(private val userRecipeService: UserRecipeService)
                     name = event.recipe.name,
                     composition = event.recipe.composition,
                     servingWeight = event.recipe.servingWeight,
+                    image = event.recipe.image?.let(FoodCompositionComponentImage::Blob),
                 )
 
             is UserRecipeDeletedEvent -> {

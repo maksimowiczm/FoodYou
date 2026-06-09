@@ -22,13 +22,19 @@ object FoodCompositionUpdateService {
         nutritionFacts: NutritionFacts,
         servingWeight: Weight?,
         packageWeight: Weight?,
+        image: FoodCompositionComponentImage?,
     ): FoodComposition =
         transform(composition, identity) { component ->
             check(component is FoodCompositionComponent.Simple) {
                 "Expected a Simple component for identity $identity, but found ${component::class}"
             }
             val updatedQuantity = updateQuantity(component.quantity, servingWeight, packageWeight)
-            component.copy(name = name, nutritionFacts = nutritionFacts, quantity = updatedQuantity)
+            component.copy(
+                name = name,
+                nutritionFacts = nutritionFacts,
+                quantity = updatedQuantity,
+                image = image,
+            )
         } ?: composition
 
     /**
@@ -42,13 +48,19 @@ object FoodCompositionUpdateService {
         newComposition: FoodComposition,
         servingWeight: Weight?,
         packageWeight: Weight?,
+        image: FoodCompositionComponentImage?,
     ): FoodComposition =
         transform(composition, identity) { component ->
             check(component is FoodCompositionComponent.Composite) {
                 "Expected a Composite component for identity $identity, but found ${component::class}"
             }
             val updatedQuantity = updateQuantity(component.quantity, servingWeight, packageWeight)
-            component.copy(name = name, composition = newComposition, quantity = updatedQuantity)
+            component.copy(
+                name = name,
+                composition = newComposition,
+                quantity = updatedQuantity,
+                image = image,
+            )
         } ?: composition
 
     /**

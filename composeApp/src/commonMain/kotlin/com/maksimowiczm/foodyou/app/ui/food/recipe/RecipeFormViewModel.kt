@@ -4,13 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.common.RemoteData
-import com.maksimowiczm.foodyou.common.domain.BlobDigest
-import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
@@ -149,6 +148,7 @@ class RecipeFormViewModel(
                                 FoodCompositionComponent.Composite(
                                     identity = id,
                                     name = it.name,
+                                    image = it.image?.let(FoodCompositionComponentImage::Blob),
                                     quantity = it.toComponentQuantity(quantity),
                                     composition = it.composition,
                                 )
@@ -164,6 +164,7 @@ class RecipeFormViewModel(
                                 FoodCompositionComponent.Simple(
                                     identity = id,
                                     name = FoodName(fallback = it.name),
+                                    image = null,
                                     nutritionFacts = it.nutritionFacts,
                                     quantity = it.toComponentQuantity(quantity),
                                 )
@@ -179,10 +180,13 @@ class RecipeFormViewModel(
                                 FoodCompositionComponent.Simple(
                                     identity = id,
                                     name = it.name,
+                                    image =
+                                        (it.thumbnail ?: it.image)?.let(
+                                            FoodCompositionComponentImage::Uri
+                                        ),
                                     nutritionFacts = it.nutritionFacts,
                                     quantity = it.toComponentQuantity(quantity),
-                                ),
-                            imageFile = it.thumbnail ?: it.image,
+                                )
                         )
                     }
                 }
@@ -195,10 +199,10 @@ class RecipeFormViewModel(
                                 FoodCompositionComponent.Simple(
                                     identity = id,
                                     name = it.name,
+                                    image = it.image?.let(FoodCompositionComponentImage::Blob),
                                     nutritionFacts = it.nutritionFacts,
                                     quantity = it.toComponentQuantity(quantity),
-                                ),
-                            imageBlob = it.image,
+                                )
                         )
                     }
                 }
@@ -328,10 +332,6 @@ data class IngredientEntry(
     val quantity: Quantity,
 )
 
-data class ResolvedIngredient(
-    val component: FoodCompositionComponent,
-    val imageFile: FileUri? = null,
-    val imageBlob: BlobDigest? = null,
-)
+data class ResolvedIngredient(val component: FoodCompositionComponent)
 
 data class IngredientItemState(val entry: IngredientEntry, val resolved: ResolvedIngredient?)

@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.userrecipe.application
 
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductUpdatedEvent
 
@@ -15,6 +16,10 @@ class OpenFoodFactsSynchronizer(private val userRecipeService: UserRecipeService
             nutritionFacts = event.product.nutritionFacts,
             servingWeight = (event.product.servingQuantity as? AbsoluteQuantity.Weight)?.weight,
             packageWeight = (event.product.packageQuantity as? AbsoluteQuantity.Weight)?.weight,
+            image =
+                (event.product.thumbnail ?: event.product.image)?.let(
+                    FoodCompositionComponentImage::Uri
+                ),
         )
     }
 }

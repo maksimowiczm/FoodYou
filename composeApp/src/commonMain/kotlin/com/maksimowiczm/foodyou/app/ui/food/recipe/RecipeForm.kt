@@ -62,6 +62,7 @@ import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
@@ -317,18 +318,19 @@ private fun IngredientListItem(
     val nameSelector = LocalFoodNameSelector.current
     val headline = remember(component.name, nameSelector) { nameSelector.select(component.name) }
 
-    val image: @Composable (() -> Unit)? =
-        when {
-            resolved.imageBlob != null -> {
-                @Composable { resolveBlob(resolved.imageBlob).Image(shimmer, Modifier.size(56.dp)) }
+    val image: @Composable (() -> Unit)? = run {
+        when (val image = component.image) {
+            is FoodCompositionComponentImage.Blob -> {
+                @Composable { resolveBlob(image.blob).Image(shimmer, Modifier.size(56.dp)) }
             }
 
-            resolved.imageFile != null -> {
-                @Composable { resolved.imageFile.Image(shimmer, Modifier.size(56.dp)) }
+            is FoodCompositionComponentImage.Uri -> {
+                @Composable { image.uri.Image(shimmer, Modifier.size(56.dp)) }
             }
 
-            else -> null
+            null -> null
         }
+    }
 
     RecipeIngredientListItem(
         headline = headline,
