@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.common.domain.FileUri
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.div
+import io.github.vinceglb.filekit.exists
 import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.write
 import okio.ByteString.Companion.toByteString
@@ -15,7 +16,7 @@ internal class FileKitBlobStorage : BlobStorage {
     override suspend fun store(bytes: ByteArray): BlobDigest {
         val digest = "sha256:" + bytes.toByteString().sha256().hex()
         val file = FileKit.filesDir / digest
-        file.write(bytes)
+        if (!file.exists()) file.write(bytes)
         return BlobDigest(digest)
     }
 
