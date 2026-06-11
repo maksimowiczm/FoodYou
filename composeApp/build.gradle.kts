@@ -14,17 +14,15 @@ room { schemaDirectory("$projectDir/schemas") }
 
 kotlin {
     compilerOptions {
-        optIn.add("androidx.compose.ui.ExperimentalComposeUiApi")
+        allWarningsAsErrors = true
+
         optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
         optIn.add("kotlin.time.ExperimentalTime")
         optIn.add("kotlinx.coroutines.ExperimentalCoroutinesApi")
-        optIn.add("kotlin.uuid.ExperimentalUuidApi")
         optIn.add("kotlin.contracts.ExperimentalContracts")
         freeCompilerArgs.add("-Xexpect-actual-classes")
-        freeCompilerArgs.add("-Xcontext-parameters")
         freeCompilerArgs.add("-Xreturn-value-checker=check")
-        freeCompilerArgs.add("-Xexplicit-backing-fields")
     }
 
     android {
