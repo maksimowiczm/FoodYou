@@ -39,7 +39,7 @@ requery-sqlite-android = "3.49.0"
 skydoves-colorpicker-compose = "1.1.3"
 touchlab-kermit = "2.1.0"
 valentinilk-shimmer = "1.3.3"
-vinceglb-filekit = "0.13.0"
+vinceglb-filekit = "0.14.1"
 
 [libraries]
 androidx-activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity-compose" }
