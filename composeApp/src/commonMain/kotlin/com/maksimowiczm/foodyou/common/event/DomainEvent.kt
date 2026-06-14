@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.common.event
 
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 /**
  * Base interface for all domain events in the system.
@@ -9,6 +10,6 @@ import kotlin.time.Instant
  * immutable and captures the state change that occurred at a specific point in time.
  */
 interface DomainEvent {
-    /** The timestamp when the event was created. */
+    val id: Uuid
     val timestamp: Instant
 }

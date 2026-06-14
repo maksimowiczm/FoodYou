@@ -21,6 +21,7 @@ internal object DomainEventMapper {
 
     fun toRoomStoredEventEntity(event: DomainEvent, stream: String): DomainEventEntity =
         DomainEventEntity(
+            id = event.id,
             eventStream = stream,
             payloadJson =
                 roomEventJson.encodeToString(PolymorphicSerializer(DomainEvent::class), event),

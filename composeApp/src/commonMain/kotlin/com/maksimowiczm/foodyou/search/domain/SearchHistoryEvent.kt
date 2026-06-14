@@ -3,13 +3,14 @@ package com.maksimowiczm.foodyou.search.domain
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.InstantComponentSerializer
 
-@Serializable sealed interface SearchHistoryEvent : DomainEvent
+@Serializable sealed class SearchHistoryEvent(override val id: Uuid = Uuid.random()) : DomainEvent
 
 @Serializable
 data class SearchQueryRecordedEvent(
     val query: SearchQuery.Text,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
-) : SearchHistoryEvent
+) : SearchHistoryEvent()

@@ -10,18 +10,20 @@ internal interface EventStoreDao {
 
     @Query(
         """
-        SELECT * FROM EventStore
+        SELECT *
+        FROM EventStore
         WHERE eventStream = :stream
-        ORDER BY id ASC
+        ORDER BY occurredAtEpochMs ASC
         """
     )
     suspend fun getAllByStream(stream: String): List<DomainEventEntity>
 
     @Query(
         """
-        SELECT * FROM EventStore
+        SELECT *
+        FROM EventStore
         WHERE eventStream = :stream
-        ORDER BY id ASC
+        ORDER BY occurredAtEpochMs ASC
         """
     )
     fun observeAllByStream(stream: String): Flow<List<DomainEventEntity>>
