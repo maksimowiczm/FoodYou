@@ -67,6 +67,22 @@ interface DateFormatter {
     fun formatDateTime(dateTime: LocalDateTime): String
 }
 
+expect class DateFormatterImpl : DateFormatter {
+    override val weekDayNamesShort: List<String>
+
+    override fun formatMonthYear(date: LocalDate): String
+
+    override fun formatDate(date: LocalDate): String
+
+    override fun formatDateShort(date: LocalDate): String
+
+    override fun formatDateSuperShort(date: LocalDate): String
+
+    override fun formatTime(time: LocalTime): String
+
+    override fun formatDateTime(dateTime: LocalDateTime): String
+}
+
 private val defaultDateFormatter: DateFormatter =
     object : DateFormatter {
         override val weekDayNamesShort: List<String>

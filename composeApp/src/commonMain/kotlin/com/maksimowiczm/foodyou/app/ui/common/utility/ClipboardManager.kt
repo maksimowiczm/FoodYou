@@ -19,6 +19,12 @@ interface ClipboardManager {
     fun paste(): String?
 }
 
+expect class ClipboardManagerImpl : ClipboardManager {
+    override fun copy(label: String, text: String)
+
+    override fun paste(): String?
+}
+
 private val defaultClipboardManager: ClipboardManager =
     object : ClipboardManager {
         override fun copy(label: String, text: String) = Unit

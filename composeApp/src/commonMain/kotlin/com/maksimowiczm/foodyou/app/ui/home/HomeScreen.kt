@@ -143,7 +143,7 @@ fun HomeScreen(
         remember(initialQuery) {
             listOfNotNull(HomeNavKey.Home, if (initialQuery != null) HomeNavKey.Search else null)
         }
-    val backStack = rememberNavBackStack(config, *elements.toTypedArray())
+    val backStack = rememberNavBackStack(config, *elements.toTypedArray<NavKey>())
 
     val isHome by remember { derivedStateOf { backStack.last() is HomeNavKey.Home } }
     val isSearch =

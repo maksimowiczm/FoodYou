@@ -8,27 +8,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
-import com.maksimowiczm.foodyou.app.ui.common.utility.AndroidClipboardManager
-import com.maksimowiczm.foodyou.app.ui.common.utility.AndroidDateFormatter
 import com.maksimowiczm.foodyou.app.ui.common.utility.AppConfigProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.BlobResolverProvider
+import com.maksimowiczm.foodyou.app.ui.common.utility.ClipboardManagerImpl
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClockProvider
+import com.maksimowiczm.foodyou.app.ui.common.utility.DateFormatterImpl
 import com.maksimowiczm.foodyou.app.ui.common.utility.DateFormatterProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelectorProvider
 import com.maksimowiczm.foodyou.common.domain.BlobResolver
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
-import com.maksimowiczm.foodyou.common.infrastructure.defaultLocale
 import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
-import foodyou.app.generated.resources.*
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
 import kotlin.time.Clock
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 
 abstract class FoodYouAbstractActivity : AppCompatActivity() {
@@ -44,11 +41,8 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
 
         FileKit.init(this)
 
-        val clipboardManager =
-            AndroidClipboardManager(this) {
-                runBlocking { org.jetbrains.compose.resources.getString(Res.string.neutral_copied) }
-            }
-        val dateFormatter = AndroidDateFormatter(this) { defaultLocale }
+        val clipboardManager = ClipboardManagerImpl(this)
+        val dateFormatter = DateFormatterImpl(this)
 
         with<AppCompatActivity, Unit>(this) {
             setContent {

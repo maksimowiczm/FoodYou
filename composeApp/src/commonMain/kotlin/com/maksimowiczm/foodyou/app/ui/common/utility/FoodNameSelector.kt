@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.common.utility
 import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
@@ -10,6 +11,9 @@ import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 /**
  * Service for selecting appropriate food names based on user locale preferences.
@@ -33,6 +37,39 @@ interface FoodNameSelector {
      * @return A flow emitting the preferred language for food names
      */
     fun observeLanguage(): Flow<Language>
+}
+
+internal class FoodNameSelectorImpl(private val systemDetails: SystemDetails) : FoodNameSelector {
+    override fun select(foodName: FoodName): String {
+        val tag = runBlocking { systemDetails.languageTag.first() }
+        val language = localizedLanguage(tag) ?: Language.English
+        return foodName[language] ?: foodName.fallback
+    }
+
+    override fun observeLanguage(): Flow<Language> =
+        systemDetails.languageTag.map { localizedLanguage(it) ?: Language.English }
+
+    private fun localizedLanguage(tag: String): Language? =
+        when (tag.take(2)) {
+            "en" -> Language.English
+            "ca" -> Language.Catalan
+            "cs" -> Language.Czech
+            "da" -> Language.Danish
+            "de" -> Language.German
+            "es" -> Language.Spanish
+            "fr" -> Language.French
+            "it" -> Language.Italian
+            "hu" -> Language.Hungarian
+            "nl" -> Language.Dutch
+            "pl" -> Language.Polish
+            "pt" -> Language.PortugueseBrazil
+            "tr" -> Language.Turkish
+            "ru" -> Language.Russian
+            "uk" -> Language.Ukrainian
+            "ar" -> Language.Arabic
+            "zh" -> Language.ChineseSimplified
+            else -> null
+        }
 }
 
 fun OpenFoodFactsProduct.headline(nameSelector: FoodNameSelector) = buildString {

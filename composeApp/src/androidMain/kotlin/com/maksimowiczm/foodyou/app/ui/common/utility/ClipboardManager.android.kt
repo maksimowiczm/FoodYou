@@ -4,32 +4,30 @@ import android.content.ClipData
 import android.content.Context
 import android.os.Build
 import android.widget.Toast
+import foodyou.app.generated.resources.*
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.getString
 
-fun interface CopyMessageProvider {
-    fun getCopyMessage(): String
-}
-
-class AndroidClipboardManager(
+actual class ClipboardManagerImpl(
     private val context: Context,
-    private val copyMessageProvider: CopyMessageProvider,
+    private val copyMessageProvider: () -> String = {
+        runBlocking { getString(Res.string.neutral_copied) }
+    },
 ) : ClipboardManager {
     private val clipboard: android.content.ClipboardManager
         get() =
             context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
 
-    private val copyMessage: String
-        get() = copyMessageProvider.getCopyMessage()
-
-    override fun copy(label: String, text: String) {
+    actual override fun copy(label: String, text: String) {
         val clip = ClipData.newPlainText(label, text)
         clipboard.setPrimaryClip(clip)
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
-            Toast.makeText(context, copyMessage, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, copyMessageProvider(), Toast.LENGTH_SHORT).show()
         }
     }
 
-    override fun paste(): String? =
+    actual override fun paste(): String? =
         runCatching {
                 val clip = clipboard.primaryClip
 

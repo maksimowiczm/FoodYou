@@ -3,6 +3,8 @@ package com.maksimowiczm.foodyou.app.ui
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import coil3.ImageLoader
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.setSingletonImageLoaderFactory
@@ -23,13 +25,31 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun FoodYouApp(userQuery: String?) {
+fun FoodYouApp(
+    userQuery: String?,
+    backStack: NavBackStack<NavKey> = rememberFoodYouNavBackStack(FoodYouNavHostRoute.Home(null)),
+) {
     val appViewModel: AppViewModel = koinViewModel()
     val networkConfig: NetworkConfig = koinInject()
 
     val nutrientsOrder = appViewModel.nutrientsOrder.collectAsStateWithLifecycle().value
     val energyUnit = appViewModel.energyUnit.collectAsStateWithLifecycle().value
     val appPage by appViewModel.appPage.collectAsStateWithLifecycle()
+
+    LaunchedEffect(backStack, userQuery) {
+        if (userQuery == null) return@LaunchedEffect
+
+        val home = backStack.first() as? FoodYouNavHostRoute.Home ?: return@LaunchedEffect
+
+        if (home.initialQuery != userQuery) {
+            while (backStack.last() !is FoodYouNavHostRoute.Home) {
+                backStack.safeRemoveLast()
+            }
+
+            backStack.safeRemoveLast()
+            backStack.add(FoodYouNavHostRoute.Home(userQuery))
+        }
+    }
 
     setSingletonImageLoaderFactory { context ->
         val httpClient = HttpClient { install(UserAgent) { agent = networkConfig.userAgent } }
@@ -53,29 +73,7 @@ fun FoodYouApp(userQuery: String?) {
                         AppPage.Onboarding ->
                             Onboarding(onFinish = appViewModel::onFinishOnboarding)
 
-                        AppPage.Main -> {
-                            val backStack =
-                                rememberFoodYouNavBackStack(FoodYouNavHostRoute.Home(null))
-
-                            LaunchedEffect(backStack, userQuery) {
-                                if (userQuery == null) return@LaunchedEffect
-
-                                val home =
-                                    backStack.first() as? FoodYouNavHostRoute.Home
-                                        ?: return@LaunchedEffect
-
-                                if (home.initialQuery != userQuery) {
-                                    while (backStack.last() !is FoodYouNavHostRoute.Home) {
-                                        backStack.safeRemoveLast()
-                                    }
-
-                                    backStack.safeRemoveLast()
-                                    backStack.add(FoodYouNavHostRoute.Home(userQuery))
-                                }
-                            }
-
-                            FoodYouNavDisplay(backStack)
-                        }
+                        AppPage.Main -> FoodYouNavDisplay(backStack)
                     }
                 }
             }
