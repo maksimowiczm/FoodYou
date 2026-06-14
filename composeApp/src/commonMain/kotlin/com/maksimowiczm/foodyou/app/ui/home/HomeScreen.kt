@@ -297,7 +297,7 @@ fun HomeScreen(
                                     item {
                                         CalendarCard(
                                             homeState = homeState,
-                                            modifier = Modifier.padding(horizontal = 8.dp),
+                                            contentPadding = PaddingValues(horizontal = 8.dp),
                                         )
                                     }
                                 }
@@ -369,34 +369,37 @@ fun HomeScreen(
 
             NavDisplay(sceneState = sceneState, navigationEventState = navigationEventState)
 
-            Box(
-                Modifier.fillMaxWidth()
-                    .padding(top = contentPadding.calculateTopPadding())
-                    .graphicsLayer {
-                        alpha =
-                            when {
-                                isHome -> 0f
-                                backProgress.value != 0f ->
-                                    (1 - backProgress.value / Crossfade.PROGRESS_THRESHOLD)
+            if (!isHome) {
+                Box(
+                    Modifier.fillMaxWidth()
+                        .padding(top = contentPadding.calculateTopPadding())
+                        .graphicsLayer {
+                            alpha =
+                                when {
+                                    isHome -> 0f
+                                    backProgress.value != 0f ->
+                                        (1 - backProgress.value / Crossfade.PROGRESS_THRESHOLD)
 
-                                else -> isSearch.value
-                            }
-                        translationY = (1 - isSearch.value) * size.height
-                        filterChipsHeight.floatValue = size.height
-                    }
-            ) {
-                SearchFilters(
-                    collections = collections,
-                    selected = selectedCollection.value,
-                    onCollection = {
-                        selectedCollection.value = it
-                        if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
-                    },
-                    contentPadding =
-                        PaddingValues(horizontal = 16.dp) +
-                            WindowInsets.statusBars.asPaddingValues().horizontal() +
-                            WindowInsets.displayCutout.asPaddingValues().horizontal(),
-                )
+                                    else -> isSearch.value
+                                }
+                            translationY = (1 - isSearch.value) * size.height
+                            filterChipsHeight.floatValue = size.height
+                        }
+                ) {
+                    SearchFilters(
+                        collections = collections,
+                        selected = selectedCollection.value,
+                        onCollection = {
+                            selectedCollection.value = it
+                            if (backStack.last() !is HomeNavKey.Search)
+                                backStack.add(HomeNavKey.Search)
+                        },
+                        contentPadding =
+                            PaddingValues(horizontal = 16.dp) +
+                                WindowInsets.statusBars.asPaddingValues().horizontal() +
+                                WindowInsets.displayCutout.asPaddingValues().horizontal(),
+                    )
+                }
             }
         }
     }

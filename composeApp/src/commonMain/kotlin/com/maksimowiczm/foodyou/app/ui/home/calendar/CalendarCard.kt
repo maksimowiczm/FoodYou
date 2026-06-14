@@ -1,55 +1,55 @@
 package com.maksimowiczm.foodyou.app.ui.home.calendar
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.confirm
+import com.maksimowiczm.foodyou.app.ui.common.extension.horizontal
 import com.maksimowiczm.foodyou.app.ui.common.extension.minus
 import com.maksimowiczm.foodyou.app.ui.common.extension.now
+import com.maksimowiczm.foodyou.app.ui.common.extension.plus
 import com.maksimowiczm.foodyou.app.ui.common.extension.segmentFrequentTick
+import com.maksimowiczm.foodyou.app.ui.common.extension.vertical
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
-import com.maksimowiczm.foodyou.app.ui.common.utility.LocalClock
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalDateFormatter
-import com.maksimowiczm.foodyou.app.ui.home.common.FoodYouHomeCard
-import com.maksimowiczm.foodyou.app.ui.home.common.FoodYouHomeCardDefaults
 import com.maksimowiczm.foodyou.app.ui.home.common.HomeState
 import com.maksimowiczm.foodyou.common.extension.observeDate
 import foodyou.app.generated.resources.*
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.combine
@@ -57,37 +57,43 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun CalendarCard(homeState: HomeState, modifier: Modifier = Modifier) {
-    val clock = LocalClock.current
-    val today by clock.observeDate().collectAsStateWithLifecycle(LocalDate.now())
+internal fun CalendarCard(
+    homeState: HomeState,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+) {
+    val dateFlow = remember { Clock.System.observeDate() }
+    val today by dateFlow.collectAsStateWithLifecycle(LocalDate.now())
 
-    val state =
-        rememberCalendarCardState(referenceDate = today, selectedDate = homeState.selectedDate)
+    val state = rememberCalendarState(homeState.selectedDate, today)
 
-    LaunchedEffect(state.selectedDate) {
-        val date = state.selectedDate
-        if (date != homeState.selectedDate) {
-            homeState.selectDate(date)
-        }
-    }
-
-    CalendarCard(modifier = modifier, state = state)
+    CalendarCard(
+        state = state,
+        onSelectDate = homeState::selectDate,
+        modifier = modifier,
+        contentPadding = contentPadding,
+    )
 }
 
 @Composable
 private fun CalendarCard(
+    state: CalendarCardState,
+    onSelectDate: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
-    state: CalendarCardState = rememberCalendarCardState(),
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
+    val formatter = LocalDateFormatter.current
     val hapticFeedback = LocalHapticFeedback.current
+    val scope = rememberCoroutineScope()
+    val showDateDialog = rememberSaveable { mutableStateOf(false) }
 
     // Tick when user scrolls
-    LaunchedEffect(state) {
+    LaunchedEffect(state.listState) {
         combine(
                 snapshotFlow { state.listState.isScrollInProgress },
                 snapshotFlow { state.listState.firstVisibleItemIndex },
@@ -97,155 +103,92 @@ private fun CalendarCard(
             .launchIn(this)
     }
 
-    val scope = rememberCoroutineScope()
-    val dateFormatter = LocalDateFormatter.current
-    val buttonHeight = ButtonDefaults.ExtraSmallContainerHeight
-
-    var showDatePicker by rememberSaveable { mutableStateOf(false) }
-    if (showDatePicker) {
+    if (showDateDialog.value) {
         CalendarCardDatePickerDialog(
-            calendarState = state,
-            onDismissRequest = { showDatePicker = false },
-            onSelectDate = { date ->
-                scope.launch {
-                    state.selectDate(date)
-                    hapticFeedback.confirm()
-                    state.snapScrollTo(date)
-                }
+            state = state,
+            referenceDate = state.referenceDate,
+            onDismissRequest = { showDateDialog.value = false },
+            onSelectDate = {
+                onSelectDate(it)
+                hapticFeedback.confirm()
+                scope.launch { state.animateScrollTo(it) }
+                showDateDialog.value = false
             },
         )
     }
 
-    FoodYouHomeCard(onClick = { showDatePicker = true }, modifier = modifier) {
-        Column(modifier = Modifier.padding(vertical = 16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).height(buttonHeight),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = dateFormatter.formatMonthYear(state.firstVisibleDate),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                Spacer(Modifier.weight(1f))
-                AnimatedVisibility(
-                    !state.referenceDateVisible || state.selectedDate != state.referenceDate,
-                    enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
-                    exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
+    Column(
+        modifier = modifier.padding(contentPadding.vertical()),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(
+            text = formatter.formatMonthYear(state.firstVisibleDate.value),
+            style = MaterialTheme.typography.headlineMedium,
+            modifier =
+                Modifier.padding(contentPadding.horizontal())
+                    .clickable(
+                        onClick = { showDateDialog.value = true },
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClickLabel = stringResource(Res.string.action_choose_other_date),
+                    ),
+        )
+        LazyRow(
+            modifier = Modifier.height(72.dp),
+            state = state.listState,
+            contentPadding = contentPadding,
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            items(Int.MAX_VALUE) { day ->
+                val date = remember(day) { CalendarCardState.zero + day.days }
+                val selected = date == state.selectedDate
+                val height =
+                    animateDpAsState(
+                        if (selected) 72.dp else 60.dp,
+                        MaterialTheme.motionScheme.fastSpatialSpec(),
+                    )
+                val containerColor =
+                    if (date == state.referenceDate) MaterialTheme.colorScheme.secondaryContainer
+                    else MaterialTheme.colorScheme.surfaceContainer
+                val colors =
+                    ToggleButtonDefaults.toggleButtonColors(
+                        containerColor = containerColor,
+                        contentColor = contentColorFor(containerColor),
+                        checkedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                        checkedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                val padding =
+                    animateIntAsState(
+                        if (selected) 28 else 12,
+                        MaterialTheme.motionScheme.fastEffectsSpec(),
+                    )
+                ToggleButton(
+                    checked = selected,
+                    onCheckedChange = {
+                        onSelectDate(date)
+                        hapticFeedback.confirm()
+                    },
+                    modifier = Modifier.height(height.value).widthIn(min = height.value),
+                    shapes = ToggleButtonDefaults.shapes(MaterialTheme.shapes.medium, CircleShape),
+                    colors = colors,
+                    contentPadding = PaddingValues(horizontal = padding.value.dp),
                 ) {
-                    TextButton(
-                        onClick = {
-                            scope.launch {
-                                state.selectDate(state.referenceDate)
-                                hapticFeedback.confirm()
-                                state.animateScrollTo(state.referenceDate)
-                            }
-                        },
-                        shapes = ButtonDefaults.shapesFor(buttonHeight),
-                        modifier = Modifier.height(buttonHeight),
-                        contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.action_today),
-                            style = ButtonDefaults.textStyleFor(buttonHeight),
-                        )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        CompositionLocalProvider(
+                            LocalTextStyle provides MaterialTheme.typography.labelLarge
+                        ) {
+                            val text =
+                                remember(date, formatter) {
+                                    buildString {
+                                        appendLine(date.day)
+                                        append(formatter.weekDayNamesShort[date.dayOfWeek.ordinal])
+                                    }
+                                }
+                            Text(text = text, textAlign = TextAlign.Center)
+                        }
                     }
                 }
-            }
-            Spacer(Modifier.height(8.dp))
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                state = state.listState,
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(state.daysCount) { index ->
-                    val date = LocalDate.fromEpochDays(index)
-
-                    CalendarLazyRowItem(
-                        date = date,
-                        state = state,
-                        onClick = {
-                            state.selectDate(date)
-                            hapticFeedback.confirm()
-                        },
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun CalendarLazyRowItem(
-    date: LocalDate,
-    state: CalendarCardState,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val containerColor by
-        animateColorAsState(
-            when (date) {
-                state.selectedDate -> MaterialTheme.colorScheme.primary
-                state.referenceDate -> MaterialTheme.colorScheme.secondaryContainer
-                else -> FoodYouHomeCardDefaults.color
-            },
-            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
-        )
-    val contentColor by
-        animateColorAsState(
-            when (date) {
-                state.selectedDate -> MaterialTheme.colorScheme.onPrimary
-                state.referenceDate -> MaterialTheme.colorScheme.onSecondaryContainer
-                else -> FoodYouHomeCardDefaults.contentColor
-            },
-            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
-        )
-
-    CalendarDayItem(
-        date = date,
-        onClick = onClick,
-        containerColor = containerColor,
-        contentColor = contentColor,
-        modifier = modifier,
-    )
-}
-
-@Composable
-private fun CalendarDayItem(
-    date: LocalDate,
-    onClick: () -> Unit,
-    containerColor: Color,
-    contentColor: Color,
-    modifier: Modifier = Modifier,
-) {
-    val dateFormatter = LocalDateFormatter.current
-
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-
-    val cornerRadius by
-        animateDpAsState(
-            targetValue = if (isPressed) 8.dp else 12.dp,
-            animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
-        )
-
-    Surface(
-        onClick = onClick,
-        modifier = modifier,
-        color = containerColor,
-        contentColor = contentColor,
-        interactionSource = interactionSource,
-        shape = RoundedCornerShape(cornerRadius),
-    ) {
-        Column(
-            modifier = Modifier.minimumInteractiveComponentSize().size(48.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
-                val dayOfWeek = (date.dayOfWeek.isoDayNumber - 1) % 7
-                Text(dateFormatter.weekDayNamesShort[dayOfWeek])
-                Text(date.day.toString())
             }
         }
     }
@@ -253,25 +196,67 @@ private fun CalendarDayItem(
 
 @Composable
 private fun CalendarCardDatePickerDialog(
-    calendarState: CalendarCardState,
+    state: CalendarCardState,
+    referenceDate: LocalDate,
     onDismissRequest: () -> Unit,
     onSelectDate: (LocalDate) -> Unit,
 ) {
-    val state = calendarState.rememberDatePickerState()
-    val scope = rememberCoroutineScope()
+    val zero = remember { Instant.fromEpochMilliseconds(0).toLocalDateTime(TimeZone.UTC).date }
+    val last = remember { zero + Int.MAX_VALUE.days }
+    val yearRange = remember { zero.year..last.year }
+
+    val selectedDate = state.selectedDate
+    val initialSelectedDateMillis =
+        selectedDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds().takeIf { it >= 0 } ?: 0
+
+    val referenceDateVisible = state.referenceDateVisible(referenceDate)
+
+    // If selected date is visible, we want to display it,
+    // otherwise we want to display reference date if it's visible.
+    // If none of them are visible, we want to display the first visible date.
+    val initialDisplayedMonthMillis =
+        when {
+            state.selectedDateVisible.value -> initialSelectedDateMillis
+            referenceDateVisible.value ->
+                referenceDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds().takeIf { it >= 0 }
+                    ?: 0
+
+            else ->
+                state.firstVisibleDate.value
+                    .atStartOfDayIn(TimeZone.UTC)
+                    .toEpochMilliseconds()
+                    .takeIf { it >= 0 } ?: 0
+        }
+
+    val pickerState =
+        rememberDatePickerState(
+            initialSelectedDateMillis = initialSelectedDateMillis,
+            initialDisplayedMonthMillis = initialDisplayedMonthMillis,
+            yearRange = yearRange,
+            selectableDates =
+                object : SelectableDates {
+                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                        val date =
+                            Instant.fromEpochMilliseconds(utcTimeMillis)
+                                .toLocalDateTime(TimeZone.UTC)
+                                .date
+                        return date in zero..last
+                    }
+
+                    override fun isSelectableYear(year: Int) = year in yearRange
+                },
+        )
 
     DatePickerDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(
                 onClick = {
-                    state.selectedDateMillis?.let {
+                    pickerState.selectedDateMillis?.let {
                         val date =
                             Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date
-
                         onSelectDate(date)
                     }
-                    onDismissRequest()
                 }
             ) {
                 Text(text = stringResource(Res.string.positive_ok))
@@ -284,8 +269,21 @@ private fun CalendarCardDatePickerDialog(
         },
     ) {
         DatePicker(
-            state = state,
-            // It won't fit on small screens, so we need to scroll
+            state = pickerState,
+            title = {
+                Row(
+                    modifier =
+                        Modifier.fillMaxWidth().padding(start = 24.dp, end = 12.dp, top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    DatePickerDefaults.DatePickerTitle(pickerState.displayMode)
+
+                    TextButton(onClick = { onSelectDate(state.referenceDate) }) {
+                        Text(stringResource(Res.string.action_go_to_today))
+                    }
+                }
+            },
             modifier = Modifier.verticalScroll(rememberScrollState()),
         )
     }
@@ -294,34 +292,11 @@ private fun CalendarCardDatePickerDialog(
 @Preview
 @Composable
 private fun CalendarCardPreview() {
-    PreviewFoodYouTheme {
-        CalendarCard(
-            state =
-                rememberCalendarCardState(
-                    referenceDate = LocalDate.now(),
-                    selectedDate = LocalDate.now() - 1.days,
-                )
+    val state =
+        rememberCalendarState(
+            selectedDate = LocalDate.now(),
+            referenceDate = LocalDate.now() - 2.days,
         )
-    }
-}
 
-@Preview
-@Composable
-private fun CalendarDayItemPreview() {
-    PreviewFoodYouTheme {
-        Row {
-            CalendarDayItem(
-                date = LocalDate.now(),
-                onClick = {},
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-            )
-            CalendarDayItem(
-                date = LocalDate.now(),
-                onClick = {},
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
-        }
-    }
+    PreviewFoodYouTheme { CalendarCard(state = state, onSelectDate = {}) }
 }
