@@ -9,7 +9,7 @@ fun HapticFeedback.toggle(state: Boolean) {
 }
 
 fun HapticFeedback.segmentFrequentTick() {
-    performHapticFeedback(HapticFeedbackType.TextHandleMove)
+    performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
 }
 
 fun HapticFeedback.confirm() {

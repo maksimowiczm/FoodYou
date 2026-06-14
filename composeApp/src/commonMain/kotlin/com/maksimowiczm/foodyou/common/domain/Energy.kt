@@ -91,8 +91,8 @@ enum class EnergyUnit {
             Kilojoules -> value * KILOJOULE_CONVERSION_FACTOR
         }
 
-    private companion object {
-        const val KILOJOULE_CONVERSION_FACTOR = 4.184
+    companion object {
+        private const val KILOJOULE_CONVERSION_FACTOR = 4.184
     }
 }
 

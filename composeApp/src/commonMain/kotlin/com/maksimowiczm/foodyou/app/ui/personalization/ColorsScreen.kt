@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -28,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.ReadYouImage
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.common.extension.confirm
 import com.maksimowiczm.foodyou.app.ui.common.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.theme.isDark
@@ -159,6 +161,8 @@ private fun ThemeOptionPicker(
     onThemeOptionChange: (ThemeOption) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     Row(
         modifier = modifier,
         horizontalArrangement =
@@ -169,21 +173,30 @@ private fun ThemeOptionPicker(
     ) {
         TonalToggleButton(
             checked = themeOption == ThemeOption.System,
-            onCheckedChange = { onThemeOptionChange(ThemeOption.System) },
+            onCheckedChange = {
+                onThemeOptionChange(ThemeOption.System)
+                hapticFeedback.confirm()
+            },
             modifier = Modifier.semantics { role = Role.RadioButton },
             shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
             content = { Text(stringResource(Res.string.headline_system)) },
         )
         TonalToggleButton(
             checked = themeOption == ThemeOption.Light,
-            onCheckedChange = { onThemeOptionChange(ThemeOption.Light) },
+            onCheckedChange = {
+                onThemeOptionChange(ThemeOption.Light)
+                hapticFeedback.confirm()
+            },
             modifier = Modifier.semantics { role = Role.RadioButton },
             shapes = ButtonGroupDefaults.connectedMiddleButtonShapes(),
             content = { Text(stringResource(Res.string.headline_light)) },
         )
         TonalToggleButton(
             checked = themeOption == ThemeOption.Dark,
-            onCheckedChange = { onThemeOptionChange(ThemeOption.Dark) },
+            onCheckedChange = {
+                onThemeOptionChange(ThemeOption.Dark)
+                hapticFeedback.confirm()
+            },
             modifier = Modifier.semantics { role = Role.RadioButton },
             shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
             content = { Text(stringResource(Res.string.headline_dark)) },

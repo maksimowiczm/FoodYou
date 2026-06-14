@@ -8,6 +8,8 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalHapticFeedback
+import com.maksimowiczm.foodyou.app.ui.common.extension.toggle
 import com.maksimowiczm.foodyou.device.domain.Theme
 import com.maksimowiczm.foodyou.device.domain.ThemeSettings
 import foodyou.app.generated.resources.*
@@ -18,6 +20,7 @@ actual fun ColumnScope.PlatformAdditionalSettings(
     themeSettings: ThemeSettings,
     onUpdateTheme: (Theme) -> Unit,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     val settingsCount = remember { platformAdditionalSettingsCount() }
 
     val isDynamic = themeSettings.theme is Theme.Dynamic || themeSettings.theme is Theme.Default
@@ -27,6 +30,7 @@ actual fun ColumnScope.PlatformAdditionalSettings(
         SegmentedListItem(
             checked = isDynamic,
             onCheckedChange = {
+                hapticFeedback.toggle(!isDynamic)
                 if (isDynamic) onUpdateTheme(themes.first()) else onUpdateTheme(Theme.Dynamic)
             },
             shapes = ListItemDefaults.segmentedShapes(index = 0, count = settingsCount + 1),

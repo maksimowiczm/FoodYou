@@ -32,10 +32,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.common.extension.confirm
 import com.maksimowiczm.foodyou.app.ui.common.theme.rememberColorScheme
 import com.maksimowiczm.foodyou.device.domain.Theme
 import kotlin.math.absoluteValue
@@ -48,6 +50,8 @@ fun PalettePicker(
     onThemeChange: (Theme.Custom) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     val colors = listOf<Theme.Custom?>(null) + rememberThemes()
     val chunks = remember(colors) { colors.chunked(5) }
     val initialPage = remember {
@@ -92,7 +96,10 @@ fun PalettePicker(
                         PalettePickerItem(
                             colorScheme = theme.rememberColorScheme(isDark),
                             selected = theme == selectedTheme,
-                            onSelect = { onThemeChange(theme) },
+                            onSelect = {
+                                onThemeChange(theme)
+                                hapticFeedback.confirm()
+                            },
                         )
                     }
                 }

@@ -47,11 +47,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.common.extension.confirm
+import com.maksimowiczm.foodyou.app.ui.common.extension.toggle
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter.stringResource
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
@@ -98,6 +101,8 @@ fun PersonalizationScreen(
     onUpdateSecureScreen: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var energyExpanded by rememberSaveable { mutableStateOf(false) }
     val expandedEdges =
@@ -225,7 +230,10 @@ fun PersonalizationScreen(
                     )
                     SegmentedListItem(
                         checked = secureScreen,
-                        onCheckedChange = { onUpdateSecureScreen(!secureScreen) },
+                        onCheckedChange = {
+                            onUpdateSecureScreen(!secureScreen)
+                            hapticFeedback.toggle(!secureScreen)
+                        },
                         shapes = ListItemDefaults.shapes(),
                         colors = colors,
                         leadingContent = {
@@ -256,6 +264,7 @@ private fun EnergyUnitSection(
     colors: ListItemColors,
     modifier: Modifier = Modifier,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     val transition = updateTransition(expanded, label = "EnergyExpanded")
 
     Column(modifier) {
@@ -321,7 +330,10 @@ private fun EnergyUnitSection(
             ) {
                 EnergyUnit.entries.forEach { unit ->
                     SegmentedListItem(
-                        onClick = { onUpdateEnergyUnit(unit) },
+                        onClick = {
+                            onUpdateEnergyUnit(unit)
+                            hapticFeedback.confirm()
+                        },
                         selected = energyUnit == unit,
                         shapes = ListItemDefaults.shapes(),
                         colors = colors,

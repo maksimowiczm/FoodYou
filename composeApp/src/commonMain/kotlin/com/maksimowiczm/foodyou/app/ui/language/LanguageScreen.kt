@@ -17,12 +17,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.common.extension.confirm
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
@@ -54,6 +56,8 @@ private fun LanguageScreen(
     currentTranslation: Translation?,
     modifier: Modifier = Modifier,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
@@ -80,10 +84,12 @@ private fun LanguageScreen(
             item {
                 SegmentedListItem(
                     selected = currentTranslation == null,
-                    onClick = { onSelectTranslation(null) },
+                    onClick = {
+                        onSelectTranslation(null)
+                        hapticFeedback.confirm()
+                    },
                     shapes =
                         ListItemDefaults.segmentedShapes(index = 0, count = languages.size + 1),
-                    modifier = modifier,
                     leadingContent = {
                         RadioButton(selected = currentTranslation == null, onClick = null)
                     },
@@ -98,13 +104,15 @@ private fun LanguageScreen(
             itemsIndexed(languages) { index, translation ->
                 SegmentedListItem(
                     selected = currentTranslation == translation,
-                    onClick = { onSelectTranslation(translation) },
+                    onClick = {
+                        onSelectTranslation(translation)
+                        hapticFeedback.confirm()
+                    },
                     shapes =
                         ListItemDefaults.segmentedShapes(
                             index = index + 1,
                             count = languages.size + 1,
                         ),
-                    modifier = modifier,
                     leadingContent = {
                         RadioButton(selected = currentTranslation == translation, onClick = null)
                     },

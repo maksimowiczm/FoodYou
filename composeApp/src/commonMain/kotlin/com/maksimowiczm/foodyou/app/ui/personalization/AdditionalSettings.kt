@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.common.extension.toggle
 import com.maksimowiczm.foodyou.device.domain.Theme
 import com.maksimowiczm.foodyou.device.domain.ThemeSettings
 import foodyou.app.generated.resources.*
@@ -24,13 +26,17 @@ fun AdditionalSettings(
     onUpdateTheme: (Theme) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     val settingsCount = remember { platformAdditionalSettingsCount() }
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         PlatformAdditionalSettings(themeSettings = themeSettings, onUpdateTheme = onUpdateTheme)
         SegmentedListItem(
             checked = themeSettings.randomizeOnLaunch,
-            onCheckedChange = { onRandomizeTheme(!themeSettings.randomizeOnLaunch) },
+            onCheckedChange = {
+                onRandomizeTheme(!themeSettings.randomizeOnLaunch)
+                hapticFeedback.toggle(!themeSettings.randomizeOnLaunch)
+            },
             shapes =
                 ListItemDefaults.segmentedShapes(index = settingsCount, count = settingsCount + 1),
             trailingContent = {

@@ -21,6 +21,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,6 +31,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.OpenFoodFactsPrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.common.extension.toggle
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -38,6 +40,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     val viewModel: PrivacyViewModel = koinViewModel()
     val foodSearchPreferences by viewModel.foodSearchPreferences.collectAsStateWithLifecycle()
 
@@ -69,6 +73,7 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                     selected = foodSearchPreferences.allowOpenFoodFacts,
                     onSelectedChange = {
                         viewModel.setFoodSearchPreferences(allowOpenFoodFacts = it)
+                        hapticFeedback.toggle(it)
                     },
                 )
             }
@@ -77,6 +82,7 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                     selected = foodSearchPreferences.allowFoodDataCentralUSDA,
                     onSelectedChange = {
                         viewModel.setFoodSearchPreferences(allowFoodDataCentralUSDA = it)
+                        hapticFeedback.toggle(it)
                     },
                 )
             }
@@ -115,10 +121,7 @@ private fun FoodYouPrivacyCard(
         contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
     ) {
         Column {
-            Text(
-                text = stringResource(Res.string.onboarding_privacy_tip),
-                color = MaterialTheme.colorScheme.primary,
-            )
+            Text(stringResource(Res.string.onboarding_privacy_tip))
             Spacer(Modifier.height(8.dp))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 PrivacyPolicyChip(onClick = { uriHandler.openUri(privacyPolicyUri) })
