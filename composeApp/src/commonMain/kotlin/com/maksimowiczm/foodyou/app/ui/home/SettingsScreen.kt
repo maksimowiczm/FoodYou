@@ -77,6 +77,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.Avatar
+import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.ProfileId
@@ -150,7 +151,7 @@ private fun SettingsScreen(
         LazyColumn(
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = contentPadding,
+            contentPadding = contentPadding.add(8.dp),
         ) {
             item {
                 Column(
@@ -189,7 +190,6 @@ private fun SettingsScreen(
                     onSelectProfile = onSelectProfile,
                     onAddProfile = onAddProfile,
                     onEditProfile = { onEditProfile(it) },
-                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
             }
             item {
@@ -198,7 +198,6 @@ private fun SettingsScreen(
                     onLanguage = onLanguage,
                     onPrivacy = onPrivacy,
                     onAbout = onAbout,
-                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
             }
         }

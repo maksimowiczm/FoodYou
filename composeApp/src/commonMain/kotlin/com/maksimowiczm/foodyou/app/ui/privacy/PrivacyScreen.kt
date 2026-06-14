@@ -60,7 +60,7 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues.add(vertical = 8.dp, horizontal = 16.dp),
+            contentPadding = paddingValues.add(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             item { FoodYouPrivacyCard() }

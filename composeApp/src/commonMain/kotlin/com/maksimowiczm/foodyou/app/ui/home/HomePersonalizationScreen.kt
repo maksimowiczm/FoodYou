@@ -5,7 +5,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,9 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.hapticDraggableHandle
 import com.maksimowiczm.foodyou.app.ui.home.calendar.CalendarCardPersonalizationCard
 import foodyou.app.generated.resources.*
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -106,7 +107,7 @@ private fun HomePersonalizationScreen(
         snapshotFlow { localOrderState.value }
             .distinctUntilChanged()
             .filterNot { it.isEmpty() }
-            .debounce(50)
+            .debounce(50.milliseconds)
             .collectLatest { order -> latestOnReorder(order) }
     }
 
@@ -128,13 +129,10 @@ private fun HomePersonalizationScreen(
         },
     ) { paddingValues ->
         LazyColumn(
-            modifier =
-                Modifier.padding(8.dp)
-                    .fillMaxSize()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = paddingValues,
+            contentPadding = paddingValues.add(8.dp),
         ) {
             items(items = localOrder, key = { it }) { card ->
                 val moveUpString = stringResource(Res.string.action_move_up)

@@ -46,7 +46,7 @@ fun PaddingValues.add(
     bottom: Dp = 0.dp,
 ): PaddingValues {
     val paddingValues =
-        remember(start, top, end, bottom) {
+        remember(this, start, top, end, bottom) {
             PaddingValues(start = start, top = top, end = end, bottom = bottom)
         }
 
@@ -56,7 +56,7 @@ fun PaddingValues.add(
 @Composable
 fun PaddingValues.add(horizontal: Dp = 0.dp, vertical: Dp = 0.dp): PaddingValues {
     val paddingValues =
-        remember(horizontal, vertical) {
+        remember(this, horizontal, vertical) {
             PaddingValues(horizontal = horizontal, vertical = vertical)
         }
 
@@ -65,7 +65,7 @@ fun PaddingValues.add(horizontal: Dp = 0.dp, vertical: Dp = 0.dp): PaddingValues
 
 @Composable
 fun PaddingValues.add(all: Dp): PaddingValues {
-    val paddingValues = remember(all) { PaddingValues(all = all) }
+    val paddingValues = remember(this, all) { PaddingValues(all = all) }
     return add(paddingValues)
 }
 
