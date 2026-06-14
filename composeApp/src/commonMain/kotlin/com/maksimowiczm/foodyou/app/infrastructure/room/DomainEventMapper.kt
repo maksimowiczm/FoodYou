@@ -7,18 +7,23 @@ import com.maksimowiczm.foodyou.search.domain.SearchHistoryEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductEvent
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeEvent
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
 internal object DomainEventMapper {
     fun toDomainEvent(entity: DomainEventEntity): DomainEvent =
-        roomEventJson.decodeFromString(entity.payloadJson)
+        roomEventJson.decodeFromString(
+            PolymorphicSerializer(DomainEvent::class),
+            entity.payloadJson,
+        )
 
     fun toRoomStoredEventEntity(event: DomainEvent, stream: String): DomainEventEntity =
         DomainEventEntity(
             eventStream = stream,
-            payloadJson = roomEventJson.encodeToString(event),
+            payloadJson =
+                roomEventJson.encodeToString(PolymorphicSerializer(DomainEvent::class), event),
             occurredAtEpochMs = event.timestamp.toEpochMilliseconds(),
         )
 }

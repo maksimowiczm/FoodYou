@@ -58,6 +58,7 @@ class Volume(val milliliters: Double, val unit: VolumeUnit) : Comparable<Volume>
     }
 }
 
+@Serializable
 enum class VolumeUnit {
     Milliliters,
     FluidOunces;

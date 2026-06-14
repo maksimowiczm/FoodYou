@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.account.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class HomeCard {
     Calendar;
 

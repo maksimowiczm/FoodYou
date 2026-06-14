@@ -1,10 +1,13 @@
 package com.maksimowiczm.foodyou.common.domain
 
+import kotlinx.serialization.Serializable
+
 /**
  * @param displayName Language name in English
  * @param language ISO 639-1 language code
  * @param country ISO 3166-1 alpha-2
  */
+@Serializable
 enum class Language(val displayName: String, val language: String, val country: String) {
     English("English", "en", "US"),
     Catalan("Catalan", "ca", "ES"),

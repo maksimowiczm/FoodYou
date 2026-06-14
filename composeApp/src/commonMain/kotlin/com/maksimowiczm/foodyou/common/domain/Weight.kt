@@ -68,6 +68,7 @@ class Weight(val grams: Double, val unit: WeightUnit) :
     }
 }
 
+@Serializable
 enum class WeightUnit {
     Micrograms,
     Milligrams,

@@ -25,6 +25,7 @@ data class Profile(
 
         @Serializable
         data class Predefined(val variant: Variant) : Avatar {
+            @Serializable
             enum class Variant {
                 Person,
                 Woman,
