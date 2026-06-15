@@ -45,12 +45,12 @@ import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchCollection
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodListItem
-import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchExtension
 import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralListItem
-import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchExtension
 import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsListItem
-import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchViewModel
-import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchExtension
+import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserProductListItem
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserRecipeListItem
 import com.maksimowiczm.foodyou.common.RemoteData
@@ -87,19 +87,18 @@ internal fun HomeSearchScreen(
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
-    val searchViewModel: SearchViewModel = koinViewModel()
-    val userFoodSearchViewModel: UserFoodSearchViewModel = koinViewModel()
-    val openFoodFactsSearchViewModel: OpenFoodFactsSearchViewModel = koinViewModel()
-    val foodDataCentralSearchViewModel: FoodDataCentralSearchViewModel = koinViewModel()
-    val favoriteFoodSearchViewModel: FavoriteFoodSearchViewModel = koinViewModel()
+    val viewModel: SearchViewModel = koinViewModel()
 
-    val searchQuery = searchViewModel.searchQuery.collectAsStateWithLifecycle().value
-    val history = searchViewModel.searchHistory.collectAsStateWithLifecycle().value
+    val searchQuery = viewModel.searchQuery.collectAsStateWithLifecycle().value
+    val history = viewModel.searchHistory.collectAsStateWithLifecycle().value
 
-    val userFood = userFoodSearchViewModel.pages.collectAsLazyPagingItems()
-    val openFoodFacts = openFoodFactsSearchViewModel.pages.collectAsLazyPagingItems()
-    val foodDataCentral = foodDataCentralSearchViewModel.pages.collectAsLazyPagingItems()
-    val favoriteFood = favoriteFoodSearchViewModel.pages.collectAsLazyPagingItems()
+    val userFood = viewModel.extension<UserFoodSearchExtension>().pages.collectAsLazyPagingItems()
+    val openFoodFacts =
+        viewModel.extension<OpenFoodFactsSearchExtension>().pages.collectAsLazyPagingItems()
+    val foodDataCentral =
+        viewModel.extension<FoodDataCentralSearchExtension>().pages.collectAsLazyPagingItems()
+    val favoriteFood =
+        viewModel.extension<FavoriteFoodSearchExtension>().pages.collectAsLazyPagingItems()
 
     val isIdle =
         when (selectedCollection) {

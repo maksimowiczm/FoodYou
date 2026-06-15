@@ -70,7 +70,6 @@ import androidx.navigationevent.NavigationEventTransitionState
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.NavigationEventHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
-import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.Crossfade
 import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfade
@@ -80,7 +79,6 @@ import com.maksimowiczm.foodyou.app.ui.common.barcodescanner.FullScreenCameraBar
 import com.maksimowiczm.foodyou.app.ui.common.component.Scrim
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefaults.rememberScrollConnection
-import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.horizontal
 import com.maksimowiczm.foodyou.app.ui.common.extension.now
@@ -91,11 +89,8 @@ import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchFloatingActionButto
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchCollection
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchFilters
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
-import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchViewModel
-import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchViewModel
-import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchViewModel
-import com.maksimowiczm.foodyou.app.ui.food.search.rememberCollectionFilter
-import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchExtension
+import com.maksimowiczm.foodyou.app.ui.food.search.rememberCollectionFilters
 import com.maksimowiczm.foodyou.app.ui.home.calendar.CalendarCard
 import com.maksimowiczm.foodyou.app.ui.home.common.rememberHomeState
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
@@ -129,6 +124,8 @@ fun HomeScreen(
     initialQuery: String?,
     modifier: Modifier = Modifier,
 ) {
+    val searchViewModel: SearchViewModel = koinViewModel { parametersOf(initialQuery) }
+
     val scope = rememberCoroutineScope()
     val density = LocalDensity.current
     val motionScheme = MaterialTheme.motionScheme
@@ -174,21 +171,11 @@ fun HomeScreen(
 
     val railState = rememberWideNavigationRailState()
 
-    val searchViewModel: SearchViewModel = koinViewModel { parametersOf(initialQuery ?: "") }
-    val userFoodSearchViewModel: UserFoodSearchViewModel = koinViewModel()
-    val openFoodFactsSearchViewModel: OpenFoodFactsSearchViewModel = koinViewModel()
-    val foodDataCentralSearchViewModel: FoodDataCentralSearchViewModel = koinViewModel()
-    val favoriteFoodSearchViewModel: FavoriteFoodSearchViewModel = koinViewModel()
-    LaunchedCollectWithLifecycle(searchViewModel.searchQuery) {
-        userFoodSearchViewModel.search(it)
-        openFoodFactsSearchViewModel.search(it)
-        foodDataCentralSearchViewModel.search(it)
-        favoriteFoodSearchViewModel.search(it)
-    }
+    val foodDataCentralExtension = searchViewModel.extension<FoodDataCentralSearchExtension>()
     LaunchedEffect(selectedCollection.value) {
         when (val collection = selectedCollection.value) {
             is SearchCollection.FoodDataCentral ->
-                foodDataCentralSearchViewModel.dataTypes(collection.dataTypes)
+                foodDataCentralExtension.dataTypes(collection.dataTypes)
 
             else -> Unit
         }
@@ -483,51 +470,6 @@ private fun HomeModalWideNavigationRail(
                 railExpanded = true,
             )
         }
-    }
-}
-
-@Composable
-internal fun rememberCollectionFilters(): List<CollectionFilter> {
-    val favorite = run {
-        val viewModel: FavoriteFoodSearchViewModel = koinViewModel()
-        rememberCollectionFilter(
-            collection = SearchCollection.Favorite(),
-            count = viewModel.count.collectAsStateWithLifecycle().value,
-            pages = viewModel.pages.collectAsLazyPagingItems(),
-        )
-    }
-
-    val userFood = run {
-        val viewModel: UserFoodSearchViewModel = koinViewModel()
-        rememberCollectionFilter(
-            collection = SearchCollection.UserFood(),
-            count = viewModel.count.collectAsStateWithLifecycle().value,
-            pages = viewModel.pages.collectAsLazyPagingItems(),
-        )
-    }
-
-    val openFoodFacts = run {
-        val viewModel: OpenFoodFactsSearchViewModel = koinViewModel()
-        if (!viewModel.shouldShowFilter.collectAsStateWithLifecycle().value) return@run null
-        rememberCollectionFilter(
-            collection = SearchCollection.OpenFoodFacts(),
-            count = viewModel.count.collectAsStateWithLifecycle().value,
-            pages = viewModel.pages.collectAsLazyPagingItems(),
-        )
-    }
-
-    val foodDataCentral = run {
-        val viewModel: FoodDataCentralSearchViewModel = koinViewModel()
-        if (!viewModel.shouldShowFilter.collectAsStateWithLifecycle().value) return@run null
-        rememberCollectionFilter(
-            collection = SearchCollection.FoodDataCentral(),
-            count = viewModel.count.collectAsStateWithLifecycle().value,
-            pages = viewModel.pages.collectAsLazyPagingItems(),
-        )
-    }
-
-    return remember(favorite, userFood, openFoodFacts, foodDataCentral) {
-        listOfNotNull(favorite, userFood, openFoodFacts, foodDataCentral)
     }
 }
 

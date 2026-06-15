@@ -70,7 +70,6 @@ import com.maksimowiczm.foodyou.app.ui.common.barcodescanner.FullScreenCameraBar
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtection
 import com.maksimowiczm.foodyou.app.ui.common.component.StatusBarProtectionDefaults.rememberScrollConnection
-import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.error
 import com.maksimowiczm.foodyou.app.ui.common.extension.horizontal
@@ -84,15 +83,15 @@ import com.maksimowiczm.foodyou.app.ui.food.search.SearchCollection
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchFilters
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodListItem
-import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchExtension
 import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralListItem
-import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchExtension
 import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsListItem
-import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchViewModel
-import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
+import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchExtension
+import com.maksimowiczm.foodyou.app.ui.food.search.rememberCollectionFilters
+import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserProductListItem
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserRecipeListItem
-import com.maksimowiczm.foodyou.app.ui.home.rememberCollectionFilters
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
@@ -120,6 +119,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun IngredientSearchScreen(
+    recipeIdentity: UserRecipeIdentity?,
     onBack: () -> Unit,
     onFoodDataCentralProduct: (FoodDataCentralProductIdentity, Quantity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity, Quantity) -> Unit,
@@ -127,6 +127,8 @@ fun IngredientSearchScreen(
     onUserRecipe: (UserRecipeIdentity, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val searchViewModel: SearchViewModel = koinViewModel { parametersOf(recipeIdentity) }
+
     val scope = rememberCoroutineScope()
     val density = LocalDensity.current
 
@@ -144,23 +146,17 @@ fun IngredientSearchScreen(
         rememberSaveable(stateSaver = jsonSaver()) { mutableStateOf<SearchCollection?>(null) }
     val lazyListState = rememberLazyListState()
 
-    val searchViewModel: SearchViewModel = koinViewModel { parametersOf("") }
     val searchQuery = searchViewModel.searchQuery.collectAsStateWithLifecycle().value
 
-    val userFoodSearchViewModel: UserFoodSearchViewModel = koinViewModel()
-    val openFoodFactsSearchViewModel: OpenFoodFactsSearchViewModel = koinViewModel()
-    val foodDataCentralSearchViewModel: FoodDataCentralSearchViewModel = koinViewModel()
-    val favoriteFoodSearchViewModel: FavoriteFoodSearchViewModel = koinViewModel()
-    LaunchedCollectWithLifecycle(searchViewModel.searchQuery) {
-        userFoodSearchViewModel.search(it)
-        openFoodFactsSearchViewModel.search(it)
-        foodDataCentralSearchViewModel.search(it)
-        favoriteFoodSearchViewModel.search(it)
-    }
+    val openFoodFactsExtension = searchViewModel.extension<OpenFoodFactsSearchExtension>()
+    val foodDataCentralExtension = searchViewModel.extension<FoodDataCentralSearchExtension>()
+    val userFoodExtension = searchViewModel.extension<UserFoodSearchExtension>()
+    val favoriteFoodExtension = searchViewModel.extension<FavoriteFoodSearchExtension>()
+
     LaunchedEffect(selectedCollection) {
         when (val collection = selectedCollection) {
             is SearchCollection.FoodDataCentral ->
-                foodDataCentralSearchViewModel.dataTypes(collection.dataTypes)
+                foodDataCentralExtension.dataTypes(collection.dataTypes)
 
             else -> Unit
         }
@@ -255,10 +251,10 @@ fun IngredientSearchScreen(
     ) { contentPadding ->
         SearchList(
             selectedCollection = selectedCollection,
-            userFood = userFoodSearchViewModel.pages.collectAsLazyPagingItems(),
-            openFoodFacts = openFoodFactsSearchViewModel.pages.collectAsLazyPagingItems(),
-            foodDataCentral = foodDataCentralSearchViewModel.pages.collectAsLazyPagingItems(),
-            favoriteFood = favoriteFoodSearchViewModel.pages.collectAsLazyPagingItems(),
+            userFood = userFoodExtension.pages.collectAsLazyPagingItems(),
+            openFoodFacts = openFoodFactsExtension.pages.collectAsLazyPagingItems(),
+            foodDataCentral = foodDataCentralExtension.pages.collectAsLazyPagingItems(),
+            favoriteFood = favoriteFoodExtension.pages.collectAsLazyPagingItems(),
             searchQuery = searchQuery,
             contentPadding =
                 contentPadding.add(top = density.run { filterChipsHeight.floatValue.toDp() }),

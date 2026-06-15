@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.app.ui.food.search.favoritefood
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
@@ -9,6 +8,8 @@ import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
+import com.maksimowiczm.foodyou.app.ui.food.search.SearchExtension
+import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
@@ -28,31 +29,27 @@ import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
-internal class FavoriteFoodSearchViewModel(
-    avoidCircularDependencyWith: UserRecipeIdentity?,
+internal class FavoriteFoodSearchExtension(
+    viewModel: SearchViewModel,
     appProfileManager: AppProfileManager,
     private val foodDataCentralService: FoodDataCentralService,
     private val openFoodFactsService: OpenFoodFactsService,
     private val userProductService: UserProductService,
     private val userRecipeService: UserRecipeService,
     private val nameSelector: FoodNameSelector,
-) : ViewModel() {
-    private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
-
+) : SearchExtension(viewModel) {
     private val favoriteFoodIdentities =
         appProfileManager.observeAppProfile().map { it.favoriteFoods }
 
     private val excludedIds =
-        avoidCircularDependencyWith?.let { identity ->
+        viewModel.avoidCircularDependencyWith?.let { identity ->
             userRecipeService.observeAncestors(identity).map { ancestors ->
                 ancestors.map { it.id }.toSet() + identity.id
             }
@@ -97,7 +94,7 @@ internal class FavoriteFoodSearchViewModel(
                     .combine()
             }
             .flatMapLatest { it }
-            .combine(searchQuery) { list, query ->
+            .combine(viewModel.searchQuery) { list, query ->
                 when (query) {
                     SearchQuery.Blank -> list
                     is SearchQuery.Barcode ->
@@ -157,20 +154,16 @@ internal class FavoriteFoodSearchViewModel(
                     mediatorLoadStates = loadStates,
                 )
             }
-            .cachedIn(viewModelScope)
+            .cachedIn(viewModel.viewModelScope)
 
     val count =
         foodList
             .map { list -> list.count { it is RemoteData.Success } }
             .stateIn(
-                scope = viewModelScope,
+                scope = viewModel.viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
                 initialValue = null,
             )
-
-    fun search(query: SearchQuery) {
-        viewModelScope.launch { searchQuery.emit(query) }
-    }
 }
 
 private fun Any.barcode(): String? =

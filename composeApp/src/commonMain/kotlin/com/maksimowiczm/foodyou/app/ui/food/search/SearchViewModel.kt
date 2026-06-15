@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.domain.search.SearchQueryParser
 import com.maksimowiczm.foodyou.search.application.SearchHistoryService
 import com.maksimowiczm.foodyou.search.domain.recordSearchQuery
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterIsInstance
@@ -18,14 +19,27 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import org.koin.core.component.KoinScopeComponent
+import org.koin.core.parameter.parametersOf
+import org.koin.core.scope.Scope
 
 internal class SearchViewModel(
     initialQuery: String?,
+    val avoidCircularDependencyWith: UserRecipeIdentity?,
     private val searchQueryParser: SearchQueryParser,
     private val searchHistoryService: SearchHistoryService,
     savedStateHandle: SavedStateHandle,
     appProfileManager: AppProfileManager,
-) : ViewModel() {
+) : ViewModel(), KoinScopeComponent {
+    override val scope: Scope = getKoin().createScope(this)
+
+    inline fun <reified T : SearchExtension> extension(): T = scope.get { parametersOf(this) }
+
+    override fun onCleared() {
+        super.onCleared()
+        scope.close()
+    }
+
     private val _searchQuery = savedStateHandle.getMutableStateFlow(SEARCH_QUERY_KEY, initialQuery)
 
     val searchQuery =

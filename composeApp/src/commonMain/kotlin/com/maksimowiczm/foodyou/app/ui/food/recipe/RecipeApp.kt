@@ -31,8 +31,6 @@ import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddFoodDataCentralIngredi
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddOpenFoodFactsIngredientScreen
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddUserProductIngredientScreen
 import com.maksimowiczm.foodyou.app.ui.food.ingredient.AddUserRecipeIngredientScreen
-import com.maksimowiczm.foodyou.app.ui.food.search.favoritefood.FavoriteFoodSearchViewModel
-import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchViewModel
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
@@ -48,7 +46,6 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun RecipeApp(
@@ -142,10 +139,8 @@ internal fun RecipeApp(
                     )
                 }
                 entry<Search> {
-                    koinViewModel<UserFoodSearchViewModel> { parametersOf(identity) }
-                    koinViewModel<FavoriteFoodSearchViewModel> { parametersOf(identity) }
-
                     IngredientSearchScreen(
+                        recipeIdentity = identity,
                         onBack = { backStack.removeLastIf<Search>() },
                         onFoodDataCentralProduct = { id, quantity ->
                             backStack.add(FoodDataCentral(id, quantity))

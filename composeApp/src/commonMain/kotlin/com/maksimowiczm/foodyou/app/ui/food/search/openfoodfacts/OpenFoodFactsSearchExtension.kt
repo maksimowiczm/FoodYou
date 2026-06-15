@@ -1,31 +1,27 @@
 package com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
+import com.maksimowiczm.foodyou.app.ui.food.search.SearchExtension
+import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
-internal class OpenFoodFactsSearchViewModel(
-    private val service: OpenFoodFactsService,
+internal class OpenFoodFactsSearchExtension(
+    viewModel: SearchViewModel,
     settingsRepository: OpenFoodFactsSettingsRepository,
-) : ViewModel() {
-    private val searchQuery = MutableSharedFlow<SearchQuery>(replay = 1)
-
-    private val searchParameters =
-        searchQuery
-            .distinctUntilChanged()
+    private val openFoodFactsService: OpenFoodFactsService,
+) : SearchExtension(viewModel) {
+    private val parameters: SharedFlow<OpenFoodFactsSearchParameters> =
+        viewModel.searchQuery
             .map { query ->
                 OpenFoodFactsSearchParameters(
                     query = query,
@@ -33,38 +29,36 @@ internal class OpenFoodFactsSearchViewModel(
                 )
             }
             .shareIn(
-                scope = viewModelScope,
+                scope = viewModel.viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
                 replay = 1,
             )
 
     val pages =
-        searchParameters.flatMapLatest { service.search(it, PAGE_SIZE) }.cachedIn(viewModelScope)
+        parameters
+            .flatMapLatest { openFoodFactsService.search(it, PAGE_SIZE) }
+            .cachedIn(viewModel.viewModelScope)
 
     val count =
-        searchParameters
-            .flatMapLatest(service::count)
+        parameters
+            .flatMapLatest(openFoodFactsService::count)
             .stateIn(
-                scope = viewModelScope,
+                scope = viewModel.viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
                 initialValue = null,
             )
 
-    private val enabled = settingsRepository.observe().map { it.remoteEnabled }
-
     val shouldShowFilter =
-        combine(count, enabled) { count, enabled -> enabled || (count != null && count > 0) }
+        combine(count, settingsRepository.observe().map { it.remoteEnabled }) { count, enabled ->
+                enabled || (count != null && count > 0)
+            }
             .stateIn(
-                scope = viewModelScope,
+                scope = viewModel.viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
                 initialValue = false,
             )
 
-    fun search(query: SearchQuery) {
-        viewModelScope.launch { searchQuery.emit(query) }
-    }
-
-    private companion object {
+    companion object {
         private const val PAGE_SIZE = 200
     }
 }
