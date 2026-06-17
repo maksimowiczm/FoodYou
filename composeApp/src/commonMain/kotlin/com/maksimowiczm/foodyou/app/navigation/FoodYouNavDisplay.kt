@@ -156,6 +156,8 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
 
                                     is FoodCompositionComponentIdentity.Recipe ->
                                         UserRecipeDetails(UserRecipeIdentity(identity.id))
+
+                                    is FoodCompositionComponentIdentity.Anonymous -> TODO()
                                 }
                             backStack.add(route)
                         },

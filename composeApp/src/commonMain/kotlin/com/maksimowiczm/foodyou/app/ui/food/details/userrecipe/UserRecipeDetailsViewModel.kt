@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.app.application.ObserveIsFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.application.SetFavoriteFoodUseCase
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.channels.Channel
@@ -51,7 +52,7 @@ internal class UserRecipeDetailsViewModel(
 
     fun delete() {
         viewModelScope.launch {
-            userRecipeService.delete(identity)
+            userRecipeService.delete(identity, DeleteStrategy.Delete)
             eventChannel.send(UserRecipeDetailsUiEvent.Deleted)
         }
     }

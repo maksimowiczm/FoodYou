@@ -11,7 +11,7 @@ internal class RoomUserRecipeCompositionRepository(database: UserRecipeDatabase)
     private val dao: UserRecipeCompositionDao = database.compositionDao
 
     override suspend fun findRecipesUsing(
-        identity: FoodCompositionComponentIdentity
+        identity: FoodCompositionComponentIdentity.Identified
     ): List<UserRecipeIdentity> {
         val (type, value) = identity.toTypeAndValue()
         return dao.findRecipesByComponent(type, value).map(::UserRecipeIdentity)
@@ -24,7 +24,7 @@ internal class RoomUserRecipeCompositionRepository(database: UserRecipeDatabase)
 
     override suspend fun saveReferences(
         recipeIdentity: UserRecipeIdentity,
-        identities: Set<FoodCompositionComponentIdentity>,
+        identities: Set<FoodCompositionComponentIdentity.Identified>,
     ) {
         val references = identities.map { identity ->
             val (type, value) = identity.toTypeAndValue()
@@ -41,7 +41,7 @@ internal class RoomUserRecipeCompositionRepository(database: UserRecipeDatabase)
         dao.deleteByRecipeId(recipeIdentity.id)
     }
 
-    private fun FoodCompositionComponentIdentity.toTypeAndValue(): Pair<String, String> =
+    private fun FoodCompositionComponentIdentity.Identified.toTypeAndValue(): Pair<String, String> =
         when (this) {
             is FoodCompositionComponentIdentity.UserProduct -> "USER_PRODUCT" to id.toString()
             is FoodCompositionComponentIdentity.OpenFoodFacts -> "OPEN_FOOD_FACTS" to barcode

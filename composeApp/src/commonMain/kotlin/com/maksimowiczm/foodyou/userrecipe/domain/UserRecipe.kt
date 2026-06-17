@@ -3,6 +3,7 @@
 package com.maksimowiczm.foodyou.userrecipe.domain
 
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
@@ -53,8 +54,13 @@ inline fun UserRecipe.update(
         add(UserRecipeUpdatedEvent(recipe = updated, timestamp = clock.now()))
 }
 
-fun UserRecipe.remove(clock: Clock = Clock.System): List<UserRecipeEvent> =
-    listOf(UserRecipeDeletedEvent(identity = identity, timestamp = clock.now()))
+fun UserRecipe.remove(
+    strategy: DeleteStrategy,
+    clock: Clock = Clock.System,
+): List<UserRecipeEvent> =
+    listOf(
+        UserRecipeDeletedEvent(identity = identity, strategy = strategy, timestamp = clock.now())
+    )
 
 fun UserRecipe?.apply(event: UserRecipeEvent): UserRecipe? =
     when (event) {

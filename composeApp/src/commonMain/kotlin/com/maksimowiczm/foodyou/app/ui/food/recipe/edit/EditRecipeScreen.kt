@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifec
 import com.maksimowiczm.foodyou.app.ui.food.recipe.RecipeApp
 import com.maksimowiczm.foodyou.app.ui.food.recipe.RecipeFormViewModel
 import com.maksimowiczm.foodyou.app.ui.food.recipe.rememberRecipeFormState
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
@@ -42,7 +43,14 @@ fun EditRecipeScreen(
 
     val initialIngredients =
         remember(recipe.identity) {
-            recipe.composition.components.map { it.identity to it.quantity.toQuantity() }
+            recipe.composition.components
+                .map {
+                    when (it.identity) {
+                        is FoodCompositionComponentIdentity.Anonymous -> TODO()
+                        is FoodCompositionComponentIdentity.Identified -> it
+                    }
+                }
+                .map { it.identity to it.quantity.toQuantity() }
         }
     val recipeFormViewModel: RecipeFormViewModel = koinViewModel {
         parametersOf(initialIngredients)

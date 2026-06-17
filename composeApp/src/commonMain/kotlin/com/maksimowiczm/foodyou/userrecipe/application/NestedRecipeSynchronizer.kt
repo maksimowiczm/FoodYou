@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.event.EventHandler
@@ -26,9 +27,11 @@ class NestedRecipeSynchronizer(private val userRecipeService: UserRecipeService)
                 )
 
             is UserRecipeDeletedEvent -> {
-                userRecipeService.removeComponentFromRecipes(
-                    identity = FoodCompositionComponentIdentity.Recipe(event.identity.id)
-                )
+                val identity = FoodCompositionComponentIdentity.Recipe(event.identity.id)
+                when (event.strategy) {
+                    DeleteStrategy.Delete -> userRecipeService.removeComponentFromRecipes(identity)
+                    DeleteStrategy.Unlink -> userRecipeService.unlinkComponentFromRecipes(identity)
+                }
             }
         }
     }

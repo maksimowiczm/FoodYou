@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.userrecipe.domain
 
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
@@ -23,5 +24,6 @@ data class UserRecipeUpdatedEvent(
 @Serializable
 data class UserRecipeDeletedEvent(
     val identity: UserRecipeIdentity,
+    val strategy: DeleteStrategy,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : UserRecipeEvent()

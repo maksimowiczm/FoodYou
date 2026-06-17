@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
@@ -13,9 +14,7 @@ class UserProductSynchronizer(private val userRecipeService: UserRecipeService) 
     EventHandler<UserProductEvent> {
     override suspend fun handle(event: UserProductEvent) {
         when (event) {
-            is UserProductCreatedEvent -> {
-                // No action needed for creation as no recipe can use it yet
-            }
+            is UserProductCreatedEvent -> Unit
 
             is UserProductUpdatedEvent ->
                 userRecipeService.updateRecipesWithComponent(
@@ -31,9 +30,14 @@ class UserProductSynchronizer(private val userRecipeService: UserRecipeService) 
                 )
 
             is UserProductDeletedEvent -> {
-                userRecipeService.removeComponentFromRecipes(
-                    identity = FoodCompositionComponentIdentity.UserProduct(event.identity.id)
-                )
+                val componentIdentity =
+                    FoodCompositionComponentIdentity.UserProduct(event.identity.id)
+                when (event.strategy) {
+                    DeleteStrategy.Delete ->
+                        userRecipeService.removeComponentFromRecipes(componentIdentity)
+                    DeleteStrategy.Unlink ->
+                        userRecipeService.unlinkComponentFromRecipes(componentIdentity)
+                }
             }
         }
     }

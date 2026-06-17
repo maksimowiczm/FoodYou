@@ -5,9 +5,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface FoodCompositionComponentIdentity {
-    @Serializable sealed interface Leaf : FoodCompositionComponentIdentity
+    @Serializable data class Anonymous(val id: Uuid) : FoodCompositionComponentIdentity
 
-    @Serializable sealed interface Composite : FoodCompositionComponentIdentity
+    @Serializable sealed interface Identified : FoodCompositionComponentIdentity
+
+    @Serializable sealed interface Leaf : Identified
+
+    @Serializable sealed interface Composite : Identified
 
     @Serializable data class UserProduct(val id: Uuid) : Leaf
 

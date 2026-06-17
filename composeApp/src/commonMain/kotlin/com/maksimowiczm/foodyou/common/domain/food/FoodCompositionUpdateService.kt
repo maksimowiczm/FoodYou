@@ -73,6 +73,12 @@ object FoodCompositionUpdateService {
         identity: FoodCompositionComponentIdentity,
     ): FoodComposition? = transform(composition, identity) { null }
 
+    /** Replaces all components identified by [identity] with their anonymous counterparts. */
+    fun unlink(
+        composition: FoodComposition,
+        identity: FoodCompositionComponentIdentity,
+    ): FoodComposition = transform(composition, identity) { it.anonymize() } ?: composition
+
     private fun transform(
         composition: FoodComposition,
         targetId: FoodCompositionComponentIdentity,

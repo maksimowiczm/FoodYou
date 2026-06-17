@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
@@ -97,10 +98,10 @@ class UserRecipeService(
         }
     }
 
-    suspend fun delete(identity: UserRecipeIdentity) {
+    suspend fun delete(identity: UserRecipeIdentity, strategy: DeleteStrategy) {
         transact(identity) { recipe ->
             checkNotNull(recipe) { "Recipe with ID $identity not found" }
-            recipe.remove()
+            recipe.remove(strategy)
         }
     }
 
@@ -170,7 +171,7 @@ class UserRecipeService(
             .awaitAll()
     }
 
-    suspend fun removeComponentFromRecipes(identity: FoodCompositionComponentIdentity) =
+    suspend fun removeComponentFromRecipes(identity: FoodCompositionComponentIdentity.Identified) =
         coroutineScope {
             compositionRepository
                 .findRecipesUsing(identity)
@@ -180,8 +181,27 @@ class UserRecipeService(
                             recipe ?: return@transact emptyList()
                             val updatedComposition =
                                 FoodCompositionUpdateService.remove(recipe.composition, identity)
-                            if (updatedComposition == null) emptyList()
+
+                            // Delete recipe without ingredients
+                            if (updatedComposition == null) recipe.remove(DeleteStrategy.Delete)
                             else recipe.update { it.copy(composition = updatedComposition) }
+                        }
+                    }
+                }
+                .awaitAll()
+        }
+
+    suspend fun unlinkComponentFromRecipes(identity: FoodCompositionComponentIdentity.Identified) =
+        coroutineScope {
+            compositionRepository
+                .findRecipesUsing(identity)
+                .map { recipeIdentity ->
+                    async {
+                        transact(recipeIdentity) { recipe ->
+                            recipe ?: return@transact emptyList()
+                            val updatedComposition =
+                                FoodCompositionUpdateService.unlink(recipe.composition, identity)
+                            recipe.update { it.copy(composition = updatedComposition) }
                         }
                     }
                 }

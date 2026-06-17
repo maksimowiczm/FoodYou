@@ -47,7 +47,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 class RecipeFormViewModel(
-    initialIngredients: List<Pair<FoodCompositionComponentIdentity, Quantity>> = emptyList(),
+    initialIngredients: List<Pair<FoodCompositionComponentIdentity.Identified, Quantity>> =
+        emptyList(),
     private val fdc: FoodDataCentralService,
     private val off: OpenFoodFactsService,
     private val up: UserProductService,
@@ -103,7 +104,7 @@ class RecipeFormViewModel(
     }
 
     private fun getComponentFlow(
-        id: FoodCompositionComponentIdentity,
+        id: FoodCompositionComponentIdentity.Identified,
         quantity: Quantity,
     ): Flow<ResolvedIngredient?> {
         val key = id to quantity
@@ -121,7 +122,7 @@ class RecipeFormViewModel(
         ingredients.update { current -> current.toMutableList().apply { removeAt(index) } }
     }
 
-    fun addIngredient(identity: FoodCompositionComponentIdentity, quantity: Quantity) {
+    fun addIngredient(identity: FoodCompositionComponentIdentity.Identified, quantity: Quantity) {
         ingredients.update { current ->
             current.toMutableList().apply {
                 add(IngredientEntry(identity = identity, quantity = quantity))
@@ -136,7 +137,7 @@ class RecipeFormViewModel(
     }
 
     private fun observeComponent(
-        id: FoodCompositionComponentIdentity,
+        id: FoodCompositionComponentIdentity.Identified,
         quantity: Quantity,
     ): Flow<ResolvedIngredient?> =
         when (id) {
@@ -328,7 +329,7 @@ data class RecipeFormUiState(
 @Serializable
 data class IngredientEntry(
     val entryId: Uuid = Uuid.random(),
-    val identity: FoodCompositionComponentIdentity,
+    val identity: FoodCompositionComponentIdentity.Identified,
     val quantity: Quantity,
 )
 

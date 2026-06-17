@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.userrecipe
+package com.maksimowiczm.foodyou.app
 
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.app.infrastructure.room.EventStoreDatabase
@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.ReadModelDatabase.Compan
 import com.maksimowiczm.foodyou.app.infrastructure.room.RoomEventStore
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
@@ -30,8 +31,9 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductUpd
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductUpdatedEvent
+import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductDeletedEvent
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductUpdatedEvent
 import com.maksimowiczm.foodyou.userrecipe.application.CompositionSynchronizer
@@ -522,11 +524,24 @@ class UserRecipeIntegrationTest {
     @Test
     fun deleting_user_product_removes_it_from_recipes() = runIntegrationTest {
         val userRecipeService = get<UserRecipeService>()
-        val eventBus = get<EventBus>()
+        val userProductService = get<UserProductService>()
 
-        val productId = UserProductIdentity(Uuid.random())
+        val productId =
+            userProductService.create(
+                name = FoodName(fallback = "Product"),
+                brand = "Brand",
+                barcode = UserProductBarcode("123456789"),
+                note = null,
+                imageBytes = null,
+                servingQuantity = null,
+                packageQuantity = null,
+                isLiquid = false,
+                nutritionFacts = NutritionFacts(),
+            )
+        // Wait until product is created
+        userProductService.observe(productId).filterNotNull().first()
+
         val otherIngredientId = FoodCompositionComponentIdentity.OpenFoodFacts("other")
-
         val composition =
             FoodComposition(
                 components =
@@ -555,13 +570,10 @@ class UserRecipeIntegrationTest {
                 servings = 1.0,
                 composition = composition,
             )
-
         // Wait until recipe is created
         userRecipeService.observe(recipeId).filterNotNull().first()
 
-        eventBus.publish(
-            UserProductDeletedEvent(identity = productId, timestamp = Clock.System.now())
-        )
+        userProductService.delete(productId, DeleteStrategy.Delete)
 
         val updatedRecipe =
             userRecipeService.observe(recipeId).filterNotNull().first {
@@ -570,6 +582,68 @@ class UserRecipeIntegrationTest {
 
         assertEquals(1, updatedRecipe.composition.components.size)
         assertEquals(otherIngredientId, updatedRecipe.composition.components.first().identity)
+    }
+
+    @Test
+    fun unlinking_user_product_anonymizes_it_in_recipes() = runIntegrationTest {
+        val userProductService = get<UserProductService>()
+        val userRecipeService = get<UserRecipeService>()
+
+        val productId =
+            userProductService.create(
+                name = FoodName(fallback = "Product"),
+                brand = "Brand",
+                barcode = UserProductBarcode("123456789"),
+                note = null,
+                imageBytes = null,
+                servingQuantity = null,
+                packageQuantity = null,
+                isLiquid = false,
+                nutritionFacts = NutritionFacts(),
+            )
+        // Wait until product is created
+        userProductService.observe(productId).filterNotNull().first()
+
+        val name = FoodName(fallback = "To Unlink")
+        val nutrition = NutritionFacts(proteins = NutrientValue.Complete(10.grams))
+        val composition =
+            FoodComposition(
+                components =
+                    listOf(
+                        FoodCompositionComponent.Simple(
+                            identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
+                            name = name,
+                            image = null,
+                            nutritionFacts = nutrition,
+                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                        )
+                    )
+            )
+        val recipeId =
+            userRecipeService.create(
+                name = FoodName(fallback = "Recipe"),
+                note = null,
+                imageBytes = null,
+                servings = 1.0,
+                composition = composition,
+            )
+
+        // Wait until recipe is created
+        userRecipeService.observe(recipeId).filterNotNull().first()
+
+        userProductService.delete(productId, DeleteStrategy.Unlink)
+
+        val updatedRecipe =
+            userRecipeService.observe(recipeId).filterNotNull().first {
+                it.composition.components.first().identity is
+                    FoodCompositionComponentIdentity.Anonymous
+            }
+
+        assertEquals(1, updatedRecipe.composition.components.size)
+        val component = updatedRecipe.composition.components.first()
+        assertEquals(true, component.identity is FoodCompositionComponentIdentity.Anonymous)
+        assertEquals(name, component.name)
+        assertEquals(nutrition, component.nutritionFacts)
     }
 
     @Test
@@ -634,7 +708,7 @@ class UserRecipeIntegrationTest {
         userRecipeService.observe(parentId).filterNotNull().first()
 
         // 3. Delete Child Recipe
-        userRecipeService.delete(childId)
+        userRecipeService.delete(childId, DeleteStrategy.Delete)
 
         // 4. Verify Parent Recipe has one less ingredient
         val updatedParent =
@@ -644,6 +718,77 @@ class UserRecipeIntegrationTest {
 
         assertEquals(1, updatedParent.composition.components.size)
         assertEquals(otherIngredientId, updatedParent.composition.components.first().identity)
+    }
+
+    @Test
+    fun unlinking_nested_recipe_anonymizes_it_in_parent_recipe() = runIntegrationTest {
+        val userRecipeService = get<UserRecipeService>()
+
+        // 1. Create Child Recipe
+        val childComposition =
+            FoodComposition(
+                components =
+                    listOf(
+                        FoodCompositionComponent.Simple(
+                            identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
+                            name = FoodName(fallback = "Ingredient"),
+                            image = null,
+                            nutritionFacts = NutritionFacts(),
+                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                        )
+                    )
+            )
+        val childId =
+            userRecipeService.create(
+                name = FoodName(fallback = "Child"),
+                note = null,
+                imageBytes = null,
+                servings = 1.0,
+                composition = childComposition,
+            )
+
+        // 2. Create Parent Recipe
+        val parentComposition =
+            FoodComposition(
+                components =
+                    listOf(
+                        FoodCompositionComponent.Composite(
+                            identity = FoodCompositionComponentIdentity.Recipe(childId.id),
+                            name = FoodName(fallback = "Child"),
+                            image = null,
+                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                            composition = childComposition,
+                        )
+                    )
+            )
+        val parentId =
+            userRecipeService.create(
+                name = FoodName(fallback = "Parent"),
+                note = null,
+                imageBytes = null,
+                servings = 1.0,
+                composition = parentComposition,
+            )
+
+        // Wait until recipe is created
+        userRecipeService.observe(parentId).filterNotNull().first()
+
+        // 3. Unlink Child Recipe
+        userRecipeService.delete(childId, DeleteStrategy.Unlink)
+
+        // 4. Verify Parent Recipe has anonymous ingredient
+        val updatedParent =
+            userRecipeService.observe(parentId).filterNotNull().first {
+                it.composition.components.first().identity is
+                    FoodCompositionComponentIdentity.Anonymous
+            }
+
+        assertEquals(1, updatedParent.composition.components.size)
+        assertEquals(
+            true,
+            updatedParent.composition.components.first().identity
+                is FoodCompositionComponentIdentity.Anonymous,
+        )
     }
 
     private fun testModule(testScope: TestScope) = module {
@@ -659,6 +804,7 @@ class UserRecipeIntegrationTest {
         factoryOf(::RoomUserRecipeCompositionRepository).bind<UserRecipeCompositionRepository>()
 
         factoryOf(::UserRecipeService)
+        factoryOf(::UserProductService)
 
         eventHandlerOf(::UserProductSynchronizer)
         eventHandlerOf(::OpenFoodFactsSynchronizer)

@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.userproduct.application
 
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -102,10 +103,10 @@ class UserProductService(
         }
     }
 
-    suspend fun delete(identity: UserProductIdentity) {
+    suspend fun delete(identity: UserProductIdentity, strategy: DeleteStrategy) {
         transact(identity) { product ->
             checkNotNull(product) { "Product with ID $identity not found" }
-            product.remove()
+            product.remove(strategy)
         }
     }
 }

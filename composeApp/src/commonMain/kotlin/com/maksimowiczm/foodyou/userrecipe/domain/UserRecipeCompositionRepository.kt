@@ -18,7 +18,7 @@ interface UserRecipeCompositionRepository {
      * @return A list of identities for recipes that use the specified component.
      */
     suspend fun findRecipesUsing(
-        identity: FoodCompositionComponentIdentity
+        identity: FoodCompositionComponentIdentity.Identified
     ): List<UserRecipeIdentity>
 
     /**
@@ -38,7 +38,7 @@ interface UserRecipeCompositionRepository {
      */
     suspend fun saveReferences(
         recipeIdentity: UserRecipeIdentity,
-        identities: Set<FoodCompositionComponentIdentity>,
+        identities: Set<FoodCompositionComponentIdentity.Identified>,
     )
 
     /**

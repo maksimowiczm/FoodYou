@@ -163,6 +163,43 @@ class FoodCompositionUpdateServiceTest {
     }
 
     @Test
+    fun unlink_should_replace_component_with_anonymous_counterpart() {
+        val targetId = FoodCompositionComponentIdentity.UserProduct(Uuid.random())
+        val otherId = FoodCompositionComponentIdentity.OpenFoodFacts("789")
+
+        val componentToUnlink =
+            FoodCompositionComponent.Simple(
+                identity = targetId,
+                name = FoodName(fallback = "Unlinked"),
+                image = null,
+                nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
+                quantity = FoodComponentComponentQuantity.Weight(100.grams),
+            )
+
+        val otherComponent =
+            FoodCompositionComponent.Simple(
+                identity = otherId,
+                name = dummyName,
+                image = null,
+                nutritionFacts = NutritionFacts(),
+                quantity = FoodComponentComponentQuantity.Weight(100.grams),
+            )
+
+        val composition = FoodComposition(listOf(componentToUnlink, otherComponent))
+
+        val updated = FoodCompositionUpdateService.unlink(composition, targetId)
+
+        assertEquals(2, updated.components.size)
+        val unlinked = updated.components[0]
+        val unchanged = updated.components[1]
+
+        assertEquals("Unlinked", unlinked.name.fallback)
+        val identity = unlinked.identity
+        assertEquals(true, identity is FoodCompositionComponentIdentity.Anonymous)
+        assertEquals(otherId, unchanged.identity)
+    }
+
+    @Test
     fun update_should_update_serving_weight_if_provided() {
         val targetId = FoodCompositionComponentIdentity.UserProduct(Uuid.random())
         val component =

@@ -3,6 +3,7 @@
 package com.maksimowiczm.foodyou.userproduct.domain
 
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -62,8 +63,13 @@ inline fun UserProduct.update(
         add(UserProductUpdatedEvent(product = updated, timestamp = clock.now()))
 }
 
-fun UserProduct.remove(clock: Clock = Clock.System): List<UserProductEvent> =
-    listOf(UserProductDeletedEvent(identity = identity, timestamp = clock.now()))
+fun UserProduct.remove(
+    strategy: DeleteStrategy,
+    clock: Clock = Clock.System,
+): List<UserProductEvent> =
+    listOf(
+        UserProductDeletedEvent(identity = identity, strategy = strategy, timestamp = clock.now())
+    )
 
 fun UserProduct?.apply(event: UserProductEvent): UserProduct? =
     when (event) {

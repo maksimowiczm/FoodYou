@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.userrecipe.domain
 
 import com.maksimowiczm.foodyou.common.clock.staticClock
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
@@ -80,11 +81,12 @@ class UserRecipeTest {
         val now = Instant.fromEpochSeconds(3000)
         val clock = staticClock(now)
 
-        val events = userRecipe.remove(clock)
+        val events = userRecipe.remove(DeleteStrategy.Delete, clock)
 
         assertEquals(1, events.size)
         val event = assertIs<UserRecipeDeletedEvent>(events[0])
         assertEquals(identity, event.identity)
+        assertEquals(DeleteStrategy.Delete, event.strategy)
         assertEquals(now, event.timestamp)
     }
 
@@ -105,7 +107,7 @@ class UserRecipeTest {
 
     @Test
     fun apply_deleted_event() {
-        val event = UserRecipeDeletedEvent(identity, Instant.DISTANT_PAST)
+        val event = UserRecipeDeletedEvent(identity, DeleteStrategy.Delete, Instant.DISTANT_PAST)
         val result = userRecipe.apply(event)
         assertNull(result)
     }
@@ -128,7 +130,7 @@ class UserRecipeTest {
         val events =
             listOf(
                 UserRecipeCreatedEvent(userRecipe, Instant.fromEpochSeconds(1)),
-                UserRecipeDeletedEvent(identity, Instant.fromEpochSeconds(2)),
+                UserRecipeDeletedEvent(identity, DeleteStrategy.Delete, Instant.fromEpochSeconds(2)),
             )
 
         val result = events.toUserRecipe()
