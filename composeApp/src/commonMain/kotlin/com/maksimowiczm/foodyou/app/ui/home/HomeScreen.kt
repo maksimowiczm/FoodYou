@@ -391,6 +391,8 @@ fun HomeScreen(
         }
     }
 
+    // TODO: Navigation rail is invisible on first launch when dynamic colors are enabled. Requires
+    //       activity recreation to render correctly (e.g. theme change or screen rotation).
     HomeModalWideNavigationRail(
         state = railState,
         collections = collections,
@@ -404,7 +406,6 @@ fun HomeScreen(
             onCreateProduct()
         },
     )
-
     StatusBarProtection { (offset.value / topBarHeight).coerceIn(0f, 1f) }
 }
 

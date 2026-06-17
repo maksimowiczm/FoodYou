@@ -17,6 +17,8 @@ import androidx.compose.ui.platform.LocalView
 import com.maksimowiczm.foodyou.device.domain.NutrientsColors
 import com.maksimowiczm.foodyou.device.domain.Theme
 import com.maksimowiczm.foodyou.device.domain.ThemeSettings
+import com.materialkolor.PaletteStyle
+import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.ktx.animateColorScheme
 import com.materialkolor.rememberDynamicColorScheme
 
@@ -72,22 +74,28 @@ private fun FoodYouTheme(
             }
     }
 
+    val isDynamic =
+        remember(theme) {
+            (theme is Theme.Dynamic || theme is Theme.Default) &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+        }
+
     val colorScheme =
-        when (theme) {
-            is Theme.Dynamic if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> {
+        when {
+            isDynamic -> {
                 val context = LocalContext.current
                 @SuppressLint("NewApi")
                 if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             }
 
-            is Theme.Default if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> {
-                val context = LocalContext.current
-                @SuppressLint("NewApi")
-                if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-            }
-
-            is Theme.Custom -> theme.rememberColorScheme(isDark)
-            else -> rememberDynamicColorScheme(seedColor = MaterialDeepPurple, isDark = isDark)
+            theme is Theme.Custom -> theme.rememberColorScheme(isDark)
+            else ->
+                rememberDynamicColorScheme(
+                    seedColor = MaterialDeepPurple,
+                    isDark = isDark,
+                    specVersion = ColorSpec.SpecVersion.SPEC_2025,
+                    style = PaletteStyle.Expressive,
+                )
         }
 
     val context = LocalContext.current
