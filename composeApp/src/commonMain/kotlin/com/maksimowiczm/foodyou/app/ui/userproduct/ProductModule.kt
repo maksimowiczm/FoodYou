@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.app.ui.userproduct.edit.EditProductViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.scopedOf
 import org.koin.core.module.dsl.viewModelOf
-import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val productModule = module {
@@ -20,5 +19,4 @@ val productModule = module {
     }
 
     factoryOf(::ProductFormTransformer)
-    factoryOf(::ObserveEnergyUnitUseCaseImpl).bind<ObserveEnergyUnitUseCase>()
 }

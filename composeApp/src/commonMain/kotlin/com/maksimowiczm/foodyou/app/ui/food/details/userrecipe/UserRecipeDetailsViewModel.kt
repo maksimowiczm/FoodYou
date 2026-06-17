@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.app.ui.food.details.userrecipe
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
-import com.maksimowiczm.foodyou.app.ui.food.details.ObserveIsFavoriteFoodUseCase
-import com.maksimowiczm.foodyou.app.ui.food.details.SetFavoriteFoodUseCase
+import com.maksimowiczm.foodyou.app.application.ObserveIsFavoriteFoodUseCase
+import com.maksimowiczm.foodyou.app.application.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.channels.Channel

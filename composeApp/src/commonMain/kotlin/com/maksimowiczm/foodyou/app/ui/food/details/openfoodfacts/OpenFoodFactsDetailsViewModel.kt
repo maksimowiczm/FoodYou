@@ -4,14 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
+import com.maksimowiczm.foodyou.app.application.ObserveIsFavoriteFoodUseCase
+import com.maksimowiczm.foodyou.app.application.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsUiState
-import com.maksimowiczm.foodyou.app.ui.food.details.ObserveIsFavoriteFoodUseCase
-import com.maksimowiczm.foodyou.app.ui.food.details.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -68,7 +69,7 @@ internal class OpenFoodFactsDetailsViewModel(
     fun refresh() {
         viewModelScope.launch {
             isRefreshing.value = true
-            delay(500)
+            delay(500.milliseconds)
             openFoodFactsService.refresh(identity).onError { error ->
                 logger.e("Error refreshing OpenFoodFacts product: $identity", error)
             }

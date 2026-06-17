@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.userproduct
 
+import com.maksimowiczm.foodyou.app.application.ObserveEnergyUnitUseCase
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit

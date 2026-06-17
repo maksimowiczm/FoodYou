@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.userproduct
+package com.maksimowiczm.foodyou.app.application
 
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
