@@ -171,8 +171,12 @@ private fun UserRecipeDetailsScreen(
                 onBack = onBack,
                 title = headline,
                 actions = {
-                    FavoriteIconButton(favorite = isFavorite ?: false, onChange = onSetFavorite)
-                    UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
+                    FavoriteIconButton(
+                        favorite = isFavorite ?: false,
+                        onChange = onSetFavorite,
+                        enabled = recipe != null,
+                    )
+                    UserFoodMenu(onEdit = onEdit, onDelete = onDelete, enabled = recipe != null)
                 },
                 scrollBehavior = scrollBehavior,
             )

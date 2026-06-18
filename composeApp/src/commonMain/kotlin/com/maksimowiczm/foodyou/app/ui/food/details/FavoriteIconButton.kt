@@ -34,6 +34,7 @@ internal fun FavoriteIconButton(
     favorite: Boolean,
     onChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
 ) {
     val scope = rememberCoroutineScope()
@@ -54,6 +55,7 @@ internal fun FavoriteIconButton(
                 }
             }
         },
+        enabled = enabled,
         shapes = IconButtonDefaults.shapes(),
         colors = colors,
         modifier = modifier,

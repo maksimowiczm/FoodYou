@@ -142,8 +142,12 @@ private fun UserProductDetailsScreen(
                 onBack = onBack,
                 title = headline,
                 actions = {
-                    FavoriteIconButton(favorite = isFavorite ?: false, onChange = onSetFavorite)
-                    UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
+                    FavoriteIconButton(
+                        favorite = isFavorite ?: false,
+                        onChange = onSetFavorite,
+                        enabled = product != null,
+                    )
+                    UserFoodMenu(onEdit = onEdit, onDelete = onDelete, enabled = product != null)
                 },
                 scrollBehavior = scrollBehavior,
             )

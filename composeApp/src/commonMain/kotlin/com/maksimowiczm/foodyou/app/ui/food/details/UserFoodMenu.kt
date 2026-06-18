@@ -28,6 +28,7 @@ internal fun UserFoodMenu(
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -65,6 +66,7 @@ internal fun UserFoodMenu(
     Box(modifier) {
         IconButton(
             onClick = { expanded = true },
+            enabled = enabled,
             shapes = IconButtonDefaults.shapes(),
             colors = colors,
         ) {
