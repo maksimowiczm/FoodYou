@@ -5,8 +5,7 @@ import com.maksimowiczm.foodyou.common.event.DomainEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-internal class RoomEventStore(database: EventStoreDatabase) : EventStore {
-    private val eventStoreDao: EventStoreDao = database.eventStoreDao
+internal class RoomEventStore(private val eventStoreDao: EventStoreDao) : EventStore {
     private val mapper = DomainEventMapper
 
     override suspend fun load(stream: String): Iterable<DomainEvent> =

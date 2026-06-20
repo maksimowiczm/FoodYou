@@ -44,7 +44,6 @@ import com.maksimowiczm.foodyou.userrecipe.application.UserProductSynchronizer
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
 import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.RoomUserRecipeCompositionRepository
-import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeDatabase
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -64,18 +63,18 @@ import org.koin.dsl.module
 
 class UserRecipeIntegrationTest {
     private lateinit var eventStoreDatabase: EventStoreDatabase
-    private lateinit var userRecipeDatabase: ReadModelDatabase
+    private lateinit var readModelDatabase: ReadModelDatabase
 
     @BeforeTest
     fun setup() {
         eventStoreDatabase = provideRoomDatabaseBuilder<EventStoreDatabase>().buildDatabase()
-        userRecipeDatabase = provideRoomDatabaseBuilder<ReadModelDatabase>().buildDatabase()
+        readModelDatabase = provideRoomDatabaseBuilder<ReadModelDatabase>().buildDatabase()
     }
 
     @AfterTest
     fun tearDown() {
         if (::eventStoreDatabase.isInitialized) eventStoreDatabase.close()
-        if (::userRecipeDatabase.isInitialized) userRecipeDatabase.close()
+        if (::readModelDatabase.isInitialized) readModelDatabase.close()
     }
 
     @Test
@@ -796,11 +795,10 @@ class UserRecipeIntegrationTest {
         single<EventBus> { LoggingEventBus(InMemoryEventBus(), Logger) }
         single<BlobStorage> { FileKitBlobStorage() }
 
-        single<EventStoreDatabase> { eventStoreDatabase }
+        single { eventStoreDatabase.eventStoreDao }
         factoryOf(::RoomEventStore).bind<EventStore>()
 
-        single<UserRecipeDatabase> { userRecipeDatabase }
-        factory { get<UserRecipeDatabase>().compositionDao }
+        single { readModelDatabase.compositionDao }
         factoryOf(::RoomUserRecipeCompositionRepository).bind<UserRecipeCompositionRepository>()
 
         factoryOf(::UserRecipeService)

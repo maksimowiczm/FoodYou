@@ -9,12 +9,15 @@ import com.maksimowiczm.foodyou.userrecipe.application.UserProductSynchronizer
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
 import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.RoomUserRecipeCompositionRepository
+import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeDatabase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val userRecipeModule = module {
     factoryOf(::RoomUserRecipeCompositionRepository).bind<UserRecipeCompositionRepository>()
+
+    single { get<UserRecipeDatabase>().compositionDao }
 
     factoryOf(::UserRecipeService)
     eventHandlerOf(::UserProductSynchronizer)

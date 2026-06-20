@@ -12,9 +12,8 @@ import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class SearchRepositoryImpl(database: SearchDatabase) : SearchRepository {
+class SearchRepositoryImpl(private val dao: SearchDao) : SearchRepository {
     private val mapper = SearchResultMapper()
-    private val dao: SearchDao = database.searchDao
 
     override fun search(
         query: SearchQuery,

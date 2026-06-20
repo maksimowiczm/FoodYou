@@ -16,8 +16,8 @@ private const val EVENT_STORE_DATABASE_NAME = "EventStore.db"
 private const val READ_MODEL_DATABASE_NAME = "ReadModelDatabase.db"
 
 val roomModule = module {
-    single<EventStoreDatabase> {
-        databaseBuilder<EventStoreDatabase>(EVENT_STORE_DATABASE_NAME).buildDatabase()
+    single {
+        databaseBuilder<EventStoreDatabase>(EVENT_STORE_DATABASE_NAME).buildDatabase().eventStoreDao
     }
     factoryOf(::RoomEventStore).bind<EventStore>()
 

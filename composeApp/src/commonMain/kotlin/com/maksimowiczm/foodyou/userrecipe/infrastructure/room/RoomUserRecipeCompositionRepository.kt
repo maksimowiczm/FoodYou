@@ -6,15 +6,12 @@ import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-internal class RoomUserRecipeCompositionRepository(database: UserRecipeDatabase) :
+internal class RoomUserRecipeCompositionRepository(private val dao: UserRecipeCompositionDao) :
     UserRecipeCompositionRepository {
-    private val dao: UserRecipeCompositionDao = database.compositionDao
-
     override suspend fun findRecipesUsing(
         identity: FoodCompositionComponentIdentity.Identified
     ): List<UserRecipeIdentity> {
-        val (type, value) = identity.toTypeAndValue()
-        return dao.findRecipesByComponent(type, value).map(::UserRecipeIdentity)
+        return dao.findRecipesByComponent(identity).map(::UserRecipeIdentity)
     }
 
     override fun observeAncestors(identity: UserRecipeIdentity): Flow<Set<UserRecipeIdentity>> =
@@ -27,11 +24,9 @@ internal class RoomUserRecipeCompositionRepository(database: UserRecipeDatabase)
         identities: Set<FoodCompositionComponentIdentity.Identified>,
     ) {
         val references = identities.map { identity ->
-            val (type, value) = identity.toTypeAndValue()
             UserRecipeCompositionReferenceEntity(
                 recipeId = recipeIdentity.id,
-                componentType = type,
-                componentValue = value,
+                componentIdentity = identity,
             )
         }
         dao.updateReferences(recipeIdentity.id, references)
@@ -40,14 +35,4 @@ internal class RoomUserRecipeCompositionRepository(database: UserRecipeDatabase)
     override suspend fun removeReferences(recipeIdentity: UserRecipeIdentity) {
         dao.deleteByRecipeId(recipeIdentity.id)
     }
-
-    private fun FoodCompositionComponentIdentity.Identified.toTypeAndValue(): Pair<String, String> =
-        when (this) {
-            is FoodCompositionComponentIdentity.UserProduct -> "USER_PRODUCT" to id.toString()
-            is FoodCompositionComponentIdentity.OpenFoodFacts -> "OPEN_FOOD_FACTS" to barcode
-            is FoodCompositionComponentIdentity.FoodDataCentral ->
-                "FOOD_DATA_CENTRAL" to fdcId.toString()
-
-            is FoodCompositionComponentIdentity.Recipe -> "RECIPE" to id.toString()
-        }
 }
