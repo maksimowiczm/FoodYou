@@ -4,6 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter.Companion.RECIPE
+import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter.Companion.SEPARATOR
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 
@@ -15,21 +18,19 @@ interface UserRecipeCompositionDao {
             SELECT recipeId
             FROM UserRecipeFlattenedComposition
             WHERE
-                componentType = :type
-                AND
-                componentValue = :value
+                componentIdentity = :identity
             """
     )
-    suspend fun findRecipesByComponent(type: String, value: String): List<Uuid>
+    suspend fun findRecipesByComponent(
+        identity: FoodCompositionComponentIdentity.Identified
+    ): List<Uuid>
 
     @Query(
         """
             SELECT recipeId
             FROM UserRecipeFlattenedComposition
             WHERE
-                componentType = 'RECIPE'
-                AND
-                componentValue = :recipeId
+                componentIdentity = '$RECIPE$SEPARATOR' || :recipeId
             """
     )
     fun observeAncestors(recipeId: String): Flow<List<Uuid>>

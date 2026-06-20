@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
+import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter
 import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
 import com.maksimowiczm.foodyou.search.infrastructure.QuantityTypeConverter
 import com.maksimowiczm.foodyou.search.infrastructure.SearchDatabase
@@ -21,7 +22,11 @@ import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlatten
     version = ReadModelDatabase.VERSION,
     exportSchema = false,
 )
-@TypeConverters(UuidConverter::class, QuantityTypeConverter::class)
+@TypeConverters(
+    UuidConverter::class,
+    QuantityTypeConverter::class,
+    FoodCompositionComponentIdentityConverter::class,
+)
 @ConstructedBy(ReadModelDatabaseConstructor::class)
 internal abstract class ReadModelDatabase : RoomDatabase(), SearchDatabase, UserRecipeDatabase {
     companion object {
