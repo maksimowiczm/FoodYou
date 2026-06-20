@@ -21,7 +21,7 @@ class NestedRecipeSynchronizer(private val userRecipeService: UserRecipeService)
                 userRecipeService.updateRecipesWithRecipe(
                     identity = FoodCompositionComponentIdentity.Recipe(event.recipe.identity.id),
                     name = event.recipe.name,
-                    composition = event.recipe.composition,
+                    components = event.recipe.components,
                     servingWeight = event.recipe.servingWeight,
                     image = event.recipe.image?.let(FoodCompositionComponentImage::Blob),
                 )

@@ -14,7 +14,6 @@ import com.maksimowiczm.foodyou.app.ui.food.recipe.RecipeApp
 import com.maksimowiczm.foodyou.app.ui.food.recipe.RecipeFormViewModel
 import com.maksimowiczm.foodyou.app.ui.food.recipe.rememberRecipeFormState
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
-import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import foodyou.app.generated.resources.*
@@ -43,14 +42,14 @@ fun EditRecipeScreen(
 
     val initialIngredients =
         remember(recipe.identity) {
-            recipe.composition.components
+            recipe.components
                 .map {
                     when (it.identity) {
                         is FoodCompositionComponentIdentity.Anonymous -> TODO()
                         is FoodCompositionComponentIdentity.Identified -> it
                     }
                 }
-                .map { it.identity to it.quantity.toQuantity() }
+                .map { it.identity to it.quantity }
         }
     val recipeFormViewModel: RecipeFormViewModel = koinViewModel {
         parametersOf(initialIngredients)
@@ -61,14 +60,13 @@ fun EditRecipeScreen(
     val recipeFormState = rememberRecipeFormState(recipe)
 
     val isModified by
-        remember(recipeFormState.isModified, uiState.ingredients, recipe.composition) {
+        remember(recipeFormState.isModified, uiState.ingredients, recipe.components) {
             derivedStateOf {
                 recipeFormState.isModified ||
-                    uiState.ingredients.size != recipe.composition.components.size ||
-                    uiState.ingredients.zip(recipe.composition.components).any { (current, original)
-                        ->
+                    uiState.ingredients.size != recipe.components.size ||
+                    uiState.ingredients.zip(recipe.components).any { (current, original) ->
                         current.entry.identity != original.identity ||
-                            current.entry.quantity != original.quantity.toQuantity()
+                            current.entry.quantity != original.quantity
                     }
             }
         }

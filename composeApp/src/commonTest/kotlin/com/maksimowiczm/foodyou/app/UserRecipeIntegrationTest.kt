@@ -12,7 +12,6 @@ import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -101,18 +100,17 @@ class UserRecipeIntegrationTest {
             )
 
         // 2. Create a Recipe using this product
-        val composition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Simple(
-                            identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                            name = initialProductName,
-                            image = null,
-                            nutritionFacts = initialNutrition,
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        )
-                    )
+        val components =
+            listOf(
+                FoodCompositionComponent.Simple(
+                    identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
+                    name = initialProductName,
+                    image = null,
+                    nutritionFacts = initialNutrition,
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
+                )
             )
         val recipeId =
             userRecipeService.create(
@@ -120,14 +118,14 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = composition,
+                components = components,
             )
 
         // 3. Wait until recipe is created
         val recipe = userRecipeService.observe(recipeId).filterNotNull().first()
         assertEquals(
             initialProductName,
-            (recipe.composition.components.first() as FoodCompositionComponent.Simple).name,
+            (recipe.components.first() as FoodCompositionComponent.Simple).name,
         )
 
         // 4. Simulate a User Product Update
@@ -143,11 +141,10 @@ class UserRecipeIntegrationTest {
         // 5. Verify the recipe has been updated
         val updatedRecipe =
             userRecipeService.observe(recipeId).filterNotNull().first {
-                it.composition.components.first().name == updatedProductName
+                it.components.first().name == updatedProductName
             }
 
-        val component =
-            updatedRecipe.composition.components.first() as FoodCompositionComponent.Simple
+        val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
         assertEquals(updatedProductName, component.name)
         assertEquals(updatedNutrition, component.nutritionFacts)
     }
@@ -175,23 +172,17 @@ class UserRecipeIntegrationTest {
                 )
 
             // 2. Create a Recipe using 2 servings of this product
-            val composition =
-                FoodComposition(
-                    components =
-                        listOf(
-                            FoodCompositionComponent.Simple(
-                                identity =
-                                    FoodCompositionComponentIdentity.UserProduct(productId.id),
-                                name = product.name,
-                                image = null,
-                                nutritionFacts = product.nutritionFacts,
-                                quantity =
-                                    FoodComponentComponentQuantity.Serving(
-                                        quantity = 2.0,
-                                        servingWeight = 30.grams,
-                                    ),
-                            )
-                        )
+            val components =
+                listOf(
+                    FoodCompositionComponent.Simple(
+                        identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
+                        name = product.name,
+                        image = null,
+                        nutritionFacts = product.nutritionFacts,
+                        quantity = FoodComponentComponentQuantity.Serving(servings = 2.0),
+                        servingWeight = 30.grams,
+                        packageWeight = null,
+                    )
                 )
             val recipeId =
                 userRecipeService.create(
@@ -199,7 +190,7 @@ class UserRecipeIntegrationTest {
                     note = null,
                     imageBytes = null,
                     servings = 1.0,
-                    composition = composition,
+                    components = components,
                 )
 
             // 3. Wait until recipe is created and verify initial absolute weight (2 * 30g = 60g)
@@ -219,11 +210,9 @@ class UserRecipeIntegrationTest {
                     it.totalWeight == 80.grams
                 }
 
-            val component =
-                updatedRecipe.composition.components.first() as FoodCompositionComponent.Simple
-            val quantity = component.quantity as FoodComponentComponentQuantity.Serving
-            assertEquals(40.grams, quantity.servingWeight)
-            assertEquals(80.grams, component.quantity.absoluteWeight)
+            val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
+            assertEquals(40.grams, component.servingWeight)
+            assertEquals(80.grams, component.absoluteWeight)
         }
 
     @Test
@@ -235,18 +224,17 @@ class UserRecipeIntegrationTest {
         val initialProductName = FoodName(fallback = "Initial OFF Product")
         val initialNutrition = NutritionFacts(proteins = NutrientValue.Complete(5.grams))
 
-        val composition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Simple(
-                            identity = FoodCompositionComponentIdentity.OpenFoodFacts(barcode),
-                            name = initialProductName,
-                            image = null,
-                            nutritionFacts = initialNutrition,
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        )
-                    )
+        val components =
+            listOf(
+                FoodCompositionComponent.Simple(
+                    identity = FoodCompositionComponentIdentity.OpenFoodFacts(barcode),
+                    name = initialProductName,
+                    image = null,
+                    nutritionFacts = initialNutrition,
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
+                )
             )
         val recipeId =
             userRecipeService.create(
@@ -254,7 +242,7 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = composition,
+                components = components,
             )
 
         // Wait until recipe is created
@@ -284,11 +272,10 @@ class UserRecipeIntegrationTest {
 
         val updatedRecipe =
             userRecipeService.observe(recipeId).filterNotNull().first {
-                it.composition.components.first().name == updatedProductName
+                it.components.first().name == updatedProductName
             }
 
-        val component =
-            updatedRecipe.composition.components.first() as FoodCompositionComponent.Simple
+        val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
         assertEquals(updatedProductName, component.name)
         assertEquals(updatedNutrition, component.nutritionFacts)
     }
@@ -302,18 +289,17 @@ class UserRecipeIntegrationTest {
         val initialProductName = "Initial FDC Product"
         val initialNutrition = NutritionFacts(proteins = NutrientValue.Complete(8.grams))
 
-        val composition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Simple(
-                            identity = FoodCompositionComponentIdentity.FoodDataCentral(fdcId),
-                            name = FoodName(fallback = initialProductName),
-                            image = null,
-                            nutritionFacts = initialNutrition,
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        )
-                    )
+        val components =
+            listOf(
+                FoodCompositionComponent.Simple(
+                    identity = FoodCompositionComponentIdentity.FoodDataCentral(fdcId),
+                    name = FoodName(fallback = initialProductName),
+                    image = null,
+                    nutritionFacts = initialNutrition,
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
+                )
             )
         val recipeId =
             userRecipeService.create(
@@ -321,7 +307,7 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = composition,
+                components = components,
             )
 
         // Wait until recipe is created
@@ -351,11 +337,10 @@ class UserRecipeIntegrationTest {
         // Wait until recipe is updated
         val updatedRecipe =
             userRecipeService.observe(recipeId).filterNotNull().first {
-                it.composition.components.first().name.fallback == updatedProductName
+                it.components.first().name.fallback == updatedProductName
             }
 
-        val component =
-            updatedRecipe.composition.components.first() as FoodCompositionComponent.Simple
+        val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
         assertEquals(updatedProductName, component.name.fallback)
         assertEquals(updatedNutrition, component.nutritionFacts)
     }
@@ -367,18 +352,17 @@ class UserRecipeIntegrationTest {
         // 1. Create Child Recipe
         val childInitialName = FoodName(fallback = "Child Recipe")
         val childNutrition = NutritionFacts(proteins = NutrientValue.Complete(10.grams))
-        val childComposition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Simple(
-                            identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
-                            name = FoodName(fallback = "Ingredient"),
-                            image = null,
-                            nutritionFacts = childNutrition,
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        )
-                    )
+        val childComponents =
+            listOf(
+                FoodCompositionComponent.Simple(
+                    identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
+                    name = FoodName(fallback = "Ingredient"),
+                    image = null,
+                    nutritionFacts = childNutrition,
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
+                )
             )
         val childId =
             userRecipeService.create(
@@ -386,22 +370,21 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = childComposition,
+                components = childComponents,
             )
 
         // 2. Create Parent Recipe using Child Recipe
-        val parentComposition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Composite(
-                            identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                            name = childInitialName,
-                            image = null,
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                            composition = childComposition,
-                        )
-                    )
+        val parentComponents =
+            listOf(
+                FoodCompositionComponent.Composite(
+                    identity = FoodCompositionComponentIdentity.Recipe(childId.id),
+                    name = childInitialName,
+                    image = null,
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    components = childComponents,
+                    servingWeight = null,
+                    packageWeight = null,
+                )
             )
         val parentId =
             userRecipeService.create(
@@ -409,7 +392,7 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = parentComposition,
+                components = parentComponents,
             )
 
         // Wait until recipe is created
@@ -423,17 +406,16 @@ class UserRecipeIntegrationTest {
             note = "Updated",
             imageBytes = null,
             servings = 1.0,
-            composition = childComposition,
+            components = childComponents,
         )
 
         // 4. Verify Parent Recipe is updated
         val updatedParent =
             userRecipeService.observe(parentId).filterNotNull().first {
-                it.composition.components.first().name == childUpdatedName
+                it.components.first().name == childUpdatedName
             }
 
-        val component =
-            updatedParent.composition.components.first() as FoodCompositionComponent.Composite
+        val component = updatedParent.components.first() as FoodCompositionComponent.Composite
         assertEquals(childUpdatedName, component.name)
     }
 
@@ -443,18 +425,17 @@ class UserRecipeIntegrationTest {
             val userRecipeService = get<UserRecipeService>()
 
             // 1. Create Child Recipe with 1 serving = 100g
-            val childComposition =
-                FoodComposition(
-                    components =
-                        listOf(
-                            FoodCompositionComponent.Simple(
-                                identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
-                                name = FoodName(fallback = "Ingredient"),
-                                image = null,
-                                nutritionFacts = NutritionFacts(),
-                                quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                            )
-                        )
+            val childComponents =
+                listOf(
+                    FoodCompositionComponent.Simple(
+                        identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
+                        name = FoodName(fallback = "Ingredient"),
+                        image = null,
+                        nutritionFacts = NutritionFacts(),
+                        quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                        servingWeight = null,
+                        packageWeight = null,
+                    )
                 )
             val childId =
                 userRecipeService.create(
@@ -462,26 +443,21 @@ class UserRecipeIntegrationTest {
                     note = null,
                     imageBytes = null,
                     servings = 1.0,
-                    composition = childComposition,
+                    components = childComponents,
                 )
 
             // 2. Create Parent Recipe using 2 servings of Child Recipe
-            val parentComposition =
-                FoodComposition(
-                    components =
-                        listOf(
-                            FoodCompositionComponent.Composite(
-                                identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                                name = FoodName(fallback = "Child"),
-                                image = null,
-                                quantity =
-                                    FoodComponentComponentQuantity.Serving(
-                                        quantity = 2.0,
-                                        servingWeight = 100.grams,
-                                    ),
-                                composition = childComposition,
-                            )
-                        )
+            val parentComponents =
+                listOf(
+                    FoodCompositionComponent.Composite(
+                        identity = FoodCompositionComponentIdentity.Recipe(childId.id),
+                        name = FoodName(fallback = "Child"),
+                        image = null,
+                        quantity = FoodComponentComponentQuantity.Serving(servings = 2.0),
+                        servingWeight = 100.grams,
+                        components = childComponents,
+                        packageWeight = null,
+                    )
                 )
             val parentId =
                 userRecipeService.create(
@@ -489,7 +465,7 @@ class UserRecipeIntegrationTest {
                     note = null,
                     imageBytes = null,
                     servings = 1.0,
-                    composition = parentComposition,
+                    components = parentComponents,
                 )
 
             // Wait until recipe is created. Total weight should be 200g
@@ -504,7 +480,7 @@ class UserRecipeIntegrationTest {
                 note = "Updated",
                 imageBytes = null,
                 servings = 2.0,
-                composition = childComposition,
+                components = childComponents,
             )
 
             // 4. Verify Parent Recipe is updated.
@@ -514,10 +490,8 @@ class UserRecipeIntegrationTest {
                     it.totalWeight == 100.grams
                 }
 
-            val component =
-                updatedParent.composition.components.first() as FoodCompositionComponent.Composite
-            val quantity = component.quantity as FoodComponentComponentQuantity.Serving
-            assertEquals(50.grams, quantity.servingWeight)
+            val component = updatedParent.components.first() as FoodCompositionComponent.Composite
+            assertEquals(50.grams, component.servingWeight)
         }
 
     @Test
@@ -541,25 +515,26 @@ class UserRecipeIntegrationTest {
         userProductService.observe(productId).filterNotNull().first()
 
         val otherIngredientId = FoodCompositionComponentIdentity.OpenFoodFacts("other")
-        val composition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Simple(
-                            identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                            name = FoodName(fallback = "To Delete"),
-                            image = null,
-                            nutritionFacts = NutritionFacts(),
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        ),
-                        FoodCompositionComponent.Simple(
-                            identity = otherIngredientId,
-                            name = FoodName(fallback = "Keep Me"),
-                            image = null,
-                            nutritionFacts = NutritionFacts(),
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        ),
-                    )
+        val components =
+            listOf(
+                FoodCompositionComponent.Simple(
+                    identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
+                    name = FoodName(fallback = "To Delete"),
+                    image = null,
+                    nutritionFacts = NutritionFacts(),
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
+                ),
+                FoodCompositionComponent.Simple(
+                    identity = otherIngredientId,
+                    name = FoodName(fallback = "Keep Me"),
+                    image = null,
+                    nutritionFacts = NutritionFacts(),
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
+                ),
             )
         val recipeId =
             userRecipeService.create(
@@ -567,7 +542,7 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = composition,
+                components = components,
             )
         // Wait until recipe is created
         userRecipeService.observe(recipeId).filterNotNull().first()
@@ -575,12 +550,10 @@ class UserRecipeIntegrationTest {
         userProductService.delete(productId, DeleteStrategy.Delete)
 
         val updatedRecipe =
-            userRecipeService.observe(recipeId).filterNotNull().first {
-                it.composition.components.size == 1
-            }
+            userRecipeService.observe(recipeId).filterNotNull().first { it.components.size == 1 }
 
-        assertEquals(1, updatedRecipe.composition.components.size)
-        assertEquals(otherIngredientId, updatedRecipe.composition.components.first().identity)
+        assertEquals(1, updatedRecipe.components.size)
+        assertEquals(otherIngredientId, updatedRecipe.components.first().identity)
     }
 
     @Test
@@ -605,18 +578,17 @@ class UserRecipeIntegrationTest {
 
         val name = FoodName(fallback = "To Unlink")
         val nutrition = NutritionFacts(proteins = NutrientValue.Complete(10.grams))
-        val composition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Simple(
-                            identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                            name = name,
-                            image = null,
-                            nutritionFacts = nutrition,
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        )
-                    )
+        val components =
+            listOf(
+                FoodCompositionComponent.Simple(
+                    identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
+                    name = name,
+                    image = null,
+                    nutritionFacts = nutrition,
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
+                )
             )
         val recipeId =
             userRecipeService.create(
@@ -624,7 +596,7 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = composition,
+                components = components,
             )
 
         // Wait until recipe is created
@@ -634,12 +606,11 @@ class UserRecipeIntegrationTest {
 
         val updatedRecipe =
             userRecipeService.observe(recipeId).filterNotNull().first {
-                it.composition.components.first().identity is
-                    FoodCompositionComponentIdentity.Anonymous
+                it.components.first().identity is FoodCompositionComponentIdentity.Anonymous
             }
 
-        assertEquals(1, updatedRecipe.composition.components.size)
-        val component = updatedRecipe.composition.components.first()
+        assertEquals(1, updatedRecipe.components.size)
+        val component = updatedRecipe.components.first()
         assertEquals(true, component.identity is FoodCompositionComponentIdentity.Anonymous)
         assertEquals(name, component.name)
         assertEquals(nutrition, component.nutritionFacts)
@@ -650,18 +621,17 @@ class UserRecipeIntegrationTest {
         val userRecipeService = get<UserRecipeService>()
 
         // 1. Create Child Recipe
-        val childComposition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Simple(
-                            identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
-                            name = FoodName(fallback = "Ingredient"),
-                            image = null,
-                            nutritionFacts = NutritionFacts(),
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        )
-                    )
+        val childComponents =
+            listOf(
+                FoodCompositionComponent.Simple(
+                    identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
+                    name = FoodName(fallback = "Ingredient"),
+                    image = null,
+                    nutritionFacts = NutritionFacts(),
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
+                )
             )
         val childId =
             userRecipeService.create(
@@ -669,30 +639,31 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = childComposition,
+                components = childComponents,
             )
 
         // 2. Create Parent Recipe with 2 ingredients (one is the child recipe)
         val otherIngredientId = FoodCompositionComponentIdentity.OpenFoodFacts("other")
-        val parentComposition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Composite(
-                            identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                            name = FoodName(fallback = "Child"),
-                            image = null,
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                            composition = childComposition,
-                        ),
-                        FoodCompositionComponent.Simple(
-                            identity = otherIngredientId,
-                            name = FoodName(fallback = "Other"),
-                            image = null,
-                            nutritionFacts = NutritionFacts(),
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        ),
-                    )
+        val parentComponents =
+            listOf(
+                FoodCompositionComponent.Composite(
+                    identity = FoodCompositionComponentIdentity.Recipe(childId.id),
+                    name = FoodName(fallback = "Child"),
+                    image = null,
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    components = childComponents,
+                    servingWeight = null,
+                    packageWeight = null,
+                ),
+                FoodCompositionComponent.Simple(
+                    identity = otherIngredientId,
+                    name = FoodName(fallback = "Other"),
+                    image = null,
+                    nutritionFacts = NutritionFacts(),
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
+                ),
             )
         val parentId =
             userRecipeService.create(
@@ -700,7 +671,7 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = parentComposition,
+                components = parentComponents,
             )
 
         // Wait until recipe is created
@@ -711,12 +682,10 @@ class UserRecipeIntegrationTest {
 
         // 4. Verify Parent Recipe has one less ingredient
         val updatedParent =
-            userRecipeService.observe(parentId).filterNotNull().first {
-                it.composition.components.size == 1
-            }
+            userRecipeService.observe(parentId).filterNotNull().first { it.components.size == 1 }
 
-        assertEquals(1, updatedParent.composition.components.size)
-        assertEquals(otherIngredientId, updatedParent.composition.components.first().identity)
+        assertEquals(1, updatedParent.components.size)
+        assertEquals(otherIngredientId, updatedParent.components.first().identity)
     }
 
     @Test
@@ -724,18 +693,17 @@ class UserRecipeIntegrationTest {
         val userRecipeService = get<UserRecipeService>()
 
         // 1. Create Child Recipe
-        val childComposition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Simple(
-                            identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
-                            name = FoodName(fallback = "Ingredient"),
-                            image = null,
-                            nutritionFacts = NutritionFacts(),
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        )
-                    )
+        val childComponents =
+            listOf(
+                FoodCompositionComponent.Simple(
+                    identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
+                    name = FoodName(fallback = "Ingredient"),
+                    image = null,
+                    nutritionFacts = NutritionFacts(),
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
+                )
             )
         val childId =
             userRecipeService.create(
@@ -743,22 +711,21 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = childComposition,
+                components = childComponents,
             )
 
         // 2. Create Parent Recipe
-        val parentComposition =
-            FoodComposition(
-                components =
-                    listOf(
-                        FoodCompositionComponent.Composite(
-                            identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                            name = FoodName(fallback = "Child"),
-                            image = null,
-                            quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                            composition = childComposition,
-                        )
-                    )
+        val parentComponents =
+            listOf(
+                FoodCompositionComponent.Composite(
+                    identity = FoodCompositionComponentIdentity.Recipe(childId.id),
+                    name = FoodName(fallback = "Child"),
+                    image = null,
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    components = childComponents,
+                    servingWeight = null,
+                    packageWeight = null,
+                )
             )
         val parentId =
             userRecipeService.create(
@@ -766,7 +733,7 @@ class UserRecipeIntegrationTest {
                 note = null,
                 imageBytes = null,
                 servings = 1.0,
-                composition = parentComposition,
+                components = parentComponents,
             )
 
         // Wait until recipe is created
@@ -778,15 +745,13 @@ class UserRecipeIntegrationTest {
         // 4. Verify Parent Recipe has anonymous ingredient
         val updatedParent =
             userRecipeService.observe(parentId).filterNotNull().first {
-                it.composition.components.first().identity is
-                    FoodCompositionComponentIdentity.Anonymous
+                it.components.first().identity is FoodCompositionComponentIdentity.Anonymous
             }
 
-        assertEquals(1, updatedParent.composition.components.size)
+        assertEquals(1, updatedParent.components.size)
         assertEquals(
             true,
-            updatedParent.composition.components.first().identity
-                is FoodCompositionComponentIdentity.Anonymous,
+            updatedParent.components.first().identity is FoodCompositionComponentIdentity.Anonymous,
         )
     }
 

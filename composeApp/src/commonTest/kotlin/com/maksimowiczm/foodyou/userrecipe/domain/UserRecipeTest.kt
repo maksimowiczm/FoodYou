@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.userrecipe.domain
 import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -20,18 +19,17 @@ import kotlin.uuid.Uuid
 class UserRecipeTest {
     private val identity = UserRecipeIdentity(Uuid.random())
     private val name = FoodName(fallback = "Apple Pie")
-    private val composition =
-        FoodComposition(
-            components =
-                listOf(
-                    FoodCompositionComponent.Simple(
-                        identity = FoodCompositionComponentIdentity.OpenFoodFacts("123"),
-                        name = FoodName(fallback = "Apple"),
-                        image = null,
-                        nutritionFacts = NutritionFacts(),
-                        quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    )
-                )
+    private val components =
+        listOf(
+            FoodCompositionComponent.Simple(
+                identity = FoodCompositionComponentIdentity.OpenFoodFacts("123"),
+                name = FoodName(fallback = "Apple"),
+                image = null,
+                nutritionFacts = NutritionFacts(),
+                quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
+            )
         )
     private val userRecipe =
         UserRecipe(
@@ -40,7 +38,7 @@ class UserRecipeTest {
             note = "Best pie",
             image = null,
             servings = 8.0,
-            composition = composition,
+            components = components,
         )
 
     @Test
@@ -142,16 +140,16 @@ class UserRecipeTest {
         val recipeId = Uuid.random()
         val identity = UserRecipeIdentity(recipeId)
 
-        val selfReferencingComposition =
-            FoodComposition(
-                listOf(
-                    FoodCompositionComponent.Composite(
-                        identity = FoodCompositionComponentIdentity.Recipe(recipeId),
-                        name = FoodName(fallback = "Self"),
-                        image = null,
-                        quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        composition = composition, // This composition is fine by itself
-                    )
+        val selfReferencingComponents =
+            listOf(
+                FoodCompositionComponent.Composite(
+                    identity = FoodCompositionComponentIdentity.Recipe(recipeId),
+                    name = FoodName(fallback = "Self"),
+                    image = null,
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    components = components, // These components are fine by themselves
+                    servingWeight = null,
+                    packageWeight = null,
                 )
             )
 
@@ -162,7 +160,7 @@ class UserRecipeTest {
                 note = null,
                 image = null,
                 servings = 1.0,
-                composition = selfReferencingComposition,
+                components = selfReferencingComponents,
             )
         }
     }

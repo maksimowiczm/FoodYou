@@ -4,7 +4,8 @@ import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.grams
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
+import kotlin.test.assertIs
+import kotlin.test.assertTrue
 import kotlin.uuid.Uuid
 
 class FoodCompositionUpdateServiceTest {
@@ -28,6 +29,8 @@ class FoodCompositionUpdateServiceTest {
                 image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
         val otherComponent =
@@ -37,9 +40,11 @@ class FoodCompositionUpdateServiceTest {
                 image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
-        val subComposition = FoodComposition(listOf(componentToUpdate, otherComponent))
+        val subComponents = listOf(componentToUpdate, otherComponent)
 
         val compositeComponent =
             FoodCompositionComponent.Composite(
@@ -47,14 +52,16 @@ class FoodCompositionUpdateServiceTest {
                 name = FoodName(fallback = "Composite"),
                 image = null,
                 quantity = FoodComponentComponentQuantity.Weight(200.grams),
-                composition = subComposition,
+                components = subComponents,
+                servingWeight = null,
+                packageWeight = null,
             )
 
-        val mainComposition = FoodComposition(listOf(compositeComponent))
+        val mainComponents = listOf(compositeComponent)
 
-        val updatedComposition =
+        val updatedComponents =
             FoodCompositionUpdateService.update(
-                composition = mainComposition,
+                components = mainComponents,
                 identity = targetId,
                 name = newName,
                 image = FoodCompositionComponentImage.Blob(newImage),
@@ -63,17 +70,15 @@ class FoodCompositionUpdateServiceTest {
                 packageWeight = null,
             )
 
-        val updatedComposite =
-            updatedComposition.components.first() as FoodCompositionComponent.Composite
+        val updatedComposite = updatedComponents.first() as FoodCompositionComponent.Composite
         val updatedSubSimple =
-            updatedComposite.composition.components.first() as FoodCompositionComponent.Simple
+            updatedComposite.components.first() as FoodCompositionComponent.Simple
 
         assertEquals(newName, updatedSubSimple.name)
         assertEquals(newNutrition, updatedSubSimple.nutritionFacts)
         assertEquals(FoodCompositionComponentImage.Blob(newImage), updatedSubSimple.image)
         // Verify other component remained unchanged
-        val unchangedSubSimple =
-            updatedComposite.composition.components[1] as FoodCompositionComponent.Simple
+        val unchangedSubSimple = updatedComposite.components[1] as FoodCompositionComponent.Simple
         assertEquals(otherId, unchangedSubSimple.identity)
         assertEquals("Other", unchangedSubSimple.name.fallback)
         assertEquals(null, unchangedSubSimple.image)
@@ -91,6 +96,8 @@ class FoodCompositionUpdateServiceTest {
                 image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
         val otherComponent =
@@ -100,18 +107,20 @@ class FoodCompositionUpdateServiceTest {
                 image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
-        val composition = FoodComposition(listOf(componentToRemove, otherComponent))
+        val components = listOf(componentToRemove, otherComponent)
 
-        val updated = FoodCompositionUpdateService.remove(composition, targetId)
+        val updated = FoodCompositionUpdateService.remove(components, targetId)
 
-        assertEquals(1, updated?.components?.size)
-        assertEquals(otherId, updated?.components?.first()?.identity)
+        assertEquals(1, updated.size)
+        assertEquals(otherId, updated.first().identity)
     }
 
     @Test
-    fun remove_should_return_null_if_last_component_is_removed() {
+    fun remove_should_return_empty_if_last_component_is_removed() {
         val targetId = FoodCompositionComponentIdentity.UserProduct(Uuid.random())
         val component =
             FoodCompositionComponent.Simple(
@@ -120,12 +129,14 @@ class FoodCompositionUpdateServiceTest {
                 image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
-        val composition = FoodComposition(listOf(component))
+        val components = listOf(component)
 
-        val updated = FoodCompositionUpdateService.remove(composition, targetId)
+        val updated = FoodCompositionUpdateService.remove(components, targetId)
 
-        assertNull(updated)
+        assertTrue(updated.isEmpty())
     }
 
     @Test
@@ -140,8 +151,10 @@ class FoodCompositionUpdateServiceTest {
                 image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
-        val subComposition = FoodComposition(listOf(subComponent))
+        val subComponents = listOf(subComponent)
 
         val composite =
             FoodCompositionComponent.Composite(
@@ -149,17 +162,21 @@ class FoodCompositionUpdateServiceTest {
                 name = dummyName,
                 image = null,
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                composition = subComposition,
+                components = subComponents,
+                servingWeight = null,
+                packageWeight = null,
             )
 
-        val mainComposition = FoodComposition(listOf(composite))
+        val mainComponents = listOf(composite)
 
-        // Removing the only component in sub-composition should make the sub-composition null,
-        // which should make the composite component null, which should make the main composition
-        // null.
-        val updated = FoodCompositionUpdateService.remove(mainComposition, targetId)
+        val updated = FoodCompositionUpdateService.remove(mainComponents, targetId)
 
-        assertNull(updated)
+        assertEquals(1, updated.size)
+        val updatedComposite = updated.first()
+
+        assertIs<FoodCompositionComponent.Composite>(updatedComposite)
+        assertEquals(compositeId, updatedComposite.identity)
+        assertTrue(updatedComposite.components.isEmpty())
     }
 
     @Test
@@ -174,6 +191,8 @@ class FoodCompositionUpdateServiceTest {
                 image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
         val otherComponent =
@@ -183,15 +202,17 @@ class FoodCompositionUpdateServiceTest {
                 image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
-        val composition = FoodComposition(listOf(componentToUnlink, otherComponent))
+        val components = listOf(componentToUnlink, otherComponent)
 
-        val updated = FoodCompositionUpdateService.unlink(composition, targetId)
+        val updated = FoodCompositionUpdateService.unlink(components, targetId)
 
-        assertEquals(2, updated.components.size)
-        val unlinked = updated.components[0]
-        val unchanged = updated.components[1]
+        assertEquals(2, updated.size)
+        val unlinked = updated[0]
+        val unchanged = updated[1]
 
         assertEquals("Unlinked", unlinked.name.fallback)
         val identity = unlinked.identity
@@ -208,15 +229,16 @@ class FoodCompositionUpdateServiceTest {
                 name = dummyName,
                 image = null,
                 nutritionFacts = NutritionFacts(),
-                quantity =
-                    FoodComponentComponentQuantity.Serving(quantity = 2.0, servingWeight = 30.grams),
+                quantity = FoodComponentComponentQuantity.Serving(servings = 2.0),
+                servingWeight = 30.grams,
+                packageWeight = null,
             )
-        val composition = FoodComposition(listOf(component))
+        val components = listOf(component)
 
         val newServingWeight = 40.grams
         val updated =
             FoodCompositionUpdateService.update(
-                composition = composition,
+                components = components,
                 identity = targetId,
                 name = dummyName,
                 image = null,
@@ -225,10 +247,9 @@ class FoodCompositionUpdateServiceTest {
                 packageWeight = null,
             )
 
-        val updatedComponent = updated.components.first() as FoodCompositionComponent.Simple
-        val updatedQuantity = updatedComponent.quantity as FoodComponentComponentQuantity.Serving
-        assertEquals(newServingWeight, updatedQuantity.servingWeight)
-        assertEquals(80.grams, updatedComponent.quantity.absoluteWeight)
+        val updatedComponent = updated.first() as FoodCompositionComponent.Simple
+        assertEquals(newServingWeight, updatedComponent.servingWeight)
+        assertEquals(80.grams, updatedComponent.absoluteWeight)
     }
 
     @Test
@@ -240,18 +261,16 @@ class FoodCompositionUpdateServiceTest {
                 name = dummyName,
                 image = null,
                 nutritionFacts = NutritionFacts(),
-                quantity =
-                    FoodComponentComponentQuantity.Package(
-                        quantity = 0.5,
-                        packageWeight = 500.grams,
-                    ),
+                quantity = FoodComponentComponentQuantity.Package(packages = 0.5),
+                servingWeight = null,
+                packageWeight = 500.grams,
             )
-        val composition = FoodComposition(listOf(component))
+        val components = listOf(component)
 
         val newPackageWeight = 600.grams
         val updated =
             FoodCompositionUpdateService.update(
-                composition = composition,
+                components = components,
                 identity = targetId,
                 name = dummyName,
                 image = null,
@@ -260,25 +279,24 @@ class FoodCompositionUpdateServiceTest {
                 packageWeight = newPackageWeight,
             )
 
-        val updatedComponent = updated.components.first() as FoodCompositionComponent.Simple
-        val updatedQuantity = updatedComponent.quantity as FoodComponentComponentQuantity.Package
-        assertEquals(newPackageWeight, updatedQuantity.packageWeight)
-        assertEquals(300.grams, updatedComponent.quantity.absoluteWeight)
+        val updatedComponent = updated.first() as FoodCompositionComponent.Simple
+        assertEquals(newPackageWeight, updatedComponent.packageWeight)
+        assertEquals(300.grams, updatedComponent.absoluteWeight)
     }
 
     @Test
     fun update_should_update_composite_serving_weight_if_provided() {
         val targetId = FoodCompositionComponentIdentity.Recipe(Uuid.random())
-        val subComposition =
-            FoodComposition(
-                listOf(
-                    FoodCompositionComponent.Simple(
-                        identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
-                        name = dummyName,
-                        image = null,
-                        nutritionFacts = NutritionFacts(),
-                        quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    )
+        val subComponents =
+            listOf(
+                FoodCompositionComponent.Simple(
+                    identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
+                    name = dummyName,
+                    image = null,
+                    nutritionFacts = NutritionFacts(),
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
                 )
             )
         val component =
@@ -286,31 +304,28 @@ class FoodCompositionUpdateServiceTest {
                 identity = targetId,
                 name = dummyName,
                 image = null,
-                quantity =
-                    FoodComponentComponentQuantity.Serving(
-                        quantity = 1.0,
-                        servingWeight = 100.grams,
-                    ),
-                composition = subComposition,
+                quantity = FoodComponentComponentQuantity.Serving(servings = 1.0),
+                servingWeight = 100.grams,
+                components = subComponents,
+                packageWeight = null,
             )
-        val composition = FoodComposition(listOf(component))
+        val components = listOf(component)
 
         val newServingWeight = 50.grams
         val updated =
             FoodCompositionUpdateService.update(
-                composition = composition,
+                components = components,
                 identity = targetId,
                 name = dummyName,
                 image = null,
-                newComposition = subComposition,
+                newComponents = subComponents,
                 servingWeight = newServingWeight,
                 packageWeight = null,
             )
 
-        val updatedComponent = updated.components.first() as FoodCompositionComponent.Composite
-        val updatedQuantity = updatedComponent.quantity as FoodComponentComponentQuantity.Serving
-        assertEquals(newServingWeight, updatedQuantity.servingWeight)
-        assertEquals(50.grams, updatedComponent.quantity.absoluteWeight)
+        val updatedComponent = updated.first() as FoodCompositionComponent.Composite
+        assertEquals(newServingWeight, updatedComponent.servingWeight)
+        assertEquals(50.grams, updatedComponent.absoluteWeight)
     }
 
     @Test
@@ -322,14 +337,15 @@ class FoodCompositionUpdateServiceTest {
                 name = dummyName,
                 image = null,
                 nutritionFacts = NutritionFacts(),
-                quantity =
-                    FoodComponentComponentQuantity.Serving(quantity = 2.0, servingWeight = 30.grams),
+                quantity = FoodComponentComponentQuantity.Serving(servings = 2.0),
+                servingWeight = 30.grams,
+                packageWeight = null,
             )
-        val composition = FoodComposition(listOf(component))
+        val components = listOf(component)
 
         val updated =
             FoodCompositionUpdateService.update(
-                composition = composition,
+                components = components,
                 identity = targetId,
                 name = dummyName,
                 image = null,
@@ -338,8 +354,8 @@ class FoodCompositionUpdateServiceTest {
                 packageWeight = null,
             )
 
-        val updatedComponent = updated.components.first() as FoodCompositionComponent.Simple
-        // Should be converted to Weight quantity
+        val updatedComponent = updated.first() as FoodCompositionComponent.Simple
+        // Should be converted to Weight servings
         val updatedQuantity = updatedComponent.quantity as FoodComponentComponentQuantity.Weight
         assertEquals(60.grams, updatedQuantity.weight)
     }
@@ -353,17 +369,15 @@ class FoodCompositionUpdateServiceTest {
                 name = dummyName,
                 image = null,
                 nutritionFacts = NutritionFacts(),
-                quantity =
-                    FoodComponentComponentQuantity.Package(
-                        quantity = 0.5,
-                        packageWeight = 500.grams,
-                    ),
+                quantity = FoodComponentComponentQuantity.Package(packages = 0.5),
+                servingWeight = null,
+                packageWeight = 500.grams,
             )
-        val composition = FoodComposition(listOf(component))
+        val components = listOf(component)
 
         val updated =
             FoodCompositionUpdateService.update(
-                composition = composition,
+                components = components,
                 identity = targetId,
                 name = dummyName,
                 image = null,
@@ -372,8 +386,8 @@ class FoodCompositionUpdateServiceTest {
                 packageWeight = null,
             )
 
-        val updatedComponent = updated.components.first() as FoodCompositionComponent.Simple
-        // Should be converted to Weight quantity
+        val updatedComponent = updated.first() as FoodCompositionComponent.Simple
+        // Should be converted to Weight servings
         val updatedQuantity = updatedComponent.quantity as FoodComponentComponentQuantity.Weight
         assertEquals(250.grams, updatedQuantity.weight)
     }

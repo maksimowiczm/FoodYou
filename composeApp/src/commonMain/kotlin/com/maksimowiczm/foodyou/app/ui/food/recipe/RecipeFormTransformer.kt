@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.food.recipe
 
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.common.domain.Language
-import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
@@ -14,12 +14,12 @@ class RecipeFormTransformer(private val foodNameSelector: FoodNameSelector) {
         val note: String?,
         val imageBytes: ByteArray?,
         val servings: Double,
-        val composition: FoodComposition,
+        val components: List<FoodCompositionComponent>,
     )
 
     suspend fun transform(form: RecipeFormState, uiState: RecipeFormUiState): Result {
         require(form.isValid) { "Form is not valid" }
-        requireNotNull(uiState.composition) { "Composition is not ready" }
+        requireNotNull(uiState.components) { "Composition is not ready" }
 
         val language = foodNameSelector.observeLanguage().first()
 
@@ -56,7 +56,7 @@ class RecipeFormTransformer(private val foodNameSelector: FoodNameSelector) {
             note = note,
             imageBytes = form.imageUri.value?.let(::PlatformFile)?.readBytes(),
             servings = servings,
-            composition = uiState.composition,
+            components = uiState.components,
         )
     }
 }

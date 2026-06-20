@@ -5,10 +5,13 @@ package com.maksimowiczm.foodyou.userrecipe.domain
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.Weight
-import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.allComponentIdentities
+import com.maksimowiczm.foodyou.common.domain.food.nutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.totalWeight
 import kotlin.time.Clock
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
@@ -22,21 +25,22 @@ data class UserRecipe(
     val note: String?,
     val image: BlobDigest?,
     val servings: Double,
-    val composition: FoodComposition,
+    val components: List<FoodCompositionComponent>,
 ) {
     init {
         require(note == null || note.isNotBlank()) { "Note cannot be blank" }
         require(servings > 0) { "Servings must be positive number" }
+        require(components.isNotEmpty()) { "Recipe must have at least one component" }
         require(
             FoodCompositionComponentIdentity.Recipe(identity.id) !in
-                composition.allComponentIdentities
+                components.allComponentIdentities
         ) {
-            "Circular dependency: Recipe cannot contain itself in its composition"
+            "Circular dependency: Recipe cannot contain itself in its components"
         }
     }
 
-    val nutritionFacts: NutritionFacts = composition.nutritionFacts
-    val totalWeight: Weight = composition.totalWeight
+    val nutritionFacts: NutritionFacts = components.nutritionFacts
+    val totalWeight: Weight = components.totalWeight
     val servingWeight: Weight = totalWeight / servings
 
     companion object {

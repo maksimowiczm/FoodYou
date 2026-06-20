@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.common.domain.food
 import com.maksimowiczm.foodyou.common.domain.grams
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.uuid.Uuid
 
 class FoodCompositionTest {
@@ -20,6 +19,8 @@ class FoodCompositionTest {
                 image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
         val component2 =
             FoodCompositionComponent.Simple(
@@ -28,9 +29,11 @@ class FoodCompositionTest {
                 image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(250.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
-        val composition = FoodComposition(listOf(component1, component2))
+        val composition = listOf(component1, component2)
 
         assertEquals(350.grams, composition.totalWeight)
     }
@@ -45,6 +48,8 @@ class FoodCompositionTest {
                 image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(50.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
         // Component B: 150g total, 20g protein per 100g -> 30g protein absolute
         val componentB =
@@ -54,20 +59,17 @@ class FoodCompositionTest {
                 image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(20.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(150.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
-        val composition = FoodComposition(listOf(componentA, componentB))
+        val composition = listOf(componentA, componentB)
 
         // Total weight = 200g
         // Total protein = 35g
         // Normalized protein per 100g = 35 / 200 * 100 = 17.5g
         assertEquals(200.grams, composition.totalWeight)
         assertEquals(NutrientValue.Complete(17.5.grams), composition.nutritionFacts.proteins)
-    }
-
-    @Test
-    fun should_throw_exception_if_components_list_is_empty() {
-        assertFailsWith<IllegalArgumentException> { FoodComposition(emptyList()) }
     }
 
     @Test
@@ -80,8 +82,10 @@ class FoodCompositionTest {
                 image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
-        val subComposition = FoodComposition(listOf(subComponent))
+        val subComponents = listOf(subComponent)
 
         // Main composition: 50g of sub-composition + 50g of another component (20g protein/100g)
         val compositeComponent =
@@ -90,7 +94,9 @@ class FoodCompositionTest {
                 name = FoodName(fallback = "Composite"),
                 image = null,
                 quantity = FoodComponentComponentQuantity.Weight(50.grams),
-                composition = subComposition,
+                components = subComponents,
+                servingWeight = null,
+                packageWeight = null,
             )
         val otherComponent =
             FoodCompositionComponent.Simple(
@@ -99,9 +105,11 @@ class FoodCompositionTest {
                 image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(20.grams)),
                 quantity = FoodComponentComponentQuantity.Weight(50.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
-        val mainComposition = FoodComposition(listOf(compositeComponent, otherComponent))
+        val mainComposition = listOf(compositeComponent, otherComponent)
 
         // Sub-composition normalized nutrition: 10g protein / 100g
         // Composite component (50g): 5g protein
@@ -120,16 +128,16 @@ class FoodCompositionTest {
         val id3 = FoodCompositionComponentIdentity.Recipe(Uuid.random())
         val id4 = FoodCompositionComponentIdentity.FoodDataCentral(789)
 
-        val subComposition =
-            FoodComposition(
-                listOf(
-                    FoodCompositionComponent.Simple(
-                        identity = id1,
-                        name = dummyName,
-                        image = null,
-                        nutritionFacts = NutritionFacts(),
-                        quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    )
+        val subComponents =
+            listOf(
+                FoodCompositionComponent.Simple(
+                    identity = id1,
+                    name = dummyName,
+                    image = null,
+                    nutritionFacts = NutritionFacts(),
+                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    servingWeight = null,
+                    packageWeight = null,
                 )
             )
 
@@ -139,7 +147,9 @@ class FoodCompositionTest {
                 name = dummyName,
                 image = null,
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                composition = subComposition,
+                components = subComponents,
+                servingWeight = null,
+                packageWeight = null,
             )
 
         val simple2 =
@@ -149,6 +159,8 @@ class FoodCompositionTest {
                 image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
         val simple4 =
@@ -158,51 +170,13 @@ class FoodCompositionTest {
                 image = null,
                 nutritionFacts = NutritionFacts(),
                 quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                servingWeight = null,
+                packageWeight = null,
             )
 
-        val composition = FoodComposition(listOf(composite, simple2, simple4))
+        val composition = listOf(composite, simple2, simple4)
 
         val expected = setOf(id1, id2, id3, id4)
         assertEquals(expected, composition.allComponentIdentities)
-    }
-
-    @Test
-    fun should_throw_exception_if_circular_dependency_is_detected() {
-        val recipeId = FoodCompositionComponentIdentity.Recipe(Uuid.random())
-        val simpleComponent =
-            FoodCompositionComponent.Simple(
-                identity = dummyIdentity,
-                name = dummyName,
-                image = null,
-                nutritionFacts = NutritionFacts(),
-                quantity = FoodComponentComponentQuantity.Weight(100.grams),
-            )
-
-        val compositionWithCyclePlaceholder = FoodComposition(listOf(simpleComponent))
-
-        // Create a composite that contains itself in its composition (even if indirect)
-        // Here we first create a composition that has a composite with recipeId
-        val compositeWithRecipeId =
-            FoodCompositionComponent.Composite(
-                identity = recipeId,
-                name = dummyName,
-                image = null,
-                quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                composition = compositionWithCyclePlaceholder,
-            )
-
-        val compositionContainingRecipeId = FoodComposition(listOf(compositeWithRecipeId))
-
-        // Now try to create another composite with the same recipeId, but its composition already
-        // contains recipeId
-        assertFailsWith<IllegalArgumentException> {
-            FoodCompositionComponent.Composite(
-                identity = recipeId,
-                name = dummyName,
-                image = null,
-                quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                composition = compositionContainingRecipeId,
-            )
-        }
     }
 }

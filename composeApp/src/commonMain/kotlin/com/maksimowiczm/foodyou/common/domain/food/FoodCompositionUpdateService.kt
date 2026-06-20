@@ -1,110 +1,128 @@
 package com.maksimowiczm.foodyou.common.domain.food
 
 import com.maksimowiczm.foodyou.common.domain.Weight
+import kotlin.jvm.JvmName
 
 /**
- * Domain service for updating and transforming [FoodComposition] structures.
+ * Domain service for updating and transforming food composition structures.
  *
  * This service handles the recursive traversal and transformation of the component tree, keeping
- * the domain entities ([FoodComposition], [FoodCompositionComponent]) focused on representing the
- * data.
+ * the domain entities ([FoodCompositionComponent]) focused on representing the data.
  */
 object FoodCompositionUpdateService {
 
     /**
      * Updates a leaf component identified by [identity] with new [name] and [nutritionFacts]. The
-     * update is propagated through the entire [composition] tree.
+     * update is propagated through the entire [components] tree.
      */
     fun update(
-        composition: FoodComposition,
+        components: List<FoodCompositionComponent>,
         identity: FoodCompositionComponentIdentity.Leaf,
         name: FoodName,
         nutritionFacts: NutritionFacts,
         servingWeight: Weight?,
         packageWeight: Weight?,
         image: FoodCompositionComponentImage?,
-    ): FoodComposition =
-        transform(composition, identity) { component ->
-            check(component is FoodCompositionComponent.Simple) {
-                "Expected a Simple component for identity $identity, but found ${component::class}"
-            }
-            val updatedQuantity = updateQuantity(component.quantity, servingWeight, packageWeight)
+    ): List<FoodCompositionComponent> =
+        transform(components, identity) { component ->
+            val updatedQuantity = updateQuantity(component, servingWeight, packageWeight)
             component.copy(
                 name = name,
                 nutritionFacts = nutritionFacts,
                 quantity = updatedQuantity,
+                servingWeight = servingWeight,
+                packageWeight = packageWeight,
                 image = image,
             )
-        } ?: composition
+        }
 
     /**
-     * Updates a composite component identified by [identity] with new [name] and [newComposition].
-     * The update is propagated through the entire [composition] tree.
+     * Updates a composite component identified by [identity] with new [name] and [newComponents].
+     * The update is propagated through the entire [components] tree.
      */
     fun update(
-        composition: FoodComposition,
+        components: List<FoodCompositionComponent>,
         identity: FoodCompositionComponentIdentity.Composite,
         name: FoodName,
-        newComposition: FoodComposition,
+        newComponents: List<FoodCompositionComponent>,
         servingWeight: Weight?,
         packageWeight: Weight?,
         image: FoodCompositionComponentImage?,
-    ): FoodComposition =
-        transform(composition, identity) { component ->
-            check(component is FoodCompositionComponent.Composite) {
-                "Expected a Composite component for identity $identity, but found ${component::class}"
-            }
-            val updatedQuantity = updateQuantity(component.quantity, servingWeight, packageWeight)
+    ): List<FoodCompositionComponent> =
+        transform(components, identity) { component ->
+            val updatedQuantity = updateQuantity(component, servingWeight, packageWeight)
             component.copy(
                 name = name,
-                composition = newComposition,
+                components = newComponents,
                 quantity = updatedQuantity,
+                servingWeight = servingWeight,
+                packageWeight = packageWeight,
                 image = image,
             )
-        } ?: composition
+        }
 
     /**
-     * Removes all components identified by [identity] from the [composition] tree. If a composite
+     * Removes all components identified by [identity] from the [components] tree. If a composite
      * component becomes empty after removal, it is also removed. Returns `null` if the entire
      * composition is removed.
      */
     fun remove(
-        composition: FoodComposition,
+        components: List<FoodCompositionComponent>,
         identity: FoodCompositionComponentIdentity,
-    ): FoodComposition? = transform(composition, identity) { null }
+    ): List<FoodCompositionComponent> = transformList(components, identity) { null }
 
     /** Replaces all components identified by [identity] with their anonymous counterparts. */
     fun unlink(
-        composition: FoodComposition,
+        components: List<FoodCompositionComponent>,
         identity: FoodCompositionComponentIdentity,
-    ): FoodComposition = transform(composition, identity) { it.anonymize() } ?: composition
+    ): List<FoodCompositionComponent> = transformList(components, identity) { it.anonymize() }
 
     private fun transform(
-        composition: FoodComposition,
+        components: List<FoodCompositionComponent>,
+        targetId: FoodCompositionComponentIdentity.Leaf,
+        transformer: (FoodCompositionComponent.Simple) -> FoodCompositionComponent?,
+    ): List<FoodCompositionComponent> = transformList(components, targetId, transformer)
+
+    private fun transform(
+        components: List<FoodCompositionComponent>,
+        targetId: FoodCompositionComponentIdentity.Composite,
+        transformer: (FoodCompositionComponent.Composite) -> FoodCompositionComponent?,
+    ): List<FoodCompositionComponent> = transformList(components, targetId, transformer)
+
+    private fun transformList(
+        components: List<FoodCompositionComponent>,
         targetId: FoodCompositionComponentIdentity,
         transformer: (FoodCompositionComponent) -> FoodCompositionComponent?,
-    ): FoodComposition? {
-        val updatedComponents =
-            composition.components.mapNotNull { transform(it, targetId, transformer) }
+    ): List<FoodCompositionComponent> =
+        transformList<FoodCompositionComponent>(components, targetId, transformer)
+
+    @JvmName("transformListGeneric")
+    private fun <T : FoodCompositionComponent> transformList(
+        components: List<FoodCompositionComponent>,
+        targetId: FoodCompositionComponentIdentity,
+        transformer: (T) -> FoodCompositionComponent?,
+    ): List<FoodCompositionComponent> {
+        val updatedComponents = components.mapNotNull { transformSingle(it, targetId, transformer) }
         return when {
-            updatedComponents.isEmpty() -> null
-            updatedComponents == composition.components -> composition
-            else -> composition.copy(components = updatedComponents)
+            updatedComponents == components -> components
+            else -> updatedComponents
         }
     }
 
-    private fun transform(
+    private fun <T : FoodCompositionComponent> transformSingle(
         component: FoodCompositionComponent,
         targetId: FoodCompositionComponentIdentity,
-        transformer: (FoodCompositionComponent) -> FoodCompositionComponent?,
+        transformer: (T) -> FoodCompositionComponent?,
     ): FoodCompositionComponent? {
-        if (component.identity == targetId) return transformer(component)
+        if (component.identity == targetId) {
+            @Suppress("UNCHECKED_CAST")
+            return transformer(component as T)
+        }
 
         return if (component is FoodCompositionComponent.Composite) {
-            when (val updatedInner = transform(component.composition, targetId, transformer)) {
-                null -> null
-                component.composition -> component
-                else -> component.copy(composition = updatedInner)
+            when (val updatedInner = transformList(component.components, targetId, transformer)) {
+                component.components -> component
+                else -> component.copy(components = updatedInner)
             }
         } else {
             component
@@ -112,17 +130,17 @@ object FoodCompositionUpdateService {
     }
 
     private fun updateQuantity(
-        quantity: FoodComponentComponentQuantity,
+        component: FoodCompositionComponent,
         servingWeight: Weight?,
         packageWeight: Weight?,
     ): FoodComponentComponentQuantity =
-        when (quantity) {
+        when (val quantity = component.quantity) {
             is FoodComponentComponentQuantity.Serving ->
-                if (servingWeight != null) quantity.copy(servingWeight = servingWeight)
-                else FoodComponentComponentQuantity.Weight(quantity.absoluteWeight)
+                if (servingWeight != null) quantity
+                else FoodComponentComponentQuantity.Weight(component.absoluteWeight)
             is FoodComponentComponentQuantity.Package ->
-                if (packageWeight != null) quantity.copy(packageWeight = packageWeight)
-                else FoodComponentComponentQuantity.Weight(quantity.absoluteWeight)
+                if (packageWeight != null) quantity
+                else FoodComponentComponentQuantity.Weight(component.absoluteWeight)
             is FoodComponentComponentQuantity.Weight -> quantity
         }
 }

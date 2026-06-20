@@ -39,7 +39,7 @@ class EditRecipeViewModel(
         if (!isLocked.compareAndSet(expect = false, update = true)) return
 
         viewModelScope.launch {
-            val (name, note, imageBytes, servings, composition) =
+            val (name, note, imageBytes, servings, components) =
                 recipeFormTransformer.transform(form, state)
 
             recipeService.edit(
@@ -48,7 +48,7 @@ class EditRecipeViewModel(
                 note = note,
                 imageBytes = imageBytes,
                 servings = servings,
-                composition = composition,
+                components = components,
             )
 
             eventBus.send(EditRecipeEvent.Updated)

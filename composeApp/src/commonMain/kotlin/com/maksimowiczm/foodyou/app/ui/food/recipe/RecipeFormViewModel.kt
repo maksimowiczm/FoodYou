@@ -4,21 +4,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.common.RemoteData
+import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.common.extension.combine
-import com.maksimowiczm.foodyou.common.getOrNull
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -26,10 +23,8 @@ import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
-import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
@@ -81,9 +76,8 @@ class RecipeFormViewModel(
                             val components = items.mapNotNull { it.resolved?.component }
                             RecipeFormUiState(
                                 ingredients = items,
-                                composition =
-                                    if (components.size == entries.size) FoodComposition(components)
-                                    else null,
+                                components =
+                                    if (components.size == entries.size) components else null,
                             )
                         }
             }
@@ -150,8 +144,10 @@ class RecipeFormViewModel(
                                     identity = id,
                                     name = it.name,
                                     image = it.image?.let(FoodCompositionComponentImage::Blob),
-                                    quantity = it.toComponentQuantity(quantity),
-                                    composition = it.composition,
+                                    quantity = quantity.toComponentQuantity(),
+                                    servingWeight = recipe.servingWeight,
+                                    packageWeight = recipe.totalWeight,
+                                    components = it.components,
                                 )
                         )
                     }
@@ -167,7 +163,9 @@ class RecipeFormViewModel(
                                     name = FoodName(fallback = it.name),
                                     image = null,
                                     nutritionFacts = it.nutritionFacts,
-                                    quantity = it.toComponentQuantity(quantity),
+                                    quantity = quantity.toComponentQuantity(),
+                                    servingWeight = product.servingQuantity?.forceWeight(),
+                                    packageWeight = product.packageQuantity?.forceWeight(),
                                 )
                         )
                     }
@@ -186,7 +184,9 @@ class RecipeFormViewModel(
                                             FoodCompositionComponentImage::Uri
                                         ),
                                     nutritionFacts = it.nutritionFacts,
-                                    quantity = it.toComponentQuantity(quantity),
+                                    quantity = quantity.toComponentQuantity(),
+                                    servingWeight = product.servingQuantity?.forceWeight(),
+                                    packageWeight = product.packageQuantity?.forceWeight(),
                                 )
                         )
                     }
@@ -202,95 +202,30 @@ class RecipeFormViewModel(
                                     name = it.name,
                                     image = it.image?.let(FoodCompositionComponentImage::Blob),
                                     nutritionFacts = it.nutritionFacts,
-                                    quantity = it.toComponentQuantity(quantity),
+                                    quantity = quantity.toComponentQuantity(),
+                                    servingWeight = product.servingQuantity?.forceWeight(),
+                                    packageWeight = product.packageQuantity?.forceWeight(),
                                 )
                         )
                     }
                 }
         }
 
-    private fun UserRecipe.toComponentQuantity(quantity: Quantity): FoodComponentComponentQuantity =
-        resolveComponentQuantity(
-            quantity = quantity,
-            packageQuantity = AbsoluteQuantity.Weight(totalWeight),
-            servingQuantity = AbsoluteQuantity.Weight(servingWeight),
-        )
-
-    private fun FoodDataCentralProduct.toComponentQuantity(
-        quantity: Quantity
-    ): FoodComponentComponentQuantity =
-        resolveComponentQuantity(
-            quantity = quantity,
-            packageQuantity = packageQuantity,
-            servingQuantity = servingQuantity,
-        )
-
-    private fun OpenFoodFactsProduct.toComponentQuantity(
-        quantity: Quantity
-    ): FoodComponentComponentQuantity =
-        resolveComponentQuantity(
-            quantity = quantity,
-            packageQuantity = packageQuantity,
-            servingQuantity = servingQuantity,
-        )
-
-    private fun UserProduct.toComponentQuantity(
-        quantity: Quantity
-    ): FoodComponentComponentQuantity =
-        resolveComponentQuantity(
-            quantity = quantity,
-            packageQuantity = packageQuantity,
-            servingQuantity = servingQuantity,
-            isLiquid = isLiquid,
-        )
-
-    private fun resolveComponentQuantity(
-        quantity: Quantity,
-        packageQuantity: AbsoluteQuantity?,
-        servingQuantity: AbsoluteQuantity?,
-        isLiquid: Boolean = false,
-    ): FoodComponentComponentQuantity {
-        val absolute =
-            QuantityCalculator.calculateAbsoluteQuantity(
-                    suggestedQuantity = quantity,
-                    packageQuantity = packageQuantity,
-                    servingQuantity = servingQuantity,
-                )
-                .getOrNull()
-                ?: packageQuantity
-                ?: servingQuantity
-                ?: if (isLiquid) AbsoluteQuantity.Volume(100.milliliters)
-                else AbsoluteQuantity.Weight(100.grams)
-
-        val weight =
-            when (absolute) {
-                is AbsoluteQuantity.Weight -> absolute.weight
-                is AbsoluteQuantity.Volume -> absolute.volume.milliliters.grams
-            }
-
-        return when (quantity) {
-            is AbsoluteQuantity -> FoodComponentComponentQuantity.Weight(weight)
-            is PackageQuantity -> {
-                val pw =
-                    when (packageQuantity) {
-                        is AbsoluteQuantity.Weight -> packageQuantity.weight
-                        is AbsoluteQuantity.Volume -> packageQuantity.volume.milliliters.grams
-                        null -> weight / quantity.packages
-                    }
-                FoodComponentComponentQuantity.Package(quantity.packages, pw)
-            }
-
-            is ServingQuantity -> {
-                val sw =
-                    when (servingQuantity) {
-                        is AbsoluteQuantity.Weight -> servingQuantity.weight
-                        is AbsoluteQuantity.Volume -> servingQuantity.volume.milliliters.grams
-                        null -> weight / quantity.servings
-                    }
-                FoodComponentComponentQuantity.Serving(quantity.servings, sw)
-            }
+    private fun AbsoluteQuantity.forceWeight(): Weight {
+        return when (this) {
+            is AbsoluteQuantity.Weight -> weight
+            is AbsoluteQuantity.Volume -> volume.milliliters.grams
         }
     }
+
+    private fun Quantity.toComponentQuantity(): FoodComponentComponentQuantity =
+        when (this) {
+            is AbsoluteQuantity.Weight -> FoodComponentComponentQuantity.Weight(weight)
+            is AbsoluteQuantity.Volume ->
+                FoodComponentComponentQuantity.Weight(volume.milliliters.grams)
+            is PackageQuantity -> FoodComponentComponentQuantity.Package(packages)
+            is ServingQuantity -> FoodComponentComponentQuantity.Serving(servings)
+        }
 
     private fun FoodDataCentralService.observeNullable(
         identity: FoodDataCentralProductIdentity
@@ -323,7 +258,7 @@ class RecipeFormViewModel(
 
 data class RecipeFormUiState(
     val ingredients: List<IngredientItemState> = emptyList(),
-    val composition: FoodComposition? = null,
+    val components: List<FoodCompositionComponent>? = null,
 )
 
 @Serializable

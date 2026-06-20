@@ -198,7 +198,7 @@ private fun UserRecipeDetailsScreen(
             item { Spacer(Modifier.height(8.dp)) }
             if (recipe != null) {
                 item {
-                    recipe.composition.components.forEach { component ->
+                    recipe.components.forEach { component ->
                         RecipeIngredientListItem(
                             component = component,
                             scalingFactor = ingredientScalingFactor,

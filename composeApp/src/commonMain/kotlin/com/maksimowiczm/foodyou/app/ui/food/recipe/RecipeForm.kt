@@ -60,14 +60,15 @@ import com.maksimowiczm.foodyou.app.ui.userproduct.requiredStringResource
 import com.maksimowiczm.foodyou.common.domain.Energy
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.food.isIncomplete
+import com.maksimowiczm.foodyou.common.domain.food.nutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.scale
+import com.maksimowiczm.foodyou.common.domain.food.totalWeight
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.getOrNull
 import com.valentinilk.shimmer.Shimmer
@@ -92,9 +93,8 @@ fun RecipeForm(
     val horizontalPadding = contentPadding.horizontal()
 
     val uiState by viewModel.state.collectAsStateWithLifecycle()
-    val composition = uiState.composition
 
-    val totalWeight = composition?.totalWeight ?: 0.grams
+    val totalWeight = remember(uiState.components) { uiState.components?.totalWeight ?: 0.grams }
 
     val servings =
         derivedStateOf {
@@ -126,7 +126,7 @@ fun RecipeForm(
         }
     }
 
-    val nutritionFacts = composition?.nutritionFacts
+    val nutritionFacts = remember(uiState.components) { uiState.components?.nutritionFacts }
     val scaled =
         remember(nutritionFacts, totalWeight, servingWeight, selectedQuantity) {
             nutritionFacts
@@ -300,20 +300,12 @@ private fun IngredientListItem(
     val component = resolved.component
     val measurementFacts = component.measuredNutritionFacts
 
-    val packageQuantity =
-        when (val q = component.quantity) {
-            is FoodComponentComponentQuantity.Package -> AbsoluteQuantity.Weight(q.packageWeight)
-            else -> null
-        }
-    val servingQuantity =
-        when (val q = component.quantity) {
-            is FoodComponentComponentQuantity.Serving -> AbsoluteQuantity.Weight(q.servingWeight)
-            else -> null
-        }
+    val packageQuantity = component.packageWeight?.let(AbsoluteQuantity::Weight)
+    val servingQuantity = component.servingWeight?.let(AbsoluteQuantity::Weight)
 
     val measurementString =
         quantity.stringResource(packageQuantity, servingQuantity).getOrNull()
-            ?: AbsoluteQuantity.Weight(component.quantity.absoluteWeight).stringResource()
+            ?: AbsoluteQuantity.Weight(component.absoluteWeight).stringResource()
 
     val nameSelector = LocalFoodNameSelector.current
     val headline = remember(component.name, nameSelector) { nameSelector.select(component.name) }

@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.Weight
-import com.maksimowiczm.foodyou.common.domain.food.FoodComposition
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionUpdateService
@@ -58,7 +58,7 @@ class UserRecipeService(
         note: String?,
         imageBytes: ByteArray?,
         servings: Double,
-        composition: FoodComposition,
+        components: List<FoodCompositionComponent>,
     ): UserRecipeIdentity {
         val identity = UserRecipeIdentity(Uuid.random())
         transact(identity) {
@@ -69,7 +69,7 @@ class UserRecipeService(
                     note = note,
                     image = imageBytes?.let { blobStorage.store(it) },
                     servings = servings,
-                    composition = composition,
+                    components = components,
                 )
             )
         }
@@ -82,7 +82,7 @@ class UserRecipeService(
         note: String?,
         imageBytes: ByteArray?,
         servings: Double,
-        composition: FoodComposition,
+        components: List<FoodCompositionComponent>,
     ) {
         transact(identity) { recipe ->
             checkNotNull(recipe) { "Recipe with ID $identity not found" }
@@ -92,7 +92,7 @@ class UserRecipeService(
                     note = note,
                     image = imageBytes?.let { bytes -> blobStorage.store(bytes) },
                     servings = servings,
-                    composition = composition,
+                    components = components,
                 )
             }
         }
@@ -120,9 +120,9 @@ class UserRecipeService(
                     transact(recipeIdentity) { recipe ->
                         recipe?.update {
                             it.copy(
-                                composition =
+                                components =
                                     FoodCompositionUpdateService.update(
-                                        composition = it.composition,
+                                        components = it.components,
                                         identity = identity,
                                         name = name,
                                         nutritionFacts = nutritionFacts,
@@ -141,7 +141,7 @@ class UserRecipeService(
     suspend fun updateRecipesWithRecipe(
         identity: FoodCompositionComponentIdentity.Composite,
         name: FoodName,
-        composition: FoodComposition,
+        components: List<FoodCompositionComponent>,
         servingWeight: Weight? = null,
         packageWeight: Weight? = null,
         image: FoodCompositionComponentImage? = null,
@@ -153,12 +153,12 @@ class UserRecipeService(
                     transact(recipeIdentity) { recipe ->
                         recipe?.update {
                             it.copy(
-                                composition =
+                                components =
                                     FoodCompositionUpdateService.update(
-                                        composition = it.composition,
+                                        components = it.components,
                                         identity = identity,
                                         name = name,
-                                        newComposition = composition,
+                                        newComponents = components,
                                         servingWeight = servingWeight,
                                         packageWeight = packageWeight,
                                         image = image,
@@ -180,11 +180,11 @@ class UserRecipeService(
                         transact(recipeIdentity) { recipe ->
                             recipe ?: return@transact emptyList()
                             val updatedComposition =
-                                FoodCompositionUpdateService.remove(recipe.composition, identity)
+                                FoodCompositionUpdateService.remove(recipe.components, identity)
 
                             // Delete recipe without ingredients
-                            if (updatedComposition == null) recipe.remove(DeleteStrategy.Delete)
-                            else recipe.update { it.copy(composition = updatedComposition) }
+                            if (updatedComposition.isEmpty()) recipe.remove(DeleteStrategy.Delete)
+                            else recipe.update { it.copy(components = updatedComposition) }
                         }
                     }
                 }
@@ -200,8 +200,8 @@ class UserRecipeService(
                         transact(recipeIdentity) { recipe ->
                             recipe ?: return@transact emptyList()
                             val updatedComposition =
-                                FoodCompositionUpdateService.unlink(recipe.composition, identity)
-                            recipe.update { it.copy(composition = updatedComposition) }
+                                FoodCompositionUpdateService.unlink(recipe.components, identity)
+                            recipe.update { it.copy(components = updatedComposition) }
                         }
                     }
                 }
