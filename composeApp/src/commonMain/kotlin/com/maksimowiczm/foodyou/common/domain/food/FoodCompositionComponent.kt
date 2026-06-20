@@ -15,8 +15,6 @@ import kotlinx.serialization.Serializable
  * @property measuredNutritionFacts **absolute** nutrition delivered by this component at its actual
  *   [quantity]
  * @property quantity How much of this ingredient is used
- * @property servingWeight Optional weight of a single serving of this component
- * @property packageWeight Optional weight of a single package of this component
  * @property allIdentities Set of all [FoodCompositionComponentIdentity]s that make up this
  *   component, including itself and any nested components
  */
@@ -28,30 +26,7 @@ sealed interface FoodCompositionComponent {
     val nutritionFacts: NutritionFacts
     val measuredNutritionFacts: NutritionFacts
     val quantity: FoodComponentComponentQuantity
-    val servingWeight: Weight?
-    val packageWeight: Weight?
     val allIdentities: Set<FoodCompositionComponentIdentity>
-
-    /** The total weight of this component, derived from the specific servings' representation. */
-    val absoluteWeight: Weight
-        get() =
-            when (val q = quantity) {
-                is FoodComponentComponentQuantity.Weight -> q.weight
-                is FoodComponentComponentQuantity.Package -> {
-                    val pw =
-                        requireNotNull(packageWeight) {
-                            "Package weight is required for PackageQuantity"
-                        }
-                    pw * q.packages
-                }
-                is FoodComponentComponentQuantity.Serving -> {
-                    val sw =
-                        requireNotNull(servingWeight) {
-                            "Serving weight is required for ServingQuantity"
-                        }
-                    sw * q.servings
-                }
-            }
 
     /** Creates a copy of this component with an anonymous identity. */
     fun anonymize(): FoodCompositionComponent =
@@ -61,8 +36,6 @@ sealed interface FoodCompositionComponent {
             image = image,
             nutritionFacts = nutritionFacts,
             quantity = quantity,
-            servingWeight = servingWeight,
-            packageWeight = packageWeight,
         )
 
     /** A component that is not backed by any persistent food item. */
@@ -73,11 +46,9 @@ sealed interface FoodCompositionComponent {
         override val image: FoodCompositionComponentImage?,
         override val nutritionFacts: NutritionFacts,
         override val quantity: FoodComponentComponentQuantity,
-        override val servingWeight: Weight?,
-        override val packageWeight: Weight?,
     ) : FoodCompositionComponent {
         override val measuredNutritionFacts: NutritionFacts =
-            nutritionFacts * absoluteWeight.grams / 100.0
+            nutritionFacts * quantity.absoluteWeight.grams / 100.0
         override val allIdentities: Set<FoodCompositionComponentIdentity.Identified> = emptySet()
     }
 
@@ -93,11 +64,9 @@ sealed interface FoodCompositionComponent {
         override val image: FoodCompositionComponentImage?,
         override val nutritionFacts: NutritionFacts,
         override val quantity: FoodComponentComponentQuantity,
-        override val servingWeight: Weight?,
-        override val packageWeight: Weight?,
     ) : FoodCompositionComponent {
         override val measuredNutritionFacts: NutritionFacts =
-            nutritionFacts * absoluteWeight.grams / 100.0
+            nutritionFacts * quantity.absoluteWeight.grams / 100.0
         override val allIdentities: Set<FoodCompositionComponentIdentity.Leaf> = setOf(identity)
     }
 
@@ -115,13 +84,11 @@ sealed interface FoodCompositionComponent {
         override val name: FoodName,
         override val image: FoodCompositionComponentImage?,
         override val quantity: FoodComponentComponentQuantity,
-        override val servingWeight: Weight?,
-        override val packageWeight: Weight?,
         val components: List<FoodCompositionComponent>,
     ) : FoodCompositionComponent {
         override val nutritionFacts: NutritionFacts = components.nutritionFacts
         override val measuredNutritionFacts: NutritionFacts =
-            nutritionFacts * absoluteWeight.grams / 100.0
+            nutritionFacts * quantity.absoluteWeight.grams / 100.0
         override val allIdentities: Set<FoodCompositionComponentIdentity> =
             setOf(identity) + components.allComponentIdentities
     }
@@ -129,7 +96,7 @@ sealed interface FoodCompositionComponent {
 
 /** Sum of the absolute weights of all components. */
 val Iterable<FoodCompositionComponent>.totalWeight: Weight
-    get() = map { it.absoluteWeight }.sum()
+    get() = map { it.quantity.absoluteWeight }.sum()
 
 /** Set of all identities present in these components and their subcomponents. */
 val Iterable<FoodCompositionComponent>.allComponentIdentities: Set<FoodCompositionComponentIdentity>

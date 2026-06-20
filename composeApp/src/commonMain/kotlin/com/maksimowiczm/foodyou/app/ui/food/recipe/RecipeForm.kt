@@ -269,7 +269,6 @@ private fun Ingredients(
                 } else {
                     IngredientListItem(
                         resolved = item.resolved,
-                        quantity = item.entry.quantity,
                         isLocked = isLocked,
                         shimmer = shimmer,
                         onClick = { onIngredientClick(index) },
@@ -284,7 +283,6 @@ private fun Ingredients(
 @Composable
 private fun IngredientListItem(
     resolved: ResolvedIngredient,
-    quantity: Quantity,
     isLocked: Boolean,
     shimmer: Shimmer,
     onClick: () -> Unit,
@@ -297,21 +295,17 @@ private fun IngredientListItem(
         DeleteIngredientDialog(onDelete = onDelete, onDismiss = { showDeleteDialog = false })
     }
 
-    val component = resolved.component
-    val measurementFacts = component.measuredNutritionFacts
-
-    val packageQuantity = component.packageWeight?.let(AbsoluteQuantity::Weight)
-    val servingQuantity = component.servingWeight?.let(AbsoluteQuantity::Weight)
-
-    val measurementString =
-        quantity.stringResource(packageQuantity, servingQuantity).getOrNull()
-            ?: AbsoluteQuantity.Weight(component.absoluteWeight).stringResource()
+    val measurementFacts = resolved.component.measuredNutritionFacts
+    val measurementString = resolved.component.quantity.stringResource()
 
     val nameSelector = LocalFoodNameSelector.current
-    val headline = remember(component.name, nameSelector) { nameSelector.select(component.name) }
+    val headline =
+        remember(resolved.component.name, nameSelector) {
+            nameSelector.select(resolved.component.name)
+        }
 
     val image: @Composable (() -> Unit)? = run {
-        when (val image = component.image) {
+        when (val image = resolved.component.image) {
             is FoodCompositionComponentImage.Blob -> {
                 @Composable { resolveBlob(image.blob).Image(shimmer, Modifier.size(56.dp)) }
             }
@@ -326,7 +320,7 @@ private fun IngredientListItem(
 
     RecipeIngredientListItem(
         headline = headline,
-        isRecipe = component.identity is FoodCompositionComponentIdentity.Recipe,
+        isRecipe = resolved.component.identity is FoodCompositionComponentIdentity.Recipe,
         proteins = measurementFacts.proteins.value,
         carbohydrates = measurementFacts.carbohydrates.value,
         fats = measurementFacts.fats.value,

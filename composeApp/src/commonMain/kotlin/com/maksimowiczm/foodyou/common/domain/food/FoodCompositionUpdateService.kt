@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.common.domain.food
 
-import com.maksimowiczm.foodyou.common.domain.Weight
 import kotlin.jvm.JvmName
 
 /**
@@ -20,18 +19,14 @@ object FoodCompositionUpdateService {
         identity: FoodCompositionComponentIdentity.Leaf,
         name: FoodName,
         nutritionFacts: NutritionFacts,
-        servingWeight: Weight?,
-        packageWeight: Weight?,
+        quantity: (current: FoodComponentComponentQuantity) -> FoodComponentComponentQuantity,
         image: FoodCompositionComponentImage?,
     ): List<FoodCompositionComponent> =
         transform(components, identity) { component ->
-            val updatedQuantity = updateQuantity(component, servingWeight, packageWeight)
             component.copy(
                 name = name,
                 nutritionFacts = nutritionFacts,
-                quantity = updatedQuantity,
-                servingWeight = servingWeight,
-                packageWeight = packageWeight,
+                quantity = quantity(component.quantity),
                 image = image,
             )
         }
@@ -45,18 +40,14 @@ object FoodCompositionUpdateService {
         identity: FoodCompositionComponentIdentity.Composite,
         name: FoodName,
         newComponents: List<FoodCompositionComponent>,
-        servingWeight: Weight?,
-        packageWeight: Weight?,
+        quantity: (current: FoodComponentComponentQuantity) -> FoodComponentComponentQuantity,
         image: FoodCompositionComponentImage?,
     ): List<FoodCompositionComponent> =
         transform(components, identity) { component ->
-            val updatedQuantity = updateQuantity(component, servingWeight, packageWeight)
             component.copy(
                 name = name,
                 components = newComponents,
-                quantity = updatedQuantity,
-                servingWeight = servingWeight,
-                packageWeight = packageWeight,
+                quantity = quantity(component.quantity),
                 image = image,
             )
         }
@@ -128,19 +119,4 @@ object FoodCompositionUpdateService {
             component
         }
     }
-
-    private fun updateQuantity(
-        component: FoodCompositionComponent,
-        servingWeight: Weight?,
-        packageWeight: Weight?,
-    ): FoodComponentComponentQuantity =
-        when (val quantity = component.quantity) {
-            is FoodComponentComponentQuantity.Serving ->
-                if (servingWeight != null) quantity
-                else FoodComponentComponentQuantity.Weight(component.absoluteWeight)
-            is FoodComponentComponentQuantity.Package ->
-                if (packageWeight != null) quantity
-                else FoodComponentComponentQuantity.Weight(component.absoluteWeight)
-            is FoodComponentComponentQuantity.Weight -> quantity
-        }
 }

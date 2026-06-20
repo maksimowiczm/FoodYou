@@ -18,9 +18,12 @@ class FoodCompositionTest {
                 name = dummyName,
                 image = null,
                 nutritionFacts = NutritionFacts(),
-                quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                servingWeight = null,
-                packageWeight = null,
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 100.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
             )
         val component2 =
             FoodCompositionComponent.Simple(
@@ -28,9 +31,12 @@ class FoodCompositionTest {
                 name = dummyName,
                 image = null,
                 nutritionFacts = NutritionFacts(),
-                quantity = FoodComponentComponentQuantity.Weight(250.grams),
-                servingWeight = null,
-                packageWeight = null,
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 250.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
             )
 
         val composition = listOf(component1, component2)
@@ -47,9 +53,12 @@ class FoodCompositionTest {
                 name = FoodName(fallback = "A"),
                 image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
-                quantity = FoodComponentComponentQuantity.Weight(50.grams),
-                servingWeight = null,
-                packageWeight = null,
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 50.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
             )
         // Component B: 150g total, 20g protein per 100g -> 30g protein absolute
         val componentB =
@@ -58,9 +67,12 @@ class FoodCompositionTest {
                 name = FoodName(fallback = "B"),
                 image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(20.grams)),
-                quantity = FoodComponentComponentQuantity.Weight(150.grams),
-                servingWeight = null,
-                packageWeight = null,
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 150.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
             )
 
         val composition = listOf(componentA, componentB)
@@ -81,9 +93,12 @@ class FoodCompositionTest {
                 name = FoodName(fallback = "Sub"),
                 image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
-                quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                servingWeight = null,
-                packageWeight = null,
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 100.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
             )
         val subComponents = listOf(subComponent)
 
@@ -93,10 +108,13 @@ class FoodCompositionTest {
                 identity = FoodCompositionComponentIdentity.Recipe(Uuid.random()),
                 name = FoodName(fallback = "Composite"),
                 image = null,
-                quantity = FoodComponentComponentQuantity.Weight(50.grams),
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 50.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
                 components = subComponents,
-                servingWeight = null,
-                packageWeight = null,
             )
         val otherComponent =
             FoodCompositionComponent.Simple(
@@ -104,9 +122,12 @@ class FoodCompositionTest {
                 name = FoodName(fallback = "Other"),
                 image = null,
                 nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(20.grams)),
-                quantity = FoodComponentComponentQuantity.Weight(50.grams),
-                servingWeight = null,
-                packageWeight = null,
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 50.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
             )
 
         val mainComposition = listOf(compositeComponent, otherComponent)
@@ -135,9 +156,12 @@ class FoodCompositionTest {
                     name = dummyName,
                     image = null,
                     nutritionFacts = NutritionFacts(),
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 )
             )
 
@@ -146,10 +170,13 @@ class FoodCompositionTest {
                 identity = id3,
                 name = dummyName,
                 image = null,
-                quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 100.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
                 components = subComponents,
-                servingWeight = null,
-                packageWeight = null,
             )
 
         val simple2 =
@@ -158,9 +185,12 @@ class FoodCompositionTest {
                 name = dummyName,
                 image = null,
                 nutritionFacts = NutritionFacts(),
-                quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                servingWeight = null,
-                packageWeight = null,
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 100.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
             )
 
         val simple4 =
@@ -169,9 +199,12 @@ class FoodCompositionTest {
                 name = dummyName,
                 image = null,
                 nutritionFacts = NutritionFacts(),
-                quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                servingWeight = null,
-                packageWeight = null,
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 100.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
             )
 
         val composition = listOf(composite, simple2, simple4)

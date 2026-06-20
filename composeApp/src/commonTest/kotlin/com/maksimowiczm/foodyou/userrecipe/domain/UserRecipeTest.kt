@@ -26,9 +26,12 @@ class UserRecipeTest {
                 name = FoodName(fallback = "Apple"),
                 image = null,
                 nutritionFacts = NutritionFacts(),
-                quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                servingWeight = null,
-                packageWeight = null,
+                quantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 100.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    ),
             )
         )
     private val userRecipe =
@@ -146,10 +149,13 @@ class UserRecipeTest {
                     identity = FoodCompositionComponentIdentity.Recipe(recipeId),
                     name = FoodName(fallback = "Self"),
                     image = null,
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                     components = components, // These components are fine by themselves
-                    servingWeight = null,
-                    packageWeight = null,
                 )
             )
 

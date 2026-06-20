@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.Weight
+import com.maksimowiczm.foodyou.common.domain.food.FoodComponentQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
@@ -126,8 +127,13 @@ class UserRecipeService(
                                         identity = identity,
                                         name = name,
                                         nutritionFacts = nutritionFacts,
-                                        servingWeight = servingWeight,
-                                        packageWeight = packageWeight,
+                                        quantity = { current ->
+                                            FoodComponentQuantityUpdateService.update(
+                                                current = current,
+                                                servingWeight = servingWeight,
+                                                packageWeight = packageWeight,
+                                            )
+                                        },
                                         image = image,
                                     )
                             )
@@ -159,8 +165,13 @@ class UserRecipeService(
                                         identity = identity,
                                         name = name,
                                         newComponents = components,
-                                        servingWeight = servingWeight,
-                                        packageWeight = packageWeight,
+                                        quantity = { current ->
+                                            FoodComponentQuantityUpdateService.update(
+                                                current = current,
+                                                servingWeight = servingWeight,
+                                                packageWeight = packageWeight,
+                                            )
+                                        },
                                         image = image,
                                     )
                             )

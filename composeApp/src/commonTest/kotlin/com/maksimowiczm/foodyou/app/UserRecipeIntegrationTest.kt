@@ -107,9 +107,12 @@ class UserRecipeIntegrationTest {
                     name = initialProductName,
                     image = null,
                     nutritionFacts = initialNutrition,
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 )
             )
         val recipeId =
@@ -179,9 +182,12 @@ class UserRecipeIntegrationTest {
                         name = product.name,
                         image = null,
                         nutritionFacts = product.nutritionFacts,
-                        quantity = FoodComponentComponentQuantity.Serving(servings = 2.0),
-                        servingWeight = 30.grams,
-                        packageWeight = null,
+                        quantity =
+                            FoodComponentComponentQuantity.Serving(
+                                servings = 2.0,
+                                servingWeight = 30.grams,
+                                packageWeight = null,
+                            ),
                     )
                 )
             val recipeId =
@@ -211,8 +217,8 @@ class UserRecipeIntegrationTest {
                 }
 
             val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
-            assertEquals(40.grams, component.servingWeight)
-            assertEquals(80.grams, component.absoluteWeight)
+            assertEquals(40.grams, component.quantity.servingWeight)
+            assertEquals(80.grams, component.quantity.absoluteWeight)
         }
 
     @Test
@@ -231,9 +237,12 @@ class UserRecipeIntegrationTest {
                     name = initialProductName,
                     image = null,
                     nutritionFacts = initialNutrition,
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 )
             )
         val recipeId =
@@ -296,9 +305,12 @@ class UserRecipeIntegrationTest {
                     name = FoodName(fallback = initialProductName),
                     image = null,
                     nutritionFacts = initialNutrition,
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 )
             )
         val recipeId =
@@ -359,9 +371,12 @@ class UserRecipeIntegrationTest {
                     name = FoodName(fallback = "Ingredient"),
                     image = null,
                     nutritionFacts = childNutrition,
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 )
             )
         val childId =
@@ -380,10 +395,13 @@ class UserRecipeIntegrationTest {
                     identity = FoodCompositionComponentIdentity.Recipe(childId.id),
                     name = childInitialName,
                     image = null,
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                     components = childComponents,
-                    servingWeight = null,
-                    packageWeight = null,
                 )
             )
         val parentId =
@@ -432,9 +450,12 @@ class UserRecipeIntegrationTest {
                         name = FoodName(fallback = "Ingredient"),
                         image = null,
                         nutritionFacts = NutritionFacts(),
-                        quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                        servingWeight = null,
-                        packageWeight = null,
+                        quantity =
+                            FoodComponentComponentQuantity.Weight(
+                                absoluteWeight = 100.grams,
+                                servingWeight = null,
+                                packageWeight = null,
+                            ),
                     )
                 )
             val childId =
@@ -453,10 +474,13 @@ class UserRecipeIntegrationTest {
                         identity = FoodCompositionComponentIdentity.Recipe(childId.id),
                         name = FoodName(fallback = "Child"),
                         image = null,
-                        quantity = FoodComponentComponentQuantity.Serving(servings = 2.0),
-                        servingWeight = 100.grams,
+                        quantity =
+                            FoodComponentComponentQuantity.Serving(
+                                servings = 2.0,
+                                servingWeight = 100.grams,
+                                packageWeight = null,
+                            ),
                         components = childComponents,
-                        packageWeight = null,
                     )
                 )
             val parentId =
@@ -491,7 +515,7 @@ class UserRecipeIntegrationTest {
                 }
 
             val component = updatedParent.components.first() as FoodCompositionComponent.Composite
-            assertEquals(50.grams, component.servingWeight)
+            assertEquals(50.grams, component.quantity.servingWeight)
         }
 
     @Test
@@ -522,18 +546,24 @@ class UserRecipeIntegrationTest {
                     name = FoodName(fallback = "To Delete"),
                     image = null,
                     nutritionFacts = NutritionFacts(),
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 ),
                 FoodCompositionComponent.Simple(
                     identity = otherIngredientId,
                     name = FoodName(fallback = "Keep Me"),
                     image = null,
                     nutritionFacts = NutritionFacts(),
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 ),
             )
         val recipeId =
@@ -585,9 +615,12 @@ class UserRecipeIntegrationTest {
                     name = name,
                     image = null,
                     nutritionFacts = nutrition,
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 )
             )
         val recipeId =
@@ -628,9 +661,12 @@ class UserRecipeIntegrationTest {
                     name = FoodName(fallback = "Ingredient"),
                     image = null,
                     nutritionFacts = NutritionFacts(),
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 )
             )
         val childId =
@@ -650,19 +686,25 @@ class UserRecipeIntegrationTest {
                     identity = FoodCompositionComponentIdentity.Recipe(childId.id),
                     name = FoodName(fallback = "Child"),
                     image = null,
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                     components = childComponents,
-                    servingWeight = null,
-                    packageWeight = null,
                 ),
                 FoodCompositionComponent.Simple(
                     identity = otherIngredientId,
                     name = FoodName(fallback = "Other"),
                     image = null,
                     nutritionFacts = NutritionFacts(),
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 ),
             )
         val parentId =
@@ -700,9 +742,12 @@ class UserRecipeIntegrationTest {
                     name = FoodName(fallback = "Ingredient"),
                     image = null,
                     nutritionFacts = NutritionFacts(),
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
-                    servingWeight = null,
-                    packageWeight = null,
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                 )
             )
         val childId =
@@ -721,10 +766,13 @@ class UserRecipeIntegrationTest {
                     identity = FoodCompositionComponentIdentity.Recipe(childId.id),
                     name = FoodName(fallback = "Child"),
                     image = null,
-                    quantity = FoodComponentComponentQuantity.Weight(100.grams),
+                    quantity =
+                        FoodComponentComponentQuantity.Weight(
+                            absoluteWeight = 100.grams,
+                            servingWeight = null,
+                            packageWeight = null,
+                        ),
                     components = childComponents,
-                    servingWeight = null,
-                    packageWeight = null,
                 )
             )
         val parentId =

@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.common.domain.food
 
+import com.maksimowiczm.foodyou.common.domain.Volume
+import com.maksimowiczm.foodyou.common.domain.Weight
 import kotlinx.serialization.Serializable
 
 /** Represents a quantity of a food item. It can be an absolute quantity (weight or volume), */
@@ -26,3 +28,7 @@ sealed interface AbsoluteQuantity : Quantity {
 
 /** Represents a quantity in terms of servings. For example, "3 servings", "0.75 servings". */
 @Serializable data class ServingQuantity(val servings: Double) : Quantity
+
+fun Weight.toAbsoluteQuantity() = AbsoluteQuantity.Weight(this)
+
+fun Volume.toAbsoluteQuantity() = AbsoluteQuantity.Volume(this)

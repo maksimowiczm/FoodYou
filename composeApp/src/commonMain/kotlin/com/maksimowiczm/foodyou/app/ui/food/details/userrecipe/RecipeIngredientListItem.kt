@@ -13,17 +13,12 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
-import com.maksimowiczm.foodyou.app.ui.common.utility.WeightFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem
-import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity.*
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
-import com.maksimowiczm.foodyou.common.domain.food.toQuantity
-import com.maksimowiczm.foodyou.common.getOrNull
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -44,42 +39,19 @@ internal fun RecipeIngredientListItem(
         remember(component.quantity, scalingFactor) {
             when (val q = component.quantity) {
                 is FoodComponentComponentQuantity.Weight ->
-                    FoodComponentComponentQuantity.Weight(q.weight * scalingFactor)
+                    q.copy(absoluteWeight = q.absoluteWeight * scalingFactor)
 
                 is FoodComponentComponentQuantity.Package ->
-                    FoodComponentComponentQuantity.Package(q.packages * scalingFactor)
+                    q.copy(packages = q.packages * scalingFactor)
 
                 is FoodComponentComponentQuantity.Serving ->
-                    FoodComponentComponentQuantity.Serving(q.servings * scalingFactor)
+                    q.copy(servings = q.servings * scalingFactor)
             }
         }
 
     val componentMeasuredFacts =
         remember(component.measuredNutritionFacts, scalingFactor) {
             component.measuredNutritionFacts * scalingFactor
-        }
-
-    val componentPackageQuantity = component.packageWeight?.let(AbsoluteQuantity::Weight)
-    val componentServingQuantity = component.servingWeight?.let(AbsoluteQuantity::Weight)
-
-    val quantityString =
-        when (scaledComponentQuantity) {
-            is FoodComponentComponentQuantity.Weight ->
-                scaledComponentQuantity.weight.stringResource()
-
-            is FoodComponentComponentQuantity.Package ->
-                scaledComponentQuantity
-                    .toQuantity()
-                    .stringResource(componentPackageQuantity, componentServingQuantity)
-                    .getOrNull()
-                    ?: Weight(component.absoluteWeight * scalingFactor).stringResource()
-
-            is FoodComponentComponentQuantity.Serving ->
-                scaledComponentQuantity
-                    .toQuantity()
-                    .stringResource(componentPackageQuantity, componentServingQuantity)
-                    .getOrNull()
-                    ?: Weight(component.absoluteWeight * scalingFactor).stringResource()
         }
 
     val shimmer = rememberShimmer(ShimmerBounds.View)
@@ -115,7 +87,7 @@ internal fun RecipeIngredientListItem(
         carbohydrates = componentMeasuredFacts.carbohydrates.value,
         fats = componentMeasuredFacts.fats.value,
         energy = componentMeasuredFacts.energy.value,
-        quantity = { Text(quantityString) },
+        quantity = { Text(scaledComponentQuantity.stringResource()) },
         image = image,
         onClick = onClick,
         modifier = modifier,

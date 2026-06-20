@@ -6,14 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodComponentQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
@@ -144,9 +142,12 @@ class RecipeFormViewModel(
                                     identity = id,
                                     name = it.name,
                                     image = it.image?.let(FoodCompositionComponentImage::Blob),
-                                    quantity = quantity.toComponentQuantity(),
-                                    servingWeight = recipe.servingWeight,
-                                    packageWeight = recipe.totalWeight,
+                                    quantity =
+                                        FoodComponentQuantityUpdateService.map(
+                                            quantity = quantity,
+                                            servingWeight = recipe.servingWeight,
+                                            packageWeight = recipe.totalWeight,
+                                        ),
                                     components = it.components,
                                 )
                         )
@@ -163,9 +164,12 @@ class RecipeFormViewModel(
                                     name = FoodName(fallback = it.name),
                                     image = null,
                                     nutritionFacts = it.nutritionFacts,
-                                    quantity = quantity.toComponentQuantity(),
-                                    servingWeight = product.servingQuantity?.forceWeight(),
-                                    packageWeight = product.packageQuantity?.forceWeight(),
+                                    quantity =
+                                        FoodComponentQuantityUpdateService.map(
+                                            quantity = quantity,
+                                            servingWeight = product.servingQuantity?.forceWeight(),
+                                            packageWeight = product.packageQuantity?.forceWeight(),
+                                        ),
                                 )
                         )
                     }
@@ -184,9 +188,12 @@ class RecipeFormViewModel(
                                             FoodCompositionComponentImage::Uri
                                         ),
                                     nutritionFacts = it.nutritionFacts,
-                                    quantity = quantity.toComponentQuantity(),
-                                    servingWeight = product.servingQuantity?.forceWeight(),
-                                    packageWeight = product.packageQuantity?.forceWeight(),
+                                    quantity =
+                                        FoodComponentQuantityUpdateService.map(
+                                            quantity = quantity,
+                                            servingWeight = product.servingQuantity?.forceWeight(),
+                                            packageWeight = product.packageQuantity?.forceWeight(),
+                                        ),
                                 )
                         )
                     }
@@ -202,9 +209,12 @@ class RecipeFormViewModel(
                                     name = it.name,
                                     image = it.image?.let(FoodCompositionComponentImage::Blob),
                                     nutritionFacts = it.nutritionFacts,
-                                    quantity = quantity.toComponentQuantity(),
-                                    servingWeight = product.servingQuantity?.forceWeight(),
-                                    packageWeight = product.packageQuantity?.forceWeight(),
+                                    quantity =
+                                        FoodComponentQuantityUpdateService.map(
+                                            quantity = quantity,
+                                            servingWeight = product.servingQuantity?.forceWeight(),
+                                            packageWeight = product.packageQuantity?.forceWeight(),
+                                        ),
                                 )
                         )
                     }
@@ -217,15 +227,6 @@ class RecipeFormViewModel(
             is AbsoluteQuantity.Volume -> volume.milliliters.grams
         }
     }
-
-    private fun Quantity.toComponentQuantity(): FoodComponentComponentQuantity =
-        when (this) {
-            is AbsoluteQuantity.Weight -> FoodComponentComponentQuantity.Weight(weight)
-            is AbsoluteQuantity.Volume ->
-                FoodComponentComponentQuantity.Weight(volume.milliliters.grams)
-            is PackageQuantity -> FoodComponentComponentQuantity.Package(packages)
-            is ServingQuantity -> FoodComponentComponentQuantity.Serving(servings)
-        }
 
     private fun FoodDataCentralService.observeNullable(
         identity: FoodDataCentralProductIdentity

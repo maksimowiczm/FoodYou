@@ -8,10 +8,13 @@ import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
+import com.maksimowiczm.foodyou.common.domain.food.toAbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.common.expect
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -114,6 +117,21 @@ object QuantityFormatter {
         return when (this) {
             is AbsoluteQuantity.Volume -> this.volume.stringResource()
             is AbsoluteQuantity.Weight -> this.weight.stringResource()
+        }
+    }
+
+    @Composable
+    fun FoodComponentComponentQuantity.stringResource(): String {
+        return when (this) {
+            is FoodComponentComponentQuantity.Weight -> this.absoluteWeight.stringResource()
+
+            is FoodComponentComponentQuantity.Package ->
+                remember(this) { toQuantity() }
+                    .stringResource(remember(packageWeight) { packageWeight.toAbsoluteQuantity() })
+
+            is FoodComponentComponentQuantity.Serving ->
+                remember(this) { toQuantity() }
+                    .stringResource(remember(servingWeight) { servingWeight.toAbsoluteQuantity() })
         }
     }
 }
