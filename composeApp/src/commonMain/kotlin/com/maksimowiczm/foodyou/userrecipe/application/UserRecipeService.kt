@@ -192,10 +192,7 @@ class UserRecipeService(
                             recipe ?: return@transact emptyList()
                             val updatedComposition =
                                 FoodCompositionUpdateService.remove(recipe.components, identity)
-
-                            // Delete recipe without ingredients
-                            if (updatedComposition.isEmpty()) recipe.remove(DeleteStrategy.Delete)
-                            else recipe.update { it.copy(components = updatedComposition) }
+                            recipe.update { it.copy(components = updatedComposition) }
                         }
                     }
                 }

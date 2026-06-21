@@ -44,6 +44,7 @@ import com.maksimowiczm.foodyou.common.getOrNull
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import foodyou.app.generated.resources.*
+import kotlin.takeIf
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -126,7 +127,7 @@ private fun UserRecipeDetailsScreen(
 
     val ingredientScalingFactor =
         remember(recipe?.totalWeight, recipe?.servingWeight, quantity) {
-            val totalWeight = recipe?.totalWeight ?: return@remember 1.0
+            val totalWeight = recipe?.totalWeight?.takeIf { it.grams > 0 } ?: return@remember 1.0
             val servingWeight = recipe.servingWeight
 
             val selectedAbsoluteQuantity =

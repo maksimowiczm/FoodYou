@@ -30,7 +30,6 @@ data class UserRecipe(
     init {
         require(note == null || note.isNotBlank()) { "Note cannot be blank" }
         require(servings > 0) { "Servings must be positive number" }
-        require(components.isNotEmpty()) { "Recipe must have at least one component" }
         require(
             FoodCompositionComponentIdentity.Recipe(identity.id) !in
                 components.allComponentIdentities
