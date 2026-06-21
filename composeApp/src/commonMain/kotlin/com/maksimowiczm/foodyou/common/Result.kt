@@ -69,7 +69,7 @@ inline fun <R, E, R2> Result<R, E>.map(transform: (R) -> R2): Result<R2, E> =
 fun <R> Result<R, *>.expect(message: String): R =
     when (this) {
         is Success -> data
-        is Error -> error(message)
+        is Error -> error("Expected Result = $message")
     }
 
 inline fun <R, E, R1> Result<R, E>.fold(onSuccess: (R) -> R1, onError: (E) -> R1): R1 =
