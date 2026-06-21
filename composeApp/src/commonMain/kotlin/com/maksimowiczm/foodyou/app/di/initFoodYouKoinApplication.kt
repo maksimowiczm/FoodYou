@@ -22,41 +22,50 @@ import com.maksimowiczm.foodyou.openfoodfacts.di.openFoodFactsModule
 import com.maksimowiczm.foodyou.search.di.searchModule
 import com.maksimowiczm.foodyou.userproduct.di.userProductModule
 import com.maksimowiczm.foodyou.userrecipe.di.userRecipeModule
+import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
+import org.koin.dsl.koinApplication
 
-fun initKoin(appModule: AppModule, config: KoinAppDeclaration? = null) = startKoin {
-    // App modules
-    modules(dataStoreModule, roomModule, appModule.module)
+/**
+ * Builds a [KoinApplication] instance without starting it globally.
+ *
+ * This allows for isolated containers in tests. Production code must explicitly call [startKoin]
+ * with the returned [KoinApplication] instance to activate it.
+ */
+fun initFoodYouKoinApplication(appModule: AppModule, config: KoinAppDeclaration? = null) =
+    koinApplication {
+        // App modules
+        modules(dataStoreModule, roomModule, appModule.module)
 
-    // Common modules
-    modules(inMemoryEventBusModule, commonModule)
+        // Common modules
+        modules(inMemoryEventBusModule, commonModule)
 
-    // Feature modules
-    modules(
-        accountModule,
-        analyticsModule,
-        deviceModule,
-        foodDataCentralModule,
-        openFoodFactsModule,
-        userProductModule,
-        userRecipeModule,
-        searchModule,
-    )
+        // Feature modules
+        modules(
+            accountModule,
+            analyticsModule,
+            deviceModule,
+            foodDataCentralModule,
+            openFoodFactsModule,
+            userProductModule,
+            userRecipeModule,
+            searchModule,
+        )
 
-    // Ui modules
-    modules(
-        commonThemeModule,
-        onboardingModule,
-        appUiModule,
-        homeModule,
-        languageModule,
-        personalizationModule,
-        foodUiModule,
-        privacyModule,
-        profileModule,
-        productModule,
-    )
+        // Ui modules
+        modules(
+            commonThemeModule,
+            onboardingModule,
+            appUiModule,
+            homeModule,
+            languageModule,
+            personalizationModule,
+            foodUiModule,
+            privacyModule,
+            profileModule,
+            productModule,
+        )
 
-    config?.invoke(this)
-}
+        config?.invoke(this)
+    }

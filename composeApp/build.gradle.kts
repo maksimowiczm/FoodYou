@@ -1,3 +1,4 @@
+import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -11,6 +12,15 @@ plugins {
 }
 
 room { schemaDirectory("$projectDir/schemas") }
+
+val localProperties by lazy {
+    Properties().apply {
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { load(it) }
+        }
+    }
+}
 
 kotlin {
     compilerOptions {
@@ -36,6 +46,11 @@ kotlin {
 
         withHostTestBuilder {}.configure {}
         withDeviceTestBuilder { sourceSetTreeName = "test" }
+            .configure {
+                localProperties.getProperty("usda.api.key")?.let {
+                    instrumentationRunnerArguments["usda.api.key"] = it
+                }
+            }
 
         optimization {
             consumerKeepRules.publish = true

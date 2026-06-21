@@ -1,15 +1,6 @@
 package com.maksimowiczm.foodyou.app
 
-import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.app.infrastructure.room.EventStoreDatabase
-import com.maksimowiczm.foodyou.app.infrastructure.room.EventStoreDatabase.Companion.buildDatabase
-import com.maksimowiczm.foodyou.app.infrastructure.room.ReadModelDatabase
-import com.maksimowiczm.foodyou.app.infrastructure.room.ReadModelDatabase.Companion.buildDatabase
-import com.maksimowiczm.foodyou.app.infrastructure.room.RoomEventStore
-import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
-import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
-import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
@@ -18,156 +9,127 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.common.event.EventBus
-import com.maksimowiczm.foodyou.common.event.InMemoryEventBus
-import com.maksimowiczm.foodyou.common.event.LoggingEventBus
-import com.maksimowiczm.foodyou.common.event.di.eventHandlerOf
-import com.maksimowiczm.foodyou.common.infrastructure.FileKitBlobStorage
-import com.maksimowiczm.foodyou.common.infrastructure.provideRoomDatabaseBuilder
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
+import com.maksimowiczm.foodyou.common.expect
+import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductUpdatedEvent
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettings
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
+import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductUpdatedEvent
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettings
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
-import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductUpdatedEvent
-import com.maksimowiczm.foodyou.userrecipe.application.CompositionSynchronizer
-import com.maksimowiczm.foodyou.userrecipe.application.FoodDataCentralSynchronizer
-import com.maksimowiczm.foodyou.userrecipe.application.NestedRecipeSynchronizer
-import com.maksimowiczm.foodyou.userrecipe.application.OpenFoodFactsSynchronizer
-import com.maksimowiczm.foodyou.userrecipe.application.UserProductSynchronizer
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
-import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.RoomUserRecipeCompositionRepository
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import org.koin.core.Koin
-import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
-import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 
 class UserRecipeIntegrationTest {
-    private lateinit var eventStoreDatabase: EventStoreDatabase
-    private lateinit var readModelDatabase: ReadModelDatabase
-
-    @BeforeTest
-    fun setup() {
-        eventStoreDatabase = provideRoomDatabaseBuilder<EventStoreDatabase>().buildDatabase()
-        readModelDatabase = provideRoomDatabaseBuilder<ReadModelDatabase>().buildDatabase()
-    }
-
-    @AfterTest
-    fun tearDown() {
-        if (::eventStoreDatabase.isInitialized) eventStoreDatabase.close()
-        if (::readModelDatabase.isInitialized) readModelDatabase.close()
-    }
-
     @Test
-    fun updating_user_product_updates_recipes_using_it() = runIntegrationTest {
-        val userRecipeService = get<UserRecipeService>()
-        val eventBus = get<EventBus>()
+    fun updating_user_product_updates_recipes_using_it() = runTest {
+        runKoin(testModule) {
+            // 1. Create a User Product
+            val initialProductName =
+                FoodName(english = "Initial Product", fallback = "Initial Product")
 
-        // 1. Create a User Product
-        val productId = UserProductIdentity(Uuid.random())
-        val initialProductName = FoodName(fallback = "Initial Product")
-        val initialNutrition = NutritionFacts(proteins = NutrientValue.Complete(10.grams))
-        val product =
-            UserProduct(
+            val initialNutrition = NutritionFacts(proteins = NutrientValue.Complete(10.grams))
+            val productId =
+                userProductService.create(
+                    name = initialProductName,
+                    brand = "Brand",
+                    barcode = null,
+                    note = null,
+                    imageBytes = null,
+                    nutritionFacts = initialNutrition,
+                    servingQuantity = null,
+                    packageQuantity = null,
+                    isLiquid = false,
+                )
+
+            // 2. Create a Recipe using this product
+            val components =
+                listOf(
+                    FoodCompositionComponent.Simple(
+                        identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
+                        name = initialProductName,
+                        image = null,
+                        nutritionFacts = initialNutrition,
+                        quantity =
+                            FoodComponentComponentQuantity.Weight(
+                                absoluteWeight = 100.grams,
+                                servingWeight = null,
+                                packageWeight = null,
+                            ),
+                    )
+                )
+            val recipeId =
+                userRecipeService.create(
+                    name = FoodName(english = "Recipe", fallback = "Recipe"),
+                    note = null,
+                    imageBytes = null,
+                    servings = 1.0,
+                    components = components,
+                )
+
+            // 3. Wait until recipe is created
+            userRecipeService.observe(recipeId).filterNotNull().first()
+            waitForComposition(recipeId, FoodCompositionComponentIdentity.UserProduct(productId.id))
+
+            // 4. Update User Product
+            val updatedProductName =
+                FoodName(english = "Updated Product", fallback = "Updated Product")
+
+            val updatedNutrition = NutritionFacts(proteins = NutrientValue.Complete(20.grams))
+            userProductService.edit(
                 identity = productId,
-                name = initialProductName,
+                name = updatedProductName,
                 brand = "Brand",
                 barcode = null,
                 note = null,
-                image = null,
-                nutritionFacts = initialNutrition,
+                imageBytes = null,
+                nutritionFacts = updatedNutrition,
                 servingQuantity = null,
                 packageQuantity = null,
                 isLiquid = false,
             )
 
-        // 2. Create a Recipe using this product
-        val components =
-            listOf(
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                    name = initialProductName,
-                    image = null,
-                    nutritionFacts = initialNutrition,
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
-                        ),
-                )
-            )
-        val recipeId =
-            userRecipeService.create(
-                name = FoodName(fallback = "Recipe"),
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = components,
-            )
+            // 5. Verify the recipe has been updated
+            val updatedRecipe =
+                userRecipeService.observe(recipeId).filterNotNull().first {
+                    it.components.first().name == updatedProductName
+                }
 
-        // 3. Wait until recipe is created
-        val recipe = userRecipeService.observe(recipeId).filterNotNull().first()
-        assertEquals(
-            initialProductName,
-            (recipe.components.first() as FoodCompositionComponent.Simple).name,
-        )
-
-        // 4. Simulate a User Product Update
-        val updatedProductName = FoodName(fallback = "Updated Product")
-        val updatedNutrition = NutritionFacts(proteins = NutrientValue.Complete(20.grams))
-        val updatedProduct =
-            product.copy(name = updatedProductName, nutritionFacts = updatedNutrition)
-
-        eventBus.publish(
-            UserProductUpdatedEvent(product = updatedProduct, timestamp = Clock.System.now())
-        )
-
-        // 5. Verify the recipe has been updated
-        val updatedRecipe =
-            userRecipeService.observe(recipeId).filterNotNull().first {
-                it.components.first().name == updatedProductName
-            }
-
-        val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
-        assertEquals(updatedProductName, component.name)
-        assertEquals(updatedNutrition, component.nutritionFacts)
+            val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
+            assertEquals(updatedProductName, component.name)
+            assertEquals(updatedNutrition, component.nutritionFacts)
+        }
     }
 
     @Test
-    fun updating_user_product_serving_weight_updates_recipes_using_it_by_serving() =
-        runIntegrationTest {
-            val userRecipeService = get<UserRecipeService>()
-            val eventBus = get<EventBus>()
-
+    fun updating_user_product_serving_weight_updates_recipes_using_it_by_serving() = runTest {
+        runKoin(testModule) {
             // 1. Create a User Product with initial serving weight
-            val productId = UserProductIdentity(Uuid.random())
-            val product =
-                UserProduct(
-                    identity = productId,
-                    name = FoodName(fallback = "Product"),
+            val productId =
+                userProductService.create(
+                    name = FoodName(english = "Product", fallback = "Product"),
                     brand = "Brand",
                     barcode = null,
                     note = null,
-                    image = null,
+                    imageBytes = null,
                     nutritionFacts = NutritionFacts(),
                     servingQuantity = Weight(30.grams),
                     packageQuantity = null,
@@ -179,9 +141,9 @@ class UserRecipeIntegrationTest {
                 listOf(
                     FoodCompositionComponent.Simple(
                         identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                        name = product.name,
+                        name = FoodName(english = "Product", fallback = "Product"),
                         image = null,
-                        nutritionFacts = product.nutritionFacts,
+                        nutritionFacts = NutritionFacts(),
                         quantity =
                             FoodComponentComponentQuantity.Serving(
                                 servings = 2.0,
@@ -192,7 +154,7 @@ class UserRecipeIntegrationTest {
                 )
             val recipeId =
                 userRecipeService.create(
-                    name = FoodName(fallback = "Recipe"),
+                    name = FoodName(english = "Recipe", fallback = "Recipe"),
                     note = null,
                     imageBytes = null,
                     servings = 1.0,
@@ -201,13 +163,21 @@ class UserRecipeIntegrationTest {
 
             // 3. Wait until recipe is created and verify initial absolute weight (2 * 30g = 60g)
             val recipe = userRecipeService.observe(recipeId).filterNotNull().first()
+            waitForComposition(recipeId, FoodCompositionComponentIdentity.UserProduct(productId.id))
             assertEquals(60.grams, recipe.totalWeight)
 
             // 4. Update product serving weight to 40g
-            val updatedProduct = product.copy(servingQuantity = Weight(40.grams))
-
-            eventBus.publish(
-                UserProductUpdatedEvent(product = updatedProduct, timestamp = Clock.System.now())
+            userProductService.edit(
+                identity = productId,
+                name = FoodName(english = "Product", fallback = "Product"),
+                brand = "Brand",
+                barcode = null,
+                note = null,
+                imageBytes = null,
+                nutritionFacts = NutritionFacts(),
+                servingQuantity = Weight(40.grams),
+                packageQuantity = null,
+                isLiquid = false,
             )
 
             // 5. Verify the recipe has been updated and absolute weight is now 80g (2 * 40g)
@@ -220,291 +190,276 @@ class UserRecipeIntegrationTest {
             assertEquals(40.grams, component.quantity.servingWeight)
             assertEquals(80.grams, component.quantity.absoluteWeight)
         }
-
-    @Test
-    fun updating_open_food_facts_product_updates_recipes_using_it() = runIntegrationTest {
-        val userRecipeService = get<UserRecipeService>()
-        val eventBus = get<EventBus>()
-
-        val barcode = "123456789"
-        val initialProductName = FoodName(fallback = "Initial OFF Product")
-        val initialNutrition = NutritionFacts(proteins = NutrientValue.Complete(5.grams))
-
-        val components =
-            listOf(
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.OpenFoodFacts(barcode),
-                    name = initialProductName,
-                    image = null,
-                    nutritionFacts = initialNutrition,
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
-                        ),
-                )
-            )
-        val recipeId =
-            userRecipeService.create(
-                name = FoodName(fallback = "Recipe"),
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = components,
-            )
-
-        // Wait until recipe is created
-        userRecipeService.observe(recipeId).filterNotNull().first()
-
-        val updatedProductName = FoodName(fallback = "Updated OFF Product")
-        val updatedNutrition = NutritionFacts(proteins = NutrientValue.Complete(15.grams))
-        val updatedProduct =
-            OpenFoodFactsProduct(
-                identity = OpenFoodFactsProductIdentity(barcode),
-                name = updatedProductName,
-                brand = "Brand",
-                nutritionFacts = updatedNutrition,
-                servingQuantity = null,
-                packageQuantity = null,
-                thumbnail = null,
-                image = null,
-                source = "OFF",
-            )
-
-        eventBus.publish(
-            OpenFoodFactsProductUpdatedEvent(
-                product = updatedProduct,
-                timestamp = Clock.System.now(),
-            )
-        )
-
-        val updatedRecipe =
-            userRecipeService.observe(recipeId).filterNotNull().first {
-                it.components.first().name == updatedProductName
-            }
-
-        val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
-        assertEquals(updatedProductName, component.name)
-        assertEquals(updatedNutrition, component.nutritionFacts)
     }
 
     @Test
-    fun updating_food_data_central_product_updates_recipes_using_it() = runIntegrationTest {
-        val userRecipeService = get<UserRecipeService>()
-        val eventBus = get<EventBus>()
+    fun updating_open_food_facts_product_updates_recipes_using_it() =
+        runTest(timeout = 30.seconds) {
+            runKoin(testModule) {
+                val barcode = "8000500179864"
+                val identity = OpenFoodFactsProductIdentity(barcode)
 
-        val fdcId = 123456
-        val initialProductName = "Initial FDC Product"
-        val initialNutrition = NutritionFacts(proteins = NutrientValue.Complete(8.grams))
+                // 1. Create a Recipe using an OFF product (will be initially empty or minimal)
+                val initialProductName = FoodName(english = "OFF Product", fallback = "OFF Product")
 
-        val components =
-            listOf(
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.FoodDataCentral(fdcId),
-                    name = FoodName(fallback = initialProductName),
-                    image = null,
-                    nutritionFacts = initialNutrition,
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
-                        ),
+                val components =
+                    listOf(
+                        FoodCompositionComponent.Simple(
+                            identity = FoodCompositionComponentIdentity.OpenFoodFacts(barcode),
+                            name = initialProductName,
+                            image = null,
+                            nutritionFacts = NutritionFacts(),
+                            quantity =
+                                FoodComponentComponentQuantity.Weight(
+                                    absoluteWeight = 100.grams,
+                                    servingWeight = null,
+                                    packageWeight = null,
+                                ),
+                        )
+                    )
+                val recipeId =
+                    userRecipeService.create(
+                        name = FoodName(english = "Recipe", fallback = "Recipe"),
+                        note = null,
+                        imageBytes = null,
+                        servings = 1.0,
+                        components = components,
+                    )
+
+                // 2. Wait until recipe is created
+                userRecipeService.observe(recipeId).filterNotNull().first()
+                waitForComposition(
+                    recipeId,
+                    FoodCompositionComponentIdentity.OpenFoodFacts(barcode),
                 )
-            )
-        val recipeId =
-            userRecipeService.create(
-                name = FoodName(fallback = "Recipe"),
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = components,
-            )
 
-        // Wait until recipe is created
-        userRecipeService.observe(recipeId).filterNotNull().first()
+                // 3. Trigger OFF refresh (this will fetch real data if internet is available, or
+                // fail
+                // if
+                // not)
+                // If it fails due to network, we might need a different approach, but "real
+                // integration"
+                // implies network.
+                get<OpenFoodFactsService>().refresh(identity).expect("Refreshed OFF product")
 
-        val updatedProductName = "Updated FDC Product"
-        val updatedNutrition = NutritionFacts(proteins = NutrientValue.Complete(18.grams))
-        val updatedProduct =
-            FoodDataCentralProduct(
-                identity = FoodDataCentralProductIdentity(fdcId),
-                name = updatedProductName,
-                brand = "Brand",
-                barcode = null,
-                source = "FDC",
-                nutritionFacts = updatedNutrition,
-                servingQuantity = null,
-                packageQuantity = null,
-            )
+                // 4. Wait for synchronizer to update the recipe
+                // Since we don't know the real name of Nutella in all languages, we just wait for
+                // ANY
+                // change in name
+                val updatedRecipe =
+                    userRecipeService.observe(recipeId).filterNotNull().first {
+                        it.components.first().name != initialProductName
+                    }
 
-        eventBus.publish(
-            FoodDataCentralProductUpdatedEvent(
-                product = updatedProduct,
-                timestamp = Clock.System.now(),
-            )
-        )
-
-        // Wait until recipe is updated
-        val updatedRecipe =
-            userRecipeService.observe(recipeId).filterNotNull().first {
-                it.components.first().name.fallback == updatedProductName
+                val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
+                // Verify that the name is no longer the fallback
+                assertEquals(false, component.name == initialProductName)
             }
-
-        val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
-        assertEquals(updatedProductName, component.name.fallback)
-        assertEquals(updatedNutrition, component.nutritionFacts)
-    }
+        }
 
     @Test
-    fun updating_nested_recipe_updates_parent_recipe() = runIntegrationTest {
-        val userRecipeService = get<UserRecipeService>()
+    fun updating_food_data_central_product_updates_recipes_using_it() =
+        runTest(timeout = 30.seconds) {
+            runKoin(testModule) {
+                val fdcId = 2768188
+                val identity = FoodDataCentralProductIdentity(fdcId)
 
-        // 1. Create Child Recipe
-        val childInitialName = FoodName(fallback = "Child Recipe")
-        val childNutrition = NutritionFacts(proteins = NutrientValue.Complete(10.grams))
-        val childComponents =
-            listOf(
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
-                    name = FoodName(fallback = "Ingredient"),
-                    image = null,
-                    nutritionFacts = childNutrition,
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
-                        ),
+                // 1. Create a Recipe using an FDC product
+                val initialProductName = FoodName(english = "FDC Product", fallback = "FDC Product")
+
+                val components =
+                    listOf(
+                        FoodCompositionComponent.Simple(
+                            identity = FoodCompositionComponentIdentity.FoodDataCentral(fdcId),
+                            name = initialProductName,
+                            image = null,
+                            nutritionFacts = NutritionFacts(),
+                            quantity =
+                                FoodComponentComponentQuantity.Weight(
+                                    absoluteWeight = 100.grams,
+                                    servingWeight = null,
+                                    packageWeight = null,
+                                ),
+                        )
+                    )
+                val recipeId =
+                    userRecipeService.create(
+                        name = FoodName(english = "Recipe", fallback = "Recipe"),
+                        note = null,
+                        imageBytes = null,
+                        servings = 1.0,
+                        components = components,
+                    )
+
+                // 2. Wait until recipe is created
+                userRecipeService.observe(recipeId).filterNotNull().first()
+                waitForComposition(
+                    recipeId,
+                    FoodCompositionComponentIdentity.FoodDataCentral(fdcId),
                 )
-            )
-        val childId =
-            userRecipeService.create(
-                name = childInitialName,
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = childComponents,
-            )
 
-        // 2. Create Parent Recipe using Child Recipe
-        val parentComponents =
-            listOf(
-                FoodCompositionComponent.Composite(
-                    identity = FoodCompositionComponentIdentity.Recipe(childId.id),
+                // 3. Trigger FDC refresh
+                get<FoodDataCentralService>().refresh(identity).expect("Refreshed FDC product")
+
+                // 4. Wait for synchronizer to update the recipe
+                val updatedRecipe =
+                    userRecipeService.observe(recipeId).filterNotNull().first {
+                        it.components.first().name != initialProductName
+                    }
+
+                val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
+                assertEquals(false, component.name == initialProductName)
+            }
+        }
+
+    @Test
+    fun updating_nested_recipe_updates_parent_recipe() = runTest {
+        runKoin(testModule) {
+            // 1. Create Child Recipe
+            val childInitialName = FoodName(english = "Child Recipe", fallback = "Child Recipe")
+
+            val childId =
+                userRecipeService.create(
                     name = childInitialName,
-                    image = null,
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
-                        ),
-                    components = childComponents,
+                    note = null,
+                    imageBytes = null,
+                    servings = 1.0,
+                    components = emptyList(),
                 )
-            )
-        val parentId =
-            userRecipeService.create(
-                name = FoodName(fallback = "Parent Recipe"),
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = parentComponents,
-            )
 
-        // Wait until recipe is created
-        userRecipeService.observe(parentId).filterNotNull().first()
-
-        // 3. Update Child Recipe
-        val childUpdatedName = FoodName(fallback = "Updated Child Recipe")
-        userRecipeService.edit(
-            identity = childId,
-            name = childUpdatedName,
-            note = "Updated",
-            imageBytes = null,
-            servings = 1.0,
-            components = childComponents,
-        )
-
-        // 4. Verify Parent Recipe is updated
-        val updatedParent =
-            userRecipeService.observe(parentId).filterNotNull().first {
-                it.components.first().name == childUpdatedName
-            }
-
-        val component = updatedParent.components.first() as FoodCompositionComponent.Composite
-        assertEquals(childUpdatedName, component.name)
-    }
-
-    @Test
-    fun updating_nested_recipe_servings_updates_parent_recipe_using_it_by_serving() =
-        runIntegrationTest {
-            val userRecipeService = get<UserRecipeService>()
-
-            // 1. Create Child Recipe with 1 serving = 100g
-            val childComponents =
+            // 2. Create Parent Recipe using Child Recipe
+            val parentComponents =
                 listOf(
-                    FoodCompositionComponent.Simple(
-                        identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
-                        name = FoodName(fallback = "Ingredient"),
+                    FoodCompositionComponent.Composite(
+                        identity = FoodCompositionComponentIdentity.Recipe(childId.id),
+                        name = childInitialName,
                         image = null,
-                        nutritionFacts = NutritionFacts(),
                         quantity =
                             FoodComponentComponentQuantity.Weight(
                                 absoluteWeight = 100.grams,
                                 servingWeight = null,
                                 packageWeight = null,
                             ),
-                    )
-                )
-            val childId =
-                userRecipeService.create(
-                    name = FoodName(fallback = "Child"),
-                    note = null,
-                    imageBytes = null,
-                    servings = 1.0,
-                    components = childComponents,
-                )
-
-            // 2. Create Parent Recipe using 2 servings of Child Recipe
-            val parentComponents =
-                listOf(
-                    FoodCompositionComponent.Composite(
-                        identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                        name = FoodName(fallback = "Child"),
-                        image = null,
-                        quantity =
-                            FoodComponentComponentQuantity.Serving(
-                                servings = 2.0,
-                                servingWeight = 100.grams,
-                                packageWeight = null,
-                            ),
-                        components = childComponents,
+                        components = emptyList(),
                     )
                 )
             val parentId =
                 userRecipeService.create(
-                    name = FoodName(fallback = "Parent"),
+                    name = FoodName(english = "Parent Recipe", fallback = "Parent Recipe"),
                     note = null,
                     imageBytes = null,
                     servings = 1.0,
                     components = parentComponents,
                 )
 
+            // Wait until recipe is created
+            userRecipeService.observe(parentId).filterNotNull().first()
+            waitForComposition(parentId, FoodCompositionComponentIdentity.Recipe(childId.id))
+
+            // 3. Update Child Recipe
+            val childUpdatedName =
+                FoodName(english = "Updated Child Recipe", fallback = "Updated Child Recipe")
+
+            userRecipeService.edit(
+                identity = childId,
+                name = childUpdatedName,
+                note = "Updated",
+                imageBytes = null,
+                servings = 1.0,
+                components = emptyList(),
+            )
+
+            // 4. Verify Parent Recipe is updated
+            val updatedParent =
+                userRecipeService.observe(parentId).filterNotNull().first {
+                    it.components.first().name == childUpdatedName
+                }
+
+            val component = updatedParent.components.first() as FoodCompositionComponent.Composite
+            assertEquals(childUpdatedName, component.name)
+        }
+    }
+
+    @Test
+    fun updating_nested_recipe_servings_updates_parent_recipe_using_it_by_serving() = runTest {
+        runKoin(testModule) {
+            // 1. Create Child Recipe with 100g total
+            val childId =
+                userRecipeService.create(
+                    name = FoodName(english = "Child", fallback = "Child"),
+                    note = null,
+                    imageBytes = null,
+                    servings = 1.0,
+                    components =
+                        listOf(
+                            FoodCompositionComponent.Anonymous(
+                                identity =
+                                    FoodCompositionComponentIdentity.Anonymous(Uuid.random()),
+                                name = FoodName(english = "Ingredient", fallback = "Ingredient"),
+                                image = null,
+                                nutritionFacts = NutritionFacts(),
+                                quantity =
+                                    FoodComponentComponentQuantity.Weight(
+                                        absoluteWeight = 100.grams,
+                                        servingWeight = null,
+                                        packageWeight = null,
+                                    ),
+                            )
+                        ),
+                )
+
+            // 2. Create Parent Recipe using 2 servings of Child Recipe
+            val parentId =
+                userRecipeService.create(
+                    name = FoodName(english = "Parent", fallback = "Parent"),
+                    note = null,
+                    imageBytes = null,
+                    servings = 1.0,
+                    components =
+                        listOf(
+                            FoodCompositionComponent.Composite(
+                                identity = FoodCompositionComponentIdentity.Recipe(childId.id),
+                                name = FoodName(english = "Child", fallback = "Child"),
+                                image = null,
+                                quantity =
+                                    FoodComponentComponentQuantity.Serving(
+                                        servings = 2.0,
+                                        servingWeight = 100.grams,
+                                        packageWeight = null,
+                                    ),
+                                components = emptyList(),
+                            )
+                        ),
+                )
+
             // Wait until recipe is created. Total weight should be 200g
             val parent = userRecipeService.observe(parentId).filterNotNull().first()
+            waitForComposition(parentId, FoodCompositionComponentIdentity.Recipe(childId.id))
             assertEquals(200.grams, parent.totalWeight)
 
             // 3. Update Child Recipe to have 2 servings instead of 1.
             // New serving weight should be 100g / 2 = 50g.
             userRecipeService.edit(
                 identity = childId,
-                name = FoodName(fallback = "Child"),
+                name = FoodName(english = "Child", fallback = "Child"),
                 note = "Updated",
                 imageBytes = null,
                 servings = 2.0,
-                components = childComponents,
+                components =
+                    listOf(
+                        FoodCompositionComponent.Anonymous(
+                            identity = FoodCompositionComponentIdentity.Anonymous(Uuid.random()),
+                            name = FoodName(english = "Ingredient", fallback = "Ingredient"),
+                            image = null,
+                            nutritionFacts = NutritionFacts(),
+                            quantity =
+                                FoodComponentComponentQuantity.Weight(
+                                    absoluteWeight = 100.grams,
+                                    servingWeight = null,
+                                    packageWeight = null,
+                                ),
+                        )
+                    ),
             )
 
             // 4. Verify Parent Recipe is updated.
@@ -517,321 +472,292 @@ class UserRecipeIntegrationTest {
             val component = updatedParent.components.first() as FoodCompositionComponent.Composite
             assertEquals(50.grams, component.quantity.servingWeight)
         }
-
-    @Test
-    fun deleting_user_product_removes_it_from_recipes() = runIntegrationTest {
-        val userRecipeService = get<UserRecipeService>()
-        val userProductService = get<UserProductService>()
-
-        val productId =
-            userProductService.create(
-                name = FoodName(fallback = "Product"),
-                brand = "Brand",
-                barcode = UserProductBarcode("123456789"),
-                note = null,
-                imageBytes = null,
-                servingQuantity = null,
-                packageQuantity = null,
-                isLiquid = false,
-                nutritionFacts = NutritionFacts(),
-            )
-        // Wait until product is created
-        userProductService.observe(productId).filterNotNull().first()
-
-        val otherIngredientId = FoodCompositionComponentIdentity.OpenFoodFacts("other")
-        val components =
-            listOf(
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                    name = FoodName(fallback = "To Delete"),
-                    image = null,
-                    nutritionFacts = NutritionFacts(),
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
-                        ),
-                ),
-                FoodCompositionComponent.Simple(
-                    identity = otherIngredientId,
-                    name = FoodName(fallback = "Keep Me"),
-                    image = null,
-                    nutritionFacts = NutritionFacts(),
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
-                        ),
-                ),
-            )
-        val recipeId =
-            userRecipeService.create(
-                name = FoodName(fallback = "Recipe"),
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = components,
-            )
-        // Wait until recipe is created
-        userRecipeService.observe(recipeId).filterNotNull().first()
-
-        userProductService.delete(productId, DeleteStrategy.Delete)
-
-        val updatedRecipe =
-            userRecipeService.observe(recipeId).filterNotNull().first { it.components.size == 1 }
-
-        assertEquals(1, updatedRecipe.components.size)
-        assertEquals(otherIngredientId, updatedRecipe.components.first().identity)
     }
 
     @Test
-    fun unlinking_user_product_anonymizes_it_in_recipes() = runIntegrationTest {
-        val userProductService = get<UserProductService>()
-        val userRecipeService = get<UserRecipeService>()
+    fun deleting_user_product_removes_it_from_recipes() = runTest {
+        runKoin(testModule) {
+            val productId =
+                userProductService.create(
+                    name = FoodName(english = "Product", fallback = "Product"),
+                    brand = "Brand",
+                    barcode = UserProductBarcode("123456789"),
+                    note = null,
+                    imageBytes = null,
+                    servingQuantity = null,
+                    packageQuantity = null,
+                    isLiquid = false,
+                    nutritionFacts = NutritionFacts(),
+                )
 
-        val productId =
-            userProductService.create(
-                name = FoodName(fallback = "Product"),
-                brand = "Brand",
-                barcode = UserProductBarcode("123456789"),
-                note = null,
-                imageBytes = null,
-                servingQuantity = null,
-                packageQuantity = null,
-                isLiquid = false,
-                nutritionFacts = NutritionFacts(),
-            )
-        // Wait until product is created
-        userProductService.observe(productId).filterNotNull().first()
-
-        val name = FoodName(fallback = "To Unlink")
-        val nutrition = NutritionFacts(proteins = NutrientValue.Complete(10.grams))
-        val components =
-            listOf(
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                    name = name,
-                    image = null,
-                    nutritionFacts = nutrition,
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+            val otherIngredientId = FoodCompositionComponentIdentity.OpenFoodFacts("other")
+            val recipeId =
+                userRecipeService.create(
+                    name = FoodName(english = "Recipe", fallback = "Recipe"),
+                    note = null,
+                    imageBytes = null,
+                    servings = 1.0,
+                    components =
+                        listOf(
+                            FoodCompositionComponent.Simple(
+                                identity =
+                                    FoodCompositionComponentIdentity.UserProduct(productId.id),
+                                name = FoodName(english = "To Delete", fallback = "To Delete"),
+                                image = null,
+                                nutritionFacts = NutritionFacts(),
+                                quantity =
+                                    FoodComponentComponentQuantity.Weight(
+                                        absoluteWeight = 100.grams,
+                                        servingWeight = null,
+                                        packageWeight = null,
+                                    ),
+                            ),
+                            FoodCompositionComponent.Simple(
+                                identity = otherIngredientId,
+                                name = FoodName(english = "Keep Me", fallback = "Keep Me"),
+                                image = null,
+                                nutritionFacts = NutritionFacts(),
+                                quantity =
+                                    FoodComponentComponentQuantity.Weight(
+                                        absoluteWeight = 100.grams,
+                                        servingWeight = null,
+                                        packageWeight = null,
+                                    ),
+                            ),
                         ),
                 )
-            )
-        val recipeId =
-            userRecipeService.create(
-                name = FoodName(fallback = "Recipe"),
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = components,
-            )
+            // Wait until recipe is created
+            userRecipeService.observe(recipeId).filterNotNull().first()
+            waitForComposition(recipeId, FoodCompositionComponentIdentity.UserProduct(productId.id))
 
-        // Wait until recipe is created
-        userRecipeService.observe(recipeId).filterNotNull().first()
+            userProductService.delete(productId, DeleteStrategy.Delete)
 
-        userProductService.delete(productId, DeleteStrategy.Unlink)
+            val updatedRecipe =
+                userRecipeService.observe(recipeId).filterNotNull().first {
+                    it.components.size == 1
+                }
 
-        val updatedRecipe =
-            userRecipeService.observe(recipeId).filterNotNull().first {
-                it.components.first().identity is FoodCompositionComponentIdentity.Anonymous
-            }
-
-        assertEquals(1, updatedRecipe.components.size)
-        val component = updatedRecipe.components.first()
-        assertEquals(true, component.identity is FoodCompositionComponentIdentity.Anonymous)
-        assertEquals(name, component.name)
-        assertEquals(nutrition, component.nutritionFacts)
+            assertEquals(1, updatedRecipe.components.size)
+            assertEquals(otherIngredientId, updatedRecipe.components.first().identity)
+        }
     }
 
     @Test
-    fun deleting_nested_recipe_removes_it_from_parent_recipe() = runIntegrationTest {
-        val userRecipeService = get<UserRecipeService>()
-
-        // 1. Create Child Recipe
-        val childComponents =
-            listOf(
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
-                    name = FoodName(fallback = "Ingredient"),
-                    image = null,
+    fun unlinking_user_product_anonymizes_it_in_recipes() = runTest {
+        runKoin(testModule) {
+            val productId =
+                userProductService.create(
+                    name = FoodName(english = "Product", fallback = "Product"),
+                    brand = "Brand",
+                    barcode = UserProductBarcode("123456789"),
+                    note = null,
+                    imageBytes = null,
+                    servingQuantity = null,
+                    packageQuantity = null,
+                    isLiquid = false,
                     nutritionFacts = NutritionFacts(),
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+                )
+
+            val name = FoodName(english = "To Unlink", fallback = "To Unlink")
+
+            val nutrition = NutritionFacts(proteins = NutrientValue.Complete(10.grams))
+            val recipeId =
+                userRecipeService.create(
+                    name = FoodName(english = "Recipe", fallback = "Recipe"),
+                    note = null,
+                    imageBytes = null,
+                    servings = 1.0,
+                    components =
+                        listOf(
+                            FoodCompositionComponent.Simple(
+                                identity =
+                                    FoodCompositionComponentIdentity.UserProduct(productId.id),
+                                name = name,
+                                image = null,
+                                nutritionFacts = nutrition,
+                                quantity =
+                                    FoodComponentComponentQuantity.Weight(
+                                        absoluteWeight = 100.grams,
+                                        servingWeight = null,
+                                        packageWeight = null,
+                                    ),
+                            )
                         ),
                 )
-            )
-        val childId =
-            userRecipeService.create(
-                name = FoodName(fallback = "Child"),
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = childComponents,
-            )
 
-        // 2. Create Parent Recipe with 2 ingredients (one is the child recipe)
-        val otherIngredientId = FoodCompositionComponentIdentity.OpenFoodFacts("other")
-        val parentComponents =
-            listOf(
-                FoodCompositionComponent.Composite(
-                    identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                    name = FoodName(fallback = "Child"),
-                    image = null,
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
-                        ),
-                    components = childComponents,
-                ),
-                FoodCompositionComponent.Simple(
-                    identity = otherIngredientId,
-                    name = FoodName(fallback = "Other"),
-                    image = null,
-                    nutritionFacts = NutritionFacts(),
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
-                        ),
-                ),
-            )
-        val parentId =
-            userRecipeService.create(
-                name = FoodName(fallback = "Parent"),
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = parentComponents,
-            )
+            // Wait until recipe is created
+            userRecipeService.observe(recipeId).filterNotNull().first()
+            waitForComposition(recipeId, FoodCompositionComponentIdentity.UserProduct(productId.id))
 
-        // Wait until recipe is created
-        userRecipeService.observe(parentId).filterNotNull().first()
+            userProductService.delete(productId, DeleteStrategy.Unlink)
 
-        // 3. Delete Child Recipe
-        userRecipeService.delete(childId, DeleteStrategy.Delete)
+            val updatedRecipe =
+                userRecipeService.observe(recipeId).filterNotNull().first {
+                    it.components.first().identity is FoodCompositionComponentIdentity.Anonymous
+                }
 
-        // 4. Verify Parent Recipe has one less ingredient
-        val updatedParent =
-            userRecipeService.observe(parentId).filterNotNull().first { it.components.size == 1 }
-
-        assertEquals(1, updatedParent.components.size)
-        assertEquals(otherIngredientId, updatedParent.components.first().identity)
+            assertEquals(1, updatedRecipe.components.size)
+            val component = updatedRecipe.components.first()
+            assertEquals(true, component.identity is FoodCompositionComponentIdentity.Anonymous)
+            assertEquals(name, component.name)
+            assertEquals(nutrition, component.nutritionFacts)
+        }
     }
 
     @Test
-    fun unlinking_nested_recipe_anonymizes_it_in_parent_recipe() = runIntegrationTest {
-        val userRecipeService = get<UserRecipeService>()
+    fun deleting_nested_recipe_removes_it_from_parent_recipe() = runTest {
+        runKoin(testModule) {
+            // 1. Create Child Recipe
+            val childId =
+                userRecipeService.create(
+                    name = FoodName(english = "Child", fallback = "Child"),
+                    note = null,
+                    imageBytes = null,
+                    servings = 1.0,
+                    components = emptyList(),
+                )
 
-        // 1. Create Child Recipe
-        val childComponents =
-            listOf(
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
-                    name = FoodName(fallback = "Ingredient"),
-                    image = null,
-                    nutritionFacts = NutritionFacts(),
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+            // 2. Create Parent Recipe with 2 ingredients (one is the child recipe)
+            val otherIngredientId = FoodCompositionComponentIdentity.OpenFoodFacts("other")
+            val parentId =
+                userRecipeService.create(
+                    name = FoodName(english = "Parent", fallback = "Parent"),
+                    note = null,
+                    imageBytes = null,
+                    servings = 1.0,
+                    components =
+                        listOf(
+                            FoodCompositionComponent.Composite(
+                                identity = FoodCompositionComponentIdentity.Recipe(childId.id),
+                                name = FoodName(english = "Child", fallback = "Child"),
+                                image = null,
+                                quantity =
+                                    FoodComponentComponentQuantity.Weight(
+                                        absoluteWeight = 100.grams,
+                                        servingWeight = null,
+                                        packageWeight = null,
+                                    ),
+                                components = emptyList(),
+                            ),
+                            FoodCompositionComponent.Simple(
+                                identity = otherIngredientId,
+                                name = FoodName(english = "Other", fallback = "Other"),
+                                image = null,
+                                nutritionFacts = NutritionFacts(),
+                                quantity =
+                                    FoodComponentComponentQuantity.Weight(
+                                        absoluteWeight = 100.grams,
+                                        servingWeight = null,
+                                        packageWeight = null,
+                                    ),
+                            ),
                         ),
                 )
-            )
-        val childId =
-            userRecipeService.create(
-                name = FoodName(fallback = "Child"),
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = childComponents,
-            )
 
-        // 2. Create Parent Recipe
-        val parentComponents =
-            listOf(
-                FoodCompositionComponent.Composite(
-                    identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                    name = FoodName(fallback = "Child"),
-                    image = null,
-                    quantity =
-                        FoodComponentComponentQuantity.Weight(
-                            absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
-                        ),
-                    components = childComponents,
+            // Wait until recipe is created
+            userRecipeService.observe(parentId).filterNotNull().first()
+            waitForComposition(parentId, FoodCompositionComponentIdentity.Recipe(childId.id))
+
+            // 3. Delete Child Recipe
+            userRecipeService.delete(childId, DeleteStrategy.Delete)
+
+            // 4. Verify Parent Recipe has one less ingredient
+            val updatedParent =
+                userRecipeService.observe(parentId).filterNotNull().first {
+                    it.components.size == 1
+                }
+
+            assertEquals(1, updatedParent.components.size)
+            assertEquals(otherIngredientId, updatedParent.components.first().identity)
+        }
+    }
+
+    @Test
+    fun unlinking_nested_recipe_anonymizes_it_in_parent_recipe() = runTest {
+        runKoin(testModule) {
+            // 1. Create Child Recipe
+            val childId =
+                userRecipeService.create(
+                    name = FoodName(english = "Child", fallback = "Child"),
+                    note = null,
+                    imageBytes = null,
+                    servings = 1.0,
+                    components = emptyList(),
                 )
+
+            // 2. Create Parent Recipe
+            val parentId =
+                userRecipeService.create(
+                    name = FoodName(english = "Parent", fallback = "Parent"),
+                    note = null,
+                    imageBytes = null,
+                    servings = 1.0,
+                    components =
+                        listOf(
+                            FoodCompositionComponent.Composite(
+                                identity = FoodCompositionComponentIdentity.Recipe(childId.id),
+                                name = FoodName(english = "Child", fallback = "Child"),
+                                image = null,
+                                quantity =
+                                    FoodComponentComponentQuantity.Weight(
+                                        absoluteWeight = 100.grams,
+                                        servingWeight = null,
+                                        packageWeight = null,
+                                    ),
+                                components = emptyList(),
+                            )
+                        ),
+                )
+
+            // Wait until recipe is created
+            userRecipeService.observe(parentId).filterNotNull().first()
+            waitForComposition(parentId, FoodCompositionComponentIdentity.Recipe(childId.id))
+
+            // 3. Unlink Child Recipe
+            userRecipeService.delete(childId, DeleteStrategy.Unlink)
+
+            // 4. Verify Parent Recipe has anonymous ingredient
+            val updatedParent =
+                userRecipeService.observe(parentId).filterNotNull().first {
+                    it.components.first().identity is FoodCompositionComponentIdentity.Anonymous
+                }
+
+            assertEquals(1, updatedParent.components.size)
+            assertEquals(
+                true,
+                updatedParent.components.first().identity
+                    is FoodCompositionComponentIdentity.Anonymous,
             )
-        val parentId =
-            userRecipeService.create(
-                name = FoodName(fallback = "Parent"),
-                note = null,
-                imageBytes = null,
-                servings = 1.0,
-                components = parentComponents,
-            )
-
-        // Wait until recipe is created
-        userRecipeService.observe(parentId).filterNotNull().first()
-
-        // 3. Unlink Child Recipe
-        userRecipeService.delete(childId, DeleteStrategy.Unlink)
-
-        // 4. Verify Parent Recipe has anonymous ingredient
-        val updatedParent =
-            userRecipeService.observe(parentId).filterNotNull().first {
-                it.components.first().identity is FoodCompositionComponentIdentity.Anonymous
-            }
-
-        assertEquals(1, updatedParent.components.size)
-        assertEquals(
-            true,
-            updatedParent.components.first().identity is FoodCompositionComponentIdentity.Anonymous,
-        )
+        }
     }
 
-    private fun testModule(testScope: TestScope) = module {
-        applicationCoroutineScope { testScope.backgroundScope }
-        single<EventBus> { LoggingEventBus(InMemoryEventBus(), Logger) }
-        single<BlobStorage> { FileKitBlobStorage() }
-
-        single { eventStoreDatabase.eventStoreDao }
-        factoryOf(::RoomEventStore).bind<EventStore>()
-
-        single { readModelDatabase.compositionDao }
-        factoryOf(::RoomUserRecipeCompositionRepository).bind<UserRecipeCompositionRepository>()
-
-        factoryOf(::UserRecipeService)
-        factoryOf(::UserProductService)
-
-        eventHandlerOf(::UserProductSynchronizer)
-        eventHandlerOf(::OpenFoodFactsSynchronizer)
-        eventHandlerOf(::FoodDataCentralSynchronizer)
-        eventHandlerOf(::NestedRecipeSynchronizer)
-        eventHandlerOf(::CompositionSynchronizer)
-    }
-
-    private fun runIntegrationTest(block: suspend Koin.() -> Unit) =
-        runTest(timeout = 5.seconds) {
-            val testScope = this
-            val koin = koinApplication { modules(testModule(testScope)) }
-            try {
-                block(koin.koin)
-            } finally {
-                koin.close()
+    private suspend fun Koin.waitForComposition(
+        recipeId: UserRecipeIdentity,
+        componentId: FoodCompositionComponentIdentity.Identified,
+    ) {
+        val repository = get<UserRecipeCompositionRepository>()
+        withContext(Dispatchers.Default) {
+            while (!repository.findRecipesUsing(componentId).contains(recipeId)) {
+                delay(10.milliseconds)
             }
         }
+    }
+
+    private val Koin.userRecipeService: UserRecipeService
+        get() = get()
+
+    private val Koin.userProductService: UserProductService
+        get() = get()
+
+    private val testModule = module {
+        single { TestOpenFoodFactsSettingsRepository(OpenFoodFactsSettings(remoteEnabled = true)) }
+            .bind<OpenFoodFactsSettingsRepository>()
+        single {
+                val apiKey = TestSecrets.usdaApiKey
+                TestFoodDataCentralSettingsRepository(
+                    FoodDataCentralSettings(remoteEnabled = true, apiKey = apiKey)
+                )
+            }
+            .bind<FoodDataCentralSettingsRepository>()
+    }
 }
