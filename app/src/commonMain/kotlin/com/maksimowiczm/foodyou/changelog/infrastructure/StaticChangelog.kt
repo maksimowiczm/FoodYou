@@ -12,6 +12,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                v_3_4_9,
                 v_3_4_8,
                 v_3_4_7,
                 v_3_4_5,
@@ -52,6 +53,18 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_4_9 =
+        Version(
+            version = "3.4.9",
+            date = LocalDate(2026, 6, 21),
+            changes = listOf("Added text auto-sizing for day names in the calendar card."),
+            bugFixes =
+                listOf(
+                    "Fixed a crash occurring during weight calculation on the add entry screen."
+                ),
+            translations = listOf("Added Portuguese (Portugal)."),
+        )
 
     val v_3_4_8 =
         Version(

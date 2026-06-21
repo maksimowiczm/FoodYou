@@ -1,0 +1,8 @@
+Changes
+- Added text auto-sizing for day names in the calendar card.
+
+Bug Fixes
+- Fixed a crash occurring during weight calculation on the add entry screen.
+
+Translations
+- Added Portuguese (Portugal).
