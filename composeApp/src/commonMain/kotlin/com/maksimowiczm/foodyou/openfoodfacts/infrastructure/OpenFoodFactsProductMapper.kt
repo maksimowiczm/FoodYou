@@ -67,8 +67,13 @@ private fun OpenFoodFactsProductNetwork.toModel(): OpenFoodFactsProduct {
                     ?: localizedGenericNames["pl"].takeIfNotBlank(),
             portugueseBrazil =
                 localizedNames["pt_br"].takeIfNotBlank()
-                    ?: localizedNames["pt"].takeIfNotBlank()
                     ?: localizedGenericNames["pt_br"].takeIfNotBlank()
+                    ?: localizedNames["pt"].takeIfNotBlank()
+                    ?: localizedGenericNames["pt"].takeIfNotBlank(),
+            portuguesePortugal =
+                localizedNames["pt_pt"].takeIfNotBlank()
+                    ?: localizedGenericNames["pt_pt"].takeIfNotBlank()
+                    ?: localizedNames["pt"].takeIfNotBlank()
                     ?: localizedGenericNames["pt"].takeIfNotBlank(),
             slovenian =
                 localizedNames["sl"].takeIfNotBlank()

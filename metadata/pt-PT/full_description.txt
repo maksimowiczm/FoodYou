@@ -1,0 +1,15 @@
+<b>Food You</b> é uma aplicação poderosa e de código aberto para rastreamento nutricional, desenvolvida com a utilização da estética moderna Material You. Ajuda não só a rastrear calorias, como também toda a sua ingestão nutricional — com bases de dados fiáveis e uma interface modular e flexível.
+
+<b>Funcionalidades:</b>
+<ul>
+    <li><b>Design Material You:</b> tema dinâmico que se adapta ao seu dispositivo, para uma experiência visual perfeita.</li>
+    <li><b>Bases de dados de comida abrangentes:</b> aceda a dados nutricionais do Open Food Facts, USDA FoodCentral e Swiss Food Composition Database.</li>
+    <li><b>Rastreamento nutricional completo:</b> monitorize calorias, macros, vitaminas, minerais e mais.</li>
+    <li><b>Criação de receita:</b> combine alimentos em receitas personalizadas, com cálculos nutricionais automáticos.</li>
+    <li><b>Objetivos diários:</b> crie e siga metas nutricionais personalizadas.</li>
+    <li><b>Página inicial modular:</b> personalize a sua página inicial com cartões adaptados às suas necessidades.</li>
+</ul>
+
+Comece hoje a rastrear o seu consumo nutricional com Food You — limpo, completo, e totalmente seu.
+
+Ícone do "launcher" por <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

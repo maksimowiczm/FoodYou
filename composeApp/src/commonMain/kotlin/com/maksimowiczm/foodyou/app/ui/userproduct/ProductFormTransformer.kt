@@ -60,6 +60,7 @@ internal class ProductFormTransformer(
                 dutch = if (language == Language.Dutch) nameStr else null,
                 polish = if (language == Language.Polish) nameStr else null,
                 portugueseBrazil = if (language == Language.PortugueseBrazil) nameStr else null,
+                portuguesePortugal = if (language == Language.PortuguesePortugal) nameStr else null,
                 slovenian = if (language == Language.Slovenian) nameStr else null,
                 turkish = if (language == Language.Turkish) nameStr else null,
                 russian = if (language == Language.Russian) nameStr else null,

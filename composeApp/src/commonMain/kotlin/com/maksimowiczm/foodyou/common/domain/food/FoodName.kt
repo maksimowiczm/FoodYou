@@ -18,6 +18,7 @@ data class FoodName(
     val dutch: String? = null,
     val polish: String? = null,
     val portugueseBrazil: String? = null,
+    val portuguesePortugal: String? = null,
     val slovenian: String? = null,
     val turkish: String? = null,
     val russian: String? = null,
@@ -41,6 +42,7 @@ data class FoodName(
             dutch,
             polish,
             portugueseBrazil,
+            portuguesePortugal,
             slovenian,
             turkish,
             russian,
@@ -73,6 +75,7 @@ data class FoodName(
             Language.Dutch -> dutch
             Language.Polish -> polish
             Language.PortugueseBrazil -> portugueseBrazil
+            Language.PortuguesePortugal -> portuguesePortugal
             Language.Slovenian -> slovenian
             Language.Turkish -> turkish
             Language.Russian -> russian
@@ -100,6 +103,7 @@ data class FoodName(
             dutch: String?,
             polish: String?,
             portugueseBrazil: String?,
+            portuguesePortugal: String?,
             slovenian: String?,
             turkish: String?,
             russian: String?,
@@ -122,6 +126,7 @@ data class FoodName(
                 dutch = dutch,
                 polish = polish,
                 portugueseBrazil = portugueseBrazil,
+                portuguesePortugal = portuguesePortugal,
                 slovenian = slovenian,
                 turkish = turkish,
                 russian = russian,

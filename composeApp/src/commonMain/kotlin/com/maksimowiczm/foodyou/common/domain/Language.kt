@@ -22,6 +22,7 @@ enum class Language(val displayName: String, val language: String, val country: 
     Dutch("Dutch", "nl", "NL"),
     Polish("Polish", "pl", "PL"),
     PortugueseBrazil("Portuguese (Brazil)", "pt", "BR"),
+    PortuguesePortugal("Portuguese (Portugal)", "pt", "PT"),
     Slovenian("Slovenian", "sl", "SI"),
     Turkish("Turkish", "tr", "TR"),
     Russian("Russian", "ru", "RU"),
