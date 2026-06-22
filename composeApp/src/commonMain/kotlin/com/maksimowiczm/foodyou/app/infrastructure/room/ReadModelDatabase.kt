@@ -7,6 +7,8 @@ import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter
 import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
+import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryDatabase
+import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryEntryReferenceEntity
 import com.maksimowiczm.foodyou.search.infrastructure.QuantityTypeConverter
 import com.maksimowiczm.foodyou.search.infrastructure.SearchDatabase
 import com.maksimowiczm.foodyou.search.infrastructure.SearchEntity
@@ -17,7 +19,12 @@ import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlatten
 
 @Database(
     entities =
-        [SearchEntityFts::class, SearchEntity::class, UserRecipeCompositionReferenceEntity::class],
+        [
+            SearchEntityFts::class,
+            SearchEntity::class,
+            UserRecipeCompositionReferenceEntity::class,
+            FoodDiaryEntryReferenceEntity::class,
+        ],
     views = [UserRecipeFlattenedCompositionView::class],
     version = ReadModelDatabase.VERSION,
     exportSchema = false,
@@ -28,7 +35,8 @@ import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlatten
     FoodCompositionComponentIdentityConverter::class,
 )
 @ConstructedBy(ReadModelDatabaseConstructor::class)
-internal abstract class ReadModelDatabase : RoomDatabase(), SearchDatabase, UserRecipeDatabase {
+internal abstract class ReadModelDatabase :
+    RoomDatabase(), SearchDatabase, UserRecipeDatabase, FoodDiaryDatabase {
     companion object {
         const val VERSION = 1
 
