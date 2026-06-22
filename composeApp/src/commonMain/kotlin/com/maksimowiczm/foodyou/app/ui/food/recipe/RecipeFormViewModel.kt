@@ -12,6 +12,7 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
@@ -220,13 +221,6 @@ class RecipeFormViewModel(
                     }
                 }
         }
-
-    private fun AbsoluteQuantity.forceWeight(): Weight {
-        return when (this) {
-            is AbsoluteQuantity.Weight -> weight
-            is AbsoluteQuantity.Volume -> volume.milliliters.grams
-        }
-    }
 
     private fun FoodDataCentralService.observeNullable(
         identity: FoodDataCentralProductIdentity

@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
-import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
+import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductCreatedEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductDeletedEvent
@@ -22,10 +22,8 @@ class UserProductSynchronizer(private val userRecipeService: UserRecipeService) 
                         FoodCompositionComponentIdentity.UserProduct(event.product.identity.id),
                     name = event.product.name,
                     nutritionFacts = event.product.nutritionFacts,
-                    servingWeight =
-                        (event.product.servingQuantity as? AbsoluteQuantity.Weight)?.weight,
-                    packageWeight =
-                        (event.product.packageQuantity as? AbsoluteQuantity.Weight)?.weight,
+                    servingWeight = event.product.servingQuantity?.forceWeight(),
+                    packageWeight = event.product.packageQuantity?.forceWeight(),
                     image = event.product.image?.let(FoodCompositionComponentImage::Blob),
                 )
 

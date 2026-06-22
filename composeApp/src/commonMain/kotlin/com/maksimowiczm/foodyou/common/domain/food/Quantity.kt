@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.common.domain.food
 
 import com.maksimowiczm.foodyou.common.domain.Volume
 import com.maksimowiczm.foodyou.common.domain.Weight
+import com.maksimowiczm.foodyou.common.domain.grams
 import kotlinx.serialization.Serializable
 
 /** Represents a quantity of a food item. It can be an absolute quantity (weight or volume), */
@@ -32,3 +33,10 @@ sealed interface AbsoluteQuantity : Quantity {
 fun Weight.toAbsoluteQuantity() = AbsoluteQuantity.Weight(this)
 
 fun Volume.toAbsoluteQuantity() = AbsoluteQuantity.Volume(this)
+
+fun AbsoluteQuantity.forceWeight(): Weight {
+    return when (this) {
+        is AbsoluteQuantity.Weight -> weight
+        is AbsoluteQuantity.Volume -> volume.milliliters.grams
+    }
+}

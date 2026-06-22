@@ -23,6 +23,7 @@ class NestedRecipeSynchronizer(private val userRecipeService: UserRecipeService)
                     name = event.recipe.name,
                     components = event.recipe.components,
                     servingWeight = event.recipe.servingWeight,
+                    packageWeight = event.recipe.totalWeight,
                     image = event.recipe.image?.let(FoodCompositionComponentImage::Blob),
                 )
 

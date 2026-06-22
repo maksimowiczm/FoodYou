@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
-import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductUpdatedEvent
 
@@ -14,8 +14,8 @@ class FoodDataCentralSynchronizer(private val userRecipeService: UserRecipeServi
                 FoodCompositionComponentIdentity.FoodDataCentral(event.product.identity.fdcId),
             name = FoodName(fallback = event.product.name),
             nutritionFacts = event.product.nutritionFacts,
-            servingWeight = (event.product.servingQuantity as? AbsoluteQuantity.Weight)?.weight,
-            packageWeight = (event.product.packageQuantity as? AbsoluteQuantity.Weight)?.weight,
+            servingWeight = event.product.servingQuantity?.forceWeight(),
+            packageWeight = event.product.packageQuantity?.forceWeight(),
         )
     }
 }
