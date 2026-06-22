@@ -49,27 +49,7 @@ internal class FoodNameSelectorImpl(private val systemDetails: SystemDetails) : 
     override fun observeLanguage(): Flow<Language> =
         systemDetails.languageTag.map { localizedLanguage(it) ?: Language.English }
 
-    private fun localizedLanguage(tag: String): Language? =
-        when (tag.take(2)) {
-            "en" -> Language.English
-            "ca" -> Language.Catalan
-            "cs" -> Language.Czech
-            "da" -> Language.Danish
-            "de" -> Language.German
-            "es" -> Language.Spanish
-            "fr" -> Language.French
-            "it" -> Language.Italian
-            "hu" -> Language.Hungarian
-            "nl" -> Language.Dutch
-            "pl" -> Language.Polish
-            "pt" -> Language.PortugueseBrazil
-            "tr" -> Language.Turkish
-            "ru" -> Language.Russian
-            "uk" -> Language.Ukrainian
-            "ar" -> Language.Arabic
-            "zh" -> Language.ChineseSimplified
-            else -> null
-        }
+    private fun localizedLanguage(tag: String): Language? = Language.fromTag(tag)
 }
 
 fun OpenFoodFactsProduct.headline(nameSelector: FoodNameSelector) = buildString {

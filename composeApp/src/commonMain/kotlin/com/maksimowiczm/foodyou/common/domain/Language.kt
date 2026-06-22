@@ -31,4 +31,34 @@ enum class Language(val displayName: String, val language: String, val country: 
 
     /** BCP 47 language tag */
     val tag = "$language-$country"
+
+    companion object {
+        private val tagMap: Map<String, Language> by lazy {
+            entries.associateBy { it.tag.lowercase() }
+        }
+
+        private val languageMap: Map<String, Language> by lazy {
+            val map = mutableMapOf<String, Language>()
+            entries.forEach { language ->
+                val key = language.language.lowercase()
+                if (!map.containsKey(key)) {
+                    map[key] = language
+                }
+            }
+            map
+        }
+
+        fun fromTag(tag: String): Language? {
+            val normalizedTag = tag.replace("_", "-").lowercase()
+
+            // Try exact match
+            tagMap[normalizedTag]?.let {
+                return it
+            }
+
+            // Try language only match
+            val langPart = normalizedTag.substringBefore("-")
+            return languageMap[langPart]
+        }
+    }
 }
