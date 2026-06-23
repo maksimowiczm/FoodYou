@@ -3,12 +3,8 @@ package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
-import com.maksimowiczm.foodyou.common.infrastructure.network.SuspendingRateLimiter
-import com.maksimowiczm.foodyou.common.infrastructure.network.WindowedRequestLog
 import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
-import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsProductNetwork
-import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model.OpenFoodFactsProductResponseV2
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout
@@ -16,12 +12,10 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-internal class OpenFoodFactsV2RemoteDataSource(
+internal class OpenFoodFactsApiV2ProductDataSource(
     private val client: HttpClient,
     private val rateLimiter: RateLimiter,
     private val networkConfig: NetworkConfig,
@@ -68,15 +62,12 @@ internal class OpenFoodFactsV2RemoteDataSource(
 
     companion object {
         const val API_URL = "https://world.openfoodfacts.org"
-        private const val TAG = "OpenFoodFactsRemoteDataSource"
+        private const val TAG = "OpenFoodFactsApiV2ProductDataSource"
         private const val TIMEOUT = 60_000L
-
-        fun rateLimiter(clock: Clock): RateLimiter =
-            SuspendingRateLimiter(
-                clock = clock,
-                log = WindowedRequestLog(clock, 100, 1.minutes),
-                timeout = 1.seconds,
-                minWaitTime = 100.milliseconds,
-            )
     }
+
+    @Serializable
+    internal data class OpenFoodFactsProductResponseV2(
+        @SerialName("product") val product: OpenFoodFactsProductNetwork
+    )
 }

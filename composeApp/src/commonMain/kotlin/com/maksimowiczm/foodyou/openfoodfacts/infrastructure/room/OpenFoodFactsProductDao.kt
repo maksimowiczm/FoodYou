@@ -2,48 +2,13 @@ package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal abstract class OpenFoodFactsDao {
-    @Query(
-        """
-        SELECT p.*
-        FROM OpenFoodFactsPagingKey pk
-        LEFT JOIN OpenFoodFactsProduct p ON p.barcode = pk.productBarcode
-        WHERE pk.queryString = :query
-        GROUP BY p.barcode
-        ORDER BY MIN(pk.id) ASC
-        """
-    )
-    abstract fun getPagingSourceByQuery(
-        query: String
-    ): PagingSource<Int, OpenFoodFactsProductEntity>
-
-    @Query(
-        """
-        SELECT COUNT(DISTINCT pk.productBarcode)
-        FROM OpenFoodFactsPagingKey pk
-        LEFT JOIN OpenFoodFactsProduct p ON p.barcode = pk.productBarcode
-        WHERE pk.queryString = :query
-        """
-    )
-    abstract fun observeCountByQuery(query: String): Flow<Int>
-
-    @Query(
-        """
-        SELECT COUNT(*)
-        FROM OpenFoodFactsPagingKey
-        WHERE queryString = :query
-        """
-    )
-    abstract suspend fun getPagingKeyCountByQuery(query: String): Int
-
+internal abstract class OpenFoodFactsProductDao {
     @Query(
         """
         SELECT p.*
@@ -95,20 +60,6 @@ internal abstract class OpenFoodFactsDao {
             return product
         }
         return null
-    }
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract suspend fun insertPagingKeys(keys: List<OpenFoodFactsPagingKeyEntity>)
-
-    @Transaction
-    open suspend fun insertProductsWithPagingKeys(
-        products: List<OpenFoodFactsProductEntity>,
-        keys: List<OpenFoodFactsPagingKeyEntity>,
-    ): List<OpenFoodFactsProductEntity> {
-        val changed = mutableListOf<OpenFoodFactsProductEntity>()
-        for (product in products) upsertProductAndGet(product)?.let(changed::add)
-        insertPagingKeys(keys)
-        return changed
     }
 
     @Query(

@@ -90,6 +90,7 @@ import com.maksimowiczm.foodyou.app.ui.food.search.SearchCollection
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchFilters
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
 import com.maksimowiczm.foodyou.app.ui.food.search.fooddatacentral.FoodDataCentralSearchExtension
+import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSearchExtension
 import com.maksimowiczm.foodyou.app.ui.food.search.rememberCollectionFilters
 import com.maksimowiczm.foodyou.app.ui.home.calendar.CalendarCard
 import com.maksimowiczm.foodyou.app.ui.home.common.rememberHomeState
@@ -172,10 +173,13 @@ fun HomeScreen(
     val railState = rememberWideNavigationRailState()
 
     val foodDataCentralExtension = searchViewModel.extension<FoodDataCentralSearchExtension>()
+    val openFoodFactsExtension = searchViewModel.extension<OpenFoodFactsSearchExtension>()
     LaunchedEffect(selectedCollection.value) {
         when (val collection = selectedCollection.value) {
             is SearchCollection.FoodDataCentral ->
                 foodDataCentralExtension.dataTypes(collection.dataTypes)
+
+            is SearchCollection.OpenFoodFacts -> openFoodFactsExtension.version(collection.version)
 
             else -> Unit
         }

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.model
+package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer

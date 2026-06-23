@@ -6,13 +6,20 @@ import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 
 @Database(
-    entities = [OpenFoodFactsProductEntity::class, OpenFoodFactsPagingKeyEntity::class],
+    entities =
+        [
+            OpenFoodFactsProductEntity::class,
+            OpenFoodFactsPagingKeyV1Entity::class,
+            OpenFoodFactsPagingKeySearchALiciousEntity::class,
+        ],
     version = OpenFoodFactsDatabase.VERSION,
     exportSchema = false,
 )
 @ConstructedBy(OpenFoodFactsDatabaseConstructor::class)
 internal abstract class OpenFoodFactsDatabase : RoomDatabase() {
-    abstract val dao: OpenFoodFactsDao
+    abstract val productDao: OpenFoodFactsProductDao
+    abstract val pagingKeyV1Dao: OpenFoodFactsPagingKeyV1Dao
+    abstract val pagingKeySearchALiciousDao: OpenFoodFactsPagingKeySearchALiciousDao
 
     companion object {
         const val VERSION = 1

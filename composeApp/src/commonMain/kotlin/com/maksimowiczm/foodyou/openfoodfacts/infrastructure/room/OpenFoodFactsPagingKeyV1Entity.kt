@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "OpenFoodFactsPagingKey",
+    tableName = "OpenFoodFactsPagingKeyV1",
     indices = [Index(value = ["queryString"]), Index(value = ["productBarcode"])],
     foreignKeys =
         [
@@ -18,7 +18,7 @@ import androidx.room.PrimaryKey
             )
         ],
 )
-internal data class OpenFoodFactsPagingKeyEntity(
+internal data class OpenFoodFactsPagingKeyV1Entity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val queryString: String,
     val productBarcode: String,

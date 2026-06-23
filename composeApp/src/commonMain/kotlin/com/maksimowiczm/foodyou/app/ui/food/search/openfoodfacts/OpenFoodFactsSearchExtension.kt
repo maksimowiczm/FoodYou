@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -14,18 +15,22 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 internal class OpenFoodFactsSearchExtension(
     viewModel: SearchViewModel,
     settingsRepository: OpenFoodFactsSettingsRepository,
     private val openFoodFactsService: OpenFoodFactsService,
 ) : SearchExtension(viewModel) {
+    private val version =
+        MutableStateFlow(OpenFoodFactsSearchParameters.OpenFoodFactsVersion.SearchALicious)
+
     private val parameters: SharedFlow<OpenFoodFactsSearchParameters> =
-        viewModel.searchQuery
-            .map { query ->
+        combine(viewModel.searchQuery, version) { query, version ->
                 OpenFoodFactsSearchParameters(
                     query = query,
                     orderBy = OpenFoodFactsSearchParameters.OrderBy.Relevance,
+                    version = version,
                 )
             }
             .shareIn(
@@ -57,6 +62,10 @@ internal class OpenFoodFactsSearchExtension(
                 started = SharingStarted.WhileSubscribed(2_000),
                 initialValue = false,
             )
+
+    fun version(version: OpenFoodFactsSearchParameters.OpenFoodFactsVersion) {
+        viewModel.viewModelScope.launch { this@OpenFoodFactsSearchExtension.version.emit(version) }
+    }
 
     companion object {
         private const val PAGE_SIZE = 200

@@ -158,6 +158,8 @@ fun IngredientSearchScreen(
             is SearchCollection.FoodDataCentral ->
                 foodDataCentralExtension.dataTypes(collection.dataTypes)
 
+            is SearchCollection.OpenFoodFacts -> openFoodFactsExtension.version(collection.version)
+
             else -> Unit
         }
     }

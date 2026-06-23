@@ -24,9 +24,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import foodyou.app.generated.resources.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Immutable
 @Serializable
@@ -74,7 +76,10 @@ internal sealed interface SearchCollection {
 
     @Immutable
     @Serializable
-    class OpenFoodFacts : SearchCollection {
+    data class OpenFoodFacts(
+        val version: OpenFoodFactsSearchParameters.OpenFoodFactsVersion =
+            OpenFoodFactsSearchParameters.OpenFoodFactsVersion.SearchALicious
+    ) : SearchCollection {
         @Composable
         override fun Icon(selected: Boolean, modifier: Modifier) {
             Image(
@@ -87,6 +92,54 @@ internal sealed interface SearchCollection {
         @Composable
         override fun stringResource(): String =
             org.jetbrains.compose.resources.stringResource(Res.string.headline_open_food_facts)
+
+        override fun LazyListScope.suffixFilters(onUpdate: (SearchCollection) -> Unit) {
+            item {
+                var expanded by rememberSaveable { mutableStateOf(false) }
+                val entries = OpenFoodFactsSearchParameters.OpenFoodFactsVersion.entries
+
+                Box {
+                    DropdownMenuPopup(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        DropdownMenuGroup(shapes = MenuDefaults.groupShape(0, entries.size)) {
+                            entries.forEachIndexed { i, entry ->
+                                val checked = version == entry
+
+                                DropdownMenuItem(
+                                    checked = checked,
+                                    onCheckedChange = {
+                                        onUpdate(copy(version = entry))
+                                        expanded = false
+                                    },
+                                    text = { Text(entry.stringResource()) },
+                                    shapes = MenuDefaults.itemShape(i, entries.size),
+                                    checkedLeadingIcon = {
+                                        androidx.compose.material3.Icon(
+                                            imageVector = Icons.Outlined.Check,
+                                            contentDescription = null,
+                                        )
+                                    },
+                                )
+                                if (i != entries.lastIndex) {
+                                    Spacer(Modifier.height(2.dp))
+                                }
+                            }
+                        }
+                    }
+                    FilterChip(
+                        selected = true,
+                        onClick = { expanded = true },
+                        label = { Text(version.stringResource()) },
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                containerColor = MaterialTheme.colorScheme.surface
+                            ),
+                    )
+                }
+            }
+        }
     }
 
     @Immutable
@@ -172,3 +225,11 @@ internal sealed interface SearchCollection {
         }
     }
 }
+
+@Composable
+private fun OpenFoodFactsSearchParameters.OpenFoodFactsVersion.stringResource() =
+    when (this) {
+        OpenFoodFactsSearchParameters.OpenFoodFactsVersion.ApiV1 ->
+            stringResource(Res.string.openfoodfacts_version_legacy)
+        OpenFoodFactsSearchParameters.OpenFoodFactsVersion.SearchALicious -> "Search-a-licious"
+    }

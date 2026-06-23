@@ -11,5 +11,8 @@ sealed class OpenFoodFactsApiError : Exception {
     class RateLimitExceeded :
         OpenFoodFactsApiError("OpenFoodFacts API rate limit exceeded. Please try again later.")
 
+    class ServiceUnavailable :
+        OpenFoodFactsApiError("OpenFoodFacts API service unavailable. Please try again later.")
+
     class Unknown(inner: Exception) : OpenFoodFactsApiError(inner)
 }
