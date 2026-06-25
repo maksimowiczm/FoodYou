@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.network.SuspendingRateLimi
 import com.maksimowiczm.foodyou.common.infrastructure.network.WindowedRequestLog
 import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiKeyVerificationService
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.DetailedFood
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.FoodDataCentralFoodPageResponse
 import io.ktor.client.HttpClient
@@ -26,8 +27,12 @@ internal class FoodDataCentralRemoteDataSource(
     private val networkConfig: NetworkConfig,
     private val rateLimiter: RateLimiter,
     logger: Logger,
-) {
+) : FoodDataCentralApiKeyVerificationService {
     private val logger = logger.withTag(TAG)
+
+    override suspend fun verify(apiKey: String) {
+        val _ = getProduct(id = 67, apiKey = apiKey).getOrThrow()
+    }
 
     suspend fun getProduct(id: Int, apiKey: String?): Result<DetailedFood> {
         val url = "$API_URL/v1/food/$id"
@@ -42,7 +47,6 @@ internal class FoodDataCentralRemoteDataSource(
                 val response =
                     client.get(url) {
                         userAgent(networkConfig.userAgent)
-
                         parameter("format", "full")
                         parameter("api_key", apiKey ?: "DEMO_KEY")
                     }

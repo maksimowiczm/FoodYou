@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.fooddatacentral.di
 
 import com.maksimowiczm.foodyou.common.extension.databaseBuilder
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiKeyVerificationService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
@@ -40,13 +41,14 @@ val foodDataCentralModule = module {
         .onClose { it?.close() }
     single(rateLimiter) { FoodDataCentralRemoteDataSource.rateLimiter(get()) }
     factory {
-        FoodDataCentralRemoteDataSource(
-            client = get(httpClientQualifier),
-            rateLimiter = get(rateLimiter),
-            networkConfig = get(),
-            logger = get(),
-        )
-    }
+            FoodDataCentralRemoteDataSource(
+                client = get(httpClientQualifier),
+                rateLimiter = get(rateLimiter),
+                networkConfig = get(),
+                logger = get(),
+            )
+        }
+        .bind<FoodDataCentralApiKeyVerificationService>()
 
     factoryOf(::FoodDataCentralRepositoryImpl).bind<FoodDataCentralRepository>()
 
