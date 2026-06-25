@@ -19,7 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.ui.food.UpdateUsdaApiKeyDialog
+import com.maksimowiczm.foodyou.app.ui.fooddatacentral.UpdateFoodDataCentralApiKeyDialog
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -48,7 +48,7 @@ internal fun FoodDataCentralErrorCard(
 
     var showApiKeyDialog by rememberSaveable { mutableStateOf(false) }
     if (showApiKeyDialog) {
-        UpdateUsdaApiKeyDialog(
+        UpdateFoodDataCentralApiKeyDialog(
             onDismissRequest = { showApiKeyDialog = false },
             onSave = { showApiKeyDialog = false },
         )

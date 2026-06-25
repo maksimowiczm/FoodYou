@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsLoginService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -18,6 +19,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.http.formUrlEncode
+import io.ktor.http.isSuccess
 import io.ktor.http.userAgent
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.SerialName
@@ -29,7 +31,7 @@ internal class OpenFoodFactsApiV1SearchDataSource(
     private val networkConfig: NetworkConfig,
     private val settingsRepository: OpenFoodFactsSettingsRepository,
     logger: Logger,
-) : OpenFoodFactsSearchDataSource {
+) : OpenFoodFactsSearchDataSource, OpenFoodFactsLoginService {
     private val logger = logger.withTag(TAG)
 
     override suspend fun search(query: String, pageSize: Int, page: Int, sortBy: String?) =
@@ -60,11 +62,8 @@ internal class OpenFoodFactsApiV1SearchDataSource(
         try {
             if (shouldLogin) {
                 val settings = settingsRepository.observe().first()
-                val login = settings.login
-                val password = settings.password
-
-                if (login != null && password != null) {
-                    login(login, password)
+                if (settings.login != null && settings.password != null) {
+                    val _ = runCatching { login(settings.login, settings.password) }
                 }
             }
 
@@ -102,7 +101,7 @@ internal class OpenFoodFactsApiV1SearchDataSource(
             throw OpenFoodFactsApiError.Unknown(e)
         }
 
-    suspend fun login(username: String, password: String) {
+    override suspend fun login(username: String, password: String) {
         val response =
             client.post("${API_URL}/cgi/session.pl") {
                 userAgent(networkConfig.userAgent)
@@ -116,9 +115,11 @@ internal class OpenFoodFactsApiV1SearchDataSource(
                 )
             }
 
-        if (response.status.value !in 200..299) {
+        if (!response.status.isSuccess()) {
             logger.w { "Login failed for user: $username" }
         }
+
+        check(response.status.isSuccess())
     }
 
     private companion object {

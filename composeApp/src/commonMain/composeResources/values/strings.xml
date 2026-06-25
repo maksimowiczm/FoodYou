@@ -249,6 +249,9 @@
     <string name="openfoodfacts_version">Version</string>
     <string name="openfoodfacts_version_legacy" description="Old OpenFoodFacts search API">Legacy</string>
     <string name="error_open_food_facts_rate_limit">Open Food Facts API rate limit exceeded</string>
+    <string name="action_register">Register</string>
+    <string name="description_open_food_facts_credentials_message">Login credentials are encrypted and stored only on your device. Sensitive data is not accessible to anyone else.</string>
+    <string name="error_open_food_facts_failed_to_authenticate">Failed to authenticate with Open Food Facts</string>
 
     <!-- Don't translate changelog strings -->
     <string name="changelog_new_features" translatable="false">New features</string>
@@ -459,6 +462,7 @@
     <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Your database will be REPLACED, and all current data will be LOST. The app will restart after the database is replaced. You may need to reopen the app.</string>
 
     <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_out">Sign out</string>
     <string name="headline_terms_of_service">Terms of service</string>
     <string name="headline_privacy_policy">Privacy policy</string>
     <string name="error_there_was_an_error_while_signing_in">There was an error while signing in</string>
@@ -531,5 +535,10 @@
     <string name="headline_no_recent_searches">No recent searches yet</string>
 
     <string name="headline_search_ingredients">Search ingredients</string>
+
+    <string name="headline_username">Username</string>
+    <string name="headline_password">Password</string>
+    <string name="action_show" description="Show password, show credentials, text field">Show</string>
+    <string name="action_hide" description="Hide password, hide credentials, text field">Hide</string>
 
 </resources>

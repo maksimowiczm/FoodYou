@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.SuspendingRateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.WindowedRequestLog
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsLoginService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
@@ -66,14 +67,15 @@ val openFoodFactsModule = module {
     }
 
     factory {
-        OpenFoodFactsApiV1SearchDataSource(
-            get(httpClientQualifier),
-            get(openFoodFactsSearchRateLimiter),
-            get(),
-            get(),
-            get(),
-        )
-    }
+            OpenFoodFactsApiV1SearchDataSource(
+                get(httpClientQualifier),
+                get(openFoodFactsSearchRateLimiter),
+                get(),
+                get(),
+                get(),
+            )
+        }
+        .bind<OpenFoodFactsLoginService>()
     factory {
         OpenFoodFactsSearchALiciousDataSource(
             get(httpClientQualifier),

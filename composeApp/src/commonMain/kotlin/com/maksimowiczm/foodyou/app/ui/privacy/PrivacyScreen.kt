@@ -26,13 +26,13 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.app.ui.common.component.FoodDataCentralPrivacyCard
-import com.maksimowiczm.foodyou.app.ui.common.component.OpenFoodFactsPrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.toggle
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
+import com.maksimowiczm.foodyou.app.ui.fooddatacentral.FoodDataCentralPrivacyCard
+import com.maksimowiczm.foodyou.app.ui.openfoodfacts.OpenFoodFactsPrivacyCard
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
