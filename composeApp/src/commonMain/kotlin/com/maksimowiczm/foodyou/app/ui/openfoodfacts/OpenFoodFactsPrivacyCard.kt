@@ -31,13 +31,16 @@ import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.component.TermsOfUseChip
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.encryptString
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsLoginService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettings
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
-import com.maksimowiczm.foodyou.openfoodfacts.domain.hasCredentials
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -55,7 +58,9 @@ fun OpenFoodFactsPrivacyCard(
     val appConfig = LocalAppConfig.current
 
     val hasCredentials =
-        remember(repository) { repository.hasCredentials() }.collectAsStateWithLifecycle(null).value
+        remember(repository) { repository.observe().map { it.credentials != null } }
+            .collectAsStateWithLifecycle(null)
+            .value
 
     var showLoginDialog by rememberSaveable { mutableStateOf(false) }
     if (showLoginDialog) {
@@ -63,7 +68,15 @@ fun OpenFoodFactsPrivacyCard(
             onDismissRequest = { showLoginDialog = false },
             onSave = { login, password ->
                 runBlocking {
-                    repository.update { it.copy(login = login, password = password) }
+                    repository.update {
+                        it.copy(
+                            credentials =
+                                OpenFoodFactsCredentials(
+                                    login = SoftwareEncrypted.encryptString(login),
+                                    password = SoftwareEncrypted.encryptString(password),
+                                )
+                        )
+                    }
                     showLoginDialog = false
                 }
             },
@@ -112,9 +125,7 @@ fun OpenFoodFactsPrivacyCard(
                 Chip(
                     onClick = {
                         if (hasCredentials == true)
-                            runBlocking {
-                                repository.update { it.copy(login = null, password = null) }
-                            }
+                            runBlocking { repository.update { it.copy(credentials = null) } }
                         else showLoginDialog = true
                     },
                     enabled = hasCredentials != null,
@@ -175,7 +186,15 @@ private fun OpenFoodFactsPrivacyCardSignedInPreview() {
             repository =
                 object : OpenFoodFactsSettingsRepository {
                     override fun observe(): Flow<OpenFoodFactsSettings> =
-                        flowOf(OpenFoodFactsSettings(login = "login", password = "password"))
+                        flowOf(
+                            OpenFoodFactsSettings(
+                                credentials =
+                                    OpenFoodFactsCredentials(
+                                        login = SoftwareEncrypted.encryptString("login"),
+                                        password = SoftwareEncrypted.encryptString("password"),
+                                    )
+                            )
+                        )
 
                     override suspend fun save(settings: OpenFoodFactsSettings) = Unit
 

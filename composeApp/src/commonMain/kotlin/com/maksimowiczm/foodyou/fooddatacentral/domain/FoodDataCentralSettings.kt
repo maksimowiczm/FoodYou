@@ -1,3 +1,5 @@
 package com.maksimowiczm.foodyou.fooddatacentral.domain
 
-data class FoodDataCentralSettings(val remoteEnabled: Boolean, val apiKey: String?)
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
+
+data class FoodDataCentralSettings(val remoteEnabled: Boolean, val apiKey: SoftwareEncrypted?)

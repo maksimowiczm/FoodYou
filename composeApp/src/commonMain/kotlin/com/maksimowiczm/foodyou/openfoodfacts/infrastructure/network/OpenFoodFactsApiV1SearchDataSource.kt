@@ -5,8 +5,8 @@ import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsLoginService
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout
@@ -21,7 +21,6 @@ import io.ktor.http.contentType
 import io.ktor.http.formUrlEncode
 import io.ktor.http.isSuccess
 import io.ktor.http.userAgent
-import kotlinx.coroutines.flow.first
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -29,12 +28,17 @@ internal class OpenFoodFactsApiV1SearchDataSource(
     private val client: HttpClient,
     private val rateLimiter: RateLimiter,
     private val networkConfig: NetworkConfig,
-    private val settingsRepository: OpenFoodFactsSettingsRepository,
     logger: Logger,
 ) : OpenFoodFactsSearchDataSource, OpenFoodFactsLoginService {
     private val logger = logger.withTag(TAG)
 
-    override suspend fun search(query: String, pageSize: Int, page: Int, sortBy: String?) =
+    override suspend fun search(
+        query: String,
+        credentials: OpenFoodFactsCredentials.Decrypted?,
+        pageSize: Int,
+        page: Int,
+        sortBy: String?,
+    ) =
         rateLimiter.withRateLimit(
             onRateLimit = {
                 logger.d { "Rate limit exceeded for OpenFoodFacts API" }
@@ -43,6 +47,7 @@ internal class OpenFoodFactsApiV1SearchDataSource(
         ) {
             search(
                 query = query,
+                credentials = credentials,
                 shouldLogin = false,
                 page = page,
                 pageSize = pageSize,
@@ -55,15 +60,15 @@ internal class OpenFoodFactsApiV1SearchDataSource(
     private suspend fun search(
         query: String,
         shouldLogin: Boolean,
+        credentials: OpenFoodFactsCredentials.Decrypted?,
         page: Int? = null,
         pageSize: Int = 50,
         sortBy: String? = null,
     ): OpenFoodFactsNetworkPage =
         try {
             if (shouldLogin) {
-                val settings = settingsRepository.observe().first()
-                if (settings.login != null && settings.password != null) {
-                    val _ = runCatching { login(settings.login, settings.password) }
+                if (credentials != null) {
+                    val _ = runCatching { login(credentials.login, credentials.password) }
                 }
             }
 
@@ -85,6 +90,7 @@ internal class OpenFoodFactsApiV1SearchDataSource(
                 if (!shouldLogin) {
                     search(
                         query = query,
+                        credentials = credentials,
                         shouldLogin = true,
                         page = page,
                         pageSize = pageSize,
@@ -108,9 +114,9 @@ internal class OpenFoodFactsApiV1SearchDataSource(
                 contentType(ContentType.Application.FormUrlEncoded)
                 setBody(
                     Parameters.build {
-                            append("user_id", username)
-                            append("password", password)
-                        }
+                        append("user_id", username)
+                        append("password", password)
+                    }
                         .formUrlEncode()
                 )
             }

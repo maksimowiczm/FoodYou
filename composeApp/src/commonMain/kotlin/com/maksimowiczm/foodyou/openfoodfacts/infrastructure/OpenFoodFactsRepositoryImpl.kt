@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
@@ -39,6 +40,7 @@ internal class OpenFoodFactsRepositoryImpl(
         parameters: OpenFoodFactsSearchParameters,
         pageSize: Int,
         remoteEnabled: Boolean,
+        credentials: OpenFoodFactsCredentials.Decrypted?,
         onNewProduct: suspend (Set<OpenFoodFactsProduct>) -> Unit,
     ): Flow<PagingData<OpenFoodFactsProduct>> =
         resolve(parameters.version)
@@ -46,6 +48,7 @@ internal class OpenFoodFactsRepositoryImpl(
                 parameters = parameters,
                 pageSize = pageSize,
                 remoteEnabled = remoteEnabled,
+                credentials = credentials,
                 onNewFetchProduct = onNewProduct,
             )
 

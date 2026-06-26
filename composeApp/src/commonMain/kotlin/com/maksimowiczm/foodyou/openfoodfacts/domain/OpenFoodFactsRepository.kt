@@ -10,6 +10,7 @@ interface OpenFoodFactsRepository {
         parameters: OpenFoodFactsSearchParameters,
         pageSize: Int,
         remoteEnabled: Boolean,
+        credentials: OpenFoodFactsCredentials.Decrypted?,
         onNewProduct: suspend (Set<OpenFoodFactsProduct>) -> Unit,
     ): Flow<PagingData<OpenFoodFactsProduct>>
 

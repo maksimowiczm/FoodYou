@@ -7,6 +7,7 @@ import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsApiV2ProductDataSource
@@ -20,6 +21,7 @@ import kotlinx.coroutines.ensureActive
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediator(
     private val query: SearchQuery.NotBlank,
+    private val credentials: OpenFoodFactsCredentials.Decrypted?,
     private val pagingKeyDao: OpenFoodFactsPagingKeyDao<*>,
     private val productDao: OpenFoodFactsProductDao,
     private val search: OpenFoodFactsSearchDataSource,
@@ -80,7 +82,13 @@ internal class OpenFoodFactsRemoteMediator(
 
             logger.d { "Loading page $page" }
 
-            val response = search.search(query = query.query, page = page, pageSize = pageSize)
+            val response =
+                search.search(
+                    query = query.query,
+                    credentials = credentials,
+                    page = page,
+                    pageSize = pageSize,
+                )
 
             val entities = response.products.map(mapper::toEntity)
 

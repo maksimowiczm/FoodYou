@@ -72,7 +72,6 @@ val openFoodFactsModule = module {
                 get(openFoodFactsSearchRateLimiter),
                 get(),
                 get(),
-                get(),
             )
         }
         .bind<OpenFoodFactsLoginService>()

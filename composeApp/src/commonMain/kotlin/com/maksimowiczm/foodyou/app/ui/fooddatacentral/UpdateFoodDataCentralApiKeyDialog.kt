@@ -39,6 +39,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.decryptString
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.encryptString
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiKeyVerificationService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
@@ -46,6 +49,7 @@ import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -66,7 +70,7 @@ fun UpdateFoodDataCentralApiKeyDialog(
             ?: return
 
     val focusRequester = remember { FocusRequester() }
-    val textFieldState = rememberTextFieldState(settings.apiKey ?: "")
+    val textFieldState = rememberTextFieldState(settings.apiKey?.decryptString() ?: "")
     var hidePassword by rememberSaveable { mutableStateOf(true) }
 
     var requestInProgress by rememberSaveable { mutableStateOf(false) }
@@ -82,7 +86,9 @@ fun UpdateFoodDataCentralApiKeyDialog(
                 runCatching { service.verify(key) }
                     .onFailure { verificationError = it }
                     .onSuccess {
-                        repository.update { it.copy(apiKey = key) }
+                        repository.update {
+                            it.copy(apiKey = SoftwareEncrypted.encryptString(key))
+                        }
                         onSave()
                     }
                 requestInProgress = false

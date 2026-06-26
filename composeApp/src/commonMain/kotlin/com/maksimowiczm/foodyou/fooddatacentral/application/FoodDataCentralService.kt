@@ -34,7 +34,7 @@ class FoodDataCentralService(
                 parameters = parameters,
                 pageSize = pageSize,
                 remoteEnabled = settings.remoteEnabled,
-                apiKey = settings.apiKey,
+                apiKey = settings.apiKey?.decrypt()?.decodeToString(),
                 onNewProduct = { products ->
                     if (products.isNotEmpty()) {
                         eventBus.publish(
@@ -62,7 +62,7 @@ class FoodDataCentralService(
             repository.observe(
                 identity = identity,
                 remoteEnabled = settings.remoteEnabled,
-                apiKey = settings.apiKey,
+                apiKey = settings.apiKey?.decrypt()?.decodeToString(),
             )
         }
     }
@@ -70,7 +70,8 @@ class FoodDataCentralService(
     suspend fun refresh(
         identity: FoodDataCentralProductIdentity
     ): Result<FoodDataCentralProduct, FoodDataCentralApiError> {
-        val apiKey = settingsRepository.observe().map { it.apiKey }.first()
+        val apiKey =
+            settingsRepository.observe().map { it.apiKey }.first()?.decrypt()?.decodeToString()
         return repository.refresh(identity, apiKey).onSuccess {
             eventBus.publish(
                 FoodDataCentralProductUpdatedEvent(product = it, timestamp = clock.now())

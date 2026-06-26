@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.withRateLimit
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout
@@ -40,6 +41,7 @@ internal class OpenFoodFactsSearchALiciousDataSource(
      */
     override suspend fun search(
         query: String,
+        credentials: OpenFoodFactsCredentials.Decrypted?,
         pageSize: Int,
         page: Int,
         sortBy: String?,

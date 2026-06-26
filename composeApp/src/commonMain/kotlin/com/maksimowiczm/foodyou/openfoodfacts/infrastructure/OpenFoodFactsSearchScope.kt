@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
@@ -30,6 +31,7 @@ internal class OpenFoodFactsSearchScope(
         parameters: OpenFoodFactsSearchParameters,
         pageSize: Int,
         remoteEnabled: Boolean,
+        credentials: OpenFoodFactsCredentials.Decrypted?,
         onNewFetchProduct: suspend (Set<OpenFoodFactsProduct>) -> Unit,
     ): Flow<PagingData<OpenFoodFactsProduct>> {
         val config = PagingConfig(pageSize = pageSize)
@@ -47,6 +49,7 @@ internal class OpenFoodFactsSearchScope(
             if (remoteEnabled && parameters.query is SearchQuery.NotBlank) {
                 OpenFoodFactsRemoteMediator(
                     query = parameters.query,
+                    credentials = credentials,
                     pagingKeyDao = pagingKeyDao,
                     productDao = productDao,
                     search = searchDataSource,

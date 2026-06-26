@@ -10,6 +10,8 @@ import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.expect
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.encryptString
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettings
@@ -717,7 +719,10 @@ class FoodDiaryIntegrationTest {
         single {
                 val apiKey = TestSecrets.usdaApiKey
                 TestFoodDataCentralSettingsRepository(
-                    FoodDataCentralSettings(remoteEnabled = true, apiKey = apiKey)
+                    FoodDataCentralSettings(
+                        remoteEnabled = true,
+                        apiKey = apiKey?.let { SoftwareEncrypted.encryptString(it) },
+                    )
                 )
             }
             .bind<FoodDataCentralSettingsRepository>()

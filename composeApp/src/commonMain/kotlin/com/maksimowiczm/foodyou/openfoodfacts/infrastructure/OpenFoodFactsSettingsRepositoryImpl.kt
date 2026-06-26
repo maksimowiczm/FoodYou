@@ -3,9 +3,11 @@ package com.maksimowiczm.foodyou.openfoodfacts.infrastructure
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.byteArrayPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import com.maksimowiczm.foodyou.common.extension.set
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettings
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import kotlinx.coroutines.flow.Flow
@@ -17,10 +19,19 @@ internal class OpenFoodFactsSettingsRepositoryImpl(private val dataStore: DataSt
 
     override fun observe(): Flow<OpenFoodFactsSettings> {
         return dataStore.data.map { preferences ->
+            val login = preferences[login]
+            val password = preferences[password]
+            val credentials =   if (login != null && password != null)
+                OpenFoodFactsCredentials(
+                    login = SoftwareEncrypted(login),
+                    password = SoftwareEncrypted(password),
+                )
+            else null
+
             OpenFoodFactsSettings(
                 remoteEnabled = preferences[remoteEnabled] ?: false,
-                login = preferences[login],
-                password = preferences[password],
+                credentials = credentials
+
             )
         }
     }
@@ -28,8 +39,8 @@ internal class OpenFoodFactsSettingsRepositoryImpl(private val dataStore: DataSt
     override suspend fun save(settings: OpenFoodFactsSettings) {
         dataStore.edit {
             it[remoteEnabled] = settings.remoteEnabled
-            it[login] = settings.login
-            it[password] = settings.password
+            it[login] = settings.credentials?.login?.data
+            it[password] = settings.credentials?.password?.data
         }
     }
 
@@ -39,7 +50,7 @@ internal class OpenFoodFactsSettingsRepositoryImpl(private val dataStore: DataSt
 
     private companion object {
         val remoteEnabled = booleanPreferencesKey("openfoodfacts:remoteEnabled")
-        val login = stringPreferencesKey("openfoodfacts:login")
-        val password = stringPreferencesKey("openfoodfacts:password")
+        val login = byteArrayPreferencesKey("openfoodfacts:login")
+        val password = byteArrayPreferencesKey("openfoodfacts:password")
     }
 }

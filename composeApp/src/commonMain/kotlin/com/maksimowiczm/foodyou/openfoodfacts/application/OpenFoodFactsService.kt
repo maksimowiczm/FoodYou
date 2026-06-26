@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.decryptString
 import com.maksimowiczm.foodyou.common.onSuccess
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
@@ -33,6 +34,7 @@ class OpenFoodFactsService(
                 parameters = parameters,
                 pageSize = pageSize,
                 remoteEnabled = settings.remoteEnabled,
+                credentials = settings.credentials?.decrypt(),
                 onNewProduct = { products ->
                     if (products.isNotEmpty()) {
                         eventBus.publish(
