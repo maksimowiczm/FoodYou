@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.common.domain.food
 
 import com.maksimowiczm.foodyou.common.domain.Weight
+import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.sum
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
@@ -110,6 +111,8 @@ val Iterable<FoodCompositionComponent>.allComponentIdentities: Set<FoodCompositi
  * ```
  */
 val Iterable<FoodCompositionComponent>.nutritionFacts: NutritionFacts
-    get() =
-        if (count() == 0) NutritionFacts.zeroCompleted
+    get() {
+        val totalWeight = totalWeight
+        return if (totalWeight == 0.grams) NutritionFacts.zeroCompleted
         else map { it.measuredNutritionFacts }.sum() / totalWeight.grams * 100.0
+    }
