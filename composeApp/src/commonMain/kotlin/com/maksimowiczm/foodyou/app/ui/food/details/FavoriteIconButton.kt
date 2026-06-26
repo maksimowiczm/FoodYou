@@ -41,7 +41,6 @@ internal fun FavoriteIconButton(
     val animatable = remember { Animatable(1f) }
 
     val vector = if (favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
-    val tint = if (favorite) MaterialTheme.colorScheme.primary else LocalContentColor.current
 
     IconButton(
         onClick = {
@@ -60,6 +59,8 @@ internal fun FavoriteIconButton(
         colors = colors,
         modifier = modifier,
     ) {
+        val tint = if (favorite) MaterialTheme.colorScheme.primary else LocalContentColor.current
+
         Icon(
             imageVector = vector,
             contentDescription = null,
