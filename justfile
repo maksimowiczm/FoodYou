@@ -45,3 +45,9 @@ preview:
 [working-directory: 'docs']
 serve:
     zensical serve
+
+test-android-device:
+  ./gradlew :composeApp:connectedAndroidTest
+
+test-android-host:
+  ./gradlew :composeApp:cleanTestAndroidHostTest :composeApp:testAndroidHostTest --rerun
