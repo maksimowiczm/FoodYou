@@ -1,15 +1,15 @@
-<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
+<b>طعامك</b> هو تطبيق قوي ومفتوح المصدر لتتبع التغذية، مصمّم بأسلوب عصري مستوحى من Material You. يساعدك هذا التطبيق على تتبع ليس فقط السعرات الحرارية، ولكن أيضًا جميع العناصر الغذائية التي تتناولها—من خلال بيانات غذائية موثوقة وواجهة مرنة وقابلة للتعديل.
 
 <b>الميزات:</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
-    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
-    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
-    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
-    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
-    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
+    <li><b>تصميم Material You:</b> تصميم ديناميكي يتكيف مع جهازك لتجربة بصرية سلسة.</li>
+    <li><b>قواعد بيانات غذائية شاملة:</b> الوصول إلى بيانات التغذية من Open Food Facts وUSDA FoodCentral وقاعدة بيانات تكوين الأغذية السويسرية.</li>
+    <li><b>تتبع كامل للتغذية:</b> راقِب السعرات الحرارية، والمغذيات الكبرى، والفيتامينات، والمعادن، والمزيد.</li>
+    <li><b>إنشاء الوصفات:</b> اجمع الأطعمة في وصفات مخصصة مع حساب تلقائي للقيمة الغذائية.</li>
+    <li><b>الأهداف اليومية:</b> حدّد أهدافًا غذائية شخصية والتزِم بها.</li>
+    <li><b>شاشة رئيسة قابلة للتخصيص:</b> خصِّص شاشتك الرئيسة ببطاقات مصمَّمة خصيصًا لتلبية احتياجاتك.</li>
 </ul>
 
-Start tracking your nutrition today with Food You — clean, complete, and fully yours.
+ابدأ بتتبع نظامك الغذائي اليوم مع طعامك—نظام غذائي نظيف، كامل، وخاص بك تمامًا.
 
-Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+أيقونة المشغّل من تصميم <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

@@ -7,6 +7,7 @@
     <string name="headline_general">عام</string>
     <string name="headline_macronutrients">المغذيات الكبرى</string>
     <string name="headline_meals">الوجبات</string>
+    <string name="headline_delete_food">حذف الطعام</string>
     <string name="headline_edit_product">تعديل منتج</string>
     <string name="headline_permission_required">الإذن مطلوب</string>
     <string name="headline_language">اللغة</string>
@@ -23,8 +24,29 @@
     <string name="headline_create_recipe">إنشاء وصفة</string>
     <string name="headline_ingredients" description="Recipe ingredients">المكونات</string>
     <string name="headline_summary">ملخص</string>
+    <string name="headline_whats_new">ما الجديد</string>
+    <string name="headline_changelog">سجلّ التغييرات</string>
+    <string name="headline_installed" description="Installed version of the app">مثبّت</string>
+    <string name="headline_home" description="Home screen">الصفحة الرئيسة</string>
+    <string name="headline_home_settings" description="Home screen settings">إعدادات الصفحة الرئيسة</string>
+    <string name="headline_calendar">التقويم</string>
+    <string name="headline_meals_settings">إعدادات الوجبات</string>
+    <string name="headline_horizontal">أفقي</string>
+    <string name="headline_vertical">عمودي</string>
+    <string name="headline_values_per">القِيَم لكل</string>
+    <string name="headline_other">أخرى</string>
+    <string name="headline_vitamins">الفيتامينات</string>
+    <string name="headline_minerals">المعادن</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">عناوين URL المدعومة</string>
+    <string name="headline_something_went_wrong">عفوًا! حدث خطأ ما</string>
+    <string name="headline_daily_goals_settings">إعدادات الأهداف اليومية</string>
+    <string name="headline_api_key">مفتاح API</string>
+    <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">المصدر</string>
+    <string name="headline_features">الميّزات</string>
     <string name="weight">الوزن</string>
+    <string name="unit_energy" description="Energy as calories">الطاقة</string>
     <string name="unit_kcal">كيلو سعرة حرارية</string>
+    <string name="unit_kilojoules">كيلوجول</string>
     <plurals name="unit_gram">
         <item quantity="zero">جرام</item>
         <item quantity="one">جرام</item>
@@ -41,6 +63,8 @@
         <item quantity="many">مل لترات</item>
         <item quantity="other">مل لتر</item>
     </plurals>
+    <string name="unit_ounce_short">أونصة</string>
+    <string name="unit_fluid_ounce_short">أونصة سائلة</string>
     <string name="product_package_weight">وزن العبوة</string>
     <string name="product_package">عبوة</string>
     <string name="product_serving_weight">وزن الحصة</string>
@@ -48,6 +72,7 @@
     <string name="product_name">الاسم</string>
     <string name="product_brand">الماركة</string>
     <string name="product_barcode">الباركود</string>
+    <string name="product_link">رابط المنتج</string>
     <string name="recipe_servings">الحصص</string>
     <string name="description_recipe_servings">كم حصصًا هي هذه الوصفة</string>
     <string name="nutriment_proteins">بروتينات</string>
@@ -58,7 +83,36 @@
     <string name="nutriment_fats">دهون</string>
     <string name="nutriment_fats_short">F</string>
     <string name="nutriment_saturated_fats">دهون مشبعة</string>
+    <string name="nutriment_polyunsaturated_fats">الدهون المتعدّدة غير المشبّعة</string>
+    <string name="nutriment_monounsaturated_fats">الدهون الأحادية غير المشبّعة</string>
+    <string name="nutriment_omega_3">أحماض أوميجا-٣ الدهنية</string>
+    <string name="nutriment_omega_6">أحماض أوميجا-٦ الدهنية</string>
     <string name="nutriment_salt">أملاح</string>
+    <string name="nutriment_fiber">الألياف الغذائية</string>
+    <string name="nutriment_cholesterol">الكوليسترول</string>
+    <string name="nutriment_caffeine">الكافيين</string>
+    <string name="nutriment_trans_fats">الدهون المتحوّلة</string>
+    <string name="nutriment_added_sugars">السكريات المضافة</string>
+    <string name="nutriment_soluble_fiber">الألياف القابلة للذوبان</string>
+    <string name="nutriment_insoluble_fiber">الألياف الغير القابلة للذوبان</string>
+    <string name="vitamin_a">فيتامين أ (الريتينول)</string>
+    <string name="vitamin_b1">فيتامين ب١ (الثامين)</string>
+    <string name="vitamin_b2">فيتامين ب٢ (الريبوفلافين)</string>
+    <string name="vitamin_b3">فيتامين ب٣ (النياسين)</string>
+    <string name="vitamin_b5">فيتامين ب٥ (حمض البانتوثينيك)</string>
+    <string name="vitamin_b6">فيتامين ب٦ (البيريدوكسين)</string>
+    <string name="vitamin_b7">فيتامين ب٧ (البيوتين)</string>
+    <string name="vitamin_b9">فيتامين ب٩ (الفولات)</string>
+    <string name="vitamin_b12">فيتامين ب١٢ (الكوبالامين)</string>
+    <string name="vitamin_c">فيتامين ج (حمض الأسكوربيك)</string>
+    <string name="vitamin_d">فيتامين د (الكالسيفيرول)</string>
+    <string name="vitamin_e">فيتامين ھ</string>
+    <string name="vitamin_k">فيتامين ك</string>
+    <string name="mineral_manganese">المنغنيز</string>
+    <string name="mineral_magnesium">المغنيسيوم</string>
+    <string name="mineral_potassium">البوتاسيوم</string>
+    <string name="mineral_calcium">الكالسيوم</string>
+    <string name="mineral_copper">النحاس</string>
     <string name="action_search">بحث</string>
     <string name="action_scan_barcode">مسح الباركود</string>
     <string name="action_add">إضافة</string>

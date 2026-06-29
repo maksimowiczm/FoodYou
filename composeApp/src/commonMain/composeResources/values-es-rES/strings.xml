@@ -253,7 +253,6 @@
     <string name="description_add_note">Notas opcionales (p. ej., ingredientes, es vegano, alergenos, aditivos) o cualquier otro detalle no nutritivo</string>
     <string name="action_try_again">Intentar de nuevo</string>
     <string name="description_calories_are_calculated">La energía se calcula automáticamente a partir de macronutrientes. Puede desactivar esta función e introducir el valor manualmente si es necesario. El alcohol no está incluido en este cálculo.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
     <string name="neutral_an_error_occurred">Ha ocurrido un error</string>
     <string name="action_retry">Reintentar</string>
     <string name="action_import">Importar</string>

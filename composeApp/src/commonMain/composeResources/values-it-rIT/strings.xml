@@ -111,7 +111,7 @@
     <string name="mineral_phosphorus">Fosforo</string>
     <string name="mineral_selenium">Selenio</string>
     <string name="mineral_iodine">Iodio</string>
-    <string name="mineral_chromium">Chromium</string>
+    <string name="mineral_chromium">Cromo</string>
     <string name="action_search">Cerca</string>
     <string name="action_scan_barcode">Scansiona codice a barre</string>
     <string name="action_add">Aggiungi</string>
@@ -153,6 +153,7 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mostra di più</string>
     <string name="action_download_product">Scarica prodotto</string>
     <string name="action_copy_and_open_bug_report">Copia e apri segnalazione bug</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Copia e segnala</string>
     <string name="action_show_details">Mostra dettagli</string>
     <string name="action_browse_usda">Sfoglia FoodData Central (USDA)</string>
     <string name="action_set_key">Imposta chiave</string>
@@ -203,7 +204,7 @@
         <item quantity="one">Superato di %1$d kilojoule</item>
         <item quantity="other">Superato di %1$d kilojoule</item>
     </plurals>
-    <string name="description_delete_food">Il cibo sarà eliminato permanentemente</string>
+    <string name="description_delete_food">L'alimento verrà eliminato definitivamente</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Questa voce verrà eliminata dal tuo diario. Puoi aggiungerla di nuovo in qualsiasi momento.</string>
     <string name="description_about_setting">Scopri di più sull'app</string>
     <string name="description_time_based_meals_sorting">Se abilitato, i pasti in corso verranno mostrati per primi</string>
@@ -218,6 +219,15 @@
     <string name="description_please_wait_while_exporting_products">Attendi durante l'esportazione dei prodotti</string>
     <string name="headline_launcher_icon_by_icons8">Icona del launcher di Icons8</string>
     <string name="description_open_food_facts">Un database collaborativo, gratuito e aperto di prodotti alimentari da tutto il mondo</string>
+    <string name="error_open_food_facts_rate_limit">Limite delle API di Open Food Facts superato</string>
+    <string name="error_open_food_facts_service_unavailable">Servizio Open Food Facts temporaneamente non disponibile. Gli utenti registrati non sono soggetti a limiti di richiesta e ottengono l'accesso prioritario durante le ore di punta.</string>
+    <string name="action_register">Registra</string>
+    <string name="description_open_food_facts_credentials_message">Le credenziali di accesso sono crittografate e memorizzate solo sul tuo dispositivo. I dati sensibili non sono accessibili a nessun altro.</string>
+    <string name="error_open_food_facts_failed_to_authenticate">Autenticazione con Open Food Facts non riuscita</string>
+    <string name="headline_username">Nome utente</string>
+    <string name="headline_password">Password</string>
+    <string name="action_show_password">Mostra password</string>
+    <string name="action_hide_password">Nascondi password</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Esportazione prodotti</string>
     <string name="notification_importing_products">Importazione prodotti</string>
@@ -249,10 +259,10 @@
     <string name="action_reset" description="Confirm resetting">Ripristina</string>
     <string name="description_reset_nutrition_facts">Ripristina la personalizzazione delle informazioni nutrizionali ai valori predefiniti</string>
     <string name="headline_note">Note</string>
-    <string name="description_add_note">Note facoltative (es. ingredienti, stato vegano, allergeni, additivi) o qualsiasi altro dettaglio non di nutrienti</string>
+    <string name="description_add_note">Note facoltative (es. ingredienti, stato vegano, allergeni, additivi) o qualsiasi altro dettaglio non nutrizionale</string>
     <string name="action_try_again">Riprova</string>
     <string name="description_calories_are_calculated">L'energia è calcolata automaticamente dai macronutrienti. È possibile disattivare questa funzione e inserire il valore manualmente, se necessario. L'alcol non è incluso nel calcolo.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
+    <string name="x_energy_unit_per_g" description="e.g. proteins 4 kcal/g; proteins 17 kj/g">%1$s %2$d %3$s/g</string>
     <string name="neutral_an_error_occurred">Si è verificato un errore</string>
     <string name="action_retry">Riprova</string>
     <string name="action_import">Importa</string>
@@ -352,6 +362,7 @@
     <string name="action_replace">Sostituisci</string>
     <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Il tuo database verrà SOSTITUITO, e tutti i dati attuali verranno PERSI. L'app si riavvierà dopo che il database è sostituito. Potresti dover riaprire l'app.</string>
     <string name="action_sign_in">Accedi</string>
+    <string name="action_sign_out">Esci</string>
     <string name="headline_terms_of_service">Termini di servizio</string>
     <string name="headline_privacy_policy">Informativa sulla privacy</string>
     <string name="error_there_was_an_error_while_signing_in">Errore durante l'accesso</string>
@@ -390,4 +401,5 @@
     <string name="description_replacing_database">Sostituzione del database in corso, attendere…</string>
     <string name="headline_experimental">Sperimentale</string>
     <string name="description_privacy_policy">Scopri come vengono gestiti i tuoi dati</string>
+    <string name="error_open_food_facts_timeout">Open Food Facts sta impiegando molto tempo per rispondere. Il servizio potrebbe essere temporaneamente lento o non disponibile. Prova a scansionare il codice a barre del prodotto.</string>
 </resources>

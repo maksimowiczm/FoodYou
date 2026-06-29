@@ -253,7 +253,6 @@
     <string name="description_add_note">Optionele notities (Bijv., Ingrediënten, vegan status, allergenen, toevoegingen) of andere niet-voedingsdetails</string>
     <string name="action_try_again">Probeer nog een keer</string>
     <string name="description_calories_are_calculated">Energie wordt automatisch berekend uit macronutriënten. Je kan deze functie uitschakelen en de waarde handmatig invullen als het nodig is. Alcohol wordt niet meegenomen in de berekening.</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
     <string name="neutral_an_error_occurred">Er is een fout opgetreden</string>
     <string name="action_retry">Opnieuw proberen</string>
     <string name="action_import">Importeren</string>

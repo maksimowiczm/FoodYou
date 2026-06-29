@@ -232,6 +232,14 @@
     <string name="headline_launcher_icon_by_icons8">Иконка приложения от Icons8</string>
     <string name="description_open_food_facts">Совместная, бесплатная и открытая база данных продуктов питания со всего мира</string>
     <string name="error_open_food_facts_rate_limit">Превышен лимит запросов к API Open Food Facts</string>
+    <string name="error_open_food_facts_service_unavailable">Open Food Facts временно недоступен. Зарегистрированные пользователи не ограничиваются по количеству запросов и являются приоритетными в моменты нагрузки.</string>
+    <string name="action_register">Регистрация</string>
+    <string name="description_open_food_facts_credentials_message">Учётные данные зашифрованы и хранятся только на вашем устройстве. Чувствительные данные недоступны кому-либо ещё.</string>
+    <string name="error_open_food_facts_failed_to_authenticate">Аутентификация в Open Food Facts не удалась</string>
+    <string name="headline_username">Логин</string>
+    <string name="headline_password">Пароль</string>
+    <string name="action_show_password">Показать пароль</string>
+    <string name="action_hide_password">Скрыть пароль</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Продукты экспортируются</string>
     <string name="notification_importing_products">Продукты импортируются</string>
@@ -265,7 +273,7 @@
     <string name="description_add_note">Дополнительные примечания (например, ингредиенты, подходит ли для веганов, аллергены, добавки) или любые другие детали, не связанные с питательными веществами</string>
     <string name="action_try_again">Попробовать снова</string>
     <string name="description_calories_are_calculated">Энергетическая ценность автоматически рассчитывается из макронутриентов. Вы можете отключить эту функцию и ввести значение вручную, если это необходимо. Алкоголь при расчете не учитывается.</string>
-    <string name="x_kcal_per_g">%1$s %2$d ккал/г</string>
+    <string name="x_energy_unit_per_g" description="e.g. proteins 4 kcal/g; proteins 17 kj/g">%1$s %2$d %3$s/г</string>
     <string name="neutral_an_error_occurred">Произошла ошибка</string>
     <string name="action_retry">Повторить</string>
     <string name="action_import">Импорт</string>
@@ -288,7 +296,7 @@
     <string name="headline_food_database">База продуктов питания</string>
     <string name="description_food_database">Вы можете выбрать, использовать ли эти необязательные внешние сервисы, которые могут иметь свои собственные условия и политику конфиденциальности</string>
     <string name="action_skip">Пропустить</string>
-    <string name="headline_almost_done">Почти готово!</string>
+    <string name="headline_almost_done">Почти готово</string>
     <string name="headline_preparing_your_food_diary">Подготовка вашего дневника питания</string>
     <string name="headline_please_wait">Пожалуйста, подождите</string>
     <string name="headline_created">Создано</string>
@@ -369,6 +377,7 @@
     <string name="action_replace">Заменить</string>
     <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Ваша база данных будет ЗАМЕНЕНА, и все текущие данные будут ПОТЕРЯНЫ. Приложение перезапустится после замены базы данных. Возможно, вам потребуется снова открыть приложение.</string>
     <string name="action_sign_in">Вход</string>
+    <string name="action_sign_out">Выйти</string>
     <string name="headline_terms_of_service">Условия использования</string>
     <string name="headline_privacy_policy">Политика конфиденциальности</string>
     <string name="error_there_was_an_error_while_signing_in">Произошла ошибка при входе</string>
@@ -407,4 +416,5 @@
     <string name="description_replacing_database">Замена базы данных, пожалуйста, подождите...</string>
     <string name="headline_experimental">Экспериментальные функции</string>
     <string name="description_privacy_policy">Узнайте, как обрабатываются ваши данные</string>
+    <string name="error_open_food_facts_timeout">Open Food Facts отвечает слишком долго. Возможно, сервис временно недоступен или под высокой нагрузкой. Попробуйте просканировать штих-код.</string>
 </resources>

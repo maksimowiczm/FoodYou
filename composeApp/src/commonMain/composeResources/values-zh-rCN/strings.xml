@@ -246,7 +246,6 @@
     <string name="description_add_note">可选备注（如配料、素食状态、过敏原、添加剂）或其他非营养信息</string>
     <string name="action_try_again">再试一次</string>
     <string name="description_calories_are_calculated">热量值会根据宏量营养素自动计算。您可根据需要关闭此功能并手动输入数值。酒精含量不计入计算范围。</string>
-    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
     <string name="neutral_an_error_occurred">发生错误</string>
     <string name="action_retry">重试</string>
     <string name="action_import">导入</string>

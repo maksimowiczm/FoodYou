@@ -1,15 +1,15 @@
-A <b>Food You</b> egy sokszínű, nyílt-forráskódú tápértékkövető, modern Material You külsővel. Nemcsak a kalóriáidat méri, hanem az egész tépérték-beviteledet leköveti - megbízható adatokkal lát el egy rugalmas, testreszabható felületen.
+A <b>Food You</b> egy sokszínű, nyílt-forráskódú tápértékkövető, modern Material You külsővel. Nemcsak a bevitt kalóriát méri, de az egész tápérték-bevitelt - megbízható adatokkal lát el egy rugalmas, testreszabható felületen.
 
 <b>Funkciók:</b>
 <ul>
-    <li><b>Material You dizájn:</b> A dinamikus téma segítségével a te eszközödhöz igazodik.</li>
+    <li><b>Material You dizájn:</b> A dinamikus témakezelés, mely igazodik a készülékéhez az egységes vizuális érzés érdekében.</li>
     <li><b>Átfogó élelmiszer-adatbázisok:</b> A tápértékadatokat az Open Food Facts, a USDA FoodCentral és a Svájci Élelmiszer-összetétel Adatbázis biztosítja.</li>
-    <li><b>Teljes körű tápértékadat-követés:</b> Kövesd kalóriáidat, makróidat, vitaminjaidat és ásványi anyagaidat.</li>
-    <li><b>Receptek:</b> Keverd össze a már meglévő termékeidet alapanyagként receptekbe, és az app rögtön kiszámolja a tápanyagértékét.</li>
-    <li><b>Napi célok:</b> Állítsd be, és kövesd céljaidat.</li>
-    <li><b>Személyre szabható kezdőképernyő:</b> Tedd sajátoddá a képernyőn látható kártyákat, ahogy neked jól esik.</li>
+    <li><b>Teljes körű tápértékadat-követés:</b> Kövesse kalóriáit, makróit, vitaminjait, ásványi anyagait és még sok mást. </li>
+    <li><b>Recept Tervezés:</b> Kombinálja meglévő összetevőit receptté, mindezt tápanyag számítással.</li>
+    <li><b>Napi Célok:</b> Állítson be, és kövesse tápanyag céljait.</li>
+    <li><b>Alakítható Kezdőképernyő:</b> Szabja személyre a kezdőképernyőt az Ön számára fontos kártyákkal.</li>
 </ul>
 
-Kezdd el a tápanyagaidat mérni a Food You segítségével - Letisztult, teljes, és a tied.
+Kezdje el mérni tápanyagait a Food You segítségével - letisztult, teljeskörű, és mind az Öné.
 
-Az ikont készítette az <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Az indító ikont <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a> készítette

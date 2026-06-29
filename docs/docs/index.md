@@ -12,6 +12,12 @@ Design principles.
 [![Get it on F-Droid](https://fdroid.gitlab.io/artwork/badge/get-it-on.png){ width="250" }](https://f-droid.org/packages/com.maksimowiczm.foodyou)
 [![Get it on GitHub](https://s1.ax1x.com/2023/01/12/pSu1a36.png){ width="250" }](https://github.com/maksimowiczm/FoodYou/releases)
 
+SHA-256 hash of signing certificate:
+`cd74b0aedd8ead8184063a65909d639a8c885cf6465829690a9be83a8904bdea`
+
+The above signature is also valid for the F-Droid, thanks
+to [reproducible builds](https://f-droid.org/docs/Reproducible_Builds/)
+
 ## Get Started
 
 1. Download Food You from [F-Droid](https://f-droid.org/en/packages/com.maksimowiczm.foodyou/)
