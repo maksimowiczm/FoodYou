@@ -401,7 +401,12 @@ fun HomeScreen(
         state = railState,
         collections = collections,
         onCollection = {
-            selectedCollection.value = it
+            val selected = selectedCollection.value
+
+            if (selected == null || it::class != selected::class) {
+                selectedCollection.value = it
+            }
+
             if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
             scope.launch { railState.collapse() }
         },
