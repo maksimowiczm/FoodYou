@@ -17,9 +17,9 @@ import kotlinx.coroutines.sync.withLock
  * @param timeWindow The duration of the sliding time window.
  */
 class WindowedRequestLog(
-    private val clock: Clock,
     private val maxRequests: Int,
     private val timeWindow: Duration,
+    private val clock: Clock = Clock.System,
 ) {
     private val requests = mutableListOf<Instant>()
     private val mutex = Mutex()

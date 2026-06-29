@@ -39,7 +39,7 @@ val foodDataCentralModule = module {
             }
         }
         .onClose { it?.close() }
-    single(rateLimiter) { FoodDataCentralRemoteDataSource.rateLimiter(get()) }
+    single(rateLimiter) { FoodDataCentralRemoteDataSource.rateLimiter() }
     factory {
             FoodDataCentralRemoteDataSource(
                 client = get(httpClientQualifier),
@@ -52,7 +52,7 @@ val foodDataCentralModule = module {
 
     factoryOf(::FoodDataCentralRepositoryImpl).bind<FoodDataCentralRepository>()
 
-    factoryOf(::FoodDataCentralService)
+    factory { FoodDataCentralService(get(), get(), get()) }
 
     factoryOf(::FoodDataCentralSettingsRepositoryImpl).bind<FoodDataCentralSettingsRepository>()
 

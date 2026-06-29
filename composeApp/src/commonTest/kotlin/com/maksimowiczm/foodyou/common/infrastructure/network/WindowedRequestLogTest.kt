@@ -11,7 +11,7 @@ class WindowedRequestLogTest {
     @Test
     fun tryAcquire_allows_requests_until_limit_is_reached() = runTest {
         val clock = mutableClock()
-        val log = WindowedRequestLog(clock, maxRequests = 3, timeWindow = 10.seconds)
+        val log = WindowedRequestLog(maxRequests = 3, timeWindow = 10.seconds, clock = clock)
 
         repeat(3) { assertNull(log.tryAcquire()) }
 
@@ -21,7 +21,7 @@ class WindowedRequestLogTest {
     @Test
     fun tryAcquire_returns_time_until_oldest_request_leaves_window() = runTest {
         val clock = mutableClock()
-        val log = WindowedRequestLog(clock, maxRequests = 2, timeWindow = 10.seconds)
+        val log = WindowedRequestLog(maxRequests = 2, timeWindow = 10.seconds, clock = clock)
 
         assertNull(log.tryAcquire())
         clock.advanceBy(4.seconds)
@@ -35,7 +35,7 @@ class WindowedRequestLogTest {
     @Test
     fun tryAcquire_allows_new_request_after_old_requests_expire() = runTest {
         val clock = mutableClock()
-        val log = WindowedRequestLog(clock, maxRequests = 2, timeWindow = 10.seconds)
+        val log = WindowedRequestLog(maxRequests = 2, timeWindow = 10.seconds, clock = clock)
 
         assertNull(log.tryAcquire())
         clock.advanceBy(1.seconds)
@@ -49,7 +49,7 @@ class WindowedRequestLogTest {
     @Test
     fun tryAcquire_treats_request_at_window_start_as_in_window() = runTest {
         val clock = mutableClock()
-        val log = WindowedRequestLog(clock, maxRequests = 1, timeWindow = 10.seconds)
+        val log = WindowedRequestLog(maxRequests = 1, timeWindow = 10.seconds, clock = clock)
 
         assertNull(log.tryAcquire())
         clock.advanceBy(10.seconds)

@@ -127,10 +127,10 @@ internal class FoodDataCentralRemoteDataSource(
         private const val TAG = "FoodDataCentralRemoteDataSourceImpl"
         private const val API_URL = "https://api.nal.usda.gov/fdc"
 
-        fun rateLimiter(clock: Clock): RateLimiter =
+        fun rateLimiter(clock: Clock = Clock.System): RateLimiter =
             SuspendingRateLimiter(
                 clock = clock,
-                log = WindowedRequestLog(clock, 30, 1.hours),
+                log = WindowedRequestLog(30, 1.hours, clock),
                 timeout = 1.seconds,
                 minWaitTime = 100.milliseconds,
             )

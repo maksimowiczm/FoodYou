@@ -22,7 +22,6 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.serialization.kotlinx.json.json
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -51,16 +50,14 @@ val openFoodFactsModule = module {
         .onClose { it?.close() }
     single<RateLimiter>(openFoodFactsSearchRateLimiter) {
         SuspendingRateLimiter(
-            clock = Clock.System,
-            log = WindowedRequestLog(Clock.System, 10, 1.minutes),
+            log = WindowedRequestLog(10, 1.minutes),
             timeout = 150.milliseconds,
             minWaitTime = 100.milliseconds,
         )
     }
     single<RateLimiter>(openFoodFactsProductRateLimiter) {
         SuspendingRateLimiter(
-            clock = Clock.System,
-            log = WindowedRequestLog(Clock.System, 15, 1.minutes),
+            log = WindowedRequestLog(15, 1.minutes),
             timeout = 1.seconds,
             minWaitTime = 100.milliseconds,
         )
@@ -97,6 +94,7 @@ val openFoodFactsModule = module {
     factoryOf(::OpenFoodFactsRepositoryImpl).bind<OpenFoodFactsRepository>()
 
     factoryOf(::OpenFoodFactsService)
+    factory { OpenFoodFactsService(get(), get(), get()) }
 
     single(named(OpenFoodFactsUrlSearchQuery::class.qualifiedName!!)) {
         OpenFoodFactsUrlSearchQuery.recognizer

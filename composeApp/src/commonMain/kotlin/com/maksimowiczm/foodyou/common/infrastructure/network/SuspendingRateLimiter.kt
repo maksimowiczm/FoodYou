@@ -17,10 +17,10 @@ import kotlinx.coroutines.delay
  * @param minWaitTime The minimum duration to wait between consecutive requests.
  */
 class SuspendingRateLimiter(
-    private val clock: Clock,
     private val log: WindowedRequestLog,
     private val timeout: Duration,
     private val minWaitTime: Duration = Duration.ZERO,
+    private val clock: Clock = Clock.System,
 ) : RateLimiter {
     private var lastRequestTime: Instant? = null
 
