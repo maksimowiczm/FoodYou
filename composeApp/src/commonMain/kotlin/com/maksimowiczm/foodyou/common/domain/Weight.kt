@@ -49,26 +49,13 @@ class Weight(val grams: Double, val unit: WeightUnit) :
     override fun hashCode(): Int = grams.hashCode()
 
     companion object {
-        private val PARSE_REGEX = Regex("""^([\d.]+)\s*(\D+)$""")
+        private val PARSE_REGEX = Regex("""^([\d.]+)\s*(.+)$""")
 
         fun parseOrNull(value: String): Weight? {
             val match = PARSE_REGEX.matchEntire(value.trim()) ?: return null
             val (amountStr, unitStr) = match.destructured
             val amount = amountStr.toDoubleOrNull() ?: return null
-            val unit =
-                when (unitStr.lowercase()) {
-                    "g",
-                    "grams" -> WeightUnit.Grams
-                    "mg",
-                    "milligrams" -> WeightUnit.Milligrams
-                    "mcg",
-                    "ug",
-                    "µg",
-                    "micrograms" -> WeightUnit.Micrograms
-                    "oz",
-                    "ounces" -> WeightUnit.Ounces
-                    else -> return null
-                }
+            val unit = WeightUnit.fromSymbolOrNull(unitStr) ?: return null
 
             return try {
                 from(amount, unit)
@@ -130,10 +117,26 @@ enum class WeightUnit {
             Ounces -> value / GRAMS_IN_OUNCE
         }
 
-    private companion object {
-        const val MICROGRAMS_IN_GRAM = 1_000_000.0
-        const val MILLIGRAMS_IN_GRAM = 1_000.0
-        const val GRAMS_IN_OUNCE = 28.3495
+    companion object {
+        fun fromSymbolOrNull(symbol: String): WeightUnit? =
+            when (symbol.lowercase().trim().replace(".", "")) {
+                "g",
+                "grm",
+                "grams" -> Grams
+                "mg",
+                "milligrams" -> Milligrams
+                "mcg",
+                "ug",
+                "µg",
+                "micrograms" -> Micrograms
+                "oz",
+                "ounces" -> Ounces
+                else -> null
+            }
+
+        private const val MICROGRAMS_IN_GRAM = 1_000_000.0
+        private const val MILLIGRAMS_IN_GRAM = 1_000.0
+        private const val GRAMS_IN_OUNCE = 28.3495
     }
 }
 

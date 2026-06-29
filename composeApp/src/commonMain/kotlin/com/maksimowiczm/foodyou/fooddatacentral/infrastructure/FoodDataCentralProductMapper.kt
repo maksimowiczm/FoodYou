@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.fooddatacentral.infrastructure
 
-import com.maksimowiczm.foodyou.common.domain.fluidOunces
+import com.maksimowiczm.foodyou.common.domain.Volume
+import com.maksimowiczm.foodyou.common.domain.VolumeUnit
+import com.maksimowiczm.foodyou.common.domain.Weight
+import com.maksimowiczm.foodyou.common.domain.WeightUnit
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.common.domain.milliliters
-import com.maksimowiczm.foodyou.common.domain.ounces
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsMapper
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
@@ -107,29 +107,56 @@ internal class FoodDataCentralProductMapper {
 
 private fun parseServing(weight: Double?, unit: String?): AbsoluteQuantity? {
     val weight = weight ?: return null
-    val unit = unit?.lowercase() ?: return null
+    val unitStr = unit ?: return null
 
-    return when (unit) {
-        "ml",
-        "mlt" -> AbsoluteQuantity.Volume(weight.milliliters)
-
-        "g",
-        "grm" -> AbsoluteQuantity.Weight(weight.grams)
-
-        "oz",
-        "oz." -> AbsoluteQuantity.Weight(weight.ounces)
-
-        "fl oz",
-        "fl.oz",
-        "fl. oz",
-        "fl.oz." -> AbsoluteQuantity.Volume(weight.fluidOunces)
-
-        else -> null
+    WeightUnit.fromSymbolOrNull(unitStr)?.let {
+        return AbsoluteQuantity.Weight(Weight.from(weight, it))
     }
+
+    VolumeUnit.fromSymbolOrNull(unitStr)?.let {
+        return AbsoluteQuantity.Volume(Volume.from(weight, it))
+    }
+
+    return null
 }
 
 private fun parsePackage(weight: String?): AbsoluteQuantity? {
-    // TODO
+    return findQuantity(weight)
+}
+
+private val quantityRegex = Regex("""(\d+(?:\.\d+)?\s*[a-zA-Z. ]+)""")
+
+private fun findQuantity(value: String?): AbsoluteQuantity? {
+    if (value == null) return null
+
+    // Try parsing the whole string first
+    AbsoluteQuantity.parseOrNull(value)?.let {
+        return it
+    }
+
+    // Try splitting by slash and parsing parts (common in USDA, e.g. "4.5 oz/128 g")
+    if (value.contains("/")) {
+        val parts = value.split("/")
+        val parsedParts = parts.mapNotNull { AbsoluteQuantity.parseOrNull(it.trim()) }
+        if (parsedParts.isNotEmpty()) {
+            // Prioritize Weight (especially Grams)
+            return parsedParts.filterIsInstance<AbsoluteQuantity.Weight>().maxByOrNull {
+                it.weight.unit == WeightUnit.Grams
+            } ?: parsedParts.first()
+        }
+    }
+
+    // Fallback to finding any sequence that looks like a quantity
+    val matches = quantityRegex.findAll(value)
+    val parsedMatches =
+        matches.mapNotNull { AbsoluteQuantity.parseOrNull(it.groupValues[1].trim()) }.toList()
+
+    if (parsedMatches.isNotEmpty()) {
+        return parsedMatches.filterIsInstance<AbsoluteQuantity.Weight>().maxByOrNull {
+            it.weight.unit == WeightUnit.Grams
+        } ?: parsedMatches.first()
+    }
+
     return null
 }
 

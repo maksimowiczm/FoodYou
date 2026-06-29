@@ -22,6 +22,15 @@ sealed interface AbsoluteQuantity : Quantity {
             is Weight -> Weight(weight / divisor)
             is Volume -> Volume(volume / divisor)
         }
+
+    companion object {
+        fun parseOrNull(value: String): AbsoluteQuantity? {
+            return com.maksimowiczm.foodyou.common.domain.Weight.parseOrNull(value)
+                ?.toAbsoluteQuantity()
+                ?: com.maksimowiczm.foodyou.common.domain.Volume.parseOrNull(value)
+                    ?.toAbsoluteQuantity()
+        }
+    }
 }
 
 /** Represents a quantity in terms of packages. For example, "2 packages", "0.5 packages". */

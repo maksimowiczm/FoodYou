@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure
 
 import com.maksimowiczm.foodyou.common.domain.FileUri
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -105,14 +106,16 @@ private fun OpenFoodFactsProductNetwork.toModel(): OpenFoodFactsProduct {
     val thumbnail = imageThumbUrl ?: imageFrontThumbUrl
     val fullSize = imageUrl ?: imageFrontUrl
 
+    val servingQuantity = findQuantity(servingSize)
+    val packageQuantity = findQuantity(quantity)
+
     return OpenFoodFactsProduct(
         identity = OpenFoodFactsProductIdentity(code),
         name = name,
         brand = brands?.takeIf { it.isNotEmpty() }?.filterNot { it.isBlank() }?.joinToString(),
         nutritionFacts = nutriments?.toNutritionFacts() ?: NutritionFacts(),
-        // TODO
-        servingQuantity = null,
-        packageQuantity = null,
+        servingQuantity = servingQuantity,
+        packageQuantity = packageQuantity,
         thumbnail = thumbnail?.let(::FileUri),
         image = fullSize?.let(::FileUri),
         source = "https://world.openfoodfacts.org/product/$code",
@@ -165,3 +168,8 @@ private fun Nutriments.toNutritionFacts() =
         iodine = iodine100g?.grams.toNutrientValue(),
         chromium = chromium100g?.grams.toNutrientValue(),
     )
+
+private fun findQuantity(value: String?): AbsoluteQuantity? {
+    if (value == null) return null
+    return AbsoluteQuantity.parseOrNull(value)
+}

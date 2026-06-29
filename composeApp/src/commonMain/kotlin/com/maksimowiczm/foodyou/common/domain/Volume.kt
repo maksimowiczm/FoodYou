@@ -49,15 +49,7 @@ class Volume(val milliliters: Double, val unit: VolumeUnit) : Comparable<Volume>
             val match = PARSE_REGEX.matchEntire(value.trim()) ?: return null
             val (amountStr, unitStr) = match.destructured
             val amount = amountStr.toDoubleOrNull() ?: return null
-            val unit =
-                when (unitStr.lowercase().replace(".", "").replace(" ", "")) {
-                    "ml",
-                    "mlt",
-                    "milliliters" -> VolumeUnit.Milliliters
-                    "floz",
-                    "fluidounces" -> VolumeUnit.FluidOunces
-                    else -> return null
-                }
+            val unit = VolumeUnit.fromSymbolOrNull(unitStr) ?: return null
             return try {
                 from(amount, unit)
             } catch (_: IllegalArgumentException) {
@@ -107,8 +99,18 @@ enum class VolumeUnit {
             FluidOunces -> value / MILLILITERS_IN_FLUID_OUNCE
         }
 
-    private companion object {
-        const val MILLILITERS_IN_FLUID_OUNCE = 29.5735
+    companion object {
+        fun fromSymbolOrNull(symbol: String): VolumeUnit? =
+            when (symbol.lowercase().trim().replace(".", "").replace(" ", "")) {
+                "ml",
+                "mlt",
+                "milliliters" -> Milliliters
+                "floz",
+                "fluidounces" -> FluidOunces
+                else -> null
+            }
+
+        private const val MILLILITERS_IN_FLUID_OUNCE = 29.5735
     }
 }
 
