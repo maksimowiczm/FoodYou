@@ -43,6 +43,31 @@ class Volume(val milliliters: Double, val unit: VolumeUnit) : Comparable<Volume>
     override fun hashCode(): Int = milliliters.hashCode()
 
     companion object {
+        private val PARSE_REGEX = Regex("""^([\d.]+)\s*(.+)$""")
+
+        fun parseOrNull(value: String): Volume? {
+            val match = PARSE_REGEX.matchEntire(value.trim()) ?: return null
+            val (amountStr, unitStr) = match.destructured
+            val amount = amountStr.toDoubleOrNull() ?: return null
+            val unit =
+                when (unitStr.lowercase().replace(".", "").replace(" ", "")) {
+                    "ml",
+                    "mlt",
+                    "milliliters" -> VolumeUnit.Milliliters
+                    "floz",
+                    "fluidounces" -> VolumeUnit.FluidOunces
+                    else -> return null
+                }
+            return try {
+                from(amount, unit)
+            } catch (_: IllegalArgumentException) {
+                null
+            }
+        }
+
+        fun parse(value: String): Volume =
+            parseOrNull(value) ?: throw IllegalArgumentException("Invalid volume format: $value")
+
         fun from(value: Double, unit: VolumeUnit): Volume =
             ofMilliliters(unit.toMilliliters(value), unit)
 

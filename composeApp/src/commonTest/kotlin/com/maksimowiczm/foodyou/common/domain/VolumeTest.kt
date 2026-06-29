@@ -103,6 +103,38 @@ class VolumeTest {
         assertEquals(10.0.fluidOunces, Volume.fluidOunces(10.0))
     }
 
+    @Test
+    fun parse_valid_inputs() {
+        assertEquals(100.0.milliliters, Volume.parse("100ml"))
+        assertEquals(100.0.milliliters, Volume.parse("100 ml"))
+        assertEquals(100.0.milliliters, Volume.parse("100 milliliters"))
+        assertEquals(100.0.milliliters, Volume.parse("100 mlt"))
+        assertEquals(10.5.fluidOunces, Volume.parse("10.5floz"))
+        assertEquals(10.5.fluidOunces, Volume.parse("10.5 fl oz"))
+        assertEquals(10.5.fluidOunces, Volume.parse("10.5 fl.oz"))
+        assertEquals(10.5.fluidOunces, Volume.parse("10.5 fl. oz."))
+        assertEquals(10.5.fluidOunces, Volume.parse("10.5 fluid ounces"))
+    }
+
+    @Test
+    fun parse_case_insensitivity() {
+        assertEquals(100.0.milliliters, Volume.parse("100 ML"))
+        assertEquals(10.0.fluidOunces, Volume.parse("10 FL OZ"))
+    }
+
+    @Test
+    fun parse_or_null_returns_null_for_invalid_input() {
+        assertEquals(null, Volume.parseOrNull("100"))
+        assertEquals(null, Volume.parseOrNull("ml"))
+        assertEquals(null, Volume.parseOrNull("abc"))
+        assertEquals(null, Volume.parseOrNull("-10ml"))
+    }
+
+    @Test
+    fun parse_throws_for_invalid_input() {
+        assertFailsWith<IllegalArgumentException> { Volume.parse("invalid") }
+    }
+
     private fun assertClose(expected: Double, actual: Double, tolerance: Double = 1e-7) {
         assertEquals(expected, actual, tolerance)
     }
