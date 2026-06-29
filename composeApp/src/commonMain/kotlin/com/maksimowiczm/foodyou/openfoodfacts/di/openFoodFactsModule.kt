@@ -64,13 +64,13 @@ val openFoodFactsModule = module {
     }
 
     factory {
-            OpenFoodFactsApiV1SearchDataSource(
-                get(httpClientQualifier),
-                get(openFoodFactsSearchRateLimiter),
-                get(),
-                get(),
-            )
-        }
+        OpenFoodFactsApiV1SearchDataSource(
+            get(httpClientQualifier),
+            get(openFoodFactsSearchRateLimiter),
+            get(),
+            get(),
+        )
+    }
         .bind<OpenFoodFactsLoginService>()
     factory {
         OpenFoodFactsSearchALiciousDataSource(

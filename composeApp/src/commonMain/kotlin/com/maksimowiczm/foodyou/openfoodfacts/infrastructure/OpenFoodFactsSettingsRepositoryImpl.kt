@@ -21,17 +21,17 @@ internal class OpenFoodFactsSettingsRepositoryImpl(private val dataStore: DataSt
         return dataStore.data.map { preferences ->
             val login = preferences[login]
             val password = preferences[password]
-            val credentials =   if (login != null && password != null)
-                OpenFoodFactsCredentials(
-                    login = SoftwareEncrypted(login),
-                    password = SoftwareEncrypted(password),
-                )
-            else null
+            val credentials =
+                if (login != null && password != null)
+                    OpenFoodFactsCredentials(
+                        login = SoftwareEncrypted(login),
+                        password = SoftwareEncrypted(password),
+                    )
+                else null
 
             OpenFoodFactsSettings(
                 remoteEnabled = preferences[remoteEnabled] ?: false,
-                credentials = credentials
-
+                credentials = credentials,
             )
         }
     }

@@ -41,13 +41,13 @@ val foodDataCentralModule = module {
         .onClose { it?.close() }
     single(rateLimiter) { FoodDataCentralRemoteDataSource.rateLimiter() }
     factory {
-            FoodDataCentralRemoteDataSource(
-                client = get(httpClientQualifier),
-                rateLimiter = get(rateLimiter),
-                networkConfig = get(),
-                logger = get(),
-            )
-        }
+        FoodDataCentralRemoteDataSource(
+            client = get(httpClientQualifier),
+            rateLimiter = get(rateLimiter),
+            networkConfig = get(),
+            logger = get(),
+        )
+    }
         .bind<FoodDataCentralApiKeyVerificationService>()
 
     factoryOf(::FoodDataCentralRepositoryImpl).bind<FoodDataCentralRepository>()

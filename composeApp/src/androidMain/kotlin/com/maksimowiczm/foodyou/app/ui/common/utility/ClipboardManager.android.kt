@@ -27,15 +27,14 @@ actual class ClipboardManagerImpl(
         }
     }
 
-    actual override fun paste(): String? =
-        runCatching {
-                val clip = clipboard.primaryClip
+    actual override fun paste(): String? = runCatching {
+        val clip = clipboard.primaryClip
 
-                return if (clip != null && clip.itemCount > 0) {
-                    clip.getItemAt(0).text.toString()
-                } else {
-                    null
-                }
-            }
-            .getOrNull()
+        return if (clip != null && clip.itemCount > 0) {
+            clip.getItemAt(0).text.toString()
+        } else {
+            null
+        }
+    }
+        .getOrNull()
 }

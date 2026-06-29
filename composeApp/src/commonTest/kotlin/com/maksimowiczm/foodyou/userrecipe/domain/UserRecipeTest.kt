@@ -131,7 +131,11 @@ class UserRecipeTest {
         val events =
             listOf(
                 UserRecipeCreatedEvent(userRecipe, Instant.fromEpochSeconds(1)),
-                UserRecipeDeletedEvent(identity, DeleteStrategy.Delete, Instant.fromEpochSeconds(2)),
+                UserRecipeDeletedEvent(
+                    identity,
+                    DeleteStrategy.Delete,
+                    Instant.fromEpochSeconds(2),
+                ),
             )
 
         val result = events.toUserRecipe()

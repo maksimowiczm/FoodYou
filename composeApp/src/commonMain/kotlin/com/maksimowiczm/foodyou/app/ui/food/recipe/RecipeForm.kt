@@ -96,11 +96,10 @@ fun RecipeForm(
 
     val totalWeight = remember(uiState.components) { uiState.components?.totalWeight ?: 0.grams }
 
-    val servings =
-        derivedStateOf {
-                state.servings.textFieldState.text.toString().toDoubleOrNull()?.takeIf { it > 0 }
-            }
-            .value
+    val servings = derivedStateOf {
+        state.servings.textFieldState.text.toString().toDoubleOrNull()?.takeIf { it > 0 }
+    }
+        .value
 
     val servingWeight =
         remember(totalWeight, servings) {

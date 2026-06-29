@@ -114,9 +114,9 @@ internal class OpenFoodFactsApiV1SearchDataSource(
                 contentType(ContentType.Application.FormUrlEncoded)
                 setBody(
                     Parameters.build {
-                        append("user_id", username)
-                        append("password", password)
-                    }
+                            append("user_id", username)
+                            append("password", password)
+                        }
                         .formUrlEncode()
                 )
             }

@@ -33,8 +33,8 @@ private fun MutablePreferences.applyThemeOption(themeOption: ThemeOption): Mutab
 
 private fun Preferences.toThemeOption(): ThemeOption {
     return runCatching {
-            ThemeOption.entries[this[ThemeSettingsKeys.themeOption] ?: ThemeOption.System.ordinal]
-        }
+        ThemeOption.entries[this[ThemeSettingsKeys.themeOption] ?: ThemeOption.System.ordinal]
+    }
         .getOrElse { ThemeOption.System }
 }
 
@@ -83,20 +83,17 @@ private fun Preferences.toTheme(): Theme {
 }
 
 private val Preferences.themeStyle: ThemeStyle
-    get() =
-        runCatching {
-                ThemeStyle.entries[
-                        this[ThemeSettingsKeys.themeStyle] ?: ThemeStyle.TonalSpot.ordinal]
-            }
-            .getOrElse { ThemeStyle.TonalSpot }
+    get() = runCatching {
+        ThemeStyle.entries[this[ThemeSettingsKeys.themeStyle] ?: ThemeStyle.TonalSpot.ordinal]
+    }
+        .getOrElse { ThemeStyle.TonalSpot }
 
 private val Preferences.themeContrast: ThemeContrast
-    get() =
-        runCatching {
-                ThemeContrast.entries[
-                        this[ThemeSettingsKeys.themeContrast] ?: ThemeContrast.Default.ordinal]
-            }
-            .getOrElse { ThemeContrast.Default }
+    get() = runCatching {
+        ThemeContrast.entries[
+                this[ThemeSettingsKeys.themeContrast] ?: ThemeContrast.Default.ordinal]
+    }
+        .getOrElse { ThemeContrast.Default }
 
 private object ThemeSettingsKeys {
     val randomizeOnLaunch = booleanPreferencesKey("device:theme:random")

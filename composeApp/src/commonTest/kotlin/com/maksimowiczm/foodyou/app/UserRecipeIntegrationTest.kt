@@ -755,14 +755,14 @@ class UserRecipeIntegrationTest {
         single { TestOpenFoodFactsSettingsRepository(OpenFoodFactsSettings(remoteEnabled = true)) }
             .bind<OpenFoodFactsSettingsRepository>()
         single {
-                val apiKey = TestSecrets.usdaApiKey
-                TestFoodDataCentralSettingsRepository(
-                    FoodDataCentralSettings(
-                        remoteEnabled = true,
-                        apiKey = apiKey?.let { SoftwareEncrypted.encryptString(it) },
-                    )
+            val apiKey = TestSecrets.usdaApiKey
+            TestFoodDataCentralSettingsRepository(
+                FoodDataCentralSettings(
+                    remoteEnabled = true,
+                    apiKey = apiKey?.let { SoftwareEncrypted.encryptString(it) },
                 )
-            }
+            )
+        }
             .bind<FoodDataCentralSettingsRepository>()
     }
 }

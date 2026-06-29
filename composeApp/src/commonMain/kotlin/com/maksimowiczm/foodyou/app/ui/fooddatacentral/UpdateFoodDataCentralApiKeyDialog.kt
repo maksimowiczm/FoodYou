@@ -49,7 +49,6 @@ import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -86,9 +85,7 @@ fun UpdateFoodDataCentralApiKeyDialog(
                 runCatching { service.verify(key) }
                     .onFailure { verificationError = it }
                     .onSuccess {
-                        repository.update {
-                            it.copy(apiKey = SoftwareEncrypted.encryptString(key))
-                        }
+                        repository.update { it.copy(apiKey = SoftwareEncrypted.encryptString(key)) }
                         onSave()
                     }
                 requestInProgress = false

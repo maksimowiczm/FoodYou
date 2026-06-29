@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.debounce
 
 @OptIn(FlowPreview::class)
 fun LazyPagingItems<*>.debounceIsIdle(timeout: Duration = 200.milliseconds): Flow<Boolean> =
-    snapshotFlow { loadState.isIdle || loadState.hasError }.debounce(timeout)
+    snapshotFlow {
+        loadState.isIdle || loadState.hasError
+    }.debounce(timeout)
 
 @Composable
 fun LazyPagingItems<*>.rememberDebounceIsIdle(timeout: Duration = 200.milliseconds): Boolean {

@@ -37,8 +37,8 @@
         };
 
         ktfmtJar = pkgs.fetchurl {
-          url = "https://github.com/facebook/ktfmt/releases/download/v0.62/ktfmt-0.62-with-dependencies.jar";
-          sha256 = "f39bf9a1f520d27f86f2bdf4d6dbb2574c05e84f656171ed65c4e534b86b9965";
+          url = "https://github.com/facebook/ktfmt/releases/download/v0.64/ktfmt-0.64-with-dependencies.jar";
+          sha256 = "b8fbb814808d8da33f74a7bbacb6d1748cef81c0202a7f829b87139520b51273";
         };
       in
       {
