@@ -31,8 +31,3 @@ object EnergyFormatter {
 
 /** CompositionLocal for [EnergyUnit]. It represents energy unit which is preferred by user. */
 val LocalEnergyUnit = staticCompositionLocalOf { EnergyUnit.Kilocalories }
-
-@Composable
-fun EnergyUnitProvider(energyUnit: EnergyUnit, content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalEnergyUnit provides energyUnit) { content() }
-}

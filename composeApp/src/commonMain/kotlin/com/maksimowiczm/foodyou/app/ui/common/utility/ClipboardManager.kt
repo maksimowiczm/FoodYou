@@ -33,8 +33,3 @@ private val defaultClipboardManager: ClipboardManager =
     }
 
 val LocalClipboardManager = staticCompositionLocalOf { defaultClipboardManager }
-
-@Composable
-fun ClipboardManagerProvider(clipboardManager: ClipboardManager, content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalClipboardManager provides clipboardManager) { content() }
-}

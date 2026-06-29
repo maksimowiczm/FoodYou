@@ -102,8 +102,3 @@ private val defaultDateFormatter: DateFormatter =
     }
 
 val LocalDateFormatter = staticCompositionLocalOf { defaultDateFormatter }
-
-@Composable
-fun DateFormatterProvider(dateFormatter: DateFormatter, content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalDateFormatter provides dateFormatter) { content() }
-}

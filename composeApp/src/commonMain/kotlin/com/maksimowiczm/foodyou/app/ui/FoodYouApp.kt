@@ -13,8 +13,8 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavDisplay
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute
 import com.maksimowiczm.foodyou.app.navigation.rememberFoodYouNavBackStack
 import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyUnitProvider
-import com.maksimowiczm.foodyou.app.ui.common.utility.NutrientsOrderProvider
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyUnit
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.app.ui.onboarding.Onboarding
 import com.maksimowiczm.foodyou.common.extension.safeRemoveLast
 import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
@@ -63,18 +63,18 @@ fun FoodYouApp(
             .build()
     }
 
-    NutrientsOrderProvider(nutrientsOrder) {
-        EnergyUnitProvider(energyUnit) {
-            FoodYouTheme {
-                Surface {
-                    when (appPage) {
-                        AppPage.Splash -> SplashScreen()
+    CompositionLocalProvider(
+        LocalEnergyUnit provides energyUnit,
+        LocalNutrientsOrder provides nutrientsOrder,
+    ) {
+        FoodYouTheme {
+            Surface {
+                when (appPage) {
+                    AppPage.Splash -> SplashScreen()
 
-                        AppPage.Onboarding ->
-                            Onboarding(onFinish = appViewModel::onFinishOnboarding)
+                    AppPage.Onboarding -> Onboarding(onFinish = appViewModel::onFinishOnboarding)
 
-                        AppPage.Main -> FoodYouNavDisplay(backStack)
-                    }
+                    AppPage.Main -> FoodYouNavDisplay(backStack)
                 }
             }
         }

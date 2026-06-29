@@ -79,8 +79,3 @@ val LocalFoodNameSelector =
             override fun observeLanguage(): StateFlow<Language> = MutableStateFlow(Language.English)
         }
     }
-
-@Composable
-fun FoodNameSelectorProvider(selector: FoodNameSelector, content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalFoodNameSelector provides selector, content = content)
-}

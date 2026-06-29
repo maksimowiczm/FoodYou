@@ -8,21 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
-import com.maksimowiczm.foodyou.app.ui.common.utility.AppConfigProvider
-import com.maksimowiczm.foodyou.app.ui.common.utility.BlobResolverProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClipboardManagerImpl
-import com.maksimowiczm.foodyou.app.ui.common.utility.ClipboardManagerProvider
-import com.maksimowiczm.foodyou.app.ui.common.utility.ClockProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.DateFormatterImpl
-import com.maksimowiczm.foodyou.app.ui.common.utility.DateFormatterProvider
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
-import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelectorProvider
+import com.maksimowiczm.foodyou.app.ui.common.utility.UtilityProvider
 import com.maksimowiczm.foodyou.common.domain.BlobResolver
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
-import kotlin.time.Clock
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -32,7 +26,6 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     private val systemDetails: SystemDetails by inject()
     private val deviceSettingsRepository: DeviceSettingsRepository by inject()
     private val foodNameSelector: FoodNameSelector by inject()
-    private val clock: Clock by inject()
     private val appConfig: FoodYouConfig by inject()
     private val blobResolver: BlobResolver by inject()
 
@@ -46,17 +39,14 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
 
         with<AppCompatActivity, Unit>(this) {
             setContent {
-                ClipboardManagerProvider(clipboardManager) {
-                    DateFormatterProvider(dateFormatter) {
-                        ClockProvider(clock) {
-                            FoodNameSelectorProvider(foodNameSelector) {
-                                BlobResolverProvider(blobResolver) {
-                                    AppConfigProvider(appConfig) { content() }
-                                }
-                            }
-                        }
-                    }
-                }
+                UtilityProvider(
+                    clipboardManager = clipboardManager,
+                    dateFormatter = dateFormatter,
+                    foodNameSelector = foodNameSelector,
+                    appConfig = appConfig,
+                    blobResolver = blobResolver,
+                    content = content,
+                )
             }
         }
     }

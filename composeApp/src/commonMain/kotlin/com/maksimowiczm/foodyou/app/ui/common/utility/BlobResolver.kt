@@ -5,13 +5,8 @@ import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.BlobResolver
 import com.maksimowiczm.foodyou.common.domain.FileUri
 
-private val LocalBlobResolver =
+val LocalBlobResolver =
     staticCompositionLocalOf<BlobResolver> { error("BlobResolver not provided") }
-
-@Composable
-fun BlobResolverProvider(blobResolver: BlobResolver, content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalBlobResolver provides blobResolver) { content() }
-}
 
 @Composable
 fun resolveBlob(blobDigest: BlobDigest): FileUri {
