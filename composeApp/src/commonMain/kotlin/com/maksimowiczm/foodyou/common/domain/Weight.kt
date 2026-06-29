@@ -49,6 +49,36 @@ class Weight(val grams: Double, val unit: WeightUnit) :
     override fun hashCode(): Int = grams.hashCode()
 
     companion object {
+        private val PARSE_REGEX = Regex("""^([\d.]+)\s*(\D+)$""")
+
+        fun parseOrNull(value: String): Weight? {
+            val match = PARSE_REGEX.matchEntire(value.trim()) ?: return null
+            val (amountStr, unitStr) = match.destructured
+            val amount = amountStr.toDoubleOrNull() ?: return null
+            val unit =
+                when (unitStr.lowercase()) {
+                    "g",
+                    "grams" -> WeightUnit.Grams
+                    "mg",
+                    "milligrams" -> WeightUnit.Milligrams
+                    "mcg",
+                    "ug",
+                    "µg",
+                    "micrograms" -> WeightUnit.Micrograms
+                    "oz",
+                    "ounces" -> WeightUnit.Ounces
+                    else -> return null
+                }
+
+            return try {
+                from(amount, unit)
+            } catch (_: IllegalArgumentException) {
+                null
+            }
+        }
+
+        fun parse(value: String): Weight =
+            parseOrNull(value) ?: throw IllegalArgumentException("Invalid weight format: $value")
 
         fun from(value: Double, unit: WeightUnit): Weight = ofGrams(unit.toGrams(value), unit)
 

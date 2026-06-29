@@ -161,6 +161,41 @@ class WeightTest {
         assertEquals(10.0.ounces, Weight.ounces(10.0))
     }
 
+    @Test
+    fun parse_valid_inputs() {
+        assertEquals(100.0.grams, Weight.parse("100g"))
+        assertEquals(100.0.grams, Weight.parse("100 g"))
+        assertEquals(100.0.grams, Weight.parse("100 grams"))
+        assertEquals(10.5.milligrams, Weight.parse("10.5mg"))
+        assertEquals(5.0.micrograms, Weight.parse("5mcg"))
+        assertEquals(5.0.micrograms, Weight.parse("5ug"))
+        assertEquals(5.0.micrograms, Weight.parse("5µg"))
+        assertEquals(2.0.ounces, Weight.parse("2oz"))
+        assertEquals(2.0.ounces, Weight.parse("2 ounces"))
+    }
+
+    @Test
+    fun parse_case_insensitivity() {
+        assertEquals(100.0.grams, Weight.parse("100 G"))
+        assertEquals(10.0.milligrams, Weight.parse("10 MG"))
+        assertEquals(5.0.micrograms, Weight.parse("5 MCG"))
+        assertEquals(2.0.ounces, Weight.parse("2 OZ"))
+    }
+
+    @Test
+    fun parse_or_null_returns_null_for_invalid_input() {
+        assertEquals(null, Weight.parseOrNull("100"))
+        assertEquals(null, Weight.parseOrNull("g"))
+        assertEquals(null, Weight.parseOrNull("abc"))
+        assertEquals(null, Weight.parseOrNull("100abc"))
+        assertEquals(null, Weight.parseOrNull("-10g"))
+    }
+
+    @Test
+    fun parse_throws_for_invalid_input() {
+        assertFailsWith<IllegalArgumentException> { Weight.parse("invalid") }
+    }
+
     private fun assertClose(expected: Double, actual: Double, tolerance: Double = 1e-9) {
         assertEquals(expected, actual, tolerance)
     }
