@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.search
+package com.maksimowiczm.foodyou.app.ui.fooddatacentral
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,8 +18,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.ui.fooddatacentral.UpdateFoodDataCentralApiKeyDialog
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -29,6 +30,9 @@ internal fun FoodDataCentralErrorCard(
     error: FoodDataCentralApiError,
     modifier: Modifier = Modifier,
 ) {
+    val uriHandler = LocalUriHandler.current
+    val appConfig = LocalAppConfig.current
+
     val errorText =
         when (error) {
             is FoodDataCentralApiError.ProductNotFound -> return
@@ -73,22 +77,37 @@ internal fun FoodDataCentralErrorCard(
             ) {
                 Icon(imageVector = Icons.Outlined.ErrorOutline, contentDescription = null)
                 Text(
-                    text = stringResource(Res.string.headline_food_data_central_usda),
+                    text = stringResource(Res.string.headline_fooddata_central),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
-
             Text(text = errorText, style = MaterialTheme.typography.bodyMedium)
-
-            Button(
-                onClick = { showApiKeyDialog = true },
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.onErrorContainer,
-                        contentColor = MaterialTheme.colorScheme.errorContainer,
-                    ),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             ) {
-                Text(stringResource(Res.string.action_set_key))
+                Button(
+                    onClick = { uriHandler.openUri(appConfig.foodDataCentralObtainApiKeyUri) },
+                    shapes = ButtonDefaults.shapes(),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onErrorContainer,
+                            contentColor = MaterialTheme.colorScheme.errorContainer,
+                        ),
+                ) {
+                    Text(stringResource(Res.string.action_obtain_key))
+                }
+                Button(
+                    onClick = { showApiKeyDialog = true },
+                    shapes = ButtonDefaults.shapes(),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onErrorContainer,
+                            contentColor = MaterialTheme.colorScheme.errorContainer,
+                        ),
+                ) {
+                    Text(stringResource(Res.string.action_set_key))
+                }
             }
         }
     }

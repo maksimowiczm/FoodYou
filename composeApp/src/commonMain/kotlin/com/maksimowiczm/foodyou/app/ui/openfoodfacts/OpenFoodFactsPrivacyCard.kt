@@ -66,21 +66,9 @@ fun OpenFoodFactsPrivacyCard(
     if (showLoginDialog) {
         OpenFoodFactsLoginDialog(
             onDismissRequest = { showLoginDialog = false },
-            onSave = { login, password ->
-                runBlocking {
-                    repository.update {
-                        it.copy(
-                            credentials =
-                                OpenFoodFactsCredentials(
-                                    login = SoftwareEncrypted.encryptString(login),
-                                    password = SoftwareEncrypted.encryptString(password),
-                                )
-                        )
-                    }
-                    showLoginDialog = false
-                }
-            },
+            onSave = { showLoginDialog = false },
             service = service,
+            repository = repository,
         )
     }
 

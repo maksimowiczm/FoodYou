@@ -40,7 +40,6 @@ import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.error
 import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
-import com.maksimowiczm.foodyou.app.ui.food.search.FoodDataCentralErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchCollection
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchViewModel
@@ -53,6 +52,8 @@ import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSe
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserProductListItem
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserRecipeListItem
+import com.maksimowiczm.foodyou.app.ui.fooddatacentral.FoodDataCentralErrorCard
+import com.maksimowiczm.foodyou.app.ui.openfoodfacts.OpenFoodFactsErrorCard
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
@@ -460,11 +461,9 @@ private fun HomeSearchScreen(
             when (selectedCollection) {
                 is SearchCollection.OpenFoodFacts ->
                     when (val error = openFoodFacts.loadState.error) {
-                        is OpenFoodFactsApiError.RateLimitExceeded ->
-                            FoodSearchErrorCard(
-                                message =
-                                    stringResource(Res.string.error_open_food_facts_rate_limit),
-                                onRetry = openFoodFacts::retry,
+                        is OpenFoodFactsApiError ->
+                            OpenFoodFactsErrorCard(
+                                error = error,
                                 modifier =
                                     Modifier.padding(horizontal = 16.dp).padding(bottom = 8.dp),
                             )

@@ -245,13 +245,13 @@
 
     <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="description_open_food_facts">A collaborative, free and open database of food products from around the world</string>
-    <string name="link_open_food_facts" translatable="false">https://world.openfoodfacts.org</string>
     <string name="openfoodfacts_version">Version</string>
     <string name="openfoodfacts_version_legacy" description="Old OpenFoodFacts search API">Legacy</string>
     <string name="error_open_food_facts_rate_limit">Open Food Facts API rate limit exceeded</string>
     <string name="action_register">Register</string>
     <string name="description_open_food_facts_credentials_message">Login credentials are encrypted and stored only on your device. Sensitive data is not accessible to anyone else.</string>
     <string name="error_open_food_facts_failed_to_authenticate">Failed to authenticate with Open Food Facts</string>
+    <string name="error_open_food_facts_service_unavailable">Open Food Facts service temporary unavailable. Registered users are not subject to request limits and get priority access during peak times.</string>
 
     <!-- Don't translate changelog strings -->
     <string name="changelog_new_features" translatable="false">New features</string>
@@ -266,11 +266,8 @@
     <string name="notification_importing_products_success">Finished importing products</string>
 
     <string name="headline_fooddata_central" translatable="false">FoodData Central</string>
-    <string name="headline_food_data_central_usda" translatable="false">FoodData Central (USDA)</string>
     <string name="description_fooddata_central">FoodData Central is USDA's comprehensive source of food composition data with multiple distinct data types</string>
-    <string name="link_usda" translatable="false">https://fdc.nal.usda.gov</string>
-    <string name="link_usda_obtain_key" translatable="false">https://fdc.nal.usda.gov/api-key-signup</string>
-    <string name="error_usda_rate_limit">FoodData Central (USDA) API rate limit exceeded</string>
+    <string name="error_usda_rate_limit">FoodData Central API rate limit exceeded</string>
     <string name="error_usda_not_verified">The API key supplied has not been verified yet. Please check your e-mail to verify the API key.</string>
 
     <string name="headline_swiss_food_composition_database" translatable="false">Swiss Food Composition Database</string>

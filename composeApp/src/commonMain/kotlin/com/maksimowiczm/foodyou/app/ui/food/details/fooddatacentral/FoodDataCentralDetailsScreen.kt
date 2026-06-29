@@ -191,7 +191,7 @@ private fun FoodDataCentralDetailsScreen(
                                         ),
                                 )
                             },
-                            headline = stringResource(Res.string.headline_food_data_central_usda),
+                            headline = stringResource(Res.string.headline_fooddata_central),
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                         )
                     }

@@ -77,7 +77,6 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.plus
 import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
 import com.maksimowiczm.foodyou.app.ui.common.saveable.jsonSaver
-import com.maksimowiczm.foodyou.app.ui.food.search.FoodDataCentralErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchErrorCard
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchCollection
 import com.maksimowiczm.foodyou.app.ui.food.search.SearchFilters
@@ -92,6 +91,7 @@ import com.maksimowiczm.foodyou.app.ui.food.search.rememberCollectionFilters
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserProductListItem
 import com.maksimowiczm.foodyou.app.ui.food.search.userfood.UserRecipeListItem
+import com.maksimowiczm.foodyou.app.ui.fooddatacentral.FoodDataCentralErrorCard
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery

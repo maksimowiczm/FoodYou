@@ -40,20 +40,26 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
+import com.maksimowiczm.foodyou.common.infrastructure.crypto.encryptString
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsLoginService
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
 fun OpenFoodFactsLoginDialog(
     onDismissRequest: () -> Unit,
-    onSave: (login: String, password: String) -> Unit,
+    onSave: () -> Unit,
     modifier: Modifier = Modifier,
     service: OpenFoodFactsLoginService = koinInject(),
+    repository: OpenFoodFactsSettingsRepository = koinInject(),
 ) {
     val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
@@ -89,7 +95,20 @@ fun OpenFoodFactsLoginDialog(
 
                 runCatching { service.login(username, password) }
                     .onFailure { authenticationFailure = true }
-                    .onSuccess { onSave(username, password) }
+                    .onSuccess {
+                        runBlocking {
+                            repository.update {
+                                it.copy(
+                                    credentials =
+                                        OpenFoodFactsCredentials(
+                                            login = SoftwareEncrypted.encryptString(username),
+                                            password = SoftwareEncrypted.encryptString(password),
+                                        )
+                                )
+                            }
+                            onSave()
+                        }
+                    }
 
                 requestInProgress = false
             }
