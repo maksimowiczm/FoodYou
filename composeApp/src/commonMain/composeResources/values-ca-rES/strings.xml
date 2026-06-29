@@ -187,7 +187,7 @@
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Exportant productes</string>
     <string name="notification_importing_products">Important productes</string>
-    <string name="description_fooddata_central">FoodData Central és la font completa de dades sobre la composició dels aliments del USDA, amb múltiples tipus de dades distintes</string>
+    <string name="description_food_data_central_usda">FoodData Central és la font completa de dades sobre la composició dels aliments del USDA, amb múltiples tipus de dades distintes</string>
     <string name="headline_external_databases">Bases de dades externes</string>
     <string name="feature_manual_database_import">Importació manual de la base de dades</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Desempaqueta</string>

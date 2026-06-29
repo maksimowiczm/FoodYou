@@ -238,7 +238,7 @@
     <string name="notification_exporting_products">Izvažanje izdelkov</string>
     <string name="notification_importing_products">Uvažanje izdelkov</string>
     <string name="notification_importing_products_success">Uvoz izdelkov končan</string>
-    <string name="description_fooddata_central">FoodData Central je obsežen vir podatkov USDA o sestavi živil z več različnimi vrstami podatkov</string>
+    <string name="description_food_data_central_usda">FoodData Central je obsežen vir podatkov USDA o sestavi živil z več različnimi vrstami podatkov</string>
     <string name="error_usda_rate_limit">Omejitev uporabe API za FoodData Central (USDA) je presežena</string>
     <string name="description_swiss_food_composition_database_short">Swiss Food Composition Database zbirka podatkov o sestavi živil vključuje informacije o hranilni vrednosti več kot 1.100 splošnih živil</string>
     <string name="description2_swiss_food_composition_database">Swiss Food Composition Database zbirka podatkov o sestavi živil vsebuje informacije o hranilni vrednosti več kot 1.100 splošnih živilskih izdelkov. Na voljo je v štirih jezikih. Če želite te izdelke uvoziti v svoj prehranski dnevnik, izberite želene jezike.</string>

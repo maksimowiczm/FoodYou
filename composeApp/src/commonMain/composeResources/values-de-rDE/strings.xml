@@ -232,7 +232,7 @@
     <string name="notification_exporting_products">Produkte werden exportiert</string>
     <string name="notification_importing_products">Produkte werden importiert</string>
     <string name="notification_importing_products_success">Import der Produkte abgeschlossen</string>
-    <string name="description_fooddata_central">FoodData Central ist USDA's umfassende Quelle von Daten zur Lebensmittelzusammensetzung mit mehreren unterschiedlichen Datentypen</string>
+    <string name="description_food_data_central_usda">FoodData Central ist USDA's umfassende Quelle von Daten zur Lebensmittelzusammensetzung mit mehreren unterschiedlichen Datentypen</string>
     <string name="error_usda_rate_limit">FoodData Central (USDA) API-Rate-Limit überschritten</string>
     <string name="description_swiss_food_composition_database_short">Die Schweizer Lebensmittelzusammensetzungsdatenbank enthält Nährwertangaben zu über 1.100 allgemeinen Lebensmitteln</string>
     <string name="description2_swiss_food_composition_database">Die Schweizer Lebensmittelzusammensetzungsdatenbank enthält Nährwertinformationen zu über 1.100 allgemeinen Lebensmitteln. Sie ist in vier Sprachen verfügbar. Um diese Produkte in dein Lebensmitteltagebuch zu importieren, wähle bitte deine bevorzugten Sprachen aus.</string>
@@ -261,6 +261,7 @@
     <string name="description_add_note">Optionale Notiz (z.B. Zutaten, \"Vegan\"-Status, Allergene, Zusätze) oder sonstige Details</string>
     <string name="action_try_again">Erneut versuchen</string>
     <string name="description_calories_are_calculated">Die Energie wird automatisch aus Makronährstoffen berechnet. Du kannst diese Funktion bei Bedarf ausschalten und den Energiewert manuell eingeben. Alkohol wird in die Berechnung nicht einbezogen.</string>
+    <string name="x_energy_unit_per_g" description="e.g. proteins 4 kcal/g; proteins 17 kj/g">%1$s %2$d %3$s/g</string>
     <string name="neutral_an_error_occurred">Ein Fehler ist aufgetreten</string>
     <string name="action_retry">Erneut versuchen</string>
     <string name="action_import">Importieren</string>
