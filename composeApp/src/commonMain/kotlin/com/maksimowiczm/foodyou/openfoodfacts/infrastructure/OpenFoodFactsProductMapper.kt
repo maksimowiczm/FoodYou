@@ -28,78 +28,47 @@ internal class OpenFoodFactsProductMapper {
 }
 
 private fun OpenFoodFactsProductNetwork.toModel(): OpenFoodFactsProduct {
+    fun String?.sanitized(): String? = this?.sanitizeHtml()?.takeIfNotBlank()
+
     val name =
         FoodName.requireAll(
-            english =
-                localizedNames["en"].takeIfNotBlank()
-                    ?: localizedGenericNames["en"].takeIfNotBlank(),
-            catalan =
-                localizedNames["ca"].takeIfNotBlank()
-                    ?: localizedGenericNames["ca"].takeIfNotBlank(),
-            czech =
-                localizedNames["cs"].takeIfNotBlank()
-                    ?: localizedGenericNames["cs"].takeIfNotBlank(),
-            danish =
-                localizedNames["da"].takeIfNotBlank()
-                    ?: localizedGenericNames["da"].takeIfNotBlank(),
-            german =
-                localizedNames["de"].takeIfNotBlank()
-                    ?: localizedGenericNames["de"].takeIfNotBlank(),
-            spanish =
-                localizedNames["es"].takeIfNotBlank()
-                    ?: localizedGenericNames["es"].takeIfNotBlank(),
-            french =
-                localizedNames["fr"].takeIfNotBlank()
-                    ?: localizedGenericNames["fr"].takeIfNotBlank(),
+            english = localizedNames["en"].sanitized() ?: localizedGenericNames["en"].sanitized(),
+            catalan = localizedNames["ca"].sanitized() ?: localizedGenericNames["ca"].sanitized(),
+            czech = localizedNames["cs"].sanitized() ?: localizedGenericNames["cs"].sanitized(),
+            danish = localizedNames["da"].sanitized() ?: localizedGenericNames["da"].sanitized(),
+            german = localizedNames["de"].sanitized() ?: localizedGenericNames["de"].sanitized(),
+            spanish = localizedNames["es"].sanitized() ?: localizedGenericNames["es"].sanitized(),
+            french = localizedNames["fr"].sanitized() ?: localizedGenericNames["fr"].sanitized(),
             indonesian =
-                localizedNames["id"].takeIfNotBlank()
-                    ?: localizedNames["in"].takeIfNotBlank()
-                    ?: localizedGenericNames["id"].takeIfNotBlank()
-                    ?: localizedGenericNames["in"].takeIfNotBlank(),
-            italian =
-                localizedNames["it"].takeIfNotBlank()
-                    ?: localizedGenericNames["it"].takeIfNotBlank(),
-            hungarian =
-                localizedNames["hu"].takeIfNotBlank()
-                    ?: localizedGenericNames["hu"].takeIfNotBlank(),
-            dutch =
-                localizedNames["nl"].takeIfNotBlank()
-                    ?: localizedGenericNames["nl"].takeIfNotBlank(),
-            polish =
-                localizedNames["pl"].takeIfNotBlank()
-                    ?: localizedGenericNames["pl"].takeIfNotBlank(),
+                localizedNames["id"].sanitized()
+                    ?: localizedNames["in"].sanitized()
+                    ?: localizedGenericNames["id"].sanitized()
+                    ?: localizedGenericNames["in"].sanitized(),
+            italian = localizedNames["it"].sanitized() ?: localizedGenericNames["it"].sanitized(),
+            hungarian = localizedNames["hu"].sanitized() ?: localizedGenericNames["hu"].sanitized(),
+            dutch = localizedNames["nl"].sanitized() ?: localizedGenericNames["nl"].sanitized(),
+            polish = localizedNames["pl"].sanitized() ?: localizedGenericNames["pl"].sanitized(),
             portugueseBrazil =
-                localizedNames["pt_br"].takeIfNotBlank()
-                    ?: localizedGenericNames["pt_br"].takeIfNotBlank()
-                    ?: localizedNames["pt"].takeIfNotBlank()
-                    ?: localizedGenericNames["pt"].takeIfNotBlank(),
+                localizedNames["pt_br"].sanitized()
+                    ?: localizedGenericNames["pt_br"].sanitized()
+                    ?: localizedNames["pt"].sanitized()
+                    ?: localizedGenericNames["pt"].sanitized(),
             portuguesePortugal =
-                localizedNames["pt_pt"].takeIfNotBlank()
-                    ?: localizedGenericNames["pt_pt"].takeIfNotBlank()
-                    ?: localizedNames["pt"].takeIfNotBlank()
-                    ?: localizedGenericNames["pt"].takeIfNotBlank(),
-            slovenian =
-                localizedNames["sl"].takeIfNotBlank()
-                    ?: localizedGenericNames["sl"].takeIfNotBlank(),
-            turkish =
-                localizedNames["tr"].takeIfNotBlank()
-                    ?: localizedGenericNames["tr"].takeIfNotBlank(),
-            russian =
-                localizedNames["ru"].takeIfNotBlank()
-                    ?: localizedGenericNames["ru"].takeIfNotBlank(),
-            ukrainian =
-                localizedNames["uk"].takeIfNotBlank()
-                    ?: localizedGenericNames["uk"].takeIfNotBlank(),
-            arabic =
-                localizedNames["ar"].takeIfNotBlank()
-                    ?: localizedGenericNames["ar"].takeIfNotBlank(),
+                localizedNames["pt_pt"].sanitized()
+                    ?: localizedGenericNames["pt_pt"].sanitized()
+                    ?: localizedNames["pt"].sanitized()
+                    ?: localizedGenericNames["pt"].sanitized(),
+            slovenian = localizedNames["sl"].sanitized() ?: localizedGenericNames["sl"].sanitized(),
+            turkish = localizedNames["tr"].sanitized() ?: localizedGenericNames["tr"].sanitized(),
+            russian = localizedNames["ru"].sanitized() ?: localizedGenericNames["ru"].sanitized(),
+            ukrainian = localizedNames["uk"].sanitized() ?: localizedGenericNames["uk"].sanitized(),
+            arabic = localizedNames["ar"].sanitized() ?: localizedGenericNames["ar"].sanitized(),
             chineseSimplified =
-                localizedNames["zh"].takeIfNotBlank()
-                    ?: localizedGenericNames["zh"].takeIfNotBlank(),
+                localizedNames["zh"].sanitized() ?: localizedGenericNames["zh"].sanitized(),
             fallback =
-                localizedNames[""].takeIfNotBlank()
-                    ?: localizedGenericNames[""].takeIfNotBlank()
-                    ?: localizedNames.values.firstOrNull { it.isNotBlank() }
+                localizedNames[""].sanitized()
+                    ?: localizedGenericNames[""].sanitized()
+                    ?: localizedNames.values.firstOrNull { it.isNotBlank() }?.sanitizeHtml()
                     ?: code,
         )
 
@@ -173,3 +142,11 @@ private fun findQuantity(value: String?): AbsoluteQuantity? {
     if (value == null) return null
     return AbsoluteQuantity.parseOrNull(value)
 }
+
+private fun String.sanitizeHtml() =
+    replace("&amp;", "&")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&quot;", "\"")
+        .replace("&#39;", "'")
+        .trim()
