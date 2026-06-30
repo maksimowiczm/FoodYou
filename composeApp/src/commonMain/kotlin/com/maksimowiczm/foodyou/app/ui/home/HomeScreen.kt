@@ -30,9 +30,6 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.MenuOpen
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -410,10 +407,6 @@ fun HomeScreen(
             if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
             scope.launch { railState.collapse() }
         },
-        onCreate = {
-            scope.launch { railState.collapse() }
-            onCreateProduct()
-        },
     )
     StatusBarProtection { (offset.value / topBarHeight).coerceIn(0f, 1f) }
 }
@@ -423,7 +416,6 @@ private fun HomeModalWideNavigationRail(
     state: WideNavigationRailState,
     collections: List<CollectionFilter>,
     onCollection: (SearchCollection) -> Unit,
-    onCreate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -442,15 +434,6 @@ private fun HomeModalWideNavigationRail(
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.MenuOpen,
                         contentDescription = stringResource(Res.string.action_close),
-                    )
-                }
-                FloatingActionButton(
-                    onClick = onCreate,
-                    elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Add,
-                        contentDescription = stringResource(Res.string.action_create),
                     )
                 }
             }
