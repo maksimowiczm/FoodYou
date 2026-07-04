@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.search.domain
 
-import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,19 +10,17 @@ class SearchHistoryTest {
     @Test
     fun recordSearchQuery_storesOnlyTextQueries() {
         val history = SearchHistory()
-        val now = Instant.fromEpochSeconds(1_000_000_000)
-        val clock = staticClock(now)
 
         val barcode = SearchQuery.Barcode("1234567890123")
-        val events1 = history.recordSearchQuery(barcode, clock)
+        val events1 = history.recordSearchQuery(barcode)
         assertEquals(0, events1.size)
 
         val other = TestNotBlankQuery("https://example.com/product/123")
-        val events2 = history.recordSearchQuery(other, clock)
+        val events2 = history.recordSearchQuery(other)
         assertEquals(0, events2.size)
 
         val text = SearchQuery.Text("apple")
-        val events3 = history.recordSearchQuery(text, clock)
+        val events3 = history.recordSearchQuery(text)
         assertEquals(1, events3.size)
         assertEquals(text, (events3[0] as SearchQueryRecordedEvent).query)
     }
@@ -32,9 +29,8 @@ class SearchHistoryTest {
     fun recordSearchQuery_doesNotStoreDuplicateQueries() {
         val query = SearchQuery.Text("apple")
         val history = SearchHistory(history = listOf(query))
-        val clock = staticClock(Instant.fromEpochSeconds(1_000_000_000))
 
-        val events = history.recordSearchQuery(query, clock)
+        val events = history.recordSearchQuery(query)
 
         assertTrue(events.isEmpty())
     }
@@ -42,9 +38,8 @@ class SearchHistoryTest {
     @Test
     fun apply_updatesHistoryAndRemovesDuplicates() {
         val history = SearchHistory(history = listOf(SearchQuery.Text("banana")))
-        val now = Instant.fromEpochSeconds(1_000_000_000)
         val query = SearchQuery.Text("apple")
-        val event = SearchQueryRecordedEvent(query, now)
+        val event = SearchQueryRecordedEvent(query, Instant.DISTANT_PAST)
 
         val updated = history.apply(event)
 
@@ -52,7 +47,8 @@ class SearchHistoryTest {
         assertEquals(query, updated.history[0])
         assertEquals(SearchQuery.Text("banana"), updated.history[1])
 
-        val duplicateEvent = SearchQueryRecordedEvent(SearchQuery.Text("banana"), now)
+        val duplicateEvent =
+            SearchQueryRecordedEvent(SearchQuery.Text("banana"), Instant.DISTANT_PAST)
         val updated2 = updated.apply(duplicateEvent)
 
         assertEquals(2, updated2.history.size)

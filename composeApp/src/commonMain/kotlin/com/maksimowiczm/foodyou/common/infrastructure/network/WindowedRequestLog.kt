@@ -19,7 +19,7 @@ import kotlinx.coroutines.sync.withLock
 class WindowedRequestLog(
     private val maxRequests: Int,
     private val timeWindow: Duration,
-    private val clock: Clock = Clock.System,
+    val clock: Clock = Clock.System,
 ) {
     private val requests = mutableListOf<Instant>()
     private val mutex = Mutex()
@@ -33,7 +33,7 @@ class WindowedRequestLog(
     suspend fun tryAcquire(): Duration? = mutex.withLock {
         val now = clock.now()
         val windowStart = now - timeWindow
-        requests.removeAll { it < windowStart }
+        requests.removeAll { it <= windowStart }
 
         if (requests.size < maxRequests) {
             requests.add(now)

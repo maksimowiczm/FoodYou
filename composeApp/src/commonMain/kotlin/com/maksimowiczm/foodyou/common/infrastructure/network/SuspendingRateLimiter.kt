@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.common.infrastructure.network
 
-import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Instant
 import kotlinx.coroutines.delay
@@ -11,7 +10,6 @@ import kotlinx.coroutines.delay
  * Rather than immediately rejecting requests, this limiter waits precisely until the oldest request
  * leaves the time window, minimizing unnecessary delays.
  *
- * @param clock The clock used to track the timeout deadline.
  * @param log The [WindowedRequestLog] used to track and enforce the rate limit.
  * @param timeout The maximum duration to wait for a slot before giving up.
  * @param minWaitTime The minimum duration to wait between consecutive requests.
@@ -20,9 +18,9 @@ class SuspendingRateLimiter(
     private val log: WindowedRequestLog,
     private val timeout: Duration,
     private val minWaitTime: Duration = Duration.ZERO,
-    private val clock: Clock = Clock.System,
 ) : RateLimiter {
     private var lastRequestTime: Instant? = null
+    private val clock = log.clock
 
     /**
      * Suspends until a request slot is available or [timeout] is exceeded.

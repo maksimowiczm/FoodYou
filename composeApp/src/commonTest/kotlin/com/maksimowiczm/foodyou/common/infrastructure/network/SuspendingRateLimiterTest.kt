@@ -1,9 +1,8 @@
 package com.maksimowiczm.foodyou.common.infrastructure.network
 
-import com.maksimowiczm.foodyou.common.clock.mutableClock
+import com.maksimowiczm.foodyou.common.clock.testClock
 import kotlin.test.Test
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -16,45 +15,65 @@ import kotlinx.coroutines.test.runTest
 class SuspendingRateLimiterTest {
     @Test
     fun acquire_returns_true_immediately_when_slot_is_available() = runTest {
-        val clock = mutableClock()
-        val log = WindowedRequestLog(maxRequests = 1, timeWindow = 1.seconds, clock = clock)
-        val limiter = SuspendingRateLimiter(log, timeout = 5.seconds, clock = clock)
+        val limiter =
+            SuspendingRateLimiter(
+                log =
+                    WindowedRequestLog(
+                        maxRequests = 1,
+                        timeWindow = 1.seconds,
+                        clock = testClock(),
+                    ),
+                timeout = 5.seconds,
+            )
 
         assertTrue(limiter.acquire())
     }
 
     @Test
     fun acquire_waits_until_the_window_opens_then_returns_true() = runTest {
-        val clock = mutableClock()
-        val log = WindowedRequestLog(maxRequests = 1, timeWindow = 1.seconds, clock = clock)
-        assertNull(log.tryAcquire())
+        val limiter =
+            SuspendingRateLimiter(
+                log =
+                    WindowedRequestLog(
+                        maxRequests = 1,
+                        timeWindow = 1.seconds,
+                        clock = testClock(),
+                    ),
+                timeout = 5.seconds,
+            )
 
-        val limiter = SuspendingRateLimiter(log, timeout = 5.seconds, clock = clock)
+        assertTrue(limiter.acquire())
         val result = async { limiter.acquire() }
 
         runCurrent()
         assertFalse(result.isCompleted)
 
-        clock.advanceBy(1.seconds + 1.milliseconds)
-        advanceTimeBy(1.seconds)
+        advanceTimeBy(1.seconds + 1.milliseconds)
         runCurrent()
 
-        assertTrue(result.await())
+        assertTrue(result.isCompleted, "Expected acquire to complete, but it didn't")
+        assertTrue(result.await(), "Expected acquire to succeed, but it failed")
     }
 
     @Test
     fun acquire_returns_false_when_timeout_expires_before_a_slot_opens() = runTest {
-        val clock = mutableClock()
-        val log = WindowedRequestLog(maxRequests = 1, timeWindow = 1.seconds, clock = clock)
-        assertNull(log.tryAcquire())
+        val limiter =
+            SuspendingRateLimiter(
+                log =
+                    WindowedRequestLog(
+                        maxRequests = 1,
+                        timeWindow = 1.seconds,
+                        clock = testClock(),
+                    ),
+                timeout = 500.milliseconds,
+            )
 
-        val limiter = SuspendingRateLimiter(log, timeout = 500.milliseconds, clock = clock)
+        assertTrue(limiter.acquire())
         val result = async { limiter.acquire() }
 
         runCurrent()
         assertFalse(result.isCompleted)
 
-        clock.advanceBy(500.milliseconds)
         advanceTimeBy(500.milliseconds)
         runCurrent()
 
@@ -63,15 +82,17 @@ class SuspendingRateLimiterTest {
 
     @Test
     fun acquire_respects_minWaitTime_between_consecutive_requests() = runTest {
-        val clock = mutableClock()
-        val log = WindowedRequestLog(maxRequests = 100, timeWindow = 10.seconds, clock = clock)
         val minWaitTime = 500.milliseconds
         val limiter =
             SuspendingRateLimiter(
-                log,
+                log =
+                    WindowedRequestLog(
+                        maxRequests = 100,
+                        timeWindow = 10.seconds,
+                        clock = testClock(),
+                    ),
                 timeout = 5.seconds,
                 minWaitTime = minWaitTime,
-                clock = clock,
             )
 
         // First acquire should succeed immediately
@@ -84,13 +105,11 @@ class SuspendingRateLimiterTest {
         assertFalse(result.isCompleted)
 
         // Advance time by less than minWaitTime
-        clock.advanceBy(minWaitTime - 100.milliseconds)
         advanceTimeBy(minWaitTime - 100.milliseconds)
         runCurrent()
         assertFalse(result.isCompleted)
 
         // Advance time to complete the minWaitTime
-        clock.advanceBy(100.milliseconds)
         advanceTimeBy(100.milliseconds)
         runCurrent()
 
@@ -99,15 +118,17 @@ class SuspendingRateLimiterTest {
 
     @Test
     fun acquire_respects_minWaitTime_over_rate_limit() = runTest {
-        val clock = mutableClock()
-        val log = WindowedRequestLog(maxRequests = 100, timeWindow = 10.seconds, clock = clock)
         val minWaitTime = 1.seconds
         val limiter =
             SuspendingRateLimiter(
-                log,
+                log =
+                    WindowedRequestLog(
+                        maxRequests = 100,
+                        timeWindow = 10.seconds,
+                        clock = testClock(),
+                    ),
                 timeout = 5.seconds,
                 minWaitTime = minWaitTime,
-                clock = clock,
             )
 
         // First acquire should succeed immediately
@@ -121,13 +142,11 @@ class SuspendingRateLimiterTest {
         assertFalse(result.isCompleted)
 
         // Advance time just short of minWaitTime
-        clock.advanceBy(minWaitTime - 100.milliseconds)
         advanceTimeBy(minWaitTime - 100.milliseconds)
         runCurrent()
         assertFalse(result.isCompleted)
 
         // Advance time to complete the minWaitTime
-        clock.advanceBy(100.milliseconds)
         advanceTimeBy(100.milliseconds)
         runCurrent()
 
@@ -136,24 +155,30 @@ class SuspendingRateLimiterTest {
 
     @Test
     fun acquire_times_out_when_minWaitTime_exceeds_timeout() = runTest {
-        val clock = mutableClock()
-        val log = WindowedRequestLog(maxRequests = 100, timeWindow = 10.seconds, clock = clock)
         val minWaitTime = 1.seconds
         val timeout = 500.milliseconds
         val limiter =
-            SuspendingRateLimiter(log, timeout = timeout, minWaitTime = minWaitTime, clock = clock)
+            SuspendingRateLimiter(
+                log =
+                    WindowedRequestLog(
+                        maxRequests = 100,
+                        timeWindow = 10.seconds,
+                        clock = testClock(),
+                    ),
+                timeout = timeout,
+                minWaitTime = minWaitTime,
+            )
 
         // First acquire should succeed immediately
         assertTrue(limiter.acquire())
 
-        // Second acquire should timeout because minWaitTime > timeout
+        // Second acquire should time out because minWaitTime > timeout
         val result = async { limiter.acquire() }
 
         runCurrent()
         assertFalse(result.isCompleted)
 
         // Advance time by the timeout
-        clock.advanceBy(timeout)
         advanceTimeBy(timeout)
         runCurrent()
 
@@ -162,41 +187,43 @@ class SuspendingRateLimiterTest {
 
     @Test
     fun acquire_allows_multiple_sequential_requests_respecting_minWaitTime() = runTest {
-        val clock = mutableClock()
-        val log = WindowedRequestLog(maxRequests = 100, timeWindow = 10.seconds, clock = clock)
         val minWaitTime = 100.milliseconds
         val limiter =
             SuspendingRateLimiter(
-                log,
+                log =
+                    WindowedRequestLog(
+                        maxRequests = 100,
+                        timeWindow = 10.seconds,
+                        clock = testClock(),
+                    ),
                 timeout = 5.seconds,
                 minWaitTime = minWaitTime,
-                clock = clock,
             )
 
         // First request
         assertTrue(limiter.acquire())
 
         // Second request with proper delay
-        clock.advanceBy(minWaitTime)
         advanceTimeBy(minWaitTime)
         assertTrue(limiter.acquire())
 
         // Third request with proper delay
-        clock.advanceBy(minWaitTime)
         advanceTimeBy(minWaitTime)
         assertTrue(limiter.acquire())
     }
 
     @Test
     fun acquire_with_zero_minWaitTime_does_not_enforce_delay() = runTest {
-        val clock = mutableClock()
-        val log = WindowedRequestLog(maxRequests = 100, timeWindow = 10.seconds, clock = clock)
         val limiter =
             SuspendingRateLimiter(
-                log,
+                log =
+                    WindowedRequestLog(
+                        maxRequests = 100,
+                        timeWindow = 10.seconds,
+                        clock = testClock(),
+                    ),
                 timeout = 5.seconds,
                 minWaitTime = Duration.ZERO,
-                clock = clock,
             )
 
         // All requests should succeed immediately

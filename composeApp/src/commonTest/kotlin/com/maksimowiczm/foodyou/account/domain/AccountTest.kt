@@ -12,9 +12,7 @@ import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 class AccountTest {
-
     private val now = Instant.fromEpochMilliseconds(1000)
-    private val clock = staticClock(now)
 
     private val profile1 =
         Profile(
@@ -33,34 +31,34 @@ class AccountTest {
     @Test
     fun finishOnboarding_returnsOnboardingFinishedEvent_whenNotFinished() {
         val account = Account(profiles = listOf(profile1), onboardingFinished = false)
-        val events = account.finishOnboarding(clock)
+        val events = account.finishOnboarding(staticClock(now))
         assertEquals(listOf(OnboardingFinishedEvent(now)), events)
     }
 
     @Test
     fun finishOnboarding_returnsEmptyList_whenAlreadyFinished() {
         val account = Account(profiles = listOf(profile1), onboardingFinished = true)
-        val events = account.finishOnboarding(clock)
+        val events = account.finishOnboarding()
         assertTrue(events.isEmpty())
     }
 
     @Test
     fun finishOnboarding_fails_whenNoProfiles() {
         val account = Account(profiles = emptyList(), onboardingFinished = false)
-        assertFailsWith<IllegalStateException> { account.finishOnboarding(clock) }
+        assertFailsWith<IllegalStateException> { account.finishOnboarding() }
     }
 
     @Test
     fun changeEnergyUnit_returnsEnergyUnitChangedEvent_whenUnitIsDifferent() {
         val account = Account(energyUnit = EnergyUnit.Kilocalories)
-        val events = account.changeEnergyUnit(EnergyUnit.Kilojoules, clock)
+        val events = account.changeEnergyUnit(EnergyUnit.Kilojoules, staticClock(now))
         assertEquals(listOf(EnergyUnitChangedEvent(EnergyUnit.Kilojoules, now)), events)
     }
 
     @Test
     fun changeEnergyUnit_returnsEmptyList_whenUnitIsSame() {
         val account = Account(energyUnit = EnergyUnit.Kilocalories)
-        val events = account.changeEnergyUnit(EnergyUnit.Kilocalories, clock)
+        val events = account.changeEnergyUnit(EnergyUnit.Kilocalories)
         assertTrue(events.isEmpty())
     }
 
@@ -68,7 +66,7 @@ class AccountTest {
     fun changeNutrientsOrder_returnsNutrientsOrderChangedEvent_whenOrderIsDifferent() {
         val account = Account(nutrientsOrder = NutrientsOrder.defaultOrder)
         val newOrder = NutrientsOrder.defaultOrder.reversed()
-        val events = account.changeNutrientsOrder(newOrder, clock)
+        val events = account.changeNutrientsOrder(newOrder, staticClock(now))
         assertEquals(listOf(NutrientsOrderChangedEvent(newOrder, now)), events)
     }
 
@@ -79,7 +77,7 @@ class AccountTest {
             listOf(NutrientsOrder.Proteins, NutrientsOrder.Proteins) +
                 (NutrientsOrder.entries - NutrientsOrder.Proteins).take(4)
         assertFailsWith<IllegalArgumentException> {
-            account.changeNutrientsOrder(invalidOrder, clock)
+            account.changeNutrientsOrder(invalidOrder)
         }
     }
 
@@ -88,27 +86,28 @@ class AccountTest {
         val account = Account()
         val invalidOrder = NutrientsOrder.entries.take(1)
         assertFailsWith<IllegalArgumentException> {
-            account.changeNutrientsOrder(invalidOrder, clock)
+            account.changeNutrientsOrder(invalidOrder)
         }
     }
 
     @Test
     fun addProfile_returnsProfileAddedEvent() {
         val account = Account(profiles = listOf(profile1))
-        val events = account.addProfile(profile2, clock)
+        val events = account.addProfile(profile2, staticClock(now))
         assertEquals(listOf(ProfileAddedEvent(profile2, now)), events)
     }
 
     @Test
     fun addProfile_fails_whenProfileAlreadyExists() {
         val account = Account(profiles = listOf(profile1))
-        assertFailsWith<IllegalStateException> { account.addProfile(profile1, clock) }
+        assertFailsWith<IllegalStateException> { account.addProfile(profile1) }
     }
 
     @Test
     fun updateProfile_returnsProfileUpdatedEvent() {
         val account = Account(profiles = listOf(profile1))
-        val events = account.updateProfile(profile1.id, clock) { it.copy(name = "Updated Name") }
+        val events =
+            account.updateProfile(profile1.id, staticClock(now)) { it.copy(name = "Updated Name") }
         val updatedProfile = profile1.copy(name = "Updated Name")
         assertEquals(listOf(ProfileUpdatedEvent(updatedProfile, now)), events)
     }
@@ -116,13 +115,13 @@ class AccountTest {
     @Test
     fun updateProfile_fails_whenProfileDoesNotExist() {
         val account = Account(profiles = listOf(profile1))
-        assertFailsWith<IllegalStateException> { account.updateProfile(profile2.id, clock) { it } }
+        assertFailsWith<IllegalStateException> { account.updateProfile(profile2.id) { it } }
     }
 
     @Test
     fun removeProfile_returnsProfileRemovedEvent() {
         val account = Account(profiles = listOf(profile1, profile2))
-        val events = account.removeProfile(profile2.id, clock)
+        val events = account.removeProfile(profile2.id, staticClock(now))
         assertEquals(listOf(ProfileRemovedEvent(profile2.id, now)), events)
     }
 
@@ -130,21 +129,21 @@ class AccountTest {
     fun removeProfile_fails_whenProfileDoesNotExist() {
         val account = Account(profiles = listOf(profile1, profile2))
         assertFailsWith<IllegalStateException> {
-            account.removeProfile(ProfileId(Uuid.random()), clock)
+            account.removeProfile(ProfileId(Uuid.random()))
         }
     }
 
     @Test
     fun removeProfile_fails_whenItsTheLastProfile() {
         val account = Account(profiles = listOf(profile1))
-        assertFailsWith<IllegalStateException> { account.removeProfile(profile1.id, clock) }
+        assertFailsWith<IllegalStateException> { account.removeProfile(profile1.id) }
     }
 
     @Test
     fun addFavoriteFood_returnsFavoriteFoodAddedEvent() {
         val account = Account(profiles = listOf(profile1))
         val food = FavoriteFoodIdentity.FoodDataCentral(123)
-        val events = account.addFavoriteFood(profile1.id, food, clock)
+        val events = account.addFavoriteFood(profile1.id, food, staticClock(now))
         assertEquals(listOf(FavoriteFoodAddedEvent(profile1.id, food, now)), events)
     }
 
@@ -152,7 +151,7 @@ class AccountTest {
     fun addFavoriteFood_isIdempotent() {
         val food = FavoriteFoodIdentity.FoodDataCentral(123)
         val account = Account(profiles = listOf(profile1.copy(favoriteFoods = setOf(food))))
-        val events = account.addFavoriteFood(profile1.id, food, clock)
+        val events = account.addFavoriteFood(profile1.id, food)
         assertTrue(events.isEmpty())
     }
 
@@ -160,7 +159,7 @@ class AccountTest {
     fun removeFavoriteFood_returnsFavoriteFoodRemovedEvent() {
         val food = FavoriteFoodIdentity.FoodDataCentral(123)
         val account = Account(profiles = listOf(profile1.copy(favoriteFoods = setOf(food))))
-        val events = account.removeFavoriteFood(profile1.id, food, clock)
+        val events = account.removeFavoriteFood(profile1.id, food, staticClock(now))
         assertEquals(listOf(FavoriteFoodRemovedEvent(profile1.id, food, now)), events)
     }
 
@@ -168,7 +167,7 @@ class AccountTest {
     fun removeFavoriteFood_isIdempotent() {
         val food = FavoriteFoodIdentity.FoodDataCentral(123)
         val account = Account(profiles = listOf(profile1))
-        val events = account.removeFavoriteFood(profile1.id, food, clock)
+        val events = account.removeFavoriteFood(profile1.id, food)
         assertTrue(events.isEmpty())
     }
 
@@ -185,7 +184,7 @@ class AccountTest {
                     )
             )
 
-        val events = account.removeFavoriteUserFood(UserProductIdentity(productId), clock)
+        val events = account.removeFavoriteUserFood(UserProductIdentity(productId))
         assertEquals(2, events.size)
         assertTrue(events.all { it is FavoriteFoodRemovedEvent && it.foodIdentity == food })
         assertTrue(events.any { (it as FavoriteFoodRemovedEvent).profileId == profile1.id })

@@ -129,7 +129,6 @@ internal class FoodDataCentralRemoteDataSource(
 
         fun rateLimiter(clock: Clock = Clock.System): RateLimiter =
             SuspendingRateLimiter(
-                clock = clock,
                 log = WindowedRequestLog(30, 1.hours, clock),
                 timeout = 1.seconds,
                 minWaitTime = 100.milliseconds,
