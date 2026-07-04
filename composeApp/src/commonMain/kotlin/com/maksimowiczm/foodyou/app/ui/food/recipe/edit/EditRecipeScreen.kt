@@ -14,6 +14,7 @@ import com.maksimowiczm.foodyou.app.ui.food.recipe.RecipeApp
 import com.maksimowiczm.foodyou.app.ui.food.recipe.RecipeFormViewModel
 import com.maksimowiczm.foodyou.app.ui.food.recipe.rememberRecipeFormState
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import foodyou.app.generated.resources.*
@@ -41,7 +42,7 @@ fun EditRecipeScreen(
     val recipe = viewModel.recipe.collectAsStateWithLifecycle().value ?: return
 
     val initialIngredients =
-        remember(recipe.identity) {
+        remember(recipe.components) {
             recipe.components
                 .map {
                     when (it.identity) {
@@ -49,7 +50,7 @@ fun EditRecipeScreen(
                         is FoodCompositionComponentIdentity.Identified -> it
                     }
                 }
-                .map { it.identity to it.quantity }
+                .map { it.identity to it.quantity.toQuantity() }
         }
     val recipeFormViewModel: RecipeFormViewModel = koinViewModel {
         parametersOf(initialIngredients)
@@ -66,7 +67,7 @@ fun EditRecipeScreen(
                     uiState.ingredients.size != recipe.components.size ||
                     uiState.ingredients.zip(recipe.components).any { (current, original) ->
                         current.entry.identity != original.identity ||
-                            current.entry.quantity != original.quantity
+                            current.entry.quantity != original.quantity.toQuantity()
                     }
             }
         }
