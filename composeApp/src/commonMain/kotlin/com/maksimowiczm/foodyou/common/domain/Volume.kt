@@ -17,16 +17,16 @@ class Volume(val milliliters: Double, val unit: VolumeUnit) : Comparable<Volume>
 
     operator fun minus(other: Volume): Volume = ofMilliliters(milliliters - other.milliliters, unit)
 
-    operator fun times(scale: Double): Volume {
-        require(scale.isFinite()) { "Scale must be finite" }
-        require(scale >= 0.0) { "Scale must be non-negative" }
-        return ofMilliliters(milliliters * scale, unit)
+    operator fun times(multiplier: Double): Volume {
+        require(multiplier.isFinite()) { "Multiplier must be finite" }
+        require(multiplier >= 0.0) { "Multiplier must be non-negative" }
+        return ofMilliliters(milliliters * multiplier, unit)
     }
 
-    operator fun div(scale: Double): Volume {
-        require(scale.isFinite()) { "Scale must be finite" }
-        require(scale > 0.0) { "Scale must be greater than zero" }
-        return ofMilliliters(milliliters / scale, unit)
+    operator fun div(divisor: Double): Volume {
+        require(divisor.isFinite()) { "Divisor must be finite" }
+        require(divisor > 0.0) { "Divisor must be greater than zero" }
+        return ofMilliliters(milliliters / divisor, unit)
     }
 
     operator fun div(other: Volume): Double {
@@ -58,7 +58,7 @@ class Volume(val milliliters: Double, val unit: VolumeUnit) : Comparable<Volume>
         }
 
         fun parse(value: String): Volume =
-            parseOrNull(value) ?: throw IllegalArgumentException("Invalid volume format: $value")
+            requireNotNull(parseOrNull(value)) { "Invalid volume format: $value" }
 
         fun from(value: Double, unit: VolumeUnit): Volume =
             ofMilliliters(unit.toMilliliters(value), unit)

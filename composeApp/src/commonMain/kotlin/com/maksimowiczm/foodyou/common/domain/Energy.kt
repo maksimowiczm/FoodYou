@@ -23,17 +23,17 @@ class Energy(val kilocalories: Double, val unit: EnergyUnit) :
     operator fun minus(other: Energy): Energy =
         ofKilocalories(kilocalories - other.kilocalories, unit)
 
-    override operator fun times(scale: Number): Energy {
-        val scale = scale.toDouble()
-        require(scale.isFinite()) { "Scale must be finite" }
-        require(scale >= 0.0) { "Scale must be non-negative" }
+    override operator fun times(multiplier: Number): Energy {
+        val scale = multiplier.toDouble()
+        require(scale.isFinite()) { "Multiplier must be finite" }
+        require(scale >= 0.0) { "Multiplier must be non-negative" }
         return ofKilocalories(kilocalories * scale, unit)
     }
 
-    override operator fun div(scale: Number): Energy {
-        val scale = scale.toDouble()
-        require(scale.isFinite()) { "Scale must be finite" }
-        require(scale > 0.0) { "Scale must be greater than zero" }
+    override operator fun div(divisor: Number): Energy {
+        val scale = divisor.toDouble()
+        require(scale.isFinite()) { "Divisor must be finite" }
+        require(scale > 0.0) { "Divisor must be greater than zero" }
         return ofKilocalories(kilocalories / scale, unit)
     }
 

@@ -5,9 +5,9 @@ fun interface Plus<T> {
 }
 
 fun interface Times<out T> {
-    operator fun times(scale: Number): T
+    operator fun times(multiplier: Number): T
 }
 
 fun interface Div<out T> {
-    operator fun div(scale: Number): T
+    operator fun div(divisor: Number): T
 }

@@ -21,17 +21,17 @@ class Weight(val grams: Double, val unit: WeightUnit) :
 
     operator fun minus(other: Weight): Weight = ofGrams(grams - other.grams, unit)
 
-    override operator fun times(scale: Number): Weight {
-        val scale = scale.toDouble()
-        require(scale.isFinite()) { "Scale must be finite" }
-        require(scale >= 0.0) { "Scale must be non-negative" }
+    override operator fun times(multiplier: Number): Weight {
+        val scale = multiplier.toDouble()
+        require(scale.isFinite()) { "Multiplier must be finite" }
+        require(scale >= 0.0) { "Multiplier must be non-negative" }
         return ofGrams(grams * scale, unit)
     }
 
-    override operator fun div(scale: Number): Weight {
-        val scale = scale.toDouble()
-        require(scale.isFinite()) { "Scale must be finite" }
-        require(scale > 0.0) { "Scale must be greater than zero" }
+    override operator fun div(divisor: Number): Weight {
+        val scale = divisor.toDouble()
+        require(scale.isFinite()) { "Divisor must be finite" }
+        require(scale > 0.0) { "Divisor must be greater than zero" }
         return ofGrams(grams / scale, unit)
     }
 
@@ -65,7 +65,7 @@ class Weight(val grams: Double, val unit: WeightUnit) :
         }
 
         fun parse(value: String): Weight =
-            parseOrNull(value) ?: throw IllegalArgumentException("Invalid weight format: $value")
+            requireNotNull(parseOrNull(value)) { "Invalid weight format: $value" }
 
         fun from(value: Double, unit: WeightUnit): Weight = ofGrams(unit.toGrams(value), unit)
 
