@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.account.domain.AccountEvent
 import com.maksimowiczm.foodyou.analytics.domain.AnalyticsEvent
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEvent
+import com.maksimowiczm.foodyou.mealplan.domain.MealPlanEvent
 import com.maksimowiczm.foodyou.search.domain.SearchHistoryEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductEvent
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeEvent
@@ -40,6 +41,7 @@ private val roomEventJson = Json {
             subclassesOfSealed<UserRecipeEvent>()
             subclassesOfSealed<SearchHistoryEvent>()
             subclassesOfSealed<FoodDiaryEvent>()
+            subclassesOfSealed<MealPlanEvent>()
         }
     }
     explicitNulls = false

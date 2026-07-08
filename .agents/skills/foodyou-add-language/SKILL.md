@@ -43,10 +43,11 @@ NewLanguage("DISPLAY_NAME", "ISO", "CC"),
 
 Read the file. Make four changes:
 
-1. **Property** — add `val ISO: String? = null` alongside existing language properties
+1. **Property** — add `val ISO: String? = null` alongside existing language properties (e.g.
+   `val polish: String? = null`)
 2. **`list` property** — append `ISO` to the `listOf(...)`
 3. **`get(language: Language)` function** — add a branch: `Language.NewLanguage -> ISO`
-4. **`requireAll` companion function** — add the new parameter
+4. **`requireAll` companion function** — add the new parameter to the signature.
 
 ---
 
@@ -56,12 +57,9 @@ Read the file. Make four changes:
 
 Read the file. Make three changes:
 
-1. **Column** — add `@ColumnInfo(name = "name_ISO") val ISO: String? = null`
-2. **`anyProvided` check** in the `init` block — include `ISO != null`
-3. **`fallback` getter** — append `ISO` to the list
-
-> The column name in the database must be `name_ISO` (e.g. `name_pl`). Keep this consistent with
-> existing columns.
+1. **Column** — add `@ColumnInfo(name = "ISO") val ISO: String? = null`. Note: for region-specific
+   codes like `pt-BR`, use exactly that in `name`.
+2. **`fallback` getter** — append `ISO` to the list
 
 ### [`SearchResultMapper.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/search/infrastructure/SearchResultMapper.kt)
 
@@ -79,20 +77,18 @@ Read the `SIMPLE_NAME_SELECT` constant carefully. Make two changes:
    ```sql
    WHEN 'ISO-CC' THEN s.name_ISO
    ```
-2. Add `s.name_ISO` to the `COALESCE` fallback list
+2. Add `s.name_ISO` to the `COALESCE` fallback list. Note: For special codes like `pt-BR`, use
+   backticks: `s.`name_pt-BR``.
 
-The column name here (`name_ISO`) must match exactly what you used in `FoodNameEntity`.
-
-### [
-`OpenFoodFactsProductMapper.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/openfoodfacts/infrastructure/OpenFoodFactsProductMapper.kt)
+### [`OpenFoodFactsProductMapper.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/openfoodfacts/infrastructure/OpenFoodFactsProductMapper.kt)
 
 In `toModel()`, add the new language to the `FoodName.requireAll` call:
 
 ```kotlin
-ISO =
-    localizedNames["ISO"].takeIfNotBlank()
-        ?: localizedGenericNames["ISO"].takeIfNotBlank(),
+ISO = localizedNames["ISO"].sanitized() ?: localizedGenericNames["ISO"].sanitized(),
 ```
+
+Use the short ISO code (e.g., `pl`) for the keys.
 
 ---
 
@@ -100,8 +96,7 @@ ISO =
 
 **This step is mandatory.** Adding a column to `FoodNameEntity` is a breaking schema change.
 
-1. Open [
-   `ReadModelDatabase.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/app/infrastructure/room/ReadModelDatabase.kt)
+1. Open [`ReadModelDatabase.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/app/infrastructure/room/ReadModelDatabase.kt)
 2. Increment `VERSION` in the companion object: `const val VERSION = N+1`
 3. Append to the `autoMigrations` list in the `@Database` annotation, using the fully qualified name
    to match existing style:
@@ -151,22 +146,51 @@ ISO = if (language == Language.NewLanguage) nameStr else null,
 
 ---
 
-## Step 7 — Validation checklist
+## Step 7 — Default Meals
+
+### [
+`MealTemplates.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/meal/domain/MealTemplates.kt)
+
+Add a new branch to the `when (language)` block in the private `MealBuilder.forLanguage` extension.
+
+#### Guidelines for selecting default meals:
+
+* **Research Culture-Specific Defaults**: Do not just translate English meal names. Research common
+  meal times and naming conventions for the target country/culture.
+* **Include Traditional Intermediate Meals**: If the culture has traditional mid-morning or
+  mid-afternoon meals (e.g., "Drugie śniadanie" in Poland), include them using the appropriate
+  property from `MealBuilder`.
+* **Use Standard Meal Types**: Use the predefined properties in `MealBuilder`: `breakfast`,
+  `secondBreakfast`, `lunch`, `afternoonSnack`, `dinner`, `snacks`.
+* **Time Ranges**: Ensure time ranges are realistic and typically cover the entire day when
+  combined.
+
+```kotlin
+Language.NewLanguage -> {
+    breakfast from "06:00" until "10:00"
+    secondBreakfast from "10:00" until "12:00"
+    lunch from "12:00" until "15:00"
+    dinner from "18:00" until "21:00"
+    snacks
+}
+```
+
+---
+
+## Step 8 — Validation checklist
 
 After all edits, verify:
 
 - [ ] `Language.kt` — new enum entry present with correct ISO, CC, and display name
 - [ ] `FoodName.kt` — property, `list`, `get()`, and `requireAll` all updated
-- [ ] `FoodNameEntity.kt` — column name is `name_ISO`, `anyProvided` and `fallback` updated
+- [ ] `FoodNameEntity.kt` — column `@ColumnInfo` name matches expected mapping
 - [ ] `SearchResultMapper.kt` — both `toDomain` and `toFoodNameEntity` updated
 - [ ] `SearchDao.kt` — `CASE` tag is `'ISO-CC'` and `COALESCE` includes `name_ISO`; column name
-  matches entity
+  matches entity mapping
 - [ ] Database version incremented and migration registered
 - [ ] `locales_config.xml` — locale tag added
 - [ ] `Translation.kt` — entry added
 - [ ] `OpenFoodFactsProductMapper.kt` — branch added
 - [ ] `RecipeFormTransformer.kt` — branch added
 - [ ] `ProductFormTransformer.kt` — branch added
-
-The most common mistake is a mismatch between the column name in `FoodNameEntity` and the column
-referenced in `SearchDao`. Double-check these match before finishing.
+- [ ] `MealTemplates.kt` — new branch added matching the language defaults

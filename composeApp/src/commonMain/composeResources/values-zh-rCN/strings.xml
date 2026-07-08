@@ -7,6 +7,10 @@
     <string name="headline_general">常规</string>
     <string name="headline_macronutrients">宏量营养素</string>
     <string name="headline_meals">餐食</string>
+    <string name="meal_name_breakfast">早餐</string>
+    <string name="meal_name_lunch">午餐</string>
+    <string name="meal_name_dinner">晚餐</string>
+    <string name="meal_name_snacks">零食</string>
     <string name="headline_delete_food">删除食品</string>
     <string name="headline_edit_product">编辑产品</string>
     <string name="headline_permission_required">需要权限</string>

@@ -7,6 +7,10 @@
     <string name="headline_general">General</string>
     <string name="headline_macronutrients">Macronutrients</string>
     <string name="headline_meals">Àpats</string>
+    <string name="meal_name_breakfast">Esmorzar</string>
+    <string name="meal_name_lunch">Dinar</string>
+    <string name="meal_name_dinner">Sopar</string>
+    <string name="meal_name_snacks">Snacks</string>
     <string name="headline_edit_product">Editar producte</string>
     <string name="headline_permission_required">Permís necessari</string>
     <string name="headline_language">Idioma</string>

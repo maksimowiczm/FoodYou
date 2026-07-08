@@ -24,35 +24,6 @@ data class FoodNameEntity(
     @ColumnInfo(name = "ar") val arabic: String? = null,
     @ColumnInfo(name = "zh-CN") val chineseSimplified: String? = null,
 ) {
-    init {
-        val anyProvided =
-            listOf(
-                    english,
-                    czech,
-                    catalan,
-                    danish,
-                    german,
-                    spanish,
-                    french,
-                    indonesian,
-                    italian,
-                    hungarian,
-                    dutch,
-                    polish,
-                    portugueseBrazil,
-                    portuguesePortugal,
-                    slovenian,
-                    turkish,
-                    russian,
-                    ukrainian,
-                    arabic,
-                    chineseSimplified,
-                )
-                .any { !it.isNullOrBlank() }
-
-        require(anyProvided) { "At least one language must be provided" }
-    }
-
     val fallback: String
         get() =
             listOfNotNull(

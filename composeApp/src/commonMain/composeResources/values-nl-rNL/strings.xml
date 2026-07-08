@@ -7,6 +7,10 @@
     <string name="headline_general">Algemeen</string>
     <string name="headline_macronutrients">Macronutriënten</string>
     <string name="headline_meals">Maaltijden</string>
+    <string name="meal_name_breakfast">Ontbijt</string>
+    <string name="meal_name_lunch">Lunch</string>
+    <string name="meal_name_dinner">Avondeten</string>
+    <string name="meal_name_snacks">Tussendoortjes</string>
     <string name="headline_delete_food">Verwijder voeding</string>
     <string name="headline_edit_product">Product aanpassen</string>
     <string name="headline_permission_required">Toestemming vereist</string>

@@ -7,6 +7,10 @@
     <string name="headline_general">Загальні</string>
     <string name="headline_macronutrients">Макроелементи</string>
     <string name="headline_meals">Страви</string>
+    <string name="meal_name_breakfast">Сніданок</string>
+    <string name="meal_name_lunch">Обід</string>
+    <string name="meal_name_dinner">Вечеря</string>
+    <string name="meal_name_snacks">Закуски</string>
     <string name="headline_edit_product">Редагувати продукт</string>
     <string name="headline_permission_required">Потрібен дозвіл</string>
     <string name="headline_language">Мова</string>

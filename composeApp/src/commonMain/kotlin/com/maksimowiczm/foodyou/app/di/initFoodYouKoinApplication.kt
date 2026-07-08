@@ -19,6 +19,7 @@ import com.maksimowiczm.foodyou.common.event.di.inMemoryEventBusModule
 import com.maksimowiczm.foodyou.device.di.deviceModule
 import com.maksimowiczm.foodyou.fooddatacentral.di.foodDataCentralModule
 import com.maksimowiczm.foodyou.fooddiary.di.foodDiaryModule
+import com.maksimowiczm.foodyou.mealplan.di.mealPlanModule
 import com.maksimowiczm.foodyou.openfoodfacts.di.openFoodFactsModule
 import com.maksimowiczm.foodyou.search.di.searchModule
 import com.maksimowiczm.foodyou.userproduct.di.userProductModule
@@ -49,6 +50,7 @@ fun initFoodYouKoinApplication(appModule: AppModule, config: KoinAppDeclaration?
             deviceModule,
             foodDataCentralModule,
             foodDiaryModule,
+            mealPlanModule,
             openFoodFactsModule,
             userProductModule,
             userRecipeModule,

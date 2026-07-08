@@ -7,6 +7,10 @@
     <string name="headline_general">Generelt</string>
     <string name="headline_macronutrients">Makronæringsstoffer</string>
     <string name="headline_meals">Måltider</string>
+    <string name="meal_name_breakfast">Morgenmad</string>
+    <string name="meal_name_lunch">Frokost</string>
+    <string name="meal_name_dinner">Aftensmad</string>
+    <string name="meal_name_snacks">Snacks</string>
     <string name="headline_edit_product">Redigér produkt</string>
     <string name="headline_permission_required">Tilladelse kræves</string>
     <string name="headline_language">Sprog</string>

@@ -7,6 +7,10 @@
     <string name="headline_general">Общее</string>
     <string name="headline_macronutrients">Макронутриенты</string>
     <string name="headline_meals">Приемы пищи</string>
+    <string name="meal_name_breakfast">Завтрак</string>
+    <string name="meal_name_lunch">Обед</string>
+    <string name="meal_name_dinner">Ужин</string>
+    <string name="meal_name_snacks">Перекусы</string>
     <string name="headline_delete_food">Удалить продукт питания</string>
     <string name="headline_edit_product">Изменить продукт</string>
     <string name="headline_permission_required">Требуется разрешение</string>

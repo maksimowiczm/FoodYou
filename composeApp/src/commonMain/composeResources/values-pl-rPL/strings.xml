@@ -7,6 +7,11 @@
     <string name="headline_general">Ogólne</string>
     <string name="headline_macronutrients">Makroskładniki</string>
     <string name="headline_meals">Posiłki</string>
+    <string name="meal_name_breakfast">Śniadanie</string>
+    <string name="meal_name_second_breakfast">Drugie Śniadanie</string>
+    <string name="meal_name_lunch">Obiad</string>
+    <string name="meal_name_dinner">Kolacja</string>
+    <string name="meal_name_snacks">Przekąski</string>
     <string name="headline_delete_food">Usuń artykuł spożywczy</string>
     <string name="headline_edit_product">Edytuj produkt</string>
     <string name="headline_permission_required">Wymagane uprawnienia</string>

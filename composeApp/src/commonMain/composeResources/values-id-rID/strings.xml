@@ -7,6 +7,10 @@
     <string name="headline_general">Umum</string>
     <string name="headline_macronutrients">Makronutrien</string>
     <string name="headline_meals">Makanan</string>
+    <string name="meal_name_breakfast">Sarapan</string>
+    <string name="meal_name_lunch">Makan Siang</string>
+    <string name="meal_name_dinner">Makan Malam</string>
+    <string name="meal_name_snacks">Cemilan</string>
     <string name="headline_delete_food">Hapus makanan</string>
     <string name="headline_edit_product">Edit produk</string>
     <string name="headline_permission_required">Izin diperlukan</string>

@@ -11,6 +11,12 @@
     <string name="headline_general">General</string>
     <string name="headline_macronutrients">Macronutrients</string>
     <string name="headline_meals">Meals</string>
+    <string name="meal_name_breakfast" description="Meal name for Breakfast. If it doesn't make sense to translate it, use the most fitting translation or keep it as is.">Breakfast</string>
+    <string name="meal_name_second_breakfast" description="Meal name for Second Breakfast (elevenses, mid-morning snack). If it doesn't make sense to translate it, use the most fitting translation or keep it as is.">Second Breakfast</string>
+    <string name="meal_name_lunch" description="Meal name for Lunch. If it doesn't make sense to translate it, use the most fitting translation or keep it as is.">Lunch</string>
+    <string name="meal_name_afternoon_snack" description="Meal name for Afternoon Snack (tea time, mid-afternoon snack). If it doesn't make sense to translate it, use the most fitting translation or keep it as is.">Afternoon Snack</string>
+    <string name="meal_name_dinner" description="Meal name for Dinner (or supper). If it doesn't make sense to translate it, use the most fitting translation or keep it as is.">Dinner</string>
+    <string name="meal_name_snacks" description="Meal name for general Snacks. If it doesn't make sense to translate it, use the most fitting translation or keep it as is.">Snacks</string>
     <string name="headline_delete_food">Delete food</string>
     <string name="headline_edit_product">Edit product</string>
     <string name="headline_permission_required">Permission required</string>
