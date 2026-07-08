@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.app.ui.personalization
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.DragInteraction
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -173,28 +172,34 @@ private fun PersonalizeNutritionFactsScreen(
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             itemsIndexed(items = localOrder.value, key = { _, it -> it.name }) { index, item ->
-                ReorderableItem(state = reorderableLazyListState, key = item.name) { isDragging ->
-                    val containerColor by
-                        animateColorAsState(
-                            if (isDragging) MaterialTheme.colorScheme.primaryContainer
-                            else MaterialTheme.colorScheme.surfaceContainer,
-                            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
-                        )
+                val interactionSource = remember { MutableInteractionSource() }
+                val dragStartInteraction = remember { mutableStateOf<DragInteraction.Start?>(null) }
 
-                    val elevation =
-                        ListItemDefaults.elevation(
-                            elevation =
-                                animateDpAsState(
-                                        if (isDragging) 8.dp else 0.dp,
-                                        animationSpec =
-                                            MaterialTheme.motionScheme.defaultEffectsSpec(),
-                                    )
-                                    .value
-                        )
+                ReorderableItem(
+                    state = reorderableLazyListState,
+                    key = item.name,
+                    animateItemModifier =
+                        Modifier.animateItem(
+                            placementSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                        ),
+                ) { isDragging ->
+                    LaunchedEffect(isDragging) {
+                        if (isDragging) {
+                            val start = DragInteraction.Start()
+                            dragStartInteraction.value = start
+                            interactionSource.emit(start)
+                        } else {
+                            dragStartInteraction.value?.let {
+                                interactionSource.emit(DragInteraction.Stop(it))
+                            }
+                            dragStartInteraction.value = null
+                        }
+                    }
+
                     val colors =
                         ListItemDefaults.segmentedColors(
-                            containerColor = containerColor,
-                            contentColor = contentColorFor(containerColor),
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            contentColor = MaterialTheme.colorScheme.onSurface,
                         )
 
                     SegmentedListItem(
@@ -215,8 +220,8 @@ private fun PersonalizeNutritionFactsScreen(
                             },
                         onClick = {},
                         trailingContent = { DragHandle(Modifier.hapticDraggableHandle()) },
-                        elevation = elevation,
                         colors = colors,
+                        interactionSource = interactionSource,
                         content = { Text(item.stringResource()) },
                     )
                 }
