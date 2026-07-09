@@ -9,15 +9,8 @@ fun MealPlan.add(meal: Meal, clock: Clock = Clock.System): List<MealPlanEvent> {
     require(meals.none { it.identity == meal.identity }) {
         "Cannot add meal: ID ${meal.identity.id} already exists"
     }
-    if (meal is Meal.Standard) {
-        require(meals.filterIsInstance<Meal.Standard>().none { it.mealType == meal.mealType }) {
-            "Cannot add meal: Type ${meal.mealType} already exists"
-        }
-    }
-    if (meal is Meal.Custom) {
-        require(meals.filterIsInstance<Meal.Custom>().none { it.name == meal.name }) {
-            "Cannot add meal: Name '${meal.name}' already exists"
-        }
+    require(meals.none { it.name == meal.name }) {
+        "Cannot add meal: Name '${meal.name}' already exists"
     }
 
     return listOf(MealAddedEvent(meal = meal, timestamp = clock.now()))
@@ -32,12 +25,12 @@ fun MealPlan.edit(
     val current = meals.find { it.identity == identity }
     checkNotNull(current) { "Meal with ID ${identity.id} not found" }
 
-    require(meals.none { it.identity != identity && it is Meal.Custom && it.name == name }) {
+    require(meals.none { it.identity != identity && it.name == name }) {
         "Cannot rename meal: Name '$name' is already taken"
     }
 
     val updated =
-        Meal.Custom(
+        Meal(
             identity = identity,
             name = name,
             timeWindow = timeWindow,
@@ -56,37 +49,7 @@ fun MealPlan.edit(
     val current = meals.find { it.identity == identity }
     checkNotNull(current) { "Meal with ID ${identity.id} not found" }
 
-    val updated =
-        when (current) {
-            is Meal.Custom -> current.copy(timeWindow = timeWindow)
-            is Meal.Standard -> current.copy(timeWindow = timeWindow)
-        }
-
-    if (updated == current) return emptyList()
-
-    return listOf(MealUpdatedEvent(meal = updated, timestamp = clock.now()))
-}
-
-fun MealPlan.link(
-    identity: MealIdentity,
-    mealType: MealType,
-    clock: Clock = Clock.System,
-): List<MealPlanEvent> {
-    val current = meals.find { it.identity == identity }
-    checkNotNull(current) { "Meal with ID ${identity.id} not found" }
-
-    require(
-        meals.none { it.identity != identity && it is Meal.Standard && it.mealType == mealType }
-    ) {
-        "Cannot link meal: Type '$mealType' is already taken"
-    }
-
-    val updated =
-        Meal.Standard(
-            identity = identity,
-            timeWindow = current.timeWindow,
-            mealType = mealType,
-        )
+    val updated = current.copy(timeWindow = timeWindow)
 
     if (updated == current) return emptyList()
 

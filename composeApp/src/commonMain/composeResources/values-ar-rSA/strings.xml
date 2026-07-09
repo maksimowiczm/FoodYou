@@ -7,10 +7,6 @@
     <string name="headline_general">عام</string>
     <string name="headline_macronutrients">المغذيات الكبرى</string>
     <string name="headline_meals">الوجبات</string>
-    <string name="meal_name_breakfast">فطور</string>
-    <string name="meal_name_lunch">غداء</string>
-    <string name="meal_name_dinner">عشاء</string>
-    <string name="meal_name_snacks">التصبيرات</string>
     <string name="headline_delete_food">حذف الطعام</string>
     <string name="headline_edit_product">تعديل منتج</string>
     <string name="headline_permission_required">الإذن مطلوب</string>

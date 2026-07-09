@@ -37,7 +37,7 @@ class MealPlanService(
         val identity = MealIdentity(Uuid.random())
         transact { plan ->
             plan.add(
-                Meal.Custom(
+                Meal(
                     identity = identity,
                     name = name,
                     timeWindow = timeWindow,

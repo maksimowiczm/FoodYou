@@ -21,54 +21,64 @@ object MealTemplates {
  * Example:
  * ```
  * Language.Example -> {
- *     breakfast from "06:00" until "10:00"
- *     lunch from "12:00" until "15:00"
- *     dinner from "18:00" until "21:00"
- *     snacks
+ *     "Breakfast" from "06:00" until "10:00"
+ *     "Lunch" from "12:00" until "15:00"
+ *     "Dinner" from "18:00" until "21:00"
+ *     "Snacks".allDay()
  * }
- * ```
- *
- * Standard meal types:
- * - `breakfast`
- * - `secondBreakfast`
- * - `lunch`
- * - `afternoonSnack`
- * - `dinner`
- * - `snacks`
- *
- * Additional custom meals can be created by using a string:
- * ```
- * "Brunch" from "10:00" until "12:00"
  * ```
  */
 private fun MealBuilder.forLanguage(language: Language): MealBuilder = apply {
     when (language) {
-        Language.Polish -> {
-            breakfast from "06:00" until "10:00"
-            secondBreakfast from "10:00" until "12:00"
-            lunch from "12:00" until "18:00"
-            dinner from "18:00" until "00:00"
-            snacks
-        }
-
+        Language.English -> englishMeals()
+        Language.Arabic -> englishMeals("فطور", "غداء", "عشاء", "التصبيرات")
+        Language.Catalan -> englishMeals("Esmorzar", "Dinar", "Sopar", "Snacks")
+        Language.ChineseSimplified -> englishMeals("早餐", "午餐", "晚餐", "零食")
+        Language.Czech -> englishMeals("Snídaně", "Oběd", "Večeře", "Svačiny")
+        Language.Danish -> englishMeals("Morgenmad", "Frokost", "Aftensmad", "Snacks")
+        Language.Dutch -> englishMeals("Ontbijt", "Lunch", "Avondeten", "Tussendoortjes")
+        Language.French -> englishMeals("Petit-déjeuner", "Déjeuner", "Dîner", "Collation")
+        Language.German -> englishMeals("Frühstück", "Mittagessen", "Abendessen", "Snacks")
         Language.Hungarian -> {
-            breakfast from "06:00" until "08:00"
-            secondBreakfast from "09:30" until "10:30"
-            lunch from "11:00" until "14:00"
-            afternoonSnack from "15:30" until "17:00"
-            dinner from "18:00" until "21:00"
-            snacks
+            "Reggeli" from "06:00" until "08:00"
+            "Tízórai" from "09:30" until "10:30"
+            "Ebéd" from "11:00" until "14:00"
+            "Uzsonna" from "15:30" until "17:00"
+            "Vacsora" from "18:00" until "21:00"
+            "Snacks".allDay()
         }
 
-        else -> englishMeals()
+        Language.Indonesian -> englishMeals("Sarapan", "Makan Siang", "Makan Malam", "Cemilan")
+        Language.Italian -> englishMeals("Colazione", "Pranzo", "Cena", "Spuntini")
+        Language.Polish -> {
+            "Śniadanie" from "06:00" until "10:00"
+            "Drugie Śniadanie" from "10:00" until "12:00"
+            "Obiad" from "12:00" until "18:00"
+            "Kolacja" from "18:00" until "00:00"
+            "Przekąski".allDay()
+        }
+
+        Language.PortugueseBrazil -> englishMeals("Café da manhã", "Almuerzo", "Jantar", "Lanches")
+        Language.PortuguesePortugal -> englishMeals("Pequeno-almoço", "Almoço", "Jantar", "Lanches")
+        Language.Russian -> englishMeals("Завтрак", "Обед", "Ужин", "Перекусы")
+        Language.Slovenian -> englishMeals("Zajtrk", "Kosilo", "Večerja", "Prigrizki")
+        Language.Spanish -> englishMeals("Desayuno", "Almuerzo", "Cena", "Snacks")
+        Language.Turkish ->
+            englishMeals("Kahvaltı", "Öğle Yemeği", "Akşam Yemeği", "Atıştırmalıklar")
+        Language.Ukrainian -> englishMeals("Сніданок", "Обід", "Вечеря", "Закуски")
     }
 }
 
-private fun MealBuilder.englishMeals(): MealBuilder = apply {
+private fun MealBuilder.englishMeals(
+    breakfast: String = "Breakfast",
+    lunch: String = "Lunch",
+    dinner: String = "Dinner",
+    snacks: String = "Snacks",
+): MealBuilder = apply {
     breakfast from "06:00" until "10:00"
     lunch from "10:00" until "15:00"
     dinner from "15:00" until "21:00"
-    snacks
+    snacks.allDay()
 }
 
 /**
@@ -78,46 +88,45 @@ private fun MealBuilder.englishMeals(): MealBuilder = apply {
  *
  * Standard meals:
  * ```
- * breakfast from "06:00" until "10:00"
- * lunch from "12:00" until "15:00"
- * dinner from "18:00" until "21:00"
- * snacks
+ * "Breakfast" from "06:00" until "10:00"
+ * "Lunch" from "12:00" until "15:00"
+ * "Dinner" from "18:00" until "21:00"
+ * "Snacks".allDay()
  * ```
  *
  * Notes:
  * - Times use the 24-hour format (`HH:mm`).
  * - Meals are added in the order they are declared.
- * - `snacks` creates an all-day meal category without a time range.
  */
 private class MealBuilder {
     private val meals = mutableListOf<Meal>()
 
-    inner class SlotStart(private val slot: MealType) {
-        infix fun from(time: String): SlotRange = SlotRange(slot, time.toLocalTime())
+    inner class SlotStart(private val name: String) {
+        infix fun from(time: String): SlotRange = SlotRange(name, time.toLocalTime())
 
         fun allDay(): MealBuilder =
             this@MealBuilder.apply {
                 meals.add(
-                    Meal.Standard(
+                    Meal(
                         identity = MealIdentity(Uuid.random()),
+                        name = name,
                         timeWindow = Meal.TimeWindow.AllDay,
-                        mealType = slot,
                     )
                 )
             }
     }
 
     inner class SlotRange(
-        val slot: MealType,
-        val from: LocalTime,
+        private val name: String,
+        private val from: LocalTime,
     ) {
         fun append(until: LocalTime): MealBuilder =
             this@MealBuilder.apply {
                 meals.add(
-                    Meal.Standard(
+                    Meal(
                         identity = MealIdentity(Uuid.random()),
+                        name = name,
                         timeWindow = Meal.TimeWindow.Range(from, until),
-                        mealType = slot,
                     )
                 )
             }
@@ -125,23 +134,9 @@ private class MealBuilder {
         infix fun until(time: String): MealBuilder = append(time.toLocalTime())
     }
 
-    val breakfast
-        get() = SlotStart(MealType.Breakfast)
+    infix fun String.from(time: String): SlotRange = SlotStart(this) from time
 
-    val secondBreakfast
-        get() = SlotStart(MealType.SecondBreakfast)
-
-    val lunch
-        get() = SlotStart(MealType.Lunch)
-
-    val afternoonSnack
-        get() = SlotStart(MealType.AfternoonSnack)
-
-    val dinner
-        get() = SlotStart(MealType.Dinner)
-
-    val snacks
-        get() = SlotStart(MealType.Snacks).allDay()
+    fun String.allDay(): MealBuilder = SlotStart(this).allDay()
 
     fun build(): List<Meal> = meals.toList()
 }

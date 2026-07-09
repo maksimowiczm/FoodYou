@@ -7,10 +7,6 @@
     <string name="headline_general">Splošno</string>
     <string name="headline_macronutrients">Makrohranila</string>
     <string name="headline_meals">Obroki</string>
-    <string name="meal_name_breakfast">Zajtrk</string>
-    <string name="meal_name_lunch">Kosilo</string>
-    <string name="meal_name_dinner">Večerja</string>
-    <string name="meal_name_snacks">Prigrizki</string>
     <string name="headline_delete_food">Izbriši hrano</string>
     <string name="headline_edit_product">Uredi izdelka</string>
     <string name="headline_permission_required">Potrebno je dovoljenje</string>

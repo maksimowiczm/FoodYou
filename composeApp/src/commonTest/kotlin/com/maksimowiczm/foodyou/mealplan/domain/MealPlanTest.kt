@@ -1,11 +1,9 @@
 package com.maksimowiczm.foodyou.mealplan.domain
 
-import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
@@ -14,15 +12,15 @@ import kotlinx.datetime.LocalTime
 class MealPlanTest {
     private val mealIdentity = MealIdentity(Uuid.random())
     private val breakfast =
-        Meal.Standard(
+        Meal(
             identity = mealIdentity,
+            name = "Breakfast",
             timeWindow = Meal.TimeWindow.AllDay,
-            mealType = MealType.Breakfast,
         )
 
     @Test
-    fun add_standard_meal() {
-        val timestamp = Instant.DISTANT_PAST
+    fun add_meal() {
+        val timestamp = Instant.fromEpochMilliseconds(1000)
         val mealPlan = MealPlan()
         val events = mealPlan.add(breakfast, staticClock(timestamp))
 
@@ -33,15 +31,16 @@ class MealPlanTest {
     }
 
     @Test
-    fun add_fails_when_existing_id() {
+    fun add_fails_when_meal_has_existing_identity() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
+
         assertFailsWith<IllegalArgumentException> {
             mealPlan.add(breakfast)
         }
     }
 
     @Test
-    fun add_fails_when_standard_meal_has_existing_type() {
+    fun add_fails_when_meal_has_existing_name() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val otherIdentity = MealIdentity(Uuid.random())
         val anotherBreakfast = breakfast.copy(identity = otherIdentity)
@@ -52,157 +51,63 @@ class MealPlanTest {
     }
 
     @Test
-    fun add_custom_meal() {
-        val customMeal =
-            Meal.Custom(
-                identity = MealIdentity(Uuid.random()),
-                name = "Post Workout",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
-        val mealPlan = MealPlan()
-        val events = mealPlan.add(customMeal)
-
-        assertEquals(1, events.size)
-        val event = events.first() as MealAddedEvent
-        assertEquals(customMeal, event.meal)
-    }
-
-    @Test
-    fun add_fails_when_custom_meal_has_existing_name() {
-        val customMeal =
-            Meal.Custom(
-                identity = MealIdentity(Uuid.random()),
-                name = "Post Workout",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
-        val mealPlan = MealPlan(meals = listOf(customMeal))
-        val otherIdentity = MealIdentity(Uuid.random())
-        val anotherPostWorkout = customMeal.copy(identity = otherIdentity)
-
-        assertFailsWith<IllegalArgumentException> {
-            mealPlan.add(anotherPostWorkout)
-        }
-    }
-
-    @Test
-    fun edit_custom_meal_name_and_time_window() {
-        val customMeal =
-            Meal.Custom(
-                identity = mealIdentity,
-                name = "Old Name",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
-        val mealPlan = MealPlan(meals = listOf(customMeal))
-        val newTimeWindow = Meal.TimeWindow.Range(LocalTime(10, 0), LocalTime(11, 0))
-        val events = mealPlan.edit(mealIdentity, "New Name", newTimeWindow)
-
-        assertEquals(1, events.size)
-        val event = events.first() as MealUpdatedEvent
-        val updated = event.meal as Meal.Custom
-        assertEquals("New Name", updated.name)
-        assertEquals(newTimeWindow, updated.timeWindow)
-    }
-
-    @Test
-    fun edit_does_not_emit_event_when_same_values() {
-        val customMeal =
-            Meal.Custom(
-                identity = mealIdentity,
-                name = "Name",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
-        val mealPlan = MealPlan(meals = listOf(customMeal))
-        val events = mealPlan.edit(mealIdentity, "Name", Meal.TimeWindow.AllDay)
-
-        assertTrue(events.isEmpty())
-    }
-
-    @Test
-    fun edit_fails_when_renaming_custom_meal_to_existing_name() {
-        val customMeal1 =
-            Meal.Custom(
-                identity = mealIdentity,
-                name = "Meal 1",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
-        val customMeal2 =
-            Meal.Custom(
-                identity = MealIdentity(Uuid.random()),
-                name = "Meal 2",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
-        val mealPlan = MealPlan(meals = listOf(customMeal1, customMeal2))
-
-        assertFailsWith<IllegalArgumentException> {
-            mealPlan.edit(mealIdentity, "Meal 2", Meal.TimeWindow.AllDay)
-        }
-    }
-
-    @Test
-    fun edit_time_window_of_any_meal() {
+    fun edit_meal_name_and_time_window() {
+        val timestamp = Instant.fromEpochMilliseconds(2000)
         val mealPlan = MealPlan(meals = listOf(breakfast))
+        val newName = "My Breakfast"
         val newTimeWindow = Meal.TimeWindow.Range(LocalTime(8, 0), LocalTime(9, 0))
-        val events = mealPlan.edit(mealIdentity, newTimeWindow)
+
+        val events = mealPlan.edit(mealIdentity, newName, newTimeWindow, staticClock(timestamp))
 
         assertEquals(1, events.size)
         val event = events.first() as MealUpdatedEvent
+        assertEquals(newName, event.meal.name)
         assertEquals(newTimeWindow, event.meal.timeWindow)
+        assertEquals(timestamp, event.timestamp)
     }
 
     @Test
-    fun edit_fails_when_non_existent_meal() {
-        val mealPlan = MealPlan()
-        assertFailsWith<IllegalStateException> {
-            mealPlan.edit(mealIdentity, Meal.TimeWindow.AllDay)
-        }
-    }
-
-    @Test
-    fun link_custom_meal_to_type() {
-        val customMeal =
-            Meal.Custom(
-                identity = mealIdentity,
-                name = "My Breakfast",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
-        val mealPlan = MealPlan(meals = listOf(customMeal))
-        val events = mealPlan.link(mealIdentity, MealType.Breakfast)
-
-        assertEquals(1, events.size)
-        val event = events.first() as MealUpdatedEvent
-        val updated = event.meal as Meal.Standard
-        assertEquals(MealType.Breakfast, updated.mealType)
-        assertEquals(mealIdentity, updated.identity)
-    }
-
-    @Test
-    fun link_fails_when_existing_type() {
-        val customMeal =
-            Meal.Custom(
-                identity = MealIdentity(Uuid.random()),
-                name = "Custom",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
-        val mealPlan = MealPlan(meals = listOf(breakfast, customMeal))
+    fun edit_fails_when_name_already_taken() {
+        val meal2Identity = MealIdentity(Uuid.random())
+        val meal2 = Meal(meal2Identity, "Lunch", Meal.TimeWindow.AllDay)
+        val mealPlan = MealPlan(meals = listOf(breakfast, meal2))
 
         assertFailsWith<IllegalArgumentException> {
-            mealPlan.link(customMeal.identity, MealType.Breakfast)
+            mealPlan.edit(meal2Identity, "Breakfast", Meal.TimeWindow.AllDay)
         }
+    }
+
+    @Test
+    fun edit_only_time_window() {
+        val timestamp = Instant.fromEpochMilliseconds(3000)
+        val mealPlan = MealPlan(meals = listOf(breakfast))
+        val newTimeWindow = Meal.TimeWindow.Range(LocalTime(7, 0), LocalTime(8, 0))
+
+        val events = mealPlan.edit(mealIdentity, newTimeWindow, staticClock(timestamp))
+
+        assertEquals(1, events.size)
+        val event = events.first() as MealUpdatedEvent
+        assertEquals(breakfast.name, event.meal.name)
+        assertEquals(newTimeWindow, event.meal.timeWindow)
+        assertEquals(timestamp, event.timestamp)
     }
 
     @Test
     fun remove_meal() {
+        val timestamp = Instant.fromEpochMilliseconds(4000)
         val mealPlan = MealPlan(meals = listOf(breakfast))
-        val events = mealPlan.remove(mealIdentity, DeleteStrategy.Delete)
+
+        val events = mealPlan.remove(mealIdentity, DeleteStrategy.Delete, staticClock(timestamp))
 
         assertEquals(1, events.size)
         val event = events.first() as MealRemovedEvent
         assertEquals(mealIdentity, event.identity)
         assertEquals(DeleteStrategy.Delete, event.strategy)
+        assertEquals(timestamp, event.timestamp)
     }
 
     @Test
-    fun remove_fails_when_non_existent_meal() {
+    fun remove_fails_when_meal_not_found() {
         val mealPlan = MealPlan()
         assertFailsWith<IllegalStateException> {
             mealPlan.remove(mealIdentity, DeleteStrategy.Delete)
@@ -211,87 +116,72 @@ class MealPlanTest {
 
     @Test
     fun reorder_meals() {
-        val meal2 =
-            Meal.Custom(
-                identity = MealIdentity(Uuid.random()),
-                name = "Lunch",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
+        val timestamp = Instant.fromEpochMilliseconds(5000)
+        val meal2 = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, meal2))
-        val events = mealPlan.reorder(fromIndex = 0, toIndex = 1)
+
+        val events = mealPlan.reorder(0, 1, staticClock(timestamp))
 
         assertEquals(1, events.size)
         val event = events.first() as MealPlanReorderedEvent
         assertEquals(listOf(meal2.identity, breakfast.identity), event.identities)
+        assertEquals(timestamp, event.timestamp)
     }
 
     @Test
-    fun reorder_returns_empty_events_when_same_position() {
+    fun reorder_no_change_returns_empty_list() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val events = mealPlan.reorder(0, 0)
-        assertTrue(events.isEmpty())
+        assertEquals(0, events.size)
     }
 
     @Test
-    fun reorder_fails_when_invalid_indices() {
-        val mealPlan = MealPlan(meals = listOf(breakfast))
-        assertFailsWith<IllegalArgumentException> {
-            mealPlan.reorder(0, 5)
-        }
-    }
-
-    @Test
-    fun apply_added_event() {
+    fun apply_add_event() {
+        val mealPlan = MealPlan()
         val event = MealAddedEvent(breakfast, Clock.System.now())
-        val mealPlan = MealPlan().apply(event)
 
-        assertEquals(listOf(breakfast), mealPlan.meals)
+        val updatedPlan = mealPlan.apply(event)
+
+        assertEquals(listOf(breakfast), updatedPlan.meals)
     }
 
     @Test
-    fun apply_updated_event() {
+    fun apply_update_event() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val updatedBreakfast =
             breakfast.copy(timeWindow = Meal.TimeWindow.Range(LocalTime(7, 0), LocalTime(8, 0)))
         val event = MealUpdatedEvent(updatedBreakfast, Clock.System.now())
 
         val updatedPlan = mealPlan.apply(event)
+
         assertEquals(updatedBreakfast, updatedPlan.meals.first())
     }
 
     @Test
-    fun apply_removed_event() {
+    fun apply_remove_event() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val event = MealRemovedEvent(mealIdentity, DeleteStrategy.Delete, Clock.System.now())
 
         val updatedPlan = mealPlan.apply(event)
-        assertTrue(updatedPlan.meals.isEmpty())
+
+        assertEquals(0, updatedPlan.meals.size)
     }
 
     @Test
-    fun apply_reordered_event() {
-        val meal2 =
-            Meal.Custom(
-                identity = MealIdentity(Uuid.random()),
-                name = "Lunch",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
+    fun apply_reorder_event() {
+        val meal2 = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, meal2))
         val event =
             MealPlanReorderedEvent(listOf(meal2.identity, breakfast.identity), Clock.System.now())
 
         val updatedPlan = mealPlan.apply(event)
+
         assertEquals(listOf(meal2, breakfast), updatedPlan.meals)
     }
 
     @Test
-    fun build_meal_plan_from_events() {
-        val meal2 =
-            Meal.Custom(
-                identity = MealIdentity(Uuid.random()),
-                name = "Lunch",
-                timeWindow = Meal.TimeWindow.AllDay,
-            )
+    fun toMealPlan_aggregates_events() {
+        val meal2 = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         val events =
             listOf(
                 MealAddedEvent(breakfast, Clock.System.now()),
@@ -303,6 +193,12 @@ class MealPlanTest {
             )
 
         val mealPlan = events.toMealPlan()
+
         assertEquals(listOf(meal2, breakfast), mealPlan.meals)
     }
+
+    private fun staticClock(instant: Instant) =
+        object : Clock {
+            override fun now(): Instant = instant
+        }
 }

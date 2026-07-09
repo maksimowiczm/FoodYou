@@ -7,11 +7,6 @@
     <string name="headline_general">Általános</string>
     <string name="headline_macronutrients">Makrotápanyagok</string>
     <string name="headline_meals">Étkezések</string>
-    <string name="meal_name_breakfast">Reggeli</string>
-    <string name="meal_name_second_breakfast">Tízórai</string>
-    <string name="meal_name_lunch">Ebéd</string>
-    <string name="meal_name_afternoon_snack">Uzsonna</string>
-    <string name="meal_name_dinner">Vacsora</string>
     <string name="headline_delete_food">Étel törlése</string>
     <string name="headline_edit_product">Termék szerkesztése</string>
     <string name="headline_permission_required">Engedély szükséges</string>

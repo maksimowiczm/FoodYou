@@ -7,10 +7,6 @@
     <string name="headline_general">Genel</string>
     <string name="headline_macronutrients">Makro besinler</string>
     <string name="headline_meals">Öğünler</string>
-    <string name="meal_name_breakfast">Kahvaltı</string>
-    <string name="meal_name_lunch">Öğle Yemeği</string>
-    <string name="meal_name_dinner">Akşam Yemeği</string>
-    <string name="meal_name_snacks">Atıştırmalıklar</string>
     <string name="headline_delete_food">Besini sil</string>
     <string name="headline_edit_product">Ürünü düzenle</string>
     <string name="headline_permission_required">İzin gerekiyor</string>

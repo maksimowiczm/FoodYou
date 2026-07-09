@@ -7,10 +7,6 @@
     <string name="headline_general">Général</string>
     <string name="headline_macronutrients">Macronutriments</string>
     <string name="headline_meals">Repas</string>
-    <string name="meal_name_breakfast">Petit-déjeuner</string>
-    <string name="meal_name_lunch">Déjeuner</string>
-    <string name="meal_name_dinner">Dîner</string>
-    <string name="meal_name_snacks">Collation</string>
     <string name="headline_delete_food">Supprimer aliment</string>
     <string name="headline_edit_product">Modifier le produit</string>
     <string name="headline_permission_required">Autorisation nécessaire</string>

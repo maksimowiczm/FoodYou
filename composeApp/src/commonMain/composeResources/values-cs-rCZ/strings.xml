@@ -7,10 +7,6 @@
     <string name="headline_general">Obecné</string>
     <string name="headline_macronutrients">Makroživiny</string>
     <string name="headline_meals">Jídla</string>
-    <string name="meal_name_breakfast">Snídaně</string>
-    <string name="meal_name_lunch">Oběd</string>
-    <string name="meal_name_dinner">Večeře</string>
-    <string name="meal_name_snacks">Svačiny</string>
     <string name="headline_delete_food">Odstranit jídlo</string>
     <string name="headline_edit_product">Upravit produkt</string>
     <string name="headline_permission_required">Vyžadováno oprávnění</string>
