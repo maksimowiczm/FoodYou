@@ -6,7 +6,7 @@ import kotlinx.datetime.LocalTime
 
 object MealTemplates {
     /** Evaluates the template for [language]. */
-    fun forLanguage(language: Language) = MealPlan(MealBuilder().forLanguage(language).build())
+    fun forLanguage(language: Language) = MealBuilder().forLanguage(language).build()
 }
 
 /**
