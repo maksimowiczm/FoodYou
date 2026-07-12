@@ -85,9 +85,7 @@ private fun EditProductScreen(
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     if (showDiscardDialog) {
-        DiscardChangesDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack) {
-            Text(stringResource(Res.string.question_discard_product))
-        }
+        DiscardChangesDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack)
     }
 
     NavigationBackHandler(

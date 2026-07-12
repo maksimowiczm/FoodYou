@@ -90,9 +90,7 @@ fun EditProfileScreen(
         onBackCompleted = { showDiscardDialog = true },
     )
     if (showDiscardDialog) {
-        DiscardChangesDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack) {
-            Text(stringResource(Res.string.question_discard_changes))
-        }
+        DiscardChangesDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack)
     }
 
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }

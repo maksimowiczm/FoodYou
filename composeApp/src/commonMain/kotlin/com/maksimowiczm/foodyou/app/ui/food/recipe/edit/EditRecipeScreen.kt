@@ -74,9 +74,7 @@ fun EditRecipeScreen(
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     if (showDiscardDialog) {
-        DiscardChangesDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack) {
-            Text(stringResource(Res.string.question_discard_recipe))
-        }
+        DiscardChangesDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack)
     }
 
     NavigationBackHandler(

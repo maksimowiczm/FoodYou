@@ -13,7 +13,7 @@ fun DiscardChangesDialog(
     onDismissRequest: () -> Unit,
     onDiscard: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit = { Text(stringResource(Res.string.question_discard_changes)) },
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
