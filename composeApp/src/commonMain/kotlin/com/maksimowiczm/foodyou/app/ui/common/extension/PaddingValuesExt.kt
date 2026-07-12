@@ -19,18 +19,15 @@ import androidx.compose.ui.unit.dp
 fun PaddingValues.add(paddingValues: PaddingValues): PaddingValues {
     val layoutDirection = LocalLayoutDirection.current
 
-    return remember(this, paddingValues) {
-        val start =
-            paddingValues.calculateStartPadding(layoutDirection) +
-                calculateStartPadding(layoutDirection)
-        val top = paddingValues.calculateTopPadding() + calculateTopPadding()
-        val end =
-            paddingValues.calculateEndPadding(layoutDirection) +
-                calculateEndPadding(layoutDirection)
-        val bottom = paddingValues.calculateBottomPadding() + calculateBottomPadding()
+    val start =
+        paddingValues.calculateStartPadding(layoutDirection) +
+            calculateStartPadding(layoutDirection)
+    val top = paddingValues.calculateTopPadding() + calculateTopPadding()
+    val end =
+        paddingValues.calculateEndPadding(layoutDirection) + calculateEndPadding(layoutDirection)
+    val bottom = paddingValues.calculateBottomPadding() + calculateBottomPadding()
 
-        PaddingValues(start = start, top = top, end = end, bottom = bottom)
-    }
+    return PaddingValues(start = start, top = top, end = end, bottom = bottom)
 }
 
 /**
@@ -45,27 +42,20 @@ fun PaddingValues.add(
     end: Dp = 0.dp,
     bottom: Dp = 0.dp,
 ): PaddingValues {
-    val paddingValues =
-        remember(this, start, top, end, bottom) {
-            PaddingValues(start = start, top = top, end = end, bottom = bottom)
-        }
-
+    val paddingValues = PaddingValues(start = start, top = top, end = end, bottom = bottom)
     return add(paddingValues)
 }
 
 @Composable
 fun PaddingValues.add(horizontal: Dp = 0.dp, vertical: Dp = 0.dp): PaddingValues {
-    val paddingValues =
-        remember(this, horizontal, vertical) {
-            PaddingValues(horizontal = horizontal, vertical = vertical)
-        }
+    val paddingValues = PaddingValues(horizontal = horizontal, vertical = vertical)
 
     return add(paddingValues)
 }
 
 @Composable
 fun PaddingValues.add(all: Dp): PaddingValues {
-    val paddingValues = remember(this, all) { PaddingValues(all = all) }
+    val paddingValues = PaddingValues(all = all)
     return add(paddingValues)
 }
 
@@ -73,14 +63,12 @@ fun PaddingValues.add(all: Dp): PaddingValues {
 fun PaddingValues.horizontal(): PaddingValues {
     val layoutDirection = LocalLayoutDirection.current
 
-    return remember(this) {
-        PaddingValues(
-            start = calculateStartPadding(layoutDirection),
-            end = calculateEndPadding(layoutDirection),
-        )
-    }
+    return PaddingValues(
+        start = calculateStartPadding(layoutDirection),
+        end = calculateEndPadding(layoutDirection),
+    )
 }
 
 @Composable
 fun PaddingValues.vertical(): PaddingValues =
-    remember(this) { PaddingValues(top = calculateTopPadding(), bottom = calculateBottomPadding()) }
+    PaddingValues(top = calculateTopPadding(), bottom = calculateBottomPadding())
