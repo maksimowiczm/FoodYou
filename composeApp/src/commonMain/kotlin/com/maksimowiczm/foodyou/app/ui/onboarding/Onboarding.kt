@@ -16,7 +16,10 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.ForwardBackwardTransition
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -27,6 +30,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: OnboardingViewModel = koinViewModel()
     val state = rememberOnboardingState()
+    val nameSelector = LocalFoodNameSelector.current
 
     val backstack = rememberNavBackStack(config, BeforeYouStart)
 
@@ -83,6 +87,7 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
                                 avatar = state.profileAvatar,
                                 allowOpenFoodFacts = state.allowOpenFoodFacts,
                                 allowFoodDataCentral = state.allowFoodDataCentral,
+                                language = runBlocking { nameSelector.observeLanguage().first() },
                             )
                         },
                     )

@@ -8,10 +8,15 @@ import com.maksimowiczm.foodyou.account.domain.addProfile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.app.ui.common.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
+import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
+import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
+import com.maksimowiczm.foodyou.mealplan.domain.MealTemplates
+import com.maksimowiczm.foodyou.mealplan.domain.initialize
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
@@ -27,6 +32,7 @@ internal class OnboardingViewModel(
     private val openFoodFacts: OpenFoodFactsSettingsRepository,
     private val foodDataCentral: FoodDataCentralSettingsRepository,
     private val blobStorage: BlobStorage,
+    private val mealPlanService: MealPlanService,
 ) : ViewModel() {
     private val _finishingOnboarding = MutableStateFlow(false)
     val finishingOnboarding = _finishingOnboarding.asStateFlow()
@@ -39,6 +45,7 @@ internal class OnboardingViewModel(
         avatar: UiProfileAvatar,
         allowOpenFoodFacts: Boolean,
         allowFoodDataCentral: Boolean,
+        language: Language,
     ) {
         viewModelScope.launch {
             _finishingOnboarding.value = true
@@ -65,9 +72,14 @@ internal class OnboardingViewModel(
                     async {
                         foodDataCentral.update { it.copy(remoteEnabled = allowFoodDataCentral) }
                     },
+                    async {
+                        mealPlanService.transact {
+                            it.initialize(language, MealTemplates.forLanguage(language))
+                        }
+                    },
                 )
             }
-            val minDelayTask = async { delay(2_000) }
+            val minDelayTask = async { delay(2_000.milliseconds) }
 
             realTask.await()
             minDelayTask.await()
