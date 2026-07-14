@@ -21,12 +21,10 @@ object VolumeFormatter {
     fun Volume.stringResource(): String {
         return when (unit) {
             VolumeUnit.Milliliters ->
-                milliliters.formatClipZeros() +
-                    " " +
-                    stringResource(Res.string.unit_milliliter_short)
+                milliliters.formatCompact() + " " + stringResource(Res.string.unit_milliliter_short)
 
             VolumeUnit.FluidOunces ->
-                fluidOunces.formatClipZeros() +
+                fluidOunces.formatCompact() +
                     " " +
                     stringResource(Res.string.unit_fluid_ounce_short)
         }

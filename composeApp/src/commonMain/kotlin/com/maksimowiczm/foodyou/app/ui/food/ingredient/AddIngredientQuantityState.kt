@@ -7,7 +7,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import com.maksimowiczm.foodyou.app.ui.common.component.QuantityType
 import com.maksimowiczm.foodyou.app.ui.common.component.rememberQuantityFormField
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
-import com.maksimowiczm.foodyou.app.ui.common.utility.formatClipZeros
+import com.maksimowiczm.foodyou.app.ui.common.utility.formatCompact
 import com.maksimowiczm.foodyou.common.domain.VolumeUnit
 import com.maksimowiczm.foodyou.common.domain.WeightUnit
 import com.maksimowiczm.foodyou.common.domain.fluidOunces
@@ -44,7 +44,7 @@ class AddIngredientQuantityState(
                     if (quantity.weight.unit == WeightUnit.Ounces) QuantityType.Ounce
                     else QuantityType.Gram
                 formField.textFieldState.setTextAndPlaceCursorAtEnd(
-                    quantity.weight.toDouble(quantity.weight.unit).formatClipZeros()
+                    quantity.weight.toDouble(quantity.weight.unit).formatCompact()
                 )
             }
             is AbsoluteQuantity.Volume -> {
@@ -52,19 +52,19 @@ class AddIngredientQuantityState(
                     if (quantity.volume.unit == VolumeUnit.FluidOunces) QuantityType.FluidOunce
                     else QuantityType.Milliliter
                 formField.textFieldState.setTextAndPlaceCursorAtEnd(
-                    quantity.volume.toDouble(quantity.volume.unit).formatClipZeros()
+                    quantity.volume.toDouble(quantity.volume.unit).formatCompact()
                 )
             }
             is ServingQuantity -> {
                 selectedQuantityType = QuantityType.Serving
                 formField.textFieldState.setTextAndPlaceCursorAtEnd(
-                    quantity.servings.formatClipZeros()
+                    quantity.servings.formatCompact()
                 )
             }
             is PackageQuantity -> {
                 selectedQuantityType = QuantityType.Package
                 formField.textFieldState.setTextAndPlaceCursorAtEnd(
-                    quantity.packages.formatClipZeros()
+                    quantity.packages.formatCompact()
                 )
             }
         }
@@ -125,7 +125,7 @@ fun rememberAddIngredientQuantityState(
                 is ServingQuantity -> initialQuantity.servings
                 is PackageQuantity -> initialQuantity.packages
                 null -> if (servingQuantity != null || packageQuantity != null) 1.0 else 100.0
-            }.formatClipZeros()
+            }.formatCompact()
         }
 
     val formField =

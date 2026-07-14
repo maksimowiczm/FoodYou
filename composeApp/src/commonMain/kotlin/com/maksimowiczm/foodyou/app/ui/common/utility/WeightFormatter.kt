@@ -26,16 +26,16 @@ object WeightFormatter {
     fun Weight.stringResource(): String {
         return when (unit) {
             WeightUnit.Micrograms ->
-                micrograms.formatClipZeros() + " " + stringResource(Res.string.unit_microgram_short)
+                micrograms.formatCompact() + " " + stringResource(Res.string.unit_microgram_short)
 
             WeightUnit.Milligrams ->
-                milligrams.formatClipZeros() + " " + stringResource(Res.string.unit_milligram_short)
+                milligrams.formatCompact() + " " + stringResource(Res.string.unit_milligram_short)
 
             WeightUnit.Grams ->
-                grams.formatClipZeros() + " " + stringResource(Res.string.unit_gram_short)
+                grams.formatCompact() + " " + stringResource(Res.string.unit_gram_short)
 
             WeightUnit.Ounces ->
-                ounces.formatClipZeros() + " " + stringResource(Res.string.unit_ounce_short)
+                ounces.formatCompact() + " " + stringResource(Res.string.unit_ounce_short)
         }
     }
 }

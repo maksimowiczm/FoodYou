@@ -59,7 +59,7 @@ object QuantityFormatter {
                 val packageQuantityString =
                     stringResource(
                         Res.string.x_times_y,
-                        this.packages.formatClipZeros(),
+                        this.packages.formatCompact(),
                         stringResource(Res.string.product_package),
                     )
 
@@ -80,7 +80,7 @@ object QuantityFormatter {
                 val servingQuantityString =
                     stringResource(
                         Res.string.x_times_y,
-                        this.servings.formatClipZeros(),
+                        this.servings.formatCompact(),
                         stringResource(Res.string.product_serving),
                     )
 
