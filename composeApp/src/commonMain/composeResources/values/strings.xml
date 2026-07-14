@@ -538,4 +538,6 @@
     <string name="action_show" description="Show password, show credentials, text field">Show</string>
     <string name="action_hide" description="Hide password, hide credentials, text field">Hide</string>
 
+    <string name="action_undo">Undo</string>
+
 </resources>

@@ -23,6 +23,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDataCentr
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.HomePersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Language
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.MealSchedule
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.NutritionFactsPersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.OpenFoodFactsProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Personalization
@@ -41,6 +42,7 @@ import com.maksimowiczm.foodyou.app.ui.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.app.ui.home.SettingsScreen
 import com.maksimowiczm.foodyou.app.ui.language.LanguageScreen
+import com.maksimowiczm.foodyou.app.ui.meal.MealScheduleScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.ColorsScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.app.ui.personalization.PersonalizeNutritionFactsScreen
@@ -218,6 +220,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onBack = { backStack.removeLastIf<Personalization>() },
                         onHome = { backStack.add(HomePersonalization) },
                         onNutritionFacts = { backStack.add(NutritionFactsPersonalization) },
+                        onMeals = { backStack.add(MealSchedule) },
                         onColors = { backStack.add(Colors) },
                     )
                 }
@@ -240,6 +243,9 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onEditUserProduct = { id -> backStack.add(EditUserProduct(id)) },
                         onEditUserRecipe = { id -> backStack.add(EditRecipe(id)) },
                     )
+                }
+                entry<MealSchedule> {
+                    MealScheduleScreen(onBack = { backStack.removeLastIf<MealSchedule>() })
                 }
             },
     )
@@ -306,4 +312,6 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data object CreateRecipe : FoodYouNavHostRoute
 
     @Serializable data class EditRecipe(val identity: UserRecipeIdentity) : FoodYouNavHostRoute
+
+    @Serializable data object MealSchedule : FoodYouNavHostRoute
 }

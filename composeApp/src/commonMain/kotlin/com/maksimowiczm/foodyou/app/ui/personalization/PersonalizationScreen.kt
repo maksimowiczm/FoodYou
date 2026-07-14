@@ -30,6 +30,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItemColors
@@ -67,6 +68,7 @@ fun PersonalizationScreen(
     onBack: () -> Unit,
     onHome: () -> Unit,
     onNutritionFacts: () -> Unit,
+    onMeals: () -> Unit,
     onColors: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -81,6 +83,7 @@ fun PersonalizationScreen(
         onBack = onBack,
         onHome = onHome,
         onNutritionFacts = onNutritionFacts,
+        onMeals = onMeals,
         onColors = onColors,
         onUpdateEnergyUnit = viewModel::updateEnergyUnit,
         onUpdateSecureScreen = viewModel::updateSecureScreen,
@@ -96,6 +99,7 @@ fun PersonalizationScreen(
     onBack: () -> Unit,
     onHome: () -> Unit,
     onNutritionFacts: () -> Unit,
+    onMeals: () -> Unit,
     onColors: () -> Unit,
     onUpdateEnergyUnit: (EnergyUnit) -> Unit,
     onUpdateSecureScreen: (Boolean) -> Unit,
@@ -177,6 +181,21 @@ fun PersonalizationScreen(
                             )
                         },
                         content = { Text(stringResource(Res.string.headline_nutrition_facts)) },
+                    )
+                    SegmentedListItem(
+                        onClick = onMeals,
+                        shapes = ListItemDefaults.shapes(),
+                        colors = colors,
+                        leadingContent = {
+                            Icon(
+                                imageVector = Icons.Outlined.Restaurant,
+                                contentDescription = null,
+                            )
+                        },
+                        supportingContent = {
+                            Text(stringResource(Res.string.neutral_set_your_meal_schedule))
+                        },
+                        content = { Text(stringResource(Res.string.headline_meals)) },
                     )
                 }
             }
@@ -355,6 +374,7 @@ private fun PersonalizationScreenPreview() {
             onBack = {},
             onHome = {},
             onNutritionFacts = {},
+            onMeals = {},
             onColors = {},
             onUpdateEnergyUnit = {},
             onUpdateSecureScreen = {},
