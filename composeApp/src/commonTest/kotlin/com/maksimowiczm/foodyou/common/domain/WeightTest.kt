@@ -166,12 +166,17 @@ class WeightTest {
         assertEquals(100.0.grams, Weight.parse("100g"))
         assertEquals(100.0.grams, Weight.parse("100 g"))
         assertEquals(100.0.grams, Weight.parse("100 grams"))
+        assertEquals(100.0.grams, Weight.parse("100 gram"))
         assertEquals(10.5.milligrams, Weight.parse("10.5mg"))
+        assertEquals(10.5.milligrams, Weight.parse("10.5 milligram"))
         assertEquals(5.0.micrograms, Weight.parse("5mcg"))
         assertEquals(5.0.micrograms, Weight.parse("5ug"))
         assertEquals(5.0.micrograms, Weight.parse("5µg"))
+        assertEquals(5.0.micrograms, Weight.parse("5 microgram"))
         assertEquals(2.0.ounces, Weight.parse("2oz"))
         assertEquals(2.0.ounces, Weight.parse("2 ounces"))
+        assertEquals(2.0.ounces, Weight.parse("2 ounce"))
+        assertEquals(2.0.ounces, Weight.parse("2 oz."))
     }
 
     @Test

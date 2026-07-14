@@ -119,18 +119,25 @@ enum class WeightUnit {
 
     companion object {
         fun fromSymbolOrNull(symbol: String): WeightUnit? =
-            when (symbol.lowercase().trim().replace(".", "")) {
+            when (symbol.lowercase().trim().replace(".", "").replace(" ", "")) {
                 "g",
                 "grm",
-                "grams" -> Grams
+                "grams",
+                "gram" -> Grams
                 "mg",
-                "milligrams" -> Milligrams
+                "milligrams",
+                "milligram",
+                "mgs" -> Milligrams
                 "mcg",
                 "ug",
                 "µg",
-                "micrograms" -> Micrograms
+                "micrograms",
+                "microgram",
+                "mcgs" -> Micrograms
                 "oz",
-                "ounces" -> Ounces
+                "ounces",
+                "ounce",
+                "ozs" -> Ounces
                 else -> null
             }
 

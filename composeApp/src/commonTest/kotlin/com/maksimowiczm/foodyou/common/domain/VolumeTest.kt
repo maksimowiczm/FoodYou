@@ -109,11 +109,20 @@ class VolumeTest {
         assertEquals(100.0.milliliters, Volume.parse("100 ml"))
         assertEquals(100.0.milliliters, Volume.parse("100 milliliters"))
         assertEquals(100.0.milliliters, Volume.parse("100 mlt"))
+        assertEquals(100.0.milliliters, Volume.parse("100 ml."))
+        assertEquals(100.0.milliliters, Volume.parse("100 millilitre"))
+        assertEquals(100.0.milliliters, Volume.parse("100 cc"))
+        assertEquals(100.0.milliliters, Volume.parse("100 cm3"))
         assertEquals(10.5.fluidOunces, Volume.parse("10.5floz"))
         assertEquals(10.5.fluidOunces, Volume.parse("10.5 fl oz"))
         assertEquals(10.5.fluidOunces, Volume.parse("10.5 fl.oz"))
         assertEquals(10.5.fluidOunces, Volume.parse("10.5 fl. oz."))
         assertEquals(10.5.fluidOunces, Volume.parse("10.5 fluid ounces"))
+        assertEquals(10.5.fluidOunces, Volume.parse("10.5 oz"))
+        assertEquals(10.5.fluidOunces, Volume.parse("10.5 oz."))
+        assertEquals(10.5.fluidOunces, Volume.parse("10.5 fluid oz"))
+        assertEquals(10.5.fluidOunces, Volume.parse("10.5 fl ounce"))
+        assertEquals(10.5.fluidOunces, Volume.parse("10.5 oz fl"))
     }
 
     @Test

@@ -104,9 +104,20 @@ enum class VolumeUnit {
             when (symbol.lowercase().trim().replace(".", "").replace(" ", "")) {
                 "ml",
                 "mlt",
-                "milliliters" -> Milliliters
+                "milliliters",
+                "millilitre",
+                "millilitres",
+                "mltr",
+                "cc",
+                "cm3" -> Milliliters
                 "floz",
-                "fluidounces" -> FluidOunces
+                "fluidounces",
+                "fluidounce",
+                "oz",
+                "fluidoz",
+                "flounce",
+                "flounces",
+                "ozfl" -> FluidOunces
                 else -> null
             }
 
