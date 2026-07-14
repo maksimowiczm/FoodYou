@@ -637,7 +637,14 @@ private fun MealTimePicker(
                     Text(text = stringResource(Res.string.action_confirm))
                 }
             },
-            title = {},
+            title = {
+                Text(
+                    when (showTimePicker) {
+                        TimePicker.Start -> startTimeLabel
+                        TimePicker.End -> endTimeLabel
+                    }
+                )
+            },
             dismissButton = {
                 TextButton(
                     onClick = { showTimePickerState.value = null },

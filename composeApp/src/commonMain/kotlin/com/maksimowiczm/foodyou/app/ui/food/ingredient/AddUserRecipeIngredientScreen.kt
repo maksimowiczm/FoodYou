@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -135,8 +134,7 @@ private fun AddUserRecipeIngredientScreen(
                 ?.getOrNull()
         }
 
-    val lazyListState = rememberLazyListState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(lazyListState)
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
         modifier = modifier,
@@ -175,7 +173,6 @@ private fun AddUserRecipeIngredientScreen(
     ) { contentPadding ->
         LazyColumn(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            state = lazyListState,
             contentPadding = contentPadding.add(bottom = 128.dp),
         ) {
             item { FoodDetailsHeadline(headline = headline) }

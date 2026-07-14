@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
@@ -141,8 +140,7 @@ private fun OpenFoodFactsDetailsScreen(
             nutritionFacts?.scale(packageQuantity, servingQuantity, quantity)?.getOrNull()
         }
 
-    val lazyListState = rememberLazyListState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(lazyListState)
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
         modifier = modifier,
@@ -165,7 +163,6 @@ private fun OpenFoodFactsDetailsScreen(
             )
             LazyColumn(
                 contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
-                state = lazyListState,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item { FoodDetailsHeadline(headline = headline) }

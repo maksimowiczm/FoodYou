@@ -133,7 +133,7 @@ private fun UserProductDetailsScreen(
         }
 
     val lazyListState = rememberLazyListState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(lazyListState)
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
         modifier = modifier,

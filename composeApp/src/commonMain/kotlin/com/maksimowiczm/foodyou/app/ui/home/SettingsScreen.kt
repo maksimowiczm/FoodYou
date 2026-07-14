@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -133,8 +132,7 @@ private fun SettingsScreen(
     onAbout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val lazyListState = rememberLazyListState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(lazyListState)
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     var profileExpanded by rememberSaveable { mutableStateOf(true) }
 
@@ -149,7 +147,6 @@ private fun SettingsScreen(
         },
     ) { contentPadding ->
         LazyColumn(
-            state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = contentPadding.add(8.dp),
         ) {
