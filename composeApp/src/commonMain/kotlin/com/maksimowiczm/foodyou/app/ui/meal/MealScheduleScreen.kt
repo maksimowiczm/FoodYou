@@ -9,7 +9,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +28,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -75,6 +75,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -212,6 +218,9 @@ private fun MealScheduleScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val hapticFeedback = LocalHapticFeedback.current
 
+    val moveUpActionLabel = stringResource(Res.string.action_move_up)
+    val moveDownActionLabel = stringResource(Res.string.action_move_down)
+
     Scaffold(
         topBar = {
             LargeFlexibleTopAppBar(
@@ -308,17 +317,38 @@ private fun MealScheduleScreen(
                                 elevation = MealCardDefaults.elevation(isDragging),
                                 modifier =
                                     Modifier.longPressDraggableHandle(
-                                        onDragStarted = {
-                                            hapticFeedback.performHapticFeedback(
-                                                HapticFeedbackType.GestureThresholdActivate
-                                            )
+                                            onDragStarted = {
+                                                hapticFeedback.performHapticFeedback(
+                                                    HapticFeedbackType.GestureThresholdActivate
+                                                )
+                                            },
+                                            onDragStopped = {
+                                                hapticFeedback.performHapticFeedback(
+                                                    HapticFeedbackType.GestureEnd
+                                                )
+                                            },
+                                        )
+                                        .semantics {
+                                            customActions =
+                                                listOfNotNull(
+                                                    if (i > 0) {
+                                                        CustomAccessibilityAction(
+                                                            moveUpActionLabel
+                                                        ) {
+                                                            seeds.add(i - 1, seeds.removeAt(i))
+                                                            true
+                                                        }
+                                                    } else null,
+                                                    if (i < cardStates.lastIndex) {
+                                                        CustomAccessibilityAction(
+                                                            moveDownActionLabel
+                                                        ) {
+                                                            seeds.add(i + 1, seeds.removeAt(i))
+                                                            true
+                                                        }
+                                                    } else null,
+                                                )
                                         },
-                                        onDragStopped = {
-                                            hapticFeedback.performHapticFeedback(
-                                                HapticFeedbackType.GestureEnd
-                                            )
-                                        },
-                                    ),
                             )
                             Spacer(Modifier.height(2.dp))
                         }
@@ -392,6 +422,7 @@ private fun MealCard(
             MaterialTheme.motionScheme.fastEffectsSpec(),
         )
     val elevation = animateDpAsState(elevation, MaterialTheme.motionScheme.fastSpatialSpec())
+    val mealNameLabel = stringResource(Res.string.headline_meal_name)
 
     Box(
         modifier =
@@ -401,9 +432,8 @@ private fun MealCard(
                     this.shape = shape
                     this.clip = true
                 }
-                .drawBehind {
-                    drawRect(color = containerColor.value)
-                }
+                .drawBehind { drawRect(color = containerColor.value) }
+                .semantics { isTraversalGroup = true }
     ) {
         CompositionLocalProvider(LocalContentColor provides contentColor) {
             Column(Modifier.fillMaxWidth().padding(16.dp)) {
@@ -418,7 +448,8 @@ private fun MealCard(
                             Modifier.defaultMinSize(minWidth = 150.dp)
                                 .width(IntrinsicSize.Min)
                                 .weight(1f, false)
-                                .graphicsLayer { this.alpha = alpha.value },
+                                .graphicsLayer { this.alpha = alpha.value }
+                                .semantics { contentDescription = mealNameLabel },
                         enabled = !state.isDeleted,
                         textStyle =
                             LocalTextStyle.current
@@ -511,11 +542,13 @@ private fun MealCard(
                 Spacer(Modifier.height(8.dp))
                 Row(
                     modifier =
-                        Modifier.clickable(
+                        Modifier.toggleable(
+                                value = state.timeState is TimeState.AllDay,
                                 interactionSource = null,
                                 indication = null,
                                 enabled = !state.isDeleted,
-                                onClick = { state.timeState = state.timeState.flip() },
+                                role = Role.Switch,
+                                onValueChange = { state.timeState = state.timeState.flip() },
                             )
                             .graphicsLayer { this.alpha = alpha.value },
                     verticalAlignment = Alignment.CenterVertically,
@@ -547,6 +580,8 @@ private fun MealTimePicker(
     modifier: Modifier = Modifier,
 ) {
     val dateFormatter = LocalDateFormatter.current
+    val startTimeLabel = stringResource(Res.string.headline_start_time)
+    val endTimeLabel = stringResource(Res.string.headline_end_time)
 
     val showTimePickerState = rememberSaveable {
         mutableStateOf<TimePicker?>(null)
@@ -629,6 +664,11 @@ private fun MealTimePicker(
                     containerColor = containerColor,
                     contentColor = contentColor,
                 ),
+            modifier =
+                Modifier.semantics {
+                    contentDescription =
+                        "$startTimeLabel: ${dateFormatter.formatTime(state.startTime)}"
+                },
         ) {
             Text(
                 modifier = Modifier.padding(8.dp),
@@ -648,6 +688,10 @@ private fun MealTimePicker(
                     containerColor = containerColor,
                     contentColor = contentColor,
                 ),
+            modifier =
+                Modifier.semantics {
+                    contentDescription = "$endTimeLabel: ${dateFormatter.formatTime(state.endTime)}"
+                },
         ) {
             Text(
                 modifier = Modifier.padding(8.dp),

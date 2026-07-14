@@ -540,4 +540,8 @@
 
     <string name="action_undo">Undo</string>
 
+    <string name="headline_meal_name">Meal name</string>
+    <string name="headline_start_time">Start time</string>
+    <string name="headline_end_time">End time</string>
+
 </resources>
