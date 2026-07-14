@@ -129,7 +129,10 @@ fun OpenFoodFactsLoginDialog(
         modifier = modifier,
         dismissButton = {
             Row {
-                TextButton(onClick = { uriHandler.openUri(appConfig.openFoodFactsRegisterUri) }) {
+                TextButton(
+                    onClick = { uriHandler.openUri(appConfig.openFoodFactsRegisterUri) },
+                    shapes = ButtonDefaults.shapes(),
+                ) {
                     Text(stringResource(Res.string.action_register))
                 }
                 TextButton(onClick = onDismissRequest, shapes = ButtonDefaults.shapes()) {

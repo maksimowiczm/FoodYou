@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -337,9 +338,15 @@ private fun IngredientListItem(
 private fun DeleteIngredientDialog(onDelete: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        confirmButton = { TextButton(onDelete) { Text(stringResource(Res.string.action_delete)) } },
+        confirmButton = {
+            TextButton(onClick = onDelete, shapes = ButtonDefaults.shapes()) {
+                Text(stringResource(Res.string.action_delete))
+            }
+        },
         dismissButton = {
-            TextButton(onDismiss) { Text(stringResource(Res.string.action_cancel)) }
+            TextButton(onClick = onDismiss, shapes = ButtonDefaults.shapes()) {
+                Text(stringResource(Res.string.action_cancel))
+            }
         },
         text = { Text(stringResource(Res.string.action_delete_ingredient)) },
     )

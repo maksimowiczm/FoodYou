@@ -113,7 +113,8 @@ fun UpdateFoodDataCentralApiKeyDialog(
         dismissButton = {
             Row {
                 TextButton(
-                    onClick = { uriHandler.openUri(appConfig.foodDataCentralObtainApiKeyUri) }
+                    onClick = { uriHandler.openUri(appConfig.foodDataCentralObtainApiKeyUri) },
+                    shapes = ButtonDefaults.shapes(),
                 ) {
                     Text(stringResource(Res.string.action_obtain_key))
                 }

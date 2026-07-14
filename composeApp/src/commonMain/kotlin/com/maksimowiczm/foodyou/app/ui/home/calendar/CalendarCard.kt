@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -257,13 +258,14 @@ private fun CalendarCardDatePickerDialog(
                             Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date
                         onSelectDate(date)
                     }
-                }
+                },
+                shapes = ButtonDefaults.shapes(),
             ) {
                 Text(text = stringResource(Res.string.positive_ok))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismissRequest) {
+            TextButton(onClick = onDismissRequest, shapes = ButtonDefaults.shapes()) {
                 Text(text = stringResource(Res.string.action_cancel))
             }
         },
@@ -279,7 +281,10 @@ private fun CalendarCardDatePickerDialog(
                 ) {
                     DatePickerDefaults.DatePickerTitle(pickerState.displayMode)
 
-                    TextButton(onClick = { onSelectDate(state.referenceDate) }) {
+                    TextButton(
+                        onClick = { onSelectDate(state.referenceDate) },
+                        shapes = ButtonDefaults.shapes(),
+                    ) {
                         Text(stringResource(Res.string.action_go_to_today))
                     }
                 }

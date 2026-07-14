@@ -338,6 +338,10 @@ private fun ValuesPerPicker(
             leadingButton = {
                 SplitButtonDefaults.LeadingButton(
                     onClick = { expanded = !expanded },
+                    shapes =
+                        SplitButtonDefaults.leadingButtonShapesFor(
+                            ButtonDefaults.MediumContainerHeight
+                        ),
                     enabled = !isLocked,
                 ) {
                     Text(text = selected.stringResource())
@@ -347,6 +351,10 @@ private fun ValuesPerPicker(
                 SplitButtonDefaults.TrailingButton(
                     checked = expanded,
                     onCheckedChange = { expanded = it },
+                    shapes =
+                        SplitButtonDefaults.trailingButtonShapesFor(
+                            ButtonDefaults.MediumContainerHeight
+                        ),
                     enabled = !isLocked,
                 ) {
                     val rotation =

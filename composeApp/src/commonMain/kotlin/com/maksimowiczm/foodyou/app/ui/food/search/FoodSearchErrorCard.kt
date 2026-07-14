@@ -59,6 +59,7 @@ internal fun FoodSearchErrorCard(
             ) {
                 TextButton(
                     onClick = { showDetails = !showDetails },
+                    shapes = ButtonDefaults.shapes(),
                     colors =
                         ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.onErrorContainer
@@ -69,6 +70,7 @@ internal fun FoodSearchErrorCard(
 
                 FilledTonalButton(
                     onClick = { onRetry() },
+                    shapes = ButtonDefaults.shapes(),
                     colors =
                         ButtonDefaults.filledTonalButtonColors(
                             contentColor = MaterialTheme.colorScheme.errorContainer,

@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -203,13 +204,16 @@ fun CustomThemePickerDialog(
                             isAmoled = isAmoled.value,
                         )
                     )
-                }
+                },
+                shapes = ButtonDefaults.shapes(),
             ) {
                 Text(stringResource(Res.string.action_confirm))
             }
         },
         dismissButton = {
-            TextButton(onDismiss) { Text(stringResource(Res.string.action_cancel)) }
+            TextButton(onDismiss, shapes = ButtonDefaults.shapes()) {
+                Text(stringResource(Res.string.action_cancel))
+            }
         },
         modifier = modifier,
     )
@@ -262,12 +266,17 @@ fun ColorPickerDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(controller.selectedColor.value) }) {
+            TextButton(
+                onClick = { onConfirm(controller.selectedColor.value) },
+                shapes = ButtonDefaults.shapes(),
+            ) {
                 Text(stringResource(Res.string.action_confirm))
             }
         },
         dismissButton = {
-            TextButton(onDismissRequest) { Text(stringResource(Res.string.action_cancel)) }
+            TextButton(onDismissRequest, shapes = ButtonDefaults.shapes()) {
+                Text(stringResource(Res.string.action_cancel))
+            }
         },
         modifier = modifier,
     )

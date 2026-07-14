@@ -56,7 +56,10 @@ internal fun UserFoodMenu(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) {
+                TextButton(
+                    onClick = { showDeleteDialog = false },
+                    shapes = ButtonDefaults.shapes(),
+                ) {
                     Text(text = stringResource(Res.string.action_cancel))
                 }
             },

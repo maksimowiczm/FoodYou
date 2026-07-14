@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.NorthWest
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -568,7 +569,7 @@ private fun FoodSearchHistoryItem(
         headlineContent = { Text(search) },
         leadingContent = { Icon(imageVector = Icons.Outlined.History, contentDescription = null) },
         trailingContent = {
-            IconButton(onFill) {
+            IconButton(onClick = onFill, shapes = IconButtonDefaults.shapes()) {
                 Icon(
                     imageVector = Icons.Outlined.NorthWest,
                     contentDescription = stringResource(Res.string.action_insert_suggested_search),

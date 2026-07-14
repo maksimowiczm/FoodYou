@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -281,7 +282,7 @@ private fun TwoRowFoodListItemPreview() {
                 energy = { Text("165 kcal") },
                 quantity = { Text("100g") },
                 trailingContent = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {}, shapes = IconButtonDefaults.shapes()) {
                         Icon(imageVector = Icons.Outlined.Edit, contentDescription = null)
                     }
                 },

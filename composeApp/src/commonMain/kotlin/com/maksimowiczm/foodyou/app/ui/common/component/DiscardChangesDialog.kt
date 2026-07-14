@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.common.component
 
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -19,10 +20,14 @@ fun DiscardChangesDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         confirmButton = {
-            TextButton(onDiscard) { Text(stringResource(Res.string.action_discard)) }
+            TextButton(onDiscard, shapes = ButtonDefaults.shapes()) {
+                Text(stringResource(Res.string.action_discard))
+            }
         },
         dismissButton = {
-            TextButton(onDismissRequest) { Text(stringResource(Res.string.action_cancel)) }
+            TextButton(onDismissRequest, shapes = ButtonDefaults.shapes()) {
+                Text(stringResource(Res.string.action_cancel))
+            }
         },
         text = content,
     )
