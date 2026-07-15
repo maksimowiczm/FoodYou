@@ -1,5 +1,11 @@
 package com.maksimowiczm.foodyou.app.ui.about
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,11 +35,18 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.LinearGradientShader
+import androidx.compose.ui.graphics.Shader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
@@ -58,6 +71,39 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val scrollState = rememberScrollState()
     val systemTopBarHeight = WindowInsets.systemBars.getTop(LocalDensity.current)
 
+    val colorScheme = MaterialTheme.colorScheme
+    val offset =
+        rememberInfiniteTransition()
+            .animateFloat(
+                initialValue = 0f,
+                targetValue = 2f,
+                animationSpec =
+                    infiniteRepeatable(
+                        animation = tween(durationMillis = 10_000, easing = LinearEasing),
+                        repeatMode = RepeatMode.Reverse,
+                    ),
+            )
+    val brush =
+        remember(offset) {
+            object : ShaderBrush() {
+                override fun createShader(size: Size): Shader {
+                    val widthOffset = size.width * offset.value
+                    val heightOffset = size.height * offset.value
+                    return LinearGradientShader(
+                        colors =
+                            listOf(
+                                colorScheme.primary,
+                                colorScheme.secondary,
+                                colorScheme.tertiary,
+                            ),
+                        from = Offset(widthOffset, heightOffset),
+                        to = Offset(widthOffset + size.width, heightOffset + size.height),
+                        tileMode = TileMode.Mirror,
+                    )
+                }
+            }
+        }
+
     Box(modifier) {
         // Padding according to the Material Design App bars guidelines
         // https://m3.material.io/components/app-bars/specs
@@ -80,18 +126,13 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(Modifier.windowInsetsTopHeight(WindowInsets.systemBars))
-            InteractiveLogo(
-                Modifier.padding(horizontal = 32.dp)
-                    .widthIn(max = 350.dp)
-                    .aspectRatio(1f)
-                    .fillMaxSize()
-            )
+            InteractiveLogo(Modifier.widthIn(max = 400.dp).aspectRatio(1f).fillMaxSize())
             Spacer(Modifier.height(16.dp))
             Text(
                 text = stringResource(Res.string.app_name),
                 modifier = Modifier.padding(horizontal = 16.dp),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.brand.displayMedium,
+                style = MaterialTheme.typography.brand.displayMedium.copy(brush = brush),
             )
             Text(
                 text =
@@ -193,5 +234,9 @@ private fun AboutButtons(
 @Preview
 @Composable
 private fun AboutScreenPreview() {
-    PreviewFoodYouTheme { AboutScreen(onBack = {}) }
+    PreviewFoodYouTheme {
+        Surface {
+            AboutScreen(onBack = {})
+        }
+    }
 }

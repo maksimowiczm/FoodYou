@@ -1,5 +1,11 @@
 package com.maksimowiczm.foodyou.app.ui.onboarding
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -26,6 +32,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.LinearGradientShader
+import androidx.compose.ui.graphics.Shader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
@@ -59,7 +71,38 @@ private fun BeforeYouStartScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val fabHeight = ButtonDefaults.LargeContainerHeight
-
+    val colorScheme = MaterialTheme.colorScheme
+    val offset =
+        rememberInfiniteTransition()
+            .animateFloat(
+                initialValue = 0f,
+                targetValue = 2f,
+                animationSpec =
+                    infiniteRepeatable(
+                        animation = tween(durationMillis = 10_000, easing = LinearEasing),
+                        repeatMode = RepeatMode.Reverse,
+                    ),
+            )
+    val brush =
+        remember(offset) {
+            object : ShaderBrush() {
+                override fun createShader(size: Size): Shader {
+                    val widthOffset = size.width * offset.value
+                    val heightOffset = size.height * offset.value
+                    return LinearGradientShader(
+                        colors =
+                            listOf(
+                                colorScheme.primary,
+                                colorScheme.secondary,
+                                colorScheme.tertiary,
+                            ),
+                        from = Offset(widthOffset, heightOffset),
+                        to = Offset(widthOffset + size.width, heightOffset + size.height),
+                        tileMode = TileMode.Mirror,
+                    )
+                }
+            }
+        }
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -96,24 +139,15 @@ private fun BeforeYouStartScreen(
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
                 ) {
-                    InteractiveLogo(
-                        modifier =
-                            Modifier.padding(horizontal = 64.dp)
-                                .widthIn(max = 350.dp)
-                                .aspectRatio(1f)
-                                .fillMaxSize()
-                    )
+                    InteractiveLogo(Modifier.widthIn(max = 400.dp).aspectRatio(1f).fillMaxSize())
                     Text(
                         text = stringResource(Res.string.app_name),
-                        modifier = Modifier.padding(horizontal = 16.dp),
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.brand.displayMedium,
+                        style = MaterialTheme.typography.brand.displayMedium.copy(brush = brush),
                     )
                 }
             }
-
             item {
                 FlowRow(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
