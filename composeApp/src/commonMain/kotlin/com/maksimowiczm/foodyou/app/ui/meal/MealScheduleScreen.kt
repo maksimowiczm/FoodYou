@@ -9,8 +9,8 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -88,6 +89,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import com.maksimowiczm.foodyou.app.ui.common.InteractionShapes
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
@@ -96,6 +98,7 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.now
 import com.maksimowiczm.foodyou.app.ui.common.extension.plus
 import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.form.rememberFormField
+import com.maksimowiczm.foodyou.app.ui.common.rememberInteractionAnimatedShape
 import com.maksimowiczm.foodyou.app.ui.common.saveable.jsonSaver
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.mealplan.domain.Meal
@@ -286,6 +289,7 @@ private fun MealScheduleScreen(
                         if (visibleState.isIdle && !visibleState.currentState)
                             seeds.remove(state.id)
                     }
+                    val interactionSource = remember { MutableInteractionSource() }
 
                     AnimatedVisibility(
                         visibleState = visibleState,
@@ -303,11 +307,10 @@ private fun MealScheduleScreen(
                                     visibleState.targetState = false
                                     state.isDeleted = true
                                 },
-                                shape =
-                                    MealCardDefaults.shape(
+                                shapes =
+                                    MealCardDefaults.shapes(
                                         index = i,
-                                        lastIndex = cardStates.lastIndex + 1,
-                                        isDragging = isDragging,
+                                        lastIndex = cardStates.lastIndex,
                                     ),
                                 colors =
                                     MealCardDefaults.colors(
@@ -315,8 +318,10 @@ private fun MealScheduleScreen(
                                         isDragging = isDragging,
                                     ),
                                 elevation = MealCardDefaults.elevation(isDragging),
+                                interactionSource = interactionSource,
                                 modifier =
                                     Modifier.longPressDraggableHandle(
+                                            interactionSource = interactionSource,
                                             onDragStarted = {
                                                 hapticFeedback.performHapticFeedback(
                                                     HapticFeedbackType.GestureThresholdActivate
@@ -357,34 +362,38 @@ private fun MealScheduleScreen(
             }
             item {
                 val interactionSource = remember { MutableInteractionSource() }
-                val isPressed by interactionSource.collectIsPressedAsState()
-                val cornerDp =
-                    animateDpAsState(
-                        // We can't use cardStates.isEmpty() as it will contain items while vertical
-                        // shrink animation is running before deleting
-                        if (isPressed || cardStates.all { it.isNew && it.isDeleted }) 16.dp
-                        else 4.dp,
-                        MaterialTheme.motionScheme.fastEffectsSpec(),
-                    )
+                val shapes =
+                    remember(cardStates.size) {
+                        val base =
+                            RoundedCornerShape(
+                                topStart = if (cardStates.isEmpty()) 16.dp else 4.dp,
+                                topEnd = if (cardStates.isEmpty()) 16.dp else 4.dp,
+                                bottomEnd = 16.dp,
+                                bottomStart = 16.dp,
+                            )
+                        InteractionShapes(
+                            shape = base,
+                            pressedShape =
+                                base.copy(
+                                    topStart = CornerSize(16.dp),
+                                    topEnd = CornerSize(16.dp),
+                                ),
+                        )
+                    }
 
                 Surface(
                     onClick = { seeds.add(MealIdentity(Uuid.random())) },
-                    modifier =
-                        Modifier.graphicsLayer {
-                            shape =
-                                RoundedCornerShape(
-                                    topStart = cornerDp.value,
-                                    topEnd = cornerDp.value,
-                                    bottomEnd = 16.dp,
-                                    bottomStart = 16.dp,
-                                )
-                            clip = true
-                        },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape =
+                        rememberInteractionAnimatedShape(
+                            shapes = shapes,
+                            interactionSource = interactionSource,
+                        ),
                     color = MaterialTheme.colorScheme.surfaceContainer,
                     interactionSource = interactionSource,
                 ) {
                     Box(
-                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        modifier = Modifier.padding(16.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
@@ -402,9 +411,10 @@ private fun MealScheduleScreen(
 private fun MealCard(
     state: MealCardState,
     onRemove: (MealIdentity) -> Unit,
-    shape: RoundedCornerShape,
+    shapes: InteractionShapes,
     colors: MealCardColors,
     elevation: Dp,
+    interactionSource: InteractionSource,
     modifier: Modifier = Modifier,
 ) {
     val containerColor =
@@ -424,12 +434,18 @@ private fun MealCard(
     val elevation = animateDpAsState(elevation, MaterialTheme.motionScheme.fastSpatialSpec())
     val mealNameLabel = stringResource(Res.string.headline_meal_name)
 
+    val animatedShape =
+        rememberInteractionAnimatedShape(
+            shapes = shapes,
+            interactionSource = interactionSource,
+        )
+
     Box(
         modifier =
             modifier
                 .graphicsLayer {
                     this.shadowElevation = elevation.value.toPx()
-                    this.shape = shape
+                    this.shape = animatedShape
                     this.clip = true
                 }
                 .drawBehind { drawRect(color = containerColor.value) }
@@ -901,26 +917,21 @@ private object MealCardDefaults {
         }
 
     @Composable
-    fun shape(
+    fun shapes(
         index: Int,
         lastIndex: Int,
-        isDragging: Boolean,
-    ): RoundedCornerShape {
-        val topCorner =
-            animateDpAsState(
-                if (index == 0 || isDragging) 16.dp else 4.dp,
-                MaterialTheme.motionScheme.fastSpatialSpec(),
+    ): InteractionShapes {
+        val base =
+            RoundedCornerShape(
+                topStart = if (index == 0) 16.dp else 4.dp,
+                topEnd = if (index == 0) 16.dp else 4.dp,
+                bottomEnd = if (index == lastIndex) 16.dp else 4.dp,
+                bottomStart = if (index == lastIndex) 16.dp else 4.dp,
             )
-        val bottomCorner =
-            animateDpAsState(
-                if (index == lastIndex || isDragging) 16.dp else 4.dp,
-                MaterialTheme.motionScheme.fastSpatialSpec(),
-            )
-        return RoundedCornerShape(
-            topStart = topCorner.value,
-            topEnd = topCorner.value,
-            bottomEnd = bottomCorner.value,
-            bottomStart = bottomCorner.value,
+        val dragged = RoundedCornerShape(16.dp)
+        return InteractionShapes(
+            shape = base,
+            draggedShape = dragged,
         )
     }
 

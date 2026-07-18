@@ -2,10 +2,6 @@ package com.maksimowiczm.foodyou.app.ui.common.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.common.InteractionShapes
 import com.maksimowiczm.foodyou.app.ui.common.rememberAnimatedShape
+import com.maksimowiczm.foodyou.app.ui.common.rememberInteractionAnimatedShape
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -38,7 +36,7 @@ import org.jetbrains.compose.resources.stringResource
 fun PrivacyCard(
     selected: Boolean,
     title: @Composable () -> Unit,
-    shapes: PrivacyCardShapes,
+    shapes: InteractionShapes,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PrivacyCardDefaults.contentPadding,
@@ -51,21 +49,11 @@ fun PrivacyCard(
 
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
 
-    val pressed by interactionSource.collectIsPressedAsState()
-    val hovered by interactionSource.collectIsHoveredAsState()
-    val focused by interactionSource.collectIsFocusedAsState()
-    val dragged by interactionSource.collectIsDraggedAsState()
-
-    val targetShape =
-        shapes.shapeForInteraction(
-            pressed = pressed,
-            focused = focused,
-            hovered = hovered,
-            dragged = dragged,
-        )
-
     val animatedShape =
-        rememberAnimatedShape(targetShape, MaterialTheme.motionScheme.fastSpatialSpec())
+        rememberInteractionAnimatedShape(
+            shapes = shapes,
+            interactionSource = interactionSource,
+        )
 
     val inner =
         @Composable {
@@ -164,29 +152,6 @@ class PrivacyCardScope(val selected: Boolean) {
     }
 }
 
-@Immutable
-class PrivacyCardShapes(
-    val shape: CornerBasedShape,
-    val pressedShape: CornerBasedShape = shape,
-    val focusedShape: CornerBasedShape = shape,
-    val hoveredShape: CornerBasedShape = shape,
-    val draggedShape: CornerBasedShape = shape,
-) {
-    fun shapeForInteraction(
-        pressed: Boolean,
-        focused: Boolean,
-        hovered: Boolean,
-        dragged: Boolean,
-    ): CornerBasedShape =
-        when {
-            pressed -> pressedShape
-            dragged -> draggedShape
-            focused -> focusedShape
-            hovered -> hoveredShape
-            else -> shape
-        }
-}
-
 object PrivacyCardDefaults {
     val contentPadding = PaddingValues(16.dp)
 
@@ -207,10 +172,10 @@ object PrivacyCardDefaults {
     }
 
     @Composable
-    fun shapes(index: Int, count: Int, selected: Boolean): PrivacyCardShapes {
+    fun shapes(index: Int, count: Int, selected: Boolean): InteractionShapes {
         val base = shape(index, count, selected)
         val pressed = MaterialTheme.shapes.large
-        return PrivacyCardShapes(
+        return InteractionShapes(
             shape = base,
             pressedShape = pressed,
         )

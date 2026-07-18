@@ -26,9 +26,9 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.common.InteractionShapes
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCard
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCardDefaults
-import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCardShapes
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.component.TermsOfUseChip
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
@@ -52,7 +52,7 @@ import org.koin.compose.koinInject
 fun OpenFoodFactsPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
-    shapes: PrivacyCardShapes,
+    shapes: InteractionShapes,
     modifier: Modifier = Modifier,
     repository: OpenFoodFactsSettingsRepository = koinInject(),
     service: OpenFoodFactsLoginService = koinInject(),

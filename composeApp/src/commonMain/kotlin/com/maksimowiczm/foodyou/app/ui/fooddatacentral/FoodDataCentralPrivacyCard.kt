@@ -23,8 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.common.InteractionShapes
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCard
-import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCardShapes
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
@@ -35,7 +35,7 @@ import org.jetbrains.compose.resources.stringResource
 fun FoodDataCentralPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
-    shapes: PrivacyCardShapes,
+    shapes: InteractionShapes,
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current

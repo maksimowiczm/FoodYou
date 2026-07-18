@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.personalization
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -173,7 +172,6 @@ private fun PersonalizeNutritionFactsScreen(
         ) {
             itemsIndexed(items = localOrder.value, key = { _, it -> it.name }) { index, item ->
                 val interactionSource = remember { MutableInteractionSource() }
-                val dragStartInteraction = remember { mutableStateOf<DragInteraction.Start?>(null) }
 
                 ReorderableItem(
                     state = reorderableLazyListState,
@@ -182,20 +180,7 @@ private fun PersonalizeNutritionFactsScreen(
                         Modifier.animateItem(
                             placementSpec = MaterialTheme.motionScheme.fastSpatialSpec()
                         ),
-                ) { isDragging ->
-                    LaunchedEffect(isDragging) {
-                        if (isDragging) {
-                            val start = DragInteraction.Start()
-                            dragStartInteraction.value = start
-                            interactionSource.emit(start)
-                        } else {
-                            dragStartInteraction.value?.let {
-                                interactionSource.emit(DragInteraction.Stop(it))
-                            }
-                            dragStartInteraction.value = null
-                        }
-                    }
-
+                ) {
                     val colors =
                         ListItemDefaults.segmentedColors(
                             containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -219,7 +204,13 @@ private fun PersonalizeNutritionFactsScreen(
                                     )
                             },
                         onClick = {},
-                        trailingContent = { DragHandle(Modifier.hapticDraggableHandle()) },
+                        trailingContent = {
+                            DragHandle(
+                                Modifier.hapticDraggableHandle(
+                                    interactionSource = interactionSource
+                                )
+                            )
+                        },
                         colors = colors,
                         interactionSource = interactionSource,
                         content = { Text(item.stringResource()) },
