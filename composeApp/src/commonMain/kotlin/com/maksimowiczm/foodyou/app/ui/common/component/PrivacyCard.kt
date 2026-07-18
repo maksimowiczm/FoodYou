@@ -23,10 +23,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
-import com.maksimowiczm.foodyou.app.ui.fooddatacentral.FoodDataCentralPrivacyCard
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -106,7 +103,9 @@ class PrivacyCardScope(val selected: Boolean) {
         modifier: Modifier = Modifier,
         colors: ChipColors =
             AssistChipDefaults.assistChipColors(
-                labelColor = PrivacyCardDefaults.contentColor(selected)
+                labelColor = PrivacyCardDefaults.contentColor(selected),
+                leadingIconContentColor = PrivacyCardDefaults.iconColor(selected),
+                trailingIconContentColor = PrivacyCardDefaults.iconColor(selected),
             ),
         border: BorderStroke? =
             AssistChipDefaults.assistChipBorder(
@@ -140,6 +139,11 @@ object PrivacyCardDefaults {
         else MaterialTheme.colorScheme.surfaceContainer
 
     @Composable fun contentColor(selected: Boolean): Color = contentColorFor(color(selected))
+
+    @Composable
+    fun iconColor(selected: Boolean): Color =
+        if (selected) MaterialTheme.colorScheme.onPrimaryContainer
+        else MaterialTheme.colorScheme.primary
 }
 
 @Composable
@@ -172,10 +176,4 @@ fun PrivacyCardScope.TermsOfUseChip(onClick: () -> Unit, modifier: Modifier = Mo
         },
         label = { Text(stringResource(Res.string.headline_terms_of_use)) },
     )
-}
-
-@Preview
-@Composable
-private fun FoodDataCentralPrivacyCardPreview() {
-    PreviewFoodYouTheme { FoodDataCentralPrivacyCard(selected = false, onSelectedChange = {}) }
 }
