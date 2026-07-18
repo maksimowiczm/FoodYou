@@ -1,37 +1,32 @@
 package com.maksimowiczm.foodyou.app.ui.food.search
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Warning
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfade
 import com.maksimowiczm.foodyou.app.ui.common.extension.rememberDebounceIsIdle
 import foodyou.app.generated.resources.*
 import kotlinx.serialization.Serializable
@@ -45,150 +40,103 @@ internal fun SearchFilters(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    SharedTransitionLayout(modifier) {
-        updateTransition(selected).AnimatedContent(
-            contentKey = { if (it != null) it::class else "null" },
-            modifier = Modifier.fillMaxWidth(),
-            transitionSpec = { crossfade() },
-        ) { currentSelected ->
-            if (currentSelected != null)
-                LazyRow(
-                    contentPadding = contentPadding,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    item {
-                        FilterChip(
-                            selected = true,
-                            onClick = { onCollection(null) },
-                            label = { Text(currentSelected.stringResource()) },
-                            modifier =
-                                Modifier
-                                    // I have no idea why sharedElement is buggy here, but
-                                    // sharedBounds with snap enter and exit transitions work
-                                    .sharedBounds(
-                                        rememberSharedContentState(
-                                            key = currentSelected.toString()
-                                        ),
-                                        this@AnimatedContent,
-                                        enter = fadeIn(snap()),
-                                        exit = fadeOut(snap()),
-                                    ),
-                            leadingIcon = {
-                                currentSelected.Icon(
-                                    selected = true,
-                                    modifier = Modifier.size(AssistChipDefaults.IconSize),
-                                )
-                            },
-                            trailingIcon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Clear,
-                                    contentDescription = stringResource(Res.string.action_clear),
-                                    modifier = Modifier.size(AssistChipDefaults.IconSize),
-                                )
-                            },
-                        )
-                    }
-                    with(currentSelected) { suffixFilters(onCollection) }
-                }
-            else
-                LazyHorizontalStaggeredGrid(
-                    rows = StaggeredGridCells.Fixed(2),
-                    modifier = Modifier.height((8 + 32 + 8 + 32 + 8).dp).padding(vertical = 8.dp),
-                    contentPadding = contentPadding,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalItemSpacing = 8.dp,
-                ) {
-                    items(collections) {
-                        Chip(
-                            state = it.state,
-                            onClick = { onCollection(it.collection) },
-                            label = { Text(it.collection.stringResource()) },
-                            leadingIcon = {
-                                it.collection.Icon(
-                                    selected = false,
-                                    modifier = Modifier.size(AssistChipDefaults.IconSize),
-                                )
-                            },
-                            modifier =
-                                Modifier.sharedBounds(
-                                    rememberSharedContentState(key = it.collection.toString()),
-                                    this@AnimatedContent,
-                                    enter = fadeIn(snap()),
-                                    exit = fadeOut(snap()),
-                                ),
-                        )
-                    }
-                }
-        }
+    val rows = if (selected == null) 2 else 1
+    val filteredCollections = collections.filter {
+        if (selected != null) it.collection::class == selected::class else true
     }
-}
 
-@Composable
-private fun Chip(
-    state: CollectionFilterState,
-    onClick: () -> Unit,
-    label: @Composable () -> Unit,
-    leadingIcon: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val colors =
-        if (state is CollectionFilterState.Error)
-            AssistChipDefaults.assistChipColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer,
-                labelColor = MaterialTheme.colorScheme.onErrorContainer,
-                leadingIconContentColor = MaterialTheme.colorScheme.onErrorContainer,
-                trailingIconContentColor = MaterialTheme.colorScheme.onErrorContainer,
-            )
-        else
-            AssistChipDefaults.assistChipColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                leadingIconContentColor = MaterialTheme.colorScheme.onSurface,
-                trailingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-
-    val border =
-        AssistChipDefaults.assistChipBorder(
-            enabled = true,
-            borderColor =
-                if (state is CollectionFilterState.Error) Color.Transparent
-                else MaterialTheme.colorScheme.outlineVariant,
-        )
-
-    val count =
-        remember(state) {
-            val count = state.count ?: return@remember null
-            if (count > 1000) "1000+" else count.toString()
-        }
-
-    AssistChip(
-        onClick = onClick,
-        label = label,
-        modifier = modifier,
-        colors = colors,
-        border = border,
-        leadingIcon = leadingIcon,
-        trailingIcon = {
-            when (state) {
-                is CollectionFilterState.Error ->
-                    if (count == null || state.count == 0)
-                        Icon(
-                            imageVector = Icons.Outlined.Warning,
-                            contentDescription = null,
-                            modifier = Modifier.size(AssistChipDefaults.IconSize),
-                        )
-                    else Text(text = count, style = MaterialTheme.typography.bodySmall)
-
-                is CollectionFilterState.Loaded ->
-                    Text(text = count!!, style = MaterialTheme.typography.bodySmall)
-
-                CollectionFilterState.Loading ->
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(AssistChipDefaults.IconSize),
-                        strokeWidth = 2.dp,
+    LazyHorizontalStaggeredGrid(
+        rows = StaggeredGridCells.Fixed(rows),
+        contentPadding = contentPadding,
+        horizontalItemSpacing = 4.dp,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier.padding(bottom = 8.dp).height(if (selected == null) 76.dp else 36.dp),
+    ) {
+        items(items = filteredCollections, key = { it.collection.toString() }) {
+            val isSelected = selected != null && it.collection::class == selected::class
+            val colors =
+                if (it.state is CollectionFilterState.Error)
+                    FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        labelColor = MaterialTheme.colorScheme.onErrorContainer,
+                        iconColor = MaterialTheme.colorScheme.onErrorContainer,
+                        selectedTrailingIconColor = MaterialTheme.colorScheme.onErrorContainer,
                     )
+                else
+                    FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        iconColor = MaterialTheme.colorScheme.onSurface,
+                    )
+            val border =
+                FilterChipDefaults.filterChipBorder(
+                    enabled = true,
+                    selected = isSelected,
+                    borderColor =
+                        if (it.state is CollectionFilterState.Error) Color.Transparent
+                        else MaterialTheme.colorScheme.outlineVariant,
+                )
+
+            Box(
+                modifier = Modifier.animateItem().height(32.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                FilterChip(
+                    selected = isSelected,
+                    onClick = {
+                        if (!isSelected) onCollection(it.collection) else onCollection(null)
+                    },
+                    label = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(it.collection.stringResource())
+                            if (it.state is CollectionFilterState.Loaded) {
+                                val count =
+                                    remember(it.state.count) {
+                                        val count = it.state.count
+                                        if (count > 1000) "1000+" else count.toString()
+                                    }
+                                Spacer(Modifier.width(4.dp))
+                                Text(
+                                    text = count,
+                                    style = MaterialTheme.typography.bodySmall,
+                                )
+                            }
+                        }
+                    },
+                    shapes = FilterChipDefaults.shapes(),
+                    modifier = Modifier.height(32.dp),
+                    leadingIcon = {
+                        it.collection.Icon(
+                            selected = isSelected,
+                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                        )
+                    },
+                    trailingIcon = {
+                        if (isSelected)
+                            Icon(
+                                imageVector = Icons.Outlined.Clear,
+                                contentDescription = stringResource(Res.string.action_clear),
+                                modifier = Modifier.size(FilterChipDefaults.IconSize),
+                            )
+                        else if (it.state is CollectionFilterState.Error)
+                            Icon(
+                                imageVector = Icons.Outlined.Warning,
+                                contentDescription = null,
+                                modifier = Modifier.size(FilterChipDefaults.IconSize),
+                            )
+                        else if (it.state is CollectionFilterState.Loading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(FilterChipDefaults.IconSize - 4.dp),
+                                strokeWidth = 2.dp,
+                            )
+                        }
+                    },
+                    colors = colors,
+                    border = border,
+                )
             }
-        },
-    )
+        }
+        if (selected != null) with(selected) { suffixFilters(onCollection) }
+    }
 }
 
 @Immutable

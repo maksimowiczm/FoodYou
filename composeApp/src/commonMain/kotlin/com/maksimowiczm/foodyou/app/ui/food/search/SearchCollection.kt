@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Check
@@ -37,7 +37,7 @@ internal sealed interface SearchCollection {
 
     @Composable fun stringResource(): String
 
-    fun LazyListScope.suffixFilters(onUpdate: (SearchCollection) -> Unit) = Unit
+    fun LazyStaggeredGridScope.suffixFilters(onUpdate: (SearchCollection) -> Unit) = Unit
 
     @Immutable
     @Serializable
@@ -93,12 +93,12 @@ internal sealed interface SearchCollection {
         override fun stringResource(): String =
             org.jetbrains.compose.resources.stringResource(Res.string.headline_open_food_facts)
 
-        override fun LazyListScope.suffixFilters(onUpdate: (SearchCollection) -> Unit) {
+        override fun LazyStaggeredGridScope.suffixFilters(onUpdate: (SearchCollection) -> Unit) {
             item {
                 var expanded by rememberSaveable { mutableStateOf(false) }
                 val entries = OpenFoodFactsSearchParameters.OpenFoodFactsVersion.entries
 
-                Box {
+                Box(Modifier.animateItem()) {
                     DropdownMenuPopup(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
@@ -132,6 +132,7 @@ internal sealed interface SearchCollection {
                         selected = true,
                         onClick = { expanded = true },
                         label = { Text(version.stringResource()) },
+                        shapes = FilterChipDefaults.shapes(),
                         colors =
                             FilterChipDefaults.filterChipColors(
                                 containerColor = MaterialTheme.colorScheme.surface
@@ -160,12 +161,12 @@ internal sealed interface SearchCollection {
         override fun stringResource(): String =
             org.jetbrains.compose.resources.stringResource(Res.string.headline_fooddata_central)
 
-        override fun LazyListScope.suffixFilters(onUpdate: (SearchCollection) -> Unit) {
+        override fun LazyStaggeredGridScope.suffixFilters(onUpdate: (SearchCollection) -> Unit) {
             item {
                 var expanded by rememberSaveable { mutableStateOf(false) }
                 val entries = FoodDataCentralSearchParameters.DataType.entries
 
-                Box {
+                Box(Modifier.animateItem()) {
                     DropdownMenuPopup(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
@@ -215,6 +216,7 @@ internal sealed interface SearchCollection {
                                 Text(text)
                             }
                         },
+                        shapes = FilterChipDefaults.shapes(),
                         colors =
                             FilterChipDefaults.filterChipColors(
                                 containerColor = MaterialTheme.colorScheme.surface
