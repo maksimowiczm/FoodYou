@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.app.ui.common.utility.ClipboardManagerImpl
 import com.maksimowiczm.foodyou.app.ui.common.utility.DateFormatterImpl
 import com.maksimowiczm.foodyou.app.ui.common.utility.FoodNameSelector
+import com.maksimowiczm.foodyou.app.ui.common.utility.UIFeatureFlags
 import com.maksimowiczm.foodyou.app.ui.common.utility.UtilityProvider
 import com.maksimowiczm.foodyou.common.domain.BlobResolver
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
@@ -45,6 +46,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
                     foodNameSelector = foodNameSelector,
                     appConfig = appConfig,
                     blobResolver = blobResolver,
+                    uiFeatureFlags = UIFeatureFlags,
                     content = content,
                 )
             }

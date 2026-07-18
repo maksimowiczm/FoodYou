@@ -11,6 +11,7 @@ fun UtilityProvider(
     foodNameSelector: FoodNameSelector,
     appConfig: FoodYouConfig,
     blobResolver: BlobResolver,
+    uiFeatureFlags: UIFeatureFlags,
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
@@ -19,6 +20,7 @@ fun UtilityProvider(
         LocalFoodNameSelector provides foodNameSelector,
         LocalBlobResolver provides blobResolver,
         LocalAppConfig provides appConfig,
+        LocalUIFeatureFlags provides uiFeatureFlags,
         content = content,
     )
 }
