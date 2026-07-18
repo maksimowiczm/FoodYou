@@ -50,10 +50,11 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun UserRecipeDetailsScreen(
     identity: UserRecipeIdentity,
+    initialQuantity: Quantity?,
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity) -> Unit,
+    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: UserRecipeDetailsViewModel =
@@ -71,6 +72,7 @@ fun UserRecipeDetailsScreen(
     UserRecipeDetailsScreen(
         isFavorite = isFavorite,
         recipe = userRecipe,
+        initialQuantity = initialQuantity,
         onBack = onBack,
         onEdit = onEdit,
         onDelete = viewModel::delete,
@@ -84,11 +86,12 @@ fun UserRecipeDetailsScreen(
 private fun UserRecipeDetailsScreen(
     isFavorite: Boolean?,
     recipe: UserRecipe?,
+    initialQuantity: Quantity?,
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity) -> Unit,
+    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val nameSelector = LocalFoodNameSelector.current
@@ -104,21 +107,24 @@ private fun UserRecipeDetailsScreen(
     val totalWeight = recipe?.totalWeight
 
     var quantity by
-        rememberSerializable(servingWeight, totalWeight) {
+        rememberSerializable(initialQuantity, servingWeight, totalWeight) {
             val default =
-                if (servingWeight != null) ServingQuantity(1.0)
-                else AbsoluteQuantity.Weight(100.grams)
+                initialQuantity
+                    ?: if (servingWeight != null) ServingQuantity(1.0)
+                    else AbsoluteQuantity.Weight(100.grams)
             mutableStateOf(default)
         }
     val quantitySuggestions =
-        remember(servingWeight, totalWeight) {
-            if (recipe == null) return@remember emptyList<Quantity>()
+        remember(initialQuantity, servingWeight, totalWeight) {
+            if (recipe == null) return@remember emptyList()
             else
                 buildList {
                     add(AbsoluteQuantity.Weight(100.grams))
+                    if (initialQuantity != null) add(initialQuantity)
                     if (servingWeight != null) add(ServingQuantity(1.0))
                     if (totalWeight != null) add(PackageQuantity(1.0))
                 }
+                    .distinct()
         }
 
     val headline = remember(recipe?.name, nameSelector) { recipe?.headline(nameSelector) }
@@ -199,7 +205,7 @@ private fun UserRecipeDetailsScreen(
                         RecipeIngredientListItem(
                             component = component,
                             scalingFactor = ingredientScalingFactor,
-                            onClick = { onNavigateToIngredient(component.identity) },
+                            onClick = { onNavigateToIngredient(component.identity, it) },
                         )
                     }
                 }

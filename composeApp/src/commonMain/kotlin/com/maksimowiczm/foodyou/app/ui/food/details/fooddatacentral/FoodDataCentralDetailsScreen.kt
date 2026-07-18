@@ -30,6 +30,7 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.food.scale
 import com.maksimowiczm.foodyou.common.domain.grams
@@ -46,6 +47,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun FoodDataCentralDetailsScreen(
     identity: FoodDataCentralProductIdentity,
+    initialQuantity: Quantity?,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -69,6 +71,7 @@ fun FoodDataCentralDetailsScreen(
                 isLoading = uiState.isLoading,
                 isFavorite = uiState.isFavorite,
                 headline = headline,
+                initialQuantity = initialQuantity,
                 nutritionFacts = uiState.food?.nutritionFacts,
                 servingQuantity = uiState.food?.servingQuantity,
                 packageQuantity = uiState.food?.packageQuantity,
@@ -90,6 +93,7 @@ private fun FoodDataCentralDetailsScreen(
     isLoading: Boolean,
     isFavorite: Boolean,
     headline: String?,
+    initialQuantity: Quantity?,
     nutritionFacts: NutritionFacts?,
     servingQuantity: AbsoluteQuantity?,
     packageQuantity: AbsoluteQuantity?,
@@ -108,23 +112,26 @@ private fun FoodDataCentralDetailsScreen(
         }
 
     var quantity by
-        rememberSerializable(servingQuantity, packageQuantity, isLiquid) {
+        rememberSerializable(initialQuantity, servingQuantity, packageQuantity, isLiquid) {
             val default =
-                if (servingQuantity != null) ServingQuantity(1.0)
-                else if (packageQuantity != null) PackageQuantity(1.0)
-                else if (isLiquid) AbsoluteQuantity.Volume(100.milliliters)
-                else AbsoluteQuantity.Weight(100.grams)
+                initialQuantity
+                    ?: if (servingQuantity != null) ServingQuantity(1.0)
+                    else if (packageQuantity != null) PackageQuantity(1.0)
+                    else if (isLiquid) AbsoluteQuantity.Volume(100.milliliters)
+                    else AbsoluteQuantity.Weight(100.grams)
 
             mutableStateOf(default)
         }
     val quantitySuggestions =
-        remember(servingQuantity, packageQuantity, isLiquid) {
+        remember(initialQuantity, servingQuantity, packageQuantity, isLiquid) {
             buildList {
                 if (isLiquid) add(AbsoluteQuantity.Volume(100.milliliters))
                 else add(AbsoluteQuantity.Weight(100.grams))
+                if (initialQuantity != null) add(initialQuantity)
                 if (servingQuantity != null) add(ServingQuantity(1.0))
                 if (packageQuantity != null) add(PackageQuantity(1.0))
             }
+                .distinct()
         }
 
     val scaledNutritionFacts =

@@ -53,6 +53,7 @@ import com.maksimowiczm.foodyou.app.ui.userproduct.create.CreateProductScreen
 import com.maksimowiczm.foodyou.app.ui.userproduct.edit.EditProductScreen
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
@@ -101,7 +102,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onBack = { backStack.removeLastIf<CreateProduct>() },
                         onCreate = { id ->
                             backStack.removeLastIf<CreateProduct>()
-                            backStack.add(UserProductDetails(id))
+                            backStack.add(UserProductDetails(id, null))
                         },
                     )
                 }
@@ -129,6 +130,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                 entry<UserProductDetails> {
                     UserProductDetailsScreen(
                         identity = it.identity,
+                        initialQuantity = it.quantity,
                         onEdit = { backStack.add(EditUserProduct(it.identity)) },
                         onBack = { backStack.removeLastIf<UserProductDetails>() },
                         onDelete = { backStack.removeLastIf<UserProductDetails>() },
@@ -137,27 +139,33 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                 entry<UserRecipeDetails> {
                     UserRecipeDetailsScreen(
                         identity = it.identity,
+                        initialQuantity = it.quantity,
                         onEdit = { backStack.add(EditRecipe(it.identity)) },
                         onBack = { backStack.removeLastIf<UserRecipeDetails>() },
                         onDelete = { backStack.removeLastIf<UserRecipeDetails>() },
-                        onNavigateToIngredient = { identity ->
+                        onNavigateToIngredient = { identity, quantity ->
                             val route =
                                 when (identity) {
                                     is FoodCompositionComponentIdentity.UserProduct ->
-                                        UserProductDetails(UserProductIdentity(identity.id))
+                                        UserProductDetails(
+                                            UserProductIdentity(identity.id),
+                                            quantity,
+                                        )
 
                                     is FoodCompositionComponentIdentity.OpenFoodFacts ->
                                         OpenFoodFactsProductDetails(
-                                            OpenFoodFactsProductIdentity(identity.barcode)
+                                            OpenFoodFactsProductIdentity(identity.barcode),
+                                            quantity,
                                         )
 
                                     is FoodCompositionComponentIdentity.FoodDataCentral ->
                                         FoodDataCentralProductDetails(
-                                            FoodDataCentralProductIdentity(identity.fdcId)
+                                            FoodDataCentralProductIdentity(identity.fdcId),
+                                            quantity,
                                         )
 
                                     is FoodCompositionComponentIdentity.Recipe ->
-                                        UserRecipeDetails(UserRecipeIdentity(identity.id))
+                                        UserRecipeDetails(UserRecipeIdentity(identity.id), quantity)
 
                                     is FoodCompositionComponentIdentity.Anonymous -> TODO()
                                 }
@@ -168,26 +176,37 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                 entry<OpenFoodFactsProductDetails> {
                     OpenFoodFactsDetailsScreen(
                         identity = it.identity,
+                        initialQuantity = it.quantity,
                         onBack = { backStack.removeLastIf<OpenFoodFactsProductDetails>() },
                     )
                 }
                 entry<FoodDataCentralProductDetails> {
                     FoodDataCentralDetailsScreen(
                         identity = it.identity,
+                        initialQuantity = it.quantity,
                         onBack = { backStack.removeLastIf<FoodDataCentralProductDetails>() },
                     )
                 }
                 entry<Home> {
                     HomeScreen(
                         onAvatar = { backStack.add(SwitchProfile) },
-                        onFoodDataCentralProduct = { id ->
-                            backStack.add(FoodDataCentralProductDetails(id))
+                        onFoodDataCentralProduct = { id, quantity ->
+                            backStack.add(FoodDataCentralProductDetails(id, quantity))
                         },
-                        onOpenFoodFactsProduct = { id ->
-                            backStack.add(OpenFoodFactsProductDetails(id))
+                        onOpenFoodFactsProduct = { id, quantity ->
+                            backStack.add(OpenFoodFactsProductDetails(id, quantity))
                         },
-                        onUserProduct = { id -> backStack.add(UserProductDetails(id)) },
-                        onUserRecipe = { id -> backStack.add(UserRecipeDetails(id)) },
+                        onUserProduct = { id, quantity ->
+                            backStack.add(
+                                UserProductDetails(
+                                    id,
+                                    quantity,
+                                )
+                            )
+                        },
+                        onUserRecipe = { id, quantity ->
+                            backStack.add(UserRecipeDetails(id, quantity))
+                        },
                         onCreateProduct = { backStack.add(CreateProduct) },
                         onCreateRecipe = { backStack.add(CreateRecipe) },
                         initialQuery = it.initialQuery,
@@ -230,7 +249,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onBack = { backStack.removeLastIf<CreateRecipe>() },
                         onCreate = { id ->
                             backStack.removeLastIf<CreateRecipe>()
-                            backStack.add(UserRecipeDetails(id))
+                            backStack.add(UserRecipeDetails(id, null))
                         },
                         onEditUserProduct = { backStack.add(EditUserProduct(it)) },
                         onEditUserRecipe = { backStack.add(EditRecipe(it)) },
@@ -282,18 +301,24 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data class EditProfile(val profileId: ProfileId) : FoodYouNavHostRoute
 
     @Serializable
-    data class UserProductDetails(val identity: UserProductIdentity) : FoodYouNavHostRoute
-
-    @Serializable
-    data class UserRecipeDetails(val identity: UserRecipeIdentity) : FoodYouNavHostRoute
-
-    @Serializable
-    data class OpenFoodFactsProductDetails(val identity: OpenFoodFactsProductIdentity) :
+    data class UserProductDetails(val identity: UserProductIdentity, val quantity: Quantity?) :
         FoodYouNavHostRoute
 
     @Serializable
-    data class FoodDataCentralProductDetails(val identity: FoodDataCentralProductIdentity) :
+    data class UserRecipeDetails(val identity: UserRecipeIdentity, val quantity: Quantity?) :
         FoodYouNavHostRoute
+
+    @Serializable
+    data class OpenFoodFactsProductDetails(
+        val identity: OpenFoodFactsProductIdentity,
+        val quantity: Quantity?,
+    ) : FoodYouNavHostRoute
+
+    @Serializable
+    data class FoodDataCentralProductDetails(
+        val identity: FoodDataCentralProductIdentity,
+        val quantity: Quantity?,
+    ) : FoodYouNavHostRoute
 
     @Serializable data class Home(val initialQuery: String?) : FoodYouNavHostRoute
 

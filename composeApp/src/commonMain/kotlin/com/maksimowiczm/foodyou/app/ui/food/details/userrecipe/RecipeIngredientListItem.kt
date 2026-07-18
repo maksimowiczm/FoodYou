@@ -19,6 +19,8 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantit
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -29,7 +31,7 @@ internal fun RecipeIngredientListItem(
     component: FoodCompositionComponent,
     scalingFactor: Double,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
+    onClick: (Quantity) -> Unit = {},
 ) {
     val nameSelector = LocalFoodNameSelector.current
     val componentName =
@@ -89,7 +91,7 @@ internal fun RecipeIngredientListItem(
         energy = componentMeasuredFacts.energy.value,
         quantity = { Text(scaledComponentQuantity.stringResource()) },
         image = image,
-        onClick = onClick,
+        onClick = { onClick(scaledComponentQuantity.toQuantity()) },
         modifier = modifier,
     )
 }

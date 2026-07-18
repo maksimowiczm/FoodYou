@@ -91,6 +91,7 @@ import com.maksimowiczm.foodyou.app.ui.food.search.openfoodfacts.OpenFoodFactsSe
 import com.maksimowiczm.foodyou.app.ui.food.search.rememberCollectionFilters
 import com.maksimowiczm.foodyou.app.ui.home.calendar.CalendarCard
 import com.maksimowiczm.foodyou.app.ui.home.common.rememberHomeState
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.common.extension.safeRemoveLast
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -113,10 +114,10 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun HomeScreen(
     onAvatar: () -> Unit,
-    onFoodDataCentralProduct: (FoodDataCentralProductIdentity) -> Unit,
-    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity) -> Unit,
-    onUserProduct: (UserProductIdentity) -> Unit,
-    onUserRecipe: (UserRecipeIdentity) -> Unit,
+    onFoodDataCentralProduct: (FoodDataCentralProductIdentity, Quantity) -> Unit,
+    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity, Quantity) -> Unit,
+    onUserProduct: (UserProductIdentity, Quantity) -> Unit,
+    onUserRecipe: (UserRecipeIdentity, Quantity) -> Unit,
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
     initialQuery: String?,

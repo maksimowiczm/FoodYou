@@ -43,6 +43,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun UserProductDetailsScreen(
     identity: UserProductIdentity,
+    initialQuantity: Quantity?,
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -63,6 +64,7 @@ fun UserProductDetailsScreen(
     UserProductDetailsScreen(
         isFavorite = isFavorite,
         product = userFood,
+        initialQuantity = initialQuantity,
         onBack = onBack,
         onEdit = onEdit,
         onDelete = viewModel::delete,
@@ -75,6 +77,7 @@ fun UserProductDetailsScreen(
 private fun UserProductDetailsScreen(
     isFavorite: Boolean?,
     product: UserProduct?,
+    initialQuantity: Quantity?,
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -92,28 +95,32 @@ private fun UserProductDetailsScreen(
 
     var quantity by
         rememberSerializable(
+            initialQuantity,
             product?.isLiquid,
             product?.servingQuantity,
             product?.packageQuantity,
         ) {
             val default =
-                if (product?.servingQuantity != null) ServingQuantity(1.0)
-                else if (product?.packageQuantity != null) PackageQuantity(1.0)
-                else if (product?.isLiquid == true) AbsoluteQuantity.Volume(100.milliliters)
-                else AbsoluteQuantity.Weight(100.grams)
+                initialQuantity
+                    ?: if (product?.servingQuantity != null) ServingQuantity(1.0)
+                    else if (product?.packageQuantity != null) PackageQuantity(1.0)
+                    else if (product?.isLiquid == true) AbsoluteQuantity.Volume(100.milliliters)
+                    else AbsoluteQuantity.Weight(100.grams)
 
             mutableStateOf(default)
         }
     val quantitySuggestions =
         remember(product?.isLiquid, product?.servingQuantity, product?.packageQuantity) {
-            if (product == null) return@remember emptyList<Quantity>()
+            if (product == null) return@remember emptyList()
             else
                 buildList {
                     if (product.isLiquid) add(AbsoluteQuantity.Volume(100.milliliters))
                     else add(AbsoluteQuantity.Weight(100.grams))
+                    if (initialQuantity != null) add(initialQuantity)
                     if (product.servingQuantity != null) add(ServingQuantity(1.0))
                     if (product.packageQuantity != null) add(PackageQuantity(1.0))
                 }
+                    .distinct()
         }
 
     val headline =
