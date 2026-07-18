@@ -11,7 +11,8 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialShapes
@@ -25,10 +26,15 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.MeshGradientPainter
 import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Shader
+import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
@@ -37,6 +43,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.util.fastRoundToInt
 import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.RoundedPolygon
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalUIFeatureFlags
 import foodyou.app.generated.resources.*
 import kotlin.math.PI
 import kotlin.math.cos
@@ -72,8 +79,12 @@ fun InteractiveLogo(
     clickable: Boolean = true,
     autoCycle: Boolean = false,
 ) {
+    val featureFlags = LocalUIFeatureFlags.current
+
+    var useGradient by rememberSaveable { mutableStateOf(featureFlags.gradientPainterLogo) }
+
     val infiniteTransition = rememberInfiniteTransition()
-    val coroutineScope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
     val motionScheme = MaterialTheme.motionScheme
     val colorScheme = MaterialTheme.colorScheme
 
@@ -97,7 +108,7 @@ fun InteractiveLogo(
     val progress = rememberWrapAroundCounter(morphs.size.toFloat())
     val morph = remember { derivedStateOf { morphs[progress.value.toInt() % morphs.size] } }
 
-    val meshProgress =
+    val colorProgress =
         infiniteTransition.animateFloat(
             initialValue = 0f,
             targetValue = 1f,
@@ -113,7 +124,8 @@ fun InteractiveLogo(
                 .collectLatest { progress.increment(motionScheme.fastSpatialSpec()) }
         }
 
-    val colors =
+    // Colors for the mesh-gradient variant
+    val meshColors =
         remember(colorScheme) {
             listOf(
                 colorScheme.primary,
@@ -123,6 +135,32 @@ fun InteractiveLogo(
                 colorScheme.secondaryContainer,
                 colorScheme.primaryContainer,
             )
+        }
+
+    // Colors for the simple linear-gradient variant
+    val simpleColors =
+        remember(colorScheme) {
+            listOf(
+                colorScheme.primary,
+                colorScheme.secondary,
+                colorScheme.tertiary,
+            )
+        }
+
+    val simpleBrush =
+        remember(simpleColors, colorProgress) {
+            object : ShaderBrush() {
+                override fun createShader(size: Size): Shader {
+                    val widthOffset = size.width * colorProgress.value
+                    val heightOffset = size.height * colorProgress.value
+                    return LinearGradientShader(
+                        colors = simpleColors,
+                        from = Offset(widthOffset, heightOffset),
+                        to = Offset(widthOffset + size.width, heightOffset + size.height),
+                        tileMode = TileMode.Mirror,
+                    )
+                }
+            }
         }
 
     val morphOutlineShape =
@@ -162,78 +200,119 @@ fun InteractiveLogo(
             Modifier.fillMaxSize(.95f)
                 .then(
                     if (clickable)
-                        Modifier.clickable(interactionSource = null) {
-                            coroutineScope.launch {
-                                progress.increment(motionScheme.defaultSpatialSpec())
-                            }
-                        }
+                        Modifier.combinedClickable(
+                            interactionSource = null,
+                            indication = LocalIndication.current,
+                            onClick = {
+                                scope.launch {
+                                    progress.increment(motionScheme.defaultSpatialSpec())
+                                }
+                            },
+                            onLongClick = { useGradient = !useGradient },
+                        )
                     else Modifier
                 )
         ) {
-            val t = meshProgress.value * 2f * PI.toFloat()
-            val colorCount = colors.size
-            val colorProgress = (meshProgress.value * colorCount) % 1f
-            val baseShift = (meshProgress.value * colorCount).toInt()
+            if (useGradient) {
+                val t = colorProgress.value * 2f * PI.toFloat()
+                val colorCount = meshColors.size
+                val meshColorProgress = (colorProgress.value * colorCount) % 1f
+                val baseShift = (colorProgress.value * colorCount).toInt()
 
-            fun getShiftedColor(index: Int): Color {
-                val c1 = colors[(index + baseShift) % colorCount]
-                val c2 = colors[(index + baseShift + 1) % colorCount]
-                return lerp(c1, c2, colorProgress)
-            }
-
-            val gradientPainter =
-                MeshGradientPainter(rows = 3, columns = 3) {
-                    // Corners
-                    setVertex(0, 0, Offset(0f, 0f), getShiftedColor(0))
-                    setVertex(0, 3, Offset(1f, 0f), getShiftedColor(1))
-                    setVertex(3, 0, Offset(0f, 1f), getShiftedColor(2))
-                    setVertex(3, 3, Offset(1f, 1f), getShiftedColor(3))
-
-                    // Top edge
-                    setVertex(0, 1, Offset(0.33f + sin(t) * 0.03f, 0f), getShiftedColor(4))
-                    setVertex(0, 2, Offset(0.66f + cos(t) * 0.03f, 0f), getShiftedColor(5))
-
-                    // Bottom edge
-                    setVertex(3, 1, Offset(0.33f + cos(t * 0.8f) * 0.03f, 1f), getShiftedColor(2))
-                    setVertex(3, 2, Offset(0.66f + sin(t * 1.2f) * 0.03f, 1f), getShiftedColor(3))
-
-                    // Left edge
-                    setVertex(1, 0, Offset(0f, 0.33f + sin(t * 1.1f) * 0.03f), getShiftedColor(1))
-                    setVertex(2, 0, Offset(0f, 0.66f + cos(t * 0.9f) * 0.03f), getShiftedColor(0))
-
-                    // Right edge
-                    setVertex(1, 3, Offset(1f, 0.33f + cos(t * 1.3f) * 0.03f), getShiftedColor(5))
-                    setVertex(2, 3, Offset(1f, 0.66f + sin(t * 0.7f) * 0.03f), getShiftedColor(4))
-
-                    // Inner vertices
-                    setVertex(
-                        1,
-                        1,
-                        Offset(0.33f + sin(t * 0.7f) * 0.12f, 0.33f + cos(t * 0.8f) * 0.12f),
-                        getShiftedColor(0),
-                    )
-                    setVertex(
-                        1,
-                        2,
-                        Offset(0.66f + cos(t * 0.9f) * 0.12f, 0.33f + sin(t * 0.7f) * 0.12f),
-                        getShiftedColor(1),
-                    )
-                    setVertex(
-                        2,
-                        1,
-                        Offset(0.33f + cos(t * 0.8f) * 0.12f, 0.66f + sin(t * 0.9f) * 0.12f),
-                        getShiftedColor(2),
-                    )
-                    setVertex(
-                        2,
-                        2,
-                        Offset(0.66f + sin(t * 0.7f) * 0.12f, 0.66f + cos(t * 0.8f) * 0.12f),
-                        getShiftedColor(3),
-                    )
+                fun getShiftedColor(index: Int): Color {
+                    val c1 = meshColors[(index + baseShift) % colorCount]
+                    val c2 = meshColors[(index + baseShift + 1) % colorCount]
+                    return lerp(c1, c2, meshColorProgress)
                 }
 
-            with(gradientPainter) {
-                draw(size)
+                val gradientPainter =
+                    MeshGradientPainter(rows = 3, columns = 3) {
+                        // Corners
+                        setVertex(0, 0, Offset(0f, 0f), getShiftedColor(0))
+                        setVertex(0, 3, Offset(1f, 0f), getShiftedColor(1))
+                        setVertex(3, 0, Offset(0f, 1f), getShiftedColor(2))
+                        setVertex(3, 3, Offset(1f, 1f), getShiftedColor(3))
+
+                        // Top edge
+                        setVertex(0, 1, Offset(0.33f + sin(t) * 0.03f, 0f), getShiftedColor(4))
+                        setVertex(0, 2, Offset(0.66f + cos(t) * 0.03f, 0f), getShiftedColor(5))
+
+                        // Bottom edge
+                        setVertex(
+                            3,
+                            1,
+                            Offset(0.33f + cos(t * 0.8f) * 0.03f, 1f),
+                            getShiftedColor(2),
+                        )
+                        setVertex(
+                            3,
+                            2,
+                            Offset(0.66f + sin(t * 1.2f) * 0.03f, 1f),
+                            getShiftedColor(3),
+                        )
+
+                        // Left edge
+                        setVertex(
+                            1,
+                            0,
+                            Offset(0f, 0.33f + sin(t * 1.1f) * 0.03f),
+                            getShiftedColor(1),
+                        )
+                        setVertex(
+                            2,
+                            0,
+                            Offset(0f, 0.66f + cos(t * 0.9f) * 0.03f),
+                            getShiftedColor(0),
+                        )
+
+                        // Right edge
+                        setVertex(
+                            1,
+                            3,
+                            Offset(1f, 0.33f + cos(t * 1.3f) * 0.03f),
+                            getShiftedColor(5),
+                        )
+                        setVertex(
+                            2,
+                            3,
+                            Offset(1f, 0.66f + sin(t * 0.7f) * 0.03f),
+                            getShiftedColor(4),
+                        )
+
+                        // Inner vertices
+                        setVertex(
+                            1,
+                            1,
+                            Offset(0.33f + sin(t * 0.7f) * 0.12f, 0.33f + cos(t * 0.8f) * 0.12f),
+                            getShiftedColor(0),
+                        )
+                        setVertex(
+                            1,
+                            2,
+                            Offset(0.66f + cos(t * 0.9f) * 0.12f, 0.33f + sin(t * 0.7f) * 0.12f),
+                            getShiftedColor(1),
+                        )
+                        setVertex(
+                            2,
+                            1,
+                            Offset(0.33f + cos(t * 0.8f) * 0.12f, 0.66f + sin(t * 0.9f) * 0.12f),
+                            getShiftedColor(2),
+                        )
+                        setVertex(
+                            2,
+                            2,
+                            Offset(0.66f + sin(t * 0.7f) * 0.12f, 0.66f + cos(t * 0.8f) * 0.12f),
+                            getShiftedColor(3),
+                        )
+                    }
+
+                with(gradientPainter) {
+                    draw(size)
+                }
+            } else {
+                rotate(degrees = rotation.value) {
+                    drawRect(simpleBrush)
+                }
             }
 
             val iconSize = Size(size.width * iconFraction, size.height * iconFraction)
