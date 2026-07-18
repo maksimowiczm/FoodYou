@@ -17,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
+import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.valentinilk.shimmer.Shimmer
@@ -27,14 +28,19 @@ import io.github.vinceglb.filekit.coil.securelyAccessFile
 import io.github.vinceglb.filekit.lastModified
 
 @Composable
-fun FileUri.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
+fun FileUri.Image(
+    shimmer: Shimmer,
+    modifier: Modifier = Modifier,
+    networkCachePolicy: CachePolicy = CachePolicy.ENABLED,
+) {
     val platformContext = LocalPlatformContext.current
     val file = remember(value) { runCatching { PlatformFile(value) }.getOrNull() }
 
     val model =
-        remember(platformContext, value) {
+        remember(platformContext, value, networkCachePolicy) {
             ImageRequest.Builder(platformContext)
                 .data(value)
+                .networkCachePolicy(networkCachePolicy)
                 .apply {
                     if (file != null) {
                         val cacheKey = "${file.absolutePath()}_${file.lastModified()}"
@@ -52,13 +58,14 @@ fun FileUri.Image(shimmer: Shimmer, modifier: Modifier = Modifier) {
         )
     val state = painter.state.collectAsStateWithLifecycle().value
 
+    if (state is AsyncImagePainter.State.Error && networkCachePolicy == CachePolicy.DISABLED) return
+
     val color by
         animateColorAsState(
             when (state) {
                 AsyncImagePainter.State.Empty,
                 is AsyncImagePainter.State.Success,
                 is AsyncImagePainter.State.Loading -> MaterialTheme.colorScheme.surfaceContainer
-
                 is AsyncImagePainter.State.Error -> MaterialTheme.colorScheme.errorContainer
             },
             animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),

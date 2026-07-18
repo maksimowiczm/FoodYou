@@ -5,8 +5,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import coil3.request.CachePolicy
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
+import com.maksimowiczm.foodyou.app.ui.common.utility.LocalUIFeatureFlags
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.common.utility.headline
 import com.maksimowiczm.foodyou.app.ui.food.search.FoodSearchListItem
@@ -63,6 +65,8 @@ internal fun OpenFoodFactsListItem(
             .stringResource(food.packageQuantity, food.servingQuantity)
             .expect("PreferredQuantity string can't be null")
 
+    val downloadImages = LocalUIFeatureFlags.current.downloadOpenFoodFactsSearchImages
+
     FoodSearchListItem(
         headline = food.headline(LocalFoodNameSelector.current),
         proteins = measurementFacts.proteins.value,
@@ -70,7 +74,17 @@ internal fun OpenFoodFactsListItem(
         fats = measurementFacts.fats.value,
         energy = measurementFacts.energy.value,
         quantity = { Text(measurementString) },
-        image = food.image?.let { @Composable { it.Image(shimmer, Modifier.size(56.dp)) } },
+        image =
+            food.image?.let {
+                @Composable {
+                    it.Image(
+                        shimmer = shimmer,
+                        modifier = Modifier.size(56.dp),
+                        networkCachePolicy =
+                            if (downloadImages) CachePolicy.ENABLED else CachePolicy.DISABLED,
+                    )
+                }
+            },
         onClick = { onClick(preferredQuantity) },
         modifier = modifier,
     )
