@@ -20,6 +20,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCardDefaults
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.fooddatacentral.FoodDataCentralPrivacyCard
@@ -79,13 +80,15 @@ internal fun FoodDatabaseScreen(
                 OpenFoodFactsPrivacyCard(
                     selected = state.allowOpenFoodFacts,
                     onSelectedChange = { state.allowOpenFoodFacts = it },
+                    shapes = PrivacyCardDefaults.shapes(0, 2, state.allowOpenFoodFacts),
                 )
             }
-            item { Spacer(Modifier.height(8.dp)) }
+            item { Spacer(Modifier.height(2.dp)) }
             item {
                 FoodDataCentralPrivacyCard(
                     selected = state.allowFoodDataCentral,
                     onSelectedChange = { state.allowFoodDataCentral = it },
+                    shapes = PrivacyCardDefaults.shapes(1, 2, state.allowFoodDataCentral),
                 )
             }
         }

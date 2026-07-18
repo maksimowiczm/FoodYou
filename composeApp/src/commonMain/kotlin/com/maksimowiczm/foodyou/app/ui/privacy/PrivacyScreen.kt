@@ -20,6 +20,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCard
+import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCardDefaults
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.toggle
@@ -65,9 +67,9 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues.add(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            item { FoodYouPrivacyCard() }
+            item { FoodYouPrivacyCard(shape = PrivacyCardDefaults.shape(0, 3, true)) }
             item {
                 OpenFoodFactsPrivacyCard(
                     selected = foodSearchPreferences.allowOpenFoodFacts,
@@ -75,6 +77,8 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                         viewModel.setFoodSearchPreferences(allowOpenFoodFacts = it)
                         hapticFeedback.toggle(it)
                     },
+                    shapes =
+                        PrivacyCardDefaults.shapes(1, 3, foodSearchPreferences.allowOpenFoodFacts),
                 )
             }
             item {
@@ -84,6 +88,12 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                         viewModel.setFoodSearchPreferences(allowFoodDataCentralUSDA = it)
                         hapticFeedback.toggle(it)
                     },
+                    shapes =
+                        PrivacyCardDefaults.shapes(
+                            2,
+                            3,
+                            foodSearchPreferences.allowFoodDataCentralUSDA,
+                        ),
                 )
             }
         }
@@ -92,6 +102,7 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun FoodYouPrivacyCard(
+    shape: Shape,
     modifier: Modifier = Modifier,
     privacyPolicyUri: String = LocalAppConfig.current.privacyPolicyUri,
 ) {
@@ -117,6 +128,7 @@ private fun FoodYouPrivacyCard(
                 )
             }
         },
+        shape = shape,
         modifier = modifier,
         contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
     ) {

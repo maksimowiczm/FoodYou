@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCard
+import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCardShapes
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
@@ -34,6 +35,7 @@ import org.jetbrains.compose.resources.stringResource
 fun FoodDataCentralPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
+    shapes: PrivacyCardShapes,
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
@@ -71,6 +73,7 @@ fun FoodDataCentralPrivacyCard(
                 }
             }
         },
+        shapes = shapes,
         modifier = modifier,
         contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
         onClick = { onSelectedChange(!selected) },

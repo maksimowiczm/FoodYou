@@ -27,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCard
+import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCardDefaults
+import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyCardShapes
 import com.maksimowiczm.foodyou.app.ui.common.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.app.ui.common.component.TermsOfUseChip
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
@@ -50,6 +52,7 @@ import org.koin.compose.koinInject
 fun OpenFoodFactsPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
+    shapes: PrivacyCardShapes,
     modifier: Modifier = Modifier,
     repository: OpenFoodFactsSettingsRepository = koinInject(),
     service: OpenFoodFactsLoginService = koinInject(),
@@ -96,6 +99,7 @@ fun OpenFoodFactsPrivacyCard(
                 }
             }
         },
+        shapes = shapes,
         modifier = modifier,
         contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
         onClick = { onSelectedChange(!selected) },
@@ -147,6 +151,7 @@ private fun OpenFoodFactsPrivacyCardPreview() {
     PreviewFoodYouTheme {
         OpenFoodFactsPrivacyCard(
             selected = true,
+            shapes = PrivacyCardDefaults.shapes(0, 1, true),
             onSelectedChange = {},
             repository =
                 object : OpenFoodFactsSettingsRepository {
@@ -170,6 +175,7 @@ private fun OpenFoodFactsPrivacyCardSignedInPreview() {
     PreviewFoodYouTheme {
         OpenFoodFactsPrivacyCard(
             selected = true,
+            shapes = PrivacyCardDefaults.shapes(0, 1, true),
             onSelectedChange = {},
             repository =
                 object : OpenFoodFactsSettingsRepository {
