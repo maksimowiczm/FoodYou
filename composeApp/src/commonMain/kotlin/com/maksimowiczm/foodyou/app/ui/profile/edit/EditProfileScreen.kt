@@ -6,13 +6,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -142,22 +146,26 @@ fun EditProfileScreen(
                     )
                 },
                 actions = {
-                    val buttonHeight = ButtonDefaults.ExtraSmallContainerHeight
-                    Button(
+                    FilledIconButton(
                         onClick = {
                             viewModel.edit(
                                 name = formState.nameTextState.text.toString(),
                                 avatar = formState.avatar,
                             )
                         },
-                        shapes = ButtonDefaults.shapesFor(buttonHeight),
-                        modifier = Modifier.height(buttonHeight),
+                        shapes = IconButtonDefaults.shapes(),
+                        modifier =
+                            Modifier.size(
+                                IconButtonDefaults.smallContainerSize(
+                                    IconButtonDefaults.IconButtonWidthOption.Wide
+                                )
+                            ),
                         enabled = formState.isValid && !isLocked,
-                        contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
                     ) {
-                        Text(
-                            text = stringResource(Res.string.action_save),
-                            style = ButtonDefaults.textStyleFor(buttonHeight),
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = stringResource(Res.string.action_save),
+                            modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                         )
                     }
                 },

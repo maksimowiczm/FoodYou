@@ -1,12 +1,15 @@
 package com.maksimowiczm.foodyou.app.ui.userproduct.create
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -110,8 +113,7 @@ fun CreateProductScreen(
                     )
                 },
                 actions = {
-                    val buttonHeight = ButtonDefaults.ExtraSmallContainerHeight
-                    Button(
+                    FilledIconButton(
                         onClick = {
                             if (!formState.hasSuggestedFieldsFilled) {
                                 showFillSuggestedFieldsDialog = true
@@ -119,16 +121,20 @@ fun CreateProductScreen(
                                 viewModel.create(formState)
                             }
                         },
-                        shapes = ButtonDefaults.shapesFor(buttonHeight),
+                        shapes = IconButtonDefaults.shapes(),
                         modifier =
-                            Modifier.height(buttonHeight)
+                            Modifier.size(
+                                    IconButtonDefaults.smallContainerSize(
+                                        IconButtonDefaults.IconButtonWidthOption.Wide
+                                    )
+                                )
                                 .then(if (isLocked) Modifier.shimmer() else Modifier),
                         enabled = formState.isValid && !isLocked,
-                        contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
                     ) {
-                        Text(
-                            text = stringResource(Res.string.action_create),
-                            style = ButtonDefaults.textStyleFor(buttonHeight),
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = stringResource(Res.string.action_create),
+                            modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                         )
                     }
                 },
