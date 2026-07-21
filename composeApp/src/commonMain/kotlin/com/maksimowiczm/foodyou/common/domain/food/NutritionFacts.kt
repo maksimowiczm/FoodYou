@@ -269,6 +269,57 @@ data class NutritionFacts(
     fun hasMacronutrientsValues(): Boolean =
         proteins.value != null && carbohydrates.value != null && fats.value != null
 
+    fun hasProteins(): Boolean = proteins.value != null
+
+    fun hasAnyCarbohydratesComponent(): Boolean =
+        carbohydrates.value != null ||
+            sugars.value != null ||
+            addedSugars.value != null ||
+            dietaryFiber.value != null ||
+            solubleFiber.value != null ||
+            insolubleFiber.value != null
+
+    fun hasAnyFatsComponent(): Boolean =
+        fats.value != null ||
+            saturatedFats.value != null ||
+            transFats.value != null ||
+            monounsaturatedFats.value != null ||
+            polyunsaturatedFats.value != null ||
+            omega3.value != null ||
+            omega6.value != null
+
+    fun hasAnyOtherComponent(): Boolean =
+        salt.value != null || cholesterol.value != null || caffeine.value != null
+
+    fun hasAnyVitamins(): Boolean =
+        vitaminA.value != null ||
+            vitaminB1.value != null ||
+            vitaminB2.value != null ||
+            vitaminB3.value != null ||
+            vitaminB5.value != null ||
+            vitaminB6.value != null ||
+            vitaminB7.value != null ||
+            vitaminB9.value != null ||
+            vitaminB12.value != null ||
+            vitaminC.value != null ||
+            vitaminD.value != null ||
+            vitaminE.value != null ||
+            vitaminK.value != null
+
+    fun hasAnyMinerals(): Boolean =
+        manganese.value != null ||
+            magnesium.value != null ||
+            potassium.value != null ||
+            calcium.value != null ||
+            copper.value != null ||
+            zinc.value != null ||
+            sodium.value != null ||
+            iron.value != null ||
+            phosphorus.value != null ||
+            selenium.value != null ||
+            iodine.value != null ||
+            chromium.value != null
+
     companion object {
         /**
          * Creates a NutritionFacts instance requiring all nutrient values to be explicitly

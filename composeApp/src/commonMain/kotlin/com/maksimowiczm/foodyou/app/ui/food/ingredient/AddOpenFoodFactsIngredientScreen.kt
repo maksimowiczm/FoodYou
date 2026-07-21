@@ -187,17 +187,28 @@ private fun AddOpenFoodFactsIngredientScreen(
                 topPadding = contentPadding.calculateTopPadding(),
             )
             LazyColumn(contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp)) {
-                item { FoodDetailsHeadline(headline = headline) }
-                item { Spacer(Modifier.height(16.dp)) }
-                item { FoodDetailsImage(image = image, showPlaceholder = isLoading) }
-                item { Spacer(Modifier.height(16.dp)) }
+                item {
+                    FoodDetailsHeadline(
+                        headline = headline,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
+                }
+                item { Spacer(Modifier.height(8.dp)) }
+                item {
+                    FoodDetailsImage(
+                        image = image,
+                        showPlaceholder = isLoading,
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                    )
+                }
+                item { Spacer(Modifier.height(8.dp)) }
                 item {
                     QuantityInput(
                         entries = quantityState.quantityTypes,
                         selectedQuantity = quantityState.selectedQuantityType,
                         onQuantity = quantityState::onSelectedQuantityTypeChange,
                         formField = quantityState.formField,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                     )
                 }
                 item { Spacer(Modifier.height(8.dp)) }
@@ -216,7 +227,7 @@ private fun AddOpenFoodFactsIngredientScreen(
                     }
                 }
                 if (url != null) {
-                    item { Spacer(Modifier.height(16.dp)) }
+                    item { Spacer(Modifier.height(8.dp)) }
                     item {
                         FoodSource(
                             url = url,
@@ -232,7 +243,7 @@ private fun AddOpenFoodFactsIngredientScreen(
                                 )
                             },
                             headline = stringResource(Res.string.headline_open_food_facts),
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                         )
                     }
                 }

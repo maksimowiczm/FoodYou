@@ -180,15 +180,20 @@ private fun AddFoodDataCentralIngredientScreen(
                 topPadding = contentPadding.calculateTopPadding(),
             )
             LazyColumn(contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp)) {
-                item { FoodDetailsHeadline(headline = headline) }
-                item { Spacer(Modifier.height(16.dp)) }
+                item {
+                    FoodDetailsHeadline(
+                        headline = headline,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
+                }
+                item { Spacer(Modifier.height(8.dp)) }
                 item {
                     QuantityInput(
                         entries = quantityState.quantityTypes,
                         selectedQuantity = quantityState.selectedQuantityType,
                         onQuantity = quantityState::onSelectedQuantityTypeChange,
                         formField = quantityState.formField,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                     )
                 }
                 item { Spacer(Modifier.height(8.dp)) }
@@ -207,7 +212,7 @@ private fun AddFoodDataCentralIngredientScreen(
                     }
                 }
                 if (url != null) {
-                    item { Spacer(Modifier.height(16.dp)) }
+                    item { Spacer(Modifier.height(8.dp)) }
                     item {
                         FoodSource(
                             url = url,
@@ -223,7 +228,7 @@ private fun AddFoodDataCentralIngredientScreen(
                                 )
                             },
                             headline = stringResource(Res.string.headline_fooddata_central),
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                         )
                     }
                 }

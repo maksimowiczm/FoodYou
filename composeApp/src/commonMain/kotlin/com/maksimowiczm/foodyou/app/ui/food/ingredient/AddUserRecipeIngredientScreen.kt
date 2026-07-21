@@ -175,22 +175,30 @@ private fun AddUserRecipeIngredientScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = contentPadding.add(bottom = 128.dp),
         ) {
-            item { FoodDetailsHeadline(headline = headline) }
-            item { Spacer(Modifier.height(16.dp)) }
             item {
-                FoodDetailsImage(
-                    image = recipe?.image?.let { resolveBlob(it) },
-                    showPlaceholder = recipe == null,
+                FoodDetailsHeadline(
+                    headline = headline,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
             }
-            item { Spacer(Modifier.height(16.dp)) }
+            item { Spacer(Modifier.height(8.dp)) }
+            if (recipe?.image != null) {
+                item {
+                    FoodDetailsImage(
+                        image = resolveBlob(recipe.image),
+                        showPlaceholder = false,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
+                }
+                item { Spacer(Modifier.height(8.dp)) }
+            }
             item {
                 QuantityInput(
                     entries = quantityState.quantityTypes,
                     selectedQuantity = quantityState.selectedQuantityType,
                     onQuantity = quantityState::onSelectedQuantityTypeChange,
                     formField = quantityState.formField,
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }
             item { Spacer(Modifier.height(8.dp)) }
@@ -213,7 +221,7 @@ private fun AddUserRecipeIngredientScreen(
                     Spacer(Modifier.height(8.dp))
                     UserFoodNote(
                         note = recipe.note,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     )
                 }
             }

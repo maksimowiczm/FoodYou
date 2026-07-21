@@ -190,12 +190,18 @@ private fun UserRecipeDetailsScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = contentPadding.add(bottom = 8.dp),
         ) {
-            item { FoodDetailsHeadline(headline = headline) }
+            item {
+                FoodDetailsHeadline(
+                    headline = headline,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                )
+            }
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 FoodDetailsImage(
                     image = recipe?.image?.let { resolveBlob(it) },
                     showPlaceholder = recipe == null,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
             }
             item { Spacer(Modifier.height(8.dp)) }
@@ -225,6 +231,7 @@ private fun UserRecipeDetailsScreen(
                             expandingEnabled = expandingEnabled,
                         )
                         if (anyNutrientIsMissing) {
+                            Spacer(Modifier.height(8.dp))
                             Text(
                                 text =
                                     "* " +

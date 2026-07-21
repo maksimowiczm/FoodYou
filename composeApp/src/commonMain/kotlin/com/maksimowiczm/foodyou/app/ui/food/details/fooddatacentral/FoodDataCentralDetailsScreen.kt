@@ -162,9 +162,14 @@ private fun FoodDataCentralDetailsScreen(
             )
             LazyColumn(
                 contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                item { FoodDetailsHeadline(headline = headline) }
+                item {
+                    FoodDetailsHeadline(
+                        headline = headline,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
+                }
                 if (scaledNutritionFacts != null) {
                     item {
                         FoodDetailsNutrients(
@@ -196,7 +201,7 @@ private fun FoodDataCentralDetailsScreen(
                                 )
                             },
                             headline = stringResource(Res.string.headline_fooddata_central),
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                         )
                     }
                 }

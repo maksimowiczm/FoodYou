@@ -8,7 +8,13 @@ import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
+/** Utility object for formatting [Energy] and [EnergyUnit] into localized strings. */
 object EnergyFormatter {
+    /**
+     * Formats this [Energy] into a localized string using its own [Energy.unit].
+     *
+     * @return Localized string representation of the energy value and its unit.
+     */
     @Composable
     fun Energy.stringResource(): String {
         return when (unit) {
@@ -20,6 +26,11 @@ object EnergyFormatter {
         }
     }
 
+    /**
+     * Returns the localized string representation of this [EnergyUnit].
+     *
+     * @return Localized unit string (e.g., "kcal" or "kJ").
+     */
     @Composable
     fun EnergyUnit.stringResource(): String {
         return when (this) {

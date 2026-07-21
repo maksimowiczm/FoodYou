@@ -117,6 +117,17 @@ fun <T> NutrientValue<T>.isIncomplete(): Boolean where T : Plus<T>, T : Times<T>
     return this is NutrientValue.Incomplete<T>
 }
 
+inline fun <T> NutrientValue<T>.map(transform: (T) -> T): NutrientValue<T>
+    where T : Plus<T>, T : Times<T>, T : Div<T> {
+    contract {
+        callsInPlace(transform, kotlin.contracts.InvocationKind.AT_MOST_ONCE)
+    }
+    return when (this) {
+        is NutrientValue.Complete -> NutrientValue.Complete(transform(value))
+        is NutrientValue.Incomplete -> NutrientValue.Incomplete(value?.let(transform))
+    }
+}
+
 /**
  * Sums a list of nutrient values, preserving completeness information.
  *

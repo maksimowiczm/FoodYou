@@ -181,14 +181,15 @@ fun RecipeForm(
             }
             if (nutritionFacts?.hasMacronutrientsValues() == true) {
                 NutrientsHeader(
-                    proteins = nutritionFacts.proteins.value?.grams?.toFloat(),
-                    carbohydrates = nutritionFacts.carbohydrates.value?.grams?.toFloat(),
-                    fats = nutritionFacts.fats.value?.grams?.toFloat(),
+                    proteins = nutritionFacts.proteins.value,
+                    carbohydrates = nutritionFacts.carbohydrates.value,
+                    fats = nutritionFacts.fats.value,
                     expanded = expanded,
                     onExpandedChange = { expanded = it },
                     enabled = true,
                     modifier = Modifier.fillMaxWidth().padding(horizontalPadding),
                 )
+                Spacer(Modifier.height(8.dp))
             }
             NutrientList(
                 facts = scaled,

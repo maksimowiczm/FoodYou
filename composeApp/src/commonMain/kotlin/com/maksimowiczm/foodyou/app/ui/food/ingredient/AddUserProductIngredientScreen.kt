@@ -170,22 +170,28 @@ private fun AddUserProductIngredientScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = contentPadding.add(bottom = 128.dp),
         ) {
-            item { FoodDetailsHeadline(headline = headline) }
-            item { Spacer(Modifier.height(16.dp)) }
+            item {
+                FoodDetailsHeadline(
+                    headline = headline,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                )
+            }
+            item { Spacer(Modifier.height(8.dp)) }
             item {
                 FoodDetailsImage(
                     image = product?.image?.let { resolveBlob(it) },
                     showPlaceholder = product == null,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
             }
-            item { Spacer(Modifier.height(16.dp)) }
+            item { Spacer(Modifier.height(8.dp)) }
             item {
                 QuantityInput(
                     entries = quantityState.quantityTypes,
                     selectedQuantity = quantityState.selectedQuantityType,
                     onQuantity = quantityState::onSelectedQuantityTypeChange,
                     formField = quantityState.formField,
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }
             item { Spacer(Modifier.height(8.dp)) }
@@ -208,7 +214,7 @@ private fun AddUserProductIngredientScreen(
                     Spacer(Modifier.height(8.dp))
                     UserFoodNote(
                         note = product.note,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     )
                 }
             }

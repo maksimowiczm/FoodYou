@@ -14,6 +14,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.app.ui.common.extension.horizontal
+import com.maksimowiczm.foodyou.app.ui.common.extension.vertical
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
@@ -38,6 +40,7 @@ internal fun FoodDetailsNutrients(
     onExpandedChange: (Boolean) -> Unit,
     expandingEnabled: Boolean,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 8.dp),
 ) {
     val stringifiedQuantities = quantities.mapNotNull { quantity ->
         quantity.stringResource(packageQuantity, servingQuantity).getOrNull()?.let {
@@ -45,21 +48,21 @@ internal fun FoodDetailsNutrients(
         }
     }
 
-    Column(modifier) {
+    Column(modifier.padding(contentPadding.vertical())) {
         if (nutritionFacts.hasMacronutrientsValues()) {
             NutrientsHeader(
-                proteins = nutritionFacts.proteins.value?.grams?.toFloat(),
-                carbohydrates = nutritionFacts.carbohydrates.value?.grams?.toFloat(),
-                fats = nutritionFacts.fats.value?.grams?.toFloat(),
+                proteins = nutritionFacts.proteins.value,
+                carbohydrates = nutritionFacts.carbohydrates.value,
+                fats = nutritionFacts.fats.value,
                 expanded = expanded,
                 onExpandedChange = onExpandedChange,
                 enabled = expandingEnabled,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(contentPadding.horizontal()),
             )
         }
         if (stringifiedQuantities.isNotEmpty()) {
             LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp),
+                contentPadding = contentPadding.horizontal(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(stringifiedQuantities) { (quantity, text) ->
@@ -76,7 +79,7 @@ internal fun FoodDetailsNutrients(
             expanded = expanded,
             modifier =
                 Modifier.fillMaxWidth()
-                    .padding(horizontal = 8.dp)
+                    .padding(contentPadding.horizontal())
                     .clickable(
                         interactionSource = null,
                         indication = null,

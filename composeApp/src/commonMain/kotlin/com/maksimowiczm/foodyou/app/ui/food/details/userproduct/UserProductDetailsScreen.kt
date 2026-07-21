@@ -164,14 +164,22 @@ private fun UserProductDetailsScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             state = lazyListState,
             contentPadding = contentPadding.add(bottom = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            item { FoodDetailsHeadline(headline = headline) }
             item {
-                FoodDetailsImage(
-                    image = product?.image?.let { resolveBlob(it) },
-                    showPlaceholder = product == null,
+                FoodDetailsHeadline(
+                    headline = headline,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
+            }
+            if (product?.image != null) {
+                item {
+                    FoodDetailsImage(
+                        image = resolveBlob(product.image),
+                        showPlaceholder = false,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
+                }
             }
             if (scaledNutritionFacts != null) {
                 item {

@@ -170,10 +170,23 @@ private fun OpenFoodFactsDetailsScreen(
             )
             LazyColumn(
                 contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                item { FoodDetailsHeadline(headline = headline) }
-                item { FoodDetailsImage(image = image, showPlaceholder = isLoading) }
+                item {
+                    FoodDetailsHeadline(
+                        headline = headline,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
+                }
+                if (image != null && !isLoading) {
+                    item {
+                        FoodDetailsImage(
+                            image = image,
+                            showPlaceholder = isLoading,
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        )
+                    }
+                }
                 if (scaledNutritionFacts != null) {
                     item {
                         FoodDetailsNutrients(
@@ -205,7 +218,7 @@ private fun OpenFoodFactsDetailsScreen(
                                 )
                             },
                             headline = stringResource(Res.string.headline_open_food_facts),
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                         )
                     }
                 }
