@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.food.details.userrecipe
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -189,6 +191,7 @@ private fun UserRecipeDetailsScreen(
         LazyColumn(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = contentPadding.add(bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             item {
                 FoodDetailsHeadline(
@@ -196,7 +199,6 @@ private fun UserRecipeDetailsScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
             }
-            item { Spacer(Modifier.height(8.dp)) }
             item {
                 FoodDetailsImage(
                     image = recipe?.image?.let { resolveBlob(it) },
@@ -204,15 +206,29 @@ private fun UserRecipeDetailsScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
             }
-            item { Spacer(Modifier.height(8.dp)) }
-            if (recipe != null) {
+            if (recipe != null && recipe.components.isNotEmpty()) {
+                val hasNestedRecipe =
+                    recipe.components.any {
+                        it.identity is FoodCompositionComponentIdentity.Composite
+                    }
+
                 item {
-                    recipe.components.forEach { component ->
-                        RecipeIngredientListItem(
-                            component = component,
-                            scalingFactor = ingredientScalingFactor,
-                            onClick = { onNavigateToIngredient(component.identity, it) },
-                        )
+                    Column(
+                        modifier =
+                            Modifier.padding(horizontal = 8.dp).clip(MaterialTheme.shapes.large),
+                        verticalArrangement =
+                            if (hasNestedRecipe) Arrangement.spacedBy(8.dp)
+                            else Arrangement.spacedBy(2.dp),
+                    ) {
+                        recipe.components.forEach { component ->
+                            RecipeIngredientListItem(
+                                component = component,
+                                scalingFactor = ingredientScalingFactor,
+                                onNavigateToIngredient = onNavigateToIngredient,
+                                modifier = Modifier.fillMaxWidth(),
+                                unwrap = hasNestedRecipe,
+                            )
+                        }
                     }
                 }
             }
@@ -247,7 +263,6 @@ private fun UserRecipeDetailsScreen(
                 }
             }
             if (recipe?.note != null) {
-                item { Spacer(Modifier.height(8.dp)) }
                 item {
                     UserFoodNote(
                         note = recipe.note,
