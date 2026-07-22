@@ -87,8 +87,12 @@ fun NutrientList(
 
                 AnimatedVisibility(
                     visible = isAvailable && (expanded || isCoreNutrient),
-                    enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically(),
+                    enter =
+                        fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()) +
+                            expandVertically(MaterialTheme.motionScheme.fastSpatialSpec()),
+                    exit =
+                        fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
+                            shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec()),
                 ) {
                     Column {
                         Spacer(Modifier.height(spacerHeight.value))
