@@ -32,7 +32,6 @@ import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
@@ -310,6 +309,9 @@ private fun PersonalizeNutritionFactsScreen(
                             else MaterialTheme.colorScheme.surfaceContainer,
                             animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
                         )
+                    val color =
+                        if (isDragging) MaterialTheme.colorScheme.onTertiaryContainer
+                        else MaterialTheme.colorScheme.onSurface
 
                     val elevation by
                         animateDpAsState(
@@ -356,7 +358,7 @@ private fun PersonalizeNutritionFactsScreen(
                                 ),
                         shape = animatedShape,
                         color = containerColor,
-                        contentColor = contentColorFor(containerColor),
+                        contentColor = color,
                         shadowElevation = elevation,
                     ) {
                         Row(

@@ -482,7 +482,7 @@ private fun MealCard(
                                     Box(modifier = Modifier.padding(horizontal = 4.dp)) { it() }
                                     HorizontalDivider(
                                         color =
-                                            if (state.isValid) MaterialTheme.colorScheme.outline
+                                            if (state.isValid) contentColor
                                             else MaterialTheme.colorScheme.error
                                     )
                                 }
