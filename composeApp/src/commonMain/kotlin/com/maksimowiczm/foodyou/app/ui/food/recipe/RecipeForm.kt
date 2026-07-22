@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -37,16 +38,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.app.ui.common.InteractionShapes
 import com.maksimowiczm.foodyou.app.ui.common.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.app.ui.common.component.Image
 import com.maksimowiczm.foodyou.app.ui.common.component.TwoRowFoodListItem
+import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.extension.horizontal
 import com.maksimowiczm.foodyou.app.ui.common.extension.vertical
+import com.maksimowiczm.foodyou.app.ui.common.rememberInteractionAnimatedShape
 import com.maksimowiczm.foodyou.app.ui.common.utility.EnergyFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
@@ -262,20 +267,24 @@ private fun Ingredients(
     val shimmer = rememberShimmer(ShimmerBounds.View)
 
     Column(modifier) {
-        AddIngredientButton(onClick = onAdd, contentPadding = contentPadding.horizontal())
-        ingredients.forEachIndexed { index, item ->
-            key(item.entry.entryId) {
-                if (item.resolved == null) {
-                    FoodListItemSkeleton(shimmer)
-                } else {
-                    IngredientListItem(
-                        resolved = item.resolved,
-                        isLocked = isLocked,
-                        shimmer = shimmer,
-                        onClick = { onIngredientClick(index) },
-                        onDelete = { onDeleteIngredient(index) },
-                    )
+        AddIngredientButton(
+            onClick = onAdd,
+            contentPadding = contentPadding.horizontal().add(horizontal = 12.dp),
+        )
+        Column(Modifier.padding(contentPadding.horizontal()).clip(MaterialTheme.shapes.large)) {
+            ingredients.forEachIndexed { index, item ->
+                key(item.entry.entryId) {
+                    if (item.resolved == null) FoodListItemSkeleton(shimmer)
+                    else
+                        IngredientListItem(
+                            resolved = item.resolved,
+                            isLocked = isLocked,
+                            shimmer = shimmer,
+                            onClick = { onIngredientClick(index) },
+                            onDelete = { onDeleteIngredient(index) },
+                        )
                 }
+                Spacer(Modifier.height(2.dp))
             }
         }
     }
@@ -368,40 +377,58 @@ internal fun RecipeIngredientListItem(
     isLocked: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    TwoRowFoodListItem(
-        headline = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = headline)
-                if (isRecipe) {
-                    Spacer(Modifier.width(8.dp))
+    val interactionSource = remember { MutableInteractionSource() }
+    val shape =
+        rememberInteractionAnimatedShape(
+            InteractionShapes(
+                shape = MaterialTheme.shapes.extraSmall,
+                pressedShape = MaterialTheme.shapes.large,
+            ),
+            interactionSource,
+        )
+
+    Surface(
+        onClick = onClick,
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        shape = shape,
+        interactionSource = interactionSource,
+    ) {
+        TwoRowFoodListItem(
+            headline = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = headline)
+                    if (isRecipe) {
+                        Spacer(Modifier.width(8.dp))
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_skillet_filled),
+                            contentDescription = null,
+                        )
+                    }
+                }
+            },
+            image = image,
+            proteins = { Text(proteins?.stringResource() ?: "?") },
+            carbohydrates = { Text(carbohydrates?.stringResource() ?: "?") },
+            fats = { Text(fats?.stringResource() ?: "?") },
+            energy = { Text(energy?.inUnit(LocalEnergyUnit.current)?.stringResource() ?: "?") },
+            quantity = quantity,
+            modifier = Modifier,
+            trailingContent = {
+                IconButton(
+                    onClick = onDelete,
+                    shapes = IconButtonDefaults.shapes(),
+                    enabled = !isLocked,
+                ) {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_skillet_filled),
-                        contentDescription = null,
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = stringResource(Res.string.action_delete_ingredient),
                     )
                 }
-            }
-        },
-        image = image,
-        proteins = { Text(proteins?.stringResource() ?: "?") },
-        carbohydrates = { Text(carbohydrates?.stringResource() ?: "?") },
-        fats = { Text(fats?.stringResource() ?: "?") },
-        energy = { Text(energy?.inUnit(LocalEnergyUnit.current)?.stringResource() ?: "?") },
-        quantity = quantity,
-        modifier = modifier,
-        trailingContent = {
-            IconButton(
-                onClick = onDelete,
-                shapes = IconButtonDefaults.shapes(),
-                enabled = !isLocked,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Delete,
-                    contentDescription = stringResource(Res.string.action_delete_ingredient),
-                )
-            }
-        },
-        onClick = onClick,
-    )
+            },
+            onClick = null,
+        )
+    }
 }
 
 @Composable
