@@ -259,6 +259,7 @@ private fun UserRecipeDetailsScreen(
                                 style = MaterialTheme.typography.bodySmall,
                             )
                         }
+                        Spacer(Modifier.height(8.dp))
                     }
                 }
             }

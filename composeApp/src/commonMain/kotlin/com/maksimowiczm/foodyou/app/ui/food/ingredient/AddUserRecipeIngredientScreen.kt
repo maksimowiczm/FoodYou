@@ -54,6 +54,7 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdent
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
+import com.maksimowiczm.foodyou.common.domain.food.isIncomplete
 import com.maksimowiczm.foodyou.common.domain.food.scale
 import com.maksimowiczm.foodyou.common.getOrNull
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
@@ -178,6 +179,13 @@ private fun AddUserRecipeIngredientScreen(
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
+    val anyNutrientIsMissing =
+        remember(recipe?.nutritionFacts) {
+            if (recipe?.nutritionFacts == null) return@remember false
+            recipe.nutritionFacts.asMap().any { it.value.isIncomplete() } ||
+                recipe.nutritionFacts.energy.isIncomplete()
+        }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -289,6 +297,19 @@ private fun AddUserRecipeIngredientScreen(
                         onExpandedChange = { expanded.value = it },
                         expandingEnabled = expandingEnabled,
                     )
+                    if (anyNutrientIsMissing) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text =
+                                "* " +
+                                    stringResource(
+                                        Res.string.description_incomplete_nutrition_data
+                                    ),
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
                     Spacer(Modifier.height(8.dp))
                 }
             }
