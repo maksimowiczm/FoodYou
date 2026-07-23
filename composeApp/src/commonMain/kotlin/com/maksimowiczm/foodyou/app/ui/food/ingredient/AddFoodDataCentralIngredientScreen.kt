@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
@@ -179,7 +180,10 @@ private fun AddFoodDataCentralIngredientScreen(
                 isLoading = isLoading,
                 topPadding = contentPadding.calculateTopPadding(),
             )
-            LazyColumn(contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp)) {
+            LazyColumn(
+                modifier = Modifier.imePadding(),
+                contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
+            ) {
                 item {
                     FoodDetailsHeadline(
                         headline = headline,

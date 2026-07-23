@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.app.ui.food.ingredient
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -167,7 +168,7 @@ private fun AddUserProductIngredientScreen(
         },
     ) { contentPadding ->
         LazyColumn(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).imePadding(),
             contentPadding = contentPadding.add(bottom = 128.dp),
         ) {
             item {
