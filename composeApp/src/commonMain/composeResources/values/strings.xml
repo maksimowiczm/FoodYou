@@ -286,7 +286,7 @@
     <string name="headline_source_code">Source code</string>
     <string name="action_write_an_email">Write an email</string>
     <string name="headline_contact">Contact</string>
-    <string name="description_sponsor_contact">If you have any requests regarding sponsoring, feel free to contact me via email or GitHub.</string>
+    <string name="description_sponsor_contact">For sponsorship requests, feel free to contact via email or GitHub.</string>
 
     <string name="sponsor_bank_or_card">Bank account or credit card</string>
 
@@ -365,7 +365,7 @@
 
     <string name="action_done">Done</string>
 
-    <string name="neutral_measurement_added">Got it! We've added your measurement</string>
+    <string name="neutral_measurement_added">Got it! Measurement added</string>
 
     <string name="headline_imported_from_food_you_2">Imported from Food You 2</string>
 
@@ -377,7 +377,7 @@
 
     <string name="action_import_csv_food_products">Import CSV food products</string>
     <string name="description_import_csv_food_products">Import food products from CSV file</string>
-    <string name="description_import_csv_food_products_hint">We just need to know what's what. Tell us which column in your file is the product name, brand, etc.</string>
+    <string name="description_import_csv_food_products_hint">Map each column in the file to the corresponding product detail (name, brand, etc.).</string>
     <string name="description_import_csv_food_products_hint_2">All nutrient values must be given in grams or kcal per 100 g</string>
 
     <string name="action_export_csv_food_products">Export CSV food products</string>
