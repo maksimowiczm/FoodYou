@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.app.ui.food.ingredient
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -8,8 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeExtendedFloatingActionButton
@@ -28,6 +33,7 @@ import com.maksimowiczm.foodyou.app.ui.common.component.QuantityInput
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
+import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.common.utility.headline
 import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
 import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
@@ -130,6 +136,16 @@ private fun AddUserProductIngredientScreen(
                 ?.getOrNull()
         }
 
+    val stringedQuantities =
+        quantityState.quantitySuggestions.mapNotNull { quantity ->
+            quantity
+                .stringResource(product?.packageQuantity, product?.servingQuantity)
+                .getOrNull()
+                ?.let {
+                    quantity to it
+                }
+        }
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
@@ -184,8 +200,25 @@ private fun AddUserProductIngredientScreen(
                     showPlaceholder = product == null,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
+                Spacer(Modifier.height(8.dp))
             }
-            item { Spacer(Modifier.height(8.dp)) }
+            if (stringedQuantities.isNotEmpty()) {
+                item {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth().height(32.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 8.dp),
+                    ) {
+                        items(stringedQuantities) { (quantity, text) ->
+                            AssistChip(
+                                onClick = { quantityState.onSelectQuantity(quantity) },
+                                label = { Text(text) },
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(8.dp))
+                }
+            }
             item {
                 QuantityInput(
                     entries = quantityState.quantityTypes,
@@ -200,10 +233,6 @@ private fun AddUserProductIngredientScreen(
                 item {
                     AddIngredientNutrients(
                         nutritionFacts = scaledNutritionFacts,
-                        quantities = quantityState.quantitySuggestions,
-                        servingQuantity = product?.servingQuantity,
-                        packageQuantity = product?.packageQuantity,
-                        onSelectQuantity = quantityState::onSelectQuantity,
                         expanded = expanded.value,
                         onExpandedChange = { expanded.value = it },
                         expandingEnabled = expandingEnabled,
