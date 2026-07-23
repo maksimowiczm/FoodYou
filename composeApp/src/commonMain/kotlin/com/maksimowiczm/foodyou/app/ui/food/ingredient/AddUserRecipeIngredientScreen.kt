@@ -1,8 +1,13 @@
 package com.maksimowiczm.foodyou.app.ui.food.ingredient
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -12,6 +17,7 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeExtendedFloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -19,6 +25,7 @@ import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,11 +43,14 @@ import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
 import com.maksimowiczm.foodyou.app.ui.food.details.UserFoodMenu
 import com.maksimowiczm.foodyou.app.ui.food.details.UserFoodNote
 import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.app.ui.food.details.userrecipe.RecipeIngredientListItem
 import com.maksimowiczm.foodyou.app.ui.food.details.userrecipe.UserRecipeDetailsUiEvent
 import com.maksimowiczm.foodyou.app.ui.food.details.userrecipe.UserRecipeDetailsViewModel
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
 import com.maksimowiczm.foodyou.common.domain.food.scale
 import com.maksimowiczm.foodyou.common.getOrNull
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
@@ -59,6 +69,7 @@ fun AddUserRecipeIngredientScreen(
     identity: UserRecipeIdentity,
     initialQuantity: Quantity,
     modifier: Modifier = Modifier,
+    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit = { _, _ -> },
 ) {
     val viewModel: UserRecipeDetailsViewModel =
         koinViewModel(parameters = { parametersOf(identity) })
@@ -93,6 +104,7 @@ fun AddUserRecipeIngredientScreen(
         onAdd = { onAdd(quantityState.quantity) },
         onEdit = onEdit,
         onDelete = viewModel::delete,
+        onNavigateToIngredient = onNavigateToIngredient,
         modifier = modifier,
         quantityState = quantityState,
     )
@@ -107,6 +119,7 @@ private fun AddUserRecipeIngredientScreen(
     onAdd: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
+    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
     quantityState: AddIngredientQuantityState,
     modifier: Modifier = Modifier,
 ) {
@@ -132,6 +145,25 @@ private fun AddUserRecipeIngredientScreen(
                 ?.nutritionFacts
                 ?.scale(packageQuantity, servingQuantity, quantityState.quantity)
                 ?.getOrNull()
+        }
+
+    val ingredientScalingFactor =
+        remember(recipe, quantityState.quantity) {
+            val totalWeight = recipe?.totalWeight?.takeIf { it.grams > 0 } ?: return@remember 1.0
+            val servingWeight = recipe.servingWeight
+
+            val selectedAbsoluteQuantity =
+                QuantityCalculator.calculateAbsoluteQuantity(
+                        suggestedQuantity = quantityState.quantity,
+                        packageQuantity = AbsoluteQuantity.Weight(totalWeight),
+                        servingQuantity = AbsoluteQuantity.Weight(servingWeight),
+                    )
+                    .getOrNull() ?: return@remember 1.0
+
+            when (selectedAbsoluteQuantity) {
+                is AbsoluteQuantity.Weight -> selectedAbsoluteQuantity.weight / totalWeight
+                is AbsoluteQuantity.Volume -> 1.0
+            }
         }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -172,7 +204,7 @@ private fun AddUserRecipeIngredientScreen(
         },
     ) { contentPadding ->
         LazyColumn(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).imePadding(),
             contentPadding = contentPadding.add(bottom = 128.dp),
         ) {
             item {
@@ -180,8 +212,8 @@ private fun AddUserRecipeIngredientScreen(
                     headline = headline,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
+                Spacer(Modifier.height(8.dp))
             }
-            item { Spacer(Modifier.height(8.dp)) }
             if (recipe?.image != null) {
                 item {
                     FoodDetailsImage(
@@ -189,8 +221,28 @@ private fun AddUserRecipeIngredientScreen(
                         showPlaceholder = false,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     )
+                    Spacer(Modifier.height(8.dp))
                 }
-                item { Spacer(Modifier.height(8.dp)) }
+            }
+            if (recipe != null && recipe.components.isNotEmpty()) {
+                item {
+                    Column(
+                        modifier =
+                            Modifier.padding(horizontal = 8.dp).clip(MaterialTheme.shapes.large),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                    ) {
+                        recipe.components.forEach { component ->
+                            RecipeIngredientListItem(
+                                component = component,
+                                scalingFactor = ingredientScalingFactor,
+                                onNavigateToIngredient = onNavigateToIngredient,
+                                modifier = Modifier.fillMaxWidth(),
+                                unwrap = false,
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(8.dp))
+                }
             }
             item {
                 QuantityInput(
@@ -200,8 +252,8 @@ private fun AddUserRecipeIngredientScreen(
                     formField = quantityState.formField,
                     modifier = Modifier.padding(horizontal = 8.dp),
                 )
+                Spacer(Modifier.height(8.dp))
             }
-            item { Spacer(Modifier.height(8.dp)) }
             if (scaledNutritionFacts != null) {
                 item {
                     AddIngredientNutrients(
@@ -214,11 +266,11 @@ private fun AddUserRecipeIngredientScreen(
                         onExpandedChange = { expanded.value = it },
                         expandingEnabled = expandingEnabled,
                     )
+                    Spacer(Modifier.height(8.dp))
                 }
             }
             if (recipe?.note != null) {
                 item {
-                    Spacer(Modifier.height(8.dp))
                     UserFoodNote(
                         note = recipe.note,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
