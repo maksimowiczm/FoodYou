@@ -224,6 +224,7 @@ private fun AddUserRecipeIngredientScreen(
         LazyColumn(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).imePadding(),
             contentPadding = contentPadding.add(bottom = 128.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             item {
                 FoodDetailsHeadline(
@@ -239,7 +240,6 @@ private fun AddUserRecipeIngredientScreen(
                         showPlaceholder = false,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     )
-                    Spacer(Modifier.height(8.dp))
                 }
             }
             if (recipe != null && recipe.components.isNotEmpty()) {
@@ -259,7 +259,6 @@ private fun AddUserRecipeIngredientScreen(
                             )
                         }
                     }
-                    Spacer(Modifier.height(8.dp))
                 }
             }
             if (stringedQuantities.isNotEmpty()) {
@@ -276,7 +275,6 @@ private fun AddUserRecipeIngredientScreen(
                             )
                         }
                     }
-                    Spacer(Modifier.height(8.dp))
                 }
             }
             item {
@@ -287,37 +285,37 @@ private fun AddUserRecipeIngredientScreen(
                     formField = quantityState.formField,
                     modifier = Modifier.padding(horizontal = 8.dp),
                 )
-                Spacer(Modifier.height(8.dp))
             }
             if (scaledNutritionFacts != null) {
                 item {
-                    AddIngredientNutrients(
-                        nutritionFacts = scaledNutritionFacts,
-                        expanded = expanded.value,
-                        onExpandedChange = { expanded.value = it },
-                        expandingEnabled = expandingEnabled,
-                    )
-                    if (anyNutrientIsMissing) {
-                        Spacer(Modifier.height(8.dp))
-                        Text(
-                            text =
-                                "* " +
-                                    stringResource(
-                                        Res.string.description_incomplete_nutrition_data
-                                    ),
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            style = MaterialTheme.typography.bodySmall,
+                    Column {
+                        AddIngredientNutrients(
+                            nutritionFacts = scaledNutritionFacts,
+                            expanded = expanded.value,
+                            onExpandedChange = { expanded.value = it },
+                            expandingEnabled = expandingEnabled,
                         )
+                        if (anyNutrientIsMissing) {
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                text =
+                                    "* " +
+                                        stringResource(
+                                            Res.string.description_incomplete_nutrition_data
+                                        ),
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
                     }
-                    Spacer(Modifier.height(8.dp))
                 }
             }
             if (recipe?.note != null) {
                 item {
                     UserFoodNote(
                         note = recipe.note,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                     )
                 }
             }

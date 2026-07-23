@@ -254,12 +254,11 @@ private fun UserRecipeDetailsScreen(
                                         stringResource(
                                             Res.string.description_incomplete_nutrition_data
                                         ),
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.bodySmall,
                             )
                         }
-                        Spacer(Modifier.height(8.dp))
                     }
                 }
             }
@@ -267,7 +266,7 @@ private fun UserRecipeDetailsScreen(
                 item {
                     UserFoodNote(
                         note = recipe.note,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                     )
                 }
             }

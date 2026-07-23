@@ -200,7 +200,7 @@ private fun UserProductDetailsScreen(
                 item {
                     UserFoodNote(
                         note = product.note,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                     )
                 }
             }

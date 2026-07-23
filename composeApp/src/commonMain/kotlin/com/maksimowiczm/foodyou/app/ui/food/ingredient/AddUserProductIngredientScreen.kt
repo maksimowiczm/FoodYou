@@ -244,7 +244,7 @@ private fun AddUserProductIngredientScreen(
                     Spacer(Modifier.height(8.dp))
                     UserFoodNote(
                         note = product.note,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                     )
                 }
             }
