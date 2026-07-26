@@ -162,7 +162,7 @@ private fun FoodDataCentralDetailsScreen(
             )
             LazyColumn(
                 contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item {
                     FoodDetailsHeadline(

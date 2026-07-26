@@ -213,13 +213,13 @@ private fun AddFoodDataCentralIngredientScreen(
                 modifier = Modifier.imePadding(),
                 contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
                 state = lazyListState,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item {
                     FoodDetailsHeadline(
                         headline = headline,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     )
-                    Spacer(Modifier.height(8.dp))
                 }
                 if (stringedQuantities.isNotEmpty()) {
                     item {
@@ -235,7 +235,6 @@ private fun AddFoodDataCentralIngredientScreen(
                                 )
                             }
                         }
-                        Spacer(Modifier.height(8.dp))
                     }
                 }
                 item {
@@ -248,7 +247,6 @@ private fun AddFoodDataCentralIngredientScreen(
                             Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                     )
                 }
-                item { Spacer(Modifier.height(8.dp)) }
                 if (scaledNutritionFacts != null) {
                     item {
                         AddIngredientNutrients(
@@ -260,7 +258,6 @@ private fun AddFoodDataCentralIngredientScreen(
                     }
                 }
                 if (url != null) {
-                    item { Spacer(Modifier.height(8.dp)) }
                     item {
                         FoodSource(
                             url = url,

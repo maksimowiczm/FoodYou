@@ -164,7 +164,7 @@ private fun UserProductDetailsScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             state = lazyListState,
             contentPadding = contentPadding.add(bottom = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
                 FoodDetailsHeadline(

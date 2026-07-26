@@ -168,7 +168,10 @@ private fun AddOpenFoodFactsIngredientScreen(
 
     LaunchedEffect(Unit) {
         if (!focusRequested) {
-            val quantityInputIndex = 3 + (if (stringedQuantities.isNotEmpty()) 1 else 0)
+            val quantityInputIndex =
+                1 +
+                    (if (image != null) 1 else 0) +
+                    (if (stringedQuantities.isNotEmpty()) 1 else 0)
             lazyListState.animateScrollToItem(quantityInputIndex)
             focusRequester.requestFocus()
             focusRequested = true
@@ -221,6 +224,7 @@ private fun AddOpenFoodFactsIngredientScreen(
                 modifier = Modifier.imePadding(),
                 contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
                 state = lazyListState,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item {
                     FoodDetailsHeadline(
@@ -228,14 +232,14 @@ private fun AddOpenFoodFactsIngredientScreen(
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     )
                 }
-                item { Spacer(Modifier.height(8.dp)) }
-                item {
-                    FoodDetailsImage(
-                        image = image,
-                        showPlaceholder = isLoading,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
-                    Spacer(Modifier.height(8.dp))
+                if (image != null && !isLoading) {
+                    item {
+                        FoodDetailsImage(
+                            image = image,
+                            showPlaceholder = false,
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                        )
+                    }
                 }
                 if (stringedQuantities.isNotEmpty()) {
                     item {
@@ -251,7 +255,6 @@ private fun AddOpenFoodFactsIngredientScreen(
                                 )
                             }
                         }
-                        Spacer(Modifier.height(8.dp))
                     }
                 }
                 item {
@@ -264,7 +267,6 @@ private fun AddOpenFoodFactsIngredientScreen(
                             Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                     )
                 }
-                item { Spacer(Modifier.height(8.dp)) }
                 if (scaledNutritionFacts != null) {
                     item {
                         AddIngredientNutrients(
@@ -276,7 +278,6 @@ private fun AddOpenFoodFactsIngredientScreen(
                     }
                 }
                 if (url != null) {
-                    item { Spacer(Modifier.height(8.dp)) }
                     item {
                         FoodSource(
                             url = url,

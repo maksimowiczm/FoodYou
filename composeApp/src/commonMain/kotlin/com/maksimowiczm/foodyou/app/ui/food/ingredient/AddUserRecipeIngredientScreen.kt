@@ -197,11 +197,9 @@ private fun AddUserRecipeIngredientScreen(
         if (!focusRequested) {
             val quantityInputIndex =
                 1 +
-                    if (recipe?.image != null) 1
-                    else
-                        0 +
-                            if (recipe != null && recipe.components.isNotEmpty()) 1
-                            else 0 + if (stringedQuantities.isNotEmpty()) 1 else 0
+                    (if (recipe?.image != null) 1 else 0) +
+                    (if (recipe != null && recipe.components.isNotEmpty()) 1 else 0) +
+                    (if (stringedQuantities.isNotEmpty()) 1 else 0)
             lazyListState.animateScrollToItem(quantityInputIndex)
             focusRequester.requestFocus()
             focusRequested = true
@@ -247,14 +245,13 @@ private fun AddUserRecipeIngredientScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).imePadding(),
             state = lazyListState,
             contentPadding = contentPadding.add(bottom = 128.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
                 FoodDetailsHeadline(
                     headline = headline,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
-                Spacer(Modifier.height(8.dp))
             }
             if (recipe?.image != null) {
                 item {

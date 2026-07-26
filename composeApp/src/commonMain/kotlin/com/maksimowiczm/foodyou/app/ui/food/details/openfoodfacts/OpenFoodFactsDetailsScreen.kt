@@ -170,7 +170,7 @@ private fun OpenFoodFactsDetailsScreen(
             )
             LazyColumn(
                 contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item {
                     FoodDetailsHeadline(
@@ -182,7 +182,7 @@ private fun OpenFoodFactsDetailsScreen(
                     item {
                         FoodDetailsImage(
                             image = image,
-                            showPlaceholder = isLoading,
+                            showPlaceholder = false,
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                         )
                     }

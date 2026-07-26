@@ -191,7 +191,7 @@ private fun UserRecipeDetailsScreen(
         LazyColumn(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = contentPadding.add(bottom = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
                 FoodDetailsHeadline(
@@ -199,12 +199,14 @@ private fun UserRecipeDetailsScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
             }
-            item {
-                FoodDetailsImage(
-                    image = recipe?.image?.let { resolveBlob(it) },
-                    showPlaceholder = recipe == null,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                )
+            if (recipe?.image != null) {
+                item {
+                    FoodDetailsImage(
+                        image = resolveBlob(recipe.image),
+                        showPlaceholder = false,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
+                }
             }
             if (recipe != null && recipe.components.isNotEmpty()) {
                 val hasNestedRecipe =

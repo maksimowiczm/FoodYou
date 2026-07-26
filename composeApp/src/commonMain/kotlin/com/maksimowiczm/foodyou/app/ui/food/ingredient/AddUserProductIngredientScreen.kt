@@ -155,7 +155,10 @@ private fun AddUserProductIngredientScreen(
 
     LaunchedEffect(Unit) {
         if (!focusRequested) {
-            val quantityInputIndex = 3 + (if (stringedQuantities.isNotEmpty()) 1 else 0)
+            val quantityInputIndex =
+                1 +
+                    (if (product?.image != null) 1 else 0) +
+                    (if (stringedQuantities.isNotEmpty()) 1 else 0)
             lazyListState.animateScrollToItem(quantityInputIndex)
             focusRequester.requestFocus()
             focusRequested = true
@@ -203,6 +206,7 @@ private fun AddUserProductIngredientScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).imePadding(),
             contentPadding = contentPadding.add(bottom = 128.dp),
             state = lazyListState,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
                 FoodDetailsHeadline(
@@ -210,14 +214,14 @@ private fun AddUserProductIngredientScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 )
             }
-            item { Spacer(Modifier.height(8.dp)) }
-            item {
-                FoodDetailsImage(
-                    image = product?.image?.let { resolveBlob(it) },
-                    showPlaceholder = product == null,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                )
-                Spacer(Modifier.height(8.dp))
+            if (product?.image != null) {
+                item {
+                    FoodDetailsImage(
+                        image = resolveBlob(product.image),
+                        showPlaceholder = false,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
+                }
             }
             if (stringedQuantities.isNotEmpty()) {
                 item {
@@ -233,7 +237,6 @@ private fun AddUserProductIngredientScreen(
                             )
                         }
                     }
-                    Spacer(Modifier.height(8.dp))
                 }
             }
             item {
@@ -245,7 +248,6 @@ private fun AddUserProductIngredientScreen(
                     modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                 )
             }
-            item { Spacer(Modifier.height(8.dp)) }
             if (scaledNutritionFacts != null) {
                 item {
                     AddIngredientNutrients(
@@ -258,7 +260,6 @@ private fun AddUserProductIngredientScreen(
             }
             if (product?.note != null) {
                 item {
-                    Spacer(Modifier.height(8.dp))
                     UserFoodNote(
                         note = product.note,
                         modifier = Modifier.padding(horizontal = 8.dp),
