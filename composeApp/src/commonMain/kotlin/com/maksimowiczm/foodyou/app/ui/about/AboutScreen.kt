@@ -144,11 +144,6 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(
-                text = icons8stringResource(MaterialTheme.typography.bodyMedium),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
             Spacer(Modifier.height(64.dp))
             AboutButtons(
                 onSourceCode = { uriHandler.openUri(appConfig.sourceCodeUri) },

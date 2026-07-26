@@ -229,7 +229,6 @@
     <string name="description_show_macronutrients_goals">Pokaż cele makroskładników</string>
     <string name="description_please_wait_while_importing_products">Proszę czekać podczas importowania produktów</string>
     <string name="description_please_wait_while_exporting_products">Proszę czekać podczas eksportowania produktów</string>
-    <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="description_open_food_facts">Wspólna, wolna i otwarta baza produktów spożywczych z całego świata</string>
     <string name="error_open_food_facts_rate_limit">Przekroczono limit Open Food Facts API</string>
     <string name="error_open_food_facts_service_unavailable">Usługa Open Food Facts jest chwilowo niedostępna. Zarejestrowani użytkownicy nie mają limitów zapytań i mają priorytetowy dostęp w godzinach szczytu.</string>

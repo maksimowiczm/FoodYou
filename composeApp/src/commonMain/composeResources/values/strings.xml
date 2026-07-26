@@ -240,9 +240,6 @@
     <string name="description_please_wait_while_importing_products">Please wait while importing products</string>
     <string name="description_please_wait_while_exporting_products">Please wait while exporting products</string>
 
-    <string name="link_icons8" translatable="false">https://icons8.com/</string>
-    <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
-
     <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="description_open_food_facts">A collaborative, free and open database of food products from around the world</string>
     <string name="openfoodfacts_version">Version</string>

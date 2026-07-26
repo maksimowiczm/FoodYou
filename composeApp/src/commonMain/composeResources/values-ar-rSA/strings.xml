@@ -181,6 +181,5 @@
     <string name="description_time_based_meals_sorting">عند تفعيلها، ستُعرض الوجبات التي تتناولها حاليًا أولاً</string>
     <string name="description_incomplete_nutrition_data">بعض المنتجات المستعملة تنقصها هذه القيمة؛ لذا، قد لا تكون القيمة المعروضة دقيقة</string>
     <string name="description_translation_warning">الترجمات من إنشاء المتطوعين. قد لا تكون مثالية، وقد تكون بعض الترجمات ناقصة. إذا لاحظت أي أخطاء، لا تتردد في المساهمة في تحسينها.</string>
-    <string name="headline_launcher_icon_by_icons8">أيقونة المشغل من Icons8</string>
     <!-- Don't translate changelog strings -->
 </resources>

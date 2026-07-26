@@ -116,7 +116,7 @@ private fun FoodYouPrivacyCard(
             ) {
                 Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_sushi),
+                        painter = painterResource(Res.drawable.ic_logo),
                         contentDescription = null,
                         modifier = Modifier.size(32.dp),
                     )

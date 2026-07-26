@@ -217,7 +217,6 @@
     <string name="description_show_macronutrients_goals">Laat doelen van macronutriënten zien</string>
     <string name="description_please_wait_while_importing_products">Even geduld terwijl de producten worden geïmporteerd</string>
     <string name="description_please_wait_while_exporting_products">Eén moment terwijl producten worden geëxporteerd</string>
-    <string name="headline_launcher_icon_by_icons8">App icoon door Icons8</string>
     <string name="description_open_food_facts">Een samenwerkend, gratis en open database van voedselproducten van over de hele wereld</string>
     <string name="error_open_food_facts_rate_limit">Open Food Facts API verzoeklimiet overschreden</string>
     <!-- Don't translate changelog strings -->

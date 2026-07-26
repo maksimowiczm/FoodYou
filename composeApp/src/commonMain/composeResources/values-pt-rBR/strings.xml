@@ -179,7 +179,6 @@
     <string name="description_incomplete_nutrition_data">Alguns dos produtos usados não têm esse valor; portanto, o valor exibido pode não ser exato</string>
     <string name="description_translation_warning">As traduções são feitas por voluntários. Elas podem não ser perfeitas e podem estar faltando algumas traduções. Se você notar algum erro, não hesite em ajudar a melhorá-las.</string>
     <string name="description_show_macronutrients_goals">Mostrar os objetivos de macronutrientes</string>
-    <string name="headline_launcher_icon_by_icons8">Ícone da aplicação por Icons8</string>
     <string name="headline_username">Usuário</string>
     <string name="action_show_password">Mostrar senha</string>
     <string name="action_hide_password">Ocultar senha</string>

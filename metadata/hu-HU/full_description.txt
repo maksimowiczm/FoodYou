@@ -11,5 +11,3 @@ A <b>Food You</b> egy sokszínű, nyílt-forráskódú tápértékkövető, mode
 </ul>
 
 Kezdje el mérni tápanyagait a Food You segítségével - letisztult, teljeskörű, és mind az Öné.
-
-Az indító ikont <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a> készítette

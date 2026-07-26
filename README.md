@@ -94,7 +94,6 @@ Looking for alternatives or similar tools?
 
 - [ReadYou](https://github.com/Ashinch/ReadYou) — I shamelessly borrowed inspiration from this
   project 🙃
-- [Icons8](https://icons8.com) — sushi icon 🍣
 
 ## 📜 License
 

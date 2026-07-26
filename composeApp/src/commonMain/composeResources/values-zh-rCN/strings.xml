@@ -210,7 +210,6 @@
     <string name="description_show_macronutrients_goals">显示宏量营养素目标</string>
     <string name="description_please_wait_while_importing_products">请稍候，正在导出产品</string>
     <string name="description_please_wait_while_exporting_products">请稍候，正在导出产品</string>
-    <string name="headline_launcher_icon_by_icons8">启动器图标来自于 Icon8</string>
     <string name="description_open_food_facts">一个协作、免费和开放的食品数据库，包含来自世界各地的食品</string>
     <string name="error_open_food_facts_rate_limit">Open Food Facts API 速率限制超出</string>
     <!-- Don't translate changelog strings -->

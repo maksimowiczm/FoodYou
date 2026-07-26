@@ -4,9 +4,7 @@ site_name = "Food You"
 site_description = "Food You documentation"
 site_author = "Mateusz Maksimowicz"
 site_url = "https://foodyou.maksimowiczm.com/"
-copyright = """
-  Copyright &copy; Mateusz Maksimowicz &nbsp–&nbsp Logo by <a href="https://icons8.com/">Icons8</a>
-"""
+copyright = "Copyright &copy; Mateusz Maksimowicz"
 repo_url = "https://github.com/maksimowiczm/FoodYou"
 extra.generator = false
 nav = [
@@ -32,7 +30,7 @@ favicon = "images/favicon.png"
 language = "en"
 
 [project.theme.icon]
-logo = "sushi"
+logo = "favicon"
 repo = "fontawesome/brands/github"
 
 [[project.theme.palette]]

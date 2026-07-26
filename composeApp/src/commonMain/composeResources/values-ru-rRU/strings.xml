@@ -229,7 +229,6 @@
     <string name="description_show_macronutrients_goals">Показывать цели по макронутриентам</string>
     <string name="description_please_wait_while_importing_products">Пожалуйста, подождите, продукты импортируются</string>
     <string name="description_please_wait_while_exporting_products">Пожалуйста, подождите, продукты экспортируются</string>
-    <string name="headline_launcher_icon_by_icons8">Иконка приложения от Icons8</string>
     <string name="description_open_food_facts">Совместная, бесплатная и открытая база данных продуктов питания со всего мира</string>
     <string name="error_open_food_facts_rate_limit">Превышен лимит запросов к API Open Food Facts</string>
     <string name="error_open_food_facts_service_unavailable">Open Food Facts временно недоступен. Зарегистрированные пользователи не ограничиваются по количеству запросов и являются приоритетными в моменты нагрузки.</string>

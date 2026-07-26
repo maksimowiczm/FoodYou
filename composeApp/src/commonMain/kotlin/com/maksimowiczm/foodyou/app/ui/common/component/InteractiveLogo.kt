@@ -187,7 +187,7 @@ fun InteractiveLogo(
             }
         }
 
-    val iconPainter = painterResource(Res.drawable.ic_sushi)
+    val iconPainter = painterResource(Res.drawable.ic_logo)
     Box(
         modifier =
             modifier.graphicsLayer {

@@ -229,7 +229,6 @@
     <string name="description_show_macronutrients_goals">Prikaži cilje makrohranil</string>
     <string name="description_please_wait_while_importing_products">Počakajte dokler poteka uvoz izdelkov</string>
     <string name="description_please_wait_while_exporting_products">Počakajte dokler poteka izvoz izdelkov</string>
-    <string name="headline_launcher_icon_by_icons8">Ikona aplikacije od Icons8</string>
     <string name="description_open_food_facts">Skupna, brezplačna in odprta zbirka podatkov o živilskih izdelkih z vsega sveta</string>
     <string name="error_open_food_facts_service_unavailable">Storitev Open Food Facts začasno ni na voljo. Za registrirane uporabnike ne veljajo omejitve zahtev in imajo prednostni dostop v času konic.</string>
     <string name="action_register">Registracija</string>

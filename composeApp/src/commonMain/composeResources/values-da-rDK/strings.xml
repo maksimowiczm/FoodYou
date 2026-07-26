@@ -173,7 +173,6 @@
     <string name="description_download_product">Indsæt link til et fødevareprodukt og hent automatisk ernæringsfakta samt produktdetaljer.</string>
     <string name="description_download_product_hint">Enhver tekst kan indsættes. Første URL anvendes.</string>
     <string name="description_show_macronutrients_goals">Vis makroernæringsmål</string>
-    <string name="headline_launcher_icon_by_icons8">Launcher-ikon fra Icons8</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Eksporterer produkter</string>
     <string name="notification_importing_products">Importerer produkter</string>

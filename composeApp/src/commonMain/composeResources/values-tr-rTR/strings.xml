@@ -217,7 +217,6 @@
     <string name="description_show_macronutrients_goals">Makro besin hedeflerini göster</string>
     <string name="description_please_wait_while_importing_products">Ürünler içe aktarılırken lütfen bekleyin</string>
     <string name="description_please_wait_while_exporting_products">Ürünler dışa aktarılırken lütfen bekleyin</string>
-    <string name="headline_launcher_icon_by_icons8">Başlatıcı simgesi: Icons8</string>
     <string name="description_open_food_facts">Dünya çapındaki gıda ürünlerinin ortaklaşa oluşturulan, ücretsiz ve açık bir veritabanı</string>
     <string name="error_open_food_facts_rate_limit">Open Food Facts API istek sınırı aşıldı</string>
     <string name="error_open_food_facts_service_unavailable">Open Food Facts hizmeti geçici olarak kullanılamıyor. Kayıtlı kullanıcılar istek sınırlarına tabi değildir ve yoğun zamanlarda öncelikli erişime sahiptir.</string>

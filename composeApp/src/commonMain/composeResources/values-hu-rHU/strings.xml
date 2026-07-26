@@ -217,7 +217,6 @@
     <string name="description_show_macronutrients_goals">Tápanyag-célok megjelenítése</string>
     <string name="description_please_wait_while_importing_products">Kérem várjon amíg az importálás befejeződik</string>
     <string name="description_please_wait_while_exporting_products">Kérem várjon amíg az exportálás befejeződik</string>
-    <string name="headline_launcher_icon_by_icons8">Az indító ikont az Icon8 készítette</string>
     <string name="description_open_food_facts">Egy kollaboráció, mely ingyenes, nyílt és az világot lefedő ételadatbázist használ</string>
     <string name="error_open_food_facts_rate_limit">Elérte az Open Food Fact API limitét</string>
     <string name="error_open_food_facts_service_unavailable">Az Open Food Facts szolgáltatása ideiglenesen jelenleg nem elérhető. A regisztrált felhasználók számára nincs elérési korlát, és elsődleges hozzáférést kapnak csúcsidőben is.</string>

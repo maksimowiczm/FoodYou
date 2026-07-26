@@ -217,7 +217,6 @@
     <string name="description_show_macronutrients_goals">Näytä makroravinnetavoitteet</string>
     <string name="description_please_wait_while_importing_products">Odota hetki tuotaessa tuotteita</string>
     <string name="description_please_wait_while_exporting_products">Odota kun tuotteita viedään</string>
-    <string name="headline_launcher_icon_by_icons8">Käynnistinkuvakkeen on tehnyt Icons8</string>
     <string name="description_open_food_facts">Yhteistyöhön perustuva, vapaa ja avoin tietokanta elintarvikkeista ympäri maailmaa</string>
     <string name="error_open_food_facts_rate_limit">Open Food Facts API-raja ylittynyt</string>
     <!-- Don't translate changelog strings -->

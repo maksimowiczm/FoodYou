@@ -210,7 +210,6 @@
     <string name="description_show_macronutrients_goals">Tampilkan target makronutrien</string>
     <string name="description_please_wait_while_importing_products">Harap tunggu saat produk sedang diimpor</string>
     <string name="description_please_wait_while_exporting_products">Harap tunggu saat produk sedang diekspor</string>
-    <string name="headline_launcher_icon_by_icons8">Ikon peluncur dibuat oleh Icons8</string>
     <string name="description_open_food_facts">Basis data produk makanan dari seluruh dunia yang kolaboratif, gratis, dan terbuka</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Mengekspor produk</string>

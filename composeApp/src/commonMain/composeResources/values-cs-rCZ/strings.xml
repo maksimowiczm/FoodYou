@@ -229,7 +229,6 @@
     <string name="description_show_macronutrients_goals">Zobrazit cíle makroživin</string>
     <string name="description_please_wait_while_importing_products">Prosím počkejte na import produktů</string>
     <string name="description_please_wait_while_exporting_products">Prosím počkejte na export produktů</string>
-    <string name="headline_launcher_icon_by_icons8">Ikona aplikace od Icons8</string>
     <string name="description_open_food_facts">Kolaborativní, svobodná a otevřená databáze potravit z celého světa</string>
     <string name="error_open_food_facts_rate_limit">Byl překročen API limit pro Open Food Facts</string>
     <!-- Don't translate changelog strings -->
