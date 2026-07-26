@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.AssistChip
@@ -23,8 +24,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -112,6 +116,9 @@ private fun AddUserProductIngredientScreen(
     modifier: Modifier = Modifier,
 ) {
     val nameSelector = LocalFoodNameSelector.current
+    val lazyListState = rememberLazyListState()
+    val focusRequester = remember { FocusRequester() }
+    var focusRequested by rememberSaveable { mutableStateOf(false) }
 
     val expanded = rememberNutrientExpanded()
     val expandingEnabled =
@@ -145,6 +152,15 @@ private fun AddUserProductIngredientScreen(
                     quantity to it
                 }
         }
+
+    LaunchedEffect(Unit) {
+        if (!focusRequested) {
+            val quantityInputIndex = 3 + (if (stringedQuantities.isNotEmpty()) 1 else 0)
+            lazyListState.animateScrollToItem(quantityInputIndex)
+            focusRequester.requestFocus()
+            focusRequested = true
+        }
+    }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -186,6 +202,7 @@ private fun AddUserProductIngredientScreen(
         LazyColumn(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).imePadding(),
             contentPadding = contentPadding.add(bottom = 128.dp),
+            state = lazyListState,
         ) {
             item {
                 FoodDetailsHeadline(
@@ -225,7 +242,7 @@ private fun AddUserProductIngredientScreen(
                     selectedQuantity = quantityState.selectedQuantityType,
                     onQuantity = quantityState::onSelectedQuantityTypeChange,
                     formField = quantityState.formField,
-                    modifier = Modifier.padding(horizontal = 8.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                 )
             }
             item { Spacer(Modifier.height(8.dp)) }
