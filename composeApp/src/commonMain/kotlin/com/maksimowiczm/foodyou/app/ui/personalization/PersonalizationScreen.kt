@@ -202,7 +202,7 @@ fun PersonalizationScreen(
             item {
                 val spacerHeight by
                     animateDpAsState(
-                        targetValue = if (energyExpanded) 16.dp else 2.dp,
+                        targetValue = if (energyExpanded) 8.dp else 2.dp,
                         animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
                     )
                 Spacer(Modifier.height(spacerHeight))
