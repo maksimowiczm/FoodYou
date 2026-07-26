@@ -72,8 +72,8 @@ fun AddUserRecipeIngredientScreen(
     onDelete: () -> Unit,
     identity: UserRecipeIdentity,
     initialQuantity: Quantity,
+    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
     modifier: Modifier = Modifier,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit = { _, _ -> },
 ) {
     val viewModel: UserRecipeDetailsViewModel =
         koinViewModel(parameters = { parametersOf(identity) })
@@ -243,11 +243,18 @@ private fun AddUserRecipeIngredientScreen(
                 }
             }
             if (recipe != null && recipe.components.isNotEmpty()) {
+                val hasNestedRecipe =
+                    recipe.components.any {
+                        it.identity is FoodCompositionComponentIdentity.Composite
+                    }
+
                 item {
                     Column(
                         modifier =
                             Modifier.padding(horizontal = 8.dp).clip(MaterialTheme.shapes.large),
-                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                        verticalArrangement =
+                            if (hasNestedRecipe) Arrangement.spacedBy(8.dp)
+                            else Arrangement.spacedBy(2.dp),
                     ) {
                         recipe.components.forEach { component ->
                             RecipeIngredientListItem(
@@ -255,7 +262,7 @@ private fun AddUserRecipeIngredientScreen(
                                 scalingFactor = ingredientScalingFactor,
                                 onNavigateToIngredient = onNavigateToIngredient,
                                 modifier = Modifier.fillMaxWidth(),
-                                unwrap = false,
+                                unwrap = hasNestedRecipe,
                             )
                         }
                     }

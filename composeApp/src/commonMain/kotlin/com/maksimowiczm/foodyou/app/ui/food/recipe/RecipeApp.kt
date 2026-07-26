@@ -214,6 +214,31 @@ internal fun RecipeApp(
                         onDelete = { backStack.removeLastIf<UserRecipe>() },
                         identity = it.identity,
                         initialQuantity = it.quantity,
+                        onNavigateToIngredient = { identity, quantity ->
+                            val route =
+                                when (identity) {
+                                    is FoodCompositionComponentIdentity.UserProduct ->
+                                        UserProduct(UserProductIdentity(identity.id), quantity)
+
+                                    is FoodCompositionComponentIdentity.OpenFoodFacts ->
+                                        OpenFoodFacts(
+                                            OpenFoodFactsProductIdentity(identity.barcode),
+                                            quantity,
+                                        )
+
+                                    is FoodCompositionComponentIdentity.FoodDataCentral ->
+                                        FoodDataCentral(
+                                            FoodDataCentralProductIdentity(identity.fdcId),
+                                            quantity,
+                                        )
+
+                                    is FoodCompositionComponentIdentity.Recipe ->
+                                        UserRecipe(UserRecipeIdentity(identity.id), quantity)
+
+                                    is FoodCompositionComponentIdentity.Anonymous -> TODO()
+                                }
+                            backStack.add(route)
+                        },
                     )
                 }
                 entry<EditOpenFoodFacts> {
@@ -268,6 +293,31 @@ internal fun RecipeApp(
                         },
                         identity = it.identity,
                         initialQuantity = it.quantity,
+                        onNavigateToIngredient = { identity, quantity ->
+                            val route =
+                                when (identity) {
+                                    is FoodCompositionComponentIdentity.UserProduct ->
+                                        UserProduct(UserProductIdentity(identity.id), quantity)
+
+                                    is FoodCompositionComponentIdentity.OpenFoodFacts ->
+                                        OpenFoodFacts(
+                                            OpenFoodFactsProductIdentity(identity.barcode),
+                                            quantity,
+                                        )
+
+                                    is FoodCompositionComponentIdentity.FoodDataCentral ->
+                                        FoodDataCentral(
+                                            FoodDataCentralProductIdentity(identity.fdcId),
+                                            quantity,
+                                        )
+
+                                    is FoodCompositionComponentIdentity.Recipe ->
+                                        UserRecipe(UserRecipeIdentity(identity.id), quantity)
+
+                                    is FoodCompositionComponentIdentity.Anonymous -> TODO()
+                                }
+                            backStack.add(route)
+                        },
                     )
                 }
             },
