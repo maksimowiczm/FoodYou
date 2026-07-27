@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.app.ui.food.recipe
 
 import androidx.compose.animation.ContentTransform
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -378,7 +380,10 @@ private fun RecipeFormScreen(
             )
         },
     ) { paddingValues ->
-        LazyColumn(contentPadding = paddingValues.add(vertical = 8.dp)) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().imePadding(),
+            contentPadding = paddingValues.add(vertical = 8.dp),
+        ) {
             item {
                 RecipeForm(
                     state = recipeForm,
