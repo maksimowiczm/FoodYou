@@ -5,10 +5,12 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -202,14 +204,17 @@ private fun PersonalizeNutritionFactsScreen(
                                     localOrder.addAll(order)
                                 },
                                 shapes = IconButtonDefaults.shapes(),
+                                modifier = Modifier.size(IconButtonDefaults.smallContainerSize()),
                                 enabled = isModified,
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Outlined.Undo,
                                     contentDescription = stringResource(Res.string.action_undo),
+                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                 )
                             }
                         }
+                        Spacer(Modifier.width(4.dp))
                     } else if (!isDefaultOrder) {
                         TooltipBox(
                             positionProvider =
@@ -229,14 +234,17 @@ private fun PersonalizeNutritionFactsScreen(
                                     localOrder.addAll(NutrientsOrder.defaultOrder)
                                 },
                                 shapes = IconButtonDefaults.shapes(),
+                                modifier = Modifier.size(IconButtonDefaults.smallContainerSize()),
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.Refresh,
                                     contentDescription =
                                         stringResource(Res.string.headline_reset_to_default),
+                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                 )
                             }
                         }
+                        Spacer(Modifier.width(4.dp))
                     }
                     FilledIconButton(
                         onClick = { onSaveOrder(localOrder.toList()) },
