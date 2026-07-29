@@ -2,7 +2,7 @@
 version-name = "4.0.0-alpha.1"
 android-versionCode = "1000"
 android-compileSdk = "37"
-android-minSdk = "28"
+android-minSdk = "30"
 android-targetSdk = "37"
 
 agp = "9.2.1"
