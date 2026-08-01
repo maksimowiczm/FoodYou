@@ -13,7 +13,22 @@ fun MealPlan.update(
         "Meal identities must be unique"
     }
     if (updatedMeals == meals) return emptyList()
-    return listOf(MealPlanUpdatedEvent(updatedMeals, clock.now()))
+
+    val now = clock.now()
+    val currentById = meals.associateBy { it.identity }
+    val updatedById = updatedMeals.associateBy { it.identity }
+
+    val added = updatedMeals.filter { it.identity !in currentById }
+    val removed = meals.filter { it.identity !in updatedById }
+    val changed = updatedMeals.filter { meal ->
+        currentById[meal.identity]?.let { it != meal } == true
+    }
+
+    return buildList {
+        added.forEach { add(MealAddedEvent(it, now)) }
+        changed.forEach { add(MealUpdatedEvent(it, now)) }
+        removed.forEach { add(MealDeletedEvent(it.identity, now)) }
+    }
 }
 
 fun MealPlan.initialize(
@@ -35,7 +50,10 @@ fun MealPlan.initialize(
 fun MealPlan.apply(event: MealPlanEvent): MealPlan =
     when (event) {
         is MealPlanInitializedEvent -> copy(meals = event.meals)
-        is MealPlanUpdatedEvent -> copy(meals = event.meals)
+        is MealAddedEvent -> copy(meals = meals + event.meal)
+        is MealUpdatedEvent ->
+            copy(meals = meals.map { if (it.identity == event.meal.identity) event.meal else it })
+        is MealDeletedEvent -> copy(meals = meals.filterNot { it.identity == event.identity })
     }
 
 fun Iterable<MealPlanEvent>.toMealPlan(): MealPlan =

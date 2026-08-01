@@ -17,9 +17,12 @@ import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryIdentity
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryMealRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.edit
 import com.maksimowiczm.foodyou.fooddiary.domain.remove
 import com.maksimowiczm.foodyou.fooddiary.domain.toFoodDiaryEntry
-import com.maksimowiczm.foodyou.fooddiary.domain.update
+import com.maksimowiczm.foodyou.fooddiary.domain.unlinkFromMeal
+import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.async
@@ -32,6 +35,7 @@ class FoodDiaryService(
     private val eventStore: EventStore,
     private val eventBus: EventBus,
     private val compositionRepository: FoodDiaryCompositionRepository,
+    private val mealRepository: FoodDiaryMealRepository,
 ) {
     private fun streamId(identity: FoodDiaryEntryIdentity) = "FoodDiaryEntry-${identity.id}"
 
@@ -52,16 +56,16 @@ class FoodDiaryService(
 
     suspend fun create(
         composition: FoodCompositionComponent,
+        mealIdentity: MealIdentity,
         timestamp: Instant,
     ): FoodDiaryEntryIdentity {
         val identity = FoodDiaryEntryIdentity(Uuid.random())
         transact(identity) {
             FoodDiaryEntry.create(
-                FoodDiaryEntry(
-                    identity = identity,
-                    composition = composition,
-                    timestamp = timestamp,
-                )
+                identity = identity,
+                composition = composition,
+                mealIdentity = mealIdentity,
+                timestamp = timestamp,
             )
         }
         return identity
@@ -74,7 +78,10 @@ class FoodDiaryService(
     ) {
         transact(identity) { entry ->
             checkNotNull(entry) { "Food diary entry with ID $identity not found" }
-            entry.update { it.copy(composition = composition, timestamp = timestamp) }
+            entry.edit(
+                composition = composition,
+                timestamp = timestamp,
+            )
         }
     }
 
@@ -98,25 +105,24 @@ class FoodDiaryService(
             .map { entryIdentity ->
                 async {
                     transact(entryIdentity) { entry ->
-                        entry?.update {
-                            val wrapped = listOf(it.composition)
-                            val updated =
-                                FoodCompositionUpdateService.update(
-                                    components = wrapped,
-                                    identity = identity,
-                                    name = name,
-                                    nutritionFacts = nutritionFacts,
-                                    quantity = { current ->
-                                        FoodComponentQuantityUpdateService.update(
-                                            current = current,
-                                            servingWeight = servingWeight,
-                                            packageWeight = packageWeight,
-                                        )
-                                    },
-                                    image = image,
-                                )
-                            it.copy(composition = updated.first())
-                        } ?: emptyList()
+                        if (entry == null) return@transact emptyList()
+                        val wrapped = listOf(entry.composition)
+                        val updated =
+                            FoodCompositionUpdateService.update(
+                                components = wrapped,
+                                identity = identity,
+                                name = name,
+                                nutritionFacts = nutritionFacts,
+                                quantity = { current ->
+                                    FoodComponentQuantityUpdateService.update(
+                                        current = current,
+                                        servingWeight = servingWeight,
+                                        packageWeight = packageWeight,
+                                    )
+                                },
+                                image = image,
+                            )
+                        entry.edit(composition = updated.first())
                     }
                 }
             }
@@ -136,25 +142,24 @@ class FoodDiaryService(
             .map { entryIdentity ->
                 async {
                     transact(entryIdentity) { entry ->
-                        entry?.update {
-                            val wrapped = listOf(it.composition)
-                            val updated =
-                                FoodCompositionUpdateService.update(
-                                    components = wrapped,
-                                    identity = identity,
-                                    name = name,
-                                    newComponents = components,
-                                    quantity = { current ->
-                                        FoodComponentQuantityUpdateService.update(
-                                            current = current,
-                                            servingWeight = servingWeight,
-                                            packageWeight = packageWeight,
-                                        )
-                                    },
-                                    image = image,
-                                )
-                            it.copy(composition = updated.first())
-                        } ?: emptyList()
+                        if (entry == null) return@transact emptyList()
+                        val wrapped = listOf(entry.composition)
+                        val updated =
+                            FoodCompositionUpdateService.update(
+                                components = wrapped,
+                                identity = identity,
+                                name = name,
+                                newComponents = components,
+                                quantity = { current ->
+                                    FoodComponentQuantityUpdateService.update(
+                                        current = current,
+                                        servingWeight = servingWeight,
+                                        packageWeight = packageWeight,
+                                    )
+                                },
+                                image = image,
+                            )
+                        entry.edit(composition = updated.first())
                     }
                 }
             }
@@ -168,13 +173,13 @@ class FoodDiaryService(
                 .map { entryIdentity ->
                     async {
                         transact(entryIdentity) { entry ->
-                            entry ?: return@transact emptyList()
+                            if (entry == null) return@transact emptyList()
                             val wrapped = listOf(entry.composition)
                             val updatedComposition =
                                 FoodCompositionUpdateService.remove(wrapped, identity)
 
                             if (updatedComposition.isEmpty()) entry.remove(DeleteStrategy.Delete)
-                            else entry.update { it.copy(composition = updatedComposition.first()) }
+                            else entry.edit(composition = updatedComposition.first())
                         }
                     }
                 }
@@ -192,10 +197,23 @@ class FoodDiaryService(
                             val wrapped = listOf(entry.composition)
                             val updatedComposition =
                                 FoodCompositionUpdateService.unlink(wrapped, identity)
-                            entry.update { it.copy(composition = updatedComposition.first()) }
+                            entry.edit(composition = updatedComposition.first())
                         }
                     }
                 }
                 .awaitAll()
         }
+
+    suspend fun unlinkEntriesFromMeal(mealIdentity: MealIdentity) = coroutineScope {
+        mealRepository
+            .findEntriesUsing(mealIdentity)
+            .map { entryIdentity ->
+                async {
+                    transact(entryIdentity) { entry ->
+                        entry?.unlinkFromMeal() ?: emptyList()
+                    }
+                }
+            }
+            .awaitAll()
+    }
 }

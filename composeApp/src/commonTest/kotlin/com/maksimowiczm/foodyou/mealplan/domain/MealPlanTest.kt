@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.mealplan.domain
 
+import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.domain.Language
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,7 +20,7 @@ class MealPlanTest {
         )
 
     @Test
-    fun initialize_meal_plan() {
+    fun `initialize empty plan produces MealPlanInitializedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(500)
         val templateMeals = MealTemplates.forLanguage(Language.English)
         val events = MealPlan().initialize(Language.English, templateMeals, staticClock(timestamp))
@@ -32,7 +33,7 @@ class MealPlanTest {
     }
 
     @Test
-    fun initialize_fails_when_not_empty() {
+    fun `initialize non-empty plan fails`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         assertFailsWith<IllegalStateException> {
             mealPlan.initialize(Language.English, listOf(breakfast))
@@ -40,7 +41,7 @@ class MealPlanTest {
     }
 
     @Test
-    fun update_meal_plan() {
+    fun `adding meal produces MealAddedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val newMeal = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
@@ -49,13 +50,62 @@ class MealPlanTest {
         val events = mealPlan.update(newMeals, staticClock(timestamp))
 
         assertEquals(1, events.size)
-        val event = assertIs<MealPlanUpdatedEvent>(events.single())
-        assertEquals(newMeals, event.meals)
+        val event = assertIs<MealAddedEvent>(events.single())
+        assertEquals(newMeal, event.meal)
         assertEquals(timestamp, event.timestamp)
     }
 
     @Test
-    fun update_fails_with_duplicate_identities() {
+    fun `updating meal produces MealUpdatedEvent`() {
+        val timestamp = Instant.fromEpochMilliseconds(5000)
+        val mealPlan = MealPlan(meals = listOf(breakfast))
+        val updatedBreakfast = breakfast.copy(name = "Updated Breakfast")
+        val newMeals = listOf(updatedBreakfast)
+
+        val events = mealPlan.update(newMeals, staticClock(timestamp))
+
+        assertEquals(1, events.size)
+        val event = assertIs<MealUpdatedEvent>(events.single())
+        assertEquals(updatedBreakfast, event.meal)
+        assertEquals(timestamp, event.timestamp)
+    }
+
+    @Test
+    fun `removing meal produces MealDeletedEvent`() {
+        val timestamp = Instant.fromEpochMilliseconds(5000)
+        val mealPlan = MealPlan(meals = listOf(breakfast))
+        val newMeals = emptyList<Meal>()
+
+        val events = mealPlan.update(newMeals, staticClock(timestamp))
+
+        assertEquals(1, events.size)
+        val event = assertIs<MealDeletedEvent>(events.single())
+        assertEquals(breakfast.identity, event.identity)
+        assertEquals(timestamp, event.timestamp)
+    }
+
+    @Test
+    fun `multiple changes produce multiple granular events`() {
+        val timestamp = Instant.fromEpochMilliseconds(5000)
+        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
+
+        val lunch = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val updatedBreakfast = breakfast.copy(name = "Big Breakfast")
+
+        // breakfast updated, dinner removed, lunch added
+        val newMeals = listOf(updatedBreakfast, lunch)
+
+        val events = mealPlan.update(newMeals, staticClock(timestamp))
+
+        assertEquals(3, events.size)
+        assertIs<MealUpdatedEvent>(events.find { it is MealUpdatedEvent })
+        assertIs<MealDeletedEvent>(events.find { it is MealDeletedEvent })
+        assertIs<MealAddedEvent>(events.find { it is MealAddedEvent })
+    }
+
+    @Test
+    fun `updating with duplicate identities fails`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val duplicateMeal = breakfast.copy(name = "Duplicate")
 
@@ -65,14 +115,14 @@ class MealPlanTest {
     }
 
     @Test
-    fun update_no_changes_returns_empty_list() {
+    fun `updating with no changes returns no events`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val events = mealPlan.update(listOf(breakfast))
         assertEquals(0, events.size)
     }
 
     @Test
-    fun apply_initialize_event() {
+    fun `applying MealPlanInitializedEvent sets meals`() {
         val mealPlan = MealPlan()
         val defaultMeals = MealTemplates.forLanguage(Language.English)
         val event = MealPlanInitializedEvent(Language.English, defaultMeals, Clock.System.now())
@@ -83,33 +133,52 @@ class MealPlanTest {
     }
 
     @Test
-    fun apply_update_event() {
+    fun `applying MealAddedEvent adds meal`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val newMeal = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
-        val newMeals = listOf(breakfast, newMeal)
-        val event = MealPlanUpdatedEvent(newMeals, Clock.System.now())
+        val event = MealAddedEvent(newMeal, Clock.System.now())
 
         val updatedPlan = mealPlan.apply(event)
 
-        assertEquals(newMeals, updatedPlan.meals)
+        assertEquals(listOf(breakfast, newMeal), updatedPlan.meals)
     }
 
     @Test
-    fun toMealPlan_aggregates_events() {
+    fun `applying MealUpdatedEvent updates meal`() {
+        val mealPlan = MealPlan(meals = listOf(breakfast))
+        val updatedBreakfast = breakfast.copy(name = "Better Breakfast")
+        val event = MealUpdatedEvent(updatedBreakfast, Clock.System.now())
+
+        val updatedPlan = mealPlan.apply(event)
+
+        assertEquals(listOf(updatedBreakfast), updatedPlan.meals)
+    }
+
+    @Test
+    fun `applying MealDeletedEvent removes meal`() {
+        val mealPlan = MealPlan(meals = listOf(breakfast))
+        val event = MealDeletedEvent(breakfast.identity, Clock.System.now())
+
+        val updatedPlan = mealPlan.apply(event)
+
+        assertEquals(emptyList(), updatedPlan.meals)
+    }
+
+    @Test
+    fun `aggregating event sequence produces correct state`() {
         val meal2 = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val updatedMeal2 = meal2.copy(name = "Better Lunch")
+        val now = Clock.System.now()
         val events =
             listOf(
-                MealPlanInitializedEvent(Language.English, listOf(breakfast), Clock.System.now()),
-                MealPlanUpdatedEvent(listOf(breakfast, meal2), Clock.System.now()),
+                MealPlanInitializedEvent(Language.English, listOf(breakfast), now),
+                MealAddedEvent(meal2, now),
+                MealUpdatedEvent(updatedMeal2, now),
+                MealDeletedEvent(breakfast.identity, now),
             )
 
         val mealPlan = events.toMealPlan()
 
-        assertEquals(listOf(breakfast, meal2), mealPlan.meals)
+        assertEquals(listOf(updatedMeal2), mealPlan.meals)
     }
-
-    private fun staticClock(instant: Instant) =
-        object : Clock {
-            override fun now(): Instant = instant
-        }
 }

@@ -1,7 +1,9 @@
 package com.maksimowiczm.foodyou.fooddiary.domain
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.event.DomainEvent
+import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
@@ -11,13 +13,24 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 
 @Serializable
 data class FoodDiaryEntryCreatedEvent(
-    val entry: FoodDiaryEntry,
+    val identity: FoodDiaryEntryIdentity,
+    val composition: FoodCompositionComponent,
+    val mealIdentity: MealIdentity,
+    @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()
 
 @Serializable
 data class FoodDiaryEntryUpdatedEvent(
-    val entry: FoodDiaryEntry,
+    val identity: FoodDiaryEntryIdentity,
+    val composition: FoodCompositionComponent,
+    @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,
+    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
+) : FoodDiaryEvent()
+
+@Serializable
+data class FoodDiaryEntryUnlinkedFromMealEvent(
+    val identity: FoodDiaryEntryIdentity,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()
 

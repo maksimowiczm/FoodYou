@@ -4,6 +4,7 @@ package com.maksimowiczm.foodyou.fooddiary.domain
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
+import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
@@ -17,20 +18,47 @@ data class FoodDiaryEntry(
     val identity: FoodDiaryEntryIdentity,
     val composition: FoodCompositionComponent,
     @Serializable(with = InstantComponentSerializer::class) val timestamp: Instant,
+    val mealIdentity: MealIdentity?,
 ) {
     companion object {
-        fun create(entry: FoodDiaryEntry, clock: Clock = Clock.System): List<FoodDiaryEvent> =
-            listOf(FoodDiaryEntryCreatedEvent(entry = entry, timestamp = clock.now()))
+        fun create(
+            identity: FoodDiaryEntryIdentity,
+            composition: FoodCompositionComponent,
+            mealIdentity: MealIdentity,
+            timestamp: Instant,
+            clock: Clock = Clock.System,
+        ): List<FoodDiaryEvent> =
+            listOf(
+                FoodDiaryEntryCreatedEvent(
+                    identity = identity,
+                    composition = composition,
+                    mealIdentity = mealIdentity,
+                    entryTimestamp = timestamp,
+                    timestamp = clock.now(),
+                )
+            )
     }
 }
 
-inline fun FoodDiaryEntry.update(
+fun FoodDiaryEntry.edit(
+    composition: FoodCompositionComponent = this.composition,
+    timestamp: Instant = this.timestamp,
     clock: Clock = Clock.System,
-    transform: (FoodDiaryEntry) -> FoodDiaryEntry,
 ): List<FoodDiaryEvent> = buildList {
-    val updated = transform(this@update)
-    if (updated != this@update)
-        add(FoodDiaryEntryUpdatedEvent(entry = updated, timestamp = clock.now()))
+    val updated =
+        this@edit.copy(
+            composition = composition,
+            timestamp = timestamp,
+        )
+    if (updated != this@edit)
+        add(
+            FoodDiaryEntryUpdatedEvent(
+                identity = identity,
+                composition = composition,
+                entryTimestamp = timestamp,
+                timestamp = clock.now(),
+            )
+        )
 }
 
 fun FoodDiaryEntry.remove(
@@ -45,11 +73,30 @@ fun FoodDiaryEntry.remove(
         )
     )
 
+fun FoodDiaryEntry.unlinkFromMeal(clock: Clock = Clock.System): List<FoodDiaryEvent> =
+    listOf(
+        FoodDiaryEntryUnlinkedFromMealEvent(
+            identity = identity,
+            timestamp = clock.now(),
+        )
+    )
+
 fun FoodDiaryEntry?.apply(event: FoodDiaryEvent): FoodDiaryEntry? =
     when (event) {
-        is FoodDiaryEntryCreatedEvent -> event.entry
-        is FoodDiaryEntryUpdatedEvent -> event.entry
+        is FoodDiaryEntryCreatedEvent ->
+            FoodDiaryEntry(
+                identity = event.identity,
+                composition = event.composition,
+                timestamp = event.entryTimestamp,
+                mealIdentity = event.mealIdentity,
+            )
+        is FoodDiaryEntryUpdatedEvent ->
+            this?.copy(
+                composition = event.composition,
+                timestamp = event.entryTimestamp,
+            )
         is FoodDiaryEntryDeletedEvent -> null
+        is FoodDiaryEntryUnlinkedFromMealEvent -> this?.copy(mealIdentity = null)
     }
 
 fun Iterable<FoodDiaryEvent>.toFoodDiaryEntry(): FoodDiaryEntry? =

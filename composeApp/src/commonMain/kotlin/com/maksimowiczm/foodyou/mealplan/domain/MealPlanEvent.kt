@@ -17,7 +17,19 @@ data class MealPlanInitializedEvent(
 ) : MealPlanEvent()
 
 @Serializable
-data class MealPlanUpdatedEvent(
-    val meals: List<Meal>,
+data class MealAddedEvent(
+    val meal: Meal,
+    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
+) : MealPlanEvent()
+
+@Serializable
+data class MealUpdatedEvent(
+    val meal: Meal,
+    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
+) : MealPlanEvent()
+
+@Serializable
+data class MealDeletedEvent(
+    val identity: MealIdentity,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : MealPlanEvent()

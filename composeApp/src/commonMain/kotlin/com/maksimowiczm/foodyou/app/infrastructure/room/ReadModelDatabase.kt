@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter
 import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryDatabase
+import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryEntryMealEntity
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryEntryReferenceEntity
 import com.maksimowiczm.foodyou.search.infrastructure.QuantityTypeConverter
 import com.maksimowiczm.foodyou.search.infrastructure.SearchDatabase
@@ -24,6 +25,7 @@ import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlatten
             SearchEntity::class,
             UserRecipeCompositionReferenceEntity::class,
             FoodDiaryEntryReferenceEntity::class,
+            FoodDiaryEntryMealEntity::class,
         ],
     views = [UserRecipeFlattenedCompositionView::class],
     version = ReadModelDatabase.VERSION,

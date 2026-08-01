@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryUnlinkedFromMealEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryUpdatedEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEvent
 
@@ -14,21 +15,23 @@ class FoodDiaryCompositionSynchronizer(private val repository: FoodDiaryComposit
         when (event) {
             is FoodDiaryEntryCreatedEvent ->
                 repository.saveReferences(
-                    event.entry.identity,
-                    event.entry.composition.allIdentities
+                    event.identity,
+                    event.composition.allIdentities
                         .filterIsInstance<FoodCompositionComponentIdentity.Identified>()
                         .toSet(),
                 )
 
             is FoodDiaryEntryUpdatedEvent ->
                 repository.saveReferences(
-                    event.entry.identity,
-                    event.entry.composition.allIdentities
+                    event.identity,
+                    event.composition.allIdentities
                         .filterIsInstance<FoodCompositionComponentIdentity.Identified>()
                         .toSet(),
                 )
 
             is FoodDiaryEntryDeletedEvent -> repository.removeReferences(event.identity)
+
+            is FoodDiaryEntryUnlinkedFromMealEvent -> Unit
         }
     }
 }
