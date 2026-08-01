@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
@@ -166,7 +167,8 @@ private fun OpenFoodFactsDetailsScreen(
         Box(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
             FoodDetailsLoadingOverlay(
                 isLoading = isLoading,
-                topPadding = contentPadding.calculateTopPadding(),
+                modifier =
+                    Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
             )
             LazyColumn(
                 contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),

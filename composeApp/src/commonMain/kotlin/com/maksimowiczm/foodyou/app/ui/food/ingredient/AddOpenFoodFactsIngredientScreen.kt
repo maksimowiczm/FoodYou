@@ -34,6 +34,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.maksimowiczm.foodyou.app.ui.common.component.QuantityInput
@@ -169,9 +170,7 @@ private fun AddOpenFoodFactsIngredientScreen(
     LaunchedEffect(Unit) {
         if (!focusRequested) {
             val quantityInputIndex =
-                1 +
-                    (if (image != null) 1 else 0) +
-                    (if (stringedQuantities.isNotEmpty()) 1 else 0)
+                1 + (if (image != null) 1 else 0) + (if (stringedQuantities.isNotEmpty()) 1 else 0)
             lazyListState.animateScrollToItem(quantityInputIndex)
             focusRequester.requestFocus()
             focusRequested = true
@@ -218,7 +217,8 @@ private fun AddOpenFoodFactsIngredientScreen(
         Box(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
             FoodDetailsLoadingOverlay(
                 isLoading = isLoading,
-                topPadding = contentPadding.calculateTopPadding(),
+                modifier =
+                    Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
             )
             LazyColumn(
                 modifier = Modifier.imePadding(),

@@ -34,6 +34,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.maksimowiczm.foodyou.app.ui.common.component.QuantityInput
@@ -207,7 +208,8 @@ private fun AddFoodDataCentralIngredientScreen(
         Box(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
             FoodDetailsLoadingOverlay(
                 isLoading = isLoading,
-                topPadding = contentPadding.calculateTopPadding(),
+                modifier =
+                    Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
             )
             LazyColumn(
                 modifier = Modifier.imePadding(),
