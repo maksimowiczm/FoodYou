@@ -21,8 +21,26 @@ import org.koin.dsl.module
 val foodUiModule = module {
     viewModelOf(::OpenFoodFactsDetailsViewModel)
     viewModelOf(::FoodDataCentralDetailsViewModel)
-    viewModelOf(::UserProductDetailsViewModel)
-    viewModelOf(::UserRecipeDetailsViewModel)
+    viewModel { params ->
+        UserProductDetailsViewModel(
+            identity = params.get(),
+            initialQuantity = params.getOrNull(),
+            userProductService = get(),
+            observeIsFavoriteFoodUseCase = get(),
+            setFavoriteFoodUseCase = get(),
+            savedStateHandle = get(),
+        )
+    }
+    viewModel { params ->
+        UserRecipeDetailsViewModel(
+            identity = params.get(),
+            initialQuantity = params.getOrNull(),
+            userRecipeService = get(),
+            observeIsFavoriteFoodUseCase = get(),
+            setFavoriteFoodUseCase = get(),
+            savedStateHandle = get(),
+        )
+    }
 
     viewModelOf(::CreateRecipeViewModel)
     viewModelOf(::EditRecipeViewModel)

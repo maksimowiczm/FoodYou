@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.details
+package com.maksimowiczm.foodyou.app.ui.food.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -18,11 +18,14 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalClipboardManager
 
+interface FoodUiScopeWithSource {
+    val sourceUrl: String
+}
+
 @Composable
-internal fun FoodSource(
-    url: String,
-    logo: @Composable () -> Unit,
+fun FoodUiScopeWithSource.SourceLink(
     headline: String,
+    logo: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
@@ -35,8 +38,8 @@ internal fun FoodSource(
             .combinedClickable(
                 interactionSource = null,
                 indication = ripple(),
-                onClick = { uriHandler.openUri(url) },
-                onLongClick = { clipboardManager.copy("url", url) },
+                onClick = { uriHandler.openUri(sourceUrl) },
+                onLongClick = { clipboardManager.copy("url", sourceUrl) },
             )
     ) {
         Row(
@@ -52,7 +55,7 @@ internal fun FoodSource(
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
-                    text = url,
+                    text = sourceUrl,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,
@@ -60,8 +63,4 @@ internal fun FoodSource(
             }
         }
     }
-}
-
-internal object FoodSourceDefaults {
-    val logoMaxSize = 32.dp
 }

@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.food.details.userrecipe
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,9 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,26 +22,27 @@ import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.headline
 import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
-import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsImage
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsNutrients
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
-import com.maksimowiczm.foodyou.app.ui.food.details.UserFoodMenu
-import com.maksimowiczm.foodyou.app.ui.food.details.UserFoodNote
-import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.app.ui.food.common.FavoriteIconButton
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodDetailsNutrientsWithSuggestions
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodScreenTopBar
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScope
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithImage
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithIngredients
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithNote
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithOptionalNutrients
+import com.maksimowiczm.foodyou.app.ui.food.common.Headline
+import com.maksimowiczm.foodyou.app.ui.food.common.Image
+import com.maksimowiczm.foodyou.app.ui.food.common.Ingredients
+import com.maksimowiczm.foodyou.app.ui.food.common.Note
+import com.maksimowiczm.foodyou.app.ui.food.common.UserFoodMenu
+import com.maksimowiczm.foodyou.app.ui.food.common.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
-import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
-import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
-import com.maksimowiczm.foodyou.common.domain.food.isIncomplete
-import com.maksimowiczm.foodyou.common.domain.food.scale
-import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.common.getOrNull
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -60,7 +60,7 @@ fun UserRecipeDetailsScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: UserRecipeDetailsViewModel =
-        koinViewModel(parameters = { parametersOf(identity) })
+        koinViewModel(parameters = { parametersOf(identity, initialQuantity) })
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {
@@ -68,121 +68,94 @@ fun UserRecipeDetailsScreen(
         }
     }
 
-    val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
-    val userRecipe by viewModel.userRecipe.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    UserRecipeDetailsScreen(
-        isFavorite = isFavorite,
-        recipe = userRecipe,
-        initialQuantity = initialQuantity,
+    val nameSelector = LocalFoodNameSelector.current
+    val image = uiState.recipe?.image?.let { resolveBlob(it) }
+
+    val scope =
+        remember(uiState, nameSelector, image) {
+            val recipe = uiState.recipe ?: return@remember null
+
+            UserRecipeScope(
+                headline = recipe.headline(nameSelector),
+                isFavorite = uiState.isFavorite,
+                image = image,
+                note = recipe.note,
+                components = recipe.components,
+                ingredientScalingFactor = uiState.ingredientScalingFactor,
+                suggestions = uiState.suggestions,
+                selectedQuantity = uiState.selectedQuantity,
+                scaledNutritionFacts = uiState.scaledNutritionFacts,
+                packageQuantity = AbsoluteQuantity.Weight(recipe.totalWeight),
+                servingQuantity = AbsoluteQuantity.Weight(recipe.servingWeight),
+            )
+        }
+
+    scope?.Screen(
         onBack = onBack,
         onEdit = onEdit,
         onDelete = viewModel::delete,
         onSetFavorite = viewModel::setFavorite,
+        onSelectQuantity = viewModel::selectQuantity,
         onNavigateToIngredient = onNavigateToIngredient,
         modifier = modifier,
     )
 }
 
+@Immutable
+private data class UserRecipeScope(
+    override val headline: String?,
+    override val isFavorite: Boolean,
+    override val image: FileUri?,
+    override val note: String?,
+    override val components: List<FoodCompositionComponent>,
+    override val ingredientScalingFactor: Double,
+    override val suggestions: List<Quantity>,
+    override val selectedQuantity: Quantity?,
+    override val scaledNutritionFacts: NutritionFacts?,
+    override val packageQuantity: AbsoluteQuantity?,
+    override val servingQuantity: AbsoluteQuantity?,
+) :
+    FoodUiScope,
+    FoodUiScopeWithImage,
+    FoodUiScopeWithNote,
+    FoodUiScopeWithIngredients,
+    FoodUiScopeWithOptionalNutrients
+
 @Composable
-private fun UserRecipeDetailsScreen(
-    isFavorite: Boolean?,
-    recipe: UserRecipe?,
-    initialQuantity: Quantity?,
+private fun UserRecipeScope.Screen(
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
+    onSelectQuantity: (Quantity) -> Unit,
     onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val nameSelector = LocalFoodNameSelector.current
-
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(recipe?.nutritionFacts) {
-            if (recipe?.nutritionFacts == null) return@remember false
-            (Nutrient.all - Nutrient.basic).any { recipe.nutritionFacts[it].value != null }
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
+            (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
-    val servingWeight = recipe?.servingWeight
-    val totalWeight = recipe?.totalWeight
-
-    var quantity by
-        rememberSerializable(initialQuantity, servingWeight, totalWeight) {
-            val default =
-                initialQuantity
-                    ?: if (servingWeight != null) ServingQuantity(1.0)
-                    else AbsoluteQuantity.Weight(100.grams)
-            mutableStateOf(default)
-        }
-    val quantitySuggestions =
-        remember(initialQuantity, servingWeight, totalWeight) {
-            if (recipe == null) return@remember emptyList()
-            else
-                buildList {
-                    add(AbsoluteQuantity.Weight(100.grams))
-                    if (initialQuantity != null) add(initialQuantity)
-                    if (servingWeight != null) add(ServingQuantity(1.0))
-                    if (totalWeight != null) add(PackageQuantity(1.0))
-                }
-                    .distinct()
-        }
-
-    val headline = remember(recipe?.name, nameSelector) { recipe?.headline(nameSelector) }
-
-    val ingredientScalingFactor =
-        remember(recipe?.totalWeight, recipe?.servingWeight, quantity) {
-            val totalWeight = recipe?.totalWeight?.takeIf { it.grams > 0 } ?: return@remember 1.0
-            val servingWeight = recipe.servingWeight
-
-            val selectedAbsoluteQuantity =
-                QuantityCalculator.calculateAbsoluteQuantity(
-                        suggestedQuantity = quantity,
-                        packageQuantity = AbsoluteQuantity.Weight(totalWeight),
-                        servingQuantity = AbsoluteQuantity.Weight(servingWeight),
-                    )
-                    .getOrNull() ?: return@remember 1.0
-
-            when (selectedAbsoluteQuantity) {
-                is AbsoluteQuantity.Weight -> selectedAbsoluteQuantity.weight / totalWeight
-                is AbsoluteQuantity.Volume -> 1.0
-            }
-        }
-
-    val scaledNutritionFacts =
-        remember(recipe?.nutritionFacts, servingWeight, totalWeight, quantity) {
-            recipe
-                ?.nutritionFacts
-                ?.scale(
-                    packageQuantity = totalWeight?.let { AbsoluteQuantity.Weight(it) },
-                    servingQuantity = servingWeight?.let { AbsoluteQuantity.Weight(it) },
-                    quantity = quantity,
-                )
-                ?.getOrNull()
-        }
     val anyNutrientIsMissing =
-        remember(recipe?.nutritionFacts) {
-            if (recipe?.nutritionFacts == null) return@remember false
-            recipe.nutritionFacts.asMap().any { it.value.isIncomplete() } ||
-                recipe.nutritionFacts.energy.isIncomplete()
-        }
-
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        remember(scaledNutritionFacts) { scaledNutritionFacts?.isIncomplete() == true }
 
     Scaffold(
         modifier = modifier,
         topBar = {
-            FoodDetailsTopBar(
+            FoodScreenTopBar(
                 onBack = onBack,
                 title = headline,
                 actions = {
                     FavoriteIconButton(
-                        favorite = isFavorite ?: false,
+                        favorite = isFavorite,
                         onChange = onSetFavorite,
-                        enabled = recipe != null,
                     )
-                    UserFoodMenu(onEdit = onEdit, onDelete = onDelete, enabled = recipe != null)
+                    UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
                 },
                 scrollBehavior = scrollBehavior,
             )
@@ -194,59 +167,28 @@ private fun UserRecipeDetailsScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodDetailsHeadline(
-                    headline = headline,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                )
+                Headline(Modifier.padding(horizontal = 8.dp))
             }
-            if (recipe?.image != null) {
+            if (image != null)
                 item {
-                    FoodDetailsImage(
-                        image = resolveBlob(recipe.image),
-                        showPlaceholder = false,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    Image(Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                }
+            if (components.isNotEmpty())
+                item {
+                    Ingredients(
+                        onNavigateToIngredient = onNavigateToIngredient,
+                        modifier = Modifier.padding(horizontal = 8.dp),
                     )
                 }
-            }
-            if (recipe != null && recipe.components.isNotEmpty()) {
-                val hasNestedRecipe =
-                    recipe.components.any {
-                        it.identity is FoodCompositionComponentIdentity.Composite
-                    }
-
-                item {
-                    Column(
-                        modifier =
-                            Modifier.padding(horizontal = 8.dp).clip(MaterialTheme.shapes.large),
-                        verticalArrangement =
-                            if (hasNestedRecipe) Arrangement.spacedBy(8.dp)
-                            else Arrangement.spacedBy(2.dp),
-                    ) {
-                        recipe.components.forEach { component ->
-                            RecipeIngredientListItem(
-                                component = component,
-                                scalingFactor = ingredientScalingFactor,
-                                onNavigateToIngredient = onNavigateToIngredient,
-                                modifier = Modifier.fillMaxWidth(),
-                                unwrap = hasNestedRecipe,
-                            )
-                        }
-                    }
-                }
-            }
-            if (scaledNutritionFacts != null) {
+            if (scaledNutritionFacts != null)
                 item {
                     Column {
-                        FoodDetailsNutrients(
-                            nutritionFacts = scaledNutritionFacts,
-                            quantities = quantitySuggestions,
-                            selectedQuantity = quantity,
-                            servingQuantity = servingWeight?.let { AbsoluteQuantity.Weight(it) },
-                            packageQuantity = totalWeight?.let { AbsoluteQuantity.Weight(it) },
-                            onSelectQuantity = { quantity = it },
-                            expanded = expanded,
+                        FoodDetailsNutrientsWithSuggestions(
+                            onSelectQuantity = onSelectQuantity,
+                            expanded = if (!expandingEnabled) false else expanded,
                             onExpandedChange = { expanded = it },
                             expandingEnabled = expandingEnabled,
+                            contentPadding = PaddingValues(horizontal = 8.dp),
                         )
                         if (anyNutrientIsMissing) {
                             Spacer(Modifier.height(8.dp))
@@ -263,15 +205,10 @@ private fun UserRecipeDetailsScreen(
                         }
                     }
                 }
-            }
-            if (recipe?.note != null) {
+            if (note != null)
                 item {
-                    UserFoodNote(
-                        note = recipe.note,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
+                    Note(Modifier.padding(horizontal = 8.dp))
                 }
-            }
         }
     }
 }

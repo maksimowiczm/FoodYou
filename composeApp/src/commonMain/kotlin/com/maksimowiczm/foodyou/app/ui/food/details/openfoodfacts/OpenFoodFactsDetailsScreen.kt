@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.ui.food.details.openfoodfacts
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -19,29 +18,25 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.headline
-import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsImage
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsLoadingOverlay
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsNutrients
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsUiState
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodSource
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodSourceDefaults
-import com.maksimowiczm.foodyou.app.ui.food.details.RefreshIconButton
-import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.app.ui.food.common.FavoriteIconButton
+import com.maksimowiczm.foodyou.app.ui.food.common.FetchProgressIndicator
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodDetailsNutrientsWithSuggestions
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodScreenTopBar
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScope
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithFetch
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithImage
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithOptionalNutrients
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithSource
+import com.maksimowiczm.foodyou.app.ui.food.common.Headline
+import com.maksimowiczm.foodyou.app.ui.food.common.Image
+import com.maksimowiczm.foodyou.app.ui.food.common.RefreshIconButton
+import com.maksimowiczm.foodyou.app.ui.food.common.SourceLink
+import com.maksimowiczm.foodyou.app.ui.food.common.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
-import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
-import com.maksimowiczm.foodyou.common.domain.food.scale
-import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.common.domain.milliliters
-import com.maksimowiczm.foodyou.common.getOrNull
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -56,104 +51,81 @@ fun OpenFoodFactsDetailsScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: OpenFoodFactsDetailsViewModel =
-        koinViewModel(parameters = { parametersOf(identity) })
+    val viewModel: OpenFoodFactsDetailsViewModel = koinViewModel {
+        parametersOf(identity, initialQuantity)
+    }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     val nameSelector = LocalFoodNameSelector.current
-    val headline =
+
+    val scope =
         remember(uiState, nameSelector) {
-            when (uiState) {
-                is FoodDetailsUiState.Error -> null
-                FoodDetailsUiState.NotFound -> null
-                is FoodDetailsUiState.Details<OpenFoodFactsProduct> ->
-                    uiState.food?.headline(nameSelector)
-            }
+            val details = uiState as? OpenFoodFactsDetailsUiState.Details ?: return@remember null
+            val food = details.food
+
+            OpenFoodFactsScope(
+                headline = food.headline(nameSelector),
+                isFavorite = details.isFavorite,
+                isLoading = details.isLoading,
+                image = food.image,
+                sourceUrl = food.source,
+                suggestions = details.suggestions,
+                selectedQuantity = details.selectedQuantity,
+                scaledNutritionFacts = details.scaledNutritionFacts,
+                packageQuantity = food.packageQuantity,
+                servingQuantity = food.servingQuantity,
+            )
         }
 
-    when (uiState) {
-        is FoodDetailsUiState.Details<OpenFoodFactsProduct> ->
-            OpenFoodFactsDetailsScreen(
-                isLoading = uiState.isLoading,
-                isFavorite = uiState.isFavorite,
-                headline = headline,
-                initialQuantity = initialQuantity,
-                image = uiState.food?.image,
-                nutritionFacts = uiState.food?.nutritionFacts,
-                servingQuantity = uiState.food?.servingQuantity,
-                packageQuantity = uiState.food?.packageQuantity,
-                isLiquid = false, // TODO
-                url = uiState.food?.source,
-                onBack = onBack,
-                onRefresh = viewModel::refresh,
-                onSetFavorite = viewModel::setFavorite,
-                modifier = modifier,
-            )
-
-        is FoodDetailsUiState.Error,
-        FoodDetailsUiState.NotFound -> error("Not possible for now")
-    }
+    scope?.Screen(
+        onBack = onBack,
+        onRefresh = viewModel::refresh,
+        onSetFavorite = viewModel::setFavorite,
+        onSelectQuantity = viewModel::selectQuantity,
+        modifier = modifier,
+    )
 }
 
+@Immutable
+private data class OpenFoodFactsScope(
+    override val headline: String?,
+    override val isFavorite: Boolean,
+    override val isLoading: Boolean,
+    override val image: FileUri?,
+    override val sourceUrl: String,
+    override val suggestions: List<Quantity>,
+    override val selectedQuantity: Quantity?,
+    override val scaledNutritionFacts: NutritionFacts?,
+    override val packageQuantity: AbsoluteQuantity?,
+    override val servingQuantity: AbsoluteQuantity?,
+) :
+    FoodUiScope,
+    FoodUiScopeWithFetch,
+    FoodUiScopeWithImage,
+    FoodUiScopeWithSource,
+    FoodUiScopeWithOptionalNutrients
+
 @Composable
-private fun OpenFoodFactsDetailsScreen(
-    isLoading: Boolean,
-    isFavorite: Boolean,
-    headline: String?,
-    initialQuantity: Quantity?,
-    image: FileUri?,
-    nutritionFacts: NutritionFacts?,
-    servingQuantity: AbsoluteQuantity?,
-    packageQuantity: AbsoluteQuantity?,
-    isLiquid: Boolean,
-    url: String?,
+private fun OpenFoodFactsScope.Screen(
     onBack: () -> Unit,
     onRefresh: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
+    onSelectQuantity: (Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(nutritionFacts) {
-            if (nutritionFacts == null) return@remember false
-            (Nutrient.all - Nutrient.basic).any { nutritionFacts[it].value != null }
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
+            (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
-
-    var quantity by
-        rememberSerializable(initialQuantity, servingQuantity, packageQuantity, isLiquid) {
-            val default =
-                initialQuantity
-                    ?: if (servingQuantity != null) ServingQuantity(1.0)
-                    else if (packageQuantity != null) PackageQuantity(1.0)
-                    else if (isLiquid) AbsoluteQuantity.Volume(100.milliliters)
-                    else AbsoluteQuantity.Weight(100.grams)
-
-            mutableStateOf(default)
-        }
-    val quantitySuggestions =
-        remember(initialQuantity, servingQuantity, packageQuantity, isLiquid) {
-                buildList {
-                    if (isLiquid) add(AbsoluteQuantity.Volume(100.milliliters))
-                    else add(AbsoluteQuantity.Weight(100.grams))
-                    if (initialQuantity != null) add(initialQuantity)
-                    if (servingQuantity != null) add(ServingQuantity(1.0))
-                    if (packageQuantity != null) add(PackageQuantity(1.0))
-                }
-            }
-            .distinct()
-
-    val scaledNutritionFacts =
-        remember(nutritionFacts, quantity) {
-            nutritionFacts?.scale(packageQuantity, servingQuantity, quantity)?.getOrNull()
-        }
-
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            FoodDetailsTopBar(
+            FoodScreenTopBar(
                 onBack = onBack,
                 title = headline,
                 actions = {
@@ -164,66 +136,46 @@ private fun OpenFoodFactsDetailsScreen(
             )
         },
     ) { contentPadding ->
-        Box(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
-            FoodDetailsLoadingOverlay(
-                isLoading = isLoading,
-                modifier =
-                    Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
-            )
-            LazyColumn(
-                contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
+        FetchProgressIndicator(
+            Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f)
+        )
+        LazyColumn(
+            contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            item {
+                Headline(Modifier.padding(horizontal = 8.dp))
+            }
+            if (image != null)
                 item {
-                    FoodDetailsHeadline(
-                        headline = headline,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    Image(Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                }
+            if (scaledNutritionFacts != null)
+                item {
+                    FoodDetailsNutrientsWithSuggestions(
+                        onSelectQuantity = onSelectQuantity,
+                        expanded = if (!expandingEnabled) false else expanded,
+                        onExpandedChange = { expanded = it },
+                        expandingEnabled = expandingEnabled,
+                        contentPadding = PaddingValues(horizontal = 8.dp),
                     )
                 }
-                if (image != null && !isLoading) {
-                    item {
-                        FoodDetailsImage(
-                            image = image,
-                            showPlaceholder = false,
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+            item {
+                SourceLink(
+                    logo = {
+                        Image(
+                            painter = painterResource(Res.drawable.openfoodfacts_logo),
+                            contentDescription = null,
+                            modifier =
+                                Modifier.sizeIn(
+                                    maxHeight = 32.dp,
+                                    maxWidth = 32.dp,
+                                ),
                         )
-                    }
-                }
-                if (scaledNutritionFacts != null) {
-                    item {
-                        FoodDetailsNutrients(
-                            nutritionFacts = scaledNutritionFacts,
-                            quantities = quantitySuggestions,
-                            selectedQuantity = quantity,
-                            servingQuantity = servingQuantity,
-                            packageQuantity = packageQuantity,
-                            onSelectQuantity = { quantity = it },
-                            expanded = expanded,
-                            onExpandedChange = { expanded = it },
-                            expandingEnabled = expandingEnabled,
-                        )
-                    }
-                }
-                if (url != null) {
-                    item {
-                        FoodSource(
-                            url = url,
-                            logo = {
-                                Image(
-                                    painter = painterResource(Res.drawable.openfoodfacts_logo),
-                                    contentDescription = null,
-                                    modifier =
-                                        Modifier.sizeIn(
-                                            maxHeight = FoodSourceDefaults.logoMaxSize,
-                                            maxWidth = FoodSourceDefaults.logoMaxSize,
-                                        ),
-                                )
-                            },
-                            headline = stringResource(Res.string.headline_open_food_facts),
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                        )
-                    }
-                }
+                    },
+                    headline = stringResource(Res.string.headline_open_food_facts),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                )
             }
         }
     }

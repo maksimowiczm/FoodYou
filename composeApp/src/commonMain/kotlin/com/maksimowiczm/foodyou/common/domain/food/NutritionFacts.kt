@@ -266,6 +266,9 @@ data class NutritionFacts(
 
     fun asMap(): Map<Nutrient, NutrientValue<Weight>> = Nutrient.entries.associateWith { this[it] }
 
+    /** Checks if any nutrient value (including energy) is incomplete. */
+    fun isIncomplete(): Boolean = asMap().values.any { it.isIncomplete() } || energy.isIncomplete()
+
     fun hasMacronutrientsValues(): Boolean =
         proteins.value != null && carbohydrates.value != null && fats.value != null
 

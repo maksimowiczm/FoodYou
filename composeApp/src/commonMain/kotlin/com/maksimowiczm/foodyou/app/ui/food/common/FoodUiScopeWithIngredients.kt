@@ -1,6 +1,7 @@
-package com.maksimowiczm.foodyou.app.ui.food.details.userrecipe
+package com.maksimowiczm.foodyou.app.ui.food.common
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.InteractionShapes
@@ -36,6 +38,40 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+
+interface FoodUiScopeWithIngredients {
+    val components: List<FoodCompositionComponent>
+    val ingredientScalingFactor: Double
+}
+
+@Composable
+fun FoodUiScopeWithIngredients.Ingredients(
+    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (components.isEmpty()) return
+
+    val hasNestedRecipe =
+        remember(components) {
+            components.any { it.identity is FoodCompositionComponentIdentity.Composite }
+        }
+
+    Column(
+        modifier = modifier.clip(MaterialTheme.shapes.large),
+        verticalArrangement =
+            if (hasNestedRecipe) Arrangement.spacedBy(8.dp) else Arrangement.spacedBy(2.dp),
+    ) {
+        components.forEach { component ->
+            RecipeIngredientListItem(
+                component = component,
+                scalingFactor = ingredientScalingFactor,
+                onNavigateToIngredient = onNavigateToIngredient,
+                modifier = Modifier.fillMaxWidth(),
+                unwrap = hasNestedRecipe,
+            )
+        }
+    }
+}
 
 @Composable
 internal fun RecipeIngredientListItem(

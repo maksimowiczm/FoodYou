@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.details
+package com.maksimowiczm.foodyou.app.ui.food.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -15,8 +15,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalClipboardManager
 
+interface FoodUiScopeWithNote {
+    val note: String?
+}
+
 @Composable
-internal fun UserFoodNote(note: String, modifier: Modifier = Modifier) {
+fun FoodUiScopeWithNote.Note(modifier: Modifier = Modifier) {
+    val note = note ?: return
     val clipboardManager = LocalClipboardManager.current
 
     Box(

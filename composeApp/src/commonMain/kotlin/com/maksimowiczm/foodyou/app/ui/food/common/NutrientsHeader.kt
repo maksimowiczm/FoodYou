@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.details
+package com.maksimowiczm.foodyou.app.ui.food.common
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background

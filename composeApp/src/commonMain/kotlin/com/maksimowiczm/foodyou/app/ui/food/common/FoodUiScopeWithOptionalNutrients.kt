@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.details
+package com.maksimowiczm.foodyou.app.ui.food.common
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,20 +21,21 @@ import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringRe
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
-import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.common.getOrNull
 
+interface FoodUiScopeWithOptionalNutrients {
+    val suggestions: List<Quantity>
+    val selectedQuantity: Quantity?
+    val scaledNutritionFacts: NutritionFacts?
+    val packageQuantity: AbsoluteQuantity?
+    val servingQuantity: AbsoluteQuantity?
+}
+
 @Composable
-internal fun FoodDetailsNutrients(
-    nutritionFacts: NutritionFacts,
-    quantities: List<Quantity>,
-    selectedQuantity: Quantity,
-    servingQuantity: AbsoluteQuantity?,
-    packageQuantity: AbsoluteQuantity?,
+fun FoodUiScopeWithOptionalNutrients.FoodDetailsNutrientsWithSuggestions(
     onSelectQuantity: (Quantity) -> Unit,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
@@ -42,7 +43,9 @@ internal fun FoodDetailsNutrients(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 8.dp),
 ) {
-    val stringifiedQuantities = quantities.mapNotNull { quantity ->
+    val nutritionFacts = scaledNutritionFacts ?: return
+
+    val stringifiedQuantities = suggestions.mapNotNull { quantity ->
         quantity.stringResource(packageQuantity, servingQuantity).getOrNull()?.let {
             quantity to it
         }
@@ -84,6 +87,46 @@ internal fun FoodDetailsNutrients(
                         interactionSource = null,
                         indication = null,
                         onClick = { onExpandedChange(!expanded) },
+                        enabled = expandingEnabled,
+                    ),
+        )
+    }
+}
+
+@Composable
+fun FoodUiScopeWithOptionalNutrients.FoodDetailsNutrientsCompact(
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    expandingEnabled: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val nutritionFacts = scaledNutritionFacts ?: return
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        if (nutritionFacts.hasMacronutrientsValues()) {
+            NutrientsHeader(
+                proteins = nutritionFacts.proteins.value,
+                carbohydrates = nutritionFacts.carbohydrates.value,
+                fats = nutritionFacts.fats.value,
+                expanded = expanded,
+                onExpandedChange = onExpandedChange,
+                enabled = expandingEnabled,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        NutrientList(
+            facts = nutritionFacts,
+            expanded = expanded,
+            modifier =
+                Modifier.fillMaxWidth()
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = { onExpandedChange(!expanded) },
+                        enabled = expandingEnabled,
                     ),
         )
     }
@@ -91,14 +134,9 @@ internal fun FoodDetailsNutrients(
 
 @Preview(showBackground = true)
 @Composable
-private fun FoodDetailsEmptyNutrientsPreview() {
+private fun FoodDetailsNutrientsWithSuggestionsPreview() {
     PreviewFoodYouTheme {
-        FoodDetailsNutrients(
-            nutritionFacts = NutritionFacts(),
-            quantities = sampleQuantities,
-            selectedQuantity = sampleQuantities.first(),
-            packageQuantity = AbsoluteQuantity.Weight(200.grams),
-            servingQuantity = AbsoluteQuantity.Weight(30.grams),
+        PreviewFoodUiScopeWithOptionalNutrients.FoodDetailsNutrientsWithSuggestions(
             onSelectQuantity = {},
             expanded = false,
             onExpandedChange = {},
@@ -109,32 +147,9 @@ private fun FoodDetailsEmptyNutrientsPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun FoodDetailsNutrientsPreview() {
+private fun FoodDetailsNutrientsWithSuggestionsExpandedPreview() {
     PreviewFoodYouTheme {
-        FoodDetailsNutrients(
-            nutritionFacts = sampleNutritionFacts,
-            quantities = sampleQuantities,
-            selectedQuantity = sampleQuantities.first(),
-            packageQuantity = AbsoluteQuantity.Weight(200.grams),
-            servingQuantity = AbsoluteQuantity.Weight(30.grams),
-            onSelectQuantity = {},
-            expanded = false,
-            onExpandedChange = {},
-            expandingEnabled = true,
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun FoodDetailsNutrientsExpandedPreview() {
-    PreviewFoodYouTheme {
-        FoodDetailsNutrients(
-            nutritionFacts = sampleNutritionFacts,
-            quantities = sampleQuantities,
-            selectedQuantity = sampleQuantities.first(),
-            packageQuantity = AbsoluteQuantity.Weight(200.grams),
-            servingQuantity = AbsoluteQuantity.Weight(30.grams),
+        PreviewFoodUiScopeWithOptionalNutrients.FoodDetailsNutrientsWithSuggestions(
             onSelectQuantity = {},
             expanded = true,
             onExpandedChange = {},
@@ -143,22 +158,48 @@ private fun FoodDetailsNutrientsExpandedPreview() {
     }
 }
 
-private val sampleNutritionFacts =
-    NutritionFacts(
-        energy = NutrientValue.Complete(250.kilocalories),
-        proteins = NutrientValue.Complete(15.grams),
-        carbohydrates = NutrientValue.Complete(30.grams),
-        fats = NutrientValue.Complete(10.grams),
-        sugars = NutrientValue.Complete(5.grams),
-        saturatedFats = NutrientValue.Complete(2.grams),
-        dietaryFiber = NutrientValue.Complete(3.grams),
-        salt = NutrientValue.Complete(0.5.grams),
-    )
+@Preview(showBackground = true)
+@Composable
+private fun FoodDetailsNutrientsCompactPreview() {
+    PreviewFoodYouTheme {
+        PreviewFoodUiScopeWithOptionalNutrients.FoodDetailsNutrientsCompact(
+            expanded = false,
+            onExpandedChange = {},
+            expandingEnabled = true,
+        )
+    }
+}
 
-private val sampleQuantities =
-    listOf(
-        AbsoluteQuantity.Weight(100.grams),
-        ServingQuantity(1.0),
-        PackageQuantity(1.0),
-        AbsoluteQuantity.Weight(100.grams),
-    )
+@Preview(showBackground = true)
+@Composable
+private fun FoodDetailsNutrientsCompactExpandedPreview() {
+    PreviewFoodYouTheme {
+        PreviewFoodUiScopeWithOptionalNutrients.FoodDetailsNutrientsCompact(
+            expanded = true,
+            onExpandedChange = {},
+            expandingEnabled = true,
+        )
+    }
+}
+
+private object PreviewFoodUiScopeWithOptionalNutrients : FoodUiScopeWithOptionalNutrients {
+    override val suggestions =
+        listOf(
+            AbsoluteQuantity.Weight(100.grams),
+            AbsoluteQuantity.Weight(200.grams),
+        )
+    override val selectedQuantity = suggestions.first()
+    override val scaledNutritionFacts =
+        NutritionFacts(
+            energy = NutrientValue.Complete(250.kilocalories),
+            proteins = NutrientValue.Complete(15.grams),
+            carbohydrates = NutrientValue.Complete(30.grams),
+            fats = NutrientValue.Complete(10.grams),
+            sugars = NutrientValue.Complete(5.grams),
+            saturatedFats = NutrientValue.Complete(2.grams),
+            solubleFiber = NutrientValue.Complete(3.grams),
+            salt = NutrientValue.Complete(0.5.grams),
+        )
+    override val packageQuantity = AbsoluteQuantity.Weight(200.grams)
+    override val servingQuantity = AbsoluteQuantity.Weight(30.grams)
+}

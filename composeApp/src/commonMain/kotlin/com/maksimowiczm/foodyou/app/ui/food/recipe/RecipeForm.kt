@@ -58,8 +58,8 @@ import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.common.utility.WeightFormatter.stringResource
 import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
-import com.maksimowiczm.foodyou.app.ui.food.details.NutrientList
-import com.maksimowiczm.foodyou.app.ui.food.details.NutrientsHeader
+import com.maksimowiczm.foodyou.app.ui.food.common.NutrientList
+import com.maksimowiczm.foodyou.app.ui.food.common.NutrientsHeader
 import com.maksimowiczm.foodyou.app.ui.userproduct.OutlinedTextField
 import com.maksimowiczm.foodyou.app.ui.userproduct.PhotoPicker
 import com.maksimowiczm.foodyou.app.ui.userproduct.requiredStringResource
@@ -71,7 +71,6 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
-import com.maksimowiczm.foodyou.common.domain.food.isIncomplete
 import com.maksimowiczm.foodyou.common.domain.food.nutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.scale
 import com.maksimowiczm.foodyou.common.domain.food.totalWeight
@@ -142,12 +141,7 @@ fun RecipeForm(
                 )
                 ?.getOrNull()
         }
-    val anyNutrientIsMissing =
-        remember(nutritionFacts) {
-            if (nutritionFacts == null) return@remember false
-            nutritionFacts.asMap().any { it.value.isIncomplete() } ||
-                nutritionFacts.energy.isIncomplete()
-        }
+    val anyNutrientIsMissing = remember(nutritionFacts) { nutritionFacts?.isIncomplete() == true }
 
     Column(modifier = modifier.padding(contentPadding.vertical())) {
         General(state = state, isLocked = isLocked, modifier = Modifier.padding(horizontalPadding))

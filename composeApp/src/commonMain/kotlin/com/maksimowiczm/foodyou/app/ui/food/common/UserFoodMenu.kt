@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.details
+package com.maksimowiczm.foodyou.app.ui.food.common
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
@@ -8,13 +8,15 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -75,27 +77,29 @@ internal fun UserFoodMenu(
         ) {
             Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = null)
         }
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            DropdownMenuItem(
-                text = { Text(stringResource(Res.string.action_edit)) },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Outlined.Edit, contentDescription = null)
-                },
-                onClick = {
-                    expanded = false
-                    onEdit()
-                },
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(Res.string.action_delete)) },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Outlined.Delete, contentDescription = null)
-                },
-                onClick = {
-                    expanded = false
-                    showDeleteDialog = true
-                },
-            )
+        DropdownMenuPopup(expanded = expanded, onDismissRequest = { expanded = false }) {
+            DropdownMenuGroup(shapes = MenuDefaults.groupShape(0, 2)) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(Res.string.action_edit)) },
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = null)
+                    },
+                    onClick = {
+                        expanded = false
+                        onEdit()
+                    },
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(Res.string.action_delete)) },
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Outlined.Delete, contentDescription = null)
+                    },
+                    onClick = {
+                        expanded = false
+                        showDeleteDialog = true
+                    },
+                )
+            }
         }
     }
 }

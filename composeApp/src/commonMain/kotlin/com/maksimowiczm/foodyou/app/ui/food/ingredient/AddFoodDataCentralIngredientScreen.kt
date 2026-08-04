@@ -2,8 +2,6 @@ package com.maksimowiczm.foodyou.app.ui.food.ingredient
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,12 +11,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeExtendedFloatingActionButton
@@ -37,26 +32,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
-import com.maksimowiczm.foodyou.app.ui.common.component.QuantityInput
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
-import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
-import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsLoadingOverlay
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsUiState
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodSource
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodSourceDefaults
-import com.maksimowiczm.foodyou.app.ui.food.details.RefreshIconButton
+import com.maksimowiczm.foodyou.app.ui.common.form.FormField
+import com.maksimowiczm.foodyou.app.ui.common.utility.formatCompact
+import com.maksimowiczm.foodyou.app.ui.food.common.FavoriteIconButton
+import com.maksimowiczm.foodyou.app.ui.food.common.FetchProgressIndicator
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodDetailsNutrientsCompact
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodScreenTopBar
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScope
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithFetch
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithQuantityInput
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithSource
+import com.maksimowiczm.foodyou.app.ui.food.common.Headline
+import com.maksimowiczm.foodyou.app.ui.food.common.QuantityInput
+import com.maksimowiczm.foodyou.app.ui.food.common.QuantitySuggestions
+import com.maksimowiczm.foodyou.app.ui.food.common.RefreshIconButton
+import com.maksimowiczm.foodyou.app.ui.food.common.SourceLink
+import com.maksimowiczm.foodyou.app.ui.food.common.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.app.ui.food.common.rememberQuantityFormField
+import com.maksimowiczm.foodyou.app.ui.food.details.fooddatacentral.FoodDataCentralDetailsUiState
 import com.maksimowiczm.foodyou.app.ui.food.details.fooddatacentral.FoodDataCentralDetailsViewModel
-import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.common.domain.food.scale
-import com.maksimowiczm.foodyou.common.getOrNull
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
+import com.maksimowiczm.foodyou.common.domain.food.QuantityType
+import com.maksimowiczm.foodyou.common.domain.food.amount
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -72,115 +73,115 @@ fun AddFoodDataCentralIngredientScreen(
     initialQuantity: Quantity,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: FoodDataCentralDetailsViewModel =
-        koinViewModel(parameters = { parametersOf(identity) })
+    val viewModel: FoodDataCentralDetailsViewModel = koinViewModel {
+        parametersOf(identity, initialQuantity)
+    }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
-    val headline =
-        remember(uiState) {
-            when (uiState) {
-                is FoodDetailsUiState.Error -> null
-                FoodDetailsUiState.NotFound -> null
-                is FoodDetailsUiState.Details<FoodDataCentralProduct> -> uiState.food?.headline
-            }
-        }
+    val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
 
-    when (uiState) {
-        is FoodDetailsUiState.Details<FoodDataCentralProduct> -> {
-            val quantityState =
-                rememberAddIngredientQuantityState(
-                    initialQuantity = initialQuantity,
-                    servingQuantity = uiState.food?.servingQuantity,
-                    packageQuantity = uiState.food?.packageQuantity,
-                    isLiquid = false, // TODO
-                )
+    val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
 
-            AddFoodDataCentralIngredientScreen(
-                isLoading = uiState.isLoading,
-                onBack = onBack,
-                onAdd = { onAdd(quantityState.quantity) },
-                isFavorite = uiState.isFavorite,
-                onSetFavorite = viewModel::setFavorite,
-                onRefresh = viewModel::refresh,
-                headline = headline,
-                nutritionFacts = uiState.food?.nutritionFacts,
-                servingQuantity = uiState.food?.servingQuantity,
-                packageQuantity = uiState.food?.packageQuantity,
-                url = uiState.food?.source,
-                modifier = modifier,
-                quantityState = quantityState,
+    val scope =
+        remember(
+            uiState,
+            formField,
+        ) {
+            val details = uiState as? FoodDataCentralDetailsUiState.Details ?: return@remember null
+            val food = details.food
+
+            AddIngredientFoodDataCentralScope(
+                headline = food.headline,
+                isFavorite = details.isFavorite,
+                isLoading = details.isLoading,
+                sourceUrl = food.source,
+                suggestions = details.suggestions,
+                selectedQuantity = details.selectedQuantity,
+                scaledNutritionFacts = details.scaledNutritionFacts,
+                packageQuantity = food.packageQuantity,
+                servingQuantity = food.servingQuantity,
+                types = details.quantityTypes,
+                selectedType = details.selectedQuantityType,
+                formField = formField,
             )
         }
 
-        is FoodDetailsUiState.Error,
-        FoodDetailsUiState.NotFound -> Unit
+    LaunchedEffect(formField.textFieldState.text, scope?.selectedType) {
+        viewModel.selectQuantity(
+            formField.textFieldState.text.toString().toDoubleOrNull(),
+            scope?.selectedType,
+        )
     }
+
+    scope?.Screen(
+        onBack = onBack,
+        onAdd = { scope.selectedQuantity?.let { onAdd(it) } },
+        onRefresh = viewModel::refresh,
+        onSetFavorite = viewModel::setFavorite,
+        onSelectQuantity = {
+            viewModel.selectQuantity(it)
+            formField.textFieldState.setTextAndPlaceCursorAtEnd(it.amount.formatCompact())
+        },
+        onSelectQuantityType = viewModel::selectQuantityType,
+        modifier = modifier,
+    )
 }
 
+@Immutable
+private data class AddIngredientFoodDataCentralScope(
+    override val headline: String?,
+    override val isFavorite: Boolean,
+    override val isLoading: Boolean,
+    override val sourceUrl: String,
+    override val suggestions: List<Quantity>,
+    override val selectedQuantity: Quantity?,
+    override val scaledNutritionFacts: NutritionFacts?,
+    override val packageQuantity: AbsoluteQuantity?,
+    override val servingQuantity: AbsoluteQuantity?,
+    override val types: List<QuantityType>,
+    override val selectedType: QuantityType,
+    override val formField: FormField,
+) : FoodUiScope, FoodUiScopeWithFetch, FoodUiScopeWithSource, FoodUiScopeWithQuantityInput
+
 @Composable
-private fun AddFoodDataCentralIngredientScreen(
-    isLoading: Boolean,
+private fun AddIngredientFoodDataCentralScope.Screen(
     onBack: () -> Unit,
-    onAdd: () -> Unit,
-    isFavorite: Boolean,
-    onSetFavorite: (Boolean) -> Unit,
     onRefresh: () -> Unit,
-    headline: String?,
-    nutritionFacts: NutritionFacts?,
-    servingQuantity: AbsoluteQuantity?,
-    packageQuantity: AbsoluteQuantity?,
-    url: String?,
-    quantityState: AddIngredientQuantityState,
+    onAdd: () -> Unit,
+    onSetFavorite: (Boolean) -> Unit,
+    onSelectQuantity: (Quantity) -> Unit,
+    onSelectQuantityType: (QuantityType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val lazyListState = rememberLazyListState()
+    var expanded by rememberNutrientExpanded()
+    val expandingEnabled =
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
+            (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
+        }
+
     val focusRequester = remember { FocusRequester() }
     var focusRequested by rememberSaveable { mutableStateOf(false) }
-
-    val expanded = rememberNutrientExpanded()
-    val expandingEnabled =
-        remember(nutritionFacts) {
-            if (nutritionFacts == null) return@remember false
-            (Nutrient.all - Nutrient.basic).any { nutritionFacts[it].value != null }
-        }
-
-    val scaledNutritionFacts =
-        remember(nutritionFacts, quantityState.quantity) {
-            nutritionFacts
-                ?.scale(packageQuantity, servingQuantity, quantityState.quantity)
-                ?.getOrNull()
-        }
-
-    val stringedQuantities =
-        quantityState.quantitySuggestions.mapNotNull { quantity ->
-            quantity.stringResource(packageQuantity, servingQuantity).getOrNull()?.let {
-                quantity to it
-            }
-        }
-
     LaunchedEffect(Unit) {
         if (!focusRequested) {
-            val quantityInputIndex = 1 + (if (stringedQuantities.isNotEmpty()) 1 else 0)
-            lazyListState.animateScrollToItem(quantityInputIndex)
             focusRequester.requestFocus()
             focusRequested = true
         }
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            FoodDetailsTopBar(
+            FoodScreenTopBar(
                 onBack = onBack,
                 title = headline,
-                scrollBehavior = scrollBehavior,
                 actions = {
                     FavoriteIconButton(favorite = isFavorite, onChange = onSetFavorite)
                     RefreshIconButton(onRefresh = onRefresh)
                 },
+                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {
@@ -191,7 +192,7 @@ private fun AddFoodDataCentralIngredientScreen(
                         visible =
                             !isLoading &&
                                 !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                quantityState.formField.error == null,
+                                formField.error == null,
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -205,80 +206,53 @@ private fun AddFoodDataCentralIngredientScreen(
             }
         },
     ) { contentPadding ->
-        Box(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
-            FoodDetailsLoadingOverlay(
-                isLoading = isLoading,
-                modifier =
-                    Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
-            )
-            LazyColumn(
-                modifier = Modifier.imePadding(),
-                contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
-                state = lazyListState,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
+        FetchProgressIndicator(
+            Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f)
+        )
+        LazyColumn(
+            modifier = Modifier.imePadding(),
+            contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            item { Headline(Modifier.padding(horizontal = 8.dp)) }
+            if (suggestions.isNotEmpty())
                 item {
-                    FoodDetailsHeadline(
-                        headline = headline,
+                    QuantitySuggestions(
+                        onSelectQuantity = onSelectQuantity,
+                        modifier = Modifier.height(32.dp),
+                    )
+                }
+            item {
+                QuantityInput(
+                    onSelectType = onSelectQuantityType,
+                    modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
+                )
+            }
+            if (scaledNutritionFacts != null)
+                item {
+                    FoodDetailsNutrientsCompact(
+                        expanded = if (!expandingEnabled) false else expanded,
+                        onExpandedChange = { expanded = it },
+                        expandingEnabled = expandingEnabled,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     )
                 }
-                if (stringedQuantities.isNotEmpty()) {
-                    item {
-                        LazyRow(
-                            modifier = Modifier.fillMaxWidth().height(32.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(horizontal = 8.dp),
-                        ) {
-                            items(stringedQuantities) { (quantity, text) ->
-                                AssistChip(
-                                    onClick = { quantityState.onSelectQuantity(quantity) },
-                                    label = { Text(text) },
-                                )
-                            }
-                        }
-                    }
-                }
-                item {
-                    QuantityInput(
-                        entries = quantityState.quantityTypes,
-                        selectedQuantity = quantityState.selectedQuantityType,
-                        onQuantity = quantityState::onSelectedQuantityTypeChange,
-                        formField = quantityState.formField,
-                        modifier =
-                            Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
-                    )
-                }
-                if (scaledNutritionFacts != null) {
-                    item {
-                        AddIngredientNutrients(
-                            nutritionFacts = scaledNutritionFacts,
-                            expanded = expanded.value,
-                            onExpandedChange = { expanded.value = it },
-                            expandingEnabled = expandingEnabled,
+            item {
+                SourceLink(
+                    logo = {
+                        Image(
+                            painter = painterResource(Res.drawable.usda_logo),
+                            contentDescription = null,
+                            modifier =
+                                Modifier.sizeIn(
+                                    maxHeight = 32.dp,
+                                    maxWidth = 32.dp,
+                                ),
                         )
-                    }
-                }
-                if (url != null) {
-                    item {
-                        FoodSource(
-                            url = url,
-                            logo = {
-                                Image(
-                                    painter = painterResource(Res.drawable.usda_logo),
-                                    contentDescription = null,
-                                    modifier =
-                                        Modifier.sizeIn(
-                                            maxHeight = FoodSourceDefaults.logoMaxSize,
-                                            maxWidth = FoodSourceDefaults.logoMaxSize,
-                                        ),
-                                )
-                            },
-                            headline = stringResource(Res.string.headline_fooddata_central),
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                        )
-                    }
-                }
+                    },
+                    headline = stringResource(Res.string.headline_fooddata_central),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                )
             }
         }
     }

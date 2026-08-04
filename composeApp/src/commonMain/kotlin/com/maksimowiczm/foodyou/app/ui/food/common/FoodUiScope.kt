@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.details
+package com.maksimowiczm.foodyou.app.ui.food.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,16 +11,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import com.maksimowiczm.foodyou.app.ui.common.extension.toDp
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 
+interface FoodUiScope {
+    val headline: String?
+    val isFavorite: Boolean
+}
+
 @Composable
-internal fun FoodDetailsHeadline(headline: String?, modifier: Modifier = Modifier) {
+fun FoodUiScope.Headline(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberShimmer(ShimmerBounds.View),
+) {
+    val headline = headline
+
     Box(modifier) {
         if (headline != null) {
             Text(text = headline, style = MaterialTheme.typography.displaySmall)
         } else {
             Spacer(
-                Modifier.shimmer()
+                Modifier.shimmer(shimmer)
                     .fillMaxWidth(.75f)
                     .height(MaterialTheme.typography.displaySmall.toDp())
                     .clip(MaterialTheme.shapes.medium)

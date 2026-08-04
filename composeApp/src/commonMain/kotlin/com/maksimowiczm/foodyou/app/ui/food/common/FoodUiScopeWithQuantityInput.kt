@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.common.component
+package com.maksimowiczm.foodyou.app.ui.food.common
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -6,14 +6,16 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,6 +26,7 @@ import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -48,15 +51,59 @@ import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.form.rememberFormField
 import com.maksimowiczm.foodyou.app.ui.common.form.validateDouble
 import com.maksimowiczm.foodyou.app.ui.common.theme.PreviewFoodYouTheme
+import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.QuantityType
+import com.maksimowiczm.foodyou.common.domain.food.toQuantity
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.kilocalories
+import com.maksimowiczm.foodyou.common.getOrNull
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
+interface FoodUiScopeWithQuantityInput : FoodUiScopeWithOptionalNutrients {
+    val types: List<QuantityType>
+    val selectedType: QuantityType
+    val formField: FormField
+}
+
 @Composable
-fun QuantityInput(
-    entries: List<QuantityType>,
-    selectedQuantity: QuantityType,
-    onQuantity: (QuantityType) -> Unit,
-    formField: FormField,
+fun FoodUiScopeWithQuantityInput.QuantitySuggestions(
+    onSelectQuantity: (Quantity) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 8.dp),
+) {
+    val stringedQuantities = suggestions.mapNotNull { quantity ->
+        quantity.stringResource(packageQuantity, servingQuantity).getOrNull()?.let {
+            quantity to it
+        }
+    }
+    LazyRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = contentPadding,
+    ) {
+        items(stringedQuantities) { (quantity, text) ->
+            val isSelected =
+                remember(quantity, selectedType, formField.textFieldState.text) {
+                    val currentAmount = formField.textFieldState.text.toString().toDoubleOrNull()
+                    currentAmount?.let { selectedType.toQuantity(it) } == quantity
+                }
+            FilterChip(
+                selected = isSelected,
+                onClick = { onSelectQuantity(quantity) },
+                label = { Text(text) },
+            )
+        }
+    }
+}
+
+@Composable
+fun FoodUiScopeWithQuantityInput.QuantityInput(
+    onSelectType: (QuantityType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -141,7 +188,7 @@ fun QuantityInput(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = selectedQuantity.stringResource(),
+                    text = selectedType.stringResource(),
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center,
                 )
@@ -156,39 +203,46 @@ fun QuantityInput(
                         contentDescription = null,
                         modifier = Modifier.graphicsLayer { rotationZ = arrowRotation.value },
                     )
-
-                    QuantityDropdown(
+                    DropdownMenuPopup(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
-                        entries = entries,
-                        selectedQuantity = selectedQuantity,
-                        onQuantity = onQuantity,
-                    )
+                    ) {
+                        DropdownMenuGroup(shapes = MenuDefaults.groupShape(0, types.size)) {
+                            types.forEachIndexed { i, entry ->
+                                DropdownMenuItem(
+                                    selected = entry == selectedType,
+                                    onClick = { onSelectType(entry) },
+                                    text = { Text(entry.stringResource()) },
+                                    shapes = MenuDefaults.itemShape(i, types.size),
+                                    selectedLeadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Check,
+                                            contentDescription = null,
+                                        )
+                                    },
+                                )
+                                if (i != types.lastIndex) {
+                                    Spacer(Modifier.height(2.dp))
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-enum class QuantityType {
-    Gram,
-    Ounce,
-    FluidOunce,
-    Milliliter,
-    Serving,
-    Package;
-
-    @Composable
-    fun stringResource(): String =
-        when (this) {
-            Gram -> stringResource(Res.string.unit_gram_short)
-            Ounce -> stringResource(Res.string.unit_ounce_short)
-            Milliliter -> stringResource(Res.string.unit_milliliter_short)
-            FluidOunce -> stringResource(Res.string.unit_fluid_ounce_short)
-            Serving -> stringResource(Res.string.product_serving)
-            Package -> stringResource(Res.string.product_package)
-        }
-}
+@Composable
+fun QuantityType.stringResource(): String =
+    when (this) {
+        QuantityType.Gram -> stringResource(Res.string.unit_gram_short)
+        QuantityType.Ounce -> stringResource(Res.string.unit_ounce_short)
+        QuantityType.Milliliter -> stringResource(Res.string.unit_milliliter_short)
+        QuantityType.FluidOunce -> stringResource(Res.string.unit_fluid_ounce_short)
+        QuantityType.Serving -> stringResource(Res.string.product_serving)
+        QuantityType.Package -> stringResource(Res.string.product_package)
+    }
 
 @Composable
 fun rememberQuantityFormField(vararg keys: Any?, defaultValue: String? = null): FormField {
@@ -203,47 +257,44 @@ fun rememberQuantityFormField(vararg keys: Any?, defaultValue: String? = null): 
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-private fun QuantityDropdown(
-    expanded: Boolean,
-    onDismissRequest: () -> Unit,
-    entries: List<QuantityType>,
-    selectedQuantity: QuantityType,
-    onQuantity: (QuantityType) -> Unit,
-) {
-    DropdownMenuPopup(expanded = expanded, onDismissRequest = onDismissRequest) {
-        DropdownMenuGroup(shapes = MenuDefaults.groupShape(0, entries.size)) {
-            entries.forEachIndexed { i, entry ->
-                DropdownMenuItem(
-                    selected = entry == selectedQuantity,
-                    onClick = { onQuantity(entry) },
-                    text = { Text(entry.stringResource()) },
-                    shapes = MenuDefaults.itemShape(i, entries.size),
-                    selectedLeadingIcon = {
-                        Icon(imageVector = Icons.Outlined.Check, contentDescription = null)
-                    },
-                )
-                if (i != entries.lastIndex) {
-                    Spacer(Modifier.height(2.dp))
-                }
-            }
-        }
+private fun QuantitySuggestionsPreview() {
+    PreviewFoodYouTheme {
+        PreviewFoodUiScopeWithQuantityInput().QuantitySuggestions(onSelectQuantity = {})
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun QuantityInputPreview() {
-    var quantity by remember { mutableStateOf(QuantityType.Gram) }
-
     PreviewFoodYouTheme {
-        Box(modifier = Modifier.fillMaxSize().padding(8.dp), contentAlignment = Alignment.Center) {
-            QuantityInput(
-                entries = QuantityType.entries,
-                selectedQuantity = quantity,
-                onQuantity = { quantity = it },
-                formField = rememberQuantityFormField(),
-            )
-        }
+        PreviewFoodUiScopeWithQuantityInput().QuantityInput(onSelectType = {})
     }
+}
+
+private class PreviewFoodUiScopeWithQuantityInput : FoodUiScopeWithQuantityInput {
+    override val types = listOf(QuantityType.Gram, QuantityType.Serving)
+    override val selectedType = QuantityType.Gram
+    override val formField = FormField()
+
+    override val suggestions =
+        listOf(
+            AbsoluteQuantity.Weight(100.grams),
+            AbsoluteQuantity.Weight(200.grams),
+        )
+    override val selectedQuantity = suggestions.first()
+    override val scaledNutritionFacts =
+        NutritionFacts(
+            energy = NutrientValue.Complete(250.kilocalories),
+            proteins = NutrientValue.Complete(15.grams),
+            carbohydrates = NutrientValue.Complete(30.grams),
+            fats = NutrientValue.Complete(10.grams),
+            sugars = NutrientValue.Complete(5.grams),
+            saturatedFats = NutrientValue.Complete(2.grams),
+            solubleFiber = NutrientValue.Complete(3.grams),
+            salt = NutrientValue.Complete(0.5.grams),
+        )
+    override val packageQuantity = AbsoluteQuantity.Weight(200.grams)
+    override val servingQuantity = AbsoluteQuantity.Weight(30.grams)
 }

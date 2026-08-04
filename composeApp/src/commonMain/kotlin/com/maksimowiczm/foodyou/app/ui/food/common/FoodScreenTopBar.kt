@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.details
+package com.maksimowiczm.foodyou.app.ui.food.common
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.MaterialTheme
@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.maksimowiczm.foodyou.app.ui.common.component.ArrowBackIconButton
 
 @Composable
-internal fun FoodDetailsTopBar(
+internal fun FoodScreenTopBar(
     onBack: () -> Unit,
     title: String?,
     scrollBehavior: TopAppBarScrollBehavior,

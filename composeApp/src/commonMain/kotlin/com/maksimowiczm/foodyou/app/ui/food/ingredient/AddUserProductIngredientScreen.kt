@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.app.ui.food.ingredient
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -10,12 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeExtendedFloatingActionButton
@@ -33,27 +29,37 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
-import com.maksimowiczm.foodyou.app.ui.common.component.QuantityInput
 import com.maksimowiczm.foodyou.app.ui.common.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.app.ui.common.extension.add
+import com.maksimowiczm.foodyou.app.ui.common.form.FormField
 import com.maksimowiczm.foodyou.app.ui.common.utility.LocalFoodNameSelector
-import com.maksimowiczm.foodyou.app.ui.common.utility.QuantityFormatter.stringResource
+import com.maksimowiczm.foodyou.app.ui.common.utility.formatCompact
 import com.maksimowiczm.foodyou.app.ui.common.utility.headline
 import com.maksimowiczm.foodyou.app.ui.common.utility.resolveBlob
-import com.maksimowiczm.foodyou.app.ui.food.details.FavoriteIconButton
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsHeadline
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsImage
-import com.maksimowiczm.foodyou.app.ui.food.details.FoodDetailsTopBar
-import com.maksimowiczm.foodyou.app.ui.food.details.UserFoodMenu
-import com.maksimowiczm.foodyou.app.ui.food.details.UserFoodNote
-import com.maksimowiczm.foodyou.app.ui.food.details.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.app.ui.food.common.FavoriteIconButton
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodDetailsNutrientsCompact
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodScreenTopBar
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScope
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithImage
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithNote
+import com.maksimowiczm.foodyou.app.ui.food.common.FoodUiScopeWithQuantityInput
+import com.maksimowiczm.foodyou.app.ui.food.common.Headline
+import com.maksimowiczm.foodyou.app.ui.food.common.Image
+import com.maksimowiczm.foodyou.app.ui.food.common.Note
+import com.maksimowiczm.foodyou.app.ui.food.common.QuantityInput
+import com.maksimowiczm.foodyou.app.ui.food.common.QuantitySuggestions
+import com.maksimowiczm.foodyou.app.ui.food.common.UserFoodMenu
+import com.maksimowiczm.foodyou.app.ui.food.common.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.app.ui.food.common.rememberQuantityFormField
 import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsUiEvent
 import com.maksimowiczm.foodyou.app.ui.food.details.userproduct.UserProductDetailsViewModel
+import com.maksimowiczm.foodyou.common.domain.FileUri
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.common.domain.food.scale
-import com.maksimowiczm.foodyou.common.getOrNull
-import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
+import com.maksimowiczm.foodyou.common.domain.food.QuantityType
+import com.maksimowiczm.foodyou.common.domain.food.amount
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -70,8 +76,9 @@ fun AddUserProductIngredientScreen(
     initialQuantity: Quantity,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: UserProductDetailsViewModel =
-        koinViewModel(parameters = { parametersOf(identity) })
+    val viewModel: UserProductDetailsViewModel = koinViewModel {
+        parametersOf(identity, initialQuantity)
+    }
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {
@@ -79,105 +86,116 @@ fun AddUserProductIngredientScreen(
         }
     }
 
-    val product by viewModel.userFood.collectAsStateWithLifecycle()
-    val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val product = uiState.product
 
-    val quantityState =
-        rememberAddIngredientQuantityState(
-            initialQuantity = initialQuantity,
-            servingQuantity = product?.servingQuantity,
-            packageQuantity = product?.packageQuantity,
-            isLiquid = product?.isLiquid ?: false,
+    val nameSelector = LocalFoodNameSelector.current
+
+    val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
+    val formField =
+        rememberQuantityFormField(
+            defaultValue,
+            defaultValue = defaultValue,
         )
 
-    AddUserProductIngredientScreen(
-        product = product,
-        isFavorite = isFavorite,
-        onSetFavorite = viewModel::setFavorite,
+    LaunchedEffect(formField.textFieldState.text, uiState.selectedQuantityType) {
+        viewModel.selectQuantity(
+            formField.textFieldState.text.toString().toDoubleOrNull(),
+            uiState.selectedQuantityType,
+        )
+    }
+
+    val image = product?.image?.let { resolveBlob(it) }
+
+    val scope =
+        remember(uiState, nameSelector, image, formField) {
+            val userProduct = uiState.product ?: return@remember null
+            AddUserProductIngredientScope(
+                headline = userProduct.headline(nameSelector),
+                isFavorite = uiState.isFavorite,
+                image = image,
+                note = userProduct.note,
+                suggestions = uiState.suggestions,
+                selectedQuantity = uiState.selectedQuantity,
+                scaledNutritionFacts = uiState.scaledNutritionFacts,
+                packageQuantity = userProduct.packageQuantity,
+                servingQuantity = userProduct.servingQuantity,
+                types = uiState.quantityTypes,
+                selectedType = uiState.selectedQuantityType ?: QuantityType.Gram,
+                formField = formField,
+            )
+        }
+
+    scope?.Screen(
         onBack = onBack,
-        onAdd = { onAdd(quantityState.quantity) },
+        onAdd = { scope.selectedQuantity?.let { onAdd(it) } },
         onEdit = onEdit,
         onDelete = viewModel::delete,
+        onSetFavorite = viewModel::setFavorite,
+        onSelectQuantity = {
+            viewModel.selectQuantity(it)
+            formField.textFieldState.setTextAndPlaceCursorAtEnd(it.amount.formatCompact())
+        },
+        onSelectQuantityType = viewModel::selectQuantityType,
         modifier = modifier,
-        quantityState = quantityState,
     )
 }
 
+@Immutable
+private data class AddUserProductIngredientScope(
+    override val headline: String?,
+    override val isFavorite: Boolean,
+    override val image: FileUri?,
+    override val note: String?,
+    override val suggestions: List<Quantity>,
+    override val selectedQuantity: Quantity?,
+    override val scaledNutritionFacts: NutritionFacts?,
+    override val packageQuantity: AbsoluteQuantity?,
+    override val servingQuantity: AbsoluteQuantity?,
+    override val types: List<QuantityType>,
+    override val selectedType: QuantityType,
+    override val formField: FormField,
+) : FoodUiScope, FoodUiScopeWithImage, FoodUiScopeWithQuantityInput, FoodUiScopeWithNote
+
 @Composable
-private fun AddUserProductIngredientScreen(
-    product: UserProduct?,
-    isFavorite: Boolean?,
-    onSetFavorite: (Boolean) -> Unit,
+private fun AddUserProductIngredientScope.Screen(
     onBack: () -> Unit,
     onAdd: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    quantityState: AddIngredientQuantityState,
+    onSetFavorite: (Boolean) -> Unit,
+    onSelectQuantity: (Quantity) -> Unit,
+    onSelectQuantityType: (QuantityType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val nameSelector = LocalFoodNameSelector.current
-    val lazyListState = rememberLazyListState()
     val focusRequester = remember { FocusRequester() }
     var focusRequested by rememberSaveable { mutableStateOf(false) }
-
-    val expanded = rememberNutrientExpanded()
-    val expandingEnabled =
-        remember(product?.nutritionFacts) {
-            val nutritionFacts = product?.nutritionFacts ?: return@remember false
-            (Nutrient.all - Nutrient.basic).any { nutritionFacts[it].value != null }
-        }
-
-    val headline =
-        remember(product?.name, product?.brand, nameSelector) { product?.headline(nameSelector) }
-
-    val scaledNutritionFacts =
-        remember(
-            product?.nutritionFacts,
-            product?.packageQuantity,
-            product?.servingQuantity,
-            quantityState.quantity,
-        ) {
-            product
-                ?.nutritionFacts
-                ?.scale(product.packageQuantity, product.servingQuantity, quantityState.quantity)
-                ?.getOrNull()
-        }
-
-    val stringedQuantities =
-        quantityState.quantitySuggestions.mapNotNull { quantity ->
-            quantity
-                .stringResource(product?.packageQuantity, product?.servingQuantity)
-                .getOrNull()
-                ?.let {
-                    quantity to it
-                }
-        }
-
     LaunchedEffect(Unit) {
         if (!focusRequested) {
-            val quantityInputIndex =
-                1 +
-                    (if (product?.image != null) 1 else 0) +
-                    (if (stringedQuantities.isNotEmpty()) 1 else 0)
-            lazyListState.animateScrollToItem(quantityInputIndex)
             focusRequester.requestFocus()
             focusRequested = true
         }
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    var expanded by rememberNutrientExpanded()
+    val expandingEnabled =
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
+            (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
+        }
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            FoodDetailsTopBar(
+            FoodScreenTopBar(
                 onBack = onBack,
                 title = headline,
-                scrollBehavior = scrollBehavior,
                 actions = {
-                    FavoriteIconButton(favorite = isFavorite ?: false, onChange = onSetFavorite)
+                    FavoriteIconButton(favorite = isFavorite, onChange = onSetFavorite)
                     UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
                 },
+                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {
@@ -186,9 +204,8 @@ private fun AddUserProductIngredientScreen(
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
-                            product != null &&
-                                !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                quantityState.formField.error == null,
+                            !LocalNavAnimatedContentScope.current.transition.isRunning &&
+                                formField.error == null,
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -203,69 +220,43 @@ private fun AddUserProductIngredientScreen(
         },
     ) { contentPadding ->
         LazyColumn(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).imePadding(),
-            contentPadding = contentPadding.add(bottom = 128.dp),
-            state = lazyListState,
+            modifier = Modifier.imePadding(),
+            contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodDetailsHeadline(
-                    headline = headline,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                )
+                Headline(Modifier.padding(horizontal = 8.dp))
             }
-            if (product?.image != null) {
+            if (image != null)
                 item {
-                    FoodDetailsImage(
-                        image = resolveBlob(product.image),
-                        showPlaceholder = false,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    Image(Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                }
+            if (suggestions.isNotEmpty())
+                item {
+                    QuantitySuggestions(
+                        onSelectQuantity = onSelectQuantity,
+                        modifier = Modifier.height(32.dp),
                     )
                 }
-            }
-            if (stringedQuantities.isNotEmpty()) {
-                item {
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth().height(32.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 8.dp),
-                    ) {
-                        items(stringedQuantities) { (quantity, text) ->
-                            AssistChip(
-                                onClick = { quantityState.onSelectQuantity(quantity) },
-                                label = { Text(text) },
-                            )
-                        }
-                    }
-                }
-            }
             item {
                 QuantityInput(
-                    entries = quantityState.quantityTypes,
-                    selectedQuantity = quantityState.selectedQuantityType,
-                    onQuantity = quantityState::onSelectedQuantityTypeChange,
-                    formField = quantityState.formField,
+                    onSelectType = onSelectQuantityType,
                     modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                 )
             }
-            if (scaledNutritionFacts != null) {
+            if (scaledNutritionFacts != null)
                 item {
-                    AddIngredientNutrients(
-                        nutritionFacts = scaledNutritionFacts,
-                        expanded = expanded.value,
-                        onExpandedChange = { expanded.value = it },
+                    FoodDetailsNutrientsCompact(
+                        expanded = if (!expandingEnabled) false else expanded,
+                        onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     )
                 }
-            }
-            if (product?.note != null) {
+            if (note != null)
                 item {
-                    UserFoodNote(
-                        note = product.note,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
+                    Note(Modifier.padding(horizontal = 8.dp))
                 }
-            }
         }
     }
 }

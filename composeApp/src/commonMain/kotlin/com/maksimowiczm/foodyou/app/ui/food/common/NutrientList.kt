@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.app.ui.food.details
+package com.maksimowiczm.foodyou.app.ui.food.common
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -101,6 +101,7 @@ fun NutrientList(
                             NutrientsOrder.Fats -> Fats(facts = facts, expanded = expanded)
                             NutrientsOrder.Carbohydrates ->
                                 Carbohydrates(facts = facts, expanded = expanded)
+
                             NutrientsOrder.Other -> Other(facts = facts, expanded = expanded)
                             NutrientsOrder.Vitamins -> Vitamins(facts = facts, expanded = expanded)
                             NutrientsOrder.Minerals -> Minerals(facts = facts, expanded = expanded)
@@ -1255,26 +1256,24 @@ private fun NutrientHolder(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun NutrientList() {
     PreviewFoodYouTheme {
-        Surface {
-            NutrientList(
-                facts =
-                    NutritionFacts(
-                        energy = NutrientValue.Complete(250.kilocalories),
-                        proteins = NutrientValue.Complete(15.grams),
-                        carbohydrates = NutrientValue.Complete(30.grams),
-                        fats = NutrientValue.Complete(10.grams),
-                        sugars = NutrientValue.Complete(5.grams),
-                        saturatedFats = NutrientValue.Complete(2.grams),
-                        solubleFiber = NutrientValue.Complete(3.grams),
-                        salt = NutrientValue.Complete(0.5.grams),
-                    ),
-                expanded = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        NutrientList(
+            facts =
+                NutritionFacts(
+                    energy = NutrientValue.Complete(250.kilocalories),
+                    proteins = NutrientValue.Complete(15.grams),
+                    carbohydrates = NutrientValue.Complete(30.grams),
+                    fats = NutrientValue.Complete(10.grams),
+                    sugars = NutrientValue.Complete(5.grams),
+                    saturatedFats = NutrientValue.Complete(2.grams),
+                    solubleFiber = NutrientValue.Complete(3.grams),
+                    salt = NutrientValue.Complete(0.5.grams),
+                ),
+            expanded = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
