@@ -172,7 +172,7 @@ private fun AddUserProductIngredientScope.Screen(
     var focusRequested by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         if (!focusRequested) {
-            focusRequester.requestFocus()
+            val _ = runCatching { focusRequester.requestFocus() }
             focusRequested = true
         }
     }
