@@ -34,7 +34,6 @@ kotlinx-serialization-json = "1.11.0"
 ksp = "2.3.4"
 ktor = "3.5.1"
 materialkolor = "4.1.1"
-okio = "3.17.0"
 requery-sqlite-android = "3.49.0"
 skydoves-colorpicker-compose = "1.2.0"
 touchlab-kermit = "2.1.0"
@@ -76,9 +75,9 @@ google-zxing-core = { module = "com.google.zxing:core", version.ref = "google-zx
 insert-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 insert-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 insert-koin-composeViewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+insert-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 jetbrains-androidx-lifecycle-viewmodelNavigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "compose-multiplatform-lifecycle" }
 konform = { module = "io.konform:konform", version.ref = "konform" }
-kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
@@ -91,73 +90,11 @@ ktor-serializationKotlinxJson = { module = "io.ktor:ktor-serialization-kotlinx-j
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialkolor" }
 requery-sqliteAndroid = { module = "com.github.requery:sqlite-android", version.ref = "requery-sqlite-android" }
 skydoves-colorpickerCompose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "skydoves-colorpicker-compose" }
-squareup-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "touchlab-kermit" }
 valentinilk-shimmer-composeShimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "valentinilk-shimmer" }
 vinceglb-filekitCoil = { module = "io.github.vinceglb:filekit-coil", version.ref = "vinceglb-filekit" }
 vinceglb-filekitCore = { module = "io.github.vinceglb:filekit-core", version.ref = "vinceglb-filekit" }
 vinceglb-filekitDialogsCompose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "vinceglb-filekit" }
-
-[bundles]
-androidx-android-ui = [
-    "androidx-activityCompose",
-    "androidx-appcompat"
-]
-androidx-test = [
-    "androidx-test-core",
-    "androidx-test-coreKtx",
-    "androidx-test-ext-junit",
-    "androidx-test-runner"
-]
-camera = [
-    "androidx-camera-camera2",
-    "androidx-camera-lifecycle",
-    "androidx-camera-view"
-]
-coil = [
-    "coil-compose",
-    "coil-networkKtor3"
-]
-compose-core = [
-    "compose-components-resources",
-    "compose-foundation",
-    "compose-material-iconsExtended",
-    "compose-material3",
-    "compose-runtime",
-    "compose-ui",
-    "compose-ui-toolingPreview"
-]
-compose-navigation = [
-    "compose-navigation3-ui",
-    "compose-navigationevent-compose",
-    "jetbrains-androidx-lifecycle-viewmodelNavigation3"
-]
-filekit = [
-    "vinceglb-filekitCoil",
-    "vinceglb-filekitCore",
-    "vinceglb-filekitDialogsCompose"
-]
-koin-compose = [
-    "insert-koin-compose",
-    "insert-koin-composeViewmodel"
-]
-kotlinx = [
-    "kotlinx-datetime",
-    "kotlinx-serializationJson"
-]
-ktor = [
-    "ktor-clientContentNegotiation",
-    "ktor-clientCore",
-    "ktor-serializationKotlinxJson"
-]
-paging = [
-    "androidx-paging-common",
-    "androidx-paging-compose"
-]
-room = [
-    "androidx-room-paging",
-    "androidx-room-runtime"
-]
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

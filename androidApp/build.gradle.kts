@@ -5,17 +5,15 @@ plugins {
 }
 
 kotlin {
-    compilerOptions { freeCompilerArgs.add("-Xskip-prerelease-check") }
-
     dependencies {
-        implementation(projects.composeApp)
+        implementation(projects.app)
 
-        implementation(libs.bundles.androidx.android.ui)
+        implementation(libs.androidx.activityCompose)
+        implementation(libs.androidx.appcompat)
         implementation(libs.compose.components.resources)
         implementation(libs.compose.runtime)
         implementation(libs.insert.koin.android)
         implementation(libs.touchlab.kermit)
-        implementation(libs.vinceglb.filekitCore)
         implementation(libs.vinceglb.filekitDialogsCompose)
     }
 }
@@ -31,9 +29,6 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = libs.versions.android.versionCode.get().toInt()
         versionName = libs.versions.version.name.get()
-
-        manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher"
-        manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -61,14 +56,6 @@ android {
         create("miniDevRelease") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("debug")
-        }
-        create("preview") {
-            initWith(getByName("release"))
-
-            applicationIdSuffix = ".preview"
-            versionNameSuffix = "-preview"
-            manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher_preview"
-            manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round_preview"
         }
     }
     compileOptions {

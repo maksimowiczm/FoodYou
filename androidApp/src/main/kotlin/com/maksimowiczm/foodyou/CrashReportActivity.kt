@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou
 import android.os.Bundle
 import androidx.compose.ui.platform.LocalUriHandler
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
-import com.maksimowiczm.foodyou.app.ui.common.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.app.ui.common.utility.LocalClipboardManager
-import com.maksimowiczm.foodyou.app.ui.crash.CrashReportScreen
+import com.maksimowiczm.foodyou.features.crash.CrashReportScreen
+import com.maksimowiczm.foodyou.shared.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalClipboardManager
 import org.koin.android.ext.android.inject
 
 class CrashReportActivity : FoodYouAbstractActivity() {

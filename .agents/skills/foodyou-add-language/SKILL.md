@@ -31,7 +31,7 @@ and report the discrepancy rather than guessing.
 
 ## Step 2 — Domain layer
 
-### [`Language.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/common/domain/Language.kt)
+### [`Language.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/common/domain/Language.kt)
 
 Read the file. Add a new enum entry after the last existing one:
 
@@ -39,7 +39,7 @@ Read the file. Add a new enum entry after the last existing one:
 NewLanguage("DISPLAY_NAME", "ISO", "CC"),
 ```
 
-### [`FoodName.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/common/domain/food/FoodName.kt)
+### [`FoodName.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/common/domain/food/FoodName.kt)
 
 Read the file. Make four changes:
 
@@ -53,7 +53,7 @@ Read the file. Make four changes:
 
 ## Step 3 — Infrastructure layer
 
-### [`FoodNameEntity.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/search/infrastructure/FoodNameEntity.kt)
+### [`FoodNameEntity.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/search/infrastructure/FoodNameEntity.kt)
 
 Read the file. Make three changes:
 
@@ -61,7 +61,7 @@ Read the file. Make three changes:
    codes like `pt-BR`, use exactly that in `name`.
 2. **`fallback` getter** — append `ISO` to the list
 
-### [`SearchResultMapper.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/search/infrastructure/SearchResultMapper.kt)
+### [`SearchResultMapper.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/search/infrastructure/SearchResultMapper.kt)
 
 Read the file. Make two changes:
 
@@ -69,7 +69,7 @@ Read the file. Make two changes:
    call
 2. In `toFoodNameEntity(name: FoodName)` — map `ISO = name.ISO`
 
-### [`SearchDao.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/search/infrastructure/SearchDao.kt)
+### [`SearchDao.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/search/infrastructure/SearchDao.kt)
 
 Read the `SIMPLE_NAME_SELECT` constant carefully. Make two changes:
 
@@ -80,7 +80,7 @@ Read the `SIMPLE_NAME_SELECT` constant carefully. Make two changes:
 2. Add `s.name_ISO` to the `COALESCE` fallback list. Note: For special codes like `pt-BR`, use
    backticks: `s.`name_pt-BR``.
 
-### [`OpenFoodFactsProductMapper.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/openfoodfacts/infrastructure/OpenFoodFactsProductMapper.kt)
+### [`OpenFoodFactsProductMapper.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/openfoodfacts/infrastructure/OpenFoodFactsProductMapper.kt)
 
 In `toModel()`, add the new language to the `FoodName.requireAll` call:
 
@@ -96,7 +96,7 @@ Use the short ISO code (e.g., `pl`) for the keys.
 
 **This step is mandatory.** Adding a column to `FoodNameEntity` is a breaking schema change.
 
-1. Open [`ReadModelDatabase.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/app/infrastructure/room/ReadModelDatabase.kt)
+1. Open [`ReadModelDatabase.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/app/infrastructure/room/ReadModelDatabase.kt)
 2. Increment `VERSION` in the companion object: `const val VERSION = N+1`
 3. Append to the `autoMigrations` list in the `@Database` annotation, using the fully qualified name
    to match existing style:
@@ -129,7 +129,7 @@ Add inside the root element:
 
 ## Step 6 — UI registration
 
-### [`Translation.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/app/ui/language/Translation.kt)
+### [`Translation.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/language/Translation.kt)
 
 Add to the `languages` list:
 
@@ -137,7 +137,7 @@ Add to the `languages` list:
 Translation("DISPLAY_NAME", Language.NewLanguage),
 ```
 
-### [`RecipeFormTransformer.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/app/ui/food/recipe/RecipeFormTransformer.kt) and [`ProductFormTransformer.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/app/ui/userproduct/ProductFormTransformer.kt)
+### [`RecipeFormTransformer.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/food/recipe/RecipeFormTransformer.kt) and [`ProductFormTransformer.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/userproduct/ProductFormTransformer.kt)
 In both files, update the `FoodName.requireAll` call inside the `transform` function:
 
 ```kotlin
@@ -148,8 +148,7 @@ ISO = if (language == Language.NewLanguage) nameStr else null,
 
 ## Step 7 — Default Meals
 
-### [
-`MealTemplates.kt`](../../../composeApp/src/commonMain/kotlin/com/maksimowiczm/foodyou/meal/domain/MealTemplates.kt)
+### [`MealTemplates.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/mealplan/domain/MealTemplates.kt)
 
 Add a new branch to the `when (language)` block in the private `MealBuilder.forLanguage` extension.
 
@@ -158,20 +157,18 @@ Add a new branch to the `when (language)` block in the private `MealBuilder.forL
 * **Research Culture-Specific Defaults**: Do not just translate English meal names. Research common
   meal times and naming conventions for the target country/culture.
 * **Include Traditional Intermediate Meals**: If the culture has traditional mid-morning or
-  mid-afternoon meals (e.g., "Drugie śniadanie" in Poland), include them using the appropriate
-  property from `MealBuilder`.
-* **Use Standard Meal Types**: Use the predefined properties in `MealBuilder`: `breakfast`,
-  `secondBreakfast`, `lunch`, `afternoonSnack`, `dinner`, `snacks`.
+  mid-afternoon meals (e.g., "Drugie śniadanie" in Poland), include them using strings in the DSL.
+* **Use Standard Meal DSL**: Use the predefined DSL in `MealBuilder`:
+  `"Meal Name" from "HH:mm" until "HH:mm"` or `"Meal Name".allDay()`.
 * **Time Ranges**: Ensure time ranges are realistic and typically cover the entire day when
   combined.
 
 ```kotlin
 Language.NewLanguage -> {
-    breakfast from "06:00" until "10:00"
-    secondBreakfast from "10:00" until "12:00"
-    lunch from "12:00" until "15:00"
-    dinner from "18:00" until "21:00"
-    snacks
+    "Breakfast" from "06:00" until "10:00"
+    "Lunch" from "12:00" until "15:00"
+    "Dinner" from "18:00" until "21:00"
+    "Snacks".allDay()
 }
 ```
 

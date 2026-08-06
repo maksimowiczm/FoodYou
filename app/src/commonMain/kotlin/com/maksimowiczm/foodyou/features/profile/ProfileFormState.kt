@@ -1,0 +1,47 @@
+package com.maksimowiczm.foodyou.features.profile
+
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSerializable
+import com.maksimowiczm.foodyou.account.domain.Profile
+import com.maksimowiczm.foodyou.shared.ui.component.UiProfileAvatar
+
+@Stable
+internal class ProfileFormState(
+    val nameTextState: TextFieldState,
+    avatarState: MutableState<UiProfileAvatar>,
+    private val defaultName: String,
+    private val defaultAvatar: UiProfileAvatar,
+) {
+    var avatar: UiProfileAvatar by avatarState
+
+    val isValid by derivedStateOf { nameTextState.text.isNotBlank() }
+
+    val isModified by derivedStateOf {
+        nameTextState.text != defaultName || avatar != defaultAvatar
+    }
+
+    companion object {
+        val DEFAULT_AVATAR: UiProfileAvatar =
+            UiProfileAvatar.Predefined(Profile.Avatar.Predefined.Variant.Person)
+    }
+}
+
+@Composable
+internal fun rememberProfileFormState(
+    defaultName: String = "",
+    defaultAvatar: UiProfileAvatar = ProfileFormState.DEFAULT_AVATAR,
+): ProfileFormState {
+    val nameTextFieldState = rememberTextFieldState(defaultName)
+    val avatarState = rememberSerializable { mutableStateOf(defaultAvatar) }
+
+    return remember(nameTextFieldState, avatarState, defaultName, defaultAvatar) {
+        ProfileFormState(
+            nameTextState = nameTextFieldState,
+            avatarState = avatarState,
+            defaultName = defaultName,
+            defaultAvatar = defaultAvatar,
+        )
+    }
+}

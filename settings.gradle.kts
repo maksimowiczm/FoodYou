@@ -32,6 +32,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "FoodYou"
 
-include(":composeApp")
+include(":core")
+
+include(":app")
 
 include(":androidApp")
