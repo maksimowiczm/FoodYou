@@ -257,6 +257,9 @@ internal fun rememberProductFormState(
     val servingQuantity =
         rememberFormField(
             valuesPer.value,
+            required,
+            invalidNumber,
+            valueMustBePositive,
             defaultValue = defaultServingQuantity?.formatCompact(),
         ) {
             dynamic {
@@ -299,6 +302,9 @@ internal fun rememberProductFormState(
     val packageQuantity =
         rememberFormField(
             valuesPer.value,
+            required,
+            invalidNumber,
+            valueMustBePositive,
             defaultValue = defaultPackageQuantity?.formatCompact(),
         ) {
             dynamic {
@@ -601,13 +607,17 @@ internal fun rememberProductFormState(
 @Composable
 private fun rememberDoubleFormField(defaultValue: String?): FormField {
     val invalidNumber = stringResource(Res.string.error_invalid_number)
-    val valueMustBePositive = stringResource(Res.string.error_value_must_be_positive)
+    val valueCannotBeNegative = stringResource(Res.string.error_value_cannot_be_negative)
 
-    return rememberFormField(defaultValue = defaultValue) {
+    return rememberFormField(
+        invalidNumber,
+        valueCannotBeNegative,
+        defaultValue = defaultValue,
+    ) {
         ifPresent {
             validateDouble {
                 constrain(invalidNumber) { it != null }
-                constrain(valueMustBePositive) { it?.let { it > 0 } ?: true }
+                constrain(valueCannotBeNegative) { it?.let { it >= 0 } ?: true }
             }
         }
     }
