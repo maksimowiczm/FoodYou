@@ -137,7 +137,7 @@ Add to the `languages` list:
 Translation("DISPLAY_NAME", Language.NewLanguage),
 ```
 
-### [`RecipeFormTransformer.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/food/recipe/RecipeFormTransformer.kt) and [`ProductFormTransformer.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/userproduct/ProductFormTransformer.kt)
+### [`RecipeFormTransformer.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/food/userrecipe/RecipeFormTransformer.kt) and [`ProductFormTransformer.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/userproduct/ProductFormTransformer.kt)
 In both files, update the `FoodName.requireAll` call inside the `transform` function:
 
 ```kotlin

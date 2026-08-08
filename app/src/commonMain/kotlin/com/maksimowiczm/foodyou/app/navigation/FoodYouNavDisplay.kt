@@ -43,8 +43,10 @@ import com.maksimowiczm.foodyou.features.food.details.fooddatacentral.FoodDataCe
 import com.maksimowiczm.foodyou.features.food.details.openfoodfacts.OpenFoodFactsDetailsScreen
 import com.maksimowiczm.foodyou.features.food.details.userproduct.UserProductDetailsScreen
 import com.maksimowiczm.foodyou.features.food.details.userrecipe.UserRecipeDetailsScreen
-import com.maksimowiczm.foodyou.features.food.recipe.create.CreateRecipeScreen
-import com.maksimowiczm.foodyou.features.food.recipe.edit.EditRecipeScreen
+import com.maksimowiczm.foodyou.features.food.userproduct.create.CreateProductScreen
+import com.maksimowiczm.foodyou.features.food.userproduct.edit.EditProductScreen
+import com.maksimowiczm.foodyou.features.food.userrecipe.create.CreateRecipeScreen
+import com.maksimowiczm.foodyou.features.food.userrecipe.edit.EditRecipeScreen
 import com.maksimowiczm.foodyou.features.fooddatacentral.UpdateFoodDataCentralApiKeyDialog
 import com.maksimowiczm.foodyou.features.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.features.home.HomeScreen
@@ -58,8 +60,6 @@ import com.maksimowiczm.foodyou.features.personalization.PersonalizeNutritionFac
 import com.maksimowiczm.foodyou.features.privacy.PrivacyScreen
 import com.maksimowiczm.foodyou.features.profile.add.AddProfileScreen
 import com.maksimowiczm.foodyou.features.profile.edit.EditProfileScreen
-import com.maksimowiczm.foodyou.features.userproduct.create.CreateProductScreen
-import com.maksimowiczm.foodyou.features.userproduct.edit.EditProductScreen
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity

@@ -10,6 +10,10 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.common.domain.milliliters
+import com.maksimowiczm.foodyou.features.food.userproduct.ProductFormState
+import com.maksimowiczm.foodyou.features.food.userproduct.ProductFormTransformer
+import com.maksimowiczm.foodyou.features.food.userproduct.QuantityUnit
+import com.maksimowiczm.foodyou.features.food.userproduct.ValuesPer
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import io.konform.validation.Validation

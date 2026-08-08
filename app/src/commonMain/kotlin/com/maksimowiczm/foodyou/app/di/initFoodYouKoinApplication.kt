@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.common.event.di.inMemoryEventBusModule
 import com.maksimowiczm.foodyou.device.di.deviceModule
 import com.maksimowiczm.foodyou.features.diary.diaryUiModule
 import com.maksimowiczm.foodyou.features.food.foodUiModule
+import com.maksimowiczm.foodyou.features.food.userproduct.productModule
 import com.maksimowiczm.foodyou.features.fooddatacentral.foodDataCentralUiModule
 import com.maksimowiczm.foodyou.features.home.homeModule
 import com.maksimowiczm.foodyou.features.language.languageModule
@@ -20,7 +21,6 @@ import com.maksimowiczm.foodyou.features.openfoodfacts.openFoodFactsModule as op
 import com.maksimowiczm.foodyou.features.personalization.personalizationModule
 import com.maksimowiczm.foodyou.features.privacy.privacyModule
 import com.maksimowiczm.foodyou.features.profile.profileModule
-import com.maksimowiczm.foodyou.features.userproduct.productModule
 import com.maksimowiczm.foodyou.fooddatacentral.di.foodDataCentralModule
 import com.maksimowiczm.foodyou.fooddiary.di.foodDiaryModule
 import com.maksimowiczm.foodyou.mealplan.di.mealPlanModule
