@@ -9,13 +9,17 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.ForwardBackwardTransition
+import com.maksimowiczm.foodyou.app.navigation.rememberPredictiveBackRoundedCornersDecorator
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
+import com.maksimowiczm.foodyou.features.fooddatacentral.UpdateFoodDataCentralApiKeyDialog
+import com.maksimowiczm.foodyou.features.openfoodfacts.OpenFoodFactsLoginDialog
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import kotlinx.coroutines.flow.first
@@ -33,6 +37,7 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
     val nameSelector = LocalFoodNameSelector.current
 
     val backstack = rememberNavBackStack(config, BeforeYouStart)
+    val dialogStrategy = remember { DialogSceneStrategy<NavKey>() }
 
     LaunchedCollectWithLifecycle(viewModel.events) { event ->
         when (event) {
@@ -56,7 +61,9 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
             listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator(),
+                rememberPredictiveBackRoundedCornersDecorator(),
             ),
+        sceneStrategies = listOf(dialogStrategy),
         transitionSpec = {
             ContentTransform(
                 ForwardBackwardTransition.enterTransition(),
@@ -107,6 +114,23 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
                         state = state,
                         onBack = { backstack.removeLastIf<FoodDatabase>() },
                         onContinue = { backstack.add(AddProfile) },
+                        onFoodDataCentralApiKey = { backstack.add(FoodDataCentralApiKey) },
+                        isOpenFoodFactsSignedIn =
+                            viewModel.isOpenFoodFactsSignedIn.collectAsStateWithLifecycle().value,
+                        onOpenFoodFactsLogin = { backstack.add(OpenFoodFactsLogin) },
+                        onOpenFoodFactsLogout = { viewModel.signOutFromOpenFoodFacts() },
+                    )
+                }
+                entry<FoodDataCentralApiKey>(metadata = DialogSceneStrategy.dialog()) {
+                    UpdateFoodDataCentralApiKeyDialog(
+                        onDismissRequest = { backstack.removeLastIf<FoodDataCentralApiKey>() },
+                        onSave = { backstack.removeLastIf<FoodDataCentralApiKey>() },
+                    )
+                }
+                entry<OpenFoodFactsLogin>(metadata = DialogSceneStrategy.dialog()) {
+                    OpenFoodFactsLoginDialog(
+                        onDismissRequest = { backstack.removeLastIf<OpenFoodFactsLogin>() },
+                        onSave = { backstack.removeLastIf<OpenFoodFactsLogin>() },
                     )
                 }
             },
@@ -129,3 +153,7 @@ private val config = SavedStateConfiguration {
 @Serializable private object BeforeYouStart : OnboardingNavKey
 
 @Serializable private object FoodDatabase : OnboardingNavKey
+
+@Serializable private object FoodDataCentralApiKey : OnboardingNavKey
+
+@Serializable private object OpenFoodFactsLogin : OnboardingNavKey

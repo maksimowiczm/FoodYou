@@ -1,0 +1,3 @@
+package com.maksimowiczm.foodyou.features.openfoodfacts
+
+data object OpenFoodFactsLoginSignedInUiEvent

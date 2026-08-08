@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.fooddatacentral
+package com.maksimowiczm.foodyou.features.privacy
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,14 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
-import com.maksimowiczm.foodyou.shared.ui.component.PrivacyCard
-import com.maksimowiczm.foodyou.shared.ui.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -35,19 +32,12 @@ import org.jetbrains.compose.resources.stringResource
 fun FoodDataCentralPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
+    onApiKey: () -> Unit,
     shapes: InteractionShapes,
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
     val appConfig = LocalAppConfig.current
-
-    var showApiKeyDialog by rememberSaveable { mutableStateOf(false) }
-    if (showApiKeyDialog) {
-        UpdateFoodDataCentralApiKeyDialog(
-            onDismissRequest = { showApiKeyDialog = false },
-            onSave = { showApiKeyDialog = false },
-        )
-    }
 
     PrivacyCard(
         selected = selected,
@@ -86,7 +76,7 @@ fun FoodDataCentralPrivacyCard(
                     onClick = { uriHandler.openUri(appConfig.foodDataCentralPrivacyPolicyUri) }
                 )
                 Chip(
-                    onClick = { showApiKeyDialog = true },
+                    onClick = onApiKey,
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Outlined.Key,

@@ -22,6 +22,7 @@ class PrivacyViewModel(
             PrivacyPreferences(
                 allowOpenFoodFacts = off.remoteEnabled,
                 allowFoodDataCentralUSDA = usda.remoteEnabled,
+                isOpenFoodFactsSignedIn = off.credentials != null,
             )
         }
 
@@ -55,5 +56,9 @@ class PrivacyViewModel(
 
             awaitAll(*jobs.toTypedArray())
         }
+    }
+
+    fun signOutFromOpenFoodFacts() {
+        viewModelScope.launch { openFoodFacts.update { it.copy(credentials = null) } }
     }
 }

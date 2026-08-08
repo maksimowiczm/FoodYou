@@ -6,4 +6,5 @@ import androidx.compose.runtime.*
 data class PrivacyPreferences(
     val allowOpenFoodFacts: Boolean,
     val allowFoodDataCentralUSDA: Boolean,
+    val isOpenFoodFactsSignedIn: Boolean,
 )

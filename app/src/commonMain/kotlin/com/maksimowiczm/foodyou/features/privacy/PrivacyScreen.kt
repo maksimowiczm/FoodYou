@@ -26,12 +26,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.features.fooddatacentral.FoodDataCentralPrivacyCard
-import com.maksimowiczm.foodyou.features.openfoodfacts.OpenFoodFactsPrivacyCard
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.component.PrivacyCard
-import com.maksimowiczm.foodyou.shared.ui.component.PrivacyCardDefaults
-import com.maksimowiczm.foodyou.shared.ui.component.PrivacyPolicyChip
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.toggle
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalAppConfig
@@ -41,7 +36,12 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+fun PrivacyScreen(
+    onBack: () -> Unit,
+    onFoodDataCentralApiKey: () -> Unit,
+    onOpenFoodFactsLogin: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val hapticFeedback = LocalHapticFeedback.current
 
     val viewModel: PrivacyViewModel = koinViewModel()
@@ -77,6 +77,9 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                         viewModel.setFoodSearchPreferences(allowOpenFoodFacts = it)
                         hapticFeedback.toggle(it)
                     },
+                    signedIn = foodSearchPreferences.isOpenFoodFactsSignedIn,
+                    onLogin = onOpenFoodFactsLogin,
+                    onLogout = { viewModel.signOutFromOpenFoodFacts() },
                     shapes =
                         PrivacyCardDefaults.shapes(1, 3, foodSearchPreferences.allowOpenFoodFacts),
                 )
@@ -88,6 +91,7 @@ fun PrivacyScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                         viewModel.setFoodSearchPreferences(allowFoodDataCentralUSDA = it)
                         hapticFeedback.toggle(it)
                     },
+                    onApiKey = onFoodDataCentralApiKey,
                     shapes =
                         PrivacyCardDefaults.shapes(
                             2,

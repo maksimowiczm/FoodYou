@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.features.fooddatacentral.FoodDataCentralPrivacyCard
-import com.maksimowiczm.foodyou.features.openfoodfacts.OpenFoodFactsPrivacyCard
+import com.maksimowiczm.foodyou.features.privacy.FoodDataCentralPrivacyCard
+import com.maksimowiczm.foodyou.features.privacy.OpenFoodFactsPrivacyCard
+import com.maksimowiczm.foodyou.features.privacy.PrivacyCardDefaults
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.component.PrivacyCardDefaults
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import foodyou.app.generated.resources.*
@@ -33,6 +33,10 @@ internal fun FoodDatabaseScreen(
     state: OnboardingState,
     onBack: () -> Unit,
     onContinue: () -> Unit,
+    onFoodDataCentralApiKey: () -> Unit,
+    isOpenFoodFactsSignedIn: Boolean,
+    onOpenFoodFactsLogin: () -> Unit,
+    onOpenFoodFactsLogout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -80,6 +84,9 @@ internal fun FoodDatabaseScreen(
                 OpenFoodFactsPrivacyCard(
                     selected = state.allowOpenFoodFacts,
                     onSelectedChange = { state.allowOpenFoodFacts = it },
+                    signedIn = isOpenFoodFactsSignedIn,
+                    onLogin = onOpenFoodFactsLogin,
+                    onLogout = onOpenFoodFactsLogout,
                     shapes = PrivacyCardDefaults.shapes(0, 2, state.allowOpenFoodFacts),
                 )
             }
@@ -88,6 +95,7 @@ internal fun FoodDatabaseScreen(
                 FoodDataCentralPrivacyCard(
                     selected = state.allowFoodDataCentral,
                     onSelectedChange = { state.allowFoodDataCentral = it },
+                    onApiKey = onFoodDataCentralApiKey,
                     shapes = PrivacyCardDefaults.shapes(1, 2, state.allowFoodDataCentral),
                 )
             }
@@ -99,6 +107,14 @@ internal fun FoodDatabaseScreen(
 @Composable
 private fun FoodDatabaseScreenPreview() {
     PreviewFoodYouTheme {
-        FoodDatabaseScreen(state = rememberOnboardingState(), onBack = {}, onContinue = {})
+        FoodDatabaseScreen(
+            state = rememberOnboardingState(),
+            onBack = {},
+            onContinue = {},
+            onFoodDataCentralApiKey = {},
+            isOpenFoodFactsSignedIn = false,
+            onOpenFoodFactsLogin = {},
+            onOpenFoodFactsLogout = {},
+        )
     }
 }

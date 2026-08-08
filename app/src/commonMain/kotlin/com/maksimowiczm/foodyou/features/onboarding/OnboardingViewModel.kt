@@ -22,9 +22,14 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 internal class OnboardingViewModel(
     private val accountService: AccountService,
@@ -37,8 +42,22 @@ internal class OnboardingViewModel(
     private val _finishingOnboarding = MutableStateFlow(false)
     val finishingOnboarding = _finishingOnboarding.asStateFlow()
 
+    val isOpenFoodFactsSignedIn =
+        openFoodFacts
+            .observe()
+            .map { it.credentials != null }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = runBlocking { openFoodFacts.observe().first().credentials != null },
+            )
+
     private val eventBus = Channel<OnboardingEvent>()
     val events = eventBus.receiveAsFlow()
+
+    fun signOutFromOpenFoodFacts() {
+        viewModelScope.launch { openFoodFacts.update { it.copy(credentials = null) } }
+    }
 
     fun finishOnboarding(
         name: String,

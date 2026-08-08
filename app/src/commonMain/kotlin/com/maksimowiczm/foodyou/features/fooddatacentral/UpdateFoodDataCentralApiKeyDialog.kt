@@ -38,60 +38,50 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.decryptString
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.encryptString
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiKeyVerificationService
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
+import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun UpdateFoodDataCentralApiKeyDialog(
     onDismissRequest: () -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
-    service: FoodDataCentralApiKeyVerificationService = koinInject(),
 ) {
-    val repository: FoodDataCentralSettingsRepository = koinInject()
-    val appConfig = LocalAppConfig.current
-    val uriHandler = LocalUriHandler.current
-    val scope = rememberCoroutineScope()
+    val viewModel: FoodDataCentralSettingsViewModel = koinViewModel()
 
-    val settings =
-        remember(repository) { repository.observe() }.collectAsStateWithLifecycle(null).value
-            ?: return
-
-    val focusRequester = remember { FocusRequester() }
-    val textFieldState = rememberTextFieldState(settings.apiKey?.decryptString() ?: "")
-    var hidePassword by rememberSaveable { mutableStateOf(true) }
-
-    var requestInProgress by rememberSaveable { mutableStateOf(false) }
-    var verificationError by rememberSaveable { mutableStateOf<Throwable?>(null) }
-
-    val onCommit = {
-        val key = textFieldState.text.toString().trim()
-        if (key.isNotBlank()) {
-            requestInProgress = true
-            verificationError = null
-
-            scope.launch {
-                runCatching { service.verify(key) }
-                    .onFailure { verificationError = it }
-                    .onSuccess {
-                        repository.update { it.copy(apiKey = SoftwareEncrypted.encryptString(key)) }
-                        onSave()
-                    }
-                requestInProgress = false
-            }
+    LaunchedCollectWithLifecycle(viewModel.uiEvent) {
+        when (it) {
+            FoodDataCentralSettingsUiEvent.Saved -> onSave()
         }
     }
+
+    UpdateFoodDataCentralApiKeyDialog(
+        onDismissRequest = onDismissRequest,
+        onSave = viewModel::verifyAndSave,
+        state = viewModel.uiState.collectAsStateWithLifecycle().value,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun UpdateFoodDataCentralApiKeyDialog(
+    state: FoodDataCentralSettingUiState,
+    onDismissRequest: () -> Unit,
+    onSave: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val appConfig = LocalAppConfig.current
+    val uriHandler = LocalUriHandler.current
+
+    val focusRequester = remember { FocusRequester() }
+    val textFieldState = rememberTextFieldState(state.apiKey ?: "")
+    var hidePassword by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         delay(200.milliseconds)
@@ -102,9 +92,9 @@ fun UpdateFoodDataCentralApiKeyDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             FilledTonalButton(
-                onClick = onCommit,
+                onClick = { onSave(textFieldState.text.toString().trim()) },
                 shapes = ButtonDefaults.shapes(),
-                enabled = textFieldState.text.isNotBlank() && !requestInProgress,
+                enabled = textFieldState.text.isNotBlank() && !state.inProgress,
             ) {
                 Text(stringResource(Res.string.action_save))
             }
@@ -129,10 +119,10 @@ fun UpdateFoodDataCentralApiKeyDialog(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                if (requestInProgress) LinearProgressIndicator(Modifier.fillMaxWidth())
+                if (state.inProgress) LinearProgressIndicator(Modifier.fillMaxWidth())
                 else Spacer(Modifier.height(4.dp))
 
-                verificationError?.let { error ->
+                state.error?.let { error ->
                     val message =
                         when (error) {
                             is FoodDataCentralApiError.ApiKeyInvalid,
@@ -189,8 +179,8 @@ fun UpdateFoodDataCentralApiKeyDialog(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done,
                         ),
-                    onKeyboardAction = { onCommit() },
-                    isError = verificationError != null,
+                    onKeyboardAction = { onSave(textFieldState.text.toString().trim()) },
+                    isError = state.error != null,
                 )
             }
         },

@@ -39,31 +39,42 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.encryptString
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsLoginService
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun OpenFoodFactsLoginDialog(
     onDismissRequest: () -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
-    service: OpenFoodFactsLoginService = koinInject(),
-    repository: OpenFoodFactsSettingsRepository = koinInject(),
+) {
+    val viewModel: OpenFoodFactsLoginViewModel = koinViewModel()
+
+    LaunchedCollectWithLifecycle(viewModel.signInUiEvent) { onSave() }
+
+    OpenFoodFactsLoginDialog(
+        onDismissRequest = onDismissRequest,
+        onSignIn = viewModel::login,
+        state = viewModel.uiState.collectAsStateWithLifecycle().value,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun OpenFoodFactsLoginDialog(
+    state: OpenFoodFactsLoginUiState,
+    onDismissRequest: () -> Unit,
+    onSignIn: (String, String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
-    val scope = rememberCoroutineScope()
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -81,37 +92,11 @@ fun OpenFoodFactsLoginDialog(
             derivedStateOf { login.text.isNotBlank() && password.text.isNotBlank() }
         }
 
-    var requestInProgress by rememberSaveable { mutableStateOf(false) }
-    var authenticationFailure by rememberSaveable { mutableStateOf(false) }
     var hidePassword by rememberSaveable { mutableStateOf(true) }
 
-    val onSignIn = {
+    val handleSignIn = {
         if (isFormValid) {
-            requestInProgress = true
-
-            scope.launch {
-                val username = login.text.toString()
-                val password = password.text.toString()
-
-                runCatching { service.login(username, password) }
-                    .onFailure { authenticationFailure = true }
-                    .onSuccess {
-                        runBlocking {
-                            repository.update {
-                                it.copy(
-                                    credentials =
-                                        OpenFoodFactsCredentials(
-                                            login = SoftwareEncrypted.encryptString(username),
-                                            password = SoftwareEncrypted.encryptString(password),
-                                        )
-                                )
-                            }
-                            onSave()
-                        }
-                    }
-
-                requestInProgress = false
-            }
+            onSignIn(login.text.toString().trim(), password.text.toString().trim())
         }
     }
 
@@ -119,9 +104,9 @@ fun OpenFoodFactsLoginDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             FilledTonalButton(
-                onClick = onSignIn,
+                onClick = handleSignIn,
                 shapes = ButtonDefaults.shapes(),
-                enabled = isFormValid && !requestInProgress,
+                enabled = isFormValid && !state.inProgress,
             ) {
                 Text(stringResource(Res.string.action_sign_in))
             }
@@ -146,14 +131,14 @@ fun OpenFoodFactsLoginDialog(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                if (requestInProgress) LinearProgressIndicator(Modifier.fillMaxWidth())
+                if (state.inProgress) LinearProgressIndicator(Modifier.fillMaxWidth())
                 else Spacer(Modifier.height(4.dp))
                 Text(
                     text =
                         stringResource(Res.string.description_open_food_facts_credentials_message),
                     style = MaterialTheme.typography.bodySmall,
                 )
-                if (authenticationFailure) {
+                if (state.authenticationFailure) {
                     Text(
                         text =
                             stringResource(Res.string.error_open_food_facts_failed_to_authenticate),
@@ -207,7 +192,7 @@ fun OpenFoodFactsLoginDialog(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done,
                         ),
-                    onKeyboardAction = { onSignIn() },
+                    onKeyboardAction = { handleSignIn() },
                     isError = !isPasswordValid,
                     supportingText = {
                         if (!isPasswordValid) {

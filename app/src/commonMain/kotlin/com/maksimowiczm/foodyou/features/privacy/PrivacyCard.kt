@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.shared.ui.component
+package com.maksimowiczm.foodyou.features.privacy
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource

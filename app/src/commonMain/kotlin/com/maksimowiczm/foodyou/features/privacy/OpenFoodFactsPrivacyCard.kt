@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.openfoodfacts
+package com.maksimowiczm.foodyou.features.privacy
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -19,61 +19,30 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.encryptString
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsLoginService
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettings
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
-import com.maksimowiczm.foodyou.shared.ui.component.PrivacyCard
-import com.maksimowiczm.foodyou.shared.ui.component.PrivacyCardDefaults
-import com.maksimowiczm.foodyou.shared.ui.component.PrivacyPolicyChip
-import com.maksimowiczm.foodyou.shared.ui.component.TermsOfUseChip
 import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 fun OpenFoodFactsPrivacyCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
+    signedIn: Boolean,
+    onLogin: () -> Unit,
+    onLogout: () -> Unit,
     shapes: InteractionShapes,
     modifier: Modifier = Modifier,
-    repository: OpenFoodFactsSettingsRepository = koinInject(),
-    service: OpenFoodFactsLoginService = koinInject(),
 ) {
     val uriHandler = LocalUriHandler.current
     val appConfig = LocalAppConfig.current
-
-    val hasCredentials =
-        remember(repository) { repository.observe().map { it.credentials != null } }
-            .collectAsStateWithLifecycle(null)
-            .value
-
-    var showLoginDialog by rememberSaveable { mutableStateOf(false) }
-    if (showLoginDialog) {
-        OpenFoodFactsLoginDialog(
-            onDismissRequest = { showLoginDialog = false },
-            onSave = { showLoginDialog = false },
-            service = service,
-            repository = repository,
-        )
-    }
 
     PrivacyCard(
         selected = selected,
@@ -116,13 +85,10 @@ fun OpenFoodFactsPrivacyCard(
                 )
                 Chip(
                     onClick = {
-                        if (hasCredentials == true)
-                            runBlocking { repository.update { it.copy(credentials = null) } }
-                        else showLoginDialog = true
+                        if (signedIn) onLogout() else onLogin()
                     },
-                    enabled = hasCredentials != null,
                     leadingIcon = {
-                        if (hasCredentials == true)
+                        if (signedIn)
                             Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.Logout,
                                 contentDescription = null,
@@ -136,7 +102,7 @@ fun OpenFoodFactsPrivacyCard(
                             )
                     },
                     label = {
-                        if (hasCredentials == true) Text(stringResource(Res.string.action_sign_out))
+                        if (signedIn) Text(stringResource(Res.string.action_sign_out))
                         else Text(stringResource(Res.string.action_sign_in))
                     },
                 )
@@ -151,20 +117,11 @@ private fun OpenFoodFactsPrivacyCardPreview() {
     PreviewFoodYouTheme {
         OpenFoodFactsPrivacyCard(
             selected = true,
+            signedIn = false,
+            onLogin = {},
+            onLogout = {},
             shapes = PrivacyCardDefaults.shapes(0, 1, true),
             onSelectedChange = {},
-            repository =
-                object : OpenFoodFactsSettingsRepository {
-                    override fun observe(): Flow<OpenFoodFactsSettings> =
-                        flowOf(OpenFoodFactsSettings())
-
-                    override suspend fun save(settings: OpenFoodFactsSettings) = Unit
-
-                    override suspend fun update(
-                        transform: (OpenFoodFactsSettings) -> OpenFoodFactsSettings
-                    ) = Unit
-                },
-            service = OpenFoodFactsLoginService { _, _ -> },
         )
     }
 }
@@ -175,28 +132,11 @@ private fun OpenFoodFactsPrivacyCardSignedInPreview() {
     PreviewFoodYouTheme {
         OpenFoodFactsPrivacyCard(
             selected = true,
+            signedIn = true,
+            onLogin = {},
+            onLogout = {},
             shapes = PrivacyCardDefaults.shapes(0, 1, true),
             onSelectedChange = {},
-            repository =
-                object : OpenFoodFactsSettingsRepository {
-                    override fun observe(): Flow<OpenFoodFactsSettings> =
-                        flowOf(
-                            OpenFoodFactsSettings(
-                                credentials =
-                                    OpenFoodFactsCredentials(
-                                        login = SoftwareEncrypted.encryptString("login"),
-                                        password = SoftwareEncrypted.encryptString("password"),
-                                    )
-                            )
-                        )
-
-                    override suspend fun save(settings: OpenFoodFactsSettings) = Unit
-
-                    override suspend fun update(
-                        transform: (OpenFoodFactsSettings) -> OpenFoodFactsSettings
-                    ) = Unit
-                },
-            service = OpenFoodFactsLoginService { _, _ -> },
         )
     }
 }

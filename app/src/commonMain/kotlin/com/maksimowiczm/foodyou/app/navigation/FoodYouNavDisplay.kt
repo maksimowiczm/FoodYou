@@ -9,6 +9,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
@@ -19,12 +20,14 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateRecipe
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditRecipe
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditUserProduct
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDataCentralApiKeyDialog
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDataCentralProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.HomePersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Language
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.MealSchedule
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.NutritionFactsPersonalization
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.OpenFoodFactsLoginDialog
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.OpenFoodFactsProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Personalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
@@ -42,11 +45,13 @@ import com.maksimowiczm.foodyou.features.food.details.userproduct.UserProductDet
 import com.maksimowiczm.foodyou.features.food.details.userrecipe.UserRecipeDetailsScreen
 import com.maksimowiczm.foodyou.features.food.recipe.create.CreateRecipeScreen
 import com.maksimowiczm.foodyou.features.food.recipe.edit.EditRecipeScreen
+import com.maksimowiczm.foodyou.features.fooddatacentral.UpdateFoodDataCentralApiKeyDialog
 import com.maksimowiczm.foodyou.features.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.features.home.HomeScreen
 import com.maksimowiczm.foodyou.features.home.SettingsScreen
 import com.maksimowiczm.foodyou.features.language.LanguageScreen
 import com.maksimowiczm.foodyou.features.meal.MealScheduleScreen
+import com.maksimowiczm.foodyou.features.openfoodfacts.OpenFoodFactsLoginDialog
 import com.maksimowiczm.foodyou.features.personalization.ColorsScreen
 import com.maksimowiczm.foodyou.features.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.features.personalization.PersonalizeNutritionFactsScreen
@@ -66,6 +71,8 @@ import kotlinx.serialization.modules.polymorphic
 
 @Composable
 fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modifier) {
+    val dialogStrategy = remember { DialogSceneStrategy<NavKey>() }
+
     NavDisplay(
         backStack = backStack,
         modifier = modifier,
@@ -75,6 +82,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                 rememberViewModelStoreNavEntryDecorator(),
                 rememberPredictiveBackRoundedCornersDecorator(),
             ),
+        sceneStrategies = listOf(dialogStrategy),
         transitionSpec = {
             ContentTransform(
                 ForwardBackwardTransition.enterTransition(),
@@ -243,7 +251,13 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onColors = { backStack.add(Colors) },
                     )
                 }
-                entry<Privacy> { PrivacyScreen(onBack = { backStack.removeLastIf<Privacy>() }) }
+                entry<Privacy> {
+                    PrivacyScreen(
+                        onBack = { backStack.removeLastIf<Privacy>() },
+                        onFoodDataCentralApiKey = { backStack.add(FoodDataCentralApiKeyDialog) },
+                        onOpenFoodFactsLogin = { backStack.add(OpenFoodFactsLoginDialog) },
+                    )
+                }
                 entry<CreateRecipe> {
                     CreateRecipeScreen(
                         onBack = { backStack.removeLastIf<CreateRecipe>() },
@@ -265,6 +279,20 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                 }
                 entry<MealSchedule> {
                     MealScheduleScreen(onBack = { backStack.removeLastIf<MealSchedule>() })
+                }
+                entry<FoodDataCentralApiKeyDialog>(metadata = DialogSceneStrategy.dialog()) {
+                    UpdateFoodDataCentralApiKeyDialog(
+                        onDismissRequest = {
+                            backStack.removeLastIf<FoodDataCentralApiKeyDialog>()
+                        },
+                        onSave = { backStack.removeLastIf<FoodDataCentralApiKeyDialog>() },
+                    )
+                }
+                entry<OpenFoodFactsLoginDialog>(metadata = DialogSceneStrategy.dialog()) {
+                    OpenFoodFactsLoginDialog(
+                        onDismissRequest = { backStack.removeLastIf<OpenFoodFactsLoginDialog>() },
+                        onSave = { backStack.removeLastIf<OpenFoodFactsLoginDialog>() },
+                    )
                 }
             },
     )
@@ -339,4 +367,8 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data class EditRecipe(val identity: UserRecipeIdentity) : FoodYouNavHostRoute
 
     @Serializable data object MealSchedule : FoodYouNavHostRoute
+
+    @Serializable data object FoodDataCentralApiKeyDialog : FoodYouNavHostRoute
+
+    @Serializable data object OpenFoodFactsLoginDialog : FoodYouNavHostRoute
 }
