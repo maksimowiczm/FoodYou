@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.food.search.favoritefood
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.favoritefood
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
@@ -7,12 +7,12 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchViewModel
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.extension.combine
-import com.maksimowiczm.foodyou.features.food.search.SearchExtension
-import com.maksimowiczm.foodyou.features.food.search.SearchViewModel
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
@@ -36,7 +36,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-internal class FavoriteFoodSearchExtension(
+class FavoriteFoodSearchExtension(
     viewModel: SearchViewModel,
     appProfileManager: AppProfileManager,
     private val foodDataCentralService: FoodDataCentralService,

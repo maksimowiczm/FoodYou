@@ -1,31 +1,22 @@
-package com.maksimowiczm.foodyou.features.food.search.openfoodfacts
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral
 
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import coil3.request.CachePolicy
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchListItem
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.expect
-import com.maksimowiczm.foodyou.features.food.search.FoodSearchListItem
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.shared.ui.component.Image
-import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
-import com.maksimowiczm.foodyou.shared.ui.utility.LocalUIFeatureFlags
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
-import com.maksimowiczm.foodyou.shared.ui.utility.headline
-import com.valentinilk.shimmer.Shimmer
 
 @Composable
-internal fun OpenFoodFactsListItem(
-    food: OpenFoodFactsProduct,
+fun FoodDataCentralListItem(
+    food: FoodDataCentralProduct,
     onClick: (Quantity) -> Unit,
-    shimmer: Shimmer,
     modifier: Modifier = Modifier,
     preferredQuantity: Quantity =
         remember(food.servingQuantity, food.packageQuantity) {
@@ -63,26 +54,14 @@ internal fun OpenFoodFactsListItem(
             .stringResource(food.packageQuantity, food.servingQuantity)
             .expect("PreferredQuantity string can't be null")
 
-    val downloadImages = LocalUIFeatureFlags.current.downloadOpenFoodFactsSearchImages
-
     FoodSearchListItem(
-        headline = food.headline(LocalFoodNameSelector.current),
+        headline = food.headline,
         proteins = measurementFacts.proteins.value,
         carbohydrates = measurementFacts.carbohydrates.value,
         fats = measurementFacts.fats.value,
         energy = measurementFacts.energy.value,
         quantity = { Text(measurementString) },
-        image =
-            food.image?.let {
-                @Composable {
-                    it.Image(
-                        shimmer = shimmer,
-                        modifier = Modifier.size(56.dp),
-                        networkCachePolicy =
-                            if (downloadImages) CachePolicy.ENABLED else CachePolicy.DISABLED,
-                    )
-                }
-            },
+        image = null,
         onClick = { onClick(preferredQuantity) },
         modifier = modifier,
     )

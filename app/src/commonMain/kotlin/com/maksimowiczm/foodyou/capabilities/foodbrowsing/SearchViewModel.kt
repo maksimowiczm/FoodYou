@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.food.search
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -23,7 +23,7 @@ import org.koin.core.component.KoinScopeComponent
 import org.koin.core.parameter.parametersOf
 import org.koin.core.scope.Scope
 
-internal class SearchViewModel(
+class SearchViewModel(
     initialQuery: String?,
     val avoidCircularDependencyWith: UserRecipeIdentity?,
     private val searchQueryParser: SearchQueryParser,

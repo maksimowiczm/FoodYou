@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.features.diary.search
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,18 +16,12 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -36,17 +29,11 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.Clear
-import androidx.compose.material.icons.outlined.History
-import androidx.compose.material.icons.outlined.HistoryToggleOff
-import androidx.compose.material.icons.outlined.NorthWest
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -63,68 +50,44 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationEventHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
-import com.maksimowiczm.foodyou.common.RemoteData
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchFloatingActionButton
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchList
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchCollection
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchFilters
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchHints
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchViewModel
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.favoritefood.FavoriteFoodSearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDataCentralSearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsSearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilters
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
-import com.maksimowiczm.foodyou.features.food.search.FoodSearchErrorCard
-import com.maksimowiczm.foodyou.features.food.search.FoodSearchFloatingActionButton
-import com.maksimowiczm.foodyou.features.food.search.SearchCollection
-import com.maksimowiczm.foodyou.features.food.search.SearchFilters
-import com.maksimowiczm.foodyou.features.food.search.SearchViewModel
-import com.maksimowiczm.foodyou.features.food.search.favoritefood.FavoriteFoodListItem
-import com.maksimowiczm.foodyou.features.food.search.favoritefood.FavoriteFoodSearchExtension
-import com.maksimowiczm.foodyou.features.food.search.fooddatacentral.FoodDataCentralListItem
-import com.maksimowiczm.foodyou.features.food.search.fooddatacentral.FoodDataCentralSearchExtension
-import com.maksimowiczm.foodyou.features.food.search.openfoodfacts.OpenFoodFactsListItem
-import com.maksimowiczm.foodyou.features.food.search.openfoodfacts.OpenFoodFactsSearchExtension
-import com.maksimowiczm.foodyou.features.food.search.rememberCollectionFilters
-import com.maksimowiczm.foodyou.features.food.search.userfood.UserFoodSearchExtension
-import com.maksimowiczm.foodyou.features.food.search.userfood.UserProductListItem
-import com.maksimowiczm.foodyou.features.food.search.userfood.UserRecipeListItem
-import com.maksimowiczm.foodyou.features.fooddatacentral.FoodDataCentralErrorCard
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.shared.ui.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.shared.ui.component.Scrim
 import com.maksimowiczm.foodyou.shared.ui.extension.add
-import com.maksimowiczm.foodyou.shared.ui.extension.error
 import com.maksimowiczm.foodyou.shared.ui.extension.horizontal
 import com.maksimowiczm.foodyou.shared.ui.extension.plus
-import com.maksimowiczm.foodyou.shared.ui.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.shared.ui.extension.toDp
 import com.maksimowiczm.foodyou.shared.ui.saveable.jsonSaver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalDateFormatter
-import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
-import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
@@ -319,7 +282,7 @@ fun FoodDiarySearchScreen(
                 )
             },
         ) { contentPadding ->
-            SearchList(
+            FoodSearchList(
                 selectedCollection = selectedCollection,
                 userFood = userFoodExtension.pages.collectAsLazyPagingItems(),
                 openFoodFacts = openFoodFactsExtension.pages.collectAsLazyPagingItems(),
@@ -373,469 +336,5 @@ fun FoodDiarySearchScreen(
             shimmer = shimmer,
             modifier = Modifier.fillMaxSize(),
         )
-    }
-}
-
-@Composable
-private fun SearchList(
-    selectedCollection: SearchCollection?,
-    userFood: LazyPagingItems<SearchResult>,
-    openFoodFacts: LazyPagingItems<OpenFoodFactsProduct>,
-    foodDataCentral: LazyPagingItems<FoodDataCentralProduct>,
-    favoriteFood: LazyPagingItems<RemoteData<Any>>,
-    searchQuery: SearchQuery,
-    contentPadding: PaddingValues,
-    lazyListState: LazyListState,
-    onFoodDataCentralProduct: (FoodDataCentralProductIdentity, Quantity) -> Unit,
-    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity, Quantity) -> Unit,
-    onUserProduct: (UserProductIdentity, Quantity) -> Unit,
-    onUserRecipe: (UserRecipeIdentity, Quantity) -> Unit,
-    shimmer: Shimmer,
-    modifier: Modifier = Modifier,
-) {
-    val density = LocalDensity.current
-    var errorCardHeight by remember { mutableIntStateOf(0) }
-
-    val isIdle =
-        when (selectedCollection) {
-            null ->
-                userFood.rememberDebounceIsIdle() &&
-                    openFoodFacts.rememberDebounceIsIdle() &&
-                    foodDataCentral.rememberDebounceIsIdle()
-
-            is SearchCollection.Favorite -> favoriteFood.rememberDebounceIsIdle()
-            is SearchCollection.FoodDataCentral -> foodDataCentral.rememberDebounceIsIdle()
-            is SearchCollection.OpenFoodFacts -> openFoodFacts.rememberDebounceIsIdle()
-            is SearchCollection.UserFood -> userFood.rememberDebounceIsIdle()
-        }
-
-    Box(modifier) {
-        LazyColumn(
-            modifier = Modifier.imePadding(),
-            state = lazyListState,
-            contentPadding = contentPadding.add(top = density.run { errorCardHeight.toDp() }),
-        ) {
-            when (selectedCollection) {
-                null -> {
-                    items(
-                        count = userFood.itemCount.coerceAtMost(5),
-                        key =
-                            userFood.itemKey {
-                                when (it) {
-                                    is SearchResult.UserProduct -> it.id.toString()
-                                    is SearchResult.UserRecipe -> it.id.toString()
-                                }
-                            },
-                    ) { i ->
-                        when (val product = userFood[i]) {
-                            null ->
-                                FoodListItemSkeleton(
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-
-                            is SearchResult.UserProduct ->
-                                UserProductListItem(
-                                    product = product,
-                                    onClick = {
-                                        onUserProduct(UserProductIdentity(product.id), it)
-                                    },
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-
-                            is SearchResult.UserRecipe ->
-                                UserRecipeListItem(
-                                    recipe = product,
-                                    onClick = { onUserRecipe(UserRecipeIdentity(product.id), it) },
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-                        }
-                    }
-
-                    items(
-                        count = foodDataCentral.itemCount.coerceAtMost(5),
-                        key = foodDataCentral.itemKey { it.identity.fdcId },
-                    ) { i ->
-                        when (val product = foodDataCentral[i]) {
-                            null ->
-                                FoodListItemSkeleton(
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-
-                            else ->
-                                FoodDataCentralListItem(
-                                    food = product,
-                                    onClick = { onFoodDataCentralProduct(product.identity, it) },
-                                    modifier = Modifier.animateItem(),
-                                )
-                        }
-                    }
-                }
-
-                is SearchCollection.UserFood ->
-                    items(
-                        count = userFood.itemCount,
-                        key =
-                            userFood.itemKey {
-                                when (it) {
-                                    is SearchResult.UserProduct -> it.id.toString()
-                                    is SearchResult.UserRecipe -> it.id.toString()
-                                }
-                            },
-                    ) { i ->
-                        when (val food = userFood[i]) {
-                            null ->
-                                FoodListItemSkeleton(
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-
-                            is SearchResult.UserProduct ->
-                                UserProductListItem(
-                                    product = food,
-                                    onClick = { onUserProduct(UserProductIdentity(food.id), it) },
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-
-                            is SearchResult.UserRecipe ->
-                                UserRecipeListItem(
-                                    recipe = food,
-                                    onClick = { onUserRecipe(UserRecipeIdentity(food.id), it) },
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-                        }
-                    }
-
-                is SearchCollection.OpenFoodFacts ->
-                    items(
-                        count = openFoodFacts.itemCount,
-                        key = openFoodFacts.itemKey { it.identity.barcode },
-                    ) { i ->
-                        when (val food = openFoodFacts[i]) {
-                            null ->
-                                FoodListItemSkeleton(
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-
-                            else ->
-                                OpenFoodFactsListItem(
-                                    food = food,
-                                    onClick = { onOpenFoodFactsProduct(food.identity, it) },
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-                        }
-                    }
-
-                is SearchCollection.FoodDataCentral ->
-                    items(
-                        count = foodDataCentral.itemCount,
-                        key = foodDataCentral.itemKey { it.identity.fdcId },
-                    ) { i ->
-                        when (val food = foodDataCentral[i]) {
-                            null ->
-                                FoodListItemSkeleton(
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-
-                            else ->
-                                FoodDataCentralListItem(
-                                    food = food,
-                                    onClick = { onFoodDataCentralProduct(food.identity, it) },
-                                    modifier = Modifier.animateItem(),
-                                )
-                        }
-                    }
-
-                is SearchCollection.Favorite ->
-                    items(favoriteFood.itemCount) { i ->
-                        when (val food = favoriteFood[i]) {
-                            null ->
-                                FoodListItemSkeleton(
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
-                                )
-
-                            else ->
-                                FavoriteFoodListItem(
-                                    food = food,
-                                    shimmer = shimmer,
-                                    onClick = {
-                                        when (food) {
-                                            is RemoteData.Success -> {
-                                                when (val value = food.value) {
-                                                    is UserProduct ->
-                                                        onUserProduct(value.identity, it)
-
-                                                    is UserRecipe ->
-                                                        onUserRecipe(value.identity, it)
-
-                                                    is OpenFoodFactsProduct ->
-                                                        onOpenFoodFactsProduct(value.identity, it)
-
-                                                    is FoodDataCentralProduct ->
-                                                        onFoodDataCentralProduct(value.identity, it)
-                                                }
-                                            }
-
-                                            is RemoteData.Error -> {
-                                                food.partialValue?.let { value ->
-                                                    when (value) {
-                                                        is UserProduct ->
-                                                            onUserProduct(value.identity, it)
-
-                                                        is UserRecipe ->
-                                                            onUserRecipe(value.identity, it)
-
-                                                        is OpenFoodFactsProduct ->
-                                                            onOpenFoodFactsProduct(
-                                                                value.identity,
-                                                                it,
-                                                            )
-
-                                                        is FoodDataCentralProduct ->
-                                                            onFoodDataCentralProduct(
-                                                                value.identity,
-                                                                it,
-                                                            )
-                                                    }
-                                                }
-                                            }
-
-                                            is RemoteData.Loading -> {
-                                                food.partialValue?.let { value ->
-                                                    when (value) {
-                                                        is UserProduct ->
-                                                            onUserProduct(value.identity, it)
-
-                                                        is UserRecipe ->
-                                                            onUserRecipe(value.identity, it)
-
-                                                        is OpenFoodFactsProduct ->
-                                                            onOpenFoodFactsProduct(
-                                                                value.identity,
-                                                                it,
-                                                            )
-
-                                                        is FoodDataCentralProduct ->
-                                                            onFoodDataCentralProduct(
-                                                                value.identity,
-                                                                it,
-                                                            )
-                                                    }
-                                                }
-                                            }
-
-                                            is RemoteData.NotFound -> Unit
-                                        }
-                                    },
-                                    modifier = Modifier.animateItem(),
-                                    fallback = {
-                                        FoodListItemSkeleton(
-                                            shimmer = shimmer,
-                                            modifier = Modifier.animateItem(),
-                                        )
-                                    },
-                                )
-                        }
-                    }
-            }
-
-            // Common Loading State
-            val loadState =
-                when (selectedCollection) {
-                    null ->
-                        if (
-                            userFood.loadState.append is LoadState.Loading ||
-                                userFood.loadState.refresh is LoadState.Loading ||
-                                openFoodFacts.loadState.append is LoadState.Loading ||
-                                openFoodFacts.loadState.refresh is LoadState.Loading ||
-                                foodDataCentral.loadState.append is LoadState.Loading ||
-                                foodDataCentral.loadState.refresh is LoadState.Loading
-                        ) {
-                            LoadState.Loading
-                        } else LoadState.NotLoading(true)
-
-                    is SearchCollection.Favorite -> favoriteFood.loadState.append
-                    is SearchCollection.FoodDataCentral -> foodDataCentral.loadState.append
-                    is SearchCollection.OpenFoodFacts -> openFoodFacts.loadState.append
-                    is SearchCollection.UserFood -> userFood.loadState.append
-                }
-
-            if (loadState is LoadState.Loading) {
-                items(10) { FoodListItemSkeleton(shimmer) }
-            }
-        }
-
-        // Error Cards
-        Box(
-            Modifier.padding(top = contentPadding.calculateTopPadding()).onSizeChanged {
-                errorCardHeight = it.height
-            }
-        ) {
-            when (selectedCollection) {
-                is SearchCollection.OpenFoodFacts ->
-                    when (val error = openFoodFacts.loadState.error) {
-                        is OpenFoodFactsApiError.RateLimitExceeded ->
-                            FoodSearchErrorCard(
-                                message =
-                                    stringResource(Res.string.error_open_food_facts_rate_limit),
-                                onRetry = openFoodFacts::retry,
-                                modifier =
-                                    Modifier.padding(horizontal = 16.dp).padding(bottom = 8.dp),
-                            )
-
-                        is Throwable ->
-                            FoodSearchErrorCard(
-                                message = error.message,
-                                onRetry = openFoodFacts::retry,
-                                modifier =
-                                    Modifier.padding(horizontal = 16.dp).padding(bottom = 8.dp),
-                            )
-                    }
-
-                is SearchCollection.FoodDataCentral ->
-                    when (val error = foodDataCentral.loadState.error) {
-                        is FoodDataCentralApiError ->
-                            FoodDataCentralErrorCard(
-                                error = error,
-                                modifier =
-                                    Modifier.padding(horizontal = 16.dp).padding(bottom = 8.dp),
-                            )
-
-                        is Throwable ->
-                            FoodSearchErrorCard(
-                                message = error.message,
-                                onRetry = foodDataCentral::retry,
-                                modifier =
-                                    Modifier.padding(horizontal = 16.dp).padding(bottom = 8.dp),
-                            )
-                    }
-
-                else -> Unit
-            }
-        }
-
-        // Empty States
-        if (isIdle) {
-            val isSearchActive = selectedCollection != null || searchQuery !is SearchQuery.Blank
-            val isEmpty =
-                when (selectedCollection) {
-                    null ->
-                        userFood.itemCount == 0 &&
-                            openFoodFacts.itemCount == 0 &&
-                            foodDataCentral.itemCount == 0
-
-                    is SearchCollection.Favorite -> favoriteFood.itemCount == 0
-                    is SearchCollection.FoodDataCentral -> foodDataCentral.itemCount == 0
-                    is SearchCollection.OpenFoodFacts -> openFoodFacts.itemCount == 0
-                    is SearchCollection.UserFood -> userFood.itemCount == 0
-                }
-
-            if (isEmpty) {
-                if (selectedCollection == null && !isSearchActive) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement =
-                            Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.HistoryToggleOff,
-                            contentDescription = null,
-                            modifier = Modifier.size(48.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                        Text(
-                            text = stringResource(Res.string.headline_no_recent_searches),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                } else {
-                    Text(
-                        text = stringResource(Res.string.neutral_no_food_found),
-                        modifier = Modifier.align(Alignment.Center),
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-        }
-
-        if (!isIdle) {
-            ContainedLoadingIndicator(
-                Modifier.align(Alignment.TopCenter)
-                    .padding(top = contentPadding.calculateTopPadding())
-            )
-        }
-    }
-}
-
-@Composable
-private fun SearchHints(
-    history: List<String>?,
-    onSearch: (String) -> Unit,
-    onFill: (String) -> Unit,
-    shimmer: Shimmer,
-    modifier: Modifier = Modifier,
-) {
-    val history = history ?: List<String?>(5) { null }
-
-    LazyColumn(modifier) {
-        itemsIndexed(history, key = { i, _ -> i }) { _, query ->
-            if (query == null) {
-                ListItem(
-                    modifier = Modifier.animateItem(),
-                    headlineContent = {
-                        val extraWidth = rememberSaveable { ((0..100).random().toFloat() / 100f) }
-
-                        Spacer(
-                            Modifier.shimmer(shimmer)
-                                .height(LocalTextStyle.current.toDp())
-                                .width(100.dp + extraWidth * 100.dp)
-                                .clip(MaterialTheme.shapes.medium)
-                                .background(MaterialTheme.colorScheme.surfaceContainerLowest)
-                        )
-                    },
-                    leadingContent = {
-                        Icon(imageVector = Icons.Outlined.History, contentDescription = null)
-                    },
-                    trailingContent = {
-                        Icon(imageVector = Icons.Outlined.NorthWest, contentDescription = null)
-                    },
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                )
-            } else {
-                ListItem(
-                    modifier = Modifier.clickable { onSearch(query) }.animateItem(),
-                    headlineContent = { Text(query) },
-                    leadingContent = {
-                        Icon(imageVector = Icons.Outlined.History, contentDescription = null)
-                    },
-                    trailingContent = {
-                        IconButton(
-                            onClick = { onFill(query) },
-                            shapes = IconButtonDefaults.shapes(),
-                            modifier = Modifier.offset(x = 12.dp),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.NorthWest,
-                                contentDescription =
-                                    stringResource(Res.string.action_insert_suggested_search),
-                            )
-                        }
-                    },
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                )
-            }
-        }
     }
 }

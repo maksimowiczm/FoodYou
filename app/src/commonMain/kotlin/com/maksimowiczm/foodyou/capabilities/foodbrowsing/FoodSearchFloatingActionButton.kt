@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.food.search
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LunchDining
@@ -18,7 +18,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun FoodSearchFloatingActionButton(
+fun FoodSearchFloatingActionButton(
     fabExpanded: Boolean,
     onFabExpandedChange: (Boolean) -> Unit,
     onCreateRecipe: () -> Unit,

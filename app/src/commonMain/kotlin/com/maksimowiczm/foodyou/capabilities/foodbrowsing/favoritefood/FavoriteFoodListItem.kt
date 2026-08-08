@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.food.search.favoritefood
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.favoritefood
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchListItem
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
@@ -20,7 +21,6 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.expect
-import com.maksimowiczm.foodyou.features.food.search.FoodSearchListItem
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.shared.ui.component.Image
@@ -35,7 +35,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-internal fun FavoriteFoodListItem(
+fun FavoriteFoodListItem(
     food: RemoteData<Any>,
     shimmer: Shimmer,
     onClick: (Quantity) -> Unit,

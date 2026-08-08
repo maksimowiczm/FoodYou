@@ -1,9 +1,9 @@
-package com.maksimowiczm.foodyou.features.food.search.userfood
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.features.food.search.SearchExtension
-import com.maksimowiczm.foodyou.features.food.search.SearchViewModel
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchViewModel
 import com.maksimowiczm.foodyou.search.domain.SearchRepository
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-internal class UserFoodSearchExtension(
+class UserFoodSearchExtension(
     viewModel: SearchViewModel,
     repository: SearchRepository,
     compositionRepository: UserRecipeCompositionRepository,

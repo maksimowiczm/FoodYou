@@ -1,12 +1,12 @@
-package com.maksimowiczm.foodyou.features.food.search.fooddatacentral
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.features.food.search.SearchExtension
-import com.maksimowiczm.foodyou.features.food.search.SearchViewModel
-import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchViewModel
+import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,19 +17,20 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-internal class FoodDataCentralSearchExtension(
+class OpenFoodFactsSearchExtension(
     viewModel: SearchViewModel,
-    settingsRepository: FoodDataCentralSettingsRepository,
-    private val foodDataCentralService: FoodDataCentralService,
+    settingsRepository: OpenFoodFactsSettingsRepository,
+    private val openFoodFactsService: OpenFoodFactsService,
 ) : SearchExtension(viewModel) {
-    private val dataTypes = MutableStateFlow<Set<FoodDataCentralSearchParameters.DataType>?>(null)
+    private val version =
+        MutableStateFlow(OpenFoodFactsSearchParameters.OpenFoodFactsVersion.SearchALicious)
 
-    private val parameters: SharedFlow<FoodDataCentralSearchParameters> =
-        combine(viewModel.searchQuery, dataTypes) { query, dataTypes ->
-                FoodDataCentralSearchParameters(
+    private val parameters: SharedFlow<OpenFoodFactsSearchParameters> =
+        combine(viewModel.searchQuery, version) { query, version ->
+                OpenFoodFactsSearchParameters(
                     query = query,
-                    orderBy = FoodDataCentralSearchParameters.OrderBy.NameAscending,
-                    dataTypes = dataTypes,
+                    orderBy = OpenFoodFactsSearchParameters.OrderBy.Relevance,
+                    version = version,
                 )
             }
             .shareIn(
@@ -40,12 +41,12 @@ internal class FoodDataCentralSearchExtension(
 
     val pages =
         parameters
-            .flatMapLatest { foodDataCentralService.search(it, PAGE_SIZE) }
+            .flatMapLatest { openFoodFactsService.search(it, PAGE_SIZE) }
             .cachedIn(viewModel.viewModelScope)
 
     val count =
         parameters
-            .flatMapLatest(foodDataCentralService::count)
+            .flatMapLatest(openFoodFactsService::count)
             .stateIn(
                 scope = viewModel.viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -62,8 +63,8 @@ internal class FoodDataCentralSearchExtension(
                 initialValue = false,
             )
 
-    fun dataTypes(types: Set<FoodDataCentralSearchParameters.DataType>) {
-        viewModel.viewModelScope.launch { dataTypes.emit(types.takeIf { it.isNotEmpty() }) }
+    fun version(version: OpenFoodFactsSearchParameters.OpenFoodFactsVersion) {
+        viewModel.viewModelScope.launch { this@OpenFoodFactsSearchExtension.version.emit(version) }
     }
 
     companion object {

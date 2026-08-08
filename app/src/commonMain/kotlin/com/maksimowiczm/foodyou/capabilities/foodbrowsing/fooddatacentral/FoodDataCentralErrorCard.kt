@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.openfoodfacts
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,33 +20,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
+import com.maksimowiczm.foodyou.features.fooddatacentral.UpdateFoodDataCentralApiKeyDialog
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun OpenFoodFactsErrorCard(error: OpenFoodFactsApiError, modifier: Modifier = Modifier) {
-    val appConfig = LocalAppConfig.current
+fun FoodDataCentralErrorCard(
+    error: FoodDataCentralApiError,
+    modifier: Modifier = Modifier,
+) {
     val uriHandler = LocalUriHandler.current
+    val appConfig = LocalAppConfig.current
 
     val errorText =
         when (error) {
-            is OpenFoodFactsApiError.ProductNotFound -> return
-            is OpenFoodFactsApiError.RateLimitExceeded ->
-                stringResource(Res.string.error_open_food_facts_timeout)
+            is FoodDataCentralApiError.ProductNotFound -> return
 
-            is OpenFoodFactsApiError.ServiceUnavailable ->
-                stringResource(Res.string.error_open_food_facts_service_unavailable)
+            is FoodDataCentralApiError.ApiKeyDisabled,
+            is FoodDataCentralApiError.ApiKeyInvalid,
+            is FoodDataCentralApiError.ApiKeyIsMissing,
+            is FoodDataCentralApiError.ApiKeyUnauthorized ->
+                stringResource(Res.string.error_api_key_is_invalid)
 
-            is OpenFoodFactsApiError.Unknown -> error.message ?: return
+            is FoodDataCentralApiError.ApiKeyUnverified ->
+                stringResource(Res.string.error_usda_not_verified)
+
+            is FoodDataCentralApiError.RateLimitExceeded ->
+                stringResource(Res.string.error_usda_rate_limit)
         }
 
-    var showDialog by rememberSaveable { mutableStateOf(false) }
-    if (showDialog) {
-        OpenFoodFactsLoginDialog(
-            onDismissRequest = { showDialog = false },
-            onSave = { showDialog = false },
+    var showApiKeyDialog by rememberSaveable { mutableStateOf(false) }
+    if (showApiKeyDialog) {
+        UpdateFoodDataCentralApiKeyDialog(
+            onDismissRequest = { showApiKeyDialog = false },
+            onSave = { showApiKeyDialog = false },
         )
     }
 
@@ -69,7 +78,7 @@ fun OpenFoodFactsErrorCard(error: OpenFoodFactsApiError, modifier: Modifier = Mo
             ) {
                 Icon(imageVector = Icons.Outlined.ErrorOutline, contentDescription = null)
                 Text(
-                    text = stringResource(Res.string.headline_open_food_facts),
+                    text = stringResource(Res.string.headline_fooddata_central),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
@@ -79,7 +88,7 @@ fun OpenFoodFactsErrorCard(error: OpenFoodFactsApiError, modifier: Modifier = Mo
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             ) {
                 Button(
-                    onClick = { uriHandler.openUri(appConfig.openFoodFactsRegisterUri) },
+                    onClick = { uriHandler.openUri(appConfig.foodDataCentralObtainApiKeyUri) },
                     shapes = ButtonDefaults.shapes(),
                     colors =
                         ButtonDefaults.buttonColors(
@@ -87,10 +96,10 @@ fun OpenFoodFactsErrorCard(error: OpenFoodFactsApiError, modifier: Modifier = Mo
                             contentColor = MaterialTheme.colorScheme.errorContainer,
                         ),
                 ) {
-                    Text(text = stringResource(Res.string.action_register))
+                    Text(stringResource(Res.string.action_obtain_key))
                 }
                 Button(
-                    onClick = { showDialog = true },
+                    onClick = { showApiKeyDialog = true },
                     shapes = ButtonDefaults.shapes(),
                     colors =
                         ButtonDefaults.buttonColors(
@@ -98,7 +107,7 @@ fun OpenFoodFactsErrorCard(error: OpenFoodFactsApiError, modifier: Modifier = Mo
                             contentColor = MaterialTheme.colorScheme.errorContainer,
                         ),
                 ) {
-                    Text(text = stringResource(Res.string.action_sign_in))
+                    Text(stringResource(Res.string.action_set_key))
                 }
             }
         }

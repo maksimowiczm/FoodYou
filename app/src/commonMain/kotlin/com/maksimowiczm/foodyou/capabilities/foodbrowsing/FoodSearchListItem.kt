@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.food.search
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -11,7 +11,7 @@ import com.maksimowiczm.foodyou.shared.ui.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.shared.ui.utility.WeightFormatter.stringResource
 
 @Composable
-internal fun FoodSearchListItem(
+fun FoodSearchListItem(
     headline: String,
     proteins: Weight?,
     carbohydrates: Weight?,
@@ -36,7 +36,7 @@ internal fun FoodSearchListItem(
 }
 
 @Composable
-internal fun FoodSearchListItem(
+fun FoodSearchListItem(
     headline: @Composable () -> Unit,
     proteins: Weight?,
     carbohydrates: Weight?,

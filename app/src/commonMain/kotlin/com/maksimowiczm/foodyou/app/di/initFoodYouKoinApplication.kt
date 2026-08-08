@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.analytics.di.analyticsModule
 import com.maksimowiczm.foodyou.app.infrastructure.dataStoreModule
 import com.maksimowiczm.foodyou.app.infrastructure.room.roomModule
 import com.maksimowiczm.foodyou.app.ui.appUiModule
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.foodBrowsingModule
 import com.maksimowiczm.foodyou.common.di.commonModule
 import com.maksimowiczm.foodyou.common.event.di.inMemoryEventBusModule
 import com.maksimowiczm.foodyou.device.di.deviceModule
@@ -58,6 +59,9 @@ fun initFoodYouKoinApplication(appModule: AppModule, config: KoinAppDeclaration?
             userRecipeModule,
             searchModule,
         )
+
+        // Capabilities
+        modules(foodBrowsingModule)
 
         // Ui modules
         modules(

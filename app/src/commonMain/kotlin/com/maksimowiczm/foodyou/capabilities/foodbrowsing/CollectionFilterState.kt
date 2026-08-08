@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.features.food.search
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
 import androidx.compose.runtime.*
 import kotlinx.serialization.Serializable
 
 @Immutable
 @Serializable
-internal sealed interface CollectionFilterState {
+sealed interface CollectionFilterState {
     val count: Int?
 
     @Immutable

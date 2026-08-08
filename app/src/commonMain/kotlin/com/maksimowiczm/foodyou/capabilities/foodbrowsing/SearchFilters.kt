@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.food.search
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +33,7 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun SearchFilters(
+fun SearchFilters(
     collections: List<CollectionFilter>,
     onCollection: (SearchCollection?) -> Unit,
     selected: SearchCollection?,
@@ -141,13 +141,13 @@ internal fun SearchFilters(
 
 @Immutable
 @Serializable
-internal data class CollectionFilter(
+data class CollectionFilter(
     val collection: SearchCollection,
     val state: CollectionFilterState,
 )
 
 @Composable
-internal fun rememberCollectionFilter(
+fun rememberCollectionFilter(
     collection: SearchCollection,
     count: Int?,
     pages: LazyPagingItems<*>,

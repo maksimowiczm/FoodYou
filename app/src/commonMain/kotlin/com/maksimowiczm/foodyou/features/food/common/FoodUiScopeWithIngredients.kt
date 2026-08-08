@@ -27,12 +27,15 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.common.domain.food.totalWeight
-import com.maksimowiczm.foodyou.features.food.search.FoodSearchListItem
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
+import com.maksimowiczm.foodyou.shared.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.shared.ui.component.Image
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
+import com.maksimowiczm.foodyou.shared.ui.utility.EnergyFormatter.stringResource
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
+import com.maksimowiczm.foodyou.shared.ui.utility.WeightFormatter.stringResource
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
@@ -198,7 +201,7 @@ private fun RecipeIngredientListItemContent(
         shape = shape,
         interactionSource = interactionSource,
     ) {
-        FoodSearchListItem(
+        FoodListItem(
             headline = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(componentName)
@@ -211,10 +214,18 @@ private fun RecipeIngredientListItemContent(
                     }
                 }
             },
-            proteins = componentMeasuredFacts.proteins.value,
-            carbohydrates = componentMeasuredFacts.carbohydrates.value,
-            fats = componentMeasuredFacts.fats.value,
-            energy = componentMeasuredFacts.energy.value,
+            proteins = { Text(componentMeasuredFacts.proteins.value?.stringResource() ?: "?") },
+            carbohydrates = {
+                Text(componentMeasuredFacts.carbohydrates.value?.stringResource() ?: "?")
+            },
+            fats = { Text(componentMeasuredFacts.fats.value?.stringResource() ?: "?") },
+            energy = {
+                Text(
+                    componentMeasuredFacts.energy.value
+                        ?.inUnit(LocalEnergyUnit.current)
+                        ?.stringResource() ?: "?"
+                )
+            },
             quantity = { Text(scaledComponentQuantity.stringResource()) },
             image = image,
             onClick = null,

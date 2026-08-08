@@ -1,16 +1,16 @@
-package com.maksimowiczm.foodyou.features.food.search
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.maksimowiczm.foodyou.features.food.search.favoritefood.FavoriteFoodSearchExtension
-import com.maksimowiczm.foodyou.features.food.search.fooddatacentral.FoodDataCentralSearchExtension
-import com.maksimowiczm.foodyou.features.food.search.openfoodfacts.OpenFoodFactsSearchExtension
-import com.maksimowiczm.foodyou.features.food.search.userfood.UserFoodSearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.favoritefood.FavoriteFoodSearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDataCentralSearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsSearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun rememberCollectionFilters(): List<CollectionFilter> {
+fun rememberCollectionFilters(): List<CollectionFilter> {
     val viewModel: SearchViewModel = koinViewModel()
 
     val favorite = run {

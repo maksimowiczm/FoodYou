@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.food.search
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -32,7 +32,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Immutable
 @Serializable
-internal sealed interface SearchCollection {
+sealed interface SearchCollection {
     @Composable fun Icon(selected: Boolean, modifier: Modifier = Modifier)
 
     @Composable fun stringResource(): String
