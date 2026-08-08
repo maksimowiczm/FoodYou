@@ -29,25 +29,29 @@ release:
       --out ./release-signed.apk \
       androidApp/build/outputs/apk/release/aligned.apk
 
-preview:
-    @./gradlew --no-daemon --no-build-cache clean
-    @./gradlew --no-daemon --no-build-cache androidApp:assemblePreview
-    @zipalign -f -p -v 4 \
-      androidApp/build/outputs/apk/preview/androidApp-preview-unsigned.apk \
-      androidApp/build/outputs/apk/preview/aligned.apk
-    @apksigner sign \
-      --alignment-preserved \
-      --ks foodyou.keystore \
-      --ks-key-alias foodyou \
-      --out ./preview-signed.apk \
-      androidApp/build/outputs/apk/preview/aligned.apk
-
-[working-directory: 'docs']
+[working-directory('docs')]
 serve:
     zensical serve
 
-test-android-device:
-  ./gradlew :composeApp:connectedAndroidTest
+# Fix apostrophes in strings.xml files
+fix-strings:
+    @find app/src/commonMain/composeResources -type f -name "strings.xml" | while read -r file; do \
+        sed -i "s/\\\'/'/g" "$file"; \
+        echo "Processed: $file"; \
+    done
 
-test-android-host:
-  ./gradlew :composeApp:cleanTestAndroidHostTest :composeApp:testAndroidHostTest --rerun
+# Find unused string resources in .kt files
+find-unused-strings:
+    #!/usr/bin/env bash
+    STRINGS_FILE="app/src/commonMain/composeResources/values/strings.xml"
+
+    ALL_NAMES=$(grep -oP '(?<=<string name=")[^"]+' "$STRINGS_FILE" | sort -u)
+    USED_NAMES=$(grep -rohw --include='*.kt' --exclude-dir=build -f <(echo "$ALL_NAMES") . | sort -u)
+    UNUSED=$(comm -23 <(echo "$ALL_NAMES") <(echo "$USED_NAMES"))
+
+    if [ -z "$UNUSED" ]; then
+        echo -e "\e[32mAll string resources are used!\e[0m"
+    else
+        echo -e "\e[31mUnused string resources found:\e[0m"
+        echo "$UNUSED" | sed 's/^/ - /'
+    fi
