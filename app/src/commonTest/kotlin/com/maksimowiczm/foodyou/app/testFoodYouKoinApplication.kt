@@ -1,9 +1,6 @@
 package com.maksimowiczm.foodyou.app
 
-import com.maksimowiczm.foodyou.app.di.AppModule
-import com.maksimowiczm.foodyou.app.di.initFoodYouKoinApplication
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
-import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.InMemoryEventBus
 import com.maksimowiczm.foodyou.common.event.LoggingEventBus
@@ -17,11 +14,14 @@ import org.koin.dsl.module
 
 fun TestScope.testFoodYouKoinApplication(config: KoinAppDeclaration? = null): KoinApplication =
     initFoodYouKoinApplication(
-        appModule = AppModule(foodYouConfig = { single { FoodYouConfig("TEST") } })
+        appModule =
+            AppModule(
+                foodYouConfig = { single { FoodYouConfig("TEST") } },
+                coroutineScope = { backgroundScope },
+            )
     ) {
         modules(
             module {
-                applicationCoroutineScope { backgroundScope }
                 single { LoggingEventBus(get<InMemoryEventBus>(), get()) }.bind<EventBus>()
             }
         )
