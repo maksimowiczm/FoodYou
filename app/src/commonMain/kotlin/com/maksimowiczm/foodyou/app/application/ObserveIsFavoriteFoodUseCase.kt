@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-internal class ObserveIsFavoriteFoodUseCase(private val appProfileManager: AppProfileManager) {
+class ObserveIsFavoriteFoodUseCase(private val appProfileManager: AppProfileManager) {
     fun observe(identity: OpenFoodFactsProductIdentity): Flow<Boolean> =
         observe(FavoriteFoodIdentity.OpenFoodFacts(identity.barcode))
 

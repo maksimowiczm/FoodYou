@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.account.domain.removeFavoriteFood
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 
-internal class SetFavoriteFoodUseCase(
+class SetFavoriteFoodUseCase(
     private val appProfileManager: AppProfileManager,
     private val accountService: AccountService,
 ) {
