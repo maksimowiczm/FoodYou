@@ -55,6 +55,7 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.DiscardChangesDialog
@@ -62,7 +63,6 @@ import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.horizontal
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

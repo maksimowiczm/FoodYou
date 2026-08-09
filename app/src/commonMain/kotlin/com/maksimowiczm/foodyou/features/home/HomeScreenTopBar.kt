@@ -59,8 +59,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfade
+import com.maksimowiczm.foodyou.shared.ui.brand
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
-import com.maksimowiczm.foodyou.shared.ui.theme.brand
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.abs

@@ -19,12 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.features.privacy.FoodDataCentralPrivacyCard
 import com.maksimowiczm.foodyou.features.privacy.OpenFoodFactsPrivacyCard
 import com.maksimowiczm.foodyou.features.privacy.PrivacyCardDefaults
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.extension.add
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

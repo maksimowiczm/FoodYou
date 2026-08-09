@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.account.domain.Profile
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
@@ -45,7 +46,6 @@ import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.features.home.ProfileUiState
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import kotlin.uuid.Uuid
 
 interface FoodUiScopeWithDiaryInput : FoodUiScopeWithQuantityInput {

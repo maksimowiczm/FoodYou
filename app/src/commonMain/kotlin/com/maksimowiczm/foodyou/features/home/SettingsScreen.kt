@@ -74,12 +74,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.account.domain.Profile
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.toDp
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.uuid.Uuid

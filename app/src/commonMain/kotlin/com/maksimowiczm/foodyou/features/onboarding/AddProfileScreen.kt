@@ -43,11 +43,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
 import com.maksimowiczm.foodyou.shared.ui.component.UiProfileAvatar
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import foodyou.app.generated.resources.*
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitType

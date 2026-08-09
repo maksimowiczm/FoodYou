@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.shared.ui.theme
+package com.maksimowiczm.foodyou.capabilities.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
@@ -13,7 +13,25 @@ import com.materialkolor.Contrast
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
 
-internal fun ThemeStyle.toPaletteStyle(): PaletteStyle =
+@Composable
+fun ThemeSettings.isDark(): Boolean =
+    when (themeOption) {
+        ThemeOption.System -> isSystemInDarkTheme()
+        ThemeOption.Light -> false
+        ThemeOption.Dark -> true
+    }
+
+@Composable
+fun Theme.Custom.rememberColorScheme(isDark: Boolean): ColorScheme =
+    rememberDynamicColorScheme(
+        seedColor = Color(seedColor),
+        isDark = isDark,
+        isAmoled = isAmoled,
+        style = style.toPaletteStyle(),
+        contrastLevel = contrast.toContrastLevel().value,
+    )
+
+private fun ThemeStyle.toPaletteStyle(): PaletteStyle =
     when (this) {
         ThemeStyle.TonalSpot -> PaletteStyle.TonalSpot
         ThemeStyle.Neutral -> PaletteStyle.Neutral
@@ -26,28 +44,10 @@ internal fun ThemeStyle.toPaletteStyle(): PaletteStyle =
         ThemeStyle.Content -> PaletteStyle.Content
     }
 
-internal fun ThemeContrast.toContrastLevel(): Contrast =
+private fun ThemeContrast.toContrastLevel(): Contrast =
     when (this) {
         ThemeContrast.Default -> Contrast.Default
         ThemeContrast.Medium -> Contrast.Medium
         ThemeContrast.High -> Contrast.High
         ThemeContrast.Reduced -> Contrast.Reduced
     }
-
-@Composable
-internal fun ThemeSettings.isDark(): Boolean =
-    when (themeOption) {
-        ThemeOption.System -> isSystemInDarkTheme()
-        ThemeOption.Light -> false
-        ThemeOption.Dark -> true
-    }
-
-@Composable
-internal fun Theme.Custom.rememberColorScheme(isDark: Boolean): ColorScheme =
-    rememberDynamicColorScheme(
-        seedColor = Color(seedColor),
-        isDark = isDark,
-        isAmoled = isAmoled,
-        style = style.toPaletteStyle(),
-        contrastLevel = contrast.toContrastLevel().value,
-    )

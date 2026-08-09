@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.extension.observeDate
 import com.maksimowiczm.foodyou.features.home.common.HomeState
 import com.maksimowiczm.foodyou.shared.ui.extension.confirm
@@ -47,7 +48,6 @@ import com.maksimowiczm.foodyou.shared.ui.extension.now
 import com.maksimowiczm.foodyou.shared.ui.extension.plus
 import com.maksimowiczm.foodyou.shared.ui.extension.segmentFrequentTick
 import com.maksimowiczm.foodyou.shared.ui.extension.vertical
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import kotlin.time.Clock

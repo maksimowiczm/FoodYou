@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.shared.ui.theme
+package com.maksimowiczm.foodyou.shared.ui
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.*

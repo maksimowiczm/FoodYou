@@ -26,9 +26,9 @@ import androidx.compose.ui.graphics.Shader
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.tooling.preview.Preview
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
+import com.maksimowiczm.foodyou.shared.ui.brand
 import com.maksimowiczm.foodyou.shared.ui.component.InteractiveLogo
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
-import com.maksimowiczm.foodyou.shared.ui.theme.brand
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.seconds
 import org.jetbrains.compose.resources.stringResource

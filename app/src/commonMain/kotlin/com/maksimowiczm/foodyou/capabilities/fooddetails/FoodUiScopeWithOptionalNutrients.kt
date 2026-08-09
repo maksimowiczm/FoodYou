@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -23,7 +24,6 @@ import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.common.getOrNull
 import com.maksimowiczm.foodyou.shared.ui.extension.horizontal
 import com.maksimowiczm.foodyou.shared.ui.extension.vertical
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
 
 interface FoodUiScopeWithOptionalNutrients {

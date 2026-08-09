@@ -12,11 +12,9 @@ import com.maksimowiczm.foodyou.features.privacy.privacy
 import com.maksimowiczm.foodyou.features.profile.profile
 import com.maksimowiczm.foodyou.features.userproduct.userProduct
 import com.maksimowiczm.foodyou.features.userrecipe.userRecipe
-import com.maksimowiczm.foodyou.shared.ui.theme.commonTheme
 import org.koin.dsl.module
 
 val featuresModule = module {
-    commonTheme()
     diary()
     onboarding()
     home()

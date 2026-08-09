@@ -1,10 +1,11 @@
-package com.maksimowiczm.foodyou.shared.ui.theme
+package com.maksimowiczm.foodyou.capabilities.theme
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.device.domain.NutrientsColors
 import com.maksimowiczm.foodyou.device.domain.ThemeSettings
+import com.maksimowiczm.foodyou.shared.ui.NutrientsPalette
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

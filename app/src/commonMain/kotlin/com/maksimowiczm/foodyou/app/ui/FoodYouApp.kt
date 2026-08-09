@@ -12,10 +12,10 @@ import coil3.network.ktor3.KtorNetworkFetcherFactory
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavDisplay
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute
 import com.maksimowiczm.foodyou.app.navigation.rememberFoodYouNavBackStack
+import com.maksimowiczm.foodyou.capabilities.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.common.extension.safeRemoveLast
 import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import com.maksimowiczm.foodyou.features.onboarding.Onboarding
-import com.maksimowiczm.foodyou.shared.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalNutrientsOrder
 import io.github.vinceglb.filekit.coil.addPlatformFileSupport

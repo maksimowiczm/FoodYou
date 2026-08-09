@@ -54,11 +54,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
+import com.maksimowiczm.foodyou.shared.ui.brand
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.InteractiveLogo
 import com.maksimowiczm.foodyou.shared.ui.component.StatusBarProtection
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
-import com.maksimowiczm.foodyou.shared.ui.theme.brand
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.shared.ui.theme
+package com.maksimowiczm.foodyou.capabilities.theme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -52,12 +52,12 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.confirm
 import com.maksimowiczm.foodyou.shared.ui.extension.toggle
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.shared.ui.utility.EnergyFormatter.stringResource
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

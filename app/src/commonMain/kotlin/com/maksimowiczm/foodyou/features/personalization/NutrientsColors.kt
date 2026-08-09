@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
+import com.maksimowiczm.foodyou.shared.ui.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.shared.ui.component.ResetToDefaultDialog
-import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.utility.rememberContrastContentColor
 import com.materialkolor.ktx.toHex

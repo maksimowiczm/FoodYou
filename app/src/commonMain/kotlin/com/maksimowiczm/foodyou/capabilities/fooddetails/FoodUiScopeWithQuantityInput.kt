@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -59,7 +60,6 @@ import com.maksimowiczm.foodyou.common.getOrNull
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.shared.ui.form.validateDouble
-import com.maksimowiczm.foodyou.shared.ui.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
