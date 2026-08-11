@@ -1,9 +1,11 @@
 package com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import coil3.request.CachePolicy
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchListItem
@@ -26,6 +28,8 @@ fun OpenFoodFactsListItem(
     food: OpenFoodFactsProduct,
     onClick: (Quantity) -> Unit,
     shimmer: Shimmer,
+    interactionSource: MutableInteractionSource,
+    shape: Shape,
     modifier: Modifier = Modifier,
     preferredQuantity: Quantity =
         remember(food.servingQuantity, food.packageQuantity) {
@@ -84,6 +88,8 @@ fun OpenFoodFactsListItem(
                 }
             },
         onClick = { onClick(preferredQuantity) },
+        interactionSource = interactionSource,
+        shape = shape,
         modifier = modifier,
     )
 }

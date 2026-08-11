@@ -1,8 +1,10 @@
 package com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchListItem
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
@@ -12,11 +14,15 @@ import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.expect
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
+import com.valentinilk.shimmer.Shimmer
 
 @Composable
 fun FoodDataCentralListItem(
     food: FoodDataCentralProduct,
     onClick: (Quantity) -> Unit,
+    shimmer: Shimmer,
+    interactionSource: MutableInteractionSource,
+    shape: Shape,
     modifier: Modifier = Modifier,
     preferredQuantity: Quantity =
         remember(food.servingQuantity, food.packageQuantity) {
@@ -63,6 +69,8 @@ fun FoodDataCentralListItem(
         quantity = { Text(measurementString) },
         image = null,
         onClick = { onClick(preferredQuantity) },
+        interactionSource = interactionSource,
+        shape = shape,
         modifier = modifier,
     )
 }

@@ -1,8 +1,11 @@
 package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import com.maksimowiczm.foodyou.common.domain.Energy
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.shared.ui.component.FoodListItem
@@ -20,6 +23,8 @@ fun FoodSearchListItem(
     quantity: @Composable () -> Unit,
     image: @Composable (() -> Unit)?,
     onClick: () -> Unit,
+    interactionSource: MutableInteractionSource,
+    shape: Shape,
     modifier: Modifier = Modifier,
 ) {
     FoodSearchListItem(
@@ -32,6 +37,8 @@ fun FoodSearchListItem(
         quantity = quantity,
         modifier = modifier,
         onClick = onClick,
+        interactionSource = interactionSource,
+        shape = shape,
     )
 }
 
@@ -45,6 +52,8 @@ fun FoodSearchListItem(
     quantity: @Composable () -> Unit,
     image: @Composable (() -> Unit)?,
     onClick: () -> Unit,
+    interactionSource: MutableInteractionSource,
+    shape: Shape,
     modifier: Modifier = Modifier,
 ) {
     FoodListItem(
@@ -55,7 +64,10 @@ fun FoodSearchListItem(
         fats = { Text(fats?.stringResource() ?: "?") },
         energy = { Text(energy?.inUnit(LocalEnergyUnit.current)?.stringResource() ?: "?") },
         quantity = quantity,
-        modifier = modifier,
         onClick = onClick,
+        modifier = modifier,
+        interactionSource = interactionSource,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        shape = shape,
     )
 }

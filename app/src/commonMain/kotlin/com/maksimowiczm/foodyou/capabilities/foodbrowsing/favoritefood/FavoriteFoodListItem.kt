@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.capabilities.foodbrowsing.favoritefood
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -9,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchListItem
 import com.maksimowiczm.foodyou.common.RemoteData
@@ -39,6 +41,8 @@ fun FavoriteFoodListItem(
     food: RemoteData<Any>,
     shimmer: Shimmer,
     onClick: (Quantity) -> Unit,
+    interactionSource: MutableInteractionSource,
+    shape: Shape,
     modifier: Modifier = Modifier,
     fallback: @Composable () -> Unit,
     preferredQuantity: Quantity =
@@ -108,6 +112,8 @@ fun FavoriteFoodListItem(
         quantity = { Text(measurementString) },
         image = image?.let { @Composable { it.Image(shimmer, Modifier.size(56.dp)) } },
         onClick = { onClick(preferredQuantity) },
+        interactionSource = interactionSource,
+        shape = shape,
         modifier = modifier,
     )
 }

@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,11 +63,13 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.search.domain.SearchResult
+import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
 import com.maksimowiczm.foodyou.shared.ui.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.error
 import com.maksimowiczm.foodyou.shared.ui.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.shared.ui.extension.toDp
+import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
@@ -91,11 +94,11 @@ fun FoodSearchList(
     onUserProduct: (UserProductIdentity, Quantity) -> Unit,
     onUserRecipe: (UserRecipeIdentity, Quantity) -> Unit,
     shimmer: Shimmer,
+    onFill: (String) -> Unit,
+    onSearch: (String) -> Unit,
     modifier: Modifier = Modifier,
     history: List<String>? = null,
     showQuickResults: Boolean = true,
-    onSearch: ((String) -> Unit)? = null,
-    onFill: ((String) -> Unit)? = null,
 ) {
     val density = LocalDensity.current
     var errorCardHeight by remember { mutableIntStateOf(0) }
@@ -118,6 +121,7 @@ fun FoodSearchList(
             modifier = Modifier.imePadding(),
             state = lazyListState,
             contentPadding = contentPadding.add(top = density.run { errorCardHeight.toDp() }),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             when (selectedCollection) {
                 null -> {
@@ -132,11 +136,43 @@ fun FoodSearchList(
                                     }
                                 },
                         ) { i ->
+                            val baseShape =
+                                when (i) {
+                                    0 if userFood.itemCount == 1 -> MaterialTheme.shapes.extraLarge
+                                    0 ->
+                                        MaterialTheme.shapes.extraSmall.copy(
+                                            topStart = MaterialTheme.shapes.extraLarge.topStart,
+                                            topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                        )
+
+                                    userFood.itemCount - 1 ->
+                                        MaterialTheme.shapes.extraSmall.copy(
+                                            bottomStart =
+                                                MaterialTheme.shapes.extraLarge.bottomStart,
+                                            bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
+                                        )
+
+                                    else -> MaterialTheme.shapes.extraSmall
+                                }
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val shape =
+                                rememberInteractionAnimatedShape(
+                                    shapes =
+                                        InteractionShapes(
+                                            shape = baseShape,
+                                            pressedShape = MaterialTheme.shapes.extraLarge,
+                                        ),
+                                    interactionSource = interactionSource,
+                                )
+
                             when (val product = userFood[i]) {
                                 null ->
                                     FoodListItemSkeleton(
                                         shimmer = shimmer,
-                                        modifier = Modifier.animateItem(),
+                                        modifier =
+                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                        shape = shape,
                                     )
 
                                 is SearchResult.UserProduct ->
@@ -146,18 +182,55 @@ fun FoodSearchList(
                                             onUserProduct(UserProductIdentity(product.id), it)
                                         },
                                         shimmer = shimmer,
-                                        modifier = Modifier.animateItem(),
+                                        modifier =
+                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                        shape = shape,
+                                        interactionSource = interactionSource,
                                     )
 
-                                is SearchResult.UserRecipe ->
+                                is SearchResult.UserRecipe -> {
+                                    val baseShape =
+                                        when (i) {
+                                            0 ->
+                                                MaterialTheme.shapes.extraSmall.copy(
+                                                    topStart =
+                                                        MaterialTheme.shapes.extraLarge.topStart,
+                                                    topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                                )
+
+                                            userFood.itemCount - 1 ->
+                                                MaterialTheme.shapes.extraSmall.copy(
+                                                    bottomStart =
+                                                        MaterialTheme.shapes.extraLarge.bottomStart,
+                                                    bottomEnd =
+                                                        MaterialTheme.shapes.extraLarge.bottomEnd,
+                                                )
+
+                                            else -> MaterialTheme.shapes.extraSmall
+                                        }
+                                    val interactionSource = remember { MutableInteractionSource() }
+                                    val shape =
+                                        rememberInteractionAnimatedShape(
+                                            shapes =
+                                                InteractionShapes(
+                                                    shape = baseShape,
+                                                    pressedShape = MaterialTheme.shapes.extraLarge,
+                                                ),
+                                            interactionSource = interactionSource,
+                                        )
+
                                     UserRecipeListItem(
                                         recipe = product,
                                         onClick = {
                                             onUserRecipe(UserRecipeIdentity(product.id), it)
                                         },
                                         shimmer = shimmer,
-                                        modifier = Modifier.animateItem(),
+                                        interactionSource = interactionSource,
+                                        shape = shape,
+                                        modifier =
+                                            Modifier.animateItem().padding(horizontal = 8.dp),
                                     )
+                                }
                             }
                         }
 
@@ -165,11 +238,45 @@ fun FoodSearchList(
                             count = openFoodFacts.itemCount.coerceAtMost(5),
                             key = openFoodFacts.itemKey { it.identity.barcode },
                         ) { i ->
+                            val baseShape =
+                                when (i) {
+                                    0 if openFoodFacts.itemCount == 1 ->
+                                        MaterialTheme.shapes.extraLarge
+
+                                    0 ->
+                                        MaterialTheme.shapes.extraSmall.copy(
+                                            topStart = MaterialTheme.shapes.extraLarge.topStart,
+                                            topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                        )
+
+                                    openFoodFacts.itemCount - 1 ->
+                                        MaterialTheme.shapes.extraSmall.copy(
+                                            bottomStart =
+                                                MaterialTheme.shapes.extraLarge.bottomStart,
+                                            bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
+                                        )
+
+                                    else -> MaterialTheme.shapes.extraSmall
+                                }
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val shape =
+                                rememberInteractionAnimatedShape(
+                                    shapes =
+                                        InteractionShapes(
+                                            shape = baseShape,
+                                            pressedShape = MaterialTheme.shapes.extraLarge,
+                                        ),
+                                    interactionSource = interactionSource,
+                                )
+
                             when (val product = openFoodFacts[i]) {
                                 null ->
                                     FoodListItemSkeleton(
                                         shimmer = shimmer,
-                                        modifier = Modifier.animateItem(),
+                                        modifier =
+                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                        shape = shape,
                                     )
 
                                 else ->
@@ -177,7 +284,10 @@ fun FoodSearchList(
                                         food = product,
                                         onClick = { onOpenFoodFactsProduct(product.identity, it) },
                                         shimmer = shimmer,
-                                        modifier = Modifier.animateItem(),
+                                        interactionSource = interactionSource,
+                                        shape = shape,
+                                        modifier =
+                                            Modifier.animateItem().padding(horizontal = 8.dp),
                                     )
                             }
                         }
@@ -186,11 +296,45 @@ fun FoodSearchList(
                             count = foodDataCentral.itemCount.coerceAtMost(5),
                             key = foodDataCentral.itemKey { it.identity.fdcId },
                         ) { i ->
+                            val baseShape =
+                                when (i) {
+                                    0 if foodDataCentral.itemCount == 1 ->
+                                        MaterialTheme.shapes.extraLarge
+
+                                    0 ->
+                                        MaterialTheme.shapes.extraSmall.copy(
+                                            topStart = MaterialTheme.shapes.extraLarge.topStart,
+                                            topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                        )
+
+                                    foodDataCentral.itemCount - 1 ->
+                                        MaterialTheme.shapes.extraSmall.copy(
+                                            bottomStart =
+                                                MaterialTheme.shapes.extraLarge.bottomStart,
+                                            bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
+                                        )
+
+                                    else -> MaterialTheme.shapes.extraSmall
+                                }
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val shape =
+                                rememberInteractionAnimatedShape(
+                                    shapes =
+                                        InteractionShapes(
+                                            shape = baseShape,
+                                            pressedShape = MaterialTheme.shapes.extraLarge,
+                                        ),
+                                    interactionSource = interactionSource,
+                                )
+
                             when (val product = foodDataCentral[i]) {
                                 null ->
                                     FoodListItemSkeleton(
                                         shimmer = shimmer,
-                                        modifier = Modifier.animateItem(),
+                                        modifier =
+                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                        shape = shape,
                                     )
 
                                 else ->
@@ -199,11 +343,15 @@ fun FoodSearchList(
                                         onClick = {
                                             onFoodDataCentralProduct(product.identity, it)
                                         },
-                                        modifier = Modifier.animateItem(),
+                                        shimmer = shimmer,
+                                        interactionSource = interactionSource,
+                                        shape = shape,
+                                        modifier =
+                                            Modifier.animateItem().padding(horizontal = 8.dp),
                                     )
                             }
                         }
-                    } else if (history != null && onSearch != null && onFill != null) {
+                    } else if (history != null) {
                         items(history, key = { "history_$it" }) { query ->
                             FoodSearchHistoryItem(
                                 search = query,
@@ -225,11 +373,41 @@ fun FoodSearchList(
                                 }
                             },
                     ) { i ->
+                        val baseShape =
+                            when (i) {
+                                0 if userFood.itemCount == 1 -> MaterialTheme.shapes.extraLarge
+                                0 ->
+                                    MaterialTheme.shapes.extraSmall.copy(
+                                        topStart = MaterialTheme.shapes.extraLarge.topStart,
+                                        topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                    )
+
+                                userFood.itemCount - 1 ->
+                                    MaterialTheme.shapes.extraSmall.copy(
+                                        bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
+                                        bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
+                                    )
+
+                                else -> MaterialTheme.shapes.extraSmall
+                            }
+                        val interactionSource = remember { MutableInteractionSource() }
+                        val shape =
+                            rememberInteractionAnimatedShape(
+                                shapes =
+                                    InteractionShapes(
+                                        shape = baseShape,
+                                        pressedShape = MaterialTheme.shapes.extraLarge,
+                                    ),
+                                interactionSource = interactionSource,
+                            )
+
                         when (val food = userFood[i]) {
                             null ->
                                 FoodListItemSkeleton(
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    shape = shape,
                                 )
 
                             is SearchResult.UserProduct ->
@@ -237,16 +415,50 @@ fun FoodSearchList(
                                     product = food,
                                     onClick = { onUserProduct(UserProductIdentity(food.id), it) },
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    shape = shape,
+                                    interactionSource = interactionSource,
                                 )
 
-                            is SearchResult.UserRecipe ->
+                            is SearchResult.UserRecipe -> {
+                                val baseShape =
+                                    when (i) {
+                                        0 ->
+                                            MaterialTheme.shapes.extraSmall.copy(
+                                                topStart = MaterialTheme.shapes.extraLarge.topStart,
+                                                topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                            )
+
+                                        userFood.itemCount - 1 ->
+                                            MaterialTheme.shapes.extraSmall.copy(
+                                                bottomStart =
+                                                    MaterialTheme.shapes.extraLarge.bottomStart,
+                                                bottomEnd =
+                                                    MaterialTheme.shapes.extraLarge.bottomEnd,
+                                            )
+
+                                        else -> MaterialTheme.shapes.extraSmall
+                                    }
+                                val interactionSource = remember { MutableInteractionSource() }
+                                val shape =
+                                    rememberInteractionAnimatedShape(
+                                        shapes =
+                                            InteractionShapes(
+                                                shape = baseShape,
+                                                pressedShape = MaterialTheme.shapes.extraLarge,
+                                            ),
+                                        interactionSource = interactionSource,
+                                    )
+
                                 UserRecipeListItem(
                                     recipe = food,
                                     onClick = { onUserRecipe(UserRecipeIdentity(food.id), it) },
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
+                                    interactionSource = interactionSource,
+                                    shape = shape,
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
                                 )
+                            }
                         }
                     }
 
@@ -255,11 +467,41 @@ fun FoodSearchList(
                         count = openFoodFacts.itemCount,
                         key = openFoodFacts.itemKey { it.identity.barcode },
                     ) { i ->
+                        val baseShape =
+                            when (i) {
+                                0 if openFoodFacts.itemCount == 1 -> MaterialTheme.shapes.extraLarge
+                                0 ->
+                                    MaterialTheme.shapes.extraSmall.copy(
+                                        topStart = MaterialTheme.shapes.extraLarge.topStart,
+                                        topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                    )
+
+                                openFoodFacts.itemCount - 1 ->
+                                    MaterialTheme.shapes.extraSmall.copy(
+                                        bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
+                                        bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
+                                    )
+
+                                else -> MaterialTheme.shapes.extraSmall
+                            }
+                        val interactionSource = remember { MutableInteractionSource() }
+                        val shape =
+                            rememberInteractionAnimatedShape(
+                                shapes =
+                                    InteractionShapes(
+                                        shape = baseShape,
+                                        pressedShape = MaterialTheme.shapes.extraLarge,
+                                    ),
+                                interactionSource = interactionSource,
+                            )
+
                         when (val food = openFoodFacts[i]) {
                             null ->
                                 FoodListItemSkeleton(
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    shape = shape,
                                 )
 
                             else ->
@@ -267,7 +509,9 @@ fun FoodSearchList(
                                     food = food,
                                     onClick = { onOpenFoodFactsProduct(food.identity, it) },
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
+                                    interactionSource = interactionSource,
+                                    shape = shape,
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
                                 )
                         }
                     }
@@ -277,35 +521,102 @@ fun FoodSearchList(
                         count = foodDataCentral.itemCount,
                         key = foodDataCentral.itemKey { it.identity.fdcId },
                     ) { i ->
+                        val baseShape =
+                            when (i) {
+                                0 if foodDataCentral.itemCount == 1 ->
+                                    MaterialTheme.shapes.extraLarge
+
+                                0 ->
+                                    MaterialTheme.shapes.extraSmall.copy(
+                                        topStart = MaterialTheme.shapes.extraLarge.topStart,
+                                        topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                    )
+
+                                foodDataCentral.itemCount - 1 ->
+                                    MaterialTheme.shapes.extraSmall.copy(
+                                        bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
+                                        bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
+                                    )
+
+                                else -> MaterialTheme.shapes.extraSmall
+                            }
+                        val interactionSource = remember { MutableInteractionSource() }
+                        val shape =
+                            rememberInteractionAnimatedShape(
+                                shapes =
+                                    InteractionShapes(
+                                        shape = baseShape,
+                                        pressedShape = MaterialTheme.shapes.extraLarge,
+                                    ),
+                                interactionSource = interactionSource,
+                            )
+
                         when (val food = foodDataCentral[i]) {
                             null ->
                                 FoodListItemSkeleton(
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    shape = shape,
                                 )
 
                             else ->
                                 FoodDataCentralListItem(
                                     food = food,
                                     onClick = { onFoodDataCentralProduct(food.identity, it) },
-                                    modifier = Modifier.animateItem(),
+                                    shimmer = shimmer,
+                                    interactionSource = interactionSource,
+                                    shape = shape,
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
                                 )
                         }
                     }
 
                 is SearchCollection.Favorite ->
                     items(favoriteFood.itemCount) { i ->
+                        val baseShape =
+                            when (i) {
+                                0 if favoriteFood.itemCount == 1 -> MaterialTheme.shapes.extraLarge
+                                0 ->
+                                    MaterialTheme.shapes.extraSmall.copy(
+                                        topStart = MaterialTheme.shapes.extraLarge.topStart,
+                                        topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                    )
+
+                                favoriteFood.itemCount - 1 ->
+                                    MaterialTheme.shapes.extraSmall.copy(
+                                        bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
+                                        bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
+                                    )
+
+                                else -> MaterialTheme.shapes.extraSmall
+                            }
+                        val interactionSource = remember { MutableInteractionSource() }
+                        val shape =
+                            rememberInteractionAnimatedShape(
+                                shapes =
+                                    InteractionShapes(
+                                        shape = baseShape,
+                                        pressedShape = MaterialTheme.shapes.extraLarge,
+                                    ),
+                                interactionSource = interactionSource,
+                            )
+
                         when (val food = favoriteFood[i]) {
                             null ->
                                 FoodListItemSkeleton(
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem(),
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    shape = shape,
                                 )
 
                             else ->
                                 FavoriteFoodListItem(
                                     food = food,
                                     shimmer = shimmer,
+                                    interactionSource = interactionSource,
+                                    shape = shape,
                                     onClick = {
                                         when (food) {
                                             is RemoteData.Success -> {
@@ -375,11 +686,15 @@ fun FoodSearchList(
                                             is RemoteData.NotFound -> Unit
                                         }
                                     },
-                                    modifier = Modifier.animateItem(),
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
                                     fallback = {
                                         FoodListItemSkeleton(
                                             shimmer = shimmer,
-                                            modifier = Modifier.animateItem(),
+                                            modifier =
+                                                Modifier.animateItem().padding(horizontal = 8.dp),
+                                            containerColor =
+                                                MaterialTheme.colorScheme.surfaceContainer,
+                                            shape = shape,
                                         )
                                     },
                                 )
@@ -411,7 +726,32 @@ fun FoodSearchList(
                 }
 
             if (loadState is LoadState.Loading) {
-                items(10) { FoodListItemSkeleton(shimmer) }
+                items(10) { i ->
+                    val baseShape =
+                        when (i) {
+                            0 if favoriteFood.itemCount == 1 -> MaterialTheme.shapes.extraLarge
+                            0 ->
+                                MaterialTheme.shapes.extraSmall.copy(
+                                    topStart = MaterialTheme.shapes.extraLarge.topStart,
+                                    topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                )
+
+                            favoriteFood.itemCount - 1 ->
+                                MaterialTheme.shapes.extraSmall.copy(
+                                    bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
+                                    bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
+                                )
+
+                            else -> MaterialTheme.shapes.extraSmall
+                        }
+
+                    FoodListItemSkeleton(
+                        shimmer = shimmer,
+                        modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        shape = baseShape,
+                    )
+                }
             }
         }
 
@@ -534,7 +874,7 @@ fun SearchHints(
         itemsIndexed(history, key = { i, _ -> i }) { _, query ->
             if (query == null) {
                 ListItem(
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
                     headlineContent = {
                         val extraWidth = rememberSaveable { ((0..100).random().toFloat() / 100f) }
 
