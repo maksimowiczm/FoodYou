@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.features
 
-import com.maksimowiczm.foodyou.features.diary.diary
 import com.maksimowiczm.foodyou.features.fooddatacentral.foodDataCentral
 import com.maksimowiczm.foodyou.features.home.home
 import com.maksimowiczm.foodyou.features.language.language
@@ -15,7 +14,6 @@ import com.maksimowiczm.foodyou.features.userrecipe.userRecipe
 import org.koin.dsl.module
 
 val featuresModule = module {
-    diary()
     onboarding()
     home()
     language()
