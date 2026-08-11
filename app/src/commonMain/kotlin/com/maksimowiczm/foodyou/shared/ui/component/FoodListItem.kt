@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.shared.ui.component
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,10 +39,77 @@ fun FoodListItem(
     energy: @Composable () -> Unit,
     quantity: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
     containerColor: Color = Color.Transparent,
     contentColor: Color = LocalContentColor.current,
     shape: Shape = RectangleShape,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+) {
+    Surface(
+        modifier = modifier,
+        color = containerColor,
+        contentColor = contentColor,
+        shape = shape,
+    ) {
+        FoodListItemContent(
+            headline = headline,
+            image = image,
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            fats = fats,
+            energy = energy,
+            quantity = quantity,
+            contentPadding = contentPadding,
+        )
+    }
+}
+
+@Composable
+fun FoodListItem(
+    headline: @Composable () -> Unit,
+    image: @Composable (() -> Unit)?,
+    proteins: @Composable () -> Unit,
+    carbohydrates: @Composable () -> Unit,
+    fats: @Composable () -> Unit,
+    energy: @Composable () -> Unit,
+    quantity: @Composable () -> Unit,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    containerColor: Color = Color.Transparent,
+    contentColor: Color = LocalContentColor.current,
+    shape: Shape = RectangleShape,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier,
+        color = containerColor,
+        contentColor = contentColor,
+        shape = shape,
+        interactionSource = interactionSource,
+    ) {
+        FoodListItemContent(
+            headline = headline,
+            image = image,
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            fats = fats,
+            energy = energy,
+            quantity = quantity,
+            contentPadding = contentPadding,
+        )
+    }
+}
+
+@Composable
+private fun FoodListItemContent(
+    headline: @Composable () -> Unit,
+    image: @Composable (() -> Unit)?,
+    proteins: @Composable () -> Unit,
+    carbohydrates: @Composable () -> Unit,
+    fats: @Composable () -> Unit,
+    energy: @Composable () -> Unit,
+    quantity: @Composable () -> Unit,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
@@ -97,42 +165,20 @@ fun FoodListItem(
             }
         }
 
-    val content =
-        @Composable {
-            Row(
-                modifier = Modifier.padding(contentPadding),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+    Row(
+        modifier = Modifier.padding(contentPadding),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        image?.invoke()
+
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
             ) {
-                image?.invoke()
-
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    CompositionLocalProvider(
-                        LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
-                    ) {
-                        headline()
-                    }
-                    supportingContent()
-                }
+                headline()
             }
+            supportingContent()
         }
-
-    if (onClick != null) {
-        Surface(
-            onClick = onClick,
-            modifier = modifier,
-            color = containerColor,
-            contentColor = contentColor,
-            shape = shape,
-            content = content,
-        )
-    } else {
-        Surface(
-            modifier = modifier,
-            color = containerColor,
-            contentColor = contentColor,
-            shape = shape,
-            content = content,
-        )
     }
 }
 
@@ -147,11 +193,82 @@ fun TwoRowFoodListItem(
     quantity: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     trailingContent: (@Composable () -> Unit)? = null,
-    onClick: (() -> Unit)? = null,
     containerColor: Color = Color.Transparent,
     contentColor: Color = LocalContentColor.current,
     shape: Shape = RectangleShape,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+) {
+    Surface(
+        modifier = modifier,
+        color = containerColor,
+        contentColor = contentColor,
+        shape = shape,
+    ) {
+        TwoRowFoodListItemContent(
+            headline = headline,
+            image = image,
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            fats = fats,
+            energy = energy,
+            quantity = quantity,
+            trailingContent = trailingContent,
+            contentPadding = contentPadding,
+        )
+    }
+}
+
+@Composable
+fun TwoRowFoodListItem(
+    headline: @Composable () -> Unit,
+    image: @Composable (() -> Unit)?,
+    proteins: @Composable () -> Unit,
+    carbohydrates: @Composable () -> Unit,
+    fats: @Composable () -> Unit,
+    energy: @Composable () -> Unit,
+    quantity: @Composable () -> Unit,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    trailingContent: (@Composable () -> Unit)? = null,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    containerColor: Color = Color.Transparent,
+    contentColor: Color = LocalContentColor.current,
+    shape: Shape = RectangleShape,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier,
+        color = containerColor,
+        contentColor = contentColor,
+        shape = shape,
+        interactionSource = interactionSource,
+    ) {
+        TwoRowFoodListItemContent(
+            headline = headline,
+            image = image,
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            fats = fats,
+            energy = energy,
+            quantity = quantity,
+            trailingContent = trailingContent,
+            contentPadding = contentPadding,
+        )
+    }
+}
+
+@Composable
+private fun TwoRowFoodListItemContent(
+    headline: @Composable () -> Unit,
+    image: @Composable (() -> Unit)?,
+    proteins: @Composable () -> Unit,
+    carbohydrates: @Composable () -> Unit,
+    fats: @Composable () -> Unit,
+    energy: @Composable () -> Unit,
+    quantity: @Composable () -> Unit,
+    trailingContent: (@Composable () -> Unit)?,
+    contentPadding: PaddingValues,
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
     val order = LocalNutrientsOrder.current
@@ -206,47 +323,25 @@ fun TwoRowFoodListItem(
             }
         }
 
-    val content =
-        @Composable {
-            Row(
-                modifier = Modifier.padding(contentPadding),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+    Row(
+        modifier = Modifier.padding(contentPadding),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        image?.invoke()
+
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
             ) {
-                image?.invoke()
-
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    CompositionLocalProvider(
-                        LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
-                    ) {
-                        headline()
-                    }
-                    supportingContent()
-                }
-
-                trailingContent?.invoke()
+                headline()
             }
+            supportingContent()
         }
 
-    if (onClick != null) {
-        Surface(
-            onClick = onClick,
-            modifier = modifier,
-            color = containerColor,
-            contentColor = contentColor,
-            shape = shape,
-            content = content,
-        )
-    } else {
-        Surface(
-            modifier = modifier,
-            color = containerColor,
-            contentColor = contentColor,
-            shape = shape,
-            content = content,
-        )
+        trailingContent?.invoke()
     }
 }
 

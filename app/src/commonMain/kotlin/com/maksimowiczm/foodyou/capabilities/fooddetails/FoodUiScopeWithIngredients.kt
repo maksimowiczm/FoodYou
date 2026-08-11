@@ -228,7 +228,6 @@ private fun RecipeIngredientListItemContent(
             },
             quantity = { Text(scaledComponentQuantity.stringResource()) },
             image = image,
-            onClick = null,
             modifier = Modifier,
         )
     }

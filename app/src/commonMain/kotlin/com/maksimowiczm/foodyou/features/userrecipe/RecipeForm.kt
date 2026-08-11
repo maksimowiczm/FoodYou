@@ -420,7 +420,6 @@ internal fun RecipeIngredientListItem(
                     )
                 }
             },
-            onClick = null,
         )
     }
 }

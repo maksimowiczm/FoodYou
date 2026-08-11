@@ -44,7 +44,7 @@ fun FoodSearchListItem(
     energy: Energy?,
     quantity: @Composable () -> Unit,
     image: @Composable (() -> Unit)?,
-    onClick: (() -> Unit)?,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FoodListItem(
