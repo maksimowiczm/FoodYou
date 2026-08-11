@@ -1,24 +1,18 @@
 package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.HistoryToggleOff
@@ -29,20 +23,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.times
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
@@ -68,14 +58,12 @@ import com.maksimowiczm.foodyou.shared.ui.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.error
 import com.maksimowiczm.foodyou.shared.ui.extension.rememberDebounceIsIdle
-import com.maksimowiczm.foodyou.shared.ui.extension.toDp
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import com.valentinilk.shimmer.Shimmer
-import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -726,17 +714,31 @@ fun FoodSearchList(
                 }
 
             if (loadState is LoadState.Loading) {
+                val itemCountBeforeLoading =
+                    when (selectedCollection) {
+                        null ->
+                            if (showQuickResults) {
+                                userFood.itemCount.coerceAtMost(5) +
+                                    openFoodFacts.itemCount.coerceAtMost(5) +
+                                    foodDataCentral.itemCount.coerceAtMost(5)
+                            } else history?.size ?: 0
+
+                        is SearchCollection.Favorite -> favoriteFood.itemCount
+                        is SearchCollection.FoodDataCentral -> foodDataCentral.itemCount
+                        is SearchCollection.OpenFoodFacts -> openFoodFacts.itemCount
+                        is SearchCollection.UserFood -> userFood.itemCount
+                    }
+
                 items(10) { i ->
                     val baseShape =
                         when (i) {
-                            0 if favoriteFood.itemCount == 1 -> MaterialTheme.shapes.extraLarge
-                            0 ->
+                            0 if itemCountBeforeLoading == 0 ->
                                 MaterialTheme.shapes.extraSmall.copy(
                                     topStart = MaterialTheme.shapes.extraLarge.topStart,
                                     topEnd = MaterialTheme.shapes.extraLarge.topEnd,
                                 )
 
-                            favoriteFood.itemCount - 1 ->
+                            9 ->
                                 MaterialTheme.shapes.extraSmall.copy(
                                     bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
                                     bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
@@ -856,67 +858,6 @@ fun FoodSearchList(
                 Modifier.align(Alignment.TopCenter)
                     .padding(top = contentPadding.calculateTopPadding())
             )
-        }
-    }
-}
-
-@Composable
-fun SearchHints(
-    history: List<String>?,
-    onSearch: (String) -> Unit,
-    onFill: (String) -> Unit,
-    shimmer: Shimmer,
-    modifier: Modifier = Modifier,
-) {
-    val history = history ?: List<String?>(5) { null }
-
-    LazyColumn(modifier) {
-        itemsIndexed(history, key = { i, _ -> i }) { _, query ->
-            if (query == null) {
-                ListItem(
-                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
-                    headlineContent = {
-                        val extraWidth = rememberSaveable { ((0..100).random().toFloat() / 100f) }
-
-                        Spacer(
-                            Modifier.shimmer(shimmer)
-                                .height(LocalTextStyle.current.toDp())
-                                .width(100.dp + extraWidth * 100.dp)
-                                .clip(MaterialTheme.shapes.medium)
-                                .background(MaterialTheme.colorScheme.surfaceContainerLowest)
-                        )
-                    },
-                    leadingContent = {
-                        Icon(imageVector = Icons.Outlined.History, contentDescription = null)
-                    },
-                    trailingContent = {
-                        Icon(imageVector = Icons.Outlined.NorthWest, contentDescription = null)
-                    },
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                )
-            } else {
-                ListItem(
-                    modifier = Modifier.clickable { onSearch(query) }.animateItem(),
-                    headlineContent = { Text(query) },
-                    leadingContent = {
-                        Icon(imageVector = Icons.Outlined.History, contentDescription = null)
-                    },
-                    trailingContent = {
-                        IconButton(
-                            onClick = { onFill(query) },
-                            shapes = IconButtonDefaults.shapes(),
-                            modifier = Modifier.offset(x = 12.dp),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.NorthWest,
-                                contentDescription =
-                                    stringResource(Res.string.action_insert_suggested_search),
-                            )
-                        }
-                    },
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                )
-            }
         }
     }
 }
