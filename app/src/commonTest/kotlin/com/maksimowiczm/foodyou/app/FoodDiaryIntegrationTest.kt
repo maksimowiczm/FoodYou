@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.app
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
@@ -45,6 +46,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 class FoodDiaryIntegrationTest {
+    private val profileId = ProfileId(Uuid.random())
     private val mealId = MealIdentity(Uuid.random())
 
     @Test
@@ -81,7 +83,8 @@ class FoodDiaryIntegrationTest {
                             packageWeight = null,
                         ),
                 )
-            val entryId = foodDiaryService.create(composition, mealId, Clock.System.now())
+            val entryId =
+                foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
 
             // 3. Wait until entry is created and indexed
             waitForComposition(entryId, FoodCompositionComponentIdentity.UserProduct(productId.id))
@@ -162,7 +165,8 @@ class FoodDiaryIntegrationTest {
                         ),
                     components = recipeComponents,
                 )
-            val entryId = foodDiaryService.create(entryComposition, mealId, Clock.System.now())
+            val entryId =
+                foodDiaryService.create(profileId, entryComposition, mealId, Clock.System.now())
 
             // 3. Wait until entry is created and indexed
             waitForComposition(entryId, FoodCompositionComponentIdentity.Recipe(recipeId.id))
@@ -249,7 +253,8 @@ class FoodDiaryIntegrationTest {
                         ),
                     components = recipeComponents,
                 )
-            val entryId = foodDiaryService.create(entryComposition, mealId, Clock.System.now())
+            val entryId =
+                foodDiaryService.create(profileId, entryComposition, mealId, Clock.System.now())
 
             // 4. Wait until entry is created and indexed
             waitForComposition(entryId, FoodCompositionComponentIdentity.Recipe(recipeId.id))
@@ -315,7 +320,8 @@ class FoodDiaryIntegrationTest {
                             packageWeight = null,
                         ),
                 )
-            val entryId = foodDiaryService.create(composition, mealId, Clock.System.now())
+            val entryId =
+                foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
 
             // 3. Wait until entry is created and indexed
             waitForComposition(entryId, FoodCompositionComponentIdentity.UserProduct(productId.id))
@@ -361,7 +367,8 @@ class FoodDiaryIntegrationTest {
                             packageWeight = null,
                         ),
                 )
-            val entryId = foodDiaryService.create(composition, mealId, Clock.System.now())
+            val entryId =
+                foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
 
             // 3. Wait until entry is created and indexed
             waitForComposition(entryId, FoodCompositionComponentIdentity.UserProduct(productId.id))
@@ -411,7 +418,8 @@ class FoodDiaryIntegrationTest {
                             packageWeight = null,
                         ),
                 )
-            val entryId = foodDiaryService.create(composition, mealId, Clock.System.now())
+            val entryId =
+                foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
 
             // 3. Wait until entry is created and indexed
             waitForComposition(entryId, FoodCompositionComponentIdentity.UserProduct(productId.id))
@@ -465,7 +473,8 @@ class FoodDiaryIntegrationTest {
                                 packageWeight = null,
                             ),
                     )
-                val entryId = foodDiaryService.create(composition, mealId, Clock.System.now())
+                val entryId =
+                    foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
 
                 // 2. Wait until entry is created and indexed
                 waitForComposition(entryId, FoodCompositionComponentIdentity.OpenFoodFacts(barcode))
@@ -506,7 +515,8 @@ class FoodDiaryIntegrationTest {
                                 packageWeight = null,
                             ),
                     )
-                val entryId = foodDiaryService.create(composition, mealId, Clock.System.now())
+                val entryId =
+                    foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
 
                 // 2. Wait until entry is created and indexed
                 waitForComposition(entryId, FoodCompositionComponentIdentity.FoodDataCentral(fdcId))
@@ -567,7 +577,8 @@ class FoodDiaryIntegrationTest {
                         ),
                     components = emptyList(),
                 )
-            val entryId = foodDiaryService.create(composition, mealId, Clock.System.now())
+            val entryId =
+                foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
 
             // Wait until entry is created and indexed
             waitForComposition(entryId, FoodCompositionComponentIdentity.Recipe(recipeId.id))
@@ -636,7 +647,8 @@ class FoodDiaryIntegrationTest {
                         ),
                     components = emptyList(),
                 )
-            val entryId = foodDiaryService.create(composition, mealId, Clock.System.now())
+            val entryId =
+                foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
 
             // Wait until entry is created and indexed
             waitForComposition(entryId, FoodCompositionComponentIdentity.Recipe(recipeId.id))
@@ -676,7 +688,8 @@ class FoodDiaryIntegrationTest {
                         ),
                     components = emptyList(),
                 )
-            val entryId = foodDiaryService.create(composition, mealId, Clock.System.now())
+            val entryId =
+                foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
 
             // Wait until entry is created and indexed
             waitForComposition(entryId, FoodCompositionComponentIdentity.Recipe(recipeId.id))

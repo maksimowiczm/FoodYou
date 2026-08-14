@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.app
 
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
@@ -25,6 +26,7 @@ class MealPlanUnlinkingIntegrationTest {
     @Test
     fun `deleting meal unlinks diary entries`() = runTest {
         runKoin {
+            val profileId = ProfileId(Uuid.random())
             // 1. Setup a meal plan with one meal
             val mealId = MealIdentity(Uuid.random())
             val meal = Meal(mealId, "Breakfast", Meal.TimeWindow.AllDay)
@@ -44,7 +46,8 @@ class MealPlanUnlinkingIntegrationTest {
                             packageWeight = null,
                         ),
                 )
-            val entryId = foodDiaryService.create(composition, mealId, Clock.System.now())
+            val entryId =
+                foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
 
             // 3. Verify association
             val entry = foodDiaryService.observe(entryId).filterNotNull().first()

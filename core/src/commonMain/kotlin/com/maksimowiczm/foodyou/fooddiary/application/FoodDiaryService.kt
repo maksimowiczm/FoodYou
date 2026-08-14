@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.fooddiary.application
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.EventStore
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
@@ -55,6 +56,7 @@ class FoodDiaryService(
         eventStore.observe<FoodDiaryEvent>(streamId(identity)).map { it.toFoodDiaryEntry() }
 
     suspend fun create(
+        profileId: ProfileId,
         composition: FoodCompositionComponent,
         mealIdentity: MealIdentity,
         timestamp: Instant,
@@ -63,6 +65,7 @@ class FoodDiaryService(
         transact(identity) {
             FoodDiaryEntry.create(
                 identity = identity,
+                profileId = profileId,
                 composition = composition,
                 mealIdentity = mealIdentity,
                 timestamp = timestamp,

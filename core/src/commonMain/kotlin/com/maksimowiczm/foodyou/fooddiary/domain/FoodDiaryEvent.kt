@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.fooddiary.domain
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
@@ -14,6 +15,7 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 @Serializable
 data class FoodDiaryEntryCreatedEvent(
     val identity: FoodDiaryEntryIdentity,
+    val profileId: ProfileId,
     val composition: FoodCompositionComponent,
     val mealIdentity: MealIdentity,
     @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,

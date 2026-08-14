@@ -3,6 +3,7 @@
 package com.maksimowiczm.foodyou.fooddiary.domain
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
 import kotlin.time.Clock
@@ -16,6 +17,7 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 @Serializable
 data class FoodDiaryEntry(
     val identity: FoodDiaryEntryIdentity,
+    val profileId: ProfileId,
     val composition: FoodCompositionComponent,
     @Serializable(with = InstantComponentSerializer::class) val timestamp: Instant,
     val mealIdentity: MealIdentity?,
@@ -23,6 +25,7 @@ data class FoodDiaryEntry(
     companion object {
         fun create(
             identity: FoodDiaryEntryIdentity,
+            profileId: ProfileId,
             composition: FoodCompositionComponent,
             mealIdentity: MealIdentity,
             timestamp: Instant,
@@ -31,6 +34,7 @@ data class FoodDiaryEntry(
             listOf(
                 FoodDiaryEntryCreatedEvent(
                     identity = identity,
+                    profileId = profileId,
                     composition = composition,
                     mealIdentity = mealIdentity,
                     entryTimestamp = timestamp,
@@ -86,6 +90,7 @@ fun FoodDiaryEntry?.apply(event: FoodDiaryEvent): FoodDiaryEntry? =
         is FoodDiaryEntryCreatedEvent ->
             FoodDiaryEntry(
                 identity = event.identity,
+                profileId = event.profileId,
                 composition = event.composition,
                 timestamp = event.entryTimestamp,
                 mealIdentity = event.mealIdentity,
