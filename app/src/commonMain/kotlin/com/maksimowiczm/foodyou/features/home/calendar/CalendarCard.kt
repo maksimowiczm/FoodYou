@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.extension.observeDate
-import com.maksimowiczm.foodyou.features.home.common.HomeState
 import com.maksimowiczm.foodyou.shared.ui.extension.confirm
 import com.maksimowiczm.foodyou.shared.ui.extension.horizontal
 import com.maksimowiczm.foodyou.shared.ui.extension.minus
@@ -63,19 +62,20 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun CalendarCard(
-    homeState: HomeState,
+fun CalendarCard(
+    date: LocalDate,
+    onSelectDate: (LocalDate) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     val dateFlow = remember { Clock.System.observeDate() }
     val today by dateFlow.collectAsStateWithLifecycle(LocalDate.now())
 
-    val state = rememberCalendarState(homeState.selectedDate, today)
+    val state = rememberCalendarState(date, today)
 
     CalendarCard(
         state = state,
-        onSelectDate = homeState::selectDate,
+        onSelectDate = onSelectDate,
         modifier = modifier,
         contentPadding = contentPadding,
     )

@@ -331,7 +331,6 @@ fun FoodSearchList(
                                         onClick = {
                                             onFoodDataCentralProduct(product.identity, it)
                                         },
-                                        shimmer = shimmer,
                                         interactionSource = interactionSource,
                                         shape = shape,
                                         modifier =
@@ -552,7 +551,6 @@ fun FoodSearchList(
                                 FoodDataCentralListItem(
                                     food = food,
                                     onClick = { onFoodDataCentralProduct(food.identity, it) },
-                                    shimmer = shimmer,
                                     interactionSource = interactionSource,
                                     shape = shape,
                                     modifier = Modifier.animateItem().padding(horizontal = 8.dp),

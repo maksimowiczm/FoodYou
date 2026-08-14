@@ -11,7 +11,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.until
 
 @Stable
-internal class CalendarCardState(
+class CalendarCardState(
     val listState: LazyListState,
     val selectedDate: LocalDate,
     val referenceDate: LocalDate,
@@ -50,7 +50,7 @@ internal class CalendarCardState(
 }
 
 @Composable
-internal fun rememberCalendarState(
+fun rememberCalendarState(
     selectedDate: LocalDate,
     referenceDate: LocalDate,
 ): CalendarCardState {

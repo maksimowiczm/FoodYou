@@ -26,7 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.Bolt
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Palette
@@ -66,7 +65,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun PersonalizationScreen(
     onBack: () -> Unit,
-    onHome: () -> Unit,
     onNutritionFacts: () -> Unit,
     onMeals: () -> Unit,
     onColors: () -> Unit,
@@ -81,7 +79,6 @@ fun PersonalizationScreen(
         secureScreen = secureScreen,
         energyFormat = energyFormat,
         onBack = onBack,
-        onHome = onHome,
         onNutritionFacts = onNutritionFacts,
         onMeals = onMeals,
         onColors = onColors,
@@ -97,7 +94,6 @@ fun PersonalizationScreen(
     secureScreen: Boolean,
     energyFormat: EnergyUnit,
     onBack: () -> Unit,
-    onHome: () -> Unit,
     onNutritionFacts: () -> Unit,
     onMeals: () -> Unit,
     onColors: () -> Unit,
@@ -151,18 +147,6 @@ fun PersonalizationScreen(
                             clip = true
                         },
                 ) {
-                    SegmentedListItem(
-                        onClick = onHome,
-                        shapes = ListItemDefaults.shapes(),
-                        colors = colors,
-                        leadingContent = {
-                            Icon(imageVector = Icons.Outlined.Home, contentDescription = null)
-                        },
-                        supportingContent = {
-                            Text(stringResource(Res.string.description_home_settings))
-                        },
-                        content = { Text(stringResource(Res.string.headline_home)) },
-                    )
                     SegmentedListItem(
                         onClick = onNutritionFacts,
                         shapes = ListItemDefaults.shapes(),
@@ -372,7 +356,6 @@ private fun PersonalizationScreenPreview() {
             secureScreen = false,
             energyFormat = EnergyUnit.Kilocalories,
             onBack = {},
-            onHome = {},
             onNutritionFacts = {},
             onMeals = {},
             onColors = {},

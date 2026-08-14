@@ -541,4 +541,7 @@
     <string name="headline_start_time">Start time</string>
     <string name="headline_end_time">End time</string>
 
+    <string name="action_expand">Expand</string>
+    <string name="action_collapse" description="Opposite of expand">Collapse</string>
+
 </resources>

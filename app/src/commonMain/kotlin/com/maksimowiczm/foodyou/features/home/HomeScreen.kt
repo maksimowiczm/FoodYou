@@ -2,27 +2,19 @@ package com.maksimowiczm.foodyou.features.home
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationConstants.DefaultDurationMillis
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CornerSize
@@ -39,74 +31,60 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.WideNavigationRailDefaults
 import androidx.compose.material3.WideNavigationRailItem
-import androidx.compose.material3.WideNavigationRailState
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.rememberWideNavigationRailState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberDecoratedNavEntries
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.scene.SceneInfo
-import androidx.navigation3.scene.SinglePaneSceneStrategy
-import androidx.navigation3.scene.rememberSceneState
-import androidx.navigation3.ui.NavDisplay
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.NavigationEventTransitionState
 import androidx.navigationevent.compose.NavigationBackHandler
-import androidx.navigationevent.compose.NavigationEventHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
-import androidx.savedstate.serialization.SavedStateConfiguration
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.app.navigation.Crossfade
-import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfade
-import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfadeIn
-import com.maksimowiczm.foodyou.app.navigation.Crossfade.crossfadeOut
-import com.maksimowiczm.foodyou.capabilities.foodbrowsing.CollectionFilter
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchFloatingActionButton
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchList
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchCollection
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchFilters
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchViewModel
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.favoritefood.FavoriteFoodSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDataCentralSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilters
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.common.extension.removeLastIf
-import com.maksimowiczm.foodyou.common.extension.safeRemoveLast
+import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.features.home.calendar.CalendarCard
-import com.maksimowiczm.foodyou.features.home.common.rememberHomeState
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.shared.ui.barcodescanner.FullScreenCameraBarcodeScanner
-import com.maksimowiczm.foodyou.shared.ui.component.Scrim
-import com.maksimowiczm.foodyou.shared.ui.component.StatusBarProtection
-import com.maksimowiczm.foodyou.shared.ui.component.StatusBarProtectionDefaults.rememberScrollConnection
+import com.maksimowiczm.foodyou.shared.ui.component.ScrimWithPredictiveBack
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.horizontal
-import com.maksimowiczm.foodyou.shared.ui.extension.now
 import com.maksimowiczm.foodyou.shared.ui.extension.plus
 import com.maksimowiczm.foodyou.shared.ui.saveable.jsonSaver
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -124,51 +102,84 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
 ) {
     val searchViewModel: SearchViewModel = koinViewModel { parametersOf(initialQuery) }
+    val viewModel: HomeViewModel = koinViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
-    val density = LocalDensity.current
     val motionScheme = MaterialTheme.motionScheme
+    val textFieldState = rememberTextFieldState()
+    val focusRequester = remember { FocusRequester() }
+    val shimmer = rememberShimmer(ShimmerBounds.View)
+    val railState = rememberWideNavigationRailState()
 
-    val offset = rememberSaveable { mutableFloatStateOf(0f) }
-    val topBarHeight = density.run { 64.dp.toPx() }
-    val scrollConnection = rememberScrollConnection { offset.floatValue -= it.y }
+    val searchQuery = searchViewModel.searchQuery.collectAsStateWithLifecycle().value
+    val history = searchViewModel.searchHistory.collectAsStateWithLifecycle().value
 
-    val textFieldState = rememberTextFieldState(initialQuery ?: "")
+    val userFood =
+        searchViewModel.extension<UserFoodSearchExtension>().pages.collectAsLazyPagingItems()
+    val openFoodFacts =
+        searchViewModel.extension<OpenFoodFactsSearchExtension>().pages.collectAsLazyPagingItems()
+    val foodDataCentral =
+        searchViewModel.extension<FoodDataCentralSearchExtension>().pages.collectAsLazyPagingItems()
+    val favoriteFood =
+        searchViewModel.extension<FavoriteFoodSearchExtension>().pages.collectAsLazyPagingItems()
 
-    val elements =
-        remember(initialQuery) {
-            listOfNotNull(HomeNavKey.Home, if (initialQuery != null) HomeNavKey.Search else null)
+    val showQuickResults = remember { mutableStateOf(searchQuery !is SearchQuery.Blank) }
+    LaunchedEffect(searchQuery) {
+        if (searchQuery is SearchQuery.Blank) {
+            showQuickResults.value = false
+        } else {
+            delay(100.milliseconds)
+            showQuickResults.value = true
         }
-    val backStack = rememberNavBackStack(config, *elements.toTypedArray<NavKey>())
-
-    val isHome by remember { derivedStateOf { backStack.last() is HomeNavKey.Home } }
-    val isSearch =
-        animateFloatAsState(
-            if (!isHome) 1f else 0f,
-            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
-        )
-
-    val backProgress = remember { Animatable(0f) }
-    val homeProgress = remember { Animatable(if (isHome) 1f else 0f) }
-    LaunchedEffect(isHome, backProgress.value) {
-        val gesture = backProgress.value
-        if (gesture > 0f) homeProgress.snapTo(gesture)
-        else
-            homeProgress.animateTo(
-                targetValue = if (isHome) 1f else 0f,
-                animationSpec = motionScheme.fastSpatialSpec(),
-            )
     }
 
-    val focusRequester = remember { FocusRequester() }
+    val isSearching = rememberSaveable { mutableStateOf(false) }
+    val fabExpanded = rememberSaveable { mutableStateOf(false) }
+
+    val navigationState = rememberNavigationEventState(currentInfo = NavigationEventInfo.None)
+
+    // TODO
+    //  This causes many recompositions, but we need this for searchbar predictive back animation
+    val latestEvent =
+        (navigationState.transitionState as? NavigationEventTransitionState.InProgress)?.latestEvent
+    val homeProgressAnimatable = remember { Animatable(if (isSearching.value) 0f else 1f) }
+
+    val openSearch: () -> Unit = {
+        isSearching.value = true
+        scope.launch {
+            homeProgressAnimatable.animateTo(0f, motionScheme.fastSpatialSpec())
+        }
+    }
+    val closeSearch: () -> Unit = {
+        isSearching.value = false
+        scope.launch {
+            homeProgressAnimatable.animateTo(1f, motionScheme.fastSpatialSpec())
+            viewModel.selectMeal(null)
+        }
+    }
+
+    NavigationBackHandler(
+        isBackEnabled = isSearching.value && !fabExpanded.value,
+        state = navigationState,
+        onBackCompleted = {
+            isSearching.value = false
+            scope.launch {
+                if (latestEvent != null) homeProgressAnimatable.snapTo(latestEvent.progress)
+                homeProgressAnimatable.animateTo(
+                    1f,
+                    motionScheme.fastSpatialSpec(),
+                )
+                viewModel.selectMeal(null)
+            }
+        },
+    )
 
     val filterChipsHeight = remember { mutableFloatStateOf(0f) }
     val collections = rememberCollectionFilters()
     val selectedCollection =
         rememberSaveable(stateSaver = jsonSaver()) { mutableStateOf<SearchCollection?>(null) }
     val lazyListState = rememberLazyListState()
-
-    val railState = rememberWideNavigationRailState()
 
     val foodDataCentralExtension = searchViewModel.extension<FoodDataCentralSearchExtension>()
     val openFoodFactsExtension = searchViewModel.extension<OpenFoodFactsSearchExtension>()
@@ -191,202 +202,181 @@ fun HomeScreen(
             showBarcodeScanner.value = false
             searchViewModel.search(it)
             textFieldState.setTextAndPlaceCursorAtEnd(it)
-            if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
+            openSearch()
         },
     )
 
-    var fabExpanded by rememberSaveable { mutableStateOf(false) }
-    val fabInsets =
-        WindowInsets.systemBars
-            .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-            .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-
-    Box(modifier) {
+    Box {
+        ScrimWithPredictiveBack(
+            visible = fabExpanded.value,
+            onDismiss = { fabExpanded.value = false },
+            modifier = Modifier.fillMaxSize().zIndex(100f),
+        )
         FoodSearchFloatingActionButton(
-            fabExpanded = fabExpanded,
-            onFabExpandedChange = { fabExpanded = it },
+            fabExpanded = fabExpanded.value,
+            onFabExpandedChange = { fabExpanded.value = it },
             onCreateRecipe = onCreateRecipe,
             onCreateProduct = onCreateProduct,
             modifier =
-                Modifier.zIndex(100f)
+                Modifier.zIndex(200f)
                     .align(Alignment.BottomEnd)
-                    .windowInsetsPadding(fabInsets)
-                    .consumeWindowInsets(fabInsets)
-                    .graphicsLayer {
-                        val progress = 1f - homeProgress.value
-                        alpha =
-                            when {
-                                isHome -> 0f
-                                backProgress.value != 0f ->
-                                    (1 - backProgress.value / Crossfade.PROGRESS_THRESHOLD)
-                                else -> isSearch.value
-                            }
-                        scaleX = 0.2f + 0.8f * progress
-                        scaleY = 0.2f + 0.8f * progress
-                        translationY = (1f - progress) * size.height / 4
-                        translationX = (1f - progress) * size.width / 4
-                    },
-        )
-        Scrim(
-            visible = fabExpanded,
-            onDismiss = { fabExpanded = false },
-            modifier = Modifier.fillMaxSize().zIndex(10f),
+                    .animateFloatingActionButton(
+                        visible = isSearching.value && latestEvent == null,
+                        alignment = Alignment.BottomEnd,
+                    ),
         )
         Scaffold(
-            modifier = Modifier.nestedScroll(scrollConnection),
+            modifier = modifier,
             topBar = {
-                val profileViewModel: ProfileViewModel = koinViewModel()
-                val profiles by profileViewModel.profiles.collectAsStateWithLifecycle()
-                val selectedProfileId by
-                    profileViewModel.selectedProfile.collectAsStateWithLifecycle()
-                val profile =
-                    remember(profiles, selectedProfileId) {
-                        profiles?.find { it.id == selectedProfileId }
-                    }
+                val homeProgress = { latestEvent?.progress ?: homeProgressAnimatable.value }
+                val topBarHeight = remember { mutableIntStateOf(0) }
+
+                val color = MaterialTheme.colorScheme.surface
+                val brush = remember {
+                    Brush.verticalGradient(
+                        0f to color.copy(alpha = .9f),
+                        0.6f to color.copy(alpha = .8f),
+                        0.7f to color.copy(alpha = .6f),
+                        0.9f to color.copy(alpha = .4f),
+                        1f to Color.Transparent,
+                    )
+                }
 
                 HomeScreenTopBar(
-                    profile = profile,
-                    profiles = profiles ?: emptyList(),
+                    profile = uiState.selectedProfile,
+                    profiles = uiState.profiles,
+                    meal = uiState.activeMeal,
+                    showMeal = isSearching.value && latestEvent == null,
+                    date = uiState.date,
                     textFieldState = textFieldState,
-                    homeProgress = { homeProgress.value },
+                    shimmer = shimmer,
+                    homeProgress = homeProgress,
                     onAvatar = onAvatar,
-                    onSearch = {
-                        if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
-                        searchViewModel.search(it)
-                    },
+                    onSearch = searchViewModel::search,
                     onSearchBar = {
-                        if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
+                        openSearch()
                         scope.launch {
                             delay(DefaultDurationMillis.milliseconds)
                             focusRequester.requestFocus()
                         }
                     },
-                    onBack = { backStack.removeLastIf { it !is HomeNavKey.Home } },
-                    onSelectProfile = profileViewModel::selectProfile,
+                    onBack = closeSearch,
+                    onSelectProfile = viewModel::selectProfile,
                     onBarcodeScanner = { showBarcodeScanner.value = true },
                     onMenu = { scope.launch { railState.expand() } },
-                    modifier = Modifier.focusRequester(focusRequester),
+                    modifier =
+                        Modifier.zIndex(100f)
+                            .pointerInput(Unit) { detectTapGestures {} }
+                            .drawBehind {
+                                drawRect(brush = brush, size = Size(size.width, size.height))
+                            }
+                            .focusRequester(focusRequester)
+                            .onGloballyPositioned { topBarHeight.value = it.size.height },
                 )
             },
         ) { contentPadding ->
-            val entries =
-                rememberDecoratedNavEntries(
-                    backStack = backStack,
-                    entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator()),
-                    entryProvider =
-                        entryProvider {
-                            entry<HomeNavKey.Home>(metadata = crossfadeTransitionMetadata) {
-                                val homeState = rememberHomeState(LocalDate.now())
-
-                                LazyColumn(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentPadding = contentPadding.add(vertical = 8.dp),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                                ) {
-                                    item {
-                                        CalendarCard(
-                                            homeState = homeState,
-                                            contentPadding = PaddingValues(horizontal = 8.dp),
-                                        )
-                                    }
-                                }
-                            }
-                            entry<HomeNavKey.Search>(metadata = transitionSearchMetadata) {
-                                HomeSearchScreen(
-                                    contentPadding =
-                                        contentPadding.add(
-                                            top =
-                                                density.run { filterChipsHeight.floatValue.toDp() }
-                                        ),
-                                    selectedCollection = selectedCollection.value,
-                                    onFoodDataCentralProduct = onFoodDataCentralProduct,
-                                    onOpenFoodFactsProduct = onOpenFoodFactsProduct,
-                                    onUserProduct = onUserProduct,
-                                    onUserRecipe = onUserRecipe,
-                                    lazyListState = lazyListState,
-                                    onSearch = {
-                                        searchViewModel.search(it)
-                                        textFieldState.setTextAndPlaceCursorAtEnd(it)
-                                        if (backStack.last() !is HomeNavKey.Search)
-                                            backStack.add(HomeNavKey.Search)
-                                    },
-                                    onFill = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
-                                    modifier = Modifier.fillMaxSize(),
-                                )
-                            }
-                        },
-                )
-
-            val sceneState =
-                rememberSceneState(
-                    entries = entries,
-                    sceneStrategies = listOf(SinglePaneSceneStrategy()),
-                    onBack = { backStack.safeRemoveLast() },
-                )
-
-            val navigationEventState =
-                rememberNavigationEventState(
-                    currentInfo = SceneInfo(sceneState.currentScene),
-                    backInfo = sceneState.previousScenes.map(::SceneInfo),
-                )
-
-            val animationSpec = motionScheme.fastSpatialSpec<Float>()
-            NavigationBackHandler(
-                state = navigationEventState,
-                isBackEnabled =
-                    sceneState.currentScene.previousEntries.isNotEmpty() && !fabExpanded,
-                onBackCancelled = { scope.launch { backProgress.animateTo(0f, animationSpec) } },
-                onBackCompleted = {
-                    scope.launch {
-                        backProgress.animateTo(1f, animationSpec) { scope.launch { snapTo(0f) } }
-                    }
-                    backStack.removeLastIf { true }
-                },
-            )
-            NavigationEventHandler(
-                state = rememberNavigationEventState(NavigationEventInfo.None),
-                isBackEnabled = fabExpanded,
-                onBackCompleted = { fabExpanded = false },
-            )
-
-            LaunchedEffect(navigationEventState.transitionState) {
-                val transitionState = navigationEventState.transitionState
-                if (transitionState is NavigationEventTransitionState.InProgress) {
-                    backProgress.snapTo(transitionState.latestEvent.progress)
-                }
-            }
-
-            NavDisplay(sceneState = sceneState, navigationEventState = navigationEventState)
-
-            if (!isHome) {
+            if (isSearching.value) {
                 Box(
                     Modifier.fillMaxWidth()
-                        .padding(top = contentPadding.calculateTopPadding())
+                        .zIndex(100f)
+                        .padding(top = contentPadding.calculateTopPadding() + 4.dp)
                         .graphicsLayer {
                             alpha =
                                 when {
-                                    isHome -> 0f
-                                    backProgress.value != 0f ->
-                                        (1 - backProgress.value / Crossfade.PROGRESS_THRESHOLD)
+                                    !isSearching.value -> 0f
+                                    latestEvent != null ->
+                                        (1 - latestEvent.progress / Crossfade.PROGRESS_THRESHOLD)
 
-                                    else -> isSearch.value
+                                    else -> 1 - homeProgressAnimatable.value
                                 }
-                            translationY = (1 - isSearch.value) * size.height
                             filterChipsHeight.floatValue = size.height
                         }
                 ) {
                     SearchFilters(
                         collections = collections,
                         selected = selectedCollection.value,
-                        onCollection = {
-                            selectedCollection.value = it
-                            if (backStack.last() !is HomeNavKey.Search)
-                                backStack.add(HomeNavKey.Search)
-                        },
+                        onCollection = { selectedCollection.value = it },
                         contentPadding =
                             PaddingValues(horizontal = 16.dp) +
                                 WindowInsets.statusBars.asPaddingValues().horizontal() +
                                 WindowInsets.displayCutout.asPaddingValues().horizontal(),
+                    )
+                }
+                FoodSearchList(
+                    selectedCollection = selectedCollection.value,
+                    userFood = userFood,
+                    openFoodFacts = openFoodFacts,
+                    foodDataCentral = foodDataCentral,
+                    favoriteFood = favoriteFood,
+                    searchQuery = searchQuery,
+                    contentPadding =
+                        contentPadding.add(
+                            top =
+                                LocalDensity.current.run { filterChipsHeight.floatValue.toDp() } +
+                                    4.dp,
+                            bottom = 80.dp,
+                        ),
+                    lazyListState = lazyListState,
+                    onFoodDataCentralProduct = onFoodDataCentralProduct,
+                    onOpenFoodFactsProduct = onOpenFoodFactsProduct,
+                    onUserProduct = onUserProduct,
+                    onUserRecipe = onUserRecipe,
+                    shimmer = shimmer,
+                    modifier =
+                        Modifier.zIndex(50f).fillMaxSize().graphicsLayer {
+                            alpha =
+                                when {
+                                    latestEvent != null ->
+                                        1 -
+                                            (latestEvent.progress /
+                                                (Crossfade.PROGRESS_THRESHOLD / 2))
+
+                                    else -> 1 - homeProgressAnimatable.value
+                                }
+                        },
+                    history = history,
+                    showQuickResults = showQuickResults.value,
+                    onSearch = {
+                        searchViewModel.search(it)
+                        textFieldState.setTextAndPlaceCursorAtEnd(it)
+                    },
+                    onFill = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
+                )
+            }
+            LazyColumn(
+                modifier =
+                    Modifier.fillMaxSize().graphicsLayer {
+                        alpha =
+                            when {
+                                latestEvent != null ->
+                                    (latestEvent.progress - Crossfade.PROGRESS_THRESHOLD / 2) /
+                                        Crossfade.PROGRESS_THRESHOLD
+
+                                else -> homeProgressAnimatable.value
+                            }
+                    },
+                contentPadding = contentPadding.add(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                item {
+                    CalendarCard(
+                        date = uiState.date,
+                        onSelectDate = viewModel::selectDate,
+                        contentPadding = PaddingValues(horizontal = 8.dp),
+                    )
+                }
+                item {
+                    MealCards(
+                        meals = uiState.meals,
+                        shimmer = shimmer,
+                        contentPadding = PaddingValues(horizontal = 8.dp),
+                        onAdd = {
+                            viewModel.selectMeal(it)
+                            openSearch()
+                        },
+                        onEntry = {
+                            // TODO
+                        },
                     )
                 }
             }
@@ -395,41 +385,14 @@ fun HomeScreen(
 
     // TODO: Navigation rail is invisible on first launch when dynamic colors are enabled. Requires
     //       activity recreation to render correctly (e.g. theme change or screen rotation).
-    HomeModalWideNavigationRail(
-        state = railState,
-        collections = collections,
-        onCollection = {
-            val selected = selectedCollection.value
-
-            if (selected == null || it::class != selected::class) {
-                selectedCollection.value = it
-            }
-
-            if (backStack.last() !is HomeNavKey.Search) backStack.add(HomeNavKey.Search)
-            scope.launch { railState.collapse() }
-        },
-    )
-    StatusBarProtection { (offset.value / topBarHeight).coerceIn(0f, 1f) }
-}
-
-@Composable
-private fun HomeModalWideNavigationRail(
-    state: WideNavigationRailState,
-    collections: List<CollectionFilter>,
-    onCollection: (SearchCollection) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val scope = rememberCoroutineScope()
-
     ModalWideNavigationRail(
-        modifier = modifier,
         header = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.padding(start = 24.dp),
             ) {
                 IconButton(
-                    onClick = { scope.launch { state.collapse() } },
+                    onClick = { scope.launch { railState.collapse() } },
                     shapes = IconButtonDefaults.shapes(),
                 ) {
                     Icon(
@@ -442,7 +405,7 @@ private fun HomeModalWideNavigationRail(
         hideOnCollapse = true,
         expandedShape =
             MaterialTheme.shapes.large.copy(topStart = CornerSize(0), bottomStart = CornerSize(0)),
-        state = state,
+        state = railState,
         contentPadding =
             PaddingValues(
                 top = 8.dp,
@@ -458,7 +421,16 @@ private fun HomeModalWideNavigationRail(
         collections.forEach { collection ->
             WideNavigationRailItem(
                 selected = false,
-                onClick = { onCollection(collection.collection) },
+                onClick = {
+                    val selected = selectedCollection.value
+
+                    if (selected == null || collection::class != selected::class) {
+                        selectedCollection.value = collection.collection
+                    }
+
+                    scope.launch { railState.collapse() }
+                    openSearch()
+                },
                 icon = { collection.collection.Icon(false, Modifier.size(24.dp)) },
                 label = { Text(collection.collection.stringResource()) },
                 railExpanded = true,
@@ -466,31 +438,3 @@ private fun HomeModalWideNavigationRail(
         }
     }
 }
-
-@Immutable
-@Serializable
-private sealed interface HomeNavKey : NavKey {
-    @Immutable @Serializable data object Home : HomeNavKey
-
-    @Immutable @Serializable data object Search : HomeNavKey
-}
-
-@OptIn(ExperimentalSerializationApi::class)
-private val config = SavedStateConfiguration {
-    serializersModule = SerializersModule {
-        polymorphic(NavKey::class) { subclassesOfSealed<HomeNavKey>() }
-    }
-}
-
-private val crossfadeTransitionMetadata =
-    NavDisplay.transitionSpec { crossfade() } +
-        NavDisplay.popTransitionSpec { crossfade() } +
-        NavDisplay.predictivePopTransitionSpec { crossfade() }
-
-private val transitionSearchMetadata =
-    NavDisplay.transitionSpec {
-        slideInVertically(initialOffsetY = { (it * 0.05f).toInt() }) + crossfadeIn() togetherWith
-            crossfadeOut()
-    } +
-        NavDisplay.popTransitionSpec { crossfade() } +
-        NavDisplay.predictivePopTransitionSpec { crossfade() }

@@ -5,6 +5,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.YearMonth
+import kotlinx.datetime.number
 
 interface DateFormatter {
     /**
@@ -83,22 +84,42 @@ expect class DateFormatterImpl : DateFormatter {
     override fun formatDateTime(dateTime: LocalDateTime): String
 }
 
+/**
+ * A minimal, locale-independent [DateFormatter] implementation used as a fallback when no
+ * platform-specific formatter has been provided (e.g. in previews or before composition locals are
+ * set up). It does not respect the system locale.
+ */
 private val defaultDateFormatter: DateFormatter =
     object : DateFormatter {
-        override val weekDayNamesShort: List<String>
-            get() = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+        override val weekDayNamesShort: List<String> =
+            listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
 
-        override fun formatMonthYear(date: LocalDate): String = date.toString()
+        private fun String.capitalizeFirst() = lowercase().replaceFirstChar { it.uppercase() }
 
-        override fun formatDate(date: LocalDate): String = date.toString()
+        private fun monthName(date: LocalDate): String = date.month.name.capitalizeFirst()
 
-        override fun formatDateShort(date: LocalDate): String = date.toString()
+        private fun dayOfWeekName(date: LocalDate): String = date.dayOfWeek.name.capitalizeFirst()
 
-        override fun formatDateSuperShort(date: LocalDate): String = date.toString()
+        private fun Int.pad2(): String = toString().padStart(2, '0')
 
-        override fun formatTime(time: LocalTime): String = time.toString()
+        override fun formatMonthYear(date: LocalDate): String = "${monthName(date)} ${date.year}"
 
-        override fun formatDateTime(dateTime: LocalDateTime): String = dateTime.toString()
+        override fun formatDate(date: LocalDate): String =
+            "${date.day} ${monthName(date)} ${date.year}, ${dayOfWeekName(date)}"
+
+        override fun formatDateShort(date: LocalDate): String =
+            "${date.day} ${monthName(date)} ${date.year}"
+
+        override fun formatDateSuperShort(date: LocalDate): String {
+            val shortYear = date.year % 100
+            return "${date.day}.${date.month.number}.${shortYear.pad2()}"
+        }
+
+        override fun formatTime(time: LocalTime): String =
+            "${time.hour.pad2()}:${time.minute.pad2()}"
+
+        override fun formatDateTime(dateTime: LocalDateTime): String =
+            "${formatDateShort(dateTime.date)}, ${formatTime(dateTime.time)}"
     }
 
 val LocalDateFormatter = staticCompositionLocalOf { defaultDateFormatter }

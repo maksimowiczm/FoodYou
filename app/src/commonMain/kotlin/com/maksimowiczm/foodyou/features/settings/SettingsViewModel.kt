@@ -1,16 +1,19 @@
-package com.maksimowiczm.foodyou.features.home
+package com.maksimowiczm.foodyou.features.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
+import com.maksimowiczm.foodyou.common.domain.ProfileId
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-internal class ProfileViewModel(
+class SettingsViewModel(
     private val appProfileManager: AppProfileManager,
     accountService: AccountService,
 ) : ViewModel() {
@@ -18,14 +21,10 @@ internal class ProfileViewModel(
         accountService
             .observe()
             .filterNotNull()
-            .map { account ->
-                account.profiles.map { profile ->
-                    ProfileUiState(id = profile.id, name = profile.name, avatar = profile.avatar)
-                }
-            }
+            .map { it.profiles }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
+                started = SharingStarted.WhileSubscribed(5.seconds),
                 initialValue = null,
             )
 
@@ -34,11 +33,11 @@ internal class ProfileViewModel(
             .observeAppProfileId()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
+                started = SharingStarted.WhileSubscribed(5.seconds),
                 initialValue = null,
             )
 
-    fun selectProfile(profile: ProfileUiState) {
-        viewModelScope.launch { appProfileManager.setAppProfileId(profile.id) }
+    fun selectProfile(profileId: ProfileId) {
+        viewModelScope.launch { appProfileManager.setAppProfileId(profileId) }
     }
 }

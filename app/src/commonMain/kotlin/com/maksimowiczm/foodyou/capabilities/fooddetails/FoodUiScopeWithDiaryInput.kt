@@ -43,7 +43,6 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
-import com.maksimowiczm.foodyou.features.home.ProfileUiState
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import kotlin.uuid.Uuid
@@ -52,6 +51,10 @@ interface FoodUiScopeWithDiaryInput : FoodUiScopeWithQuantityInput {
     val profiles: List<ProfileUiState>
     val selectedProfiles: List<ProfileUiState>
 }
+
+// TODO: Do we need this?
+@Immutable
+data class ProfileUiState(val id: ProfileId, val name: String, val avatar: Profile.Avatar)
 
 @Composable
 fun FoodUiScopeWithDiaryInput.DiaryInput(

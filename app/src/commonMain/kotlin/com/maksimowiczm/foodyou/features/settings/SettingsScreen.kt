@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.home
+package com.maksimowiczm.foodyou.features.settings
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -82,7 +82,6 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.toDp
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
-import kotlin.uuid.Uuid
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -97,18 +96,18 @@ fun SettingsScreen(
     onAbout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val profileViewModel: ProfileViewModel = koinInject()
-    val profiles by profileViewModel.profiles.collectAsStateWithLifecycle()
-    val selectedProfileId by profileViewModel.selectedProfile.collectAsStateWithLifecycle()
+    val settingsViewModel: SettingsViewModel = koinInject()
+    val profiles by settingsViewModel.profiles.collectAsStateWithLifecycle()
+    val selectedProfileId by settingsViewModel.selectedProfile.collectAsStateWithLifecycle()
     val profile =
         remember(profiles, selectedProfileId) { profiles?.find { it.id == selectedProfileId } }
 
     SettingsScreen(
         profiles = profiles,
         selectedProfile = profile,
-        onSelectProfile = profileViewModel::selectProfile,
+        onSelectProfile = settingsViewModel::selectProfile,
         onAddProfile = onAddProfile,
-        onEditProfile = { onEditProfile(it.id) },
+        onEditProfile = onEditProfile,
         onBack = onBack,
         onPersonalization = onPersonalization,
         onLanguage = onLanguage,
@@ -120,11 +119,11 @@ fun SettingsScreen(
 
 @Composable
 private fun SettingsScreen(
-    profiles: List<ProfileUiState>?,
-    selectedProfile: ProfileUiState?,
-    onSelectProfile: (ProfileUiState) -> Unit,
+    profiles: List<Profile>?,
+    selectedProfile: Profile?,
+    onSelectProfile: (ProfileId) -> Unit,
     onAddProfile: () -> Unit,
-    onEditProfile: (ProfileUiState) -> Unit,
+    onEditProfile: (ProfileId) -> Unit,
     onBack: () -> Unit,
     onPersonalization: () -> Unit,
     onLanguage: () -> Unit,
@@ -169,13 +168,13 @@ private fun SettingsScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             AnimatedAvatar(
-                                profileUiState = selectedProfile,
+                                settingsProfileUiState = selectedProfile,
                                 onEditProfile = { onEditProfile(it) },
                             )
                             Spacer(Modifier.height(8.dp))
                         }
                     }
-                    AnimatedName(selectedProfile)
+                    AnimatedName(selectedProfile?.name)
                 }
             }
             item {
@@ -186,7 +185,7 @@ private fun SettingsScreen(
                     onExpandedChange = { profileExpanded = !it },
                     onSelectProfile = onSelectProfile,
                     onAddProfile = onAddProfile,
-                    onEditProfile = { onEditProfile(it) },
+                    onEditProfile = onEditProfile,
                 )
             }
             item {
@@ -204,11 +203,11 @@ private fun SettingsScreen(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun AnimatedAvatar(
-    profileUiState: ProfileUiState?,
-    onEditProfile: (ProfileUiState) -> Unit,
+    settingsProfileUiState: Profile?,
+    onEditProfile: (ProfileId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    updateTransition(targetState = profileUiState).Crossfade(modifier) { profile ->
+    updateTransition(targetState = settingsProfileUiState).Crossfade(modifier) { profile ->
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed = interactionSource.collectIsPressedAsState()
         val cornerDp = animateDpAsState(if (isPressed.value) 8.dp else 32.dp)
@@ -219,7 +218,7 @@ private fun AnimatedAvatar(
                     interactionSource = interactionSource,
                     indication = null,
                     enabled = profile != null,
-                    onClick = { if (profile != null) onEditProfile(profile) },
+                    onClick = { if (profile != null) onEditProfile(profile.id) },
                     onClickLabel = stringResource(Res.string.action_edit),
                     role = Role.Button,
                 )
@@ -246,7 +245,7 @@ private fun AnimatedAvatar(
             }
             if (profile != null) {
                 IconButton(
-                    onClick = { onEditProfile(profile) },
+                    onClick = { onEditProfile(profile.id) },
                     modifier =
                         Modifier.size(24.dp).align(Alignment.BottomEnd).clearAndSetSemantics {},
                     colors =
@@ -269,8 +268,11 @@ private fun AnimatedAvatar(
 }
 
 @Composable
-private fun AnimatedName(profileUiState: ProfileUiState?, modifier: Modifier = Modifier) {
-    if (profileUiState != null) {
+private fun AnimatedName(
+    name: String?,
+    modifier: Modifier = Modifier,
+) {
+    if (name != null) {
         val colorScheme = MaterialTheme.colorScheme
         val colors =
             remember(colorScheme) {
@@ -305,7 +307,11 @@ private fun AnimatedName(profileUiState: ProfileUiState?, modifier: Modifier = M
             }
 
         Text(
-            text = stringResource(Res.string.headline_welcome_user_message, profileUiState.name),
+            text =
+                stringResource(
+                    Res.string.headline_welcome_user_message,
+                    name,
+                ),
             modifier = modifier,
             style = MaterialTheme.typography.titleLarge.copy(brush = brush),
             maxLines = 2,
@@ -326,12 +332,12 @@ private fun AnimatedName(profileUiState: ProfileUiState?, modifier: Modifier = M
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun ProfileSwitcher(
-    profiles: List<ProfileUiState>?,
-    selectedProfile: ProfileUiState?,
+    profiles: List<Profile>?,
+    selectedProfile: Profile?,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
-    onSelectProfile: (ProfileUiState) -> Unit,
-    onEditProfile: (ProfileUiState) -> Unit,
+    onSelectProfile: (ProfileId) -> Unit,
+    onEditProfile: (ProfileId) -> Unit,
     onAddProfile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -429,8 +435,8 @@ private fun ProfileSwitcher(
                         val interactionSource = remember { MutableInteractionSource() }
                         SegmentedListItem(
                             onClick = {
-                                if (profile == selectedProfile) onEditProfile(profile)
-                                else onSelectProfile(profile)
+                                if (profile == selectedProfile) onEditProfile(profile.id)
+                                else onSelectProfile(profile.id)
                             },
                             selected = profile == selectedProfile,
                             colors = colors,
@@ -566,18 +572,15 @@ private fun Settings(
 private fun SettingsScreenPreview() {
     val profiles =
         listOf(
-            ProfileUiState(
-                id = ProfileId(Uuid.random()),
+            Profile(
                 name = "Mateusz",
                 avatar = Profile.Avatar.Predefined.Variant.Engineer.toAvatar(),
             ),
-            ProfileUiState(
-                id = ProfileId(Uuid.random()),
+            Profile(
                 name = "Maksimowicz",
                 avatar = Profile.Avatar.Predefined.Variant.Person.toAvatar(),
             ),
-            ProfileUiState(
-                id = ProfileId(Uuid.random()),
+            Profile(
                 name = "MaMa",
                 avatar = Profile.Avatar.Predefined.Variant.Woman.toAvatar(),
             ),

@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.features.openfoodfacts.openFoodFacts
 import com.maksimowiczm.foodyou.features.personalization.personalization
 import com.maksimowiczm.foodyou.features.privacy.privacy
 import com.maksimowiczm.foodyou.features.profile.profile
+import com.maksimowiczm.foodyou.features.settings.settings
 import com.maksimowiczm.foodyou.features.userproduct.userProduct
 import com.maksimowiczm.foodyou.features.userrecipe.userRecipe
 import org.koin.dsl.module
@@ -25,4 +26,5 @@ val featuresModule = module {
     openFoodFacts()
     privacy()
     profile()
+    settings()
 }

@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.mealplan.domain
 
 import com.maksimowiczm.foodyou.common.domain.Language
-import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalTime
 
 object MealTemplates {
@@ -108,7 +107,6 @@ private class MealBuilder {
             this@MealBuilder.apply {
                 meals.add(
                     Meal(
-                        identity = MealIdentity(Uuid.random()),
                         name = name,
                         timeWindow = Meal.TimeWindow.AllDay,
                     )
@@ -124,7 +122,6 @@ private class MealBuilder {
             this@MealBuilder.apply {
                 meals.add(
                     Meal(
-                        identity = MealIdentity(Uuid.random()),
                         name = name,
                         timeWindow = Meal.TimeWindow.Range(from, until),
                     )

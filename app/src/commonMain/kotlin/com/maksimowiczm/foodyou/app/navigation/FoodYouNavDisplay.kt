@@ -23,7 +23,6 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.EditUserProdu
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDataCentralApiKeyDialog
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.FoodDataCentralProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Home
-import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.HomePersonalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Language
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.MealSchedule
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.NutritionFactsPersonalization
@@ -44,9 +43,7 @@ import com.maksimowiczm.foodyou.features.fooddetails.FoodDataCentralDetailsScree
 import com.maksimowiczm.foodyou.features.fooddetails.OpenFoodFactsDetailsScreen
 import com.maksimowiczm.foodyou.features.fooddetails.UserProductDetailsScreen
 import com.maksimowiczm.foodyou.features.fooddetails.UserRecipeDetailsScreen
-import com.maksimowiczm.foodyou.features.home.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.features.home.HomeScreen
-import com.maksimowiczm.foodyou.features.home.SettingsScreen
 import com.maksimowiczm.foodyou.features.language.LanguageScreen
 import com.maksimowiczm.foodyou.features.meal.MealScheduleScreen
 import com.maksimowiczm.foodyou.features.openfoodfacts.OpenFoodFactsLoginDialog
@@ -56,6 +53,7 @@ import com.maksimowiczm.foodyou.features.personalization.PersonalizeNutritionFac
 import com.maksimowiczm.foodyou.features.privacy.PrivacyScreen
 import com.maksimowiczm.foodyou.features.profile.add.AddProfileScreen
 import com.maksimowiczm.foodyou.features.profile.edit.EditProfileScreen
+import com.maksimowiczm.foodyou.features.settings.SettingsScreen
 import com.maksimowiczm.foodyou.features.userproduct.create.CreateProductScreen
 import com.maksimowiczm.foodyou.features.userproduct.edit.EditProductScreen
 import com.maksimowiczm.foodyou.features.userrecipe.create.CreateRecipeScreen
@@ -205,12 +203,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                             backStack.add(OpenFoodFactsProductDetails(id, quantity))
                         },
                         onUserProduct = { id, quantity ->
-                            backStack.add(
-                                UserProductDetails(
-                                    id,
-                                    quantity,
-                                )
-                            )
+                            backStack.add(UserProductDetails(id, quantity))
                         },
                         onUserRecipe = { id, quantity ->
                             backStack.add(UserRecipeDetails(id, quantity))
@@ -231,11 +224,6 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onEditProfile = { backStack.add(EditProfile(it)) },
                     )
                 }
-                entry<HomePersonalization> {
-                    HomePersonalizationScreen(
-                        onBack = { backStack.removeLastIf<HomePersonalization>() }
-                    )
-                }
                 entry<Language> { LanguageScreen(onBack = { backStack.removeLastIf<Language>() }) }
                 entry<NutritionFactsPersonalization> {
                     PersonalizeNutritionFactsScreen(
@@ -245,7 +233,6 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                 entry<Personalization> {
                     PersonalizationScreen(
                         onBack = { backStack.removeLastIf<Personalization>() },
-                        onHome = { backStack.add(HomePersonalization) },
                         onNutritionFacts = { backStack.add(NutritionFactsPersonalization) },
                         onMeals = { backStack.add(MealSchedule) },
                         onColors = { backStack.add(Colors) },
@@ -351,8 +338,6 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable data class Home(val initialQuery: String?) : FoodYouNavHostRoute
 
     @Serializable data object SwitchProfile : FoodYouNavHostRoute
-
-    @Serializable data object HomePersonalization : FoodYouNavHostRoute
 
     @Serializable data object Language : FoodYouNavHostRoute
 

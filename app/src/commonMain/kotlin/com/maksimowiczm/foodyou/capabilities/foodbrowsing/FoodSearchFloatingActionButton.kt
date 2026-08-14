@@ -1,5 +1,12 @@
 package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LunchDining
 import androidx.compose.material.icons.outlined.Add
@@ -24,12 +31,16 @@ fun FoodSearchFloatingActionButton(
     onCreateRecipe: () -> Unit,
     onCreateProduct: () -> Unit,
     modifier: Modifier = Modifier,
+    windowInsets: WindowInsets =
+        WindowInsets.systemBars
+            .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+            .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)),
 ) {
     val colorScheme = MaterialTheme.colorScheme
 
     FloatingActionButtonMenu(
         expanded = fabExpanded,
-        modifier = modifier,
+        modifier = modifier.windowInsetsPadding(windowInsets),
         button = {
             ToggleFloatingActionButton(
                 checked = fabExpanded,

@@ -14,13 +14,11 @@ import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.expect
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
-import com.valentinilk.shimmer.Shimmer
 
 @Composable
 fun FoodDataCentralListItem(
     food: FoodDataCentralProduct,
     onClick: (Quantity) -> Unit,
-    shimmer: Shimmer,
     interactionSource: MutableInteractionSource,
     shape: Shape,
     modifier: Modifier = Modifier,

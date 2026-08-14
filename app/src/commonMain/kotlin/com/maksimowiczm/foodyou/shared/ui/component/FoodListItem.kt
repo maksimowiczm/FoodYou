@@ -39,6 +39,7 @@ fun FoodListItem(
     energy: @Composable () -> Unit,
     quantity: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    overline: @Composable (() -> Unit)? = null,
     containerColor: Color = Color.Transparent,
     contentColor: Color = LocalContentColor.current,
     shape: Shape = RectangleShape,
@@ -58,6 +59,7 @@ fun FoodListItem(
             fats = fats,
             energy = energy,
             quantity = quantity,
+            overline = overline,
             contentPadding = contentPadding,
         )
     }
@@ -74,6 +76,7 @@ fun FoodListItem(
     quantity: @Composable () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    overline: @Composable (() -> Unit)? = null,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     containerColor: Color = Color.Transparent,
     contentColor: Color = LocalContentColor.current,
@@ -96,6 +99,7 @@ fun FoodListItem(
             fats = fats,
             energy = energy,
             quantity = quantity,
+            overline = overline,
             contentPadding = contentPadding,
         )
     }
@@ -110,6 +114,7 @@ private fun FoodListItemContent(
     fats: @Composable () -> Unit,
     energy: @Composable () -> Unit,
     quantity: @Composable () -> Unit,
+    overline: @Composable (() -> Unit)?,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
@@ -165,19 +170,27 @@ private fun FoodListItemContent(
             }
         }
 
-    Row(
+    Column(
         modifier = Modifier.padding(contentPadding),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        image?.invoke()
+        CompositionLocalProvider(
+            LocalTextStyle provides MaterialTheme.typography.bodySmall,
+            LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
+        ) {
+            overline?.invoke()
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            image?.invoke()
 
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
-            ) {
-                headline()
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                CompositionLocalProvider(
+                    LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
+                ) {
+                    headline()
+                }
+                supportingContent()
             }
-            supportingContent()
         }
     }
 }

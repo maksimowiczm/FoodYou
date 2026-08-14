@@ -475,5 +475,6 @@ data class NutritionFacts(
  *
  * Useful for calculating total nutrition from multiple food items in a meal.
  */
-fun Iterable<NutritionFacts>.sum(): NutritionFacts =
-    fold(NutritionFacts.zeroCompleted) { acc, nutrients -> acc + nutrients }
+fun Iterable<NutritionFacts>.sum(
+    initial: NutritionFacts = NutritionFacts.zeroCompleted
+): NutritionFacts = fold(initial) { acc, nutrients -> acc + nutrients }
