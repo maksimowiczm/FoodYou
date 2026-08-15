@@ -39,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
@@ -497,10 +496,10 @@ private fun MealCard(
 
 @Preview
 @Composable
-private fun MealCardsPreview(@PreviewParameter(HomeUiStateProvider::class) uiState: HomeUiState) {
+private fun MealCardsPreview() {
     PreviewFoodYouTheme {
         MealCards(
-            meals = uiState.meals,
+            meals = HomeUiStateProvider().uiState.meals,
             contentPadding = PaddingValues(),
             shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View),
             onAdd = {},

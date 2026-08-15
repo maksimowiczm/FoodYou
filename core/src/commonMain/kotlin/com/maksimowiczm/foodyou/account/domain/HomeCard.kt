@@ -4,9 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class HomeCard {
-    Calendar;
+    Calendar,
+    MealCards;
 
     companion object {
-        val defaultOrder = listOf(Calendar)
+        val defaultOrder = listOf(Calendar, MealCards)
     }
 }

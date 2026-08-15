@@ -70,6 +70,7 @@ import androidx.compose.ui.unit.lerp
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.navigation.Crossfade
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.sum
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
@@ -92,8 +93,8 @@ import org.jetbrains.compose.resources.painterResource
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreenTopBar(
-    profile: ProfileUiState?,
-    profiles: List<ProfileUiState>,
+    profile: Profile?,
+    profiles: List<Profile>,
     showMeal: Boolean,
     meal: HomeMealState?,
     date: LocalDate,
@@ -104,7 +105,7 @@ fun HomeScreenTopBar(
     onSearch: (String?) -> Unit,
     onSearchBar: () -> Unit,
     onBack: () -> Unit,
-    onSelectProfile: (ProfileUiState) -> Unit,
+    onSelectProfile: (ProfileId) -> Unit,
     onBarcodeScanner: () -> Unit,
     onMenu: () -> Unit,
     modifier: Modifier = Modifier,
@@ -164,7 +165,7 @@ fun HomeScreenTopBar(
                         ) { direction, nextProfile ->
                             profileSwitchDirection = direction
                             animateProfileSwitch = true
-                            onSelectProfile(nextProfile)
+                            onSelectProfile(nextProfile.id)
                         },
                 ) {
                     if (p != null) {

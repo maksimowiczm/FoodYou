@@ -22,6 +22,7 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.MenuOpen
+import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -47,6 +48,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,8 +56,12 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.NavigationEventTransitionState
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.app.navigation.Crossfade
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.CollectionFilter
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchFloatingActionButton
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchList
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchCollection
@@ -64,13 +70,21 @@ import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchViewModel
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.favoritefood.FavoriteFoodSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDataCentralSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsSearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilter
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilters
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
+import com.maksimowiczm.foodyou.common.RemoteData
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.features.home.ui.calendar.CalendarCard
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.shared.ui.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.shared.ui.component.ScrimWithPredictiveBack
 import com.maksimowiczm.foodyou.shared.ui.extension.add
@@ -84,7 +98,9 @@ import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -105,15 +121,8 @@ fun HomeScreen(
     val viewModel: HomeViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val scope = rememberCoroutineScope()
-    val motionScheme = MaterialTheme.motionScheme
-    val textFieldState = rememberTextFieldState()
-    val focusRequester = remember { FocusRequester() }
-    val shimmer = rememberShimmer(ShimmerBounds.View)
-    val railState = rememberWideNavigationRailState()
-
-    val searchQuery = searchViewModel.searchQuery.collectAsStateWithLifecycle().value
-    val history = searchViewModel.searchHistory.collectAsStateWithLifecycle().value
+    val searchQuery by searchViewModel.searchQuery.collectAsStateWithLifecycle()
+    val searchHistory by searchViewModel.searchHistory.collectAsStateWithLifecycle()
 
     val userFood =
         searchViewModel.extension<UserFoodSearchExtension>().pages.collectAsLazyPagingItems()
@@ -123,6 +132,79 @@ fun HomeScreen(
         searchViewModel.extension<FoodDataCentralSearchExtension>().pages.collectAsLazyPagingItems()
     val favoriteFood =
         searchViewModel.extension<FavoriteFoodSearchExtension>().pages.collectAsLazyPagingItems()
+
+    val foodDataCentralExtension = searchViewModel.extension<FoodDataCentralSearchExtension>()
+    val openFoodFactsExtension = searchViewModel.extension<OpenFoodFactsSearchExtension>()
+
+    val collections = rememberCollectionFilters()
+
+    HomeScreenContent(
+        initialQuery = initialQuery,
+        uiState = uiState,
+        searchQuery = searchQuery,
+        searchHistory = searchHistory,
+        collections = collections,
+        userFood = userFood,
+        openFoodFacts = openFoodFacts,
+        foodDataCentral = foodDataCentral,
+        favoriteFood = favoriteFood,
+        onAvatar = onAvatar,
+        onSearch = searchViewModel::search,
+        onSelectProfile = viewModel::selectProfile,
+        onSelectDate = viewModel::selectDate,
+        onSelectMeal = viewModel::selectMeal,
+        onFoodDataCentralProduct = onFoodDataCentralProduct,
+        onOpenFoodFactsProduct = onOpenFoodFactsProduct,
+        onUserProduct = onUserProduct,
+        onUserRecipe = onUserRecipe,
+        onCreateProduct = onCreateProduct,
+        onCreateRecipe = onCreateRecipe,
+        onCollectionSelected = { collection ->
+            when (collection) {
+                is SearchCollection.FoodDataCentral ->
+                    foodDataCentralExtension.dataTypes(collection.dataTypes)
+
+                is SearchCollection.OpenFoodFacts ->
+                    openFoodFactsExtension.version(collection.version)
+
+                else -> Unit
+            }
+        },
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun HomeScreenContent(
+    initialQuery: String?,
+    uiState: HomeUiState,
+    searchQuery: SearchQuery,
+    searchHistory: List<String>?,
+    collections: List<CollectionFilter>,
+    userFood: LazyPagingItems<SearchResult>,
+    openFoodFacts: LazyPagingItems<OpenFoodFactsProduct>,
+    foodDataCentral: LazyPagingItems<FoodDataCentralProduct>,
+    favoriteFood: LazyPagingItems<RemoteData<Any>>,
+    onAvatar: () -> Unit,
+    onSearch: (String?) -> Unit,
+    onSelectProfile: (ProfileId) -> Unit,
+    onSelectDate: (LocalDate) -> Unit,
+    onSelectMeal: (MealIdentity?) -> Unit,
+    onFoodDataCentralProduct: (FoodDataCentralProductIdentity, Quantity) -> Unit,
+    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity, Quantity) -> Unit,
+    onUserProduct: (UserProductIdentity, Quantity) -> Unit,
+    onUserRecipe: (UserRecipeIdentity, Quantity) -> Unit,
+    onCreateProduct: () -> Unit,
+    onCreateRecipe: () -> Unit,
+    onCollectionSelected: (SearchCollection) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scope = rememberCoroutineScope()
+    val motionScheme = MaterialTheme.motionScheme
+    val textFieldState = rememberTextFieldState(initialQuery ?: "")
+    val focusRequester = remember { FocusRequester() }
+    val shimmer = rememberShimmer(ShimmerBounds.View)
+    val railState = rememberWideNavigationRailState()
 
     val showQuickResults = remember { mutableStateOf(searchQuery !is SearchQuery.Blank) }
     LaunchedEffect(searchQuery) {
@@ -134,7 +216,7 @@ fun HomeScreen(
         }
     }
 
-    val isSearching = rememberSaveable { mutableStateOf(false) }
+    val isSearching = rememberSaveable(initialQuery) { mutableStateOf(initialQuery != null) }
     val fabExpanded = rememberSaveable { mutableStateOf(false) }
 
     val navigationState = rememberNavigationEventState(currentInfo = NavigationEventInfo.None)
@@ -155,7 +237,7 @@ fun HomeScreen(
         isSearching.value = false
         scope.launch {
             homeProgressAnimatable.animateTo(1f, motionScheme.fastSpatialSpec())
-            viewModel.selectMeal(null)
+            onSelectMeal(null)
         }
     }
 
@@ -170,28 +252,18 @@ fun HomeScreen(
                     1f,
                     motionScheme.fastSpatialSpec(),
                 )
-                viewModel.selectMeal(null)
+                onSelectMeal(null)
             }
         },
     )
 
     val filterChipsHeight = remember { mutableFloatStateOf(0f) }
-    val collections = rememberCollectionFilters()
     val selectedCollection =
         rememberSaveable(stateSaver = jsonSaver()) { mutableStateOf<SearchCollection?>(null) }
     val lazyListState = rememberLazyListState()
 
-    val foodDataCentralExtension = searchViewModel.extension<FoodDataCentralSearchExtension>()
-    val openFoodFactsExtension = searchViewModel.extension<OpenFoodFactsSearchExtension>()
     LaunchedEffect(selectedCollection.value) {
-        when (val collection = selectedCollection.value) {
-            is SearchCollection.FoodDataCentral ->
-                foodDataCentralExtension.dataTypes(collection.dataTypes)
-
-            is SearchCollection.OpenFoodFacts -> openFoodFactsExtension.version(collection.version)
-
-            else -> Unit
-        }
+        selectedCollection.value?.let { onCollectionSelected(it) }
     }
 
     val showBarcodeScanner = rememberSaveable { mutableStateOf(false) }
@@ -200,7 +272,7 @@ fun HomeScreen(
         onClose = { showBarcodeScanner.value = false },
         onBarcodeScan = {
             showBarcodeScanner.value = false
-            searchViewModel.search(it)
+            onSearch(it)
             textFieldState.setTextAndPlaceCursorAtEnd(it)
             openSearch()
         },
@@ -232,15 +304,16 @@ fun HomeScreen(
                 val topBarHeight = remember { mutableIntStateOf(0) }
 
                 val color = MaterialTheme.colorScheme.surface
-                val brush = remember {
-                    Brush.verticalGradient(
-                        0f to color.copy(alpha = .9f),
-                        0.6f to color.copy(alpha = .8f),
-                        0.7f to color.copy(alpha = .6f),
-                        0.9f to color.copy(alpha = .4f),
-                        1f to Color.Transparent,
-                    )
-                }
+                val brush =
+                    remember(color) {
+                        Brush.verticalGradient(
+                            0f to color.copy(alpha = .9f),
+                            0.6f to color.copy(alpha = .8f),
+                            0.7f to color.copy(alpha = .6f),
+                            0.9f to color.copy(alpha = .4f),
+                            1f to Color.Transparent,
+                        )
+                    }
 
                 HomeScreenTopBar(
                     profile = uiState.selectedProfile,
@@ -252,7 +325,7 @@ fun HomeScreen(
                     shimmer = shimmer,
                     homeProgress = homeProgress,
                     onAvatar = onAvatar,
-                    onSearch = searchViewModel::search,
+                    onSearch = onSearch,
                     onSearchBar = {
                         openSearch()
                         scope.launch {
@@ -261,7 +334,7 @@ fun HomeScreen(
                         }
                     },
                     onBack = closeSearch,
-                    onSelectProfile = viewModel::selectProfile,
+                    onSelectProfile = onSelectProfile,
                     onBarcodeScanner = { showBarcodeScanner.value = true },
                     onMenu = { scope.launch { railState.expand() } },
                     modifier =
@@ -334,52 +407,67 @@ fun HomeScreen(
                                     else -> 1 - homeProgressAnimatable.value
                                 }
                         },
-                    history = history,
+                    history = searchHistory,
                     showQuickResults = showQuickResults.value,
                     onSearch = {
-                        searchViewModel.search(it)
+                        onSearch(it)
                         textFieldState.setTextAndPlaceCursorAtEnd(it)
                     },
                     onFill = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
                 )
             }
-            LazyColumn(
-                modifier =
-                    Modifier.fillMaxSize().graphicsLayer {
-                        alpha =
-                            when {
-                                latestEvent != null ->
-                                    (latestEvent.progress - Crossfade.PROGRESS_THRESHOLD / 2) /
-                                        Crossfade.PROGRESS_THRESHOLD
+            if (uiState.selectedProfile != null)
+                LazyColumn(
+                    modifier =
+                        Modifier.fillMaxSize().graphicsLayer {
+                            alpha =
+                                when {
+                                    latestEvent != null ->
+                                        (latestEvent.progress - Crossfade.PROGRESS_THRESHOLD / 2) /
+                                            Crossfade.PROGRESS_THRESHOLD
 
-                                else -> homeProgressAnimatable.value
-                            }
-                    },
-                contentPadding = contentPadding.add(vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                item {
-                    CalendarCard(
-                        date = uiState.date,
-                        onSelectDate = viewModel::selectDate,
-                        contentPadding = PaddingValues(horizontal = 8.dp),
-                    )
-                }
-                item {
-                    MealCards(
-                        meals = uiState.meals,
-                        shimmer = shimmer,
-                        contentPadding = PaddingValues(horizontal = 8.dp),
-                        onAdd = {
-                            viewModel.selectMeal(it)
-                            openSearch()
+                                    else -> homeProgressAnimatable.value
+                                }
                         },
-                        onEntry = {
-                            // TODO
-                        },
-                    )
+                    contentPadding = contentPadding.add(vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    uiState.selectedProfile.homeCardsOrder.forEach {
+                        when (it) {
+                            HomeCard.Calendar ->
+                                item {
+                                    CalendarCard(
+                                        date = uiState.date,
+                                        onSelectDate = onSelectDate,
+                                        contentPadding = PaddingValues(horizontal = 8.dp),
+                                    )
+                                }
+
+                            HomeCard.MealCards ->
+                                item {
+                                    MealCards(
+                                        meals = uiState.meals,
+                                        shimmer = shimmer,
+                                        contentPadding = PaddingValues(horizontal = 8.dp),
+                                        onAdd = {
+                                            onSelectMeal(it)
+                                            openSearch()
+                                        },
+                                        onEntry = {
+                                            // TODO
+                                        },
+                                    )
+                                }
+                        }
+                    }
                 }
-            }
+            else
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    ContainedLoadingIndicator()
+                }
         }
     }
 
@@ -436,5 +524,76 @@ fun HomeScreen(
                 railExpanded = true,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun HomeScreenPreview() {
+    val userFood = remember {
+        flowOf(PagingData.from(emptyList<SearchResult>()))
+    }
+        .collectAsLazyPagingItems()
+    val openFoodFacts = remember {
+        flowOf(PagingData.from(emptyList<OpenFoodFactsProduct>()))
+    }
+        .collectAsLazyPagingItems()
+    val foodDataCentral = remember {
+        flowOf(PagingData.from(emptyList<FoodDataCentralProduct>()))
+    }
+        .collectAsLazyPagingItems()
+    val favoriteFood = remember {
+        flowOf(PagingData.from(emptyList<RemoteData<Any>>()))
+    }
+        .collectAsLazyPagingItems()
+    val searchHistory = remember { listOf("Apple", "Pen") }
+    val collections =
+        listOf(
+            rememberCollectionFilter(
+                collection = SearchCollection.Favorite(),
+                count = favoriteFood.itemCount,
+                pages = favoriteFood,
+            ),
+            rememberCollectionFilter(
+                collection = SearchCollection.UserFood(),
+                count = userFood.itemCount,
+                pages = userFood,
+            ),
+            rememberCollectionFilter(
+                collection = SearchCollection.OpenFoodFacts(),
+                count = openFoodFacts.itemCount,
+                pages = openFoodFacts,
+            ),
+            rememberCollectionFilter(
+                collection = SearchCollection.FoodDataCentral(),
+                count = foodDataCentral.itemCount,
+                pages = foodDataCentral,
+            ),
+        )
+
+    PreviewFoodYouTheme {
+        HomeScreenContent(
+            initialQuery = null,
+            uiState = HomeUiStateProvider().uiState,
+            searchQuery = SearchQuery.Blank,
+            searchHistory = searchHistory,
+            collections = collections,
+            userFood = userFood,
+            openFoodFacts = openFoodFacts,
+            foodDataCentral = foodDataCentral,
+            favoriteFood = favoriteFood,
+            onAvatar = {},
+            onSearch = {},
+            onSelectProfile = {},
+            onSelectDate = {},
+            onSelectMeal = {},
+            onFoodDataCentralProduct = { _, _ -> },
+            onOpenFoodFactsProduct = { _, _ -> },
+            onUserProduct = { _, _ -> },
+            onUserRecipe = { _, _ -> },
+            onCreateProduct = {},
+            onCreateRecipe = {},
+            onCollectionSelected = {},
+        )
     }
 }

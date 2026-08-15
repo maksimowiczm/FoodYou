@@ -11,15 +11,15 @@ import kotlinx.datetime.LocalTime
 
 @Immutable
 data class HomeUiState(
-    val profiles: List<ProfileUiState> = emptyList(),
-    val selectedProfile: ProfileUiState? = null,
+    val profiles: List<Profile> = emptyList(),
+    val selectedProfileId: ProfileId? = null,
     val date: LocalDate,
     val meals: List<HomeMealState> = emptyList(),
-    val activeMeal: HomeMealState? = null,
-)
-
-@Immutable
-data class ProfileUiState(val id: ProfileId, val name: String, val avatar: Profile.Avatar)
+    val activeMealId: MealIdentity? = null,
+) {
+    val selectedProfile = profiles.singleOrNull { it.id == selectedProfileId }
+    val activeMeal = meals.singleOrNull { it.identity == activeMealId }
+}
 
 @Immutable
 data class HomeMealState(

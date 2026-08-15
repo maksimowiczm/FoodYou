@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.observe
 import com.maksimowiczm.foodyou.features.home.integration.HomeDao
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryIdentity
@@ -34,14 +35,10 @@ class HomeViewModel(
     accountService: AccountService,
 ) : ViewModel() {
     private val profiles =
-        accountService.observe().filterNotNull().map { account ->
-            account.profiles.map { profile ->
-                ProfileUiState(id = profile.id, name = profile.name, avatar = profile.avatar)
-            }
-        }
+        accountService.observe().filterNotNull().map { account -> account.profiles }
 
-    fun selectProfile(profile: ProfileUiState) {
-        viewModelScope.launch { appProfileManager.setAppProfileId(profile.id) }
+    fun selectProfile(profileId: ProfileId) {
+        viewModelScope.launch { appProfileManager.setAppProfileId(profileId) }
     }
 
     private val userDate = MutableStateFlow<LocalDate?>(null)
@@ -118,11 +115,10 @@ class HomeViewModel(
 
                     HomeUiState(
                         profiles = profiles,
-                        selectedProfile = profiles.find { it.id == selectedProfileId },
+                        selectedProfileId = selectedProfileId,
                         date = dateTime.date,
                         meals = meals,
-                        activeMeal =
-                            activeMeal?.let { am -> meals.find { it.identity == am.identity } },
+                        activeMealId = activeMeal?.identity,
                     )
                 }
             }
