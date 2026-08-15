@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.home.calendar
+package com.maksimowiczm.foodyou.features.home.ui.calendar
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState

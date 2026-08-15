@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.home
+package com.maksimowiczm.foodyou.features.home.ui
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationConstants.DefaultDurationMillis
@@ -68,7 +68,7 @@ import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilt
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
-import com.maksimowiczm.foodyou.features.home.calendar.CalendarCard
+import com.maksimowiczm.foodyou.features.home.ui.calendar.CalendarCard
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.shared.ui.barcodescanner.FullScreenCameraBarcodeScanner

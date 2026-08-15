@@ -5,8 +5,12 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
+import com.maksimowiczm.foodyou.common.infrastructure.room.DateConverters
 import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter
+import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionConverter
 import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
+import com.maksimowiczm.foodyou.features.home.integration.HomeDao
+import com.maksimowiczm.foodyou.features.home.integration.HomeEntryEntity
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryEntryMealEntity
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryEntryReferenceEntity
@@ -26,6 +30,7 @@ import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlatten
             UserRecipeCompositionReferenceEntity::class,
             FoodDiaryEntryReferenceEntity::class,
             FoodDiaryEntryMealEntity::class,
+            HomeEntryEntity::class,
         ],
     views = [UserRecipeFlattenedCompositionView::class],
     version = ReadModelDatabase.VERSION,
@@ -35,10 +40,14 @@ import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlatten
     UuidConverter::class,
     QuantityTypeConverter::class,
     FoodCompositionComponentIdentityConverter::class,
+    DateConverters::class,
+    FoodCompositionConverter::class,
 )
 @ConstructedBy(ReadModelDatabaseConstructor::class)
 internal abstract class ReadModelDatabase :
     RoomDatabase(), SearchDatabase, UserRecipeDatabase, FoodDiaryDatabase {
+    abstract val homeDao: HomeDao
+
     companion object {
         const val VERSION = 1
 

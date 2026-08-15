@@ -43,7 +43,7 @@ import com.maksimowiczm.foodyou.features.fooddetails.FoodDataCentralDetailsScree
 import com.maksimowiczm.foodyou.features.fooddetails.OpenFoodFactsDetailsScreen
 import com.maksimowiczm.foodyou.features.fooddetails.UserProductDetailsScreen
 import com.maksimowiczm.foodyou.features.fooddetails.UserRecipeDetailsScreen
-import com.maksimowiczm.foodyou.features.home.HomeScreen
+import com.maksimowiczm.foodyou.features.home.ui.HomeScreen
 import com.maksimowiczm.foodyou.features.language.LanguageScreen
 import com.maksimowiczm.foodyou.features.meal.MealScheduleScreen
 import com.maksimowiczm.foodyou.features.openfoodfacts.OpenFoodFactsLoginDialog

@@ -46,8 +46,8 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 class FoodDiaryIntegrationTest {
-    private val profileId = ProfileId(Uuid.random())
-    private val mealId = MealIdentity(Uuid.random())
+    private val profileId = ProfileId()
+    private val mealId = MealIdentity()
 
     @Test
     fun updating_user_product_updates_diary_entries_using_it() = runTest {

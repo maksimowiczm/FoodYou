@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.home
+package com.maksimowiczm.foodyou.features.home.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
@@ -496,13 +497,12 @@ private fun MealCard(
 
 @Preview
 @Composable
-private fun MealCardsPreview() {
+private fun MealCardsPreview(@PreviewParameter(HomeUiStateProvider::class) uiState: HomeUiState) {
     PreviewFoodYouTheme {
-        val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
         MealCards(
-            meals = fakeHomeState.meals,
+            meals = uiState.meals,
             contentPadding = PaddingValues(),
-            shimmer = shimmer,
+            shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View),
             onAdd = {},
             onEntry = {},
             modifier = Modifier.verticalScroll(rememberScrollState()),

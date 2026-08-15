@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.features.home
+package com.maksimowiczm.foodyou.features.home.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -107,7 +107,7 @@ fun HomeScreenTopBar(
     onSelectProfile: (ProfileUiState) -> Unit,
     onBarcodeScanner: () -> Unit,
     onMenu: () -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
 ) {
     val motionScheme = MaterialTheme.motionScheme
 
@@ -382,7 +382,7 @@ private fun TopBarLayout(
     progress: () -> Float,
     startSlot: @Composable () -> Unit,
     endSlot: @Composable () -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     val showSlots by remember(progress) { derivedStateOf { progress() > 0f } }
@@ -434,7 +434,7 @@ private fun SearchBarContent(
     onSearch: (String) -> Unit,
     onClear: () -> Unit,
     onBarcodeScanner: () -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
 ) {
     val isHome by remember(homeProgress) { derivedStateOf { homeProgress() == 1f } }
 
@@ -538,7 +538,7 @@ private fun SearchBarContent(
 fun SearchInputField(
     textFieldState: TextFieldState,
     onSearch: (String) -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -563,7 +563,7 @@ fun SearchInputField(
                 interactionSource = interactionSource,
                 colors = colors,
                 contentPadding = PaddingValues(start = 44.dp, end = 92.dp),
-                container = { Box(Modifier.Companion) },
+                container = { Box(Modifier) },
             ),
     )
 }
