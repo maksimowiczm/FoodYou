@@ -315,37 +315,41 @@ fun HomeScreenContent(
                         )
                     }
 
-                HomeScreenTopBar(
-                    profile = uiState.selectedProfile,
-                    profiles = uiState.profiles,
-                    meal = uiState.activeMeal,
-                    showMeal = isSearching.value && latestEvent == null,
-                    date = uiState.date,
-                    textFieldState = textFieldState,
-                    shimmer = shimmer,
-                    homeProgress = homeProgress,
-                    onAvatar = onAvatar,
-                    onSearch = onSearch,
-                    onSearchBar = {
-                        openSearch()
-                        scope.launch {
-                            delay(DefaultDurationMillis.milliseconds)
-                            focusRequester.requestFocus()
+                Box(
+                    Modifier.zIndex(100f)
+                        .fillMaxWidth()
+                        .pointerInput(Unit) { detectTapGestures {} }
+                        .drawBehind {
+                            drawRect(brush = brush, size = Size(size.width, size.height))
                         }
-                    },
-                    onBack = closeSearch,
-                    onSelectProfile = onSelectProfile,
-                    onBarcodeScanner = { showBarcodeScanner.value = true },
-                    onMenu = { scope.launch { railState.expand() } },
-                    modifier =
-                        Modifier.zIndex(100f)
-                            .pointerInput(Unit) { detectTapGestures {} }
-                            .drawBehind {
-                                drawRect(brush = brush, size = Size(size.width, size.height))
+                ) {
+                    HomeScreenTopBar(
+                        profile = uiState.selectedProfile,
+                        profiles = uiState.profiles,
+                        meal = uiState.activeMeal,
+                        date = uiState.date,
+                        textFieldState = textFieldState,
+                        shimmer = shimmer,
+                        homeProgress = homeProgress,
+                        onAvatar = onAvatar,
+                        onSearch = onSearch,
+                        onSearchBar = {
+                            openSearch()
+                            scope.launch {
+                                delay(DefaultDurationMillis.milliseconds)
+                                focusRequester.requestFocus()
                             }
-                            .focusRequester(focusRequester)
-                            .onGloballyPositioned { topBarHeight.value = it.size.height },
-                )
+                        },
+                        onBack = closeSearch,
+                        onSelectProfile = onSelectProfile,
+                        onBarcodeScanner = { showBarcodeScanner.value = true },
+                        onMenu = { scope.launch { railState.expand() } },
+                        modifier =
+                            Modifier.focusRequester(focusRequester).onGloballyPositioned {
+                                topBarHeight.value = it.size.height
+                            },
+                    )
+                }
             },
         ) { contentPadding ->
             if (isSearching.value) {

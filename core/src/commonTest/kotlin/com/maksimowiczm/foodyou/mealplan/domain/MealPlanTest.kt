@@ -6,8 +6,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
-import kotlin.test.assertNull
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalTime
@@ -185,53 +185,35 @@ class MealPlanTest {
     }
 
     @Test
-    fun `activeMealStrict returns matching meal when time is within range`() {
-        val breakfast = Meal(name = "Breakfast", timeWindow = range("07:00", "09:00"))
-        val lunch = Meal(name = "Lunch", timeWindow = range("12:00", "14:00"))
-        val plan = MealPlan(listOf(breakfast, lunch))
-
-        assertEquals(breakfast, plan.activeMealStrict(LocalTime.parse("08:00")))
-    }
-
-    @Test
-    fun `activeMealStrict returns null when no range matches time`() {
-        val breakfast = Meal(name = "Breakfast", timeWindow = range("07:00", "09:00"))
-        val lunch = Meal(name = "Lunch", timeWindow = range("12:00", "14:00"))
-        val plan = MealPlan(listOf(breakfast, lunch))
-
-        assertNull(plan.activeMealStrict(LocalTime.parse("10:00")))
-    }
-
-    @Test
-    fun `activeMealStrict handles ranges wrapping past midnight`() {
-        val dinner = Meal(name = "Dinner", timeWindow = range("22:00", "02:00"))
-        val plan = MealPlan(listOf(dinner))
-
-        assertEquals(dinner, plan.activeMealStrict(LocalTime.parse("23:00")))
-        assertEquals(dinner, plan.activeMealStrict(LocalTime.parse("01:00")))
-        assertNull(plan.activeMealStrict(LocalTime.parse("12:00")))
-    }
-
-    @Test
     fun `activeMeal returns active meal when time is within range`() {
         val breakfast = Meal(name = "Breakfast", timeWindow = range("07:00", "09:00"))
         val lunch = Meal(name = "Lunch", timeWindow = range("12:00", "14:00"))
         val plan = MealPlan(listOf(breakfast, lunch))
 
-        assertEquals(breakfast, plan.activeMeal(LocalTime.parse("08:00")))
+        assertEquals(breakfast, plan.activeMeal(LocalTime.parse("08:00"), 10.minutes))
     }
 
     @Test
-    fun `activeMeal returns closest meal when no range matches time`() {
+    fun `activeMeal returns closest meal within threshold when no range matches time`() {
         val breakfast = Meal(name = "Breakfast", timeWindow = range("07:00", "09:00"))
         val lunch = Meal(name = "Lunch", timeWindow = range("12:00", "14:00"))
         val plan = MealPlan(listOf(breakfast, lunch))
 
-        // 10:00 is closer to breakfast (1h away) than to lunch (2h away)
-        assertEquals(breakfast, plan.activeMeal(LocalTime.parse("10:00")))
+        // 09:05 is 5 minutes from breakfast, within 10m threshold
+        assertEquals(breakfast, plan.activeMeal(LocalTime.parse("09:05"), 10.minutes))
 
-        // 11:30 is closer to lunch (30m away) than to breakfast (2.5h away)
-        assertEquals(lunch, plan.activeMeal(LocalTime.parse("11:30")))
+        // 11:55 is 5 minutes from lunch, within 10m threshold
+        assertEquals(lunch, plan.activeMeal(LocalTime.parse("11:55"), 10.minutes))
+    }
+
+    @Test
+    fun `activeMeal falls back to all day meal when range meal is outside threshold`() {
+        val breakfast = Meal(name = "Breakfast", timeWindow = range("07:00", "09:00"))
+        val allDay = Meal(name = "All Day", timeWindow = Meal.TimeWindow.AllDay)
+        val plan = MealPlan(listOf(breakfast, allDay))
+
+        // 10:00 is 1 hour from breakfast, outside 10m threshold
+        assertEquals(allDay, plan.activeMeal(LocalTime.parse("10:00"), 10.minutes))
     }
 
     @Test
@@ -239,7 +221,7 @@ class MealPlanTest {
         val allDay = Meal(name = "All Day", timeWindow = Meal.TimeWindow.AllDay)
         val plan = MealPlan(listOf(allDay))
 
-        assertEquals(allDay, plan.activeMeal(LocalTime.parse("15:00")))
+        assertEquals(allDay, plan.activeMeal(LocalTime.parse("15:00"), 10.minutes))
     }
 
     @Test
@@ -247,7 +229,7 @@ class MealPlanTest {
         val breakfast = Meal(name = "Breakfast", timeWindow = range("07:00", "09:00"))
         val plan = MealPlan(listOf(breakfast))
 
-        assertEquals(breakfast, plan.activeMeal(LocalTime.parse("15:00")))
+        assertEquals(breakfast, plan.activeMeal(LocalTime.parse("15:00"), 10.minutes))
     }
 
     private fun range(start: String, end: String) =

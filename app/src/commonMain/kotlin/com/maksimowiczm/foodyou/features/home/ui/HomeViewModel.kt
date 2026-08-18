@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.features.home.integration.HomeDao
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryIdentity
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
-import com.maksimowiczm.foodyou.mealplan.domain.activeMealStrict
+import com.maksimowiczm.foodyou.mealplan.domain.activeMeal
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -69,7 +69,7 @@ class HomeViewModel(
                 mealPlanService.observe(),
                 dateTime,
             ) { mealPlan, date ->
-                mealPlan.activeMealStrict(date.time)
+                mealPlan.activeMeal(date.time, 10.minutes)
             }
         else
             mealPlanService.observe().map { mealPlan ->
