@@ -420,58 +420,60 @@ fun HomeScreenContent(
                     onFill = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
                 )
             }
-            if (uiState.selectedProfile != null)
-                LazyColumn(
-                    modifier =
-                        Modifier.fillMaxSize().graphicsLayer {
-                            alpha =
-                                when {
-                                    latestEvent != null ->
-                                        (latestEvent.progress - Crossfade.PROGRESS_THRESHOLD / 2) /
-                                            Crossfade.PROGRESS_THRESHOLD
+            if (homeProgressAnimatable.value != 0f || latestEvent != null)
+                if (uiState.selectedProfile != null)
+                    LazyColumn(
+                        modifier =
+                            Modifier.fillMaxSize().graphicsLayer {
+                                alpha =
+                                    when {
+                                        latestEvent != null ->
+                                            (latestEvent.progress -
+                                                Crossfade.PROGRESS_THRESHOLD / 2) /
+                                                Crossfade.PROGRESS_THRESHOLD
 
-                                    else -> homeProgressAnimatable.value
-                                }
-                        },
-                    contentPadding = contentPadding.add(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    uiState.selectedProfile.homeCardsOrder.forEach {
-                        when (it) {
-                            HomeCard.Calendar ->
-                                item {
-                                    CalendarCard(
-                                        date = uiState.date,
-                                        onSelectDate = onSelectDate,
-                                        contentPadding = PaddingValues(horizontal = 8.dp),
-                                    )
-                                }
+                                        else -> homeProgressAnimatable.value
+                                    }
+                            },
+                        contentPadding = contentPadding.add(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        uiState.selectedProfile.homeCardsOrder.forEach {
+                            when (it) {
+                                HomeCard.Calendar ->
+                                    item {
+                                        CalendarCard(
+                                            date = uiState.date,
+                                            onSelectDate = onSelectDate,
+                                            contentPadding = PaddingValues(horizontal = 8.dp),
+                                        )
+                                    }
 
-                            HomeCard.MealCards ->
-                                item {
-                                    MealCards(
-                                        meals = uiState.meals,
-                                        shimmer = shimmer,
-                                        contentPadding = PaddingValues(horizontal = 8.dp),
-                                        onAdd = {
-                                            onSelectMeal(it)
-                                            openSearch()
-                                        },
-                                        onEntry = {
-                                            // TODO
-                                        },
-                                    )
-                                }
+                                HomeCard.MealCards ->
+                                    item {
+                                        MealCards(
+                                            meals = uiState.meals,
+                                            shimmer = shimmer,
+                                            contentPadding = PaddingValues(horizontal = 8.dp),
+                                            onAdd = {
+                                                onSelectMeal(it)
+                                                openSearch()
+                                            },
+                                            onEntry = {
+                                                // TODO
+                                            },
+                                        )
+                                    }
+                            }
                         }
                     }
-                }
-            else
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    ContainedLoadingIndicator()
-                }
+                else
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        ContainedLoadingIndicator()
+                    }
         }
     }
 
