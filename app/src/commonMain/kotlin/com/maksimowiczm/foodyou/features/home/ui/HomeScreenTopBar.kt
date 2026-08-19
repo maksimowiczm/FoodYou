@@ -199,7 +199,13 @@ fun HomeScreenTopBar(
                     if (meal != null)
                         Text(
                             text = meal.name,
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier =
+                                Modifier.fillMaxWidth()
+                                    .heightIn(
+                                        max =
+                                            MaterialTheme.typography.brand.displayMedium.toDp() *
+                                                1.5f
+                                    ),
                             autoSize =
                                 TextAutoSize.StepBased(
                                     minFontSize = MaterialTheme.typography.bodyLarge.fontSize,
@@ -418,7 +424,6 @@ private fun TopBarLayout(
         val infoHeightPx = lerp(naturalInfoHeight.toDp(), 0.dp, p).roundToPx().coerceAtLeast(0)
         val nutrientsHeightPx =
             lerp(naturalNutrientsHeight.toDp(), 0.dp, p).roundToPx().coerceAtLeast(0)
-        val topPx = infoHeightPx + nutrientsHeightPx
 
         val looseHeight = Constraints(minHeight = 0, maxHeight = constraints.maxHeight)
 
@@ -443,7 +448,12 @@ private fun TopBarLayout(
                 Constraints(maxWidth = constraints.maxWidth, maxHeight = nutrientsHeightPx)
             )
 
-        val contentHeight = maxOf(navigationP.height, avatarP.height, (searchBarP.height + topPx))
+        val measuredInfoHeight = mealInfoP?.height ?: 0
+        val measuredNutrientsHeight = nutrientsP?.height ?: 0
+        val actualTopPx = measuredInfoHeight + measuredNutrientsHeight
+
+        val contentHeight =
+            maxOf(navigationP.height, avatarP.height, (searchBarP.height + actualTopPx))
         val height = contentHeight.coerceIn(constraints.minHeight, constraints.maxHeight)
 
         val neededWidth = slotPx * 2 + hPadPx * 2 + gapPx * 2 + searchBarP.width
@@ -451,10 +461,10 @@ private fun TopBarLayout(
 
         layout(totalWidth, height) {
             mealInfoP?.let { it.placeRelative((totalWidth - it.width) / 2, 0) }
-            nutrientsP?.placeRelative(0, infoHeightPx)
+            nutrientsP?.placeRelative(0, measuredInfoHeight)
             searchBarP.placeRelative(
                 hPadPx + slotPx + gapPx,
-                (height + topPx - searchBarP.height) / 2,
+                (height + actualTopPx - searchBarP.height) / 2,
             )
             navigationP.placeRelative(4.dp.roundToPx(), 8.dp.roundToPx())
             avatarP.placeRelative(totalWidth - 52.dp.roundToPx(), 8.dp.roundToPx())
