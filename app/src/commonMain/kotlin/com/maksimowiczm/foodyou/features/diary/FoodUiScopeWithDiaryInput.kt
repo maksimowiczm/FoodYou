@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.capabilities.fooddetails
+package com.maksimowiczm.foodyou.features.diary
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateBounds
@@ -35,6 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.account.domain.Profile
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithQuantityInput
+import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantityInput
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
@@ -46,14 +48,15 @@ import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import kotlin.uuid.Uuid
+import kotlinx.serialization.Serializable
 
 interface FoodUiScopeWithDiaryInput : FoodUiScopeWithQuantityInput {
     val profiles: List<ProfileUiState>
     val selectedProfiles: List<ProfileUiState>
 }
 
-// TODO: Do we need this?
 @Immutable
+@Serializable
 data class ProfileUiState(val id: ProfileId, val name: String, val avatar: Profile.Avatar)
 
 @Composable
@@ -77,68 +80,73 @@ fun FoodUiScopeWithDiaryInput.DiaryInput(
                                 boundsTransform = { _, _ -> motionScheme.fastSpatialSpec() },
                             ),
                 )
-                Spacer(Modifier.width(8.dp))
-                ProfileStack(
-                    selectedProfiles = selectedProfiles,
-                    expanded = expanded,
-                    onExpandedChange = { expanded = it },
-                )
+                if (profiles.size > 1) {
+                    Spacer(Modifier.width(8.dp))
+                    ProfileStack(
+                        selectedProfiles = selectedProfiles,
+                        expanded = expanded,
+                        onExpandedChange = { expanded = it },
+                    )
+                }
             }
         }
-        AnimatedVisibility(
-            visible = expanded,
-            enter =
-                fadeIn(motionScheme.fastEffectsSpec()) +
-                    expandVertically(motionScheme.defaultSpatialSpec()),
-            exit =
-                fadeOut(motionScheme.fastEffectsSpec()) +
-                    shrinkVertically(motionScheme.fastSpatialSpec()),
-        ) {
-            Column(
-                modifier = Modifier.padding(top = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp),
+        if (profiles.size > 1) {
+            AnimatedVisibility(
+                visible = expanded,
+                enter =
+                    fadeIn(motionScheme.fastEffectsSpec()) +
+                        expandVertically(motionScheme.defaultSpatialSpec()),
+                exit =
+                    fadeOut(motionScheme.fastEffectsSpec()) +
+                        shrinkVertically(motionScheme.fastSpatialSpec()),
             ) {
-                profiles.forEachIndexed { index, profile ->
-                    SegmentedListItem(
-                        selected = profile in selectedProfiles,
-                        onClick = {
-                            val selected = selectedProfiles.toMutableList()
-                            if (profile in selected && selected.size > 1) selected.remove(profile)
-                            else selected.add(profile)
-                            onSelectProfiles(selected.distinct())
-                        },
-                        shapes =
-                            ListItemDefaults.segmentedShapes(
-                                index = index,
-                                count = profiles.size,
-                            ),
-                        colors =
-                            ListItemDefaults.segmentedColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainer
-                            ),
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                Column(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    profiles.forEachIndexed { index, profile ->
+                        SegmentedListItem(
+                            selected = profile in selectedProfiles,
+                            onClick = {
+                                val selected = selectedProfiles.toMutableList()
+                                if (profile in selected && selected.size > 1)
+                                    selected.remove(profile)
+                                else selected.add(profile)
+                                onSelectProfiles(selected.distinct())
+                            },
+                            shapes =
+                                ListItemDefaults.segmentedShapes(
+                                    index = index,
+                                    count = profiles.size,
+                                ),
+                            colors =
+                                ListItemDefaults.segmentedColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                                ),
                         ) {
-                            Box(
-                                modifier =
-                                    Modifier.size(40.dp)
-                                        .clip(CircleShape)
-                                        .wrapContentSize(unbounded = true),
-                                contentAlignment = Alignment.Center,
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
                             ) {
-                                profile.avatar.Avatar(
-                                    when (profile.avatar) {
-                                        is Profile.Avatar.Photo -> Modifier.size(40.dp)
-                                        is Profile.Avatar.Predefined ->
-                                            Modifier.padding(8.dp)
-                                                .size(24.dp)
-                                                .wrapContentSize(unbounded = true)
-                                    }
-                                )
+                                Box(
+                                    modifier =
+                                        Modifier.size(40.dp)
+                                            .clip(CircleShape)
+                                            .wrapContentSize(unbounded = true),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    profile.avatar.Avatar(
+                                        when (profile.avatar) {
+                                            is Profile.Avatar.Photo -> Modifier.size(40.dp)
+                                            is Profile.Avatar.Predefined ->
+                                                Modifier.padding(8.dp)
+                                                    .size(24.dp)
+                                                    .wrapContentSize(unbounded = true)
+                                        }
+                                    )
+                                }
+                                Text(profile.name)
                             }
-                            Text(profile.name)
                         }
                     }
                 }
@@ -148,7 +156,7 @@ fun FoodUiScopeWithDiaryInput.DiaryInput(
 }
 
 @Composable
-fun LookaheadScope.ProfileStack(
+private fun LookaheadScope.ProfileStack(
     selectedProfiles: List<ProfileUiState>,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,

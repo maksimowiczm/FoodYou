@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavDisplay
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute
 import com.maksimowiczm.foodyou.app.navigation.rememberFoodYouNavBackStack
 import com.maksimowiczm.foodyou.capabilities.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.common.extension.removeWhile
 import com.maksimowiczm.foodyou.common.extension.safeRemoveLast
 import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import com.maksimowiczm.foodyou.features.onboarding.Onboarding
@@ -42,10 +43,7 @@ fun FoodYouApp(
         val home = backStack.first() as? FoodYouNavHostRoute.Home ?: return@LaunchedEffect
 
         if (home.initialQuery != userQuery) {
-            while (backStack.last() !is FoodYouNavHostRoute.Home) {
-                backStack.safeRemoveLast()
-            }
-
+            backStack.removeWhile { it !is FoodYouNavHostRoute.Home }
             backStack.safeRemoveLast()
             backStack.add(FoodYouNavHostRoute.Home(userQuery))
         }
