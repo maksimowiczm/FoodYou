@@ -124,6 +124,142 @@ class MealPlanTest {
     }
 
     @Test
+    fun `reordering meals produces MealsReorderedEvent`() {
+        val timestamp = Instant.fromEpochMilliseconds(5000)
+        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
+
+        val reordered = listOf(dinner, breakfast)
+
+        val events = mealPlan.update(reordered, staticClock(timestamp))
+
+        assertEquals(1, events.size)
+        val event = assertIs<MealsReorderedEvent>(events.single())
+        assertEquals(listOf(dinner.identity, breakfast.identity), event.order)
+        assertEquals(timestamp, event.timestamp)
+    }
+
+    @Test
+    fun `reordering with simultaneous content change produces both events`() {
+        val timestamp = Instant.fromEpochMilliseconds(5000)
+        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
+
+        val updatedBreakfast = breakfast.copy(name = "Big Breakfast")
+        val newMeals = listOf(dinner, updatedBreakfast)
+
+        val events = mealPlan.update(newMeals, staticClock(timestamp))
+
+        assertEquals(2, events.size)
+        val updateEvent = assertIs<MealUpdatedEvent>(events.find { it is MealUpdatedEvent })
+        assertEquals(updatedBreakfast, updateEvent.meal)
+
+        val reorderEvent = assertIs<MealsReorderedEvent>(events.find { it is MealsReorderedEvent })
+        assertEquals(listOf(dinner.identity, breakfast.identity), reorderEvent.order)
+    }
+
+    @Test
+    fun `adding a meal in the middle produces MealAddedEvent and MealsReorderedEvent`() {
+        val timestamp = Instant.fromEpochMilliseconds(5000)
+        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
+
+        val lunch = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        // lunch inserted between breakfast and dinner, not appended at the end
+        val newMeals = listOf(breakfast, lunch, dinner)
+
+        val events = mealPlan.update(newMeals, staticClock(timestamp))
+
+        assertEquals(2, events.size)
+        val addedEvent = assertIs<MealAddedEvent>(events.find { it is MealAddedEvent })
+        assertEquals(lunch, addedEvent.meal)
+
+        val reorderEvent = assertIs<MealsReorderedEvent>(events.find { it is MealsReorderedEvent })
+        assertEquals(
+            listOf(breakfast.identity, lunch.identity, dinner.identity),
+            reorderEvent.order,
+        )
+    }
+
+    @Test
+    fun `adding a meal at the end does not produce MealsReorderedEvent`() {
+        val timestamp = Instant.fromEpochMilliseconds(5000)
+        val mealPlan = MealPlan(meals = listOf(breakfast))
+        val lunch = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+
+        val events = mealPlan.update(listOf(breakfast, lunch), staticClock(timestamp))
+
+        assertEquals(1, events.size)
+        assertIs<MealAddedEvent>(events.single())
+    }
+
+    @Test
+    fun `deleting a meal does not spuriously produce MealsReorderedEvent`() {
+        val timestamp = Instant.fromEpochMilliseconds(5000)
+        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
+
+        val events = mealPlan.update(listOf(dinner), staticClock(timestamp))
+
+        assertEquals(1, events.size)
+        assertIs<MealDeletedEvent>(events.single())
+    }
+
+    @Test
+    fun `deleting a meal from the middle does not spuriously produce MealsReorderedEvent`() {
+        val timestamp = Instant.fromEpochMilliseconds(5000)
+        val lunch = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val mealPlan = MealPlan(meals = listOf(breakfast, lunch, dinner))
+
+        // remove lunch, keep breakfast and dinner in their original relative order
+        val events = mealPlan.update(listOf(breakfast, dinner), staticClock(timestamp))
+
+        assertEquals(1, events.size)
+        val event = assertIs<MealDeletedEvent>(events.single())
+        assertEquals(lunch.identity, event.identity)
+    }
+
+    @Test
+    fun `applying MealsReorderedEvent reorders meals`() {
+        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
+        val event =
+            MealsReorderedEvent(listOf(dinner.identity, breakfast.identity), Clock.System.now())
+
+        val updatedPlan = mealPlan.apply(event)
+
+        assertEquals(listOf(dinner, breakfast), updatedPlan.meals)
+    }
+
+    @Test
+    fun `aggregating update and reorder events produces correct state`() {
+        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val updatedBreakfast = breakfast.copy(name = "Big Breakfast")
+        val now = Clock.System.now()
+        val events =
+            listOf(
+                MealPlanInitializedEvent(Language.English, listOf(breakfast, dinner), now),
+                MealUpdatedEvent(updatedBreakfast, now),
+                MealsReorderedEvent(listOf(dinner.identity, breakfast.identity), now),
+            )
+
+        val mealPlan = events.toMealPlan()
+
+        assertEquals(listOf(dinner, updatedBreakfast), mealPlan.meals)
+    }
+
+    @Test
+    fun `updating with no order change and no content change returns no events`() {
+        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
+
+        val events = mealPlan.update(listOf(breakfast, dinner))
+
+        assertEquals(0, events.size)
+    }
+
+    @Test
     fun `applying MealPlanInitializedEvent sets meals`() {
         val mealPlan = MealPlan()
         val defaultMeals = MealTemplates.forLanguage(Language.English)

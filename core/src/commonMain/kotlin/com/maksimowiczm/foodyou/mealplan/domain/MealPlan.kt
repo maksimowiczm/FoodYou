@@ -26,10 +26,17 @@ fun MealPlan.update(
         currentById[meal.identity]?.let { it != meal } == true
     }
 
+    val removedIds = removed.map { it.identity }.toSet()
+    val naturalOrder =
+        meals.map { it.identity }.filterNot { it in removedIds } + added.map { it.identity }
+    val targetOrder = updatedMeals.map { it.identity }
+    val reordered = targetOrder != naturalOrder
+
     return buildList {
         added.forEach { add(MealAddedEvent(it, now)) }
         changed.forEach { add(MealUpdatedEvent(it, now)) }
         removed.forEach { add(MealDeletedEvent(it.identity, now)) }
+        if (reordered) add(MealsReorderedEvent(targetOrder, now))
     }
 }
 
@@ -76,8 +83,11 @@ fun MealPlan.apply(event: MealPlanEvent): MealPlan =
         is MealAddedEvent -> copy(meals = meals + event.meal)
         is MealUpdatedEvent ->
             copy(meals = meals.map { if (it.identity == event.meal.identity) event.meal else it })
-
         is MealDeletedEvent -> copy(meals = meals.filterNot { it.identity == event.identity })
+        is MealsReorderedEvent -> {
+            val byId = meals.associateBy { it.identity }
+            copy(meals = event.order.mapNotNull { byId[it] })
+        }
     }
 
 fun Iterable<MealPlanEvent>.toMealPlan(): MealPlan =

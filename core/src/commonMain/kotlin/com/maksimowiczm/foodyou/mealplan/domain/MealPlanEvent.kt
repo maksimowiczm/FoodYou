@@ -33,3 +33,9 @@ data class MealDeletedEvent(
     val identity: MealIdentity,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : MealPlanEvent()
+
+@Serializable
+data class MealsReorderedEvent(
+    val order: List<MealIdentity>,
+    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
+) : MealPlanEvent()
