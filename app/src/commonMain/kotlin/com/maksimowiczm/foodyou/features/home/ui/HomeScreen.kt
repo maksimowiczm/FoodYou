@@ -108,10 +108,12 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun HomeScreen(
     onAvatar: () -> Unit,
-    onFoodDataCentralProduct: (FoodDataCentralProductIdentity, Quantity, MealIdentity?) -> Unit,
-    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity, Quantity, MealIdentity?) -> Unit,
-    onUserProduct: (UserProductIdentity, Quantity, MealIdentity?) -> Unit,
-    onUserRecipe: (UserRecipeIdentity, Quantity, MealIdentity?) -> Unit,
+    onFoodDataCentralProduct:
+        (FoodDataCentralProductIdentity, Quantity, MealIdentity?, LocalDate?) -> Unit,
+    onOpenFoodFactsProduct:
+        (OpenFoodFactsProductIdentity, Quantity, MealIdentity?, LocalDate?) -> Unit,
+    onUserProduct: (UserProductIdentity, Quantity, MealIdentity?, LocalDate?) -> Unit,
+    onUserRecipe: (UserRecipeIdentity, Quantity, MealIdentity?, LocalDate?) -> Unit,
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
     initialQuery: String?,
@@ -154,16 +156,16 @@ fun HomeScreen(
         onSelectDate = viewModel::selectDate,
         onSelectMeal = viewModel::selectMeal,
         onFoodDataCentralProduct = { product, quantity ->
-            onFoodDataCentralProduct(product, quantity, uiState.activeMeal?.identity)
+            onFoodDataCentralProduct(product, quantity, uiState.activeMeal?.identity, uiState.date)
         },
         onOpenFoodFactsProduct = { product, quantity ->
-            onOpenFoodFactsProduct(product, quantity, uiState.activeMeal?.identity)
+            onOpenFoodFactsProduct(product, quantity, uiState.activeMeal?.identity, uiState.date)
         },
         onUserProduct = { product, quantity ->
-            onUserProduct(product, quantity, uiState.activeMeal?.identity)
+            onUserProduct(product, quantity, uiState.activeMeal?.identity, uiState.date)
         },
         onUserRecipe = { recipe, quantity ->
-            onUserRecipe(recipe, quantity, uiState.activeMeal?.identity)
+            onUserRecipe(recipe, quantity, uiState.activeMeal?.identity, uiState.date)
         },
         onCreateProduct = onCreateProduct,
         onCreateRecipe = onCreateRecipe,

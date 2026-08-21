@@ -62,6 +62,11 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import foodyou.app.generated.resources.*
+import kotlin.time.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -74,6 +79,7 @@ fun AddFoodDataCentralDiaryEntryScreen(
     mealIdentity: MealIdentity,
     identity: FoodDataCentralProductIdentity,
     initialQuantity: Quantity,
+    date: LocalDate?,
     modifier: Modifier = Modifier,
 ) {
     val foodViewModel: FoodDataCentralDetailsViewModel = koinViewModel {
@@ -142,10 +148,14 @@ fun AddFoodDataCentralDiaryEntryScreen(
     scope?.Screen(
         onBack = onBack,
         onAdd = {
+            val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            val timestamp = LocalDateTime(date ?: now.date, now.time)
+
             foodDiaryEntryViewModel.create(
                 product = scope.product,
                 quantity = scope.selectedQuantity ?: return@Screen,
                 profiles = scope.selectedProfiles.map { it.id },
+                timestamp = timestamp,
             )
         },
         onRefresh = foodViewModel::refresh,

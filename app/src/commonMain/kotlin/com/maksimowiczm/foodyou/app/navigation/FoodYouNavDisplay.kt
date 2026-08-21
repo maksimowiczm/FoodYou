@@ -72,6 +72,7 @@ import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -206,23 +207,29 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                 entry<Home> {
                     HomeScreen(
                         onAvatar = { backStack.add(SwitchProfile) },
-                        onFoodDataCentralProduct = { id, quantity, mealId ->
+                        onFoodDataCentralProduct = { id, quantity, mealId, date ->
                             if (mealId == null)
                                 backStack.add(FoodDataCentralProductDetails(id, quantity))
-                            else backStack.add(FoodDataCentralAddDiaryEntry(id, quantity, mealId))
+                            else
+                                backStack.add(
+                                    FoodDataCentralAddDiaryEntry(id, quantity, mealId, date)
+                                )
                         },
-                        onOpenFoodFactsProduct = { id, quantity, mealId ->
+                        onOpenFoodFactsProduct = { id, quantity, mealId, date ->
                             if (mealId == null)
                                 backStack.add(OpenFoodFactsProductDetails(id, quantity))
-                            else backStack.add(OpenFoodFactsAddDiaryEntry(id, quantity, mealId))
+                            else
+                                backStack.add(
+                                    OpenFoodFactsAddDiaryEntry(id, quantity, mealId, date)
+                                )
                         },
-                        onUserProduct = { id, quantity, mealId ->
+                        onUserProduct = { id, quantity, mealId, date ->
                             if (mealId == null) backStack.add(UserProductDetails(id, quantity))
-                            else backStack.add(UserProductAddDiaryEntry(id, quantity, mealId))
+                            else backStack.add(UserProductAddDiaryEntry(id, quantity, mealId, date))
                         },
-                        onUserRecipe = { id, quantity, mealId ->
+                        onUserRecipe = { id, quantity, mealId, date ->
                             if (mealId == null) backStack.add(UserRecipeDetails(id, quantity))
-                            else backStack.add(UserRecipeAddDiaryEntry(id, quantity, mealId))
+                            else backStack.add(UserRecipeAddDiaryEntry(id, quantity, mealId, date))
                         },
                         onCreateProduct = { backStack.add(CreateProduct) },
                         onCreateRecipe = { backStack.add(CreateRecipe) },
@@ -307,42 +314,45 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         mealIdentity = route.mealIdentity,
                         identity = route.identity,
                         initialQuantity = route.quantity,
+                        date = route.date,
                     )
                 }
-                entry<OpenFoodFactsAddDiaryEntry> { route ->
+                entry<OpenFoodFactsAddDiaryEntry> {
                     AddOpenFoodFactsDiaryEntryScreen(
                         onBack = { backStack.removeLastIf<OpenFoodFactsAddDiaryEntry>() },
                         onAdd = {
-                            if (route.popToHome) backStack.removeWhile { it !is Home }
+                            if (it.popToHome) backStack.removeWhile { route -> route !is Home }
                             else backStack.removeLastIf<OpenFoodFactsAddDiaryEntry>()
                         },
-                        mealIdentity = route.mealIdentity,
-                        identity = route.identity,
-                        initialQuantity = route.quantity,
+                        mealIdentity = it.mealIdentity,
+                        identity = it.identity,
+                        initialQuantity = it.quantity,
+                        date = it.date,
                     )
                 }
-                entry<UserProductAddDiaryEntry> { route ->
+                entry<UserProductAddDiaryEntry> {
                     AddUserProductDiaryEntryScreen(
                         onBack = { backStack.removeLastIf<UserProductAddDiaryEntry>() },
                         onAdd = {
-                            if (route.popToHome) backStack.removeWhile { it !is Home }
+                            if (it.popToHome) backStack.removeWhile { route -> route !is Home }
                             else backStack.removeLastIf<UserProductAddDiaryEntry>()
                         },
-                        onEdit = { backStack.add(EditUserProduct(route.identity)) },
+                        onEdit = { backStack.add(EditUserProduct(it.identity)) },
                         onDelete = { backStack.removeLastIf<UserProductAddDiaryEntry>() },
-                        mealIdentity = route.mealIdentity,
-                        identity = route.identity,
-                        initialQuantity = route.quantity,
+                        mealIdentity = it.mealIdentity,
+                        identity = it.identity,
+                        initialQuantity = it.quantity,
+                        date = it.date,
                     )
                 }
-                entry<UserRecipeAddDiaryEntry> { route ->
+                entry<UserRecipeAddDiaryEntry> {
                     AddUserRecipeDiaryEntryScreen(
                         onBack = { backStack.removeLastIf<UserRecipeAddDiaryEntry>() },
                         onAdd = {
-                            if (route.popToHome) backStack.removeWhile { it !is Home }
+                            if (it.popToHome) backStack.removeWhile { route -> route !is Home }
                             else backStack.removeLastIf<UserRecipeAddDiaryEntry>()
                         },
-                        onEdit = { backStack.add(EditRecipe(route.identity)) },
+                        onEdit = { backStack.add(EditRecipe(it.identity)) },
                         onDelete = { backStack.removeLastIf<UserRecipeAddDiaryEntry>() },
                         onNavigateToIngredient = { identity, quantity ->
                             val ingredientRoute =
@@ -351,41 +361,46 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                                         UserProductAddDiaryEntry(
                                             UserProductIdentity(identity.id),
                                             quantity,
-                                            route.mealIdentity,
+                                            it.mealIdentity,
                                             popToHome = true,
+                                            date = it.date,
                                         )
 
                                     is FoodCompositionComponentIdentity.OpenFoodFacts ->
                                         OpenFoodFactsAddDiaryEntry(
                                             OpenFoodFactsProductIdentity(identity.barcode),
                                             quantity,
-                                            route.mealIdentity,
+                                            it.mealIdentity,
                                             popToHome = true,
+                                            date = it.date,
                                         )
 
                                     is FoodCompositionComponentIdentity.FoodDataCentral ->
                                         FoodDataCentralAddDiaryEntry(
                                             FoodDataCentralProductIdentity(identity.fdcId),
                                             quantity,
-                                            route.mealIdentity,
+                                            it.mealIdentity,
                                             popToHome = true,
+                                            date = it.date,
                                         )
 
                                     is FoodCompositionComponentIdentity.Recipe ->
                                         UserRecipeAddDiaryEntry(
                                             UserRecipeIdentity(identity.id),
                                             quantity,
-                                            route.mealIdentity,
+                                            it.mealIdentity,
                                             popToHome = true,
+                                            date = it.date,
                                         )
 
                                     is FoodCompositionComponentIdentity.Anonymous -> TODO()
                                 }
                             backStack.add(ingredientRoute)
                         },
-                        mealIdentity = route.mealIdentity,
-                        identity = route.identity,
-                        initialQuantity = route.quantity,
+                        mealIdentity = it.mealIdentity,
+                        identity = it.identity,
+                        initialQuantity = it.quantity,
+                        date = it.date,
                     )
                 }
             },
@@ -469,6 +484,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
         val identity: FoodDataCentralProductIdentity,
         val quantity: Quantity,
         val mealIdentity: MealIdentity,
+        val date: LocalDate?,
         val popToHome: Boolean = false,
     ) : FoodYouNavHostRoute
 
@@ -477,6 +493,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
         val identity: OpenFoodFactsProductIdentity,
         val quantity: Quantity,
         val mealIdentity: MealIdentity,
+        val date: LocalDate?,
         val popToHome: Boolean = false,
     ) : FoodYouNavHostRoute
 
@@ -485,6 +502,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
         val identity: UserProductIdentity,
         val quantity: Quantity,
         val mealIdentity: MealIdentity,
+        val date: LocalDate?,
         val popToHome: Boolean = false,
     ) : FoodYouNavHostRoute
 
@@ -493,6 +511,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
         val identity: UserRecipeIdentity,
         val quantity: Quantity,
         val mealIdentity: MealIdentity,
+        val date: LocalDate?,
         val popToHome: Boolean = false,
     ) : FoodYouNavHostRoute
 }

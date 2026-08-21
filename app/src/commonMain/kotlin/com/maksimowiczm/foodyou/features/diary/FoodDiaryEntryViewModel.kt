@@ -18,7 +18,6 @@ import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,6 +29,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 
 class FoodDiaryEntryViewModel(
     private val mealIdentity: MealIdentity,
@@ -65,13 +67,17 @@ class FoodDiaryEntryViewModel(
     private val eventBus = Channel<FoodDiaryUiEvents>()
     val uiEvents = eventBus.receiveAsFlow()
 
-    fun create(composition: FoodCompositionComponent, profiles: List<ProfileId>) {
+    fun create(
+        composition: FoodCompositionComponent,
+        profiles: List<ProfileId>,
+        timestamp: LocalDateTime,
+    ) {
         viewModelScope.launch {
             profiles.forEach {
                 foodDiaryService.create(
                     composition = composition,
                     mealIdentity = mealIdentity,
-                    timestamp = Clock.System.now(),
+                    timestamp = timestamp.toInstant(TimeZone.currentSystemDefault()),
                     profileId = it,
                 )
             }
@@ -79,7 +85,12 @@ class FoodDiaryEntryViewModel(
         }
     }
 
-    fun create(product: FoodDataCentralProduct, quantity: Quantity, profiles: List<ProfileId>) {
+    fun create(
+        product: FoodDataCentralProduct,
+        quantity: Quantity,
+        profiles: List<ProfileId>,
+        timestamp: LocalDateTime,
+    ) {
         create(
             composition =
                 FoodCompositionComponent.Simple(
@@ -96,10 +107,16 @@ class FoodDiaryEntryViewModel(
                         ),
                 ),
             profiles = profiles,
+            timestamp = timestamp,
         )
     }
 
-    fun create(product: OpenFoodFactsProduct, quantity: Quantity, profiles: List<ProfileId>) {
+    fun create(
+        product: OpenFoodFactsProduct,
+        quantity: Quantity,
+        profiles: List<ProfileId>,
+        timestamp: LocalDateTime,
+    ) {
         create(
             composition =
                 FoodCompositionComponent.Simple(
@@ -116,10 +133,16 @@ class FoodDiaryEntryViewModel(
                         ),
                 ),
             profiles = profiles,
+            timestamp = timestamp,
         )
     }
 
-    fun create(product: UserProduct, quantity: Quantity, profiles: List<ProfileId>) {
+    fun create(
+        product: UserProduct,
+        quantity: Quantity,
+        profiles: List<ProfileId>,
+        timestamp: LocalDateTime,
+    ) {
         create(
             composition =
                 FoodCompositionComponent.Simple(
@@ -135,10 +158,16 @@ class FoodDiaryEntryViewModel(
                         ),
                 ),
             profiles = profiles,
+            timestamp = timestamp,
         )
     }
 
-    fun create(recipe: UserRecipe, quantity: Quantity, profiles: List<ProfileId>) {
+    fun create(
+        recipe: UserRecipe,
+        quantity: Quantity,
+        profiles: List<ProfileId>,
+        timestamp: LocalDateTime,
+    ) {
         create(
             composition =
                 FoodCompositionComponent.Composite(
@@ -154,6 +183,7 @@ class FoodDiaryEntryViewModel(
                         ),
                 ),
             profiles = profiles,
+            timestamp = timestamp,
         )
     }
 }
