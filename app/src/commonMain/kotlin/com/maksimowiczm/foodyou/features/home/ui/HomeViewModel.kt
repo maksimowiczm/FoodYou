@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.observe
 import com.maksimowiczm.foodyou.features.home.integration.HomeDao
+import com.maksimowiczm.foodyou.features.home.integration.HomeEntryEntity
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryIdentity
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
@@ -95,23 +96,29 @@ class HomeViewModel(
             ) { profiles, selectedProfileId, dateTime, activeMeal, mealPlan ->
                 val entries = homeDao.observeEntries(selectedProfileId.value, dateTime.date)
                 entries.map { homeEntries ->
-                    val meals =
+                    val mealIds = mealPlan.meals.map { it.identity.id }.toSet()
+
+                    val linkedMeals =
                         mealPlan.meals.map { meal ->
-                            HomeMealState(
+                            HomeMealState.Linked(
                                 identity = meal.identity,
                                 name = meal.name,
                                 foods =
                                     homeEntries
                                         .filter { it.mealId == meal.identity.id }
-                                        .map { entry ->
-                                            HomeFoodState(
-                                                identity = FoodDiaryEntryIdentity(entry.entryId),
-                                                time = entry.time,
-                                                component = entry.composition,
-                                            )
-                                        },
+                                        .toFoodStates(),
                             )
                         }
+
+                    val unlinkedFoods =
+                        homeEntries
+                            .filter { it.mealId == null || it.mealId !in mealIds }
+                            .toFoodStates()
+
+                    val meals =
+                        if (unlinkedFoods.isNotEmpty())
+                            linkedMeals + HomeMealState.Unlinked(foods = unlinkedFoods)
+                        else linkedMeals
 
                     HomeUiState(
                         profiles = profiles,
@@ -132,4 +139,12 @@ class HomeViewModel(
                             Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
                     ),
             )
+
+    private fun List<HomeEntryEntity>.toFoodStates() = map { entry ->
+        HomeFoodState(
+            identity = FoodDiaryEntryIdentity(entry.entryId),
+            time = entry.time,
+            component = entry.composition,
+        )
+    }
 }

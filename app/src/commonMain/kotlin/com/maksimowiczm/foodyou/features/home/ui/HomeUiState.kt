@@ -18,15 +18,22 @@ data class HomeUiState(
     val activeMealId: MealIdentity? = null,
 ) {
     val selectedProfile = profiles.singleOrNull { it.id == selectedProfileId }
-    val activeMeal = meals.singleOrNull { it.identity == activeMealId }
+    val activeMeal =
+        meals.filterIsInstance<HomeMealState.Linked>().singleOrNull { it.identity == activeMealId }
 }
 
-@Immutable
-data class HomeMealState(
-    val identity: MealIdentity,
-    val name: String,
-    val foods: List<HomeFoodState>,
-)
+sealed interface HomeMealState {
+    val foods: List<HomeFoodState>
+
+    @Immutable data class Unlinked(override val foods: List<HomeFoodState>) : HomeMealState
+
+    @Immutable
+    data class Linked(
+        val identity: MealIdentity,
+        val name: String,
+        override val foods: List<HomeFoodState>,
+    ) : HomeMealState
+}
 
 @Immutable
 data class HomeFoodState(

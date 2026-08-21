@@ -544,4 +544,6 @@
     <string name="action_expand">Expand</string>
     <string name="action_collapse" description="Opposite of expand">Collapse</string>
 
+    <string name="headline_meal_unlinked">Unlinked</string>
+
 </resources>

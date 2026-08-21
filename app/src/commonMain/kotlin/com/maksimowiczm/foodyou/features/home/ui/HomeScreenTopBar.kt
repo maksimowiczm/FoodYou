@@ -100,7 +100,7 @@ import org.jetbrains.compose.resources.painterResource
 fun HomeScreenTopBar(
     profile: Profile?,
     profiles: List<Profile>,
-    meal: HomeMealState?,
+    meal: HomeMealState.Linked?,
     date: LocalDate,
     textFieldState: TextFieldState,
     shimmer: Shimmer,

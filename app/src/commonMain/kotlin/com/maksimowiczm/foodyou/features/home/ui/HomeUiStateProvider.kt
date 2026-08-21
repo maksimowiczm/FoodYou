@@ -36,7 +36,7 @@ internal class HomeUiStateProvider {
             date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
             meals =
                 listOf(
-                    HomeMealState(
+                    HomeMealState.Linked(
                         identity = activeMealId,
                         name = "Breakfast",
                         foods =
@@ -69,7 +69,7 @@ internal class HomeUiStateProvider {
                                 )
                             ),
                     ),
-                    HomeMealState(
+                    HomeMealState.Linked(
                         identity = MealIdentity(Uuid.random()),
                         name = "Lunch",
                         foods =
@@ -101,6 +101,36 @@ internal class HomeUiStateProvider {
                                         ),
                                 )
                             ),
+                    ),
+                    HomeMealState.Unlinked(
+                        listOf(
+                            HomeFoodState(
+                                identity = FoodDiaryEntryIdentity(Uuid.random()),
+                                time = LocalTime(hour = 12, minute = 30),
+                                component =
+                                    FoodCompositionComponent.Anonymous(
+                                        identity =
+                                            FoodCompositionComponentIdentity.Anonymous(
+                                                Uuid.random()
+                                            ),
+                                        name = FoodName(fallback = "Grilled Chicken Breast"),
+                                        image = null,
+                                        nutritionFacts =
+                                            NutritionFacts(
+                                                proteins = 23.3.grams.toNutrientValue(),
+                                                carbohydrates = 0.grams.toNutrientValue(),
+                                                fats = 2.8.grams.toNutrientValue(),
+                                                energy = 122.kilocalories.toNutrientValue(),
+                                            ),
+                                        quantity =
+                                            FoodComponentComponentQuantity.Weight(
+                                                servingWeight = null,
+                                                packageWeight = null,
+                                                absoluteWeight = 180.grams,
+                                            ),
+                                    ),
+                            )
+                        )
                     ),
                 ),
             activeMealId = activeMealId,

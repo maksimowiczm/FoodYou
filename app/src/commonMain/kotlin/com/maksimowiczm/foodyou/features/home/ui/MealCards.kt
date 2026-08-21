@@ -82,12 +82,21 @@ fun MealCards(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         meals.forEach {
-            MealCard(
-                state = it,
-                shimmer = shimmer,
-                onAdd = { onAdd(it.identity) },
-                onEntry = onEntry,
-            )
+            when (it) {
+                is HomeMealState.Linked ->
+                    MealCard(
+                        state = it,
+                        shimmer = shimmer,
+                        onAdd = { onAdd(it.identity) },
+                        onEntry = onEntry,
+                    )
+                is HomeMealState.Unlinked ->
+                    MealCard(
+                        state = it,
+                        shimmer = shimmer,
+                        onEntry = onEntry,
+                    )
+            }
         }
     }
 }
@@ -96,9 +105,9 @@ fun MealCards(
 private fun MealCard(
     state: HomeMealState,
     shimmer: Shimmer,
-    onAdd: () -> Unit,
     onEntry: (FoodDiaryEntryIdentity) -> Unit,
     modifier: Modifier = Modifier,
+    onAdd: (() -> Unit)? = null,
 ) {
     var expanded by rememberSaveable { mutableStateOf(true) }
     val sumNutrients =
@@ -158,7 +167,12 @@ private fun MealCard(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = state.name,
+                        text =
+                            when (state) {
+                                is HomeMealState.Linked -> state.name
+                                is HomeMealState.Unlinked ->
+                                    stringResource(Res.string.headline_meal_unlinked)
+                            },
                         style = MaterialTheme.typography.headlineMedium,
                     )
                     Spacer(Modifier.weight(1f))
@@ -450,19 +464,20 @@ private fun MealCard(
                             }
                         }
                     }
-                    FilledIconButton(
-                        onClick = onAdd,
-                        shapes =
-                            IconButtonDefaults.shapes(
-                                shape = MaterialTheme.shapes.medium,
-                                pressedShape = CircleShape,
-                            ),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Add,
-                            contentDescription = stringResource(Res.string.action_add),
-                        )
-                    }
+                    if (onAdd != null)
+                        FilledIconButton(
+                            onClick = onAdd,
+                            shapes =
+                                IconButtonDefaults.shapes(
+                                    shape = MaterialTheme.shapes.medium,
+                                    pressedShape = CircleShape,
+                                ),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Add,
+                                contentDescription = stringResource(Res.string.action_add),
+                            )
+                        }
                 }
             }
         }
