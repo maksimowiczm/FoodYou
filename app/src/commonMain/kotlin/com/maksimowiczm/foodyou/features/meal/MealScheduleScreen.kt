@@ -197,7 +197,11 @@ private fun MealScheduleScreen(
         }
     val isValid by
         remember(cardStates) {
-            derivedStateOf { cardStates.all { it.isValid } }
+            derivedStateOf {
+                cardStates.all { it.isValid } &&
+                    cardStates.any { !it.isDeleted } &&
+                    cardStates.isNotEmpty()
+            }
         }
 
     NavigationBackHandler(
@@ -725,6 +729,7 @@ private fun MealTimePicker(
     }
 }
 
+@Stable
 private class MealCardState(
     val id: MealIdentity,
     val formField: FormField,

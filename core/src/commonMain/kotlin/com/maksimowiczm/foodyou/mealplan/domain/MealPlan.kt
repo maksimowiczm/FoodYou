@@ -14,6 +14,7 @@ fun MealPlan.update(
     require(updatedMeals.map { it.identity }.distinct().size == updatedMeals.size) {
         "Meal identities must be unique"
     }
+    require(updatedMeals.isNotEmpty()) { "Must provide at least one meal" }
     if (updatedMeals == meals) return emptyList()
 
     val now = clock.now()
