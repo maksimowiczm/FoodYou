@@ -1,9 +1,15 @@
 package com.maksimowiczm.foodyou.features.home.ui
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -37,6 +43,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -87,8 +97,8 @@ fun MealCards(
                     MealCard(
                         state = it,
                         shimmer = shimmer,
-                        onAdd = { onAdd(it.identity) },
                         onEntry = onEntry,
+                        onAdd = { onAdd(it.identity) },
                     )
                 is HomeMealState.Unlinked ->
                     MealCard(
@@ -204,86 +214,112 @@ private fun MealCard(
         @Composable {
             val nameSelector = LocalFoodNameSelector.current
             val dateFormatter = LocalDateFormatter.current
+            val motionScheme = MaterialTheme.motionScheme
+            val transition = updateTransition(state.foods)
 
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                state.foods.forEach { food ->
-                    key(food.identity.toString()) {
-                        val interactionSource = remember { MutableInteractionSource() }
-                        val shape =
-                            rememberInteractionAnimatedShape(
-                                shapes =
-                                    InteractionShapes(
-                                        shape =
-                                            RoundedCornerShape(
-                                                topStart = 4.dp,
-                                                topEnd = 4.dp,
-                                                bottomStart = 4.dp,
-                                                bottomEnd = 4.dp,
-                                            ),
-                                        pressedShape = MaterialTheme.shapes.large,
-                                    ),
+            AnimatedVisibility(
+                visible = expanded,
+                modifier = Modifier.fillMaxWidth(),
+                enter = expandVertically(motionScheme.fastEffectsSpec()),
+                exit = shrinkVertically(motionScheme.fastEffectsSpec()),
+            ) {
+                transition.AnimatedContent(
+                    modifier = Modifier.fillMaxWidth(),
+                    transitionSpec = {
+                        fadeIn(motionScheme.fastEffectsSpec()) togetherWith
+                            fadeOut(motionScheme.fastEffectsSpec())
+                    },
+                    contentKey = { it.size },
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Spacer(Modifier)
+                        it.forEach { food ->
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val shape =
+                                rememberInteractionAnimatedShape(
+                                    shapes =
+                                        InteractionShapes(
+                                            shape =
+                                                RoundedCornerShape(
+                                                    topStart = 4.dp,
+                                                    topEnd = 4.dp,
+                                                    bottomStart = 4.dp,
+                                                    bottomEnd = 4.dp,
+                                                ),
+                                            pressedShape = MaterialTheme.shapes.large,
+                                        ),
+                                    interactionSource = interactionSource,
+                                )
+
+                            Surface(
+                                onClick = { onEntry(food.identity) },
+                                color = MaterialTheme.colorScheme.surfaceContainer,
+                                shape = shape,
                                 interactionSource = interactionSource,
-                            )
-
-                        Surface(
-                            onClick = { onEntry(food.identity) },
-                            color = MaterialTheme.colorScheme.surfaceContainer,
-                            shape = shape,
-                            interactionSource = interactionSource,
-                        ) {
-                            FoodListItem(
-                                headline = { Text(nameSelector.select(food.component.name)) },
-                                image =
-                                    run {
-                                        when (val image = food.component.image) {
-                                            is FoodCompositionComponentImage.Blob -> {
-                                                @Composable {
-                                                    resolveBlob(image.blob)
-                                                        .Image(shimmer, Modifier.size(56.dp))
-                                                }
-                                            }
-
-                                            is FoodCompositionComponentImage.Uri -> {
-                                                @Composable {
-                                                    image.uri.Image(shimmer, Modifier.size(56.dp))
-                                                }
-                                            }
-
-                                            null -> null
-                                        }
+                            ) {
+                                FoodListItem(
+                                    headline = {
+                                        Text(nameSelector.select(food.component.name))
                                     },
-                                proteins = {
-                                    Text(
-                                        food.component.measuredNutritionFacts.proteins.value
-                                            ?.stringResource() ?: "?"
-                                    )
-                                },
-                                carbohydrates = {
-                                    Text(
-                                        food.component.measuredNutritionFacts.carbohydrates.value
-                                            ?.stringResource() ?: "?"
-                                    )
-                                },
-                                fats = {
-                                    Text(
-                                        food.component.measuredNutritionFacts.fats.value
-                                            ?.stringResource() ?: "?"
-                                    )
-                                },
-                                energy = {
-                                    Text(
-                                        food.component.measuredNutritionFacts.energy.value
-                                            ?.inUnit(LocalEnergyUnit.current)
-                                            ?.stringResource() ?: "?"
-                                    )
-                                },
-                                quantity = {
-                                    Text(food.component.quantity.stringResource())
-                                },
-                                overline = {
-                                    Text(dateFormatter.formatTime(food.time))
-                                },
-                            )
+                                    image =
+                                        run {
+                                            when (val image = food.component.image) {
+                                                is FoodCompositionComponentImage.Blob -> {
+                                                    @Composable {
+                                                        resolveBlob(image.blob)
+                                                            .Image(
+                                                                shimmer,
+                                                                Modifier.size(56.dp),
+                                                            )
+                                                    }
+                                                }
+
+                                                is FoodCompositionComponentImage.Uri -> {
+                                                    @Composable {
+                                                        image.uri.Image(
+                                                            shimmer,
+                                                            Modifier.size(56.dp),
+                                                        )
+                                                    }
+                                                }
+
+                                                null -> null
+                                            }
+                                        },
+                                    proteins = {
+                                        Text(
+                                            food.component.measuredNutritionFacts.proteins.value
+                                                ?.stringResource() ?: "?"
+                                        )
+                                    },
+                                    carbohydrates = {
+                                        Text(
+                                            food.component.measuredNutritionFacts.carbohydrates
+                                                .value
+                                                ?.stringResource() ?: "?"
+                                        )
+                                    },
+                                    fats = {
+                                        Text(
+                                            food.component.measuredNutritionFacts.fats.value
+                                                ?.stringResource() ?: "?"
+                                        )
+                                    },
+                                    energy = {
+                                        Text(
+                                            food.component.measuredNutritionFacts.energy.value
+                                                ?.inUnit(LocalEnergyUnit.current)
+                                                ?.stringResource() ?: "?"
+                                        )
+                                    },
+                                    quantity = {
+                                        Text(food.component.quantity.stringResource())
+                                    },
+                                    overline = {
+                                        Text(dateFormatter.formatTime(food.time))
+                                    },
+                                )
+                            }
                         }
                     }
                 }
@@ -293,66 +329,81 @@ private fun MealCard(
     val nutrients =
         @Composable
         nutrients@{
-            val proteins = sumNutrients.proteins
-            val carbohydrates = sumNutrients.carbohydrates
-            val fats = sumNutrients.fats
+            val proteins = sumNutrients.proteins.value
+            val carbohydrates = sumNutrients.carbohydrates.value
+            val fats = sumNutrients.fats.value
 
-            if (proteins.value == null || carbohydrates.value == null || fats.value == null)
-                return@nutrients
+            if (proteins == null || carbohydrates == null || fats == null) {
+                val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
+
+                return@nutrients Canvas(
+                    Modifier.fillMaxWidth().height(4.dp).clip(MaterialTheme.shapes.extraSmall)
+                ) {
+                    drawRect(
+                        color = surfaceVariant,
+                        topLeft = Offset(0f, 0f),
+                        size = Size(size.width, size.height),
+                    )
+                }
+            }
 
             val nutrientsPalette = LocalNutrientsPalette.current
             val proteinsKcal =
-                remember(proteins) {
-                    NutritionCalculator.calculateProteinCalories(proteins.value!!)
-                        .kilocalories
-                        .toFloat()
-                }
+                animateFloatAsState(
+                    remember(proteins) {
+                        NutritionCalculator.calculateProteinCalories(proteins)
+                            .kilocalories
+                            .toFloat()
+                    },
+                    animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+                )
             val carbsKcal =
-                remember(carbohydrates) {
-                    NutritionCalculator.calculateCarbohydrateCalories(carbohydrates.value!!)
-                        .kilocalories
-                        .toFloat()
-                }
+                animateFloatAsState(
+                    remember(carbohydrates) {
+                        NutritionCalculator.calculateCarbohydrateCalories(carbohydrates)
+                            .kilocalories
+                            .toFloat()
+                    },
+                    animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+                )
             val fatsKcal =
-                remember(fats) {
-                    NutritionCalculator.calculateFatCalories(fats.value!!).kilocalories.toFloat()
-                }
-            val total =
-                remember(proteinsKcal, carbsKcal, fatsKcal) {
-                    (proteinsKcal + carbsKcal + fatsKcal)
+                animateFloatAsState(
+                    remember(fats) {
+                        NutritionCalculator.calculateFatCalories(fats).kilocalories.toFloat()
+                    },
+                    animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+                )
+
+            val proteinsColor = nutrientsPalette.proteinsOnSurfaceContainer
+            val carbsColor = nutrientsPalette.carbohydratesOnSurfaceContainer
+            val fatsColor = nutrientsPalette.fatsOnSurfaceContainer
+
+            Canvas(Modifier.fillMaxWidth().height(4.dp)) {
+                val total = proteinsKcal.value + carbsKcal.value + fatsKcal.value
+                if (total <= 0f) return@Canvas
+
+                val gapPx = 2.dp.toPx()
+                val visibleCount =
+                    listOf(proteinsKcal.value, carbsKcal.value, fatsKcal.value).count { it > 0f }
+                val availableWidth = size.width - gapPx * (visibleCount - 1).coerceAtLeast(0)
+                val cornerRadius = CornerRadius(size.height / 2f)
+
+                var startX = 0f
+                fun drawSegment(value: Float, color: Color) {
+                    if (value <= 0f) return
+                    val width = availableWidth * (value / total)
+                    drawRoundRect(
+                        color = color,
+                        topLeft = Offset(startX, 0f),
+                        size = Size(width, size.height),
+                        cornerRadius = cornerRadius,
+                    )
+                    startX += width + gapPx
                 }
 
-            Row(
-                modifier = modifier,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Row(
-                    modifier = Modifier.weight(1f).clip(MaterialTheme.shapes.large),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
-                    if (proteinsKcal > 0)
-                        Box(
-                            Modifier.height(4.dp)
-                                .weight(proteinsKcal / total)
-                                .clip(MaterialTheme.shapes.extraSmall)
-                                .background(nutrientsPalette.proteinsOnSurfaceContainer)
-                        )
-                    if (carbsKcal > 0)
-                        Box(
-                            Modifier.height(4.dp)
-                                .weight(carbsKcal / total)
-                                .clip(MaterialTheme.shapes.extraSmall)
-                                .background(nutrientsPalette.carbohydratesOnSurfaceContainer)
-                        )
-                    if (fatsKcal > 0)
-                        Box(
-                            Modifier.height(4.dp)
-                                .weight(fatsKcal / total)
-                                .clip(MaterialTheme.shapes.extraSmall)
-                                .background(nutrientsPalette.fatsOnSurfaceContainer)
-                        )
-                }
+                drawSegment(proteinsKcal.value, proteinsColor)
+                drawSegment(carbsKcal.value, carbsColor)
+                drawSegment(fatsKcal.value, fatsColor)
             }
         }
 
@@ -482,28 +533,11 @@ private fun MealCard(
             }
         }
 
-    Column(modifier = modifier.clip(MaterialTheme.shapes.large)) {
+    Column(modifier.clip(MaterialTheme.shapes.large)) {
         header()
-        if (state.foods.isNotEmpty()) {
-            AnimatedVisibility(
-                visible = expanded,
-                enter = expandVertically(MaterialTheme.motionScheme.fastEffectsSpec()),
-                exit = shrinkVertically(MaterialTheme.motionScheme.fastEffectsSpec()),
-            ) {
-                Column {
-                    Spacer(Modifier.height(2.dp))
-                    foods()
-                }
-            }
-        }
-        if (
-            sumNutrients.proteins.value != null &&
-                sumNutrients.carbohydrates.value != null &&
-                sumNutrients.fats.value != null
-        ) {
-            Spacer(Modifier.height(2.dp))
-            nutrients()
-        }
+        foods()
+        Spacer(Modifier.height(2.dp))
+        nutrients()
         Spacer(Modifier.height(2.dp))
         footer()
     }
