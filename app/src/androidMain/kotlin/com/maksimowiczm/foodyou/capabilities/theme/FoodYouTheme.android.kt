@@ -1,10 +1,7 @@
 package com.maksimowiczm.foodyou.capabilities.theme
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.pm.ApplicationInfo
 import android.os.Build
-import android.view.View
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialExpressiveTheme
@@ -46,51 +43,31 @@ private fun FoodYouTheme(
     nutrientsColors: NutrientsColors?,
     content: @Composable () -> Unit,
 ) {
+    val context = LocalContext.current
     val view = LocalView.current
 
     LaunchedEffect(isDark) {
-        if (Build.VERSION.SDK_INT >= 30) {
-            if (isDark) {
-                view.windowInsetsController?.setSystemBarsAppearance(
-                    0,
-                    APPEARANCE_LIGHT_STATUS_BARS,
-                )
-            } else {
-                view.windowInsetsController?.setSystemBarsAppearance(
-                    APPEARANCE_LIGHT_STATUS_BARS,
-                    APPEARANCE_LIGHT_STATUS_BARS,
-                )
-            }
-        } else
-            @Suppress("DEPRECATION")
-            {
-                val window = (view.context as Activity).window
-                val flags = window.decorView.systemUiVisibility
-
-                if (isDark) {
-                    window.decorView.systemUiVisibility =
-                        flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-                } else {
-                    window.decorView.systemUiVisibility =
-                        flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                }
-            }
+        if (isDark)
+            view.windowInsetsController?.setSystemBarsAppearance(
+                0,
+                APPEARANCE_LIGHT_STATUS_BARS,
+            )
+        else
+            view.windowInsetsController?.setSystemBarsAppearance(
+                APPEARANCE_LIGHT_STATUS_BARS,
+                APPEARANCE_LIGHT_STATUS_BARS,
+            )
     }
 
-    val isDynamic =
-        remember(theme) {
-            (theme is Theme.Dynamic || theme is Theme.Default) &&
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-        }
+    val isDynamic = remember(theme) { theme is Theme.Dynamic || theme is Theme.Default }
 
     val colorScheme =
         when {
-            isDynamic -> {
-                val context = LocalContext.current
-                @SuppressLint("NewApi")
-                if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-            }
-
+            isDynamic && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+                remember(isDark, context) {
+                    if (isDark) dynamicDarkColorScheme(context)
+                    else dynamicLightColorScheme(context)
+                }
             theme is Theme.Custom -> theme.rememberColorScheme(isDark)
             else ->
                 rememberDynamicColorScheme(
@@ -101,7 +78,6 @@ private fun FoodYouTheme(
                 )
         }
 
-    val context = LocalContext.current
     val isDebuggable =
         remember(context) { context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 }
 
