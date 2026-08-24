@@ -213,7 +213,7 @@ private fun AddIngredientUserRecipeScope.Screen(
                 onBack = onBack,
                 title = headline,
                 actions = {
-                    FavoriteIconButton(favorite = isFavorite, onChange = onSetFavorite)
+                    FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
                     UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
                 },
                 scrollBehavior = scrollBehavior,

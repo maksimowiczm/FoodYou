@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.shared.ui.component
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.keyframes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
@@ -13,63 +13,98 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
-import kotlinx.coroutines.launch
-
-private const val heartbeatDurationMs = 600
-private val heartBeatSpec by
-    lazy(LazyThreadSafetyMode.NONE) {
-        keyframes {
-            durationMillis = heartbeatDurationMs
-            1f at 0
-            1.30f at (heartbeatDurationMs * 0.24f).toInt() // first beat peak
-            0.9f at (heartbeatDurationMs * 0.44f).toInt() // settle
-            1.1f at (heartbeatDurationMs * 0.68f).toInt() // second beat peak
-            1f at heartbeatDurationMs // rest
-        }
-    }
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun FavoriteIconButton(
-    favorite: Boolean,
+    isFavorite: Boolean,
     onChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
 ) {
-    val scope = rememberCoroutineScope()
-    val animatable = remember { Animatable(1f) }
+    val iconSize =
+        animateDpAsState(
+            if (isFavorite) 32.dp else 24.dp,
+            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        )
 
-    val vector = if (favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
+    val vector =
+        if (isFavorite) painterResource(Res.drawable.ic_kid_star_filled)
+        else painterResource(Res.drawable.ic_kid_star)
+    val tint = if (isFavorite) MaterialTheme.colorScheme.primary else LocalContentColor.current
 
     IconButton(
-        onClick = {
-            onChange(!favorite)
-            scope.launch {
-                if (favorite) {
-                    animatable.snapTo(1f)
-                } else {
-                    animatable.snapTo(1f)
-                    animatable.animateTo(targetValue = 1f, animationSpec = heartBeatSpec)
-                }
-            }
-        },
+        onClick = { onChange(!isFavorite) },
         enabled = enabled,
         shapes = IconButtonDefaults.shapes(),
         colors = colors,
         modifier = modifier,
     ) {
-        val tint = if (favorite) MaterialTheme.colorScheme.primary else LocalContentColor.current
-
         Icon(
-            imageVector = vector,
+            painter = vector,
             contentDescription = null,
             tint = tint,
-            modifier =
-                Modifier.graphicsLayer {
-                    scaleX = animatable.value
-                    scaleY = animatable.value
-                },
+            modifier = Modifier.size(iconSize.value),
         )
+        AnimatedCheckmark(
+            visible = isFavorite,
+            modifier = Modifier.size(iconSize.value - 16.dp),
+            color = MaterialTheme.colorScheme.onPrimary,
+        )
+    }
+}
+
+@Composable
+private fun AnimatedCheckmark(
+    visible: Boolean,
+    modifier: Modifier = Modifier,
+    color: Color = LocalContentColor.current,
+    strokeWidth: Dp = 2.dp,
+) {
+    val progress by
+        animateFloatAsState(
+            targetValue = if (visible) 1f else 0f,
+            animationSpec = if (visible) MaterialTheme.motionScheme.slowEffectsSpec() else snap(),
+        )
+
+    if (progress > 0f) {
+        Canvas(modifier) {
+            val w = size.width
+            val h = size.height
+
+            val checkPath =
+                Path().apply {
+                    moveTo(w * 0.20f, h * 0.55f)
+                    lineTo(w * 0.42f, h * 0.75f)
+                    lineTo(w * 0.80f, h * 0.28f)
+                }
+
+            val measure = PathMeasure().apply { setPath(checkPath, false) }
+            val length = measure.length
+
+            val animatedPath = Path()
+            measure.getSegment(0f, length * progress, animatedPath, true)
+
+            drawPath(
+                path = animatedPath,
+                color = color,
+                style =
+                    Stroke(
+                        width = strokeWidth.toPx(),
+                        cap = StrokeCap.Round,
+                        join = StrokeJoin.Round,
+                    ),
+            )
+        }
     }
 }

@@ -250,7 +250,7 @@ private fun AddUserRecipeDiaryEntryScope.Screen(
                 title = headline,
                 actions = {
                     FavoriteIconButton(
-                        favorite = isFavorite,
+                        isFavorite = isFavorite,
                         onChange = onSetFavorite,
                     )
                     UserFoodMenu(onEdit = onEdit, onDelete = onDelete)

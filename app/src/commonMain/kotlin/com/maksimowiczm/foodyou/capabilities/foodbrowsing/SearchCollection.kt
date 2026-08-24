@@ -8,8 +8,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
@@ -45,8 +43,8 @@ sealed interface SearchCollection {
         @Composable
         override fun Icon(selected: Boolean, modifier: Modifier) {
             androidx.compose.material3.Icon(
-                imageVector =
-                    if (selected) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                if (selected) painterResource(Res.drawable.ic_kid_star_filled)
+                else painterResource(Res.drawable.ic_kid_star),
                 contentDescription = null,
                 modifier = modifier,
             )

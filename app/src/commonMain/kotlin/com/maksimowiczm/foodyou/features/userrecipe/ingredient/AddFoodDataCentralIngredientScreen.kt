@@ -178,7 +178,7 @@ private fun AddIngredientFoodDataCentralScope.Screen(
                 onBack = onBack,
                 title = headline,
                 actions = {
-                    FavoriteIconButton(favorite = isFavorite, onChange = onSetFavorite)
+                    FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
                     RefreshIconButton(onRefresh = onRefresh)
                 },
                 scrollBehavior = scrollBehavior,
