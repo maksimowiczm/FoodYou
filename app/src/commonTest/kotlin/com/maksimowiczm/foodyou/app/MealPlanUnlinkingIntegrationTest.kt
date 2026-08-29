@@ -27,12 +27,13 @@ class MealPlanUnlinkingIntegrationTest {
     fun `deleting meal unlinks diary entries`() = runTest {
         runKoin {
             val profileId = ProfileId(Uuid.random())
-            // 1. Setup a meal plan with one meal
+            // 1. Setup a meal plan with two meals
             val mealId = MealIdentity(Uuid.random())
             val meal = Meal(mealId, "Breakfast", Meal.TimeWindow.AllDay)
-            mealPlanService.transact { it.update(listOf(meal)) }
+            val otherMeal = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+            mealPlanService.transact { it.update(listOf(meal, otherMeal)) }
 
-            // 2. Create a diary entry associated with this meal
+            // 2. Create a diary entry associated with "Breakfast"
             val composition =
                 FoodCompositionComponent.Simple(
                     identity = FoodCompositionComponentIdentity.OpenFoodFacts("123"),
@@ -53,8 +54,8 @@ class MealPlanUnlinkingIntegrationTest {
             val entry = foodDiaryService.observe(entryId).filterNotNull().first()
             assertEquals(mealId, entry.mealIdentity)
 
-            // 4. Remove the meal from the plan
-            mealPlanService.transact { it.update(emptyList()) }
+            // 4. Remove "Breakfast" from the plan, keeping "Lunch"
+            mealPlanService.transact { it.update(listOf(otherMeal)) }
 
             // 5. Verify the diary entry is unlinked (mealIdentity becomes null)
             val updatedEntry =

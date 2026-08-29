@@ -75,8 +75,9 @@ class MealPlanTest {
     @Test
     fun `removing meal produces MealDeletedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
-        val mealPlan = MealPlan(meals = listOf(breakfast))
-        val newMeals = emptyList<Meal>()
+        val lunch = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val mealPlan = MealPlan(meals = listOf(breakfast, lunch))
+        val newMeals = listOf(lunch)
 
         val events = mealPlan.update(newMeals, staticClock(timestamp))
 
