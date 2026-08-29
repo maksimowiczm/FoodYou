@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.search.infrastructure
 
-import androidx.room.ColumnInfo
+import androidx.room3.*
 
 data class FoodNameEntity(
     @ColumnInfo(name = "en") val english: String? = null,

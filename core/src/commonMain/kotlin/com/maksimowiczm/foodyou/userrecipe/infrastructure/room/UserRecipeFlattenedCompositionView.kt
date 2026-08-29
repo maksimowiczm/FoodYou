@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userrecipe.infrastructure.room
 
-import androidx.room.DatabaseView
+import androidx.room3.*
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import kotlin.uuid.Uuid
 

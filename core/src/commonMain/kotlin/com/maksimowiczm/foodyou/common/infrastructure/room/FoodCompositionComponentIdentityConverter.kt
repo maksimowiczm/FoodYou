@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.common.infrastructure.room
 
-import androidx.room.TypeConverter
+import androidx.room3.*
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import kotlin.uuid.Uuid
 
 class FoodCompositionComponentIdentityConverter {
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromIdentity(identity: FoodCompositionComponentIdentity.Identified): String =
         when (identity) {
             is FoodCompositionComponentIdentity.UserProduct ->
@@ -17,7 +17,7 @@ class FoodCompositionComponentIdentityConverter {
             is FoodCompositionComponentIdentity.Recipe -> "$RECIPE$SEPARATOR${identity.id}"
         }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toIdentity(value: String): FoodCompositionComponentIdentity.Identified {
         val (type, idValue) = value.split(SEPARATOR, limit = 2)
         return when (type) {

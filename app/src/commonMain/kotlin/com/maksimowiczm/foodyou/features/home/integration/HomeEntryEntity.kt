@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.features.home.integration
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room3.*
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalDate

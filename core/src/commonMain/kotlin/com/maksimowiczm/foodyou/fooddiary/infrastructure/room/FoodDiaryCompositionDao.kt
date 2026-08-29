@@ -1,9 +1,6 @@
 package com.maksimowiczm.foodyou.fooddiary.infrastructure.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room3.*
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import kotlin.uuid.Uuid
 

@@ -1,8 +1,6 @@
 package com.maksimowiczm.foodyou.infrastructure.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room3.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao

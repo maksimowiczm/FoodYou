@@ -1,10 +1,6 @@
 package com.maksimowiczm.foodyou.features.home.integration
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room3.*
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate

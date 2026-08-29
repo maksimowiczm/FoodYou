@@ -1,10 +1,6 @@
 package com.maksimowiczm.foodyou.app.infrastructure.room
 
-import androidx.room.ConstructedBy
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
-import androidx.room.TypeConverters
+import androidx.room3.*
 import com.maksimowiczm.foodyou.common.infrastructure.room.DateConverters
 import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter
 import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionConverter
@@ -36,7 +32,7 @@ import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlatten
     version = ReadModelDatabase.VERSION,
     exportSchema = false,
 )
-@TypeConverters(
+@ColumnTypeConverters(
     UuidConverter::class,
     QuantityTypeConverter::class,
     FoodCompositionComponentIdentityConverter::class,

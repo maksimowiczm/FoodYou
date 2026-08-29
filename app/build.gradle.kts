@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-room { schemaDirectory("$projectDir/schemas") }
+room3 { schemaDirectory("$projectDir/schemas") }
 
 val localProperties by lazy {
     Properties().apply {
@@ -102,7 +102,6 @@ kotlin {
         }
 
         commonTest.dependencies {
-            implementation(libs.androidx.room.testing)
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutinesTest)
         }

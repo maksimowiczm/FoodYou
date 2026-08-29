@@ -1,9 +1,6 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room
 
-import androidx.room.ConstructedBy
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
+import androidx.room3.*
 
 @Database(
     entities =

@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.fooddiary.infrastructure.room
 
-import androidx.room.Entity
-import androidx.room.Index
+import androidx.room3.*
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import kotlin.uuid.Uuid
 

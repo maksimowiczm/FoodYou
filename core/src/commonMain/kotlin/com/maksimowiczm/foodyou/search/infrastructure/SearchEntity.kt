@@ -1,9 +1,6 @@
 package com.maksimowiczm.foodyou.search.infrastructure
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room3.*
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
 import kotlin.uuid.Uuid
 

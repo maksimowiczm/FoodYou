@@ -11,7 +11,7 @@ androidx-appcompat = "1.8.0"
 androidx-camera = "1.6.1"
 androidx-datastore = "1.2.1"
 androidx-paging3 = "3.5.1"
-androidx-room = "2.8.4"
+androidx-room = "3.0.2"
 androidx-test-core = "1.7.0"
 androidx-test-ext = "1.3.0"
 androidx-test-runner = "1.7.0"
@@ -34,7 +34,6 @@ kotlinx-serialization-json = "1.11.0"
 ksp = "2.3.6"
 ktor = "3.5.2"
 materialkolor = "5.0.0"
-requery-sqlite-android = "3.49.0"
 skydoves-colorpicker-compose = "1.2.0"
 touchlab-kermit = "2.1.0"
 valentinilk-shimmer = "1.5.0"
@@ -49,10 +48,9 @@ androidx-camera-view = { group = "androidx.camera", name = "camera-view", versio
 androidx-datastore-preferencesCore = { module = "androidx.datastore:datastore-preferences-core", version.ref = "androidx-datastore" }
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging3" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging3" }
-androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
-androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
-androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "androidx-room" }
+androidx-room-compiler = { module = "androidx.room3:room3-compiler", version.ref = "androidx-room" }
+androidx-room-paging = { module = "androidx.room3:room3-paging", version.ref = "androidx-room" }
+androidx-room-runtime = { module = "androidx.room3:room3-runtime", version.ref = "androidx-room" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-test-core" }
 androidx-test-coreKtx = { module = "androidx.test:core-ktx", version.ref = "androidx-test-core" }
 androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-ext" }
@@ -88,7 +86,6 @@ ktor-clientDarwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor
 ktor-clientOkhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-serializationKotlinxJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialkolor" }
-requery-sqliteAndroid = { module = "com.github.requery:sqlite-android", version.ref = "requery-sqlite-android" }
 skydoves-colorpickerCompose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "skydoves-colorpicker-compose" }
 touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "touchlab-kermit" }
 valentinilk-shimmer-composeShimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "valentinilk-shimmer" }
@@ -100,7 +97,7 @@ vinceglb-filekitDialogsCompose = { module = "io.github.vinceglb:filekit-dialogs-
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
-androidxRoom = { id = "androidx.room", version.ref = "androidx-room" }
+androidxRoom = { id = "androidx.room3", version.ref = "androidx-room" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

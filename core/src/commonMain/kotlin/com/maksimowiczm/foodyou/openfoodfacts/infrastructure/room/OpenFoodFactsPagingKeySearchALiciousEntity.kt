@@ -1,9 +1,6 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room3.*
 
 @Entity(
     tableName = "OpenFoodFactsPagingKeySearchALicious",

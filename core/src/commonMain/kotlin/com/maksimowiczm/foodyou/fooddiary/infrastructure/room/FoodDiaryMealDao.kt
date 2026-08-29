@@ -1,9 +1,6 @@
 package com.maksimowiczm.foodyou.fooddiary.infrastructure.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room3.*
 import kotlin.uuid.Uuid
 
 @Dao

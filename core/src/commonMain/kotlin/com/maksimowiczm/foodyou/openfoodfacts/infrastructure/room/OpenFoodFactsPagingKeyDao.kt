@@ -1,12 +1,7 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room
 
 import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Upsert
+import androidx.room3.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao

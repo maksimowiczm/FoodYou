@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.common.infrastructure.room
 
-import androidx.room.TypeConverter
+import androidx.room3.*
 import kotlin.uuid.Uuid
 
 class UuidConverter {
-    @TypeConverter fun fromUuid(uuid: Uuid): String = uuid.toString()
+    @ColumnTypeConverter fun fromUuid(uuid: Uuid): String = uuid.toString()
 
-    @TypeConverter fun toUuid(uuidString: String): Uuid = Uuid.parse(uuidString)
+    @ColumnTypeConverter fun toUuid(uuidString: String): Uuid = Uuid.parse(uuidString)
 }

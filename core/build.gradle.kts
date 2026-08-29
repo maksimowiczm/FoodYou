@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-room { schemaDirectory("$projectDir/schemas") }
+room3 { schemaDirectory("$projectDir/schemas") }
 
 kotlin {
     compilerOptions {
@@ -66,7 +66,6 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.insert.koin.android)
             implementation(libs.ktor.clientOkhttp)
-            implementation(libs.requery.sqliteAndroid)
         }
 
         iosMain.dependencies {

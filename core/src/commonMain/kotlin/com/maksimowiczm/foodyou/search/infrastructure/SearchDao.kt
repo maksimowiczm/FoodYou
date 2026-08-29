@@ -1,15 +1,13 @@
 package com.maksimowiczm.foodyou.search.infrastructure
 
 import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.Query
-import androidx.room.RewriteQueriesToDropUnusedColumns
-import androidx.room.Transaction
-import androidx.room.Upsert
+import androidx.room3.*
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 abstract class SearchDao {
     @RewriteQueriesToDropUnusedColumns
     @Query(

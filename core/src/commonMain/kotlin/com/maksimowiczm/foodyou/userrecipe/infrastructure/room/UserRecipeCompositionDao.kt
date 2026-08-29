@@ -1,9 +1,6 @@
 package com.maksimowiczm.foodyou.userrecipe.infrastructure.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room3.*
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter.Companion.RECIPE
 import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter.Companion.SEPARATOR

@@ -1,10 +1,6 @@
 package com.maksimowiczm.foodyou.infrastructure.room
 
-import androidx.room.ConstructedBy
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
-import androidx.room.TypeConverters
+import androidx.room3.*
 import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
 
 @Database(
@@ -12,7 +8,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
     version = EventStoreDatabase.VERSION,
     exportSchema = false,
 )
-@TypeConverters(UuidConverter::class)
+@ColumnTypeConverters(UuidConverter::class)
 @ConstructedBy(EventStoreDatabaseConstructor::class)
 abstract class EventStoreDatabase : RoomDatabase() {
     abstract val eventStoreDao: EventStoreDao

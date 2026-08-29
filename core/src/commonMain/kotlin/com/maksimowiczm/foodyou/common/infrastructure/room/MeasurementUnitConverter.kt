@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.common.infrastructure.room
 
-import androidx.room.TypeConverter
+import androidx.room3.*
 
 class MeasurementUnitConverter {
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromUnit(value: MeasurementUnit): Int =
         when (value) {
             MeasurementUnit.Grams -> GRAMS
@@ -14,7 +14,7 @@ class MeasurementUnitConverter {
             MeasurementUnit.Micrograms -> MICROGRAMS
         }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toUnit(value: Int): MeasurementUnit =
         when (value) {
             GRAMS -> MeasurementUnit.Grams

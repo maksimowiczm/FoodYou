@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.common.infrastructure.room
 
-import androidx.room.TypeConverter
+import androidx.room3.*
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -17,9 +17,9 @@ class FoodCompositionConverter {
         }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromComposition(value: FoodCompositionComponent): String = json.encodeToString(value)
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toComposition(value: String): FoodCompositionComponent = json.decodeFromString(value)
 }

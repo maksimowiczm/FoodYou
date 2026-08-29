@@ -1,11 +1,12 @@
 package com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room
 
 import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.Query
+import androidx.room3.*
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 internal abstract class OpenFoodFactsPagingKeyV1Dao :
     OpenFoodFactsPagingKeyDao<OpenFoodFactsPagingKeyV1Entity>() {
     @Query(

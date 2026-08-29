@@ -1,8 +1,6 @@
 package com.maksimowiczm.foodyou.fooddiary.infrastructure.room
 
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room3.*
 import kotlin.uuid.Uuid
 
 @Entity(tableName = "FoodDiaryEntryMeal", indices = [Index("mealId")])

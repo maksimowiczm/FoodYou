@@ -1,17 +1,13 @@
 package com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room
 
-import androidx.room.ConstructedBy
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
-import androidx.room.TypeConverters
+import androidx.room3.*
 
 @Database(
     entities = [FoodDataCentralProductEntity::class, FoodDataCentralPagingKeyEntity::class],
     version = FoodDataCentralDatabase.VERSION,
     exportSchema = false,
 )
-@TypeConverters(FoodDataCentralTypeConverters::class)
+@ColumnTypeConverters(FoodDataCentralTypeConverters::class)
 @ConstructedBy(FoodDataCentralDatabaseConstructor::class)
 internal abstract class FoodDataCentralDatabase : RoomDatabase() {
     abstract val dao: FoodDataCentralDao

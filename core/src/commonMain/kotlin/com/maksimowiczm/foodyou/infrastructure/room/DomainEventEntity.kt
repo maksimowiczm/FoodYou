@@ -1,8 +1,6 @@
 package com.maksimowiczm.foodyou.infrastructure.room
 
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room3.*
 import kotlin.uuid.Uuid
 
 @Entity(tableName = "EventStore", indices = [Index(value = ["eventStream", "id"])])

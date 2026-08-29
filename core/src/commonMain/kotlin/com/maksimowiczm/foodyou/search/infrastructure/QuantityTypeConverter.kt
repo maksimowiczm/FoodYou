@@ -1,16 +1,16 @@
 package com.maksimowiczm.foodyou.search.infrastructure
 
-import androidx.room.TypeConverter
+import androidx.room3.*
 
 class QuantityTypeConverter {
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromQuantityType(value: QuantityType): Int =
         when (value) {
             QuantityType.Weight -> WEIGHT
             QuantityType.Volume -> VOLUME
         }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toQuantityType(value: Int): QuantityType =
         when (value) {
             WEIGHT -> QuantityType.Weight

@@ -1,9 +1,6 @@
 package com.maksimowiczm.foodyou.search.infrastructure
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.Fts4
-import androidx.room.FtsOptions
+import androidx.room3.*
 
 @Entity("SearchFts")
 @Fts4(
