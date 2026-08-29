@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.model.v1.OpenF
 import com.maksimowiczm.foodyou.food.infrastructure.openfoodfacts.model.v2.OpenFoodFactsProductResponseV2
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.cookies.get
 import io.ktor.client.plugins.timeout
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -19,6 +20,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.http.formUrlEncode
+import io.ktor.http.setCookie
 import io.ktor.http.userAgent
 import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
@@ -103,7 +105,8 @@ internal class OpenFoodFactsRemoteDataSource(
                 )
             }
 
-        if (response.status.value !in 200..299) {
+        val cookies = response.setCookie()
+        if (cookies["session"] == null) {
             error("Login failed")
         }
     }

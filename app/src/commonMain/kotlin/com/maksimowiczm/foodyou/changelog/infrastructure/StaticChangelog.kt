@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.changelog.infrastructure
 import com.maksimowiczm.foodyou.changelog.domain.Changelog
 import com.maksimowiczm.foodyou.changelog.domain.Version
 import com.maksimowiczm.foodyou.common.config.AppConfig
+import com.maksimowiczm.foodyou.common.extension.now
 import kotlinx.datetime.LocalDate
 
 internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
@@ -12,6 +13,7 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
     override val versions: List<Version>
         get() =
             listOf(
+                unreleased,
                 v_3_4_9,
                 v_3_4_8,
                 v_3_4_7,
@@ -53,6 +55,9 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val unreleased =
+        unreleased(bugFixes = listOf("Fixed Open Food Facts login failing intermittently."))
 
     val v_3_4_9 =
         Version(
@@ -738,3 +743,21 @@ internal class StaticChangelog(private val appConfig: AppConfig) : Changelog {
                     .trimIndent(),
         )
 }
+
+private fun unreleased(
+    newFeatures: List<String> = emptyList(),
+    changes: List<String> = emptyList(),
+    bugFixes: List<String> = emptyList(),
+    translations: List<String> = emptyList(),
+    notes: String? = null,
+) =
+    Version(
+        version = "unreleased",
+        date = LocalDate.now(),
+        newFeatures = newFeatures,
+        changes = changes,
+        bugFixes = bugFixes,
+        translations = translations,
+        notes = notes,
+        isPreview = false,
+    )
