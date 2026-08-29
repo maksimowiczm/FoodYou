@@ -32,16 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsCompact
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodImage
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodIngredients
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodNote
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodScreenTopBar
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScope
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithImage
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithIngredients
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithNote
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithQuantityInput
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Headline
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Image
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Ingredients
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Note
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantityInput
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantitySuggestions
 import com.maksimowiczm.foodyou.capabilities.fooddetails.UserFoodMenu
@@ -135,47 +130,46 @@ fun AddUserRecipeIngredientScreen(
             )
         }
 
-    scope?.Screen(
-        onBack = onBack,
-        onAdd = { scope.selectedQuantity?.let { onAdd(it) } },
-        onEdit = onEdit,
-        onDelete = viewModel::delete,
-        onSetFavorite = viewModel::setFavorite,
-        onSelectQuantity = {
-            viewModel.selectQuantity(it)
-            formField.textFieldState.setTextAndPlaceCursorAtEnd(it.amount.formatCompact())
-        },
-        onSelectQuantityType = viewModel::selectQuantityType,
-        onNavigateToIngredient = onNavigateToIngredient,
-        modifier = modifier,
-    )
+    scope?.let {
+        AddUserRecipeIngredientScreenContent(
+            scope = it,
+            onBack = onBack,
+            onAdd = { onAdd(it.selectedQuantity ?: return@AddUserRecipeIngredientScreenContent) },
+            onEdit = onEdit,
+            onDelete = viewModel::delete,
+            onSetFavorite = viewModel::setFavorite,
+            onSelectQuantity = { quantity ->
+                viewModel.selectQuantity(quantity)
+                formField.textFieldState.setTextAndPlaceCursorAtEnd(quantity.amount.formatCompact())
+            },
+            onSelectQuantityType = viewModel::selectQuantityType,
+            onNavigateToIngredient = onNavigateToIngredient,
+            modifier = modifier,
+        )
+    }
 }
 
 @Immutable
 private data class AddIngredientUserRecipeScope(
-    override val headline: String?,
-    override val isFavorite: Boolean,
-    override val image: FileUri?,
-    override val note: String?,
-    override val components: List<FoodCompositionComponent>,
-    override val ingredientScalingFactor: Double,
-    override val suggestions: List<Quantity>,
-    override val selectedQuantity: Quantity?,
-    override val scaledNutritionFacts: NutritionFacts?,
-    override val packageQuantity: AbsoluteQuantity?,
-    override val servingQuantity: AbsoluteQuantity?,
-    override val types: List<QuantityType>,
-    override val selectedType: QuantityType,
-    override val formField: FormField,
-) :
-    FoodUiScope,
-    FoodUiScopeWithImage,
-    FoodUiScopeWithNote,
-    FoodUiScopeWithIngredients,
-    FoodUiScopeWithQuantityInput
+    val headline: String?,
+    val isFavorite: Boolean,
+    val image: FileUri?,
+    val note: String?,
+    val components: List<FoodCompositionComponent>,
+    val ingredientScalingFactor: Double,
+    val suggestions: List<Quantity>,
+    val selectedQuantity: Quantity?,
+    val scaledNutritionFacts: NutritionFacts?,
+    val packageQuantity: AbsoluteQuantity?,
+    val servingQuantity: AbsoluteQuantity?,
+    val types: List<QuantityType>,
+    val selectedType: QuantityType,
+    val formField: FormField,
+)
 
 @Composable
-private fun AddIngredientUserRecipeScope.Screen(
+private fun AddUserRecipeIngredientScreenContent(
+    scope: AddIngredientUserRecipeScope,
     onBack: () -> Unit,
     onAdd: () -> Unit,
     onEdit: () -> Unit,
@@ -198,22 +192,22 @@ private fun AddIngredientUserRecipeScope.Screen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(scaledNutritionFacts) {
-            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
+        remember(scope.scaledNutritionFacts) {
+            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
             (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
     val anyNutrientIsMissing =
-        remember(scaledNutritionFacts) { scaledNutritionFacts?.isIncomplete() == true }
+        remember(scope.scaledNutritionFacts) { scope.scaledNutritionFacts?.isIncomplete() == true }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = headline,
+                title = scope.headline,
                 actions = {
-                    FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
+                    FavoriteIconButton(isFavorite = scope.isFavorite, onChange = onSetFavorite)
                     UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
                 },
                 scrollBehavior = scrollBehavior,
@@ -226,7 +220,7 @@ private fun AddIngredientUserRecipeScope.Screen(
                     Modifier.animateFloatingActionButton(
                         visible =
                             !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                formField.error == null,
+                                scope.formField.error == null,
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -246,36 +240,47 @@ private fun AddIngredientUserRecipeScope.Screen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                Headline(Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp))
             }
-            if (image != null)
+            if (scope.image != null)
                 item {
-                    Image(Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(scope.image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
-            if (components.isNotEmpty())
+            if (scope.components.isNotEmpty())
                 item {
-                    Ingredients(
+                    FoodIngredients(
+                        components = scope.components,
+                        ingredientScalingFactor = scope.ingredientScalingFactor,
                         onNavigateToIngredient = onNavigateToIngredient,
                         modifier = Modifier.padding(horizontal = 8.dp),
                     )
                 }
-            if (suggestions.isNotEmpty())
+            if (scope.suggestions.isNotEmpty())
                 item {
                     QuantitySuggestions(
+                        suggestions = scope.suggestions,
+                        selectedType = scope.selectedType,
+                        formField = scope.formField,
+                        packageQuantity = scope.packageQuantity,
+                        servingQuantity = scope.servingQuantity,
                         onSelectQuantity = onSelectQuantity,
                         modifier = Modifier.height(32.dp),
                     )
                 }
             item {
                 QuantityInput(
+                    selectedType = scope.selectedType,
+                    types = scope.types,
+                    formField = scope.formField,
                     onSelectType = onSelectQuantityType,
                     modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                 )
             }
-            if (scaledNutritionFacts != null)
+            if (scope.scaledNutritionFacts != null)
                 item {
                     Column {
                         FoodDetailsNutrientsCompact(
+                            scaledNutritionFacts = scope.scaledNutritionFacts,
                             expanded = if (!expandingEnabled) false else expanded,
                             onExpandedChange = { expanded = it },
                             expandingEnabled = expandingEnabled,
@@ -296,9 +301,9 @@ private fun AddIngredientUserRecipeScope.Screen(
                         }
                     }
                 }
-            if (note != null)
+            if (scope.note != null)
                 item {
-                    Note(Modifier.padding(horizontal = 8.dp))
+                    FoodNote(scope.note, Modifier.padding(horizontal = 8.dp))
                 }
         }
     }

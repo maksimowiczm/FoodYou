@@ -35,32 +35,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.account.domain.Profile
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithQuantityInput
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantityInput
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
-import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
-import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
-
-interface FoodUiScopeWithDiaryInput : FoodUiScopeWithQuantityInput {
-    val profiles: List<ProfileUiState>
-    val selectedProfiles: List<ProfileUiState>
-}
 
 @Immutable
 @Serializable
 data class ProfileUiState(val id: ProfileId, val name: String, val avatar: Profile.Avatar)
 
 @Composable
-fun FoodUiScopeWithDiaryInput.DiaryInput(
+fun DiaryInput(
+    selectedType: QuantityType,
+    types: List<QuantityType>,
+    formField: FormField,
+    profiles: List<ProfileUiState>,
+    selectedProfiles: List<ProfileUiState>,
     onSelectType: (QuantityType) -> Unit,
     onSelectProfiles: (List<ProfileUiState>) -> Unit,
     modifier: Modifier = Modifier,
@@ -72,6 +66,9 @@ fun FoodUiScopeWithDiaryInput.DiaryInput(
         Row(verticalAlignment = Alignment.CenterVertically) {
             LookaheadScope {
                 QuantityInput(
+                    selectedType = selectedType,
+                    types = types,
+                    formField = formField,
                     onSelectType = onSelectType,
                     modifier =
                         Modifier.weight(1f)
@@ -208,38 +205,7 @@ private fun LookaheadScope.ProfileStack(
 @Preview
 @Composable
 private fun DiaryInputPreview() {
-    PreviewFoodYouTheme {
-        PreviewFoodUiScopeWithDiaryInput.DiaryInput(
-            onSelectType = {},
-            onSelectProfiles = {},
-        )
-    }
-}
-
-private object PreviewFoodUiScopeWithDiaryInput : FoodUiScopeWithDiaryInput {
-    override val types = listOf(QuantityType.Gram, QuantityType.Serving)
-    override val selectedType = QuantityType.Gram
-    override val formField = FormField(textFieldState = TextFieldState("100"))
-    override val suggestions =
-        listOf(
-            AbsoluteQuantity.Weight(100.grams),
-            AbsoluteQuantity.Weight(200.grams),
-        )
-    override val selectedQuantity = suggestions.first()
-    override val scaledNutritionFacts =
-        NutritionFacts(
-            energy = NutrientValue.Complete(250.kilocalories),
-            proteins = NutrientValue.Complete(15.grams),
-            carbohydrates = NutrientValue.Complete(30.grams),
-            fats = NutrientValue.Complete(10.grams),
-            sugars = NutrientValue.Complete(5.grams),
-            saturatedFats = NutrientValue.Complete(2.grams),
-            solubleFiber = NutrientValue.Complete(3.grams),
-            salt = NutrientValue.Complete(0.5.grams),
-        )
-    override val packageQuantity = AbsoluteQuantity.Weight(200.grams)
-    override val servingQuantity = AbsoluteQuantity.Weight(30.grams)
-    override val profiles: List<ProfileUiState> =
+    val previewProfiles =
         listOf(
             ProfileUiState(
                 id = ProfileId(Uuid.random()),
@@ -262,5 +228,16 @@ private object PreviewFoodUiScopeWithDiaryInput : FoodUiScopeWithDiaryInput {
                 avatar = Profile.Avatar.Predefined.Variant.Engineer.toAvatar(),
             ),
         )
-    override val selectedProfiles: List<ProfileUiState> = listOf(profiles.first(), profiles.last())
+
+    PreviewFoodYouTheme {
+        DiaryInput(
+            selectedType = QuantityType.Gram,
+            types = listOf(QuantityType.Gram, QuantityType.Serving),
+            formField = FormField(textFieldState = TextFieldState("100")),
+            profiles = previewProfiles,
+            selectedProfiles = listOf(previewProfiles.first(), previewProfiles.last()),
+            onSelectType = {},
+            onSelectProfiles = {},
+        )
+    }
 }

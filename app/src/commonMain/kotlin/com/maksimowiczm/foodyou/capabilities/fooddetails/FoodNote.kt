@@ -15,12 +15,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalClipboardManager
 
-interface FoodUiScopeWithNote {
-    val note: String?
-}
-
 @Composable
-fun FoodUiScopeWithNote.Note(modifier: Modifier = Modifier) {
+fun FoodNote(
+    note: String?,
+    modifier: Modifier = Modifier,
+) {
     val note = note ?: return
     val clipboardManager = LocalClipboardManager.current
 

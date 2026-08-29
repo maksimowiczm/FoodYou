@@ -18,12 +18,9 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalClipboardManager
 
-interface FoodUiScopeWithSource {
-    val sourceUrl: String
-}
-
 @Composable
-fun FoodUiScopeWithSource.SourceLink(
+fun FoodSourceLink(
+    sourceUrl: String,
     headline: String,
     logo: @Composable () -> Unit,
     modifier: Modifier = Modifier,

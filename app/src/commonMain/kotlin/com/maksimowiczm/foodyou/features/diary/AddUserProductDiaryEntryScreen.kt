@@ -31,13 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsCompact
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodImage
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodNote
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodScreenTopBar
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScope
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithImage
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithNote
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Headline
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Image
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Note
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantitySuggestions
 import com.maksimowiczm.foodyou.capabilities.fooddetails.UserFoodMenu
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
@@ -153,52 +150,57 @@ fun AddUserProductDiaryEntryScreen(
         )
     }
 
-    scope?.Screen(
-        onBack = onBack,
-        onAdd = {
-            val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-            val timestamp = LocalDateTime(date ?: now.date, now.time)
+    scope?.let {
+        AddUserProductDiaryEntryScreenContent(
+            scope = it,
+            onBack = onBack,
+            onAdd = {
+                val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                val timestamp = LocalDateTime(date ?: now.date, now.time)
 
-            foodDiaryEntryViewModel.create(
-                product = scope.product,
-                quantity = scope.selectedQuantity ?: return@Screen,
-                profiles = scope.selectedProfiles.map { it.id },
-                timestamp = timestamp,
-            )
-        },
-        onEdit = onEdit,
-        onDelete = foodViewModel::delete,
-        onSetFavorite = foodViewModel::setFavorite,
-        onSelectQuantity = foodViewModel::selectQuantity,
-        onSelectQuantityType = foodViewModel::selectQuantityType,
-        onSelectProfiles = { profiles -> selectedProfileIds = profiles.map { it.id } },
-        modifier = modifier,
-    )
+                foodDiaryEntryViewModel.create(
+                    product = it.product,
+                    quantity = it.selectedQuantity ?: return@AddUserProductDiaryEntryScreenContent,
+                    profiles = it.selectedProfiles.map { profile -> profile.id },
+                    timestamp = timestamp,
+                )
+            },
+            onEdit = onEdit,
+            onDelete = foodViewModel::delete,
+            onSetFavorite = foodViewModel::setFavorite,
+            onSelectQuantity = foodViewModel::selectQuantity,
+            onSelectQuantityType = foodViewModel::selectQuantityType,
+            onSelectProfiles = { selectedProfiles ->
+                selectedProfileIds = selectedProfiles.map { profile -> profile.id }
+            },
+            modifier = modifier,
+        )
+    }
 }
 
 @Immutable
 private data class AddUserProductDiaryEntryScope(
-    override val headline: String?,
-    override val isFavorite: Boolean,
-    override val image: FileUri?,
-    override val suggestions: List<Quantity>,
-    override val selectedQuantity: Quantity?,
-    override val scaledNutritionFacts: NutritionFacts?,
-    override val types: List<QuantityType>,
-    override val selectedType: QuantityType,
-    override val formField: FormField,
-    override val profiles: List<ProfileUiState>,
-    override val selectedProfiles: List<ProfileUiState>,
+    val headline: String?,
+    val isFavorite: Boolean,
+    val image: FileUri?,
+    val suggestions: List<Quantity>,
+    val selectedQuantity: Quantity?,
+    val scaledNutritionFacts: NutritionFacts?,
+    val types: List<QuantityType>,
+    val selectedType: QuantityType,
+    val formField: FormField,
+    val profiles: List<ProfileUiState>,
+    val selectedProfiles: List<ProfileUiState>,
     val product: UserProduct,
-) : FoodUiScope, FoodUiScopeWithImage, FoodUiScopeWithDiaryInput, FoodUiScopeWithNote {
-
-    override val packageQuantity = product.packageQuantity
-    override val servingQuantity = product.servingQuantity
-    override val note = product.note
+) {
+    val packageQuantity = product.packageQuantity
+    val servingQuantity = product.servingQuantity
+    val note = product.note
 }
 
 @Composable
-private fun AddUserProductDiaryEntryScope.Screen(
+private fun AddUserProductDiaryEntryScreenContent(
+    scope: AddUserProductDiaryEntryScope,
     onBack: () -> Unit,
     onAdd: () -> Unit,
     onEdit: () -> Unit,
@@ -211,8 +213,8 @@ private fun AddUserProductDiaryEntryScope.Screen(
 ) {
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(scaledNutritionFacts) {
-            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
+        remember(scope.scaledNutritionFacts) {
+            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
             (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
@@ -231,10 +233,10 @@ private fun AddUserProductDiaryEntryScope.Screen(
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = headline,
+                title = scope.headline,
                 actions = {
                     FavoriteIconButton(
-                        isFavorite = isFavorite,
+                        isFavorite = scope.isFavorite,
                         onChange = onSetFavorite,
                     )
                     UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
@@ -249,8 +251,8 @@ private fun AddUserProductDiaryEntryScope.Screen(
                     Modifier.animateFloatingActionButton(
                         visible =
                             !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                formField.error == null &&
-                                selectedProfiles.isNotEmpty(),
+                                scope.formField.error == null &&
+                                scope.selectedProfiles.isNotEmpty(),
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -270,19 +272,24 @@ private fun AddUserProductDiaryEntryScope.Screen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                Headline(Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp))
             }
-            if (image != null) {
+            if (scope.image != null) {
                 item {
-                    Image(Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(scope.image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
             }
-            if (suggestions.isNotEmpty()) {
+            if (scope.suggestions.isNotEmpty()) {
                 item {
                     QuantitySuggestions(
+                        suggestions = scope.suggestions,
+                        selectedType = scope.selectedType,
+                        formField = scope.formField,
+                        packageQuantity = scope.packageQuantity,
+                        servingQuantity = scope.servingQuantity,
                         onSelectQuantity = {
                             onSelectQuantity(it)
-                            formField.textFieldState.setTextAndPlaceCursorAtEnd(
+                            scope.formField.textFieldState.setTextAndPlaceCursorAtEnd(
                                 it.amount.formatCompact()
                             )
                         },
@@ -292,6 +299,11 @@ private fun AddUserProductDiaryEntryScope.Screen(
             }
             item {
                 DiaryInput(
+                    selectedType = scope.selectedType,
+                    types = scope.types,
+                    formField = scope.formField,
+                    profiles = scope.profiles,
+                    selectedProfiles = scope.selectedProfiles,
                     onSelectType = onSelectQuantityType,
                     onSelectProfiles = onSelectProfiles,
                     modifier =
@@ -300,9 +312,10 @@ private fun AddUserProductDiaryEntryScope.Screen(
                             .padding(horizontal = 8.dp),
                 )
             }
-            if (scaledNutritionFacts != null) {
+            if (scope.scaledNutritionFacts != null) {
                 item {
                     FoodDetailsNutrientsCompact(
+                        scaledNutritionFacts = scope.scaledNutritionFacts,
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
@@ -310,9 +323,9 @@ private fun AddUserProductDiaryEntryScope.Screen(
                     )
                 }
             }
-            if (note != null) {
+            if (scope.note != null) {
                 item {
-                    Note(Modifier.padding(horizontal = 8.dp))
+                    FoodNote(scope.note, Modifier.padding(horizontal = 8.dp))
                 }
             }
         }

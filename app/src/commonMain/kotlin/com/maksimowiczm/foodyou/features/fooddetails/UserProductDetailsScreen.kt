@@ -13,14 +13,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsWithSuggestions
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodImage
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodNote
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodScreenTopBar
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScope
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithImage
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithNote
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithOptionalNutrients
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Headline
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Image
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Note
 import com.maksimowiczm.foodyou.capabilities.fooddetails.UserFoodMenu
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userproduct.UserProductDetailsUiEvent
@@ -79,31 +75,35 @@ fun UserProductDetailsScreen(
             )
         }
 
-    scope?.Screen(
-        onBack = onBack,
-        onEdit = onEdit,
-        onDelete = viewModel::delete,
-        onSetFavorite = viewModel::setFavorite,
-        onSelectQuantity = viewModel::selectQuantity,
-        modifier = modifier,
-    )
+    scope?.let {
+        UserProductDetailsScreenContent(
+            scope = it,
+            onBack = onBack,
+            onEdit = onEdit,
+            onDelete = viewModel::delete,
+            onSetFavorite = viewModel::setFavorite,
+            onSelectQuantity = viewModel::selectQuantity,
+            modifier = modifier,
+        )
+    }
 }
 
 @Immutable
 private data class UserProductScope(
-    override val headline: String?,
-    override val isFavorite: Boolean,
-    override val image: FileUri?,
-    override val note: String?,
-    override val suggestions: List<Quantity>,
-    override val selectedQuantity: Quantity?,
-    override val scaledNutritionFacts: NutritionFacts?,
-    override val packageQuantity: AbsoluteQuantity?,
-    override val servingQuantity: AbsoluteQuantity?,
-) : FoodUiScope, FoodUiScopeWithImage, FoodUiScopeWithOptionalNutrients, FoodUiScopeWithNote
+    val headline: String?,
+    val isFavorite: Boolean,
+    val image: FileUri?,
+    val note: String?,
+    val suggestions: List<Quantity>,
+    val selectedQuantity: Quantity?,
+    val scaledNutritionFacts: NutritionFacts?,
+    val packageQuantity: AbsoluteQuantity?,
+    val servingQuantity: AbsoluteQuantity?,
+)
 
 @Composable
-private fun UserProductScope.Screen(
+private fun UserProductDetailsScreenContent(
+    scope: UserProductScope,
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -114,8 +114,8 @@ private fun UserProductScope.Screen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(scaledNutritionFacts) {
-            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
+        remember(scope.scaledNutritionFacts) {
+            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
             (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
@@ -124,10 +124,10 @@ private fun UserProductScope.Screen(
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = headline,
+                title = scope.headline,
                 actions = {
                     FavoriteIconButton(
-                        isFavorite = isFavorite,
+                        isFavorite = scope.isFavorite,
                         onChange = onSetFavorite,
                     )
                     UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
@@ -142,15 +142,20 @@ private fun UserProductScope.Screen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                Headline(Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp))
             }
-            if (image != null)
+            if (scope.image != null)
                 item {
-                    Image(Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(scope.image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
-            if (scaledNutritionFacts != null)
+            if (scope.scaledNutritionFacts != null)
                 item {
                     FoodDetailsNutrientsWithSuggestions(
+                        scaledNutritionFacts = scope.scaledNutritionFacts,
+                        suggestions = scope.suggestions,
+                        selectedQuantity = scope.selectedQuantity,
+                        packageQuantity = scope.packageQuantity,
+                        servingQuantity = scope.servingQuantity,
                         onSelectQuantity = onSelectQuantity,
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
@@ -158,9 +163,9 @@ private fun UserProductScope.Screen(
                         contentPadding = PaddingValues(horizontal = 8.dp),
                     )
                 }
-            if (note != null)
+            if (scope.note != null)
                 item {
-                    Note(Modifier.padding(horizontal = 8.dp))
+                    FoodNote(scope.note, Modifier.padding(horizontal = 8.dp))
                 }
         }
     }

@@ -10,13 +10,11 @@ import com.maksimowiczm.foodyou.shared.ui.component.Image
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 
-interface FoodUiScopeWithImage {
-    val image: FileUri?
-}
-
 @Composable
-fun FoodUiScopeWithImage.Image(modifier: Modifier = Modifier) {
-    val image = image
+fun FoodImage(
+    image: FileUri?,
+    modifier: Modifier = Modifier,
+) {
     val imageModifier = modifier.aspectRatio(16f / 9f).clip(MaterialTheme.shapes.large)
 
     image?.Image(shimmer = rememberShimmer(ShimmerBounds.View), modifier = imageModifier)

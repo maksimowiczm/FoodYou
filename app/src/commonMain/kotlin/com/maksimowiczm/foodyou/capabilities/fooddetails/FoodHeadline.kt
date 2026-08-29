@@ -16,18 +16,12 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 
-interface FoodUiScope {
-    val headline: String?
-    val isFavorite: Boolean
-}
-
 @Composable
-fun FoodUiScope.Headline(
+fun FoodHeadline(
+    headline: String?,
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberShimmer(ShimmerBounds.View),
 ) {
-    val headline = headline
-
     Box(modifier) {
         if (headline != null) {
             Text(text = headline, style = MaterialTheme.typography.displaySmall)

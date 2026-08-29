@@ -42,13 +42,10 @@ import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 
-interface FoodUiScopeWithIngredients {
-    val components: List<FoodCompositionComponent>
-    val ingredientScalingFactor: Double
-}
-
 @Composable
-fun FoodUiScopeWithIngredients.Ingredients(
+fun FoodIngredients(
+    components: List<FoodCompositionComponent>,
+    ingredientScalingFactor: Double,
     onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -77,7 +74,7 @@ fun FoodUiScopeWithIngredients.Ingredients(
 }
 
 @Composable
-internal fun RecipeIngredientListItem(
+private fun RecipeIngredientListItem(
     component: FoodCompositionComponent,
     scalingFactor: Double,
     onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,

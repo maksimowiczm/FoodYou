@@ -34,15 +34,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FetchProgressIndicator
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsCompact
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodScreenTopBar
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScope
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithFetch
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithQuantityInput
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodUiScopeWithSource
-import com.maksimowiczm.foodyou.capabilities.fooddetails.Headline
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodSourceLink
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantityInput
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantitySuggestions
-import com.maksimowiczm.foodyou.capabilities.fooddetails.SourceLink
 import com.maksimowiczm.foodyou.capabilities.fooddetails.fooddatacentral.FoodDataCentralDetailsUiState
 import com.maksimowiczm.foodyou.capabilities.fooddetails.fooddatacentral.FoodDataCentralDetailsViewModel
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
@@ -114,53 +110,52 @@ fun AddFoodDataCentralIngredientScreen(
         )
     }
 
-    scope?.Screen(
-        onBack = onBack,
-        onAdd = { scope.selectedQuantity?.let { onAdd(it) } },
-        onRefresh = viewModel::refresh,
-        onSetFavorite = viewModel::setFavorite,
-        onSelectQuantity = {
-            viewModel.selectQuantity(it)
-            formField.textFieldState.setTextAndPlaceCursorAtEnd(it.amount.formatCompact())
-        },
-        onSelectQuantityType = viewModel::selectQuantityType,
-        modifier = modifier,
-    )
+    scope?.let {
+        AddFoodDataCentralIngredientScreenContent(
+            scope = it,
+            onBack = onBack,
+            onAdd = {
+                onAdd(it.selectedQuantity ?: return@AddFoodDataCentralIngredientScreenContent)
+            },
+            onRefresh = viewModel::refresh,
+            onSetFavorite = viewModel::setFavorite,
+            onSelectQuantity = { quantity ->
+                viewModel.selectQuantity(quantity)
+                formField.textFieldState.setTextAndPlaceCursorAtEnd(quantity.amount.formatCompact())
+            },
+            onSelectQuantityType = viewModel::selectQuantityType,
+            modifier = modifier,
+        )
+    }
 }
 
 @Immutable
 private data class AddIngredientFoodDataCentralScope(
-    override val headline: String?,
-    override val isFavorite: Boolean,
-    override val isLoading: Boolean,
-    override val sourceUrl: String,
-    override val suggestions: List<Quantity>,
-    override val selectedQuantity: Quantity?,
-    override val scaledNutritionFacts: NutritionFacts?,
-    override val packageQuantity: AbsoluteQuantity?,
-    override val servingQuantity: AbsoluteQuantity?,
-    override val types: List<QuantityType>,
-    override val selectedType: QuantityType,
-    override val formField: FormField,
-) : FoodUiScope, FoodUiScopeWithFetch, FoodUiScopeWithSource, FoodUiScopeWithQuantityInput
+    val headline: String?,
+    val isFavorite: Boolean,
+    val isLoading: Boolean,
+    val sourceUrl: String,
+    val suggestions: List<Quantity>,
+    val selectedQuantity: Quantity?,
+    val scaledNutritionFacts: NutritionFacts?,
+    val packageQuantity: AbsoluteQuantity?,
+    val servingQuantity: AbsoluteQuantity?,
+    val types: List<QuantityType>,
+    val selectedType: QuantityType,
+    val formField: FormField,
+)
 
 @Composable
-private fun AddIngredientFoodDataCentralScope.Screen(
+private fun AddFoodDataCentralIngredientScreenContent(
+    scope: AddIngredientFoodDataCentralScope,
     onBack: () -> Unit,
-    onRefresh: () -> Unit,
     onAdd: () -> Unit,
+    onRefresh: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var expanded by rememberNutrientExpanded()
-    val expandingEnabled =
-        remember(scaledNutritionFacts) {
-            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
-            (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
-        }
-
     val focusRequester = remember { FocusRequester() }
     var focusRequested by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(Unit) {
@@ -171,14 +166,21 @@ private fun AddIngredientFoodDataCentralScope.Screen(
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    var expanded by rememberNutrientExpanded()
+    val expandingEnabled =
+        remember(scope.scaledNutritionFacts) {
+            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
+            (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
+        }
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = headline,
+                title = scope.headline,
                 actions = {
-                    FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
+                    FavoriteIconButton(isFavorite = scope.isFavorite, onChange = onSetFavorite)
                     RefreshIconButton(onRefresh = onRefresh)
                 },
                 scrollBehavior = scrollBehavior,
@@ -190,9 +192,9 @@ private fun AddIngredientFoodDataCentralScope.Screen(
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
-                            !isLoading &&
+                            !scope.isLoading &&
                                 !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                formField.error == null,
+                                scope.formField.error == null,
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -207,30 +209,40 @@ private fun AddIngredientFoodDataCentralScope.Screen(
         },
     ) { contentPadding ->
         FetchProgressIndicator(
-            Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f)
+            isLoading = scope.isLoading,
+            modifier = Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
         )
         LazyColumn(
             modifier = Modifier.imePadding(),
             contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            item { Headline(Modifier.padding(horizontal = 8.dp)) }
-            if (suggestions.isNotEmpty())
+            item { FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp)) }
+            if (scope.suggestions.isNotEmpty())
                 item {
                     QuantitySuggestions(
+                        suggestions = scope.suggestions,
+                        selectedType = scope.selectedType,
+                        formField = scope.formField,
+                        packageQuantity = scope.packageQuantity,
+                        servingQuantity = scope.servingQuantity,
                         onSelectQuantity = onSelectQuantity,
                         modifier = Modifier.height(32.dp),
                     )
                 }
             item {
                 QuantityInput(
+                    selectedType = scope.selectedType,
+                    types = scope.types,
+                    formField = scope.formField,
                     onSelectType = onSelectQuantityType,
                     modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                 )
             }
-            if (scaledNutritionFacts != null)
+            if (scope.scaledNutritionFacts != null)
                 item {
                     FoodDetailsNutrientsCompact(
+                        scaledNutritionFacts = scope.scaledNutritionFacts,
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
@@ -238,7 +250,8 @@ private fun AddIngredientFoodDataCentralScope.Screen(
                     )
                 }
             item {
-                SourceLink(
+                FoodSourceLink(
+                    sourceUrl = scope.sourceUrl,
                     logo = {
                         Image(
                             painter = painterResource(Res.drawable.usda_logo),

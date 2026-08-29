@@ -9,12 +9,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-interface FoodUiScopeWithFetch {
-    val isLoading: Boolean
-}
-
 @Composable
-fun FoodUiScopeWithFetch.FetchProgressIndicator(modifier: Modifier = Modifier) {
+fun FetchProgressIndicator(
+    isLoading: Boolean,
+    modifier: Modifier = Modifier,
+) {
     Column(modifier) {
         Spacer(Modifier.height(8.dp))
         if (isLoading) LinearWavyProgressIndicator(Modifier.fillMaxWidth())
