@@ -84,46 +84,31 @@ fun AddOpenFoodFactsIngredientScreen(
     val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
     val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
 
-    val scope =
-        remember(
-            uiState,
-            nameSelector,
-            formField,
-        ) {
-            val details = uiState as? OpenFoodFactsDetailsUiState.Details ?: return@remember null
-            val food = details.food
+    val details = uiState as? OpenFoodFactsDetailsUiState.Details
 
-            AddIngredientOpenFoodFactsScope(
-                headline = food.headline(nameSelector),
-                isFavorite = details.isFavorite,
-                isLoading = details.isLoading,
-                image = food.image,
-                sourceUrl = food.source,
-                suggestions = details.suggestions,
-                selectedQuantity = details.selectedQuantity,
-                scaledNutritionFacts = details.scaledNutritionFacts,
-                packageQuantity = food.packageQuantity,
-                servingQuantity = food.servingQuantity,
-                types = details.quantityTypes,
-                selectedType = details.selectedQuantityType,
-                formField = formField,
-            )
-        }
-
-    LaunchedEffect(formField.textFieldState.text, scope?.selectedType) {
+    LaunchedEffect(formField.textFieldState.text, details?.selectedQuantityType) {
         viewModel.selectQuantity(
             formField.textFieldState.text.toString().toDoubleOrNull(),
-            scope?.selectedType,
+            details?.selectedQuantityType,
         )
     }
 
-    scope?.let {
+    if (details != null) {
         AddOpenFoodFactsIngredientScreenContent(
-            scope = it,
+            headline = details.food.headline(nameSelector),
+            isFavorite = details.isFavorite,
+            isLoading = details.isLoading,
+            image = details.food.image,
+            sourceUrl = details.food.source,
+            suggestions = details.suggestions,
+            scaledNutritionFacts = details.scaledNutritionFacts,
+            packageQuantity = details.food.packageQuantity,
+            servingQuantity = details.food.servingQuantity,
+            types = details.quantityTypes,
+            selectedType = details.selectedQuantityType,
+            formField = formField,
             onBack = onBack,
-            onAdd = {
-                onAdd(it.selectedQuantity ?: return@AddOpenFoodFactsIngredientScreenContent)
-            },
+            onAdd = { onAdd(details.selectedQuantity) },
             onRefresh = viewModel::refresh,
             onSetFavorite = viewModel::setFavorite,
             onSelectQuantity = { quantity ->
@@ -136,29 +121,23 @@ fun AddOpenFoodFactsIngredientScreen(
     }
 }
 
-@Immutable
-private data class AddIngredientOpenFoodFactsScope(
-    val headline: String?,
-    val isFavorite: Boolean,
-    val isLoading: Boolean,
-    val image: FileUri?,
-    val sourceUrl: String,
-    val suggestions: List<Quantity>,
-    val selectedQuantity: Quantity?,
-    val scaledNutritionFacts: NutritionFacts?,
-    val packageQuantity: AbsoluteQuantity?,
-    val servingQuantity: AbsoluteQuantity?,
-    val types: List<QuantityType>,
-    val selectedType: QuantityType,
-    val formField: FormField,
-)
-
 @Composable
 private fun AddOpenFoodFactsIngredientScreenContent(
-    scope: AddIngredientOpenFoodFactsScope,
+    headline: String?,
+    isFavorite: Boolean,
+    isLoading: Boolean,
+    image: FileUri?,
+    sourceUrl: String,
+    suggestions: List<Quantity>,
+    scaledNutritionFacts: NutritionFacts?,
+    packageQuantity: AbsoluteQuantity?,
+    servingQuantity: AbsoluteQuantity?,
+    types: List<QuantityType>,
+    selectedType: QuantityType,
+    formField: FormField,
     onBack: () -> Unit,
-    onRefresh: () -> Unit,
     onAdd: () -> Unit,
+    onRefresh: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,
@@ -166,8 +145,8 @@ private fun AddOpenFoodFactsIngredientScreenContent(
 ) {
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(scope.scaledNutritionFacts) {
-            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
             (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
@@ -186,9 +165,9 @@ private fun AddOpenFoodFactsIngredientScreenContent(
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = scope.headline,
+                title = headline,
                 actions = {
-                    FavoriteIconButton(isFavorite = scope.isFavorite, onChange = onSetFavorite)
+                    FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
                     RefreshIconButton(onRefresh = onRefresh)
                 },
                 scrollBehavior = scrollBehavior,
@@ -200,9 +179,9 @@ private fun AddOpenFoodFactsIngredientScreenContent(
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
-                            !scope.isLoading &&
+                            !isLoading &&
                                 !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                scope.formField.error == null,
+                                formField.error == null,
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -217,7 +196,7 @@ private fun AddOpenFoodFactsIngredientScreenContent(
         },
     ) { contentPadding ->
         FetchProgressIndicator(
-            isLoading = scope.isLoading,
+            isLoading = isLoading,
             modifier = Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
         )
         LazyColumn(
@@ -226,37 +205,37 @@ private fun AddOpenFoodFactsIngredientScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
             }
-            if (scope.image != null)
+            if (image != null)
                 item {
-                    FoodImage(scope.image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
-            if (scope.suggestions.isNotEmpty())
+            if (suggestions.isNotEmpty())
                 item {
                     QuantitySuggestions(
-                        suggestions = scope.suggestions,
-                        selectedType = scope.selectedType,
-                        formField = scope.formField,
-                        packageQuantity = scope.packageQuantity,
-                        servingQuantity = scope.servingQuantity,
+                        suggestions = suggestions,
+                        selectedType = selectedType,
+                        formField = formField,
+                        packageQuantity = packageQuantity,
+                        servingQuantity = servingQuantity,
                         onSelectQuantity = onSelectQuantity,
                         modifier = Modifier.height(32.dp),
                     )
                 }
             item {
                 QuantityInput(
-                    selectedType = scope.selectedType,
-                    types = scope.types,
-                    formField = scope.formField,
+                    selectedType = selectedType,
+                    types = types,
+                    formField = formField,
                     onSelectType = onSelectQuantityType,
                     modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                 )
             }
-            if (scope.scaledNutritionFacts != null)
+            if (scaledNutritionFacts != null)
                 item {
                     FoodDetailsNutrientsCompact(
-                        scaledNutritionFacts = scope.scaledNutritionFacts,
+                        scaledNutritionFacts = scaledNutritionFacts,
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
@@ -265,7 +244,7 @@ private fun AddOpenFoodFactsIngredientScreenContent(
                 }
             item {
                 FoodSourceLink(
-                    sourceUrl = scope.sourceUrl,
+                    sourceUrl = sourceUrl,
                     logo = {
                         Image(
                             painter = painterResource(Res.drawable.openfoodfacts_logo),

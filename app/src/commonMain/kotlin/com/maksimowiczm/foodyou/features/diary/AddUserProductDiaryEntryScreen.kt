@@ -42,6 +42,7 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberQuantityFormFie
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userproduct.UserProductDetailsUiEvent
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userproduct.UserProductDetailsViewModel
 import com.maksimowiczm.foodyou.common.domain.FileUri
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
@@ -56,7 +57,6 @@ import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
-import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_add
@@ -115,53 +115,41 @@ fun AddUserProductDiaryEntryScreen(
     val nameSelector = LocalFoodNameSelector.current
     val image = foodUiState.product?.image?.let { resolveBlob(it) }
 
-    val scope =
-        remember(
-            foodUiState,
-            formField,
-            profiles,
-            selectedProfiles,
-            nameSelector,
-            image,
-        ) {
-            val profiles = profiles ?: return@remember null
-            val product = foodUiState.product ?: return@remember null
+    val selectedType = foodUiState.selectedQuantityType ?: QuantityType.Gram
 
-            AddUserProductDiaryEntryScope(
-                headline = product.headline(nameSelector),
-                isFavorite = foodUiState.isFavorite,
-                image = image,
-                suggestions = foodUiState.suggestions,
-                selectedQuantity = foodUiState.selectedQuantity,
-                scaledNutritionFacts = foodUiState.scaledNutritionFacts,
-                types = foodUiState.quantityTypes,
-                selectedType = foodUiState.selectedQuantityType ?: QuantityType.Gram,
-                formField = formField,
-                profiles = profiles,
-                selectedProfiles = selectedProfiles,
-                product = product,
-            )
-        }
-
-    LaunchedEffect(formField.textFieldState.text, scope?.selectedType) {
+    LaunchedEffect(formField.textFieldState.text, selectedType) {
         foodViewModel.selectQuantity(
             formField.textFieldState.text.toString().toDoubleOrNull(),
-            scope?.selectedType,
+            selectedType,
         )
     }
 
-    scope?.let {
+    if (profiles != null && foodUiState.product != null) {
         AddUserProductDiaryEntryScreenContent(
-            scope = it,
+            headline = foodUiState.product.headline(nameSelector),
+            isFavorite = foodUiState.isFavorite,
+            image = image,
+            suggestions = foodUiState.suggestions,
+            scaledNutritionFacts = foodUiState.scaledNutritionFacts,
+            types = foodUiState.quantityTypes,
+            selectedType = selectedType,
+            formField = formField,
+            profiles = profiles,
+            selectedProfiles = selectedProfiles,
+            packageQuantity = foodUiState.product.packageQuantity,
+            servingQuantity = foodUiState.product.servingQuantity,
+            note = foodUiState.product.note,
             onBack = onBack,
             onAdd = {
                 val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                 val timestamp = LocalDateTime(date ?: now.date, now.time)
 
                 foodDiaryEntryViewModel.create(
-                    product = it.product,
-                    quantity = it.selectedQuantity ?: return@AddUserProductDiaryEntryScreenContent,
-                    profiles = it.selectedProfiles.map { profile -> profile.id },
+                    product = foodUiState.product,
+                    quantity =
+                        foodUiState.selectedQuantity
+                            ?: return@AddUserProductDiaryEntryScreenContent,
+                    profiles = selectedProfiles.map { profile -> profile.id },
                     timestamp = timestamp,
                 )
             },
@@ -178,29 +166,21 @@ fun AddUserProductDiaryEntryScreen(
     }
 }
 
-@Immutable
-private data class AddUserProductDiaryEntryScope(
-    val headline: String?,
-    val isFavorite: Boolean,
-    val image: FileUri?,
-    val suggestions: List<Quantity>,
-    val selectedQuantity: Quantity?,
-    val scaledNutritionFacts: NutritionFacts?,
-    val types: List<QuantityType>,
-    val selectedType: QuantityType,
-    val formField: FormField,
-    val profiles: List<ProfileUiState>,
-    val selectedProfiles: List<ProfileUiState>,
-    val product: UserProduct,
-) {
-    val packageQuantity = product.packageQuantity
-    val servingQuantity = product.servingQuantity
-    val note = product.note
-}
-
 @Composable
 private fun AddUserProductDiaryEntryScreenContent(
-    scope: AddUserProductDiaryEntryScope,
+    headline: String?,
+    isFavorite: Boolean,
+    image: FileUri?,
+    suggestions: List<Quantity>,
+    scaledNutritionFacts: NutritionFacts?,
+    types: List<QuantityType>,
+    selectedType: QuantityType,
+    formField: FormField,
+    profiles: List<ProfileUiState>,
+    selectedProfiles: List<ProfileUiState>,
+    packageQuantity: AbsoluteQuantity?,
+    servingQuantity: AbsoluteQuantity?,
+    note: String?,
     onBack: () -> Unit,
     onAdd: () -> Unit,
     onEdit: () -> Unit,
@@ -213,8 +193,8 @@ private fun AddUserProductDiaryEntryScreenContent(
 ) {
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(scope.scaledNutritionFacts) {
-            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
             (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
@@ -233,10 +213,10 @@ private fun AddUserProductDiaryEntryScreenContent(
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = scope.headline,
+                title = headline,
                 actions = {
                     FavoriteIconButton(
-                        isFavorite = scope.isFavorite,
+                        isFavorite = isFavorite,
                         onChange = onSetFavorite,
                     )
                     UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
@@ -251,8 +231,8 @@ private fun AddUserProductDiaryEntryScreenContent(
                     Modifier.animateFloatingActionButton(
                         visible =
                             !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                scope.formField.error == null &&
-                                scope.selectedProfiles.isNotEmpty(),
+                                formField.error == null &&
+                                selectedProfiles.isNotEmpty(),
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -272,24 +252,24 @@ private fun AddUserProductDiaryEntryScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
             }
-            if (scope.image != null) {
+            if (image != null) {
                 item {
-                    FoodImage(scope.image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
             }
-            if (scope.suggestions.isNotEmpty()) {
+            if (suggestions.isNotEmpty()) {
                 item {
                     QuantitySuggestions(
-                        suggestions = scope.suggestions,
-                        selectedType = scope.selectedType,
-                        formField = scope.formField,
-                        packageQuantity = scope.packageQuantity,
-                        servingQuantity = scope.servingQuantity,
+                        suggestions = suggestions,
+                        selectedType = selectedType,
+                        formField = formField,
+                        packageQuantity = packageQuantity,
+                        servingQuantity = servingQuantity,
                         onSelectQuantity = {
                             onSelectQuantity(it)
-                            scope.formField.textFieldState.setTextAndPlaceCursorAtEnd(
+                            formField.textFieldState.setTextAndPlaceCursorAtEnd(
                                 it.amount.formatCompact()
                             )
                         },
@@ -299,11 +279,11 @@ private fun AddUserProductDiaryEntryScreenContent(
             }
             item {
                 DiaryInput(
-                    selectedType = scope.selectedType,
-                    types = scope.types,
-                    formField = scope.formField,
-                    profiles = scope.profiles,
-                    selectedProfiles = scope.selectedProfiles,
+                    selectedType = selectedType,
+                    types = types,
+                    formField = formField,
+                    profiles = profiles,
+                    selectedProfiles = selectedProfiles,
                     onSelectType = onSelectQuantityType,
                     onSelectProfiles = onSelectProfiles,
                     modifier =
@@ -312,10 +292,10 @@ private fun AddUserProductDiaryEntryScreenContent(
                             .padding(horizontal = 8.dp),
                 )
             }
-            if (scope.scaledNutritionFacts != null) {
+            if (scaledNutritionFacts != null) {
                 item {
                     FoodDetailsNutrientsCompact(
-                        scaledNutritionFacts = scope.scaledNutritionFacts,
+                        scaledNutritionFacts = scaledNutritionFacts,
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
@@ -323,9 +303,9 @@ private fun AddUserProductDiaryEntryScreenContent(
                     )
                 }
             }
-            if (scope.note != null) {
+            if (note != null) {
                 item {
-                    FoodNote(scope.note, Modifier.padding(horizontal = 8.dp))
+                    FoodNote(note, Modifier.padding(horizontal = 8.dp))
                 }
             }
         }

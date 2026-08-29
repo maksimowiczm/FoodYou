@@ -50,27 +50,19 @@ fun FoodDataCentralDetailsScreen(
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
-    val scope =
-        remember(uiState) {
-            val details = uiState as? FoodDataCentralDetailsUiState.Details ?: return@remember null
-            val food = details.food
+    val details = uiState as? FoodDataCentralDetailsUiState.Details
 
-            FoodDataCentralScope(
-                headline = food.headline,
-                isFavorite = details.isFavorite,
-                isLoading = details.isLoading,
-                sourceUrl = food.source,
-                suggestions = details.suggestions,
-                selectedQuantity = details.selectedQuantity,
-                scaledNutritionFacts = details.scaledNutritionFacts,
-                packageQuantity = food.packageQuantity,
-                servingQuantity = food.servingQuantity,
-            )
-        }
-
-    scope?.let {
+    if (details != null) {
         FoodDataCentralDetailsScreenContent(
-            scope = it,
+            headline = details.food.headline,
+            isFavorite = details.isFavorite,
+            isLoading = details.isLoading,
+            sourceUrl = details.food.source,
+            suggestions = details.suggestions,
+            selectedQuantity = details.selectedQuantity,
+            scaledNutritionFacts = details.scaledNutritionFacts,
+            packageQuantity = details.food.packageQuantity,
+            servingQuantity = details.food.servingQuantity,
             onBack = onBack,
             onRefresh = viewModel::refresh,
             onSetFavorite = viewModel::setFavorite,
@@ -80,22 +72,17 @@ fun FoodDataCentralDetailsScreen(
     }
 }
 
-@Immutable
-private data class FoodDataCentralScope(
-    val headline: String?,
-    val isFavorite: Boolean,
-    val isLoading: Boolean,
-    val sourceUrl: String,
-    val suggestions: List<Quantity>,
-    val selectedQuantity: Quantity?,
-    val scaledNutritionFacts: NutritionFacts?,
-    val packageQuantity: AbsoluteQuantity?,
-    val servingQuantity: AbsoluteQuantity?,
-)
-
 @Composable
 private fun FoodDataCentralDetailsScreenContent(
-    scope: FoodDataCentralScope,
+    headline: String?,
+    isFavorite: Boolean,
+    isLoading: Boolean,
+    sourceUrl: String,
+    suggestions: List<Quantity>,
+    selectedQuantity: Quantity?,
+    scaledNutritionFacts: NutritionFacts?,
+    packageQuantity: AbsoluteQuantity?,
+    servingQuantity: AbsoluteQuantity?,
     onBack: () -> Unit,
     onRefresh: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
@@ -105,8 +92,8 @@ private fun FoodDataCentralDetailsScreenContent(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(scope.scaledNutritionFacts) {
-            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
             (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
@@ -115,9 +102,9 @@ private fun FoodDataCentralDetailsScreenContent(
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = scope.headline,
+                title = headline,
                 actions = {
-                    FavoriteIconButton(isFavorite = scope.isFavorite, onChange = onSetFavorite)
+                    FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
                     RefreshIconButton(onRefresh = onRefresh)
                 },
                 scrollBehavior = scrollBehavior,
@@ -125,22 +112,22 @@ private fun FoodDataCentralDetailsScreenContent(
         },
     ) { contentPadding ->
         FetchProgressIndicator(
-            isLoading = scope.isLoading,
+            isLoading = isLoading,
             modifier = Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
         )
         LazyColumn(
             contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            item { FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp)) }
-            if (scope.scaledNutritionFacts != null)
+            item { FoodHeadline(headline, Modifier.padding(horizontal = 8.dp)) }
+            if (scaledNutritionFacts != null)
                 item {
                     FoodDetailsNutrientsWithSuggestions(
-                        scaledNutritionFacts = scope.scaledNutritionFacts,
-                        suggestions = scope.suggestions,
-                        selectedQuantity = scope.selectedQuantity,
-                        packageQuantity = scope.packageQuantity,
-                        servingQuantity = scope.servingQuantity,
+                        scaledNutritionFacts = scaledNutritionFacts,
+                        suggestions = suggestions,
+                        selectedQuantity = selectedQuantity,
+                        packageQuantity = packageQuantity,
+                        servingQuantity = servingQuantity,
                         onSelectQuantity = onSelectQuantity,
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
@@ -150,7 +137,7 @@ private fun FoodDataCentralDetailsScreenContent(
                 }
             item {
                 FoodSourceLink(
-                    sourceUrl = scope.sourceUrl,
+                    sourceUrl = sourceUrl,
                     logo = {
                         Image(
                             painter = painterResource(Res.drawable.usda_logo),

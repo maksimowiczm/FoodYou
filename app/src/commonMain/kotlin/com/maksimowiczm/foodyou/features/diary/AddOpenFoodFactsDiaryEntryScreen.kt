@@ -52,7 +52,6 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
 import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.RefreshIconButton
@@ -110,59 +109,40 @@ fun AddOpenFoodFactsDiaryEntryScreen(
 
     val nameSelector = LocalFoodNameSelector.current
 
-    val scope =
-        remember(
-            foodUiState,
-            formField,
-            profiles,
-            selectedProfiles,
-            nameSelector,
-        ) {
-            val profiles = profiles ?: return@remember null
-            val details =
-                foodUiState as? OpenFoodFactsDetailsUiState.Details ?: return@remember null
-            val food = details.food
+    val details = foodUiState as? OpenFoodFactsDetailsUiState.Details
 
-            AddOpenFoodFactsDiaryEntryScope(
-                headline = food.headline(nameSelector),
-                isFavorite = details.isFavorite,
-                isLoading = details.isLoading,
-                image = food.image,
-                sourceUrl = food.source,
-                suggestions = details.suggestions,
-                selectedQuantity = details.selectedQuantity,
-                scaledNutritionFacts = details.scaledNutritionFacts,
-                packageQuantity = food.packageQuantity,
-                servingQuantity = food.servingQuantity,
-                types = details.quantityTypes,
-                selectedType = details.selectedQuantityType,
-                formField = formField,
-                profiles = profiles,
-                selectedProfiles = selectedProfiles,
-                product = food,
-            )
-        }
-
-    LaunchedEffect(formField.textFieldState.text, scope?.selectedType) {
+    LaunchedEffect(formField.textFieldState.text, details?.selectedQuantityType) {
         foodViewModel.selectQuantity(
             formField.textFieldState.text.toString().toDoubleOrNull(),
-            scope?.selectedType,
+            details?.selectedQuantityType,
         )
     }
 
-    scope?.let {
+    if (profiles != null && details != null) {
         AddOpenFoodFactsDiaryEntryScreenContent(
-            scope = it,
+            headline = details.food.headline(nameSelector),
+            isFavorite = details.isFavorite,
+            isLoading = details.isLoading,
+            image = details.food.image,
+            sourceUrl = details.food.source,
+            suggestions = details.suggestions,
+            scaledNutritionFacts = details.scaledNutritionFacts,
+            packageQuantity = details.food.packageQuantity,
+            servingQuantity = details.food.servingQuantity,
+            types = details.quantityTypes,
+            selectedType = details.selectedQuantityType,
+            formField = formField,
+            profiles = profiles,
+            selectedProfiles = selectedProfiles,
             onBack = onBack,
             onAdd = {
                 val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                 val timestamp = LocalDateTime(date ?: now.date, now.time)
 
                 foodDiaryEntryViewModel.create(
-                    product = it.product,
-                    quantity =
-                        it.selectedQuantity ?: return@AddOpenFoodFactsDiaryEntryScreenContent,
-                    profiles = it.selectedProfiles.map { profile -> profile.id },
+                    product = details.food,
+                    quantity = details.selectedQuantity,
+                    profiles = selectedProfiles.map { profile -> profile.id },
                     timestamp = timestamp,
                 )
             },
@@ -178,29 +158,22 @@ fun AddOpenFoodFactsDiaryEntryScreen(
     }
 }
 
-@Immutable
-private data class AddOpenFoodFactsDiaryEntryScope(
-    val headline: String?,
-    val isFavorite: Boolean,
-    val isLoading: Boolean,
-    val image: FileUri?,
-    val sourceUrl: String,
-    val suggestions: List<Quantity>,
-    val selectedQuantity: Quantity?,
-    val scaledNutritionFacts: NutritionFacts?,
-    val packageQuantity: AbsoluteQuantity?,
-    val servingQuantity: AbsoluteQuantity?,
-    val types: List<QuantityType>,
-    val selectedType: QuantityType,
-    val formField: FormField,
-    val profiles: List<ProfileUiState>,
-    val selectedProfiles: List<ProfileUiState>,
-    val product: OpenFoodFactsProduct,
-)
-
 @Composable
 private fun AddOpenFoodFactsDiaryEntryScreenContent(
-    scope: AddOpenFoodFactsDiaryEntryScope,
+    headline: String?,
+    isFavorite: Boolean,
+    isLoading: Boolean,
+    image: FileUri?,
+    sourceUrl: String,
+    suggestions: List<Quantity>,
+    scaledNutritionFacts: NutritionFacts?,
+    packageQuantity: AbsoluteQuantity?,
+    servingQuantity: AbsoluteQuantity?,
+    types: List<QuantityType>,
+    selectedType: QuantityType,
+    formField: FormField,
+    profiles: List<ProfileUiState>,
+    selectedProfiles: List<ProfileUiState>,
     onBack: () -> Unit,
     onRefresh: () -> Unit,
     onAdd: () -> Unit,
@@ -212,8 +185,8 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
 ) {
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(scope.scaledNutritionFacts) {
-            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
             (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
@@ -232,9 +205,9 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = scope.headline,
+                title = headline,
                 actions = {
-                    FavoriteIconButton(isFavorite = scope.isFavorite, onChange = onSetFavorite)
+                    FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
                     RefreshIconButton(onRefresh = onRefresh)
                 },
                 scrollBehavior = scrollBehavior,
@@ -246,10 +219,10 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
-                            !scope.isLoading &&
+                            !isLoading &&
                                 !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                scope.formField.error == null &&
-                                scope.selectedProfiles.isNotEmpty(),
+                                formField.error == null &&
+                                selectedProfiles.isNotEmpty(),
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -264,7 +237,7 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
         },
     ) { contentPadding ->
         FetchProgressIndicator(
-            isLoading = scope.isLoading,
+            isLoading = isLoading,
             modifier = Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
         )
         LazyColumn(
@@ -273,24 +246,24 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
             }
-            if (scope.image != null) {
+            if (image != null) {
                 item {
-                    FoodImage(scope.image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
             }
-            if (scope.suggestions.isNotEmpty()) {
+            if (suggestions.isNotEmpty()) {
                 item {
                     QuantitySuggestions(
-                        suggestions = scope.suggestions,
-                        selectedType = scope.selectedType,
-                        formField = scope.formField,
-                        packageQuantity = scope.packageQuantity,
-                        servingQuantity = scope.servingQuantity,
+                        suggestions = suggestions,
+                        selectedType = selectedType,
+                        formField = formField,
+                        packageQuantity = packageQuantity,
+                        servingQuantity = servingQuantity,
                         onSelectQuantity = {
                             onSelectQuantity(it)
-                            scope.formField.textFieldState.setTextAndPlaceCursorAtEnd(
+                            formField.textFieldState.setTextAndPlaceCursorAtEnd(
                                 it.amount.formatCompact()
                             )
                         },
@@ -300,11 +273,11 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
             }
             item {
                 DiaryInput(
-                    selectedType = scope.selectedType,
-                    types = scope.types,
-                    formField = scope.formField,
-                    profiles = scope.profiles,
-                    selectedProfiles = scope.selectedProfiles,
+                    selectedType = selectedType,
+                    types = types,
+                    formField = formField,
+                    profiles = profiles,
+                    selectedProfiles = selectedProfiles,
                     onSelectType = onSelectQuantityType,
                     onSelectProfiles = onSelectProfiles,
                     modifier =
@@ -313,10 +286,10 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
                             .padding(horizontal = 8.dp),
                 )
             }
-            if (scope.scaledNutritionFacts != null) {
+            if (scaledNutritionFacts != null) {
                 item {
                     FoodDetailsNutrientsCompact(
-                        scaledNutritionFacts = scope.scaledNutritionFacts,
+                        scaledNutritionFacts = scaledNutritionFacts,
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
@@ -326,7 +299,7 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
             }
             item {
                 FoodSourceLink(
-                    sourceUrl = scope.sourceUrl,
+                    sourceUrl = sourceUrl,
                     logo = {
                         Image(
                             painter = painterResource(Res.drawable.openfoodfacts_logo),

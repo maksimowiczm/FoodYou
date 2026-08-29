@@ -106,35 +106,24 @@ fun AddUserRecipeIngredientScreen(
         )
     }
 
-    val image = userRecipe?.image?.let { resolveBlob(it) }
-
-    val scope =
-        remember(uiState, nameSelector, image, formField) {
-            val recipe = uiState.recipe ?: return@remember null
-
-            AddIngredientUserRecipeScope(
-                headline = recipe.headline(nameSelector),
-                isFavorite = uiState.isFavorite,
-                image = image,
-                note = recipe.note,
-                components = recipe.components,
-                ingredientScalingFactor = uiState.ingredientScalingFactor,
-                suggestions = uiState.suggestions,
-                selectedQuantity = uiState.selectedQuantity,
-                scaledNutritionFacts = uiState.scaledNutritionFacts,
-                packageQuantity = AbsoluteQuantity.Weight(recipe.totalWeight),
-                servingQuantity = AbsoluteQuantity.Weight(recipe.servingWeight),
-                types = uiState.quantityTypes,
-                selectedType = uiState.selectedQuantityType ?: QuantityType.Gram,
-                formField = formField,
-            )
-        }
-
-    scope?.let {
+    if (userRecipe != null) {
         AddUserRecipeIngredientScreenContent(
-            scope = it,
+            headline = userRecipe.headline(nameSelector),
+            isFavorite = uiState.isFavorite,
+            image = userRecipe.image?.let { resolveBlob(it) },
+            note = userRecipe.note,
+            components = userRecipe.components,
+            ingredientScalingFactor = uiState.ingredientScalingFactor,
+            suggestions = uiState.suggestions,
+            selectedQuantity = uiState.selectedQuantity,
+            scaledNutritionFacts = uiState.scaledNutritionFacts,
+            packageQuantity = AbsoluteQuantity.Weight(userRecipe.totalWeight),
+            servingQuantity = AbsoluteQuantity.Weight(userRecipe.servingWeight),
+            types = uiState.quantityTypes,
+            selectedType = uiState.selectedQuantityType ?: QuantityType.Gram,
+            formField = formField,
             onBack = onBack,
-            onAdd = { onAdd(it.selectedQuantity ?: return@AddUserRecipeIngredientScreenContent) },
+            onAdd = { uiState.selectedQuantity?.let { onAdd(it) } },
             onEdit = onEdit,
             onDelete = viewModel::delete,
             onSetFavorite = viewModel::setFavorite,
@@ -149,27 +138,22 @@ fun AddUserRecipeIngredientScreen(
     }
 }
 
-@Immutable
-private data class AddIngredientUserRecipeScope(
-    val headline: String?,
-    val isFavorite: Boolean,
-    val image: FileUri?,
-    val note: String?,
-    val components: List<FoodCompositionComponent>,
-    val ingredientScalingFactor: Double,
-    val suggestions: List<Quantity>,
-    val selectedQuantity: Quantity?,
-    val scaledNutritionFacts: NutritionFacts?,
-    val packageQuantity: AbsoluteQuantity?,
-    val servingQuantity: AbsoluteQuantity?,
-    val types: List<QuantityType>,
-    val selectedType: QuantityType,
-    val formField: FormField,
-)
-
 @Composable
 private fun AddUserRecipeIngredientScreenContent(
-    scope: AddIngredientUserRecipeScope,
+    headline: String?,
+    isFavorite: Boolean,
+    image: FileUri?,
+    note: String?,
+    components: List<FoodCompositionComponent>,
+    ingredientScalingFactor: Double,
+    suggestions: List<Quantity>,
+    selectedQuantity: Quantity?,
+    scaledNutritionFacts: NutritionFacts?,
+    packageQuantity: AbsoluteQuantity?,
+    servingQuantity: AbsoluteQuantity?,
+    types: List<QuantityType>,
+    selectedType: QuantityType,
+    formField: FormField,
     onBack: () -> Unit,
     onAdd: () -> Unit,
     onEdit: () -> Unit,
@@ -192,22 +176,22 @@ private fun AddUserRecipeIngredientScreenContent(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(scope.scaledNutritionFacts) {
-            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
             (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
     val anyNutrientIsMissing =
-        remember(scope.scaledNutritionFacts) { scope.scaledNutritionFacts?.isIncomplete() == true }
+        remember(scaledNutritionFacts) { scaledNutritionFacts?.isIncomplete() == true }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = scope.headline,
+                title = headline,
                 actions = {
-                    FavoriteIconButton(isFavorite = scope.isFavorite, onChange = onSetFavorite)
+                    FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
                     UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
                 },
                 scrollBehavior = scrollBehavior,
@@ -220,7 +204,7 @@ private fun AddUserRecipeIngredientScreenContent(
                     Modifier.animateFloatingActionButton(
                         visible =
                             !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                scope.formField.error == null,
+                                formField.error == null,
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -240,47 +224,47 @@ private fun AddUserRecipeIngredientScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
             }
-            if (scope.image != null)
+            if (image != null)
                 item {
-                    FoodImage(scope.image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
-            if (scope.components.isNotEmpty())
+            if (components.isNotEmpty())
                 item {
                     FoodIngredients(
-                        components = scope.components,
-                        ingredientScalingFactor = scope.ingredientScalingFactor,
+                        components = components,
+                        ingredientScalingFactor = ingredientScalingFactor,
                         onNavigateToIngredient = onNavigateToIngredient,
                         modifier = Modifier.padding(horizontal = 8.dp),
                     )
                 }
-            if (scope.suggestions.isNotEmpty())
+            if (suggestions.isNotEmpty())
                 item {
                     QuantitySuggestions(
-                        suggestions = scope.suggestions,
-                        selectedType = scope.selectedType,
-                        formField = scope.formField,
-                        packageQuantity = scope.packageQuantity,
-                        servingQuantity = scope.servingQuantity,
+                        suggestions = suggestions,
+                        selectedType = selectedType,
+                        formField = formField,
+                        packageQuantity = packageQuantity,
+                        servingQuantity = servingQuantity,
                         onSelectQuantity = onSelectQuantity,
                         modifier = Modifier.height(32.dp),
                     )
                 }
             item {
                 QuantityInput(
-                    selectedType = scope.selectedType,
-                    types = scope.types,
-                    formField = scope.formField,
+                    selectedType = selectedType,
+                    types = types,
+                    formField = formField,
                     onSelectType = onSelectQuantityType,
                     modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                 )
             }
-            if (scope.scaledNutritionFacts != null)
+            if (scaledNutritionFacts != null)
                 item {
                     Column {
                         FoodDetailsNutrientsCompact(
-                            scaledNutritionFacts = scope.scaledNutritionFacts,
+                            scaledNutritionFacts = scaledNutritionFacts,
                             expanded = if (!expandingEnabled) false else expanded,
                             onExpandedChange = { expanded = it },
                             expandingEnabled = expandingEnabled,
@@ -301,9 +285,9 @@ private fun AddUserRecipeIngredientScreenContent(
                         }
                     }
                 }
-            if (scope.note != null)
+            if (note != null)
                 item {
-                    FoodNote(scope.note, Modifier.padding(horizontal = 8.dp))
+                    FoodNote(note, Modifier.padding(horizontal = 8.dp))
                 }
         }
     }

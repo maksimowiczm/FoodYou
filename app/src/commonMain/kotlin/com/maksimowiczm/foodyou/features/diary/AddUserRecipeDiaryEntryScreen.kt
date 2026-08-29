@@ -60,7 +60,6 @@ import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_add
@@ -120,54 +119,44 @@ fun AddUserRecipeDiaryEntryScreen(
     val nameSelector = LocalFoodNameSelector.current
     val image = foodUiState.recipe?.image?.let { resolveBlob(it) }
 
-    val scope =
-        remember(
-            foodUiState,
-            formField,
-            profiles,
-            selectedProfiles,
-            nameSelector,
-            image,
-        ) {
-            val profiles = profiles ?: return@remember null
-            val recipe = foodUiState.recipe ?: return@remember null
+    val recipe = foodUiState.recipe
 
-            AddUserRecipeDiaryEntryScope(
-                headline = recipe.headline(nameSelector),
-                isFavorite = foodUiState.isFavorite,
-                image = image,
-                suggestions = foodUiState.suggestions,
-                selectedQuantity = foodUiState.selectedQuantity,
-                scaledNutritionFacts = foodUiState.scaledNutritionFacts,
-                types = foodUiState.quantityTypes,
-                selectedType = foodUiState.selectedQuantityType ?: QuantityType.Gram,
-                formField = formField,
-                profiles = profiles,
-                selectedProfiles = selectedProfiles,
-                recipe = recipe,
-                ingredientScalingFactor = foodUiState.ingredientScalingFactor,
-            )
-        }
+    val selectedType = foodUiState.selectedQuantityType ?: QuantityType.Gram
 
-    LaunchedEffect(formField.textFieldState.text, scope?.selectedType) {
+    LaunchedEffect(formField.textFieldState.text, selectedType) {
         foodViewModel.selectQuantity(
             formField.textFieldState.text.toString().toDoubleOrNull(),
-            scope?.selectedType,
+            selectedType,
         )
     }
 
-    scope?.let {
+    if (profiles != null && recipe != null) {
         AddUserRecipeDiaryEntryScreenContent(
-            scope = it,
+            headline = recipe.headline(nameSelector),
+            isFavorite = foodUiState.isFavorite,
+            image = image,
+            suggestions = foodUiState.suggestions,
+            scaledNutritionFacts = foodUiState.scaledNutritionFacts,
+            types = foodUiState.quantityTypes,
+            selectedType = selectedType,
+            formField = formField,
+            profiles = profiles,
+            selectedProfiles = selectedProfiles,
+            ingredientScalingFactor = foodUiState.ingredientScalingFactor,
+            packageQuantity = AbsoluteQuantity.Weight(recipe.totalWeight),
+            servingQuantity = AbsoluteQuantity.Weight(recipe.servingWeight),
+            note = recipe.note,
+            components = recipe.components,
             onBack = onBack,
             onAdd = {
                 val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                 val timestamp = LocalDateTime(date ?: now.date, now.time)
 
                 foodDiaryEntryViewModel.create(
-                    recipe = it.recipe,
-                    quantity = it.selectedQuantity ?: return@AddUserRecipeDiaryEntryScreenContent,
-                    profiles = it.selectedProfiles.map { profile -> profile.id },
+                    recipe = recipe,
+                    quantity =
+                        foodUiState.selectedQuantity ?: return@AddUserRecipeDiaryEntryScreenContent,
+                    profiles = selectedProfiles.map { profile -> profile.id },
                     timestamp = timestamp,
                 )
             },
@@ -185,31 +174,23 @@ fun AddUserRecipeDiaryEntryScreen(
     }
 }
 
-@Immutable
-private data class AddUserRecipeDiaryEntryScope(
-    val headline: String?,
-    val isFavorite: Boolean,
-    val image: FileUri?,
-    val suggestions: List<Quantity>,
-    val selectedQuantity: Quantity?,
-    val scaledNutritionFacts: NutritionFacts?,
-    val types: List<QuantityType>,
-    val selectedType: QuantityType,
-    val formField: FormField,
-    val profiles: List<ProfileUiState>,
-    val selectedProfiles: List<ProfileUiState>,
-    val ingredientScalingFactor: Double,
-    val recipe: UserRecipe,
-) {
-    val packageQuantity = AbsoluteQuantity.Weight(recipe.totalWeight)
-    val servingQuantity = AbsoluteQuantity.Weight(recipe.servingWeight)
-    val note = recipe.note
-    val components: List<FoodCompositionComponent> = recipe.components
-}
-
 @Composable
 private fun AddUserRecipeDiaryEntryScreenContent(
-    scope: AddUserRecipeDiaryEntryScope,
+    headline: String?,
+    isFavorite: Boolean,
+    image: FileUri?,
+    suggestions: List<Quantity>,
+    scaledNutritionFacts: NutritionFacts?,
+    types: List<QuantityType>,
+    selectedType: QuantityType,
+    formField: FormField,
+    profiles: List<ProfileUiState>,
+    selectedProfiles: List<ProfileUiState>,
+    ingredientScalingFactor: Double,
+    packageQuantity: AbsoluteQuantity?,
+    servingQuantity: AbsoluteQuantity?,
+    note: String?,
+    components: List<FoodCompositionComponent>,
     onBack: () -> Unit,
     onAdd: () -> Unit,
     onEdit: () -> Unit,
@@ -223,8 +204,8 @@ private fun AddUserRecipeDiaryEntryScreenContent(
 ) {
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(scope.scaledNutritionFacts) {
-            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
             (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
@@ -243,10 +224,10 @@ private fun AddUserRecipeDiaryEntryScreenContent(
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = scope.headline,
+                title = headline,
                 actions = {
                     FavoriteIconButton(
-                        isFavorite = scope.isFavorite,
+                        isFavorite = isFavorite,
                         onChange = onSetFavorite,
                     )
                     UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
@@ -261,8 +242,8 @@ private fun AddUserRecipeDiaryEntryScreenContent(
                     Modifier.animateFloatingActionButton(
                         visible =
                             !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                scope.formField.error == null &&
-                                scope.selectedProfiles.isNotEmpty(),
+                                formField.error == null &&
+                                selectedProfiles.isNotEmpty(),
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -282,32 +263,32 @@ private fun AddUserRecipeDiaryEntryScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
             }
-            if (scope.image != null) {
+            if (image != null) {
                 item {
-                    FoodImage(scope.image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
             }
             item {
                 FoodIngredients(
-                    components = scope.components,
-                    ingredientScalingFactor = scope.ingredientScalingFactor,
+                    components = components,
+                    ingredientScalingFactor = ingredientScalingFactor,
                     onNavigateToIngredient = onNavigateToIngredient,
                     modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }
-            if (scope.suggestions.isNotEmpty()) {
+            if (suggestions.isNotEmpty()) {
                 item {
                     QuantitySuggestions(
-                        suggestions = scope.suggestions,
-                        selectedType = scope.selectedType,
-                        formField = scope.formField,
-                        packageQuantity = scope.packageQuantity,
-                        servingQuantity = scope.servingQuantity,
+                        suggestions = suggestions,
+                        selectedType = selectedType,
+                        formField = formField,
+                        packageQuantity = packageQuantity,
+                        servingQuantity = servingQuantity,
                         onSelectQuantity = {
                             onSelectQuantity(it)
-                            scope.formField.textFieldState.setTextAndPlaceCursorAtEnd(
+                            formField.textFieldState.setTextAndPlaceCursorAtEnd(
                                 it.amount.formatCompact()
                             )
                         },
@@ -317,11 +298,11 @@ private fun AddUserRecipeDiaryEntryScreenContent(
             }
             item {
                 DiaryInput(
-                    selectedType = scope.selectedType,
-                    types = scope.types,
-                    formField = scope.formField,
-                    profiles = scope.profiles,
-                    selectedProfiles = scope.selectedProfiles,
+                    selectedType = selectedType,
+                    types = types,
+                    formField = formField,
+                    profiles = profiles,
+                    selectedProfiles = selectedProfiles,
                     onSelectType = onSelectQuantityType,
                     onSelectProfiles = onSelectProfiles,
                     modifier =
@@ -330,10 +311,10 @@ private fun AddUserRecipeDiaryEntryScreenContent(
                             .padding(horizontal = 8.dp),
                 )
             }
-            if (scope.scaledNutritionFacts != null) {
+            if (scaledNutritionFacts != null) {
                 item {
                     FoodDetailsNutrientsCompact(
-                        scaledNutritionFacts = scope.scaledNutritionFacts,
+                        scaledNutritionFacts = scaledNutritionFacts,
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
@@ -341,9 +322,9 @@ private fun AddUserRecipeDiaryEntryScreenContent(
                     )
                 }
             }
-            if (scope.note != null) {
+            if (note != null) {
                 item {
-                    FoodNote(scope.note, Modifier.padding(horizontal = 8.dp))
+                    FoodNote(note, Modifier.padding(horizontal = 8.dp))
                 }
             }
         }

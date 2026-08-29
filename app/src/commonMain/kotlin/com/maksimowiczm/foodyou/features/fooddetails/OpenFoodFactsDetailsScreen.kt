@@ -56,28 +56,20 @@ fun OpenFoodFactsDetailsScreen(
 
     val nameSelector = LocalFoodNameSelector.current
 
-    val scope =
-        remember(uiState, nameSelector) {
-            val details = uiState as? OpenFoodFactsDetailsUiState.Details ?: return@remember null
-            val food = details.food
+    val details = uiState as? OpenFoodFactsDetailsUiState.Details
 
-            OpenFoodFactsScope(
-                headline = food.headline(nameSelector),
-                isFavorite = details.isFavorite,
-                isLoading = details.isLoading,
-                image = food.image,
-                sourceUrl = food.source,
-                suggestions = details.suggestions,
-                selectedQuantity = details.selectedQuantity,
-                scaledNutritionFacts = details.scaledNutritionFacts,
-                packageQuantity = food.packageQuantity,
-                servingQuantity = food.servingQuantity,
-            )
-        }
-
-    scope?.let {
+    if (details != null) {
         OpenFoodFactsDetailsScreenContent(
-            scope = it,
+            headline = details.food.headline(nameSelector),
+            isFavorite = details.isFavorite,
+            isLoading = details.isLoading,
+            image = details.food.image,
+            sourceUrl = details.food.source,
+            suggestions = details.suggestions,
+            selectedQuantity = details.selectedQuantity,
+            scaledNutritionFacts = details.scaledNutritionFacts,
+            packageQuantity = details.food.packageQuantity,
+            servingQuantity = details.food.servingQuantity,
             onBack = onBack,
             onRefresh = viewModel::refresh,
             onSetFavorite = viewModel::setFavorite,
@@ -87,23 +79,18 @@ fun OpenFoodFactsDetailsScreen(
     }
 }
 
-@Immutable
-private data class OpenFoodFactsScope(
-    val headline: String?,
-    val isFavorite: Boolean,
-    val isLoading: Boolean,
-    val image: FileUri?,
-    val sourceUrl: String,
-    val suggestions: List<Quantity>,
-    val selectedQuantity: Quantity?,
-    val scaledNutritionFacts: NutritionFacts?,
-    val packageQuantity: AbsoluteQuantity?,
-    val servingQuantity: AbsoluteQuantity?,
-)
-
 @Composable
 private fun OpenFoodFactsDetailsScreenContent(
-    scope: OpenFoodFactsScope,
+    headline: String?,
+    isFavorite: Boolean,
+    isLoading: Boolean,
+    image: FileUri?,
+    sourceUrl: String,
+    suggestions: List<Quantity>,
+    selectedQuantity: Quantity?,
+    scaledNutritionFacts: NutritionFacts?,
+    packageQuantity: AbsoluteQuantity?,
+    servingQuantity: AbsoluteQuantity?,
     onBack: () -> Unit,
     onRefresh: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
@@ -113,8 +100,8 @@ private fun OpenFoodFactsDetailsScreenContent(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
-        remember(scope.scaledNutritionFacts) {
-            val scaledNutritionFacts = scope.scaledNutritionFacts ?: return@remember false
+        remember(scaledNutritionFacts) {
+            val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
             (Nutrient.all - Nutrient.basic).any { scaledNutritionFacts[it].value != null }
         }
 
@@ -123,9 +110,9 @@ private fun OpenFoodFactsDetailsScreenContent(
         topBar = {
             FoodScreenTopBar(
                 onBack = onBack,
-                title = scope.headline,
+                title = headline,
                 actions = {
-                    FavoriteIconButton(isFavorite = scope.isFavorite, onChange = onSetFavorite)
+                    FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
                     RefreshIconButton(onRefresh = onRefresh)
                 },
                 scrollBehavior = scrollBehavior,
@@ -133,7 +120,7 @@ private fun OpenFoodFactsDetailsScreenContent(
         },
     ) { contentPadding ->
         FetchProgressIndicator(
-            isLoading = scope.isLoading,
+            isLoading = isLoading,
             modifier = Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
         )
         LazyColumn(
@@ -141,20 +128,20 @@ private fun OpenFoodFactsDetailsScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(scope.headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
             }
-            if (scope.image != null)
+            if (image != null)
                 item {
-                    FoodImage(scope.image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
-            if (scope.scaledNutritionFacts != null)
+            if (scaledNutritionFacts != null)
                 item {
                     FoodDetailsNutrientsWithSuggestions(
-                        scaledNutritionFacts = scope.scaledNutritionFacts,
-                        suggestions = scope.suggestions,
-                        selectedQuantity = scope.selectedQuantity,
-                        packageQuantity = scope.packageQuantity,
-                        servingQuantity = scope.servingQuantity,
+                        scaledNutritionFacts = scaledNutritionFacts,
+                        suggestions = suggestions,
+                        selectedQuantity = selectedQuantity,
+                        packageQuantity = packageQuantity,
+                        servingQuantity = servingQuantity,
                         onSelectQuantity = onSelectQuantity,
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
@@ -164,7 +151,7 @@ private fun OpenFoodFactsDetailsScreenContent(
                 }
             item {
                 FoodSourceLink(
-                    sourceUrl = scope.sourceUrl,
+                    sourceUrl = sourceUrl,
                     logo = {
                         Image(
                             painter = painterResource(Res.drawable.openfoodfacts_logo),
