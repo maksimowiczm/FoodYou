@@ -56,7 +56,7 @@ class FoodDiaryService(
         eventStore.observe<FoodDiaryEvent>(streamId(identity)).map { it.toFoodDiaryEntry() }
 
     suspend fun create(
-        profileId: ProfileId,
+        profileIds: Set<ProfileId>,
         composition: FoodCompositionComponent,
         mealIdentity: MealIdentity,
         timestamp: Instant,
@@ -65,7 +65,7 @@ class FoodDiaryService(
         transact(identity) {
             FoodDiaryEntry.create(
                 identity = identity,
-                profileId = profileId,
+                profileIds = profileIds,
                 composition = composition,
                 mealIdentity = mealIdentity,
                 timestamp = timestamp,

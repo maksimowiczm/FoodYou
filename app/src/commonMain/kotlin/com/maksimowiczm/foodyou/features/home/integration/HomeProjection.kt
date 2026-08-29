@@ -16,14 +16,16 @@ class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEvent
             is FoodDiaryEntryCreatedEvent -> {
                 val dateTime = event.entryTimestamp.toLocalDateTime(TimeZone.currentSystemDefault())
                 homeDao.insert(
-                    HomeEntryEntity(
-                        entryId = event.identity.id,
-                        profileId = event.profileId.value,
-                        mealId = event.mealIdentity.id,
-                        date = dateTime.date,
-                        time = dateTime.time,
-                        composition = event.composition,
-                    )
+                    event.profileIds.map { profileId ->
+                        HomeEntryEntity(
+                            entryId = event.identity.id,
+                            profileId = profileId.value,
+                            mealId = event.mealIdentity.id,
+                            date = dateTime.date,
+                            time = dateTime.time,
+                            composition = event.composition,
+                        )
+                    }
                 )
             }
 

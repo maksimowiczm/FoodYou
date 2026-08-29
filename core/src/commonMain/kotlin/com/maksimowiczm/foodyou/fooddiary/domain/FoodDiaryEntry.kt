@@ -17,7 +17,7 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 @Serializable
 data class FoodDiaryEntry(
     val identity: FoodDiaryEntryIdentity,
-    val profileId: ProfileId,
+    val profileIds: Set<ProfileId>,
     val composition: FoodCompositionComponent,
     @Serializable(with = InstantComponentSerializer::class) val timestamp: Instant,
     val mealIdentity: MealIdentity?,
@@ -25,7 +25,7 @@ data class FoodDiaryEntry(
     companion object {
         fun create(
             identity: FoodDiaryEntryIdentity,
-            profileId: ProfileId,
+            profileIds: Set<ProfileId>,
             composition: FoodCompositionComponent,
             mealIdentity: MealIdentity,
             timestamp: Instant,
@@ -34,7 +34,7 @@ data class FoodDiaryEntry(
             listOf(
                 FoodDiaryEntryCreatedEvent(
                     identity = identity,
-                    profileId = profileId,
+                    profileIds = profileIds,
                     composition = composition,
                     mealIdentity = mealIdentity,
                     entryTimestamp = timestamp,
@@ -90,7 +90,7 @@ fun FoodDiaryEntry?.apply(event: FoodDiaryEvent): FoodDiaryEntry? =
         is FoodDiaryEntryCreatedEvent ->
             FoodDiaryEntry(
                 identity = event.identity,
-                profileId = event.profileId,
+                profileIds = event.profileIds,
                 composition = event.composition,
                 timestamp = event.entryTimestamp,
                 mealIdentity = event.mealIdentity,

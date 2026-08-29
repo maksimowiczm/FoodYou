@@ -48,7 +48,7 @@ class MealPlanUnlinkingIntegrationTest {
                         ),
                 )
             val entryId =
-                foodDiaryService.create(profileId, composition, mealId, Clock.System.now())
+                foodDiaryService.create(setOf(profileId), composition, mealId, Clock.System.now())
 
             // 3. Verify association
             val entry = foodDiaryService.observe(entryId).filterNotNull().first()

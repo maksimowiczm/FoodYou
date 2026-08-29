@@ -6,9 +6,12 @@ import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
-@Entity(tableName = "HomeEntry")
+@Entity(
+    tableName = "HomeEntry",
+    primaryKeys = ["entryId", "profileId"],
+)
 data class HomeEntryEntity(
-    @PrimaryKey val entryId: Uuid,
+    val entryId: Uuid,
     val profileId: Uuid,
     val mealId: Uuid?,
     val date: LocalDate,

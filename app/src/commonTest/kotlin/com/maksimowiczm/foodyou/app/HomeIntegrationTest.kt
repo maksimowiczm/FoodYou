@@ -34,7 +34,8 @@ class HomeIntegrationTest {
             runKoin {
                 val composition = createComposition()
                 val timestamp = Clock.System.now()
-                val entryId = foodDiaryService.create(profileId, composition, mealId, timestamp)
+                val entryId =
+                    foodDiaryService.create(setOf(profileId), composition, mealId, timestamp)
 
                 val dateTime = timestamp.toLocalDateTime(TimeZone.currentSystemDefault())
                 val entries =
@@ -55,7 +56,8 @@ class HomeIntegrationTest {
             runKoin {
                 val composition = createComposition()
                 val timestamp = Clock.System.now()
-                val entryId = foodDiaryService.create(profileId, composition, mealId, timestamp)
+                val entryId =
+                    foodDiaryService.create(setOf(profileId), composition, mealId, timestamp)
 
                 val date = timestamp.toLocalDateTime(TimeZone.currentSystemDefault()).date
                 homeDao.observeEntries(profileId.value, date).first { it.isNotEmpty() }
@@ -82,7 +84,8 @@ class HomeIntegrationTest {
             runKoin {
                 val composition = createComposition()
                 val timestamp = Clock.System.now()
-                val entryId = foodDiaryService.create(profileId, composition, mealId, timestamp)
+                val entryId =
+                    foodDiaryService.create(setOf(profileId), composition, mealId, timestamp)
 
                 val date = timestamp.toLocalDateTime(TimeZone.currentSystemDefault()).date
                 homeDao.observeEntries(profileId.value, date).first { it.isNotEmpty() }
@@ -102,7 +105,8 @@ class HomeIntegrationTest {
             runKoin {
                 val composition = createComposition()
                 val timestamp = Clock.System.now()
-                val entryId = foodDiaryService.create(profileId, composition, mealId, timestamp)
+                val entryId =
+                    foodDiaryService.create(setOf(profileId), composition, mealId, timestamp)
 
                 val date = timestamp.toLocalDateTime(TimeZone.currentSystemDefault()).date
                 homeDao.observeEntries(profileId.value, date).first { it.isNotEmpty() }
@@ -127,7 +131,8 @@ class HomeIntegrationTest {
             runKoin {
                 val composition = createComposition()
                 val timestamp = Clock.System.now()
-                val entryId = foodDiaryService.create(profileId, composition, mealId, timestamp)
+                val entryId =
+                    foodDiaryService.create(setOf(profileId), composition, mealId, timestamp)
 
                 val date = timestamp.toLocalDateTime(TimeZone.currentSystemDefault()).date
                 homeDao.observeEntries(profileId.value, date).first { it.isNotEmpty() }
@@ -140,6 +145,35 @@ class HomeIntegrationTest {
                     }
                 val entry = entries.first { it.entryId == entryId.id }
                 assertNull(entry.mealId)
+            }
+        }
+
+    @Test
+    fun creating_diary_entry_with_multiple_profiles_inserts_it_for_each_profile() =
+        runTest(timeout = 5.seconds) {
+            runKoin {
+                val otherProfileId = ProfileId()
+                val composition = createComposition()
+                val timestamp = Clock.System.now()
+                val entryId =
+                    foodDiaryService.create(
+                        setOf(profileId, otherProfileId),
+                        composition,
+                        mealId,
+                        timestamp,
+                    )
+
+                val date = timestamp.toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+                val entries1 =
+                    homeDao.observeEntries(profileId.value, date).first { it.isNotEmpty() }
+                val entry1 = entries1.single { it.entryId == entryId.id }
+                assertEquals(composition, entry1.composition)
+
+                val entries2 =
+                    homeDao.observeEntries(otherProfileId.value, date).first { it.isNotEmpty() }
+                val entry2 = entries2.single { it.entryId == entryId.id }
+                assertEquals(composition, entry2.composition)
             }
         }
 

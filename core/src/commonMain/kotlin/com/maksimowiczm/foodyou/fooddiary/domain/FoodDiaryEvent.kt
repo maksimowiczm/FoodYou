@@ -15,7 +15,7 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 @Serializable
 data class FoodDiaryEntryCreatedEvent(
     val identity: FoodDiaryEntryIdentity,
-    val profileId: ProfileId,
+    val profileIds: Set<ProfileId>,
     val composition: FoodCompositionComponent,
     val mealIdentity: MealIdentity,
     @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,

@@ -73,15 +73,14 @@ class FoodDiaryEntryViewModel(
         timestamp: LocalDateTime,
     ) {
         viewModelScope.launch {
-            profiles.forEach {
+            val entryId =
                 foodDiaryService.create(
+                    profileIds = profiles.toSet(),
                     composition = composition,
                     mealIdentity = mealIdentity,
                     timestamp = timestamp.toInstant(TimeZone.currentSystemDefault()),
-                    profileId = it,
                 )
-            }
-            eventBus.send(FoodDiaryUiEvents.Created)
+            eventBus.send(FoodDiaryUiEvents.Created(entryId))
         }
     }
 

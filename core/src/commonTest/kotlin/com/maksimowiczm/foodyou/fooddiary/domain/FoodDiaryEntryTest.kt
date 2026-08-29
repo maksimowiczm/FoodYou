@@ -34,11 +34,12 @@ class FoodDiaryEntryTest {
         )
     private val timestamp = Instant.fromEpochSeconds(1000)
     private val profileId = ProfileId(Uuid.random())
+    private val profileIds = setOf(profileId)
     private val mealIdentity = MealIdentity(Uuid.random())
     private val entry =
         FoodDiaryEntry(
             identity = identity,
-            profileId = profileId,
+            profileIds = profileIds,
             composition = composition,
             timestamp = timestamp,
             mealIdentity = null,
@@ -53,7 +54,7 @@ class FoodDiaryEntryTest {
         val events =
             FoodDiaryEntry.create(
                 identity = identity,
-                profileId = profileId,
+                profileIds = profileIds,
                 composition = composition,
                 mealIdentity = mealIdentity,
                 timestamp = timestamp,
@@ -63,7 +64,7 @@ class FoodDiaryEntryTest {
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryCreatedEvent>(events[0])
         assertEquals(identity, event.identity)
-        assertEquals(profileId, event.profileId)
+        assertEquals(profileIds, event.profileIds)
         assertEquals(composition, event.composition)
         assertEquals(mealIdentity, event.mealIdentity)
         assertEquals(timestamp, event.entryTimestamp)
@@ -124,7 +125,7 @@ class FoodDiaryEntryTest {
         val event =
             FoodDiaryEntryCreatedEvent(
                 identity = identity,
-                profileId = profileId,
+                profileIds = profileIds,
                 composition = composition,
                 mealIdentity = mealIdentity,
                 entryTimestamp = timestamp,
@@ -180,7 +181,7 @@ class FoodDiaryEntryTest {
             listOf(
                 FoodDiaryEntryCreatedEvent(
                     identity = identity,
-                    profileId = profileId,
+                    profileIds = profileIds,
                     composition = composition,
                     mealIdentity = mealIdentity,
                     entryTimestamp = timestamp,
@@ -195,7 +196,7 @@ class FoodDiaryEntryTest {
             )
 
         val result = events.toFoodDiaryEntry()
-        assertEquals(profileId, result?.profileId)
+        assertEquals(profileIds, result?.profileIds)
         assertEquals(composition, result?.composition)
         assertEquals(updatedTimestamp, result?.timestamp)
         assertEquals(mealIdentity, result?.mealIdentity)
@@ -207,7 +208,7 @@ class FoodDiaryEntryTest {
             listOf(
                 FoodDiaryEntryCreatedEvent(
                     identity = identity,
-                    profileId = profileId,
+                    profileIds = profileIds,
                     composition = composition,
                     mealIdentity = mealIdentity,
                     entryTimestamp = timestamp,
@@ -230,7 +231,7 @@ class FoodDiaryEntryTest {
             listOf(
                 FoodDiaryEntryCreatedEvent(
                     identity = identity,
-                    profileId = profileId,
+                    profileIds = profileIds,
                     composition = composition,
                     mealIdentity = mealIdentity,
                     entryTimestamp = timestamp,
