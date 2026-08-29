@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsLoginService
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.cookies.get
 import io.ktor.client.plugins.timeout
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -19,7 +20,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.http.formUrlEncode
-import io.ktor.http.isSuccess
+import io.ktor.http.setCookie
 import io.ktor.http.userAgent
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -121,11 +122,8 @@ internal class OpenFoodFactsApiV1SearchDataSource(
                 )
             }
 
-        if (!response.status.isSuccess()) {
-            logger.w { "Login failed for user: $username" }
-        }
-
-        check(response.status.isSuccess())
+        val cookies = response.setCookie()
+        checkNotNull(cookies["session"]) { "Session cookie not found" }
     }
 
     private companion object {
