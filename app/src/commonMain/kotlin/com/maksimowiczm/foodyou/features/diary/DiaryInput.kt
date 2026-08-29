@@ -153,6 +153,52 @@ fun DiaryInput(
 }
 
 @Composable
+fun DiaryInput(
+    selectedType: QuantityType,
+    types: List<QuantityType>,
+    formField: FormField,
+    profile: ProfileUiState?,
+    onSelectType: (QuantityType) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            LookaheadScope {
+                QuantityInput(
+                    selectedType = selectedType,
+                    types = types,
+                    formField = formField,
+                    onSelectType = onSelectType,
+                    modifier = Modifier.weight(1f),
+                )
+                if (profile != null) {
+                    Spacer(Modifier.width(8.dp))
+                    Box(
+                        modifier =
+                            Modifier.size(40.dp)
+                                .clip(CircleShape)
+                                .wrapContentSize(unbounded = true)
+                                .shadow(4.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        val avatarModifier =
+                            when (profile.avatar) {
+                                is Profile.Avatar.Photo -> Modifier.size(40.dp)
+                                is Profile.Avatar.Predefined ->
+                                    Modifier.background(MaterialTheme.colorScheme.surfaceContainer)
+                                        .padding(8.dp)
+                                        .size(24.dp)
+                                        .wrapContentSize(unbounded = true)
+                            }
+                        profile.avatar.Avatar(avatarModifier)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun LookaheadScope.ProfileStack(
     selectedProfiles: List<ProfileUiState>,
     expanded: Boolean,
