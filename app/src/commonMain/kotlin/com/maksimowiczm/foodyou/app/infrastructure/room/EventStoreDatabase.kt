@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.infrastructure.room
+package com.maksimowiczm.foodyou.app.infrastructure.room
 
 import androidx.room3.*
 import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
 )
 @ColumnTypeConverters(UuidConverter::class)
 @ConstructedBy(EventStoreDatabaseConstructor::class)
-abstract class EventStoreDatabase : RoomDatabase() {
+internal abstract class EventStoreDatabase : RoomDatabase() {
     abstract val eventStoreDao: EventStoreDao
 
     companion object {
@@ -21,6 +21,6 @@ abstract class EventStoreDatabase : RoomDatabase() {
 }
 
 @Suppress("KotlinNoActualForExpect")
-expect object EventStoreDatabaseConstructor : RoomDatabaseConstructor<EventStoreDatabase> {
+internal expect object EventStoreDatabaseConstructor : RoomDatabaseConstructor<EventStoreDatabase> {
     override fun initialize(): EventStoreDatabase
 }

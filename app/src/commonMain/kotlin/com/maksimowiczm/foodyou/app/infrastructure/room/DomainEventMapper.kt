@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.infrastructure.room
+package com.maksimowiczm.foodyou.app.infrastructure.room
 
 import com.maksimowiczm.foodyou.account.domain.AccountEvent
 import com.maksimowiczm.foodyou.analytics.domain.AnalyticsEvent
@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
-object DomainEventMapper {
+internal object DomainEventMapper {
     fun toDomainEvent(entity: DomainEventEntity): DomainEvent =
         roomEventJson.decodeFromString(
             PolymorphicSerializer(DomainEvent::class),

@@ -1,10 +1,10 @@
-package com.maksimowiczm.foodyou.infrastructure.room
+package com.maksimowiczm.foodyou.app.infrastructure.room
 
 import androidx.room3.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface EventStoreDao {
+internal interface EventStoreDao {
 
     @Query(
         """
