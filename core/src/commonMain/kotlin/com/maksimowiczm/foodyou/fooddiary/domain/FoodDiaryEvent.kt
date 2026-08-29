@@ -25,7 +25,9 @@ data class FoodDiaryEntryCreatedEvent(
 @Serializable
 data class FoodDiaryEntryUpdatedEvent(
     val identity: FoodDiaryEntryIdentity,
+    val profileIds: Set<ProfileId>,
     val composition: FoodCompositionComponent,
+    val mealIdentity: MealIdentity?,
     @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()

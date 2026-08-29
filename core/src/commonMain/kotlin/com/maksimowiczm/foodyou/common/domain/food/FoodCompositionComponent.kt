@@ -39,6 +39,9 @@ sealed interface FoodCompositionComponent {
             quantity = quantity,
         )
 
+    /** Creates a copy of this component with a new quantity. */
+    fun withNewQuantity(quantity: FoodComponentComponentQuantity): FoodCompositionComponent
+
     /** A component that is not backed by any persistent food item. */
     @Serializable
     data class Anonymous(
@@ -51,6 +54,10 @@ sealed interface FoodCompositionComponent {
         override val measuredNutritionFacts: NutritionFacts =
             nutritionFacts * quantity.absoluteWeight.grams / 100.0
         override val allIdentities: Set<FoodCompositionComponentIdentity.Identified> = emptySet()
+
+        override fun withNewQuantity(
+            quantity: FoodComponentComponentQuantity
+        ): FoodCompositionComponent = copy(quantity = quantity)
     }
 
     /**
@@ -69,6 +76,10 @@ sealed interface FoodCompositionComponent {
         override val measuredNutritionFacts: NutritionFacts =
             nutritionFacts * quantity.absoluteWeight.grams / 100.0
         override val allIdentities: Set<FoodCompositionComponentIdentity.Leaf> = setOf(identity)
+
+        override fun withNewQuantity(
+            quantity: FoodComponentComponentQuantity
+        ): FoodCompositionComponent = copy(quantity = quantity)
     }
 
     /**
@@ -92,6 +103,10 @@ sealed interface FoodCompositionComponent {
             nutritionFacts * quantity.absoluteWeight.grams / 100.0
         override val allIdentities: Set<FoodCompositionComponentIdentity> =
             setOf(identity) + components.allComponentIdentities
+
+        override fun withNewQuantity(
+            quantity: FoodComponentComponentQuantity
+        ): FoodCompositionComponent = copy(quantity = quantity)
     }
 }
 

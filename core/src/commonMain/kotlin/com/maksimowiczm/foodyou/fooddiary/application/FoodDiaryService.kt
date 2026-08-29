@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.Weight
+import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodComponentQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
 import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
@@ -76,13 +77,15 @@ class FoodDiaryService(
 
     suspend fun edit(
         identity: FoodDiaryEntryIdentity,
-        composition: FoodCompositionComponent,
+        profileIds: Set<ProfileId>,
+        quantity: FoodComponentComponentQuantity,
         timestamp: Instant,
     ) {
         transact(identity) { entry ->
             checkNotNull(entry) { "Food diary entry with ID $identity not found" }
             entry.edit(
-                composition = composition,
+                profileIds = profileIds,
+                composition = entry.composition.withNewQuantity(quantity),
                 timestamp = timestamp,
             )
         }

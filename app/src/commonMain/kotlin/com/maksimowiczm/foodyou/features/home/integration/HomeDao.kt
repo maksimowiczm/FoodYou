@@ -7,30 +7,32 @@ import kotlinx.datetime.LocalDate
 
 @Dao
 abstract class HomeDao {
-    @Insert abstract suspend fun insert(entity: List<HomeEntryEntity>)
+    @Insert protected abstract suspend fun insertAll(entities: List<HomeEntryEntity>)
 
     @Query("SELECT * FROM HomeEntry WHERE entryId = :entryId")
     protected abstract suspend fun findAllById(entryId: Uuid): List<HomeEntryEntity>
 
-    @Update protected abstract suspend fun update(entity: HomeEntryEntity)
-
-    @Transaction
-    open suspend fun updateInTransaction(
-        entryId: Uuid,
-        transform: suspend (HomeEntryEntity) -> HomeEntryEntity,
-    ) {
-        // TODO
-        //  might not want to silently drop the error here. How should we treat read model sync
-        //  errors?
-        val entities = findAllById(entryId)
-        entities.forEach { entity ->
-            val updated = transform(entity)
-            update(updated)
-        }
-    }
+    @Update protected abstract suspend fun updateAll(entities: List<HomeEntryEntity>)
 
     @Query("DELETE FROM HomeEntry WHERE entryId = :entryId")
     abstract suspend fun delete(entryId: Uuid)
+
+    @Query("UPDATE HomeEntry SET mealId = NULL WHERE entryId = :entryId")
+    abstract suspend fun clearMealId(entryId: Uuid)
+
+    @Transaction
+    open suspend fun replaceEntries(entryId: Uuid, entities: List<HomeEntryEntity>) {
+        delete(entryId)
+        insertAll(entities)
+    }
+
+    @Transaction
+    open suspend fun updateEach(
+        entryId: Uuid,
+        transform: (HomeEntryEntity) -> HomeEntryEntity,
+    ) {
+        updateAll(findAllById(entryId).map(transform))
+    }
 
     @Query(
         """

@@ -62,19 +62,23 @@ class HomeIntegrationTest {
                 val date = timestamp.toLocalDateTime(TimeZone.currentSystemDefault()).date
                 homeDao.observeEntries(profileId.value, date).first { it.isNotEmpty() }
 
-                val updatedComposition =
-                    composition.copy(name = FoodName(english = "Updated", fallback = "Updated"))
-                foodDiaryService.edit(entryId, updatedComposition, timestamp)
+                val updatedQuantity =
+                    FoodComponentComponentQuantity.Weight(
+                        absoluteWeight = 200.grams,
+                        servingWeight = null,
+                        packageWeight = null,
+                    )
+                foodDiaryService.edit(entryId, setOf(profileId), updatedQuantity, timestamp)
 
                 val entries =
                     homeDao.observeEntries(profileId.value, date).first {
                         it.any { e ->
-                            e.entryId == entryId.id && e.composition.name.english == "Updated"
+                            e.entryId == entryId.id && e.composition.quantity == updatedQuantity
                         }
                     }
 
                 val entry = entries.single { it.entryId == entryId.id }
-                assertEquals(updatedComposition, entry.composition)
+                assertEquals(updatedQuantity, entry.composition.quantity)
             }
         }
 
@@ -170,6 +174,39 @@ class HomeIntegrationTest {
                 val entry1 = entries1.single { it.entryId == entryId.id }
                 assertEquals(composition, entry1.composition)
 
+                val entries2 =
+                    homeDao.observeEntries(otherProfileId.value, date).first { it.isNotEmpty() }
+                val entry2 = entries2.single { it.entryId == entryId.id }
+                assertEquals(composition, entry2.composition)
+            }
+        }
+
+    @Test
+    fun updating_diary_entry_profiles_updates_home_projection() =
+        runTest(timeout = 5.seconds) {
+            runKoin {
+                val otherProfileId = ProfileId()
+                val composition = createComposition()
+                val timestamp = Clock.System.now()
+                val entryId =
+                    foodDiaryService.create(setOf(profileId), composition, mealId, timestamp)
+
+                val date = timestamp.toLocalDateTime(TimeZone.currentSystemDefault()).date
+                homeDao.observeEntries(profileId.value, date).first { it.isNotEmpty() }
+
+                // Add another profile and remove the first one
+                foodDiaryService.edit(
+                    identity = entryId,
+                    profileIds = setOf(otherProfileId),
+                    quantity = composition.quantity,
+                    timestamp = timestamp,
+                )
+
+                // Should be removed from first profile
+                val entries1 = homeDao.observeEntries(profileId.value, date).first { it.isEmpty() }
+                assertEquals(0, entries1.size)
+
+                // Should be added to second profile
                 val entries2 =
                     homeDao.observeEntries(otherProfileId.value, date).first { it.isNotEmpty() }
                 val entry2 = entries2.single { it.entryId == entryId.id }

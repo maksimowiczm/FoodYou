@@ -14,46 +14,52 @@ class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEvent
     override suspend fun handle(event: FoodDiaryEvent) {
         when (event) {
             is FoodDiaryEntryCreatedEvent -> {
-                val dateTime = event.entryTimestamp.toLocalDateTime(TimeZone.currentSystemDefault())
-                homeDao.insert(
-                    event.profileIds.map { profileId ->
-                        HomeEntryEntity(
-                            entryId = event.identity.id,
-                            profileId = profileId.value,
-                            mealId = event.mealIdentity.id,
-                            date = dateTime.date,
-                            time = dateTime.time,
-                            composition = event.composition,
-                        )
-                    }
+                val dt = event.entryTimestamp.toLocalDateTime(TimeZone.currentSystemDefault())
+                homeDao.replaceEntries(
+                    entryId = event.identity.id,
+                    entities =
+                        event.profileIds.map {
+                            HomeEntryEntity(
+                                entryId = event.identity.id,
+                                profileId = it.value,
+                                mealId = event.mealIdentity.id,
+                                date = dt.date,
+                                time = dt.time,
+                                composition = event.composition,
+                            )
+                        },
                 )
             }
 
-            is FoodDiaryEntryUpdatedEvent ->
-                homeDao.updateInTransaction(event.identity.id) {
-                    val dateTime =
-                        event.entryTimestamp.toLocalDateTime(TimeZone.currentSystemDefault())
-                    it.copy(
-                        date = dateTime.date,
-                        time = dateTime.time,
-                        composition = event.composition,
-                    )
-                }
+            is FoodDiaryEntryUpdatedEvent -> {
+                val dt = event.entryTimestamp.toLocalDateTime(TimeZone.currentSystemDefault())
+                homeDao.replaceEntries(
+                    entryId = event.identity.id,
+                    entities =
+                        event.profileIds.map {
+                            HomeEntryEntity(
+                                entryId = event.identity.id,
+                                profileId = it.value,
+                                mealId = event.mealIdentity?.id,
+                                date = dt.date,
+                                time = dt.time,
+                                composition = event.composition,
+                            )
+                        },
+                )
+            }
 
             is FoodDiaryEntryDeletedEvent ->
                 if (event.strategy == DeleteStrategy.Delete) {
                     homeDao.delete(event.identity.id)
                 } else {
                     // Unlink strategy - entry becomes anonymous
-                    homeDao.updateInTransaction(event.identity.id) {
+                    homeDao.updateEach(event.identity.id) {
                         it.copy(composition = it.composition.anonymize())
                     }
                 }
 
-            is FoodDiaryEntryUnlinkedFromMealEvent ->
-                homeDao.updateInTransaction(event.identity.id) {
-                    it.copy(mealId = null)
-                }
+            is FoodDiaryEntryUnlinkedFromMealEvent -> homeDao.clearMealId(event.identity.id)
         }
     }
 }

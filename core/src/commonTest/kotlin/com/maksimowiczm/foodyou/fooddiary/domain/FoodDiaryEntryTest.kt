@@ -76,14 +76,41 @@ class FoodDiaryEntryTest {
         val now = Instant.fromEpochSeconds(3000)
         val clock = staticClock(now)
         val updatedTimestamp = Instant.fromEpochSeconds(4000)
+        val updatedProfileIds = setOf(ProfileId(Uuid.random()))
 
-        val events = entry.edit(timestamp = updatedTimestamp, clock = clock)
+        val events =
+            entry.edit(
+                profileIds = updatedProfileIds,
+                timestamp = updatedTimestamp,
+                clock = clock,
+            )
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryUpdatedEvent>(events[0])
         assertEquals(identity, event.identity)
+        assertEquals(updatedProfileIds, event.profileIds)
         assertEquals(composition, event.composition)
+        assertNull(event.mealIdentity)
         assertEquals(updatedTimestamp, event.entryTimestamp)
+        assertEquals(now, event.timestamp)
+    }
+
+    @Test
+    fun edit_returns_updated_event_when_meal_identity_changed() {
+        val now = Instant.fromEpochSeconds(3500)
+        val clock = staticClock(now)
+        val newMealIdentity = MealIdentity(Uuid.random())
+
+        val events =
+            entryWithMeal.edit(
+                mealIdentity = newMealIdentity,
+                clock = clock,
+            )
+
+        assertEquals(1, events.size)
+        val event = assertIs<FoodDiaryEntryUpdatedEvent>(events[0])
+        assertEquals(identity, event.identity)
+        assertEquals(newMealIdentity, event.mealIdentity)
         assertEquals(now, event.timestamp)
     }
 
@@ -138,14 +165,18 @@ class FoodDiaryEntryTest {
     @Test
     fun apply_updated_event() {
         val updatedTimestamp = Instant.fromEpochSeconds(6000)
+        val updatedProfileIds = setOf(ProfileId(Uuid.random()))
         val event =
             FoodDiaryEntryUpdatedEvent(
                 identity = identity,
+                profileIds = updatedProfileIds,
                 composition = composition,
+                mealIdentity = mealIdentity,
                 entryTimestamp = updatedTimestamp,
                 timestamp = Instant.DISTANT_PAST,
             )
         val result = entryWithMeal.apply(event)
+        assertEquals(updatedProfileIds, result?.profileIds)
         assertEquals(composition, result?.composition)
         assertEquals(updatedTimestamp, result?.timestamp)
         assertEquals(mealIdentity, result?.mealIdentity)
@@ -189,7 +220,9 @@ class FoodDiaryEntryTest {
                 ),
                 FoodDiaryEntryUpdatedEvent(
                     identity = identity,
+                    profileIds = profileIds,
                     composition = composition,
+                    mealIdentity = mealIdentity,
                     entryTimestamp = updatedTimestamp,
                     timestamp = Instant.fromEpochSeconds(2),
                 ),

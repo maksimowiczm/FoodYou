@@ -45,20 +45,26 @@ data class FoodDiaryEntry(
 }
 
 fun FoodDiaryEntry.edit(
+    profileIds: Set<ProfileId> = this.profileIds,
     composition: FoodCompositionComponent = this.composition,
+    mealIdentity: MealIdentity? = this.mealIdentity,
     timestamp: Instant = this.timestamp,
     clock: Clock = Clock.System,
 ): List<FoodDiaryEvent> = buildList {
     val updated =
         this@edit.copy(
+            profileIds = profileIds,
             composition = composition,
+            mealIdentity = mealIdentity,
             timestamp = timestamp,
         )
     if (updated != this@edit)
         add(
             FoodDiaryEntryUpdatedEvent(
                 identity = identity,
+                profileIds = profileIds,
                 composition = composition,
+                mealIdentity = mealIdentity,
                 entryTimestamp = timestamp,
                 timestamp = clock.now(),
             )
@@ -97,8 +103,10 @@ fun FoodDiaryEntry?.apply(event: FoodDiaryEvent): FoodDiaryEntry? =
             )
         is FoodDiaryEntryUpdatedEvent ->
             this?.copy(
+                profileIds = event.profileIds,
                 composition = event.composition,
                 timestamp = event.entryTimestamp,
+                mealIdentity = event.mealIdentity,
             )
         is FoodDiaryEntryDeletedEvent -> null
         is FoodDiaryEntryUnlinkedFromMealEvent -> this?.copy(mealIdentity = null)

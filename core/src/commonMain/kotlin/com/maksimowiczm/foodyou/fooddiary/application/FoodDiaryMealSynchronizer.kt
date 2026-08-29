@@ -16,7 +16,13 @@ class FoodDiaryMealSynchronizer(private val repository: FoodDiaryMealRepository)
                 repository.saveReference(event.identity, event.mealIdentity)
             }
 
-            is FoodDiaryEntryUpdatedEvent -> Unit
+            is FoodDiaryEntryUpdatedEvent -> {
+                if (event.mealIdentity != null) {
+                    repository.saveReference(event.identity, event.mealIdentity)
+                } else {
+                    repository.removeReference(event.identity)
+                }
+            }
 
             is FoodDiaryEntryDeletedEvent -> repository.removeReference(event.identity)
 
