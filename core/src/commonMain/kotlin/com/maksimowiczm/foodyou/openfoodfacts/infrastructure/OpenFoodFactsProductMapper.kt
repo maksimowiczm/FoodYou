@@ -7,7 +7,6 @@ import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNut
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
-import com.maksimowiczm.foodyou.common.extension.takeIfNotBlank
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.Nutriments
@@ -28,7 +27,7 @@ internal class OpenFoodFactsProductMapper {
 }
 
 private fun OpenFoodFactsProductNetwork.toModel(): OpenFoodFactsProduct {
-    fun String?.sanitized(): String? = this?.sanitizeHtml()?.takeIfNotBlank()
+    fun String?.sanitized(): String? = this?.sanitizeHtml()?.takeIf { it.isNotBlank() }
 
     val name =
         FoodName.requireAll(
