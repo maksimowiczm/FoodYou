@@ -44,7 +44,6 @@ kotlin {
 
         androidResources.enable = true
 
-        withHostTestBuilder {}.configure {}
         withDeviceTestBuilder { sourceSetTreeName = "test" }
             .configure {
                 localProperties.getProperty("usda.api.key")?.let {
