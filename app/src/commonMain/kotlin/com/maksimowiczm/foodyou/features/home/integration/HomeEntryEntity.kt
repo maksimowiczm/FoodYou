@@ -16,5 +16,5 @@ data class HomeEntryEntity(
     val mealId: Uuid?,
     val date: LocalDate,
     val time: LocalTime,
-    val composition: MeasuredFoodSnapshot,
+    val snapshot: MeasuredFoodSnapshot,
 )

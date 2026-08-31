@@ -55,7 +55,7 @@ class FoodDiaryService(
 
     suspend fun create(
         profileIds: Set<ProfileId>,
-        composition: MeasuredFoodSnapshot,
+        snapshot: MeasuredFoodSnapshot,
         mealId: MealId,
         timestamp: Instant,
     ): FoodDiaryEntryId {
@@ -64,7 +64,7 @@ class FoodDiaryService(
             FoodDiaryEntry.create(
                 id = id,
                 profileIds = profileIds,
-                composition = composition,
+                snapshot = snapshot,
                 mealId = mealId,
                 timestamp = timestamp,
             )
@@ -82,7 +82,7 @@ class FoodDiaryService(
             checkNotNull(entry) { "Food diary entry with ID $id not found" }
             entry.edit(
                 profileIds = profileIds,
-                composition = entry.composition.withNewQuantity(quantity),
+                snapshot = entry.snapshot.withNewQuantity(quantity),
                 timestamp = timestamp,
             )
         }
@@ -113,7 +113,7 @@ class FoodDiaryService(
                         if (entry == null) return@transact emptyList()
                         val updated =
                             FoodSnapshotUpdateService.update(
-                                components = listOf(entry.composition),
+                                components = listOf(entry.snapshot),
                                 id = snapshot.id,
                                 transform = { current ->
                                     current.copy(
@@ -127,7 +127,7 @@ class FoodDiaryService(
                                     )
                                 },
                             )
-                        entry.edit(composition = updated.first())
+                        entry.edit(snapshot = updated.first())
                     }
                 }
             }
@@ -141,11 +141,11 @@ class FoodDiaryService(
                 async {
                     transact(entryId) { entry ->
                         if (entry == null) return@transact emptyList()
-                        val wrapped = listOf(entry.composition)
-                        val updatedComposition = FoodSnapshotUpdateService.remove(wrapped, id)
+                        val wrapped = listOf(entry.snapshot)
+                        val updatedSnapshot = FoodSnapshotUpdateService.remove(wrapped, id)
 
-                        if (updatedComposition.isEmpty()) entry.remove(DeleteStrategy.Delete)
-                        else entry.edit(composition = updatedComposition.first())
+                        if (updatedSnapshot.isEmpty()) entry.remove(DeleteStrategy.Delete)
+                        else entry.edit(snapshot = updatedSnapshot.first())
                     }
                 }
             }
@@ -159,9 +159,9 @@ class FoodDiaryService(
                 async {
                     transact(entryId) { entry ->
                         entry ?: return@transact emptyList()
-                        val wrapped = listOf(entry.composition)
-                        val updatedComposition = FoodSnapshotUpdateService.unlink(wrapped, id)
-                        entry.edit(composition = updatedComposition.first())
+                        val wrapped = listOf(entry.snapshot)
+                        val updatedSnapshot = FoodSnapshotUpdateService.unlink(wrapped, id)
+                        entry.edit(snapshot = updatedSnapshot.first())
                     }
                 }
             }

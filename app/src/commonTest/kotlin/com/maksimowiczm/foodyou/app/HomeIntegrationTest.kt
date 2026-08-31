@@ -44,7 +44,7 @@ class HomeIntegrationTest {
                     homeDao.observeEntries(profileId.value, dateTime.date).first { it.isNotEmpty() }
 
                 val entry = entries.single { it.entryId == entryId.id }
-                assertEquals(composition, entry.composition)
+                assertEquals(composition, entry.snapshot)
                 assertEquals(mealId.value, entry.mealId)
                 assertEquals(dateTime.date, entry.date)
                 assertEquals(dateTime.time.hour, entry.time.hour)
@@ -75,12 +75,12 @@ class HomeIntegrationTest {
                 val entries =
                     homeDao.observeEntries(profileId.value, date).first {
                         it.any { e ->
-                            e.entryId == entryId.id && e.composition.quantity == updatedQuantity
+                            e.entryId == entryId.id && e.snapshot.quantity == updatedQuantity
                         }
                     }
 
                 val entry = entries.single { it.entryId == entryId.id }
-                assertEquals(updatedQuantity, entry.composition.quantity)
+                assertEquals(updatedQuantity, entry.snapshot.quantity)
             }
         }
 
@@ -122,12 +122,11 @@ class HomeIntegrationTest {
                 val entries =
                     homeDao.observeEntries(profileId.value, date).first {
                         it.any { e ->
-                            e.entryId == entryId.id &&
-                                e.composition.snapshot is AnonymousFoodSnapshot
+                            e.entryId == entryId.id && e.snapshot.snapshot is AnonymousFoodSnapshot
                         }
                     }
                 val entry = entries.first { it.entryId == entryId.id }
-                assertEquals(true, entry.composition.snapshot is AnonymousFoodSnapshot)
+                assertEquals(true, entry.snapshot.snapshot is AnonymousFoodSnapshot)
             }
         }
 
@@ -174,12 +173,12 @@ class HomeIntegrationTest {
                 val entries1 =
                     homeDao.observeEntries(profileId.value, date).first { it.isNotEmpty() }
                 val entry1 = entries1.single { it.entryId == entryId.id }
-                assertEquals(composition, entry1.composition)
+                assertEquals(composition, entry1.snapshot)
 
                 val entries2 =
                     homeDao.observeEntries(otherProfileId.value, date).first { it.isNotEmpty() }
                 val entry2 = entries2.single { it.entryId == entryId.id }
-                assertEquals(composition, entry2.composition)
+                assertEquals(composition, entry2.snapshot)
             }
         }
 
@@ -212,7 +211,7 @@ class HomeIntegrationTest {
                 val entries2 =
                     homeDao.observeEntries(otherProfileId.value, date).first { it.isNotEmpty() }
                 val entry2 = entries2.single { it.entryId == entryId.id }
-                assertEquals(composition, entry2.composition)
+                assertEquals(composition, entry2.snapshot)
             }
         }
 

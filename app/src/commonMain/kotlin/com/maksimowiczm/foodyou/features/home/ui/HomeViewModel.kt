@@ -144,7 +144,7 @@ class HomeViewModel(
         HomeFoodState(
             id = FoodDiaryEntryId(entry.entryId),
             time = entry.time,
-            snapshot = entry.composition,
+            snapshot = entry.snapshot,
         )
     }
 }

@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.fooddiary
 
 import com.maksimowiczm.foodyou.common.event.di.eventHandlerOf
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDataCentralFoodDiarySynchronizer
-import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryCompositionSynchronizer
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryMealSynchronizer
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryProductSynchronizer
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryRecipeSynchronizer
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
+import com.maksimowiczm.foodyou.fooddiary.application.FoodDiarySnapshotSynchronizer
 import com.maksimowiczm.foodyou.fooddiary.application.MealPlanFoodDiarySynchronizer
 import com.maksimowiczm.foodyou.fooddiary.application.OpenFoodFactsFoodDiarySynchronizer
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
@@ -26,7 +26,7 @@ internal fun Module.foodDiary() {
     single { get<FoodDiaryDatabase>().foodDiaryCompositionDao }
     single { get<FoodDiaryDatabase>().foodDiaryMealDao }
 
-    eventHandlerOf(::FoodDiaryCompositionSynchronizer)
+    eventHandlerOf(::FoodDiarySnapshotSynchronizer)
     eventHandlerOf(::FoodDiaryMealSynchronizer)
     eventHandlerOf(::MealPlanFoodDiarySynchronizer)
     eventHandlerOf(::FoodDiaryProductSynchronizer)

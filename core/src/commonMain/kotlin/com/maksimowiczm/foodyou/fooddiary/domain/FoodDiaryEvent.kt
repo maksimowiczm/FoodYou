@@ -16,24 +16,42 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 data class FoodDiaryEntryCreatedEvent(
     val diaryEntryId: FoodDiaryEntryId,
     val profileIds: Set<ProfileId>,
-    val composition: MeasuredFoodSnapshot,
+    val snapshot: MeasuredFoodSnapshot,
     val mealId: MealId,
     @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()
 
 @Serializable
-data class FoodDiaryEntryUpdatedEvent(
+data class FoodDiaryEntryProfileIdsChangedEvent(
     val diaryEntryId: FoodDiaryEntryId,
     val profileIds: Set<ProfileId>,
-    val composition: MeasuredFoodSnapshot,
-    val mealId: MealId?,
+    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
+) : FoodDiaryEvent()
+
+@Serializable
+data class FoodDiaryEntrySnapshotChangedEvent(
+    val diaryEntryId: FoodDiaryEntryId,
+    val snapshot: MeasuredFoodSnapshot,
+    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
+) : FoodDiaryEvent()
+
+@Serializable
+data class FoodDiaryEntryTimestampChangedEvent(
+    val diaryEntryId: FoodDiaryEntryId,
     @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()
 
 @Serializable
-data class FoodDiaryEntryUnlinkedFromMealEvent(
+data class FoodDiaryEntryMealLinkedEvent(
+    val diaryEntryId: FoodDiaryEntryId,
+    val mealId: MealId,
+    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
+) : FoodDiaryEvent()
+
+@Serializable
+data class FoodDiaryEntryMealUnlinkedEvent(
     val diaryEntryId: FoodDiaryEntryId,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()

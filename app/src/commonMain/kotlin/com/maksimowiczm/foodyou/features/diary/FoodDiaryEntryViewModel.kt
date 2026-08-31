@@ -70,7 +70,7 @@ class FoodDiaryEntryViewModel(
     val uiEvents = eventBus.receiveAsFlow()
 
     fun create(
-        composition: MeasuredFoodSnapshot,
+        snapshot: MeasuredFoodSnapshot,
         profiles: List<ProfileId>,
         timestamp: LocalDateTime,
     ) {
@@ -78,7 +78,7 @@ class FoodDiaryEntryViewModel(
             val entryId =
                 foodDiaryService.create(
                     profileIds = profiles.toSet(),
-                    composition = composition,
+                    snapshot = snapshot,
                     mealId = mealId,
                     timestamp = timestamp.toInstant(TimeZone.currentSystemDefault()),
                 )
@@ -93,7 +93,7 @@ class FoodDiaryEntryViewModel(
         timestamp: LocalDateTime,
     ) {
         create(
-            composition =
+            snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
                         LeafFoodSnapshot(
@@ -122,7 +122,7 @@ class FoodDiaryEntryViewModel(
         timestamp: LocalDateTime,
     ) {
         create(
-            composition =
+            snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
                         LeafFoodSnapshot(
@@ -151,7 +151,7 @@ class FoodDiaryEntryViewModel(
         timestamp: LocalDateTime,
     ) {
         create(
-            composition =
+            snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
                         LeafFoodSnapshot(
@@ -180,7 +180,7 @@ class FoodDiaryEntryViewModel(
         timestamp: LocalDateTime,
     ) {
         create(
-            composition =
+            snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
                         CompositeFoodSnapshot(

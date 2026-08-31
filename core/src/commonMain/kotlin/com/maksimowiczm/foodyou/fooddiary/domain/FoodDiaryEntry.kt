@@ -18,7 +18,7 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 data class FoodDiaryEntry(
     val id: FoodDiaryEntryId,
     val profileIds: Set<ProfileId>,
-    val composition: MeasuredFoodSnapshot,
+    val snapshot: MeasuredFoodSnapshot,
     @Serializable(with = InstantComponentSerializer::class) val timestamp: Instant,
     val mealId: MealId?,
 ) {
@@ -26,7 +26,7 @@ data class FoodDiaryEntry(
         fun create(
             id: FoodDiaryEntryId,
             profileIds: Set<ProfileId>,
-            composition: MeasuredFoodSnapshot,
+            snapshot: MeasuredFoodSnapshot,
             mealId: MealId,
             timestamp: Instant,
             clock: Clock = Clock.System,
@@ -35,7 +35,7 @@ data class FoodDiaryEntry(
                 FoodDiaryEntryCreatedEvent(
                     diaryEntryId = id,
                     profileIds = profileIds,
-                    composition = composition,
+                    snapshot = snapshot,
                     mealId = mealId,
                     entryTimestamp = timestamp,
                     timestamp = clock.now(),
@@ -46,29 +46,27 @@ data class FoodDiaryEntry(
 
 fun FoodDiaryEntry.edit(
     profileIds: Set<ProfileId> = this.profileIds,
-    composition: MeasuredFoodSnapshot = this.composition,
+    snapshot: MeasuredFoodSnapshot = this.snapshot,
     mealId: MealId? = this.mealId,
     timestamp: Instant = this.timestamp,
     clock: Clock = Clock.System,
 ): List<FoodDiaryEvent> = buildList {
-    val updated =
-        this@edit.copy(
-            profileIds = profileIds,
-            composition = composition,
-            mealId = mealId,
-            timestamp = timestamp,
-        )
-    if (updated != this@edit)
-        add(
-            FoodDiaryEntryUpdatedEvent(
-                diaryEntryId = id,
-                profileIds = profileIds,
-                composition = composition,
-                mealId = mealId,
-                entryTimestamp = timestamp,
-                timestamp = clock.now(),
-            )
-        )
+    if (profileIds != this@edit.profileIds) {
+        add(FoodDiaryEntryProfileIdsChangedEvent(id, profileIds, clock.now()))
+    }
+    if (snapshot != this@edit.snapshot) {
+        add(FoodDiaryEntrySnapshotChangedEvent(id, snapshot, clock.now()))
+    }
+    if (timestamp != this@edit.timestamp) {
+        add(FoodDiaryEntryTimestampChangedEvent(id, timestamp, clock.now()))
+    }
+    if (mealId != this@edit.mealId) {
+        if (mealId != null) {
+            add(FoodDiaryEntryMealLinkedEvent(id, mealId, clock.now()))
+        } else {
+            add(FoodDiaryEntryMealUnlinkedEvent(id, clock.now()))
+        }
+    }
 }
 
 fun FoodDiaryEntry.remove(
@@ -85,7 +83,7 @@ fun FoodDiaryEntry.remove(
 
 fun FoodDiaryEntry.unlinkFromMeal(clock: Clock = Clock.System): List<FoodDiaryEvent> =
     listOf(
-        FoodDiaryEntryUnlinkedFromMealEvent(
+        FoodDiaryEntryMealUnlinkedEvent(
             diaryEntryId = id,
             timestamp = clock.now(),
         )
@@ -97,19 +95,22 @@ fun FoodDiaryEntry?.apply(event: FoodDiaryEvent): FoodDiaryEntry? =
             FoodDiaryEntry(
                 id = event.diaryEntryId,
                 profileIds = event.profileIds,
-                composition = event.composition,
+                snapshot = event.snapshot,
                 timestamp = event.entryTimestamp,
                 mealId = event.mealId,
             )
-        is FoodDiaryEntryUpdatedEvent ->
-            this?.copy(
-                profileIds = event.profileIds,
-                composition = event.composition,
-                timestamp = event.entryTimestamp,
-                mealId = event.mealId,
-            )
+
+        is FoodDiaryEntryProfileIdsChangedEvent -> this?.copy(profileIds = event.profileIds)
+
+        is FoodDiaryEntrySnapshotChangedEvent -> this?.copy(snapshot = event.snapshot)
+
+        is FoodDiaryEntryTimestampChangedEvent -> this?.copy(timestamp = event.entryTimestamp)
+
+        is FoodDiaryEntryMealLinkedEvent -> this?.copy(mealId = event.mealId)
+
+        is FoodDiaryEntryMealUnlinkedEvent -> this?.copy(mealId = null)
+
         is FoodDiaryEntryDeletedEvent -> null
-        is FoodDiaryEntryUnlinkedFromMealEvent -> this?.copy(mealId = null)
     }
 
 fun Iterable<FoodDiaryEvent>.toFoodDiaryEntry(): FoodDiaryEntry? =

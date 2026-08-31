@@ -17,6 +17,22 @@ abstract class HomeDao {
     @Query("DELETE FROM HomeEntry WHERE entryId = :entryId")
     abstract suspend fun delete(entryId: Uuid)
 
+    @Query("UPDATE HomeEntry SET snapshot = :snapshot WHERE entryId = :entryId")
+    abstract suspend fun updateSnapshot(
+        entryId: Uuid,
+        snapshot: com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot,
+    )
+
+    @Query("UPDATE HomeEntry SET date = :date, time = :time WHERE entryId = :entryId")
+    abstract suspend fun updateTimestamp(
+        entryId: Uuid,
+        date: LocalDate,
+        time: kotlinx.datetime.LocalTime,
+    )
+
+    @Query("UPDATE HomeEntry SET mealId = :mealId WHERE entryId = :entryId")
+    abstract suspend fun updateMealId(entryId: Uuid, mealId: Uuid?)
+
     @Query("UPDATE HomeEntry SET mealId = NULL WHERE entryId = :entryId")
     abstract suspend fun clearMealId(entryId: Uuid)
 
@@ -24,6 +40,15 @@ abstract class HomeDao {
     open suspend fun replaceEntries(entryId: Uuid, entities: List<HomeEntryEntity>) {
         delete(entryId)
         insertAll(entities)
+    }
+
+    @Transaction
+    open suspend fun replaceProfiles(entryId: Uuid, profileIds: Set<Uuid>) {
+        val existing = findAllById(entryId).firstOrNull() ?: return
+        replaceEntries(
+            entryId = entryId,
+            entities = profileIds.map { existing.copy(profileId = it) },
+        )
     }
 
     @Transaction
