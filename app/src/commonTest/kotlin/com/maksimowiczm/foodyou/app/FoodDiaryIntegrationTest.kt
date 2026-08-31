@@ -3,10 +3,13 @@ package com.maksimowiczm.foodyou.app
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity.Weight
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.AnonymousFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
+import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
@@ -71,13 +74,17 @@ class FoodDiaryIntegrationTest {
 
             // 2. Create a Diary Entry using this product
             val composition =
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                    name = initialProductName,
-                    image = null,
-                    nutritionFacts = initialNutrition,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        LeafFoodSnapshot(
+                            id = FoodSnapshotId.UserProduct(productId.id),
+                            name = initialProductName,
+                            brand = null,
+                            image = null,
+                            nutritionFacts = initialNutrition,
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Weight(
+                        FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
                             servingWeight = null,
                             packageWeight = null,
@@ -87,7 +94,7 @@ class FoodDiaryIntegrationTest {
                 foodDiaryService.create(setOf(profileId), composition, mealId, Clock.System.now())
 
             // 3. Wait until entry is created and indexed
-            waitForComposition(entryId, FoodCompositionComponentIdentity.UserProduct(productId.id))
+            waitForComposition(entryId, FoodSnapshotId.UserProduct(productId.id))
             val entry = foodDiaryService.observe(entryId).filterNotNull().first()
             assertEquals(initialProductName, entry.composition.name)
 
@@ -115,7 +122,7 @@ class FoodDiaryIntegrationTest {
                     it.composition.name == updatedProductName
                 }
 
-            val updatedComponent = updatedEntry.composition as FoodCompositionComponent.Simple
+            val updatedComponent = updatedEntry.composition.snapshot as LeafFoodSnapshot
             assertEquals(updatedProductName, updatedComponent.name)
             assertEquals(updatedNutrition, updatedComponent.nutritionFacts)
         }
@@ -129,13 +136,17 @@ class FoodDiaryIntegrationTest {
                 FoodName(english = "Initial Recipe", fallback = "Initial Recipe")
             val recipeComponents =
                 listOf(
-                    FoodCompositionComponent.Simple(
-                        identity = FoodCompositionComponentIdentity.OpenFoodFacts("1"),
-                        name = FoodName(english = "Ingredient", fallback = "Ingredient"),
-                        image = null,
-                        nutritionFacts = NutritionFacts(),
+                    MeasuredFoodSnapshot(
+                        snapshot =
+                            LeafFoodSnapshot(
+                                id = FoodSnapshotId.OpenFoodFacts("1"),
+                                name = FoodName(english = "Ingredient", fallback = "Ingredient"),
+                                brand = null,
+                                image = null,
+                                nutritionFacts = NutritionFacts(),
+                            ),
                         quantity =
-                            FoodComponentComponentQuantity.Weight(
+                            FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
                                 servingWeight = null,
                                 packageWeight = null,
@@ -153,17 +164,21 @@ class FoodDiaryIntegrationTest {
 
             // 2. Create a Diary Entry using this recipe
             val entryComposition =
-                FoodCompositionComponent.Composite(
-                    identity = FoodCompositionComponentIdentity.Recipe(recipeId.id),
-                    name = initialRecipeName,
-                    image = null,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        CompositeFoodSnapshot(
+                            id = FoodSnapshotId.UserRecipe(recipeId.id),
+                            name = initialRecipeName,
+                            brand = null,
+                            image = null,
+                            components = recipeComponents,
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Weight(
+                        FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
                             servingWeight = null,
                             packageWeight = null,
                         ),
-                    components = recipeComponents,
                 )
             val entryId =
                 foodDiaryService.create(
@@ -174,7 +189,7 @@ class FoodDiaryIntegrationTest {
                 )
 
             // 3. Wait until entry is created and indexed
-            waitForComposition(entryId, FoodCompositionComponentIdentity.Recipe(recipeId.id))
+            waitForComposition(entryId, FoodSnapshotId.UserRecipe(recipeId.id))
             foodDiaryService.observe(entryId).filterNotNull().first()
 
             // 4. Update the Recipe
@@ -195,7 +210,7 @@ class FoodDiaryIntegrationTest {
                     it.composition.name == updatedRecipeName
                 }
 
-            val updatedComponent = updatedEntry.composition as FoodCompositionComponent.Composite
+            val updatedComponent = updatedEntry.composition.snapshot as CompositeFoodSnapshot
             assertEquals(updatedRecipeName, updatedComponent.name)
         }
     }
@@ -222,13 +237,17 @@ class FoodDiaryIntegrationTest {
             // 2. Create a Recipe using this product
             val recipeComponents =
                 listOf(
-                    FoodCompositionComponent.Simple(
-                        identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                        name = initialProductName,
-                        image = null,
-                        nutritionFacts = initialNutrition,
+                    MeasuredFoodSnapshot(
+                        snapshot =
+                            LeafFoodSnapshot(
+                                id = FoodSnapshotId.UserProduct(productId.id),
+                                name = initialProductName,
+                                brand = null,
+                                image = null,
+                                nutritionFacts = initialNutrition,
+                            ),
                         quantity =
-                            FoodComponentComponentQuantity.Weight(
+                            FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
                                 servingWeight = null,
                                 packageWeight = null,
@@ -246,17 +265,21 @@ class FoodDiaryIntegrationTest {
 
             // 3. Create a Diary Entry using this recipe
             val entryComposition =
-                FoodCompositionComponent.Composite(
-                    identity = FoodCompositionComponentIdentity.Recipe(recipeId.id),
-                    name = FoodName(english = "Recipe", fallback = "Recipe"),
-                    image = null,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        CompositeFoodSnapshot(
+                            id = FoodSnapshotId.UserRecipe(recipeId.id),
+                            name = FoodName(english = "Recipe", fallback = "Recipe"),
+                            brand = null,
+                            image = null,
+                            components = recipeComponents,
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Weight(
+                        FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
                             servingWeight = null,
                             packageWeight = null,
                         ),
-                    components = recipeComponents,
                 )
             val entryId =
                 foodDiaryService.create(
@@ -267,7 +290,7 @@ class FoodDiaryIntegrationTest {
                 )
 
             // 4. Wait until entry is created and indexed
-            waitForComposition(entryId, FoodCompositionComponentIdentity.Recipe(recipeId.id))
+            waitForComposition(entryId, FoodSnapshotId.UserRecipe(recipeId.id))
             foodDiaryService.observe(entryId).filterNotNull().first()
 
             // 5. Update the User Product
@@ -289,12 +312,12 @@ class FoodDiaryIntegrationTest {
             // 6. Verify the diary entry (and the nested recipe) has been updated
             val updatedEntry =
                 foodDiaryService.observe(entryId).filterNotNull().first { entry ->
-                    val composite = entry.composition as FoodCompositionComponent.Composite
+                    val composite = entry.composition.snapshot as CompositeFoodSnapshot
                     composite.components.first().name == updatedProductName
                 }
 
-            val composite = updatedEntry.composition as FoodCompositionComponent.Composite
-            val simple = composite.components.first() as FoodCompositionComponent.Simple
+            val composite = updatedEntry.composition.snapshot as CompositeFoodSnapshot
+            val simple = composite.components.first().snapshot as LeafFoodSnapshot
             assertEquals(updatedProductName, simple.name)
         }
     }
@@ -318,13 +341,17 @@ class FoodDiaryIntegrationTest {
 
             // 2. Create a Diary Entry using this product
             val composition =
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                    name = FoodName(english = "To Delete", fallback = "To Delete"),
-                    image = null,
-                    nutritionFacts = NutritionFacts(),
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        LeafFoodSnapshot(
+                            id = FoodSnapshotId.UserProduct(productId.id),
+                            name = FoodName(english = "To Delete", fallback = "To Delete"),
+                            brand = null,
+                            image = null,
+                            nutritionFacts = NutritionFacts(),
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Weight(
+                        FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
                             servingWeight = null,
                             packageWeight = null,
@@ -334,7 +361,7 @@ class FoodDiaryIntegrationTest {
                 foodDiaryService.create(setOf(profileId), composition, mealId, Clock.System.now())
 
             // 3. Wait until entry is created and indexed
-            waitForComposition(entryId, FoodCompositionComponentIdentity.UserProduct(productId.id))
+            waitForComposition(entryId, FoodSnapshotId.UserProduct(productId.id))
             foodDiaryService.observe(entryId).filterNotNull().first()
 
             // 4. Delete the User Product
@@ -365,13 +392,17 @@ class FoodDiaryIntegrationTest {
 
             // 2. Create a Diary Entry using this product
             val composition =
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                    name = FoodName(english = "To Unlink", fallback = "To Unlink"),
-                    image = null,
-                    nutritionFacts = NutritionFacts(),
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        LeafFoodSnapshot(
+                            id = FoodSnapshotId.UserProduct(productId.id),
+                            name = FoodName(english = "To Unlink", fallback = "To Unlink"),
+                            brand = null,
+                            image = null,
+                            nutritionFacts = NutritionFacts(),
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Weight(
+                        FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
                             servingWeight = null,
                             packageWeight = null,
@@ -381,7 +412,7 @@ class FoodDiaryIntegrationTest {
                 foodDiaryService.create(setOf(profileId), composition, mealId, Clock.System.now())
 
             // 3. Wait until entry is created and indexed
-            waitForComposition(entryId, FoodCompositionComponentIdentity.UserProduct(productId.id))
+            waitForComposition(entryId, FoodSnapshotId.UserProduct(productId.id))
             foodDiaryService.observe(entryId).filterNotNull().first()
 
             // 4. Unlink the User Product
@@ -390,10 +421,10 @@ class FoodDiaryIntegrationTest {
             // 5. Verify the diary entry has been anonymized
             val updatedEntry =
                 foodDiaryService.observe(entryId).filterNotNull().first {
-                    it.composition.identity is FoodCompositionComponentIdentity.Anonymous
+                    it.composition.identity is FoodSnapshotId.Anonymous
                 }
 
-            assertIs<FoodCompositionComponentIdentity.Anonymous>(updatedEntry.composition.identity)
+            assertIs<FoodSnapshotId.Anonymous>(updatedEntry.composition.identity)
         }
     }
 
@@ -416,13 +447,17 @@ class FoodDiaryIntegrationTest {
 
             // 2. Create a Diary Entry using 2 servings of this product
             val composition =
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                    name = FoodName(english = "Product", fallback = "Product"),
-                    image = null,
-                    nutritionFacts = NutritionFacts(),
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        LeafFoodSnapshot(
+                            id = FoodSnapshotId.UserProduct(productId.id),
+                            name = FoodName(english = "Product", fallback = "Product"),
+                            brand = null,
+                            image = null,
+                            nutritionFacts = NutritionFacts(),
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Serving(
+                        FoodSnapshotQuantity.Serving(
                             servings = 2.0,
                             servingWeight = 30.grams,
                             packageWeight = null,
@@ -432,7 +467,7 @@ class FoodDiaryIntegrationTest {
                 foodDiaryService.create(setOf(profileId), composition, mealId, Clock.System.now())
 
             // 3. Wait until entry is created and indexed
-            waitForComposition(entryId, FoodCompositionComponentIdentity.UserProduct(productId.id))
+            waitForComposition(entryId, FoodSnapshotId.UserProduct(productId.id))
             val entry = foodDiaryService.observe(entryId).filterNotNull().first()
             assertEquals(60.grams, entry.composition.quantity.absoluteWeight)
 
@@ -456,8 +491,7 @@ class FoodDiaryIntegrationTest {
                     it.composition.quantity.absoluteWeight == 80.grams
                 }
 
-            val updatedComponent = updatedEntry.composition as FoodCompositionComponent.Simple
-            assertEquals(40.grams, updatedComponent.quantity.servingWeight)
+            assertEquals(40.grams, updatedEntry.composition.quantity.servingWeight)
         }
     }
 
@@ -471,13 +505,17 @@ class FoodDiaryIntegrationTest {
                 // 1. Create a Diary Entry using an OFF product
                 val initialProductName = FoodName(english = "OFF Product", fallback = "OFF Product")
                 val composition =
-                    FoodCompositionComponent.Simple(
-                        identity = FoodCompositionComponentIdentity.OpenFoodFacts(barcode),
-                        name = initialProductName,
-                        image = null,
-                        nutritionFacts = NutritionFacts(),
+                    MeasuredFoodSnapshot(
+                        snapshot =
+                            LeafFoodSnapshot(
+                                id = FoodSnapshotId.OpenFoodFacts(barcode),
+                                name = initialProductName,
+                                brand = null,
+                                image = null,
+                                nutritionFacts = NutritionFacts(),
+                            ),
                         quantity =
-                            FoodComponentComponentQuantity.Weight(
+                            FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
                                 servingWeight = null,
                                 packageWeight = null,
@@ -492,7 +530,7 @@ class FoodDiaryIntegrationTest {
                     )
 
                 // 2. Wait until entry is created and indexed
-                waitForComposition(entryId, FoodCompositionComponentIdentity.OpenFoodFacts(barcode))
+                waitForComposition(entryId, FoodSnapshotId.OpenFoodFacts(barcode))
                 foodDiaryService.observe(entryId).filterNotNull().first()
 
                 // 3. Trigger OFF refresh
@@ -518,13 +556,17 @@ class FoodDiaryIntegrationTest {
                 // 1. Create a Diary Entry using an FDC product
                 val initialProductName = FoodName(english = "FDC Product", fallback = "FDC Product")
                 val composition =
-                    FoodCompositionComponent.Simple(
-                        identity = FoodCompositionComponentIdentity.FoodDataCentral(fdcId),
-                        name = initialProductName,
-                        image = null,
-                        nutritionFacts = NutritionFacts(),
+                    MeasuredFoodSnapshot(
+                        snapshot =
+                            LeafFoodSnapshot(
+                                id = FoodSnapshotId.FoodDataCentral(fdcId),
+                                name = initialProductName,
+                                brand = null,
+                                image = null,
+                                nutritionFacts = NutritionFacts(),
+                            ),
                         quantity =
-                            FoodComponentComponentQuantity.Weight(
+                            FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
                                 servingWeight = null,
                                 packageWeight = null,
@@ -539,7 +581,7 @@ class FoodDiaryIntegrationTest {
                     )
 
                 // 2. Wait until entry is created and indexed
-                waitForComposition(entryId, FoodCompositionComponentIdentity.FoodDataCentral(fdcId))
+                waitForComposition(entryId, FoodSnapshotId.FoodDataCentral(fdcId))
                 foodDiaryService.observe(entryId).filterNotNull().first()
 
                 // 3. Trigger FDC refresh
@@ -567,14 +609,21 @@ class FoodDiaryIntegrationTest {
                     servings = 1.0,
                     components =
                         listOf(
-                            FoodCompositionComponent.Anonymous(
-                                identity =
-                                    FoodCompositionComponentIdentity.Anonymous(Uuid.random()),
-                                name = FoodName(english = "Ingredient", fallback = "Ingredient"),
-                                image = null,
-                                nutritionFacts = NutritionFacts(),
+                            MeasuredFoodSnapshot(
+                                snapshot =
+                                    AnonymousFoodSnapshot(
+                                        id = FoodSnapshotId.Anonymous(Uuid.random()),
+                                        name =
+                                            FoodName(
+                                                english = "Ingredient",
+                                                fallback = "Ingredient",
+                                            ),
+                                        brand = null,
+                                        image = null,
+                                        nutritionFacts = NutritionFacts(),
+                                    ),
                                 quantity =
-                                    FoodComponentComponentQuantity.Weight(
+                                    FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
                                         servingWeight = null,
                                         packageWeight = null,
@@ -585,23 +634,27 @@ class FoodDiaryIntegrationTest {
 
             // 2. Create Diary Entry using 2 servings of Recipe
             val composition =
-                FoodCompositionComponent.Composite(
-                    identity = FoodCompositionComponentIdentity.Recipe(recipeId.id),
-                    name = FoodName(english = "Recipe", fallback = "Recipe"),
-                    image = null,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        CompositeFoodSnapshot(
+                            id = FoodSnapshotId.UserRecipe(recipeId.id),
+                            name = FoodName(english = "Recipe", fallback = "Recipe"),
+                            brand = null,
+                            image = null,
+                            components = emptyList(),
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Serving(
+                        FoodSnapshotQuantity.Serving(
                             servings = 2.0,
                             servingWeight = 100.grams,
                             packageWeight = null,
                         ),
-                    components = emptyList(),
                 )
             val entryId =
                 foodDiaryService.create(setOf(profileId), composition, mealId, Clock.System.now())
 
             // Wait until entry is created and indexed
-            waitForComposition(entryId, FoodCompositionComponentIdentity.Recipe(recipeId.id))
+            waitForComposition(entryId, FoodSnapshotId.UserRecipe(recipeId.id))
             val entry = foodDiaryService.observe(entryId).filterNotNull().first()
             assertEquals(200.grams, entry.composition.quantity.absoluteWeight)
 
@@ -615,13 +668,18 @@ class FoodDiaryIntegrationTest {
                 servings = 2.0,
                 components =
                     listOf(
-                        FoodCompositionComponent.Anonymous(
-                            identity = FoodCompositionComponentIdentity.Anonymous(Uuid.random()),
-                            name = FoodName(english = "Ingredient", fallback = "Ingredient"),
-                            image = null,
-                            nutritionFacts = NutritionFacts(),
+                        MeasuredFoodSnapshot(
+                            snapshot =
+                                AnonymousFoodSnapshot(
+                                    id = FoodSnapshotId.Anonymous(Uuid.random()),
+                                    name =
+                                        FoodName(english = "Ingredient", fallback = "Ingredient"),
+                                    brand = null,
+                                    image = null,
+                                    nutritionFacts = NutritionFacts(),
+                                ),
                             quantity =
-                                FoodComponentComponentQuantity.Weight(
+                                FoodSnapshotQuantity.Weight(
                                     absoluteWeight = 100.grams,
                                     servingWeight = null,
                                     packageWeight = null,
@@ -637,8 +695,8 @@ class FoodDiaryIntegrationTest {
                     it.composition.quantity.absoluteWeight == 100.grams
                 }
 
-            val updatedComponent = updatedEntry.composition as FoodCompositionComponent.Composite
-            assertEquals(50.grams, updatedComponent.quantity.servingWeight)
+            val updatedComponent = updatedEntry.composition.snapshot as CompositeFoodSnapshot
+            assertEquals(50.grams, updatedEntry.composition.quantity.servingWeight)
         }
     }
 
@@ -655,23 +713,27 @@ class FoodDiaryIntegrationTest {
                 )
 
             val composition =
-                FoodCompositionComponent.Composite(
-                    identity = FoodCompositionComponentIdentity.Recipe(recipeId.id),
-                    name = FoodName(english = "To Delete", fallback = "To Delete"),
-                    image = null,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        CompositeFoodSnapshot(
+                            id = FoodSnapshotId.UserRecipe(recipeId.id),
+                            name = FoodName(english = "To Delete", fallback = "To Delete"),
+                            brand = null,
+                            image = null,
+                            components = emptyList(),
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Weight(
+                        FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
                             servingWeight = null,
                             packageWeight = null,
                         ),
-                    components = emptyList(),
                 )
             val entryId =
                 foodDiaryService.create(setOf(profileId), composition, mealId, Clock.System.now())
 
             // Wait until entry is created and indexed
-            waitForComposition(entryId, FoodCompositionComponentIdentity.Recipe(recipeId.id))
+            waitForComposition(entryId, FoodSnapshotId.UserRecipe(recipeId.id))
             foodDiaryService.observe(entryId).filterNotNull().first()
 
             userRecipeService.delete(recipeId, DeleteStrategy.Delete)
@@ -696,23 +758,27 @@ class FoodDiaryIntegrationTest {
 
             val name = FoodName(english = "To Unlink", fallback = "To Unlink")
             val composition =
-                FoodCompositionComponent.Composite(
-                    identity = FoodCompositionComponentIdentity.Recipe(recipeId.id),
-                    name = name,
-                    image = null,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        CompositeFoodSnapshot(
+                            id = FoodSnapshotId.UserRecipe(recipeId.id),
+                            name = name,
+                            brand = null,
+                            image = null,
+                            components = emptyList(),
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Weight(
+                        FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
                             servingWeight = null,
                             packageWeight = null,
                         ),
-                    components = emptyList(),
                 )
             val entryId =
                 foodDiaryService.create(setOf(profileId), composition, mealId, Clock.System.now())
 
             // Wait until entry is created and indexed
-            waitForComposition(entryId, FoodCompositionComponentIdentity.Recipe(recipeId.id))
+            waitForComposition(entryId, FoodSnapshotId.UserRecipe(recipeId.id))
             foodDiaryService.observe(entryId).filterNotNull().first()
 
             userRecipeService.delete(recipeId, DeleteStrategy.Unlink)
@@ -720,17 +786,17 @@ class FoodDiaryIntegrationTest {
             // Verify the diary entry has been anonymized
             val updatedEntry =
                 foodDiaryService.observe(entryId).filterNotNull().first {
-                    it.composition.identity is FoodCompositionComponentIdentity.Anonymous
+                    it.composition.identity is FoodSnapshotId.Anonymous
                 }
 
-            assertIs<FoodCompositionComponentIdentity.Anonymous>(updatedEntry.composition.identity)
+            assertIs<FoodSnapshotId.Anonymous>(updatedEntry.composition.identity)
             assertEquals(name, updatedEntry.composition.name)
         }
     }
 
     private suspend fun Koin.waitForComposition(
         entryId: FoodDiaryEntryIdentity,
-        componentId: FoodCompositionComponentIdentity.Identified,
+        componentId: FoodSnapshotId.Tracked,
     ) {
         val repository = get<FoodDiaryCompositionRepository>()
         withContext(Dispatchers.Default) {

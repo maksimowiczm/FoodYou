@@ -20,10 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
+import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
+import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.common.domain.food.totalWeight
@@ -44,16 +46,16 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun FoodIngredients(
-    components: List<FoodCompositionComponent>,
+    components: List<MeasuredFoodSnapshot>,
     ingredientScalingFactor: Double,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (components.isEmpty()) return
 
     val hasNestedRecipe =
         remember(components) {
-            components.any { it.identity is FoodCompositionComponentIdentity.Composite }
+            components.any { it.identity is FoodSnapshotId.Composite }
         }
 
     Column(
@@ -75,9 +77,9 @@ fun FoodIngredients(
 
 @Composable
 private fun RecipeIngredientListItem(
-    component: FoodCompositionComponent,
+    component: MeasuredFoodSnapshot,
     scalingFactor: Double,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
     modifier: Modifier = Modifier,
     unwrap: Boolean = true,
     isLast: Boolean = false,
@@ -86,8 +88,8 @@ private fun RecipeIngredientListItem(
     val interactionSource = remember { MutableInteractionSource() }
     val baseShape =
         remember(shapes, component) {
-            if (component is FoodCompositionComponent.Simple && unwrap) shapes.large
-            else if (component is FoodCompositionComponent.Composite && unwrap)
+            if (component.snapshot is LeafFoodSnapshot && unwrap) shapes.large
+            else if (component.snapshot is CompositeFoodSnapshot && unwrap)
                 shapes.large.copy(bottomEnd = shapes.extraSmall.bottomEnd)
             else if (isLast)
                 shapes.extraSmall.copy(
@@ -114,10 +116,11 @@ private fun RecipeIngredientListItem(
             shape = shape,
             interactionSource = interactionSource,
         )
-        if (unwrap && component is FoodCompositionComponent.Composite) {
+        val snapshot = component.snapshot
+        if (unwrap && snapshot is CompositeFoodSnapshot) {
             val subScalingFactor =
                 remember(component, scalingFactor) {
-                    val totalWeight = component.components.totalWeight
+                    val totalWeight = snapshot.components.totalWeight
                     if (totalWeight.grams > 0) {
                         scalingFactor *
                             (component.quantity.absoluteWeight.grams / totalWeight.grams)
@@ -126,7 +129,7 @@ private fun RecipeIngredientListItem(
                     }
                 }
 
-            component.components.forEachIndexed { i, subComponent ->
+            snapshot.components.forEachIndexed { i, subComponent ->
                 Spacer(Modifier.height(2.dp))
                 RecipeIngredientListItem(
                     component = subComponent,
@@ -134,7 +137,7 @@ private fun RecipeIngredientListItem(
                     onNavigateToIngredient = onNavigateToIngredient,
                     modifier = Modifier.fillMaxWidth().padding(start = 12.dp),
                     unwrap = false,
-                    isLast = i == component.components.lastIndex,
+                    isLast = i == snapshot.components.lastIndex,
                 )
             }
         }
@@ -143,12 +146,12 @@ private fun RecipeIngredientListItem(
 
 @Composable
 private fun RecipeIngredientListItemContent(
-    component: FoodCompositionComponent,
+    component: MeasuredFoodSnapshot,
     scalingFactor: Double,
     shape: Shape,
     interactionSource: MutableInteractionSource,
     modifier: Modifier = Modifier,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit = { _, _ -> },
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit = { _, _ -> },
 ) {
     val nameSelector = LocalFoodNameSelector.current
     val componentName =
@@ -157,14 +160,12 @@ private fun RecipeIngredientListItemContent(
     val scaledComponentQuantity =
         remember(component.quantity, scalingFactor) {
             when (val q = component.quantity) {
-                is FoodComponentComponentQuantity.Weight ->
+                is FoodSnapshotQuantity.Weight ->
                     q.copy(absoluteWeight = q.absoluteWeight * scalingFactor)
 
-                is FoodComponentComponentQuantity.Package ->
-                    q.copy(packages = q.packages * scalingFactor)
+                is FoodSnapshotQuantity.Package -> q.copy(packages = q.packages * scalingFactor)
 
-                is FoodComponentComponentQuantity.Serving ->
-                    q.copy(servings = q.servings * scalingFactor)
+                is FoodSnapshotQuantity.Serving -> q.copy(servings = q.servings * scalingFactor)
             }
         }
 
@@ -177,11 +178,11 @@ private fun RecipeIngredientListItemContent(
 
     val image: @Composable (() -> Unit)? = run {
         when (val image = component.image) {
-            is FoodCompositionComponentImage.Blob -> {
+            is FoodSnapshotImage.Blob -> {
                 @Composable { resolveBlob(image.blob).Image(shimmer, Modifier.size(56.dp)) }
             }
 
-            is FoodCompositionComponentImage.Uri -> {
+            is FoodSnapshotImage.Uri -> {
                 @Composable { image.uri.Image(shimmer, Modifier.size(56.dp)) }
             }
 
@@ -202,7 +203,7 @@ private fun RecipeIngredientListItemContent(
             headline = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(componentName)
-                    if (component.identity is FoodCompositionComponentIdentity.Recipe) {
+                    if (component.identity is FoodSnapshotId.UserRecipe) {
                         Spacer(Modifier.width(8.dp))
                         Icon(
                             painter = painterResource(Res.drawable.ic_skillet_filled),

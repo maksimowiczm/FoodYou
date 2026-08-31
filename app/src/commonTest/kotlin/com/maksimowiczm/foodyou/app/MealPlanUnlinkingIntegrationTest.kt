@@ -1,10 +1,11 @@
 package com.maksimowiczm.foodyou.app
 
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
+import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
@@ -35,13 +36,17 @@ class MealPlanUnlinkingIntegrationTest {
 
             // 2. Create a diary entry associated with "Breakfast"
             val composition =
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.OpenFoodFacts("123"),
-                    name = FoodName(fallback = "Apple"),
-                    image = null,
-                    nutritionFacts = NutritionFacts(),
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        LeafFoodSnapshot(
+                            id = FoodSnapshotId.OpenFoodFacts("123"),
+                            name = FoodName(fallback = "Apple"),
+                            brand = null,
+                            image = null,
+                            nutritionFacts = NutritionFacts(),
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Weight(
+                        FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
                             servingWeight = null,
                             packageWeight = null,

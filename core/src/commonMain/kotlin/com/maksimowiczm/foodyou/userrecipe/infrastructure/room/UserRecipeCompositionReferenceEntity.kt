@@ -1,15 +1,15 @@
 package com.maksimowiczm.foodyou.userrecipe.infrastructure.room
 
 import androidx.room3.*
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import kotlin.uuid.Uuid
 
 @Entity(
     tableName = "UserRecipeCompositionReference",
-    primaryKeys = ["recipeId", "componentIdentity"],
-    indices = [Index(value = ["componentIdentity"])],
+    primaryKeys = ["recipeId", "snapshotId"],
+    indices = [Index(value = ["snapshotId"])],
 )
 data class UserRecipeCompositionReferenceEntity(
     val recipeId: Uuid,
-    val componentIdentity: FoodCompositionComponentIdentity.Identified,
+    val snapshotId: FoodSnapshotId.Tracked,
 )

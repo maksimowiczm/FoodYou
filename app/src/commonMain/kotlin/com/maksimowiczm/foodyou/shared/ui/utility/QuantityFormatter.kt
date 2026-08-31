@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
@@ -121,15 +121,15 @@ object QuantityFormatter {
     }
 
     @Composable
-    fun FoodComponentComponentQuantity.stringResource(): String {
+    fun FoodSnapshotQuantity.stringResource(): String {
         return when (this) {
-            is FoodComponentComponentQuantity.Weight -> this.absoluteWeight.stringResource()
+            is FoodSnapshotQuantity.Weight -> this.absoluteWeight.stringResource()
 
-            is FoodComponentComponentQuantity.Package ->
+            is FoodSnapshotQuantity.Package ->
                 remember(this) { toQuantity() }
                     .stringResource(remember(packageWeight) { packageWeight.toAbsoluteQuantity() })
 
-            is FoodComponentComponentQuantity.Serving ->
+            is FoodSnapshotQuantity.Serving ->
                 remember(this) { toQuantity() }
                     .stringResource(remember(servingWeight) { servingWeight.toAbsoluteQuantity() })
         }

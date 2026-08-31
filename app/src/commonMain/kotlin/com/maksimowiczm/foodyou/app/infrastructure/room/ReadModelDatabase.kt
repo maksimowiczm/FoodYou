@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.app.infrastructure.room
 
 import androidx.room3.*
 import com.maksimowiczm.foodyou.common.infrastructure.room.DateConverters
-import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter
-import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionConverter
+import com.maksimowiczm.foodyou.common.infrastructure.room.FoodSnapshotConverter
+import com.maksimowiczm.foodyou.common.infrastructure.room.FoodSnapshotIdConverter
 import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
 import com.maksimowiczm.foodyou.features.home.integration.HomeDao
 import com.maksimowiczm.foodyou.features.home.integration.HomeEntryEntity
@@ -35,9 +35,9 @@ import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlatten
 @ColumnTypeConverters(
     UuidConverter::class,
     QuantityTypeConverter::class,
-    FoodCompositionComponentIdentityConverter::class,
+    FoodSnapshotIdConverter::class,
     DateConverters::class,
-    FoodCompositionConverter::class,
+    FoodSnapshotConverter::class,
 )
 @ConstructedBy(ReadModelDatabaseConstructor::class)
 internal abstract class ReadModelDatabase :

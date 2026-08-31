@@ -29,8 +29,8 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDe
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDetailsViewModel
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
@@ -53,7 +53,7 @@ fun UserRecipeDetailsScreen(
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: UserRecipeDetailsViewModel =
@@ -99,7 +99,7 @@ private fun UserRecipeDetailsScreenContent(
     isFavorite: Boolean,
     image: FileUri?,
     note: String?,
-    components: List<FoodCompositionComponent>,
+    components: List<MeasuredFoodSnapshot>,
     ingredientScalingFactor: Double,
     suggestions: List<Quantity>,
     selectedQuantity: Quantity?,
@@ -111,7 +111,7 @@ private fun UserRecipeDetailsScreenContent(
     onDelete: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
     onSelectQuantity: (Quantity) -> Unit,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()

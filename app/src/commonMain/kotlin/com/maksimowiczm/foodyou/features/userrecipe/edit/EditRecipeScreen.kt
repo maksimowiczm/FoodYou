@@ -8,7 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeApp
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormViewModel
@@ -46,8 +46,8 @@ fun EditRecipeScreen(
             recipe.components
                 .map {
                     when (it.identity) {
-                        is FoodCompositionComponentIdentity.Anonymous -> TODO()
-                        is FoodCompositionComponentIdentity.Identified -> it
+                        is FoodSnapshotId.Anonymous -> TODO()
+                        is FoodSnapshotId.Tracked -> it
                     }
                 }
                 .map { it.identity to it.quantity.toQuantity() }

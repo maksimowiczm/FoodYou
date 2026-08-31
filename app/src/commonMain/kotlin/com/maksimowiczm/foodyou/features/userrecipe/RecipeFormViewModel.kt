@@ -4,11 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.common.RemoteData
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentQuantityUpdateService
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
+import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
+import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.extension.combine
@@ -38,8 +40,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 class RecipeFormViewModel(
-    initialIngredients: List<Pair<FoodCompositionComponentIdentity.Identified, Quantity>> =
-        emptyList(),
+    initialIngredients: List<Pair<FoodSnapshotId.Tracked, Quantity>> = emptyList(),
     private val fdc: FoodDataCentralService,
     private val off: OpenFoodFactsService,
     private val up: UserProductService,
@@ -53,8 +54,8 @@ class RecipeFormViewModel(
             } ?: initialIngredients.map { (id, q) -> IngredientEntry(identity = id, quantity = q) }
         )
 
-    private val componentFlows =
-        mutableMapOf<Pair<FoodCompositionComponentIdentity, Quantity>, Flow<ResolvedIngredient?>>()
+    private val snapshotFlows =
+        mutableMapOf<Pair<FoodSnapshotId, Quantity>, Flow<ResolvedIngredient?>>()
 
     val state: StateFlow<RecipeFormUiState> =
         ingredients
@@ -69,10 +70,10 @@ class RecipeFormViewModel(
                         }
                         .combine()
                         .map { items ->
-                            val components = items.mapNotNull { it.resolved?.component }
+                            val components = items.mapNotNull { it.resolved?.snapshot }
                             RecipeFormUiState(
                                 ingredients = items,
-                                components =
+                                snapshots =
                                     if (components.size == entries.size) components else null,
                             )
                         }
@@ -88,17 +89,17 @@ class RecipeFormViewModel(
             .onEach { ingredients ->
                 savedStateHandle[INGREDIENTS_KEY] = Json.encodeToString(ingredients)
                 val activeKeys = ingredients.map { it.identity to it.quantity }.toSet()
-                componentFlows.keys.retainAll(activeKeys)
+                snapshotFlows.keys.retainAll(activeKeys)
             }
             .launchIn(viewModelScope)
     }
 
     private fun getComponentFlow(
-        id: FoodCompositionComponentIdentity.Identified,
+        id: FoodSnapshotId.Tracked,
         quantity: Quantity,
     ): Flow<ResolvedIngredient?> {
         val key = id to quantity
-        return componentFlows.getOrPut(key) {
+        return snapshotFlows.getOrPut(key) {
             observeComponent(id, quantity)
                 .stateIn(
                     scope = viewModelScope,
@@ -112,7 +113,7 @@ class RecipeFormViewModel(
         ingredients.update { current -> current.toMutableList().apply { removeAt(index) } }
     }
 
-    fun addIngredient(identity: FoodCompositionComponentIdentity.Identified, quantity: Quantity) {
+    fun addIngredient(identity: FoodSnapshotId.Tracked, quantity: Quantity) {
         ingredients.update { current ->
             current.toMutableList().apply {
                 add(IngredientEntry(identity = identity, quantity = quantity))
@@ -127,43 +128,51 @@ class RecipeFormViewModel(
     }
 
     private fun observeComponent(
-        id: FoodCompositionComponentIdentity.Identified,
+        id: FoodSnapshotId.Tracked,
         quantity: Quantity,
     ): Flow<ResolvedIngredient?> =
         when (id) {
-            is FoodCompositionComponentIdentity.Recipe ->
+            is FoodSnapshotId.UserRecipe ->
                 recipeService.observe(UserRecipeIdentity(id.id)).map { recipe ->
                     recipe?.let {
                         ResolvedIngredient(
-                            component =
-                                FoodCompositionComponent.Composite(
-                                    identity = id,
-                                    name = it.name,
-                                    image = it.image?.let(FoodCompositionComponentImage::Blob),
+                            snapshot =
+                                MeasuredFoodSnapshot(
+                                    snapshot =
+                                        CompositeFoodSnapshot(
+                                            id = id,
+                                            name = it.name,
+                                            brand = null,
+                                            image = it.image?.let(FoodSnapshotImage::Blob),
+                                            components = it.components,
+                                        ),
                                     quantity =
-                                        FoodComponentQuantityUpdateService.map(
+                                        FoodSnapshotQuantityUpdateService.map(
                                             quantity = quantity,
                                             servingWeight = recipe.servingWeight,
                                             packageWeight = recipe.totalWeight,
                                         ),
-                                    components = it.components,
                                 )
                         )
                     }
                 }
 
-            is FoodCompositionComponentIdentity.FoodDataCentral ->
+            is FoodSnapshotId.FoodDataCentral ->
                 fdc.observeNullable(FoodDataCentralProductIdentity(id.fdcId)).map { product ->
                     product?.let {
                         ResolvedIngredient(
-                            component =
-                                FoodCompositionComponent.Simple(
-                                    identity = id,
-                                    name = FoodName(fallback = it.name),
-                                    image = null,
-                                    nutritionFacts = it.nutritionFacts,
+                            snapshot =
+                                MeasuredFoodSnapshot(
+                                    snapshot =
+                                        LeafFoodSnapshot(
+                                            id = id,
+                                            name = FoodName(fallback = it.name),
+                                            brand = null,
+                                            image = null,
+                                            nutritionFacts = it.nutritionFacts,
+                                        ),
                                     quantity =
-                                        FoodComponentQuantityUpdateService.map(
+                                        FoodSnapshotQuantityUpdateService.map(
                                             quantity = quantity,
                                             servingWeight = product.servingQuantity?.forceWeight(),
                                             packageWeight = product.packageQuantity?.forceWeight(),
@@ -173,21 +182,25 @@ class RecipeFormViewModel(
                     }
                 }
 
-            is FoodCompositionComponentIdentity.OpenFoodFacts ->
+            is FoodSnapshotId.OpenFoodFacts ->
                 off.observeNullable(OpenFoodFactsProductIdentity(id.barcode)).map { product ->
                     product?.let {
                         ResolvedIngredient(
-                            component =
-                                FoodCompositionComponent.Simple(
-                                    identity = id,
-                                    name = it.name,
-                                    image =
-                                        (it.thumbnail ?: it.image)?.let(
-                                            FoodCompositionComponentImage::Uri
+                            snapshot =
+                                MeasuredFoodSnapshot(
+                                    snapshot =
+                                        LeafFoodSnapshot(
+                                            id = id,
+                                            name = it.name,
+                                            brand = it.brand,
+                                            image =
+                                                (it.thumbnail ?: it.image)?.let(
+                                                    FoodSnapshotImage::Uri
+                                                ),
+                                            nutritionFacts = it.nutritionFacts,
                                         ),
-                                    nutritionFacts = it.nutritionFacts,
                                     quantity =
-                                        FoodComponentQuantityUpdateService.map(
+                                        FoodSnapshotQuantityUpdateService.map(
                                             quantity = quantity,
                                             servingWeight = product.servingQuantity?.forceWeight(),
                                             packageWeight = product.packageQuantity?.forceWeight(),
@@ -197,18 +210,22 @@ class RecipeFormViewModel(
                     }
                 }
 
-            is FoodCompositionComponentIdentity.UserProduct ->
+            is FoodSnapshotId.UserProduct ->
                 up.observe(UserProductIdentity(id.id)).map { product ->
                     product?.let {
                         ResolvedIngredient(
-                            component =
-                                FoodCompositionComponent.Simple(
-                                    identity = id,
-                                    name = it.name,
-                                    image = it.image?.let(FoodCompositionComponentImage::Blob),
-                                    nutritionFacts = it.nutritionFacts,
+                            snapshot =
+                                MeasuredFoodSnapshot(
+                                    snapshot =
+                                        LeafFoodSnapshot(
+                                            id = id,
+                                            name = it.name,
+                                            brand = it.brand,
+                                            image = it.image?.let(FoodSnapshotImage::Blob),
+                                            nutritionFacts = it.nutritionFacts,
+                                        ),
                                     quantity =
-                                        FoodComponentQuantityUpdateService.map(
+                                        FoodSnapshotQuantityUpdateService.map(
                                             quantity = quantity,
                                             servingWeight = product.servingQuantity?.forceWeight(),
                                             packageWeight = product.packageQuantity?.forceWeight(),
@@ -250,16 +267,16 @@ class RecipeFormViewModel(
 
 data class RecipeFormUiState(
     val ingredients: List<IngredientItemState> = emptyList(),
-    val components: List<FoodCompositionComponent>? = null,
+    val snapshots: List<MeasuredFoodSnapshot>? = null,
 )
 
 @Serializable
 data class IngredientEntry(
     val entryId: Uuid = Uuid.random(),
-    val identity: FoodCompositionComponentIdentity.Identified,
+    val identity: FoodSnapshotId.Tracked,
     val quantity: Quantity,
 )
 
-data class ResolvedIngredient(val component: FoodCompositionComponent)
+data class ResolvedIngredient(val snapshot: MeasuredFoodSnapshot)
 
 data class IngredientItemState(val entry: IngredientEntry, val resolved: ResolvedIngredient?)

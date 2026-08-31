@@ -29,7 +29,7 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.ForwardBackwardTransition
 import com.maksimowiczm.foodyou.app.navigation.rememberPredictiveBackRoundedCornersDecorator
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.common.extension.removeWhile
@@ -105,28 +105,28 @@ internal fun RecipeApp(
 
                             val backStackEntry =
                                 when (val id = entry.identity) {
-                                    is FoodCompositionComponentIdentity.FoodDataCentral ->
+                                    is FoodSnapshotId.FoodDataCentral ->
                                         EditFoodDataCentral(
                                             index,
                                             FoodDataCentralProductIdentity(id.fdcId),
                                             entry.quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.OpenFoodFacts ->
+                                    is FoodSnapshotId.OpenFoodFacts ->
                                         EditOpenFoodFacts(
                                             index,
                                             OpenFoodFactsProductIdentity(id.barcode),
                                             entry.quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.UserProduct ->
+                                    is FoodSnapshotId.UserProduct ->
                                         EditUserProduct(
                                             index,
                                             UserProductIdentity(id.id),
                                             entry.quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.Recipe ->
+                                    is FoodSnapshotId.UserRecipe ->
                                         EditUserRecipe(
                                             index,
                                             UserRecipeIdentity(id.id),
@@ -163,7 +163,7 @@ internal fun RecipeApp(
                         onBack = { backStack.removeLastIf<OpenFoodFacts>() },
                         onAdd = { quantity ->
                             recipeFormViewModel.addIngredient(
-                                FoodCompositionComponentIdentity.OpenFoodFacts(it.identity.barcode),
+                                FoodSnapshotId.OpenFoodFacts(it.identity.barcode),
                                 quantity,
                             )
                             backStack.removeWhile { r -> r !is RecipeForm }
@@ -177,7 +177,7 @@ internal fun RecipeApp(
                         onBack = { backStack.removeLastIf<FoodDataCentral>() },
                         onAdd = { quantity ->
                             recipeFormViewModel.addIngredient(
-                                FoodCompositionComponentIdentity.FoodDataCentral(it.identity.fdcId),
+                                FoodSnapshotId.FoodDataCentral(it.identity.fdcId),
                                 quantity,
                             )
                             backStack.removeWhile { r -> r !is RecipeForm }
@@ -191,7 +191,7 @@ internal fun RecipeApp(
                         onBack = { backStack.removeLastIf<UserProduct>() },
                         onAdd = { quantity ->
                             recipeFormViewModel.addIngredient(
-                                FoodCompositionComponentIdentity.UserProduct(it.identity.id),
+                                FoodSnapshotId.UserProduct(it.identity.id),
                                 quantity,
                             )
                             backStack.removeWhile { r -> r !is RecipeForm }
@@ -207,7 +207,7 @@ internal fun RecipeApp(
                         onBack = { backStack.removeLastIf<UserRecipe>() },
                         onAdd = { quantity ->
                             recipeFormViewModel.addIngredient(
-                                FoodCompositionComponentIdentity.Recipe(it.identity.id),
+                                FoodSnapshotId.UserRecipe(it.identity.id),
                                 quantity,
                             )
                             backStack.removeWhile { r -> r !is RecipeForm }
@@ -219,25 +219,25 @@ internal fun RecipeApp(
                         onNavigateToIngredient = { identity, quantity ->
                             val route =
                                 when (identity) {
-                                    is FoodCompositionComponentIdentity.UserProduct ->
+                                    is FoodSnapshotId.UserProduct ->
                                         UserProduct(UserProductIdentity(identity.id), quantity)
 
-                                    is FoodCompositionComponentIdentity.OpenFoodFacts ->
+                                    is FoodSnapshotId.OpenFoodFacts ->
                                         OpenFoodFacts(
                                             OpenFoodFactsProductIdentity(identity.barcode),
                                             quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.FoodDataCentral ->
+                                    is FoodSnapshotId.FoodDataCentral ->
                                         FoodDataCentral(
                                             FoodDataCentralProductIdentity(identity.fdcId),
                                             quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.Recipe ->
+                                    is FoodSnapshotId.UserRecipe ->
                                         UserRecipe(UserRecipeIdentity(identity.id), quantity)
 
-                                    is FoodCompositionComponentIdentity.Anonymous -> TODO()
+                                    is FoodSnapshotId.Anonymous -> TODO()
                                 }
                             backStack.add(route)
                         },
@@ -298,25 +298,25 @@ internal fun RecipeApp(
                         onNavigateToIngredient = { identity, quantity ->
                             val route =
                                 when (identity) {
-                                    is FoodCompositionComponentIdentity.UserProduct ->
+                                    is FoodSnapshotId.UserProduct ->
                                         UserProduct(UserProductIdentity(identity.id), quantity)
 
-                                    is FoodCompositionComponentIdentity.OpenFoodFacts ->
+                                    is FoodSnapshotId.OpenFoodFacts ->
                                         OpenFoodFacts(
                                             OpenFoodFactsProductIdentity(identity.barcode),
                                             quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.FoodDataCentral ->
+                                    is FoodSnapshotId.FoodDataCentral ->
                                         FoodDataCentral(
                                             FoodDataCentralProductIdentity(identity.fdcId),
                                             quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.Recipe ->
+                                    is FoodSnapshotId.UserRecipe ->
                                         UserRecipe(UserRecipeIdentity(identity.id), quantity)
 
-                                    is FoodCompositionComponentIdentity.Anonymous -> TODO()
+                                    is FoodSnapshotId.Anonymous -> TODO()
                                 }
                             backStack.add(route)
                         },

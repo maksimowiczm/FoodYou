@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  *   weights if applicable
  */
 @Serializable
-sealed interface FoodComponentComponentQuantity {
+sealed interface FoodSnapshotQuantity {
     val servingWeight: com.maksimowiczm.foodyou.common.domain.Weight?
     val packageWeight: com.maksimowiczm.foodyou.common.domain.Weight?
     val absoluteWeight: com.maksimowiczm.foodyou.common.domain.Weight
@@ -26,7 +26,7 @@ sealed interface FoodComponentComponentQuantity {
         override val servingWeight: com.maksimowiczm.foodyou.common.domain.Weight?,
         override val packageWeight: com.maksimowiczm.foodyou.common.domain.Weight?,
         override val absoluteWeight: com.maksimowiczm.foodyou.common.domain.Weight,
-    ) : FoodComponentComponentQuantity
+    ) : FoodSnapshotQuantity
 
     /**
      * A quantity expressed as a number of packages.
@@ -38,7 +38,7 @@ sealed interface FoodComponentComponentQuantity {
         val packages: Double,
         override val servingWeight: com.maksimowiczm.foodyou.common.domain.Weight?,
         override val packageWeight: com.maksimowiczm.foodyou.common.domain.Weight,
-    ) : FoodComponentComponentQuantity {
+    ) : FoodSnapshotQuantity {
         override val absoluteWeight: com.maksimowiczm.foodyou.common.domain.Weight =
             packageWeight * packages
     }
@@ -53,21 +53,21 @@ sealed interface FoodComponentComponentQuantity {
         val servings: Double,
         override val servingWeight: com.maksimowiczm.foodyou.common.domain.Weight,
         override val packageWeight: com.maksimowiczm.foodyou.common.domain.Weight?,
-    ) : FoodComponentComponentQuantity {
+    ) : FoodSnapshotQuantity {
         override val absoluteWeight: com.maksimowiczm.foodyou.common.domain.Weight =
             servingWeight * servings
     }
 }
 
-fun FoodComponentComponentQuantity.toQuantity(): Quantity =
+fun FoodSnapshotQuantity.toQuantity(): Quantity =
     when (this) {
-        is FoodComponentComponentQuantity.Package -> toQuantity()
-        is FoodComponentComponentQuantity.Serving -> toQuantity()
-        is FoodComponentComponentQuantity.Weight -> toQuantity()
+        is FoodSnapshotQuantity.Package -> toQuantity()
+        is FoodSnapshotQuantity.Serving -> toQuantity()
+        is FoodSnapshotQuantity.Weight -> toQuantity()
     }
 
-fun FoodComponentComponentQuantity.Weight.toQuantity() = absoluteWeight.toAbsoluteQuantity()
+fun FoodSnapshotQuantity.Weight.toQuantity() = absoluteWeight.toAbsoluteQuantity()
 
-fun FoodComponentComponentQuantity.Package.toQuantity() = PackageQuantity(packages)
+fun FoodSnapshotQuantity.Package.toQuantity() = PackageQuantity(packages)
 
-fun FoodComponentComponentQuantity.Serving.toQuantity() = ServingQuantity(servings)
+fun FoodSnapshotQuantity.Serving.toQuantity() = ServingQuantity(servings)

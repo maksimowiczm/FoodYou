@@ -4,7 +4,7 @@ package com.maksimowiczm.foodyou.fooddiary.domain
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -18,7 +18,7 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 data class FoodDiaryEntry(
     val identity: FoodDiaryEntryIdentity,
     val profileIds: Set<ProfileId>,
-    val composition: FoodCompositionComponent,
+    val composition: MeasuredFoodSnapshot,
     @Serializable(with = InstantComponentSerializer::class) val timestamp: Instant,
     val mealIdentity: MealIdentity?,
 ) {
@@ -26,7 +26,7 @@ data class FoodDiaryEntry(
         fun create(
             identity: FoodDiaryEntryIdentity,
             profileIds: Set<ProfileId>,
-            composition: FoodCompositionComponent,
+            composition: MeasuredFoodSnapshot,
             mealIdentity: MealIdentity,
             timestamp: Instant,
             clock: Clock = Clock.System,
@@ -46,7 +46,7 @@ data class FoodDiaryEntry(
 
 fun FoodDiaryEntry.edit(
     profileIds: Set<ProfileId> = this.profileIds,
-    composition: FoodCompositionComponent = this.composition,
+    composition: MeasuredFoodSnapshot = this.composition,
     mealIdentity: MealIdentity? = this.mealIdentity,
     timestamp: Instant = this.timestamp,
     clock: Clock = Clock.System,

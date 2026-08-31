@@ -1,25 +1,26 @@
 package com.maksimowiczm.foodyou.common.infrastructure.room
 
 import androidx.room3.*
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
-class FoodCompositionConverter {
+class FoodSnapshotConverter {
     @OptIn(ExperimentalSerializationApi::class)
     private val json = Json {
         serializersModule = SerializersModule {
-            polymorphic(FoodCompositionComponent::class) {
-                subclassesOfSealed<FoodCompositionComponent>()
+            polymorphic(FoodSnapshot::class) {
+                subclassesOfSealed<FoodSnapshot>()
             }
         }
     }
 
     @ColumnTypeConverter
-    fun fromComposition(value: FoodCompositionComponent): String = json.encodeToString(value)
+    fun fromSnapshot(value: MeasuredFoodSnapshot): String = json.encodeToString(value)
 
     @ColumnTypeConverter
-    fun toComposition(value: String): FoodCompositionComponent = json.decodeFromString(value)
+    fun toSnapshot(value: String): MeasuredFoodSnapshot = json.decodeFromString(value)
 }

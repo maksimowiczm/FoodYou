@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.allComponentIdentities
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
@@ -17,7 +17,7 @@ class CompositionSynchronizer(private val repository: UserRecipeCompositionRepos
                 repository.saveReferences(
                     event.recipe.identity,
                     event.recipe.components.allComponentIdentities
-                        .filterIsInstance<FoodCompositionComponentIdentity.Identified>()
+                        .filterIsInstance<FoodSnapshotId.Tracked>()
                         .toSet(),
                 )
 
@@ -25,7 +25,7 @@ class CompositionSynchronizer(private val repository: UserRecipeCompositionRepos
                 repository.saveReferences(
                     event.recipe.identity,
                     event.recipe.components.allComponentIdentities
-                        .filterIsInstance<FoodCompositionComponentIdentity.Identified>()
+                        .filterIsInstance<FoodSnapshotId.Tracked>()
                         .toSet(),
                 )
 

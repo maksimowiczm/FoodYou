@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.features.home.ui
 import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryIdentity
 import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
 import kotlinx.datetime.LocalDate
@@ -39,5 +39,5 @@ sealed interface HomeMealState {
 data class HomeFoodState(
     val identity: FoodDiaryEntryIdentity,
     val time: LocalTime,
-    val component: FoodCompositionComponent,
+    val snapshot: MeasuredFoodSnapshot,
 )

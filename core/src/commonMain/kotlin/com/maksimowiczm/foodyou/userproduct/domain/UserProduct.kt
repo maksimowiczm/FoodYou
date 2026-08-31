@@ -6,6 +6,9 @@ import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
+import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import kotlin.jvm.JvmInline
 import kotlin.time.Clock
@@ -80,3 +83,12 @@ fun UserProduct?.apply(event: UserProductEvent): UserProduct? =
 
 fun Iterable<UserProductEvent>.toUserProduct(): UserProduct? =
     fold(null) { state, event -> state.apply(event) }
+
+fun UserProduct.toSnapshot() =
+    LeafFoodSnapshot(
+        id = FoodSnapshotId.UserProduct(identity.id),
+        name = name,
+        brand = brand,
+        image = image?.let(FoodSnapshotImage::Blob),
+        nutritionFacts = nutritionFacts,
+    )

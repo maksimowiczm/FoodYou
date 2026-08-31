@@ -46,8 +46,8 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDe
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDetailsViewModel
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
@@ -75,7 +75,7 @@ fun AddUserRecipeIngredientScreen(
     onDelete: () -> Unit,
     identity: UserRecipeIdentity,
     initialQuantity: Quantity,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: UserRecipeDetailsViewModel = koinViewModel {
@@ -90,6 +90,7 @@ fun AddUserRecipeIngredientScreen(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val userRecipe = uiState.recipe
+    val selectedType = uiState.selectedQuantityType
 
     val nameSelector = LocalFoodNameSelector.current
     val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
@@ -99,14 +100,14 @@ fun AddUserRecipeIngredientScreen(
             defaultValue = defaultValue,
         )
 
-    LaunchedEffect(formField.textFieldState.text, uiState.selectedQuantityType) {
-        viewModel.selectQuantity(
-            formField.textFieldState.text.toString().toDoubleOrNull(),
-            uiState.selectedQuantityType,
-        )
-    }
+    if (userRecipe != null && selectedType != null) {
+        LaunchedEffect(formField.textFieldState.text, selectedType) {
+            viewModel.selectQuantity(
+                formField.textFieldState.text.toString().toDoubleOrNull(),
+                selectedType,
+            )
+        }
 
-    if (userRecipe != null) {
         AddUserRecipeIngredientScreenContent(
             headline = userRecipe.headline(nameSelector),
             isFavorite = uiState.isFavorite,
@@ -115,12 +116,11 @@ fun AddUserRecipeIngredientScreen(
             components = userRecipe.components,
             ingredientScalingFactor = uiState.ingredientScalingFactor,
             suggestions = uiState.suggestions,
-            selectedQuantity = uiState.selectedQuantity,
             scaledNutritionFacts = uiState.scaledNutritionFacts,
             packageQuantity = AbsoluteQuantity.Weight(userRecipe.totalWeight),
             servingQuantity = AbsoluteQuantity.Weight(userRecipe.servingWeight),
             types = uiState.quantityTypes,
-            selectedType = uiState.selectedQuantityType ?: QuantityType.Gram,
+            selectedType = selectedType,
             formField = formField,
             onBack = onBack,
             onAdd = { uiState.selectedQuantity?.let { onAdd(it) } },
@@ -144,10 +144,9 @@ private fun AddUserRecipeIngredientScreenContent(
     isFavorite: Boolean,
     image: FileUri?,
     note: String?,
-    components: List<FoodCompositionComponent>,
+    components: List<MeasuredFoodSnapshot>,
     ingredientScalingFactor: Double,
     suggestions: List<Quantity>,
-    selectedQuantity: Quantity?,
     scaledNutritionFacts: NutritionFacts?,
     packageQuantity: AbsoluteQuantity?,
     servingQuantity: AbsoluteQuantity?,
@@ -161,7 +160,7 @@ private fun AddUserRecipeIngredientScreenContent(
     onSetFavorite: (Boolean) -> Unit,
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val focusRequester = remember { FocusRequester() }

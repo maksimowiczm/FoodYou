@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.features.home.integration
 
 import androidx.room3.*
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -16,5 +16,5 @@ data class HomeEntryEntity(
     val mealId: Uuid?,
     val date: LocalDate,
     val time: LocalTime,
-    val composition: FoodCompositionComponent,
+    val composition: MeasuredFoodSnapshot,
 )

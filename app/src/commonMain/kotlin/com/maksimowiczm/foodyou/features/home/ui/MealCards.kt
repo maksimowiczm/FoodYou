@@ -52,7 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
 import com.maksimowiczm.foodyou.common.domain.food.NutritionCalculator
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.sum
@@ -122,7 +122,7 @@ private fun MealCard(
     var expanded by rememberSaveable { mutableStateOf(true) }
     val sumNutrients =
         remember(state.foods) {
-            state.foods.map { it.component.measuredNutritionFacts }.sum(NutritionFacts())
+            state.foods.map { it.snapshot.measuredNutritionFacts }.sum(NutritionFacts())
         }
 
     val header =
@@ -259,12 +259,12 @@ private fun MealCard(
                             ) {
                                 FoodListItem(
                                     headline = {
-                                        Text(nameSelector.select(food.component.name))
+                                        Text(nameSelector.select(food.snapshot.name))
                                     },
                                     image =
                                         run {
-                                            when (val image = food.component.image) {
-                                                is FoodCompositionComponentImage.Blob -> {
+                                            when (val image = food.snapshot.image) {
+                                                is FoodSnapshotImage.Blob -> {
                                                     @Composable {
                                                         resolveBlob(image.blob)
                                                             .Image(
@@ -274,7 +274,7 @@ private fun MealCard(
                                                     }
                                                 }
 
-                                                is FoodCompositionComponentImage.Uri -> {
+                                                is FoodSnapshotImage.Uri -> {
                                                     @Composable {
                                                         image.uri.Image(
                                                             shimmer,
@@ -288,32 +288,31 @@ private fun MealCard(
                                         },
                                     proteins = {
                                         Text(
-                                            food.component.measuredNutritionFacts.proteins.value
+                                            food.snapshot.measuredNutritionFacts.proteins.value
                                                 ?.stringResource() ?: "?"
                                         )
                                     },
                                     carbohydrates = {
                                         Text(
-                                            food.component.measuredNutritionFacts.carbohydrates
-                                                .value
+                                            food.snapshot.measuredNutritionFacts.carbohydrates.value
                                                 ?.stringResource() ?: "?"
                                         )
                                     },
                                     fats = {
                                         Text(
-                                            food.component.measuredNutritionFacts.fats.value
+                                            food.snapshot.measuredNutritionFacts.fats.value
                                                 ?.stringResource() ?: "?"
                                         )
                                     },
                                     energy = {
                                         Text(
-                                            food.component.measuredNutritionFacts.energy.value
+                                            food.snapshot.measuredNutritionFacts.energy.value
                                                 ?.inUnit(LocalEnergyUnit.current)
                                                 ?.stringResource() ?: "?"
                                         )
                                     },
                                     quantity = {
-                                        Text(food.component.quantity.stringResource())
+                                        Text(food.snapshot.quantity.stringResource())
                                     },
                                     overline = {
                                         Text(dateFormatter.formatTime(food.time))

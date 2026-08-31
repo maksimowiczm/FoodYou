@@ -38,7 +38,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserProductDe
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserRecipeAddDiaryEntry
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserRecipeDetails
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.common.extension.removeWhile
@@ -163,28 +163,28 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onNavigateToIngredient = { identity, quantity ->
                             val route =
                                 when (identity) {
-                                    is FoodCompositionComponentIdentity.UserProduct ->
+                                    is FoodSnapshotId.UserProduct ->
                                         UserProductDetails(
                                             UserProductIdentity(identity.id),
                                             quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.OpenFoodFacts ->
+                                    is FoodSnapshotId.OpenFoodFacts ->
                                         OpenFoodFactsProductDetails(
                                             OpenFoodFactsProductIdentity(identity.barcode),
                                             quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.FoodDataCentral ->
+                                    is FoodSnapshotId.FoodDataCentral ->
                                         FoodDataCentralProductDetails(
                                             FoodDataCentralProductIdentity(identity.fdcId),
                                             quantity,
                                         )
 
-                                    is FoodCompositionComponentIdentity.Recipe ->
+                                    is FoodSnapshotId.UserRecipe ->
                                         UserRecipeDetails(UserRecipeIdentity(identity.id), quantity)
 
-                                    is FoodCompositionComponentIdentity.Anonymous -> TODO()
+                                    is FoodSnapshotId.Anonymous -> TODO()
                                 }
                             backStack.add(route)
                         },
@@ -357,7 +357,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onNavigateToIngredient = { identity, quantity ->
                             val ingredientRoute =
                                 when (identity) {
-                                    is FoodCompositionComponentIdentity.UserProduct ->
+                                    is FoodSnapshotId.UserProduct ->
                                         UserProductAddDiaryEntry(
                                             UserProductIdentity(identity.id),
                                             quantity,
@@ -366,7 +366,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                                             date = it.date,
                                         )
 
-                                    is FoodCompositionComponentIdentity.OpenFoodFacts ->
+                                    is FoodSnapshotId.OpenFoodFacts ->
                                         OpenFoodFactsAddDiaryEntry(
                                             OpenFoodFactsProductIdentity(identity.barcode),
                                             quantity,
@@ -375,7 +375,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                                             date = it.date,
                                         )
 
-                                    is FoodCompositionComponentIdentity.FoodDataCentral ->
+                                    is FoodSnapshotId.FoodDataCentral ->
                                         FoodDataCentralAddDiaryEntry(
                                             FoodDataCentralProductIdentity(identity.fdcId),
                                             quantity,
@@ -384,7 +384,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                                             date = it.date,
                                         )
 
-                                    is FoodCompositionComponentIdentity.Recipe ->
+                                    is FoodSnapshotId.UserRecipe ->
                                         UserRecipeAddDiaryEntry(
                                             UserRecipeIdentity(identity.id),
                                             quantity,
@@ -393,7 +393,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                                             date = it.date,
                                         )
 
-                                    is FoodCompositionComponentIdentity.Anonymous -> TODO()
+                                    is FoodSnapshotId.Anonymous -> TODO()
                                 }
                             backStack.add(ingredientRoute)
                         },

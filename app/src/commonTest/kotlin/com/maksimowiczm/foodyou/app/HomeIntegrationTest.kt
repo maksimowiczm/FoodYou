@@ -2,10 +2,12 @@ package com.maksimowiczm.foodyou.app
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.AnonymousFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
+import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
@@ -63,7 +65,7 @@ class HomeIntegrationTest {
                 homeDao.observeEntries(profileId.value, date).first { it.isNotEmpty() }
 
                 val updatedQuantity =
-                    FoodComponentComponentQuantity.Weight(
+                    FoodSnapshotQuantity.Weight(
                         absoluteWeight = 200.grams,
                         servingWeight = null,
                         packageWeight = null,
@@ -121,11 +123,11 @@ class HomeIntegrationTest {
                     homeDao.observeEntries(profileId.value, date).first {
                         it.any { e ->
                             e.entryId == entryId.id &&
-                                e.composition is FoodCompositionComponent.Anonymous
+                                e.composition.snapshot is AnonymousFoodSnapshot
                         }
                     }
                 val entry = entries.first { it.entryId == entryId.id }
-                assertEquals(true, entry.composition is FoodCompositionComponent.Anonymous)
+                assertEquals(true, entry.composition.snapshot is AnonymousFoodSnapshot)
             }
         }
 
@@ -215,13 +217,17 @@ class HomeIntegrationTest {
         }
 
     private fun createComposition() =
-        FoodCompositionComponent.Simple(
-            identity = FoodCompositionComponentIdentity.UserProduct(Uuid.random()),
-            name = FoodName(english = "Test Product", fallback = "Test Product"),
-            image = null,
-            nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
+        MeasuredFoodSnapshot(
+            snapshot =
+                LeafFoodSnapshot(
+                    id = FoodSnapshotId.UserProduct(Uuid.random()),
+                    name = FoodName(english = "Test Product", fallback = "Test Product"),
+                    brand = null,
+                    image = null,
+                    nutritionFacts = NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
+                ),
             quantity =
-                FoodComponentComponentQuantity.Weight(
+                FoodSnapshotQuantity.Weight(
                     absoluteWeight = 100.grams,
                     servingWeight = null,
                     packageWeight = null,

@@ -1,14 +1,14 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductCreatedEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductDeletedEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductUpdatedEvent
+import com.maksimowiczm.foodyou.userproduct.domain.toSnapshot
 
 class UserProductSynchronizer(private val userRecipeService: UserRecipeService) :
     EventHandler<UserProductEvent> {
@@ -17,19 +17,14 @@ class UserProductSynchronizer(private val userRecipeService: UserRecipeService) 
             is UserProductCreatedEvent -> Unit
 
             is UserProductUpdatedEvent ->
-                userRecipeService.updateRecipesWithComponent(
-                    identity =
-                        FoodCompositionComponentIdentity.UserProduct(event.product.identity.id),
-                    name = event.product.name,
-                    nutritionFacts = event.product.nutritionFacts,
+                userRecipeService.updateRecipesUsing(
+                    snapshot = event.product.toSnapshot(),
                     servingWeight = event.product.servingQuantity?.forceWeight(),
                     packageWeight = event.product.packageQuantity?.forceWeight(),
-                    image = event.product.image?.let(FoodCompositionComponentImage::Blob),
                 )
 
             is UserProductDeletedEvent -> {
-                val componentIdentity =
-                    FoodCompositionComponentIdentity.UserProduct(event.identity.id)
+                val componentIdentity = FoodSnapshotId.UserProduct(event.identity.id)
                 when (event.strategy) {
                     DeleteStrategy.Delete ->
                         userRecipeService.removeComponentFromRecipes(componentIdentity)

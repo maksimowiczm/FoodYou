@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.fooddiary.application
 
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEvent
@@ -17,7 +17,7 @@ class FoodDiaryCompositionSynchronizer(private val repository: FoodDiaryComposit
                 repository.saveReferences(
                     event.identity,
                     event.composition.allIdentities
-                        .filterIsInstance<FoodCompositionComponentIdentity.Identified>()
+                        .filterIsInstance<FoodSnapshotId.Tracked>()
                         .toSet(),
                 )
 
@@ -25,7 +25,7 @@ class FoodDiaryCompositionSynchronizer(private val repository: FoodDiaryComposit
                 repository.saveReferences(
                     event.identity,
                     event.composition.allIdentities
-                        .filterIsInstance<FoodCompositionComponentIdentity.Identified>()
+                        .filterIsInstance<FoodSnapshotId.Tracked>()
                         .toSet(),
                 )
 

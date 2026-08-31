@@ -49,8 +49,8 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.NutrientsHeader
 import com.maksimowiczm.foodyou.common.domain.Energy
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
 import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
@@ -99,7 +99,7 @@ fun RecipeForm(
 
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
-    val totalWeight = remember(uiState.components) { uiState.components?.totalWeight ?: 0.grams }
+    val totalWeight = remember(uiState.snapshots) { uiState.snapshots?.totalWeight ?: 0.grams }
 
     val servings = derivedStateOf {
         state.servings.textFieldState.text.toString().toDoubleOrNull()?.takeIf { it > 0 }
@@ -130,7 +130,7 @@ fun RecipeForm(
         }
     }
 
-    val nutritionFacts = remember(uiState.components) { uiState.components?.nutritionFacts }
+    val nutritionFacts = remember(uiState.snapshots) { uiState.snapshots?.nutritionFacts }
     val scaled =
         remember(nutritionFacts, totalWeight, servingWeight, selectedQuantity) {
             nutritionFacts
@@ -299,22 +299,22 @@ private fun IngredientListItem(
         DeleteIngredientDialog(onDelete = onDelete, onDismiss = { showDeleteDialog = false })
     }
 
-    val measurementFacts = resolved.component.measuredNutritionFacts
-    val measurementString = resolved.component.quantity.stringResource()
+    val measurementFacts = resolved.snapshot.measuredNutritionFacts
+    val measurementString = resolved.snapshot.quantity.stringResource()
 
     val nameSelector = LocalFoodNameSelector.current
     val headline =
-        remember(resolved.component.name, nameSelector) {
-            nameSelector.select(resolved.component.name)
+        remember(resolved.snapshot.name, nameSelector) {
+            nameSelector.select(resolved.snapshot.name)
         }
 
     val image: @Composable (() -> Unit)? = run {
-        when (val image = resolved.component.image) {
-            is FoodCompositionComponentImage.Blob -> {
+        when (val image = resolved.snapshot.image) {
+            is FoodSnapshotImage.Blob -> {
                 @Composable { resolveBlob(image.blob).Image(shimmer, Modifier.size(56.dp)) }
             }
 
-            is FoodCompositionComponentImage.Uri -> {
+            is FoodSnapshotImage.Uri -> {
                 @Composable { image.uri.Image(shimmer, Modifier.size(56.dp)) }
             }
 
@@ -324,7 +324,7 @@ private fun IngredientListItem(
 
     RecipeIngredientListItem(
         headline = headline,
-        isRecipe = resolved.component.identity is FoodCompositionComponentIdentity.Recipe,
+        isRecipe = resolved.snapshot.identity is FoodSnapshotId.UserRecipe,
         proteins = measurementFacts.proteins.value,
         carbohydrates = measurementFacts.carbohydrates.value,
         fats = measurementFacts.fats.value,

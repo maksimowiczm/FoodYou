@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentQuantityUpdateService
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
+import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
+import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
@@ -68,7 +70,7 @@ class FoodDiaryEntryViewModel(
     val uiEvents = eventBus.receiveAsFlow()
 
     fun create(
-        composition: FoodCompositionComponent,
+        composition: MeasuredFoodSnapshot,
         profiles: List<ProfileId>,
         timestamp: LocalDateTime,
     ) {
@@ -92,14 +94,17 @@ class FoodDiaryEntryViewModel(
     ) {
         create(
             composition =
-                FoodCompositionComponent.Simple(
-                    identity =
-                        FoodCompositionComponentIdentity.FoodDataCentral(product.identity.fdcId),
-                    name = FoodName(fallback = product.name),
-                    image = null,
-                    nutritionFacts = product.nutritionFacts,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        LeafFoodSnapshot(
+                            id = FoodSnapshotId.FoodDataCentral(product.identity.fdcId),
+                            name = FoodName(fallback = product.name),
+                            brand = null,
+                            image = null,
+                            nutritionFacts = product.nutritionFacts,
+                        ),
                     quantity =
-                        FoodComponentQuantityUpdateService.map(
+                        FoodSnapshotQuantityUpdateService.map(
                             quantity = quantity,
                             servingWeight = product.servingQuantity?.forceWeight(),
                             packageWeight = product.packageQuantity?.forceWeight(),
@@ -118,14 +123,17 @@ class FoodDiaryEntryViewModel(
     ) {
         create(
             composition =
-                FoodCompositionComponent.Simple(
-                    identity =
-                        FoodCompositionComponentIdentity.OpenFoodFacts(product.identity.barcode),
-                    name = product.name,
-                    image = product.image?.let { FoodCompositionComponentImage.Uri(it) },
-                    nutritionFacts = product.nutritionFacts,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        LeafFoodSnapshot(
+                            id = FoodSnapshotId.OpenFoodFacts(product.identity.barcode),
+                            name = product.name,
+                            brand = null,
+                            image = product.image?.let { FoodSnapshotImage.Uri(it) },
+                            nutritionFacts = product.nutritionFacts,
+                        ),
                     quantity =
-                        FoodComponentQuantityUpdateService.map(
+                        FoodSnapshotQuantityUpdateService.map(
                             quantity = quantity,
                             servingWeight = product.servingQuantity?.forceWeight(),
                             packageWeight = product.packageQuantity?.forceWeight(),
@@ -144,13 +152,17 @@ class FoodDiaryEntryViewModel(
     ) {
         create(
             composition =
-                FoodCompositionComponent.Simple(
-                    identity = FoodCompositionComponentIdentity.UserProduct(product.identity.id),
-                    name = product.name,
-                    image = product.image?.let { FoodCompositionComponentImage.Blob(it) },
-                    nutritionFacts = product.nutritionFacts,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        LeafFoodSnapshot(
+                            id = FoodSnapshotId.UserProduct(product.identity.id),
+                            name = product.name,
+                            brand = null,
+                            image = product.image?.let { FoodSnapshotImage.Blob(it) },
+                            nutritionFacts = product.nutritionFacts,
+                        ),
                     quantity =
-                        FoodComponentQuantityUpdateService.map(
+                        FoodSnapshotQuantityUpdateService.map(
                             quantity = quantity,
                             servingWeight = product.servingQuantity?.forceWeight(),
                             packageWeight = product.packageQuantity?.forceWeight(),
@@ -169,13 +181,17 @@ class FoodDiaryEntryViewModel(
     ) {
         create(
             composition =
-                FoodCompositionComponent.Composite(
-                    identity = FoodCompositionComponentIdentity.Recipe(recipe.identity.id),
-                    name = recipe.name,
-                    image = recipe.image?.let { FoodCompositionComponentImage.Blob(it) },
-                    components = recipe.components,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        CompositeFoodSnapshot(
+                            id = FoodSnapshotId.UserRecipe(recipe.identity.id),
+                            name = recipe.name,
+                            brand = null,
+                            image = recipe.image?.let { FoodSnapshotImage.Blob(it) },
+                            components = recipe.components,
+                        ),
                     quantity =
-                        FoodComponentQuantityUpdateService.map(
+                        FoodSnapshotQuantityUpdateService.map(
                             quantity = quantity,
                             servingWeight = recipe.servingWeight,
                             packageWeight = recipe.totalWeight,

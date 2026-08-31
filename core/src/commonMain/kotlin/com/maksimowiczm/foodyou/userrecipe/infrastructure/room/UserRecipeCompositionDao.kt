@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.userrecipe.infrastructure.room
 
 import androidx.room3.*
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
-import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter.Companion.RECIPE
-import com.maksimowiczm.foodyou.common.infrastructure.room.FoodCompositionComponentIdentityConverter.Companion.SEPARATOR
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.infrastructure.room.FoodSnapshotIdConverter.Companion.RECIPE
+import com.maksimowiczm.foodyou.common.infrastructure.room.FoodSnapshotIdConverter.Companion.SEPARATOR
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 
@@ -15,19 +15,17 @@ interface UserRecipeCompositionDao {
             SELECT recipeId
             FROM UserRecipeFlattenedComposition
             WHERE
-                componentIdentity = :identity
+                snapshotId = :identity
             """
     )
-    suspend fun findRecipesByComponent(
-        identity: FoodCompositionComponentIdentity.Identified
-    ): List<Uuid>
+    suspend fun findRecipesBySnapshotId(identity: FoodSnapshotId.Tracked): List<Uuid>
 
     @Query(
         """
             SELECT recipeId
             FROM UserRecipeFlattenedComposition
             WHERE
-                componentIdentity = '$RECIPE$SEPARATOR' || :recipeId
+                snapshotId = '$RECIPE$SEPARATOR' || :recipeId
             """
     )
     fun observeAncestors(recipeId: String): Flow<List<Uuid>>

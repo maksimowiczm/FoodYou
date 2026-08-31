@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.userrecipe.infrastructure.room
 
 import androidx.room3.*
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import kotlin.uuid.Uuid
 
 @DatabaseView(
@@ -9,18 +9,18 @@ import kotlin.uuid.Uuid
     value =
         """
         WITH RECURSIVE
-          flattened(recipeId, componentIdentity) AS (
-            SELECT recipeId, componentIdentity
+          flattened(recipeId, snapshotId) AS (
+            SELECT recipeId, snapshotId
             FROM UserRecipeCompositionReference
             UNION
-            SELECT r.recipeId, f.componentIdentity
+            SELECT r.recipeId, f.snapshotId
             FROM UserRecipeCompositionReference r
-            JOIN flattened f ON r.componentIdentity = 'RECIPE:' || CAST(f.recipeId AS TEXT)
+            JOIN flattened f ON r.snapshotId = 'RECIPE:' || CAST(f.recipeId AS TEXT)
           )
         SELECT * FROM flattened
     """,
 )
 data class UserRecipeFlattenedCompositionView(
     val recipeId: Uuid,
-    val componentIdentity: FoodCompositionComponentIdentity.Identified,
+    val snapshotId: FoodSnapshotId.Tracked,
 )

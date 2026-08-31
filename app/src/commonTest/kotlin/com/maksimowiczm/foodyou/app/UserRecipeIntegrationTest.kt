@@ -2,10 +2,13 @@ package com.maksimowiczm.foodyou.app
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity.Weight
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.AnonymousFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
+import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
@@ -65,13 +68,17 @@ class UserRecipeIntegrationTest {
             // 2. Create a Recipe using this product
             val components =
                 listOf(
-                    FoodCompositionComponent.Simple(
-                        identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                        name = initialProductName,
-                        image = null,
-                        nutritionFacts = initialNutrition,
+                    MeasuredFoodSnapshot(
+                        snapshot =
+                            LeafFoodSnapshot(
+                                id = FoodSnapshotId.UserProduct(productId.id),
+                                name = initialProductName,
+                                brand = null,
+                                image = null,
+                                nutritionFacts = initialNutrition,
+                            ),
                         quantity =
-                            FoodComponentComponentQuantity.Weight(
+                            FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
                                 servingWeight = null,
                                 packageWeight = null,
@@ -89,7 +96,7 @@ class UserRecipeIntegrationTest {
 
             // 3. Wait until recipe is created
             userRecipeService.observe(recipeId).filterNotNull().first()
-            waitForComposition(recipeId, FoodCompositionComponentIdentity.UserProduct(productId.id))
+            waitForComposition(recipeId, FoodSnapshotId.UserProduct(productId.id))
 
             // 4. Update User Product
             val updatedProductName =
@@ -115,7 +122,7 @@ class UserRecipeIntegrationTest {
                     it.components.first().name == updatedProductName
                 }
 
-            val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
+            val component = updatedRecipe.components.first().snapshot as LeafFoodSnapshot
             assertEquals(updatedProductName, component.name)
             assertEquals(updatedNutrition, component.nutritionFacts)
         }
@@ -141,13 +148,17 @@ class UserRecipeIntegrationTest {
             // 2. Create a Recipe using 2 servings of this product
             val components =
                 listOf(
-                    FoodCompositionComponent.Simple(
-                        identity = FoodCompositionComponentIdentity.UserProduct(productId.id),
-                        name = FoodName(english = "Product", fallback = "Product"),
-                        image = null,
-                        nutritionFacts = NutritionFacts(),
+                    MeasuredFoodSnapshot(
+                        snapshot =
+                            LeafFoodSnapshot(
+                                id = FoodSnapshotId.UserProduct(productId.id),
+                                name = FoodName(english = "Product", fallback = "Product"),
+                                brand = null,
+                                image = null,
+                                nutritionFacts = NutritionFacts(),
+                            ),
                         quantity =
-                            FoodComponentComponentQuantity.Serving(
+                            FoodSnapshotQuantity.Serving(
                                 servings = 2.0,
                                 servingWeight = 30.grams,
                                 packageWeight = null,
@@ -165,7 +176,7 @@ class UserRecipeIntegrationTest {
 
             // 3. Wait until recipe is created and verify initial absolute weight (2 * 30g = 60g)
             val recipe = userRecipeService.observe(recipeId).filterNotNull().first()
-            waitForComposition(recipeId, FoodCompositionComponentIdentity.UserProduct(productId.id))
+            waitForComposition(recipeId, FoodSnapshotId.UserProduct(productId.id))
             assertEquals(60.grams, recipe.totalWeight)
 
             // 4. Update product serving weight to 40g
@@ -188,7 +199,7 @@ class UserRecipeIntegrationTest {
                     it.totalWeight == 80.grams
                 }
 
-            val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
+            val component = updatedRecipe.components.first()
             assertEquals(40.grams, component.quantity.servingWeight)
             assertEquals(80.grams, component.quantity.absoluteWeight)
         }
@@ -206,13 +217,17 @@ class UserRecipeIntegrationTest {
 
                 val components =
                     listOf(
-                        FoodCompositionComponent.Simple(
-                            identity = FoodCompositionComponentIdentity.OpenFoodFacts(barcode),
-                            name = initialProductName,
-                            image = null,
-                            nutritionFacts = NutritionFacts(),
+                        MeasuredFoodSnapshot(
+                            snapshot =
+                                LeafFoodSnapshot(
+                                    id = FoodSnapshotId.OpenFoodFacts(barcode),
+                                    name = initialProductName,
+                                    brand = null,
+                                    image = null,
+                                    nutritionFacts = NutritionFacts(),
+                                ),
                             quantity =
-                                FoodComponentComponentQuantity.Weight(
+                                FoodSnapshotQuantity.Weight(
                                     absoluteWeight = 100.grams,
                                     servingWeight = null,
                                     packageWeight = null,
@@ -232,7 +247,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.observe(recipeId).filterNotNull().first()
                 waitForComposition(
                     recipeId,
-                    FoodCompositionComponentIdentity.OpenFoodFacts(barcode),
+                    FoodSnapshotId.OpenFoodFacts(barcode),
                 )
 
                 // 3. Trigger OFF refresh (this will fetch real data if internet is available, or
@@ -253,7 +268,7 @@ class UserRecipeIntegrationTest {
                         it.components.first().name != initialProductName
                     }
 
-                val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
+                val component = updatedRecipe.components.first().snapshot as LeafFoodSnapshot
                 // Verify that the name is no longer the fallback
                 assertEquals(false, component.name == initialProductName)
             }
@@ -271,13 +286,17 @@ class UserRecipeIntegrationTest {
 
                 val components =
                     listOf(
-                        FoodCompositionComponent.Simple(
-                            identity = FoodCompositionComponentIdentity.FoodDataCentral(fdcId),
-                            name = initialProductName,
-                            image = null,
-                            nutritionFacts = NutritionFacts(),
+                        MeasuredFoodSnapshot(
+                            snapshot =
+                                LeafFoodSnapshot(
+                                    id = FoodSnapshotId.FoodDataCentral(fdcId),
+                                    name = initialProductName,
+                                    brand = null,
+                                    image = null,
+                                    nutritionFacts = NutritionFacts(),
+                                ),
                             quantity =
-                                FoodComponentComponentQuantity.Weight(
+                                FoodSnapshotQuantity.Weight(
                                     absoluteWeight = 100.grams,
                                     servingWeight = null,
                                     packageWeight = null,
@@ -297,7 +316,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.observe(recipeId).filterNotNull().first()
                 waitForComposition(
                     recipeId,
-                    FoodCompositionComponentIdentity.FoodDataCentral(fdcId),
+                    FoodSnapshotId.FoodDataCentral(fdcId),
                 )
 
                 // 3. Trigger FDC refresh
@@ -309,7 +328,7 @@ class UserRecipeIntegrationTest {
                         it.components.first().name != initialProductName
                     }
 
-                val component = updatedRecipe.components.first() as FoodCompositionComponent.Simple
+                val component = updatedRecipe.components.first().snapshot as LeafFoodSnapshot
                 assertEquals(false, component.name == initialProductName)
             }
         }
@@ -332,17 +351,21 @@ class UserRecipeIntegrationTest {
             // 2. Create Parent Recipe using Child Recipe
             val parentComponents =
                 listOf(
-                    FoodCompositionComponent.Composite(
-                        identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                        name = childInitialName,
-                        image = null,
+                    MeasuredFoodSnapshot(
+                        snapshot =
+                            CompositeFoodSnapshot(
+                                id = FoodSnapshotId.UserRecipe(childId.id),
+                                name = childInitialName,
+                                brand = null,
+                                image = null,
+                                components = emptyList(),
+                            ),
                         quantity =
-                            FoodComponentComponentQuantity.Weight(
+                            FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
                                 servingWeight = null,
                                 packageWeight = null,
                             ),
-                        components = emptyList(),
                     )
                 )
             val parentId =
@@ -356,7 +379,7 @@ class UserRecipeIntegrationTest {
 
             // Wait until recipe is created
             userRecipeService.observe(parentId).filterNotNull().first()
-            waitForComposition(parentId, FoodCompositionComponentIdentity.Recipe(childId.id))
+            waitForComposition(parentId, FoodSnapshotId.UserRecipe(childId.id))
 
             // 3. Update Child Recipe
             val childUpdatedName =
@@ -377,7 +400,7 @@ class UserRecipeIntegrationTest {
                     it.components.first().name == childUpdatedName
                 }
 
-            val component = updatedParent.components.first() as FoodCompositionComponent.Composite
+            val component = updatedParent.components.first().snapshot as CompositeFoodSnapshot
             assertEquals(childUpdatedName, component.name)
         }
     }
@@ -394,14 +417,21 @@ class UserRecipeIntegrationTest {
                     servings = 1.0,
                     components =
                         listOf(
-                            FoodCompositionComponent.Anonymous(
-                                identity =
-                                    FoodCompositionComponentIdentity.Anonymous(Uuid.random()),
-                                name = FoodName(english = "Ingredient", fallback = "Ingredient"),
-                                image = null,
-                                nutritionFacts = NutritionFacts(),
+                            MeasuredFoodSnapshot(
+                                snapshot =
+                                    AnonymousFoodSnapshot(
+                                        id = FoodSnapshotId.Anonymous(Uuid.random()),
+                                        name =
+                                            FoodName(
+                                                english = "Ingredient",
+                                                fallback = "Ingredient",
+                                            ),
+                                        brand = null,
+                                        image = null,
+                                        nutritionFacts = NutritionFacts(),
+                                    ),
                                 quantity =
-                                    FoodComponentComponentQuantity.Weight(
+                                    FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
                                         servingWeight = null,
                                         packageWeight = null,
@@ -419,24 +449,28 @@ class UserRecipeIntegrationTest {
                     servings = 1.0,
                     components =
                         listOf(
-                            FoodCompositionComponent.Composite(
-                                identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                                name = FoodName(english = "Child", fallback = "Child"),
-                                image = null,
+                            MeasuredFoodSnapshot(
+                                snapshot =
+                                    CompositeFoodSnapshot(
+                                        id = FoodSnapshotId.UserRecipe(childId.id),
+                                        name = FoodName(english = "Child", fallback = "Child"),
+                                        brand = null,
+                                        image = null,
+                                        components = emptyList(),
+                                    ),
                                 quantity =
-                                    FoodComponentComponentQuantity.Serving(
+                                    FoodSnapshotQuantity.Serving(
                                         servings = 2.0,
                                         servingWeight = 100.grams,
                                         packageWeight = null,
                                     ),
-                                components = emptyList(),
                             )
                         ),
                 )
 
             // Wait until recipe is created. Total weight should be 200g
             val parent = userRecipeService.observe(parentId).filterNotNull().first()
-            waitForComposition(parentId, FoodCompositionComponentIdentity.Recipe(childId.id))
+            waitForComposition(parentId, FoodSnapshotId.UserRecipe(childId.id))
             assertEquals(200.grams, parent.totalWeight)
 
             // 3. Update Child Recipe to have 2 servings instead of 1.
@@ -449,13 +483,18 @@ class UserRecipeIntegrationTest {
                 servings = 2.0,
                 components =
                     listOf(
-                        FoodCompositionComponent.Anonymous(
-                            identity = FoodCompositionComponentIdentity.Anonymous(Uuid.random()),
-                            name = FoodName(english = "Ingredient", fallback = "Ingredient"),
-                            image = null,
-                            nutritionFacts = NutritionFacts(),
+                        MeasuredFoodSnapshot(
+                            snapshot =
+                                AnonymousFoodSnapshot(
+                                    id = FoodSnapshotId.Anonymous(Uuid.random()),
+                                    name =
+                                        FoodName(english = "Ingredient", fallback = "Ingredient"),
+                                    brand = null,
+                                    image = null,
+                                    nutritionFacts = NutritionFacts(),
+                                ),
                             quantity =
-                                FoodComponentComponentQuantity.Weight(
+                                FoodSnapshotQuantity.Weight(
                                     absoluteWeight = 100.grams,
                                     servingWeight = null,
                                     packageWeight = null,
@@ -471,7 +510,7 @@ class UserRecipeIntegrationTest {
                     it.totalWeight == 100.grams
                 }
 
-            val component = updatedParent.components.first() as FoodCompositionComponent.Composite
+            val component = updatedParent.components.first()
             assertEquals(50.grams, component.quantity.servingWeight)
         }
     }
@@ -492,7 +531,7 @@ class UserRecipeIntegrationTest {
                     nutritionFacts = NutritionFacts(),
                 )
 
-            val otherIngredientId = FoodCompositionComponentIdentity.OpenFoodFacts("other")
+            val otherIngredientId = FoodSnapshotId.OpenFoodFacts("other")
             val recipeId =
                 userRecipeService.create(
                     name = FoodName(english = "Recipe", fallback = "Recipe"),
@@ -501,26 +540,34 @@ class UserRecipeIntegrationTest {
                     servings = 1.0,
                     components =
                         listOf(
-                            FoodCompositionComponent.Simple(
-                                identity =
-                                    FoodCompositionComponentIdentity.UserProduct(productId.id),
-                                name = FoodName(english = "To Delete", fallback = "To Delete"),
-                                image = null,
-                                nutritionFacts = NutritionFacts(),
+                            MeasuredFoodSnapshot(
+                                snapshot =
+                                    LeafFoodSnapshot(
+                                        id = FoodSnapshotId.UserProduct(productId.id),
+                                        name =
+                                            FoodName(english = "To Delete", fallback = "To Delete"),
+                                        brand = null,
+                                        image = null,
+                                        nutritionFacts = NutritionFacts(),
+                                    ),
                                 quantity =
-                                    FoodComponentComponentQuantity.Weight(
+                                    FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
                                         servingWeight = null,
                                         packageWeight = null,
                                     ),
                             ),
-                            FoodCompositionComponent.Simple(
-                                identity = otherIngredientId,
-                                name = FoodName(english = "Keep Me", fallback = "Keep Me"),
-                                image = null,
-                                nutritionFacts = NutritionFacts(),
+                            MeasuredFoodSnapshot(
+                                snapshot =
+                                    LeafFoodSnapshot(
+                                        id = otherIngredientId,
+                                        name = FoodName(english = "Keep Me", fallback = "Keep Me"),
+                                        brand = null,
+                                        image = null,
+                                        nutritionFacts = NutritionFacts(),
+                                    ),
                                 quantity =
-                                    FoodComponentComponentQuantity.Weight(
+                                    FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
                                         servingWeight = null,
                                         packageWeight = null,
@@ -530,7 +577,7 @@ class UserRecipeIntegrationTest {
                 )
             // Wait until recipe is created
             userRecipeService.observe(recipeId).filterNotNull().first()
-            waitForComposition(recipeId, FoodCompositionComponentIdentity.UserProduct(productId.id))
+            waitForComposition(recipeId, FoodSnapshotId.UserProduct(productId.id))
 
             userProductService.delete(productId, DeleteStrategy.Delete)
 
@@ -571,14 +618,17 @@ class UserRecipeIntegrationTest {
                     servings = 1.0,
                     components =
                         listOf(
-                            FoodCompositionComponent.Simple(
-                                identity =
-                                    FoodCompositionComponentIdentity.UserProduct(productId.id),
-                                name = name,
-                                image = null,
-                                nutritionFacts = nutrition,
+                            MeasuredFoodSnapshot(
+                                snapshot =
+                                    LeafFoodSnapshot(
+                                        id = FoodSnapshotId.UserProduct(productId.id),
+                                        name = name,
+                                        brand = null,
+                                        image = null,
+                                        nutritionFacts = nutrition,
+                                    ),
                                 quantity =
-                                    FoodComponentComponentQuantity.Weight(
+                                    FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
                                         servingWeight = null,
                                         packageWeight = null,
@@ -589,18 +639,18 @@ class UserRecipeIntegrationTest {
 
             // Wait until recipe is created
             userRecipeService.observe(recipeId).filterNotNull().first()
-            waitForComposition(recipeId, FoodCompositionComponentIdentity.UserProduct(productId.id))
+            waitForComposition(recipeId, FoodSnapshotId.UserProduct(productId.id))
 
             userProductService.delete(productId, DeleteStrategy.Unlink)
 
             val updatedRecipe =
                 userRecipeService.observe(recipeId).filterNotNull().first {
-                    it.components.first().identity is FoodCompositionComponentIdentity.Anonymous
+                    it.components.first().identity is FoodSnapshotId.Anonymous
                 }
 
             assertEquals(1, updatedRecipe.components.size)
             val component = updatedRecipe.components.first()
-            assertEquals(true, component.identity is FoodCompositionComponentIdentity.Anonymous)
+            assertEquals(true, component.identity is FoodSnapshotId.Anonymous)
             assertEquals(name, component.name)
             assertEquals(nutrition, component.nutritionFacts)
         }
@@ -620,7 +670,7 @@ class UserRecipeIntegrationTest {
                 )
 
             // 2. Create Parent Recipe with 2 ingredients (one is the child recipe)
-            val otherIngredientId = FoodCompositionComponentIdentity.OpenFoodFacts("other")
+            val otherIngredientId = FoodSnapshotId.OpenFoodFacts("other")
             val parentId =
                 userRecipeService.create(
                     name = FoodName(english = "Parent", fallback = "Parent"),
@@ -629,25 +679,33 @@ class UserRecipeIntegrationTest {
                     servings = 1.0,
                     components =
                         listOf(
-                            FoodCompositionComponent.Composite(
-                                identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                                name = FoodName(english = "Child", fallback = "Child"),
-                                image = null,
+                            MeasuredFoodSnapshot(
+                                snapshot =
+                                    CompositeFoodSnapshot(
+                                        id = FoodSnapshotId.UserRecipe(childId.id),
+                                        name = FoodName(english = "Child", fallback = "Child"),
+                                        brand = null,
+                                        image = null,
+                                        components = emptyList(),
+                                    ),
                                 quantity =
-                                    FoodComponentComponentQuantity.Weight(
+                                    FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
                                         servingWeight = null,
                                         packageWeight = null,
                                     ),
-                                components = emptyList(),
                             ),
-                            FoodCompositionComponent.Simple(
-                                identity = otherIngredientId,
-                                name = FoodName(english = "Other", fallback = "Other"),
-                                image = null,
-                                nutritionFacts = NutritionFacts(),
+                            MeasuredFoodSnapshot(
+                                snapshot =
+                                    LeafFoodSnapshot(
+                                        id = otherIngredientId,
+                                        name = FoodName(english = "Other", fallback = "Other"),
+                                        brand = null,
+                                        image = null,
+                                        nutritionFacts = NutritionFacts(),
+                                    ),
                                 quantity =
-                                    FoodComponentComponentQuantity.Weight(
+                                    FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
                                         servingWeight = null,
                                         packageWeight = null,
@@ -658,7 +716,7 @@ class UserRecipeIntegrationTest {
 
             // Wait until recipe is created
             userRecipeService.observe(parentId).filterNotNull().first()
-            waitForComposition(parentId, FoodCompositionComponentIdentity.Recipe(childId.id))
+            waitForComposition(parentId, FoodSnapshotId.UserRecipe(childId.id))
 
             // 3. Delete Child Recipe
             userRecipeService.delete(childId, DeleteStrategy.Delete)
@@ -696,24 +754,28 @@ class UserRecipeIntegrationTest {
                     servings = 1.0,
                     components =
                         listOf(
-                            FoodCompositionComponent.Composite(
-                                identity = FoodCompositionComponentIdentity.Recipe(childId.id),
-                                name = FoodName(english = "Child", fallback = "Child"),
-                                image = null,
+                            MeasuredFoodSnapshot(
+                                snapshot =
+                                    CompositeFoodSnapshot(
+                                        id = FoodSnapshotId.UserRecipe(childId.id),
+                                        name = FoodName(english = "Child", fallback = "Child"),
+                                        brand = null,
+                                        image = null,
+                                        components = emptyList(),
+                                    ),
                                 quantity =
-                                    FoodComponentComponentQuantity.Weight(
+                                    FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
                                         servingWeight = null,
                                         packageWeight = null,
                                     ),
-                                components = emptyList(),
                             )
                         ),
                 )
 
             // Wait until recipe is created
             userRecipeService.observe(parentId).filterNotNull().first()
-            waitForComposition(parentId, FoodCompositionComponentIdentity.Recipe(childId.id))
+            waitForComposition(parentId, FoodSnapshotId.UserRecipe(childId.id))
 
             // 3. Unlink Child Recipe
             userRecipeService.delete(childId, DeleteStrategy.Unlink)
@@ -721,21 +783,20 @@ class UserRecipeIntegrationTest {
             // 4. Verify Parent Recipe has anonymous ingredient
             val updatedParent =
                 userRecipeService.observe(parentId).filterNotNull().first {
-                    it.components.first().identity is FoodCompositionComponentIdentity.Anonymous
+                    it.components.first().identity is FoodSnapshotId.Anonymous
                 }
 
             assertEquals(1, updatedParent.components.size)
             assertEquals(
                 true,
-                updatedParent.components.first().identity
-                    is FoodCompositionComponentIdentity.Anonymous,
+                updatedParent.components.first().identity is FoodSnapshotId.Anonymous,
             )
         }
     }
 
     private suspend fun Koin.waitForComposition(
         recipeId: UserRecipeIdentity,
-        componentId: FoodCompositionComponentIdentity.Identified,
+        componentId: FoodSnapshotId.Tracked,
     ) {
         val repository = get<UserRecipeCompositionRepository>()
         withContext(Dispatchers.Default) {

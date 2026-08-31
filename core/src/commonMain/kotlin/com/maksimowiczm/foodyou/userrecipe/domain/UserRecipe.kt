@@ -5,9 +5,11 @@ package com.maksimowiczm.foodyou.userrecipe.domain
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.Weight
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.allComponentIdentities
 import com.maksimowiczm.foodyou.common.domain.food.nutritionFacts
@@ -25,15 +27,12 @@ data class UserRecipe(
     val note: String?,
     val image: BlobDigest?,
     val servings: Double,
-    val components: List<FoodCompositionComponent>,
+    val components: List<MeasuredFoodSnapshot>,
 ) {
     init {
         require(note == null || note.isNotBlank()) { "Note cannot be blank" }
         require(servings > 0) { "Servings must be positive number" }
-        require(
-            FoodCompositionComponentIdentity.Recipe(identity.id) !in
-                components.allComponentIdentities
-        ) {
+        require(FoodSnapshotId.UserRecipe(identity.id) !in components.allComponentIdentities) {
             "Circular dependency: Recipe cannot contain itself in its components"
         }
     }
@@ -74,3 +73,12 @@ fun UserRecipe?.apply(event: UserRecipeEvent): UserRecipe? =
 
 fun Iterable<UserRecipeEvent>.toUserRecipe(): UserRecipe? =
     fold(null) { state, event -> state.apply(event) }
+
+fun UserRecipe.toSnapshot() =
+    CompositeFoodSnapshot(
+        id = FoodSnapshotId.UserRecipe(identity.id),
+        name = name,
+        brand = null,
+        image = image?.let(FoodSnapshotImage::Blob),
+        components = components,
+    )

@@ -4,13 +4,12 @@ import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.Weight
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentQuantityUpdateService
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentImage
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotUpdateService
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.TrackedFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.load
 import com.maksimowiczm.foodyou.common.domain.observe
 import com.maksimowiczm.foodyou.common.event.EventBus
@@ -59,7 +58,7 @@ class UserRecipeService(
         note: String?,
         imageBytes: ByteArray?,
         servings: Double,
-        components: List<FoodCompositionComponent>,
+        components: List<MeasuredFoodSnapshot>,
     ): UserRecipeIdentity {
         val identity = UserRecipeIdentity(Uuid.random())
         transact(identity) {
@@ -83,7 +82,7 @@ class UserRecipeService(
         note: String?,
         imageBytes: ByteArray?,
         servings: Double,
-        components: List<FoodCompositionComponent>,
+        components: List<MeasuredFoodSnapshot>,
     ) {
         transact(identity) { recipe ->
             checkNotNull(recipe) { "Recipe with ID $identity not found" }
@@ -106,35 +105,38 @@ class UserRecipeService(
         }
     }
 
-    suspend fun updateRecipesWithComponent(
-        identity: FoodCompositionComponentIdentity.Leaf,
-        name: FoodName,
-        nutritionFacts: NutritionFacts,
+    /**
+     * Updates all user recipes containing the food identified by [TrackedFoodSnapshot.id] with the
+     * new [snapshot]. The quantity is also updated to match new [servingWeight] and
+     * [packageWeight].
+     */
+    suspend fun updateRecipesUsing(
+        snapshot: TrackedFoodSnapshot,
         servingWeight: Weight? = null,
         packageWeight: Weight? = null,
-        image: FoodCompositionComponentImage? = null,
     ) = coroutineScope {
         compositionRepository
-            .findRecipesUsing(identity)
+            .findRecipesUsing(snapshot.id)
             .map { recipeIdentity ->
                 async {
                     transact(recipeIdentity) { recipe ->
                         recipe?.update {
                             it.copy(
                                 components =
-                                    FoodCompositionUpdateService.update(
+                                    FoodSnapshotUpdateService.update(
                                         components = it.components,
-                                        identity = identity,
-                                        name = name,
-                                        nutritionFacts = nutritionFacts,
-                                        quantity = { current ->
-                                            FoodComponentQuantityUpdateService.update(
-                                                current = current,
-                                                servingWeight = servingWeight,
-                                                packageWeight = packageWeight,
+                                        id = snapshot.id,
+                                        transform = { current ->
+                                            current.copy(
+                                                snapshot = snapshot,
+                                                quantity =
+                                                    FoodSnapshotQuantityUpdateService.update(
+                                                        current = current.quantity,
+                                                        servingWeight = servingWeight,
+                                                        packageWeight = packageWeight,
+                                                    ),
                                             )
                                         },
-                                        image = image,
                                     )
                             )
                         } ?: emptyList()
@@ -144,75 +146,35 @@ class UserRecipeService(
             .awaitAll()
     }
 
-    suspend fun updateRecipesWithRecipe(
-        identity: FoodCompositionComponentIdentity.Composite,
-        name: FoodName,
-        components: List<FoodCompositionComponent>,
-        servingWeight: Weight? = null,
-        packageWeight: Weight? = null,
-        image: FoodCompositionComponentImage? = null,
-    ) = coroutineScope {
+    suspend fun removeComponentFromRecipes(identity: FoodSnapshotId.Tracked) = coroutineScope {
         compositionRepository
             .findRecipesUsing(identity)
             .map { recipeIdentity ->
                 async {
                     transact(recipeIdentity) { recipe ->
-                        recipe?.update {
-                            it.copy(
-                                components =
-                                    FoodCompositionUpdateService.update(
-                                        components = it.components,
-                                        identity = identity,
-                                        name = name,
-                                        newComponents = components,
-                                        quantity = { current ->
-                                            FoodComponentQuantityUpdateService.update(
-                                                current = current,
-                                                servingWeight = servingWeight,
-                                                packageWeight = packageWeight,
-                                            )
-                                        },
-                                        image = image,
-                                    )
-                            )
-                        } ?: emptyList()
+                        recipe ?: return@transact emptyList()
+                        val updatedComposition =
+                            FoodSnapshotUpdateService.remove(recipe.components, identity)
+                        recipe.update { it.copy(components = updatedComposition) }
                     }
                 }
             }
             .awaitAll()
     }
 
-    suspend fun removeComponentFromRecipes(identity: FoodCompositionComponentIdentity.Identified) =
-        coroutineScope {
-            compositionRepository
-                .findRecipesUsing(identity)
-                .map { recipeIdentity ->
-                    async {
-                        transact(recipeIdentity) { recipe ->
-                            recipe ?: return@transact emptyList()
-                            val updatedComposition =
-                                FoodCompositionUpdateService.remove(recipe.components, identity)
-                            recipe.update { it.copy(components = updatedComposition) }
-                        }
+    suspend fun unlinkComponentFromRecipes(identity: FoodSnapshotId.Tracked) = coroutineScope {
+        compositionRepository
+            .findRecipesUsing(identity)
+            .map { recipeIdentity ->
+                async {
+                    transact(recipeIdentity) { recipe ->
+                        recipe ?: return@transact emptyList()
+                        val updatedComposition =
+                            FoodSnapshotUpdateService.unlink(recipe.components, identity)
+                        recipe.update { it.copy(components = updatedComposition) }
                     }
                 }
-                .awaitAll()
-        }
-
-    suspend fun unlinkComponentFromRecipes(identity: FoodCompositionComponentIdentity.Identified) =
-        coroutineScope {
-            compositionRepository
-                .findRecipesUsing(identity)
-                .map { recipeIdentity ->
-                    async {
-                        transact(recipeIdentity) { recipe ->
-                            recipe ?: return@transact emptyList()
-                            val updatedComposition =
-                                FoodCompositionUpdateService.unlink(recipe.components, identity)
-                            recipe.update { it.copy(components = updatedComposition) }
-                        }
-                    }
-                }
-                .awaitAll()
-        }
+            }
+            .awaitAll()
+    }
 }

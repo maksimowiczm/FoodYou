@@ -44,8 +44,8 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDe
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDetailsViewModel
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
@@ -61,8 +61,7 @@ import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_add
+import foodyou.app.generated.resources.*
 import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -78,7 +77,7 @@ fun AddUserRecipeDiaryEntryScreen(
     onAdd: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
     mealIdentity: MealIdentity,
     identity: UserRecipeIdentity,
     initialQuantity: Quantity,
@@ -120,17 +119,16 @@ fun AddUserRecipeDiaryEntryScreen(
     val image = foodUiState.recipe?.image?.let { resolveBlob(it) }
 
     val recipe = foodUiState.recipe
+    val selectedType = foodUiState.selectedQuantityType
 
-    val selectedType = foodUiState.selectedQuantityType ?: QuantityType.Gram
+    if (profiles != null && recipe != null && selectedType != null) {
+        LaunchedEffect(formField.textFieldState.text, selectedType) {
+            foodViewModel.selectQuantity(
+                formField.textFieldState.text.toString().toDoubleOrNull(),
+                foodUiState.selectedQuantityType,
+            )
+        }
 
-    LaunchedEffect(formField.textFieldState.text, selectedType) {
-        foodViewModel.selectQuantity(
-            formField.textFieldState.text.toString().toDoubleOrNull(),
-            selectedType,
-        )
-    }
-
-    if (profiles != null && recipe != null) {
         AddUserRecipeDiaryEntryScreenContent(
             headline = recipe.headline(nameSelector),
             isFavorite = foodUiState.isFavorite,
@@ -190,12 +188,12 @@ private fun AddUserRecipeDiaryEntryScreenContent(
     packageQuantity: AbsoluteQuantity?,
     servingQuantity: AbsoluteQuantity?,
     note: String?,
-    components: List<FoodCompositionComponent>,
+    components: List<MeasuredFoodSnapshot>,
     onBack: () -> Unit,
     onAdd: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onNavigateToIngredient: (FoodCompositionComponentIdentity, Quantity) -> Unit,
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
     onSetFavorite: (Boolean) -> Unit,
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,

@@ -2,10 +2,12 @@ package com.maksimowiczm.foodyou.userrecipe.domain
 
 import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
-import com.maksimowiczm.foodyou.common.domain.food.FoodComponentComponentQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponent
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
+import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
 import kotlin.test.Test
@@ -21,13 +23,17 @@ class UserRecipeTest {
     private val name = FoodName(fallback = "Apple Pie")
     private val components =
         listOf(
-            FoodCompositionComponent.Simple(
-                identity = FoodCompositionComponentIdentity.OpenFoodFacts("123"),
-                name = FoodName(fallback = "Apple"),
-                image = null,
-                nutritionFacts = NutritionFacts(),
+            MeasuredFoodSnapshot(
+                snapshot =
+                    LeafFoodSnapshot(
+                        id = FoodSnapshotId.OpenFoodFacts("123"),
+                        name = FoodName(fallback = "Apple"),
+                        brand = null,
+                        image = null,
+                        nutritionFacts = NutritionFacts(),
+                    ),
                 quantity =
-                    FoodComponentComponentQuantity.Weight(
+                    FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
                         servingWeight = null,
                         packageWeight = null,
@@ -149,17 +155,21 @@ class UserRecipeTest {
 
         val selfReferencingComponents =
             listOf(
-                FoodCompositionComponent.Composite(
-                    identity = FoodCompositionComponentIdentity.Recipe(recipeId),
-                    name = FoodName(fallback = "Self"),
-                    image = null,
+                MeasuredFoodSnapshot(
+                    snapshot =
+                        CompositeFoodSnapshot(
+                            id = FoodSnapshotId.UserRecipe(recipeId),
+                            name = FoodName(fallback = "Self"),
+                            brand = null,
+                            image = null,
+                            components = components, // These components are fine by themselves
+                        ),
                     quantity =
-                        FoodComponentComponentQuantity.Weight(
+                        FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
                             servingWeight = null,
                             packageWeight = null,
                         ),
-                    components = components, // These components are fine by themselves
                 )
             )
 

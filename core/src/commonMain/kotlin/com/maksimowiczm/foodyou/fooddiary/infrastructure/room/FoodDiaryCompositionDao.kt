@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.fooddiary.infrastructure.room
 
 import androidx.room3.*
-import com.maksimowiczm.foodyou.common.domain.food.FoodCompositionComponentIdentity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import kotlin.uuid.Uuid
 
 @Dao
@@ -10,12 +10,10 @@ interface FoodDiaryCompositionDao {
         """
             SELECT entryId
             FROM FoodDiaryEntryReference
-            WHERE componentIdentity = :identity
+            WHERE snapshotId = :identity
             """
     )
-    suspend fun findEntriesByComponent(
-        identity: FoodCompositionComponentIdentity.Identified
-    ): List<Uuid>
+    suspend fun findEntriesBySnapshotId(identity: FoodSnapshotId.Tracked): List<Uuid>
 
     @Query(
         """
