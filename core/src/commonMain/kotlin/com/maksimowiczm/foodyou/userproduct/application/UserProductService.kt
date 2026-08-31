@@ -12,11 +12,10 @@ import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductEvent
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userproduct.domain.remove
 import com.maksimowiczm.foodyou.userproduct.domain.toUserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.update
-import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -25,22 +24,22 @@ class UserProductService(
     private val blobStorage: BlobStorage,
     private val eventBus: EventBus,
 ) {
-    private fun streamId(identity: UserProductIdentity) = "UserProduct-${identity.id}"
+    private fun streamId(id: UserProductId) = "UserProduct-${id.value}"
 
     private suspend inline fun transact(
-        identity: UserProductIdentity,
+        id: UserProductId,
         block: (UserProduct?) -> List<UserProductEvent>,
     ) {
-        val product = eventStore.load<UserProductEvent>(streamId(identity)).toUserProduct()
+        val product = eventStore.load<UserProductEvent>(streamId(id)).toUserProduct()
         val newEvents = block(product)
         if (newEvents.isNotEmpty()) {
-            eventStore.append(streamId(identity), newEvents)
+            eventStore.append(streamId(id), newEvents)
             eventBus.publish(newEvents)
         }
     }
 
-    fun observe(identity: UserProductIdentity): Flow<UserProduct?> =
-        eventStore.observe<UserProductEvent>(streamId(identity)).map { it.toUserProduct() }
+    fun observe(id: UserProductId): Flow<UserProduct?> =
+        eventStore.observe<UserProductEvent>(streamId(id)).map { it.toUserProduct() }
 
     suspend fun create(
         name: FoodName,
@@ -52,12 +51,12 @@ class UserProductService(
         servingQuantity: AbsoluteQuantity?,
         packageQuantity: AbsoluteQuantity?,
         isLiquid: Boolean,
-    ): UserProductIdentity {
-        val identity = UserProductIdentity(Uuid.random())
-        transact(identity) {
+    ): UserProductId {
+        val id = UserProductId()
+        transact(id) {
             UserProduct.create(
                 UserProduct(
-                    identity = identity,
+                    id = id,
                     name = name,
                     brand = brand,
                     barcode = barcode,
@@ -70,11 +69,11 @@ class UserProductService(
                 )
             )
         }
-        return identity
+        return id
     }
 
     suspend fun edit(
-        identity: UserProductIdentity,
+        id: UserProductId,
         name: FoodName,
         brand: String?,
         barcode: UserProductBarcode?,
@@ -85,8 +84,8 @@ class UserProductService(
         packageQuantity: AbsoluteQuantity?,
         isLiquid: Boolean,
     ) {
-        transact(identity) { product ->
-            checkNotNull(product) { "Product with ID $identity not found" }
+        transact(id) { product ->
+            checkNotNull(product) { "Product with ID $id not found" }
             product.update {
                 it.copy(
                     name = name,
@@ -103,9 +102,9 @@ class UserProductService(
         }
     }
 
-    suspend fun delete(identity: UserProductIdentity, strategy: DeleteStrategy) {
-        transact(identity) { product ->
-            checkNotNull(product) { "Product with ID $identity not found" }
+    suspend fun delete(id: UserProductId, strategy: DeleteStrategy) {
+        transact(id) { product ->
+            checkNotNull(product) { "Product with ID $id not found" }
             product.remove(strategy)
         }
     }

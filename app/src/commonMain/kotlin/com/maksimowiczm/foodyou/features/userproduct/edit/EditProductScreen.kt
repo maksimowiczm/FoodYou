@@ -35,7 +35,7 @@ import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
@@ -45,12 +45,12 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun EditProductScreen(
-    identity: UserProductIdentity,
+    id: UserProductId,
     onBack: () -> Unit,
     onEdit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: EditProductViewModel = koinViewModel { parametersOf(identity) }
+    val viewModel: EditProductViewModel = koinViewModel { parametersOf(id) }
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {

@@ -5,11 +5,11 @@ import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalTime
 import kotlinx.serialization.Serializable
 
-@Serializable data class MealIdentity(val id: Uuid = Uuid.random())
+@Serializable data class MealId(val value: Uuid = Uuid.random())
 
 @Serializable
 data class Meal(
-    val identity: MealIdentity = MealIdentity(),
+    val id: MealId = MealId(),
     val name: String,
     val timeWindow: TimeWindow,
 ) {

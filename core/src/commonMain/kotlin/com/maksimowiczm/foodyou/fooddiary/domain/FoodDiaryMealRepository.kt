@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.fooddiary.domain
 
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 
 interface FoodDiaryMealRepository {
-    suspend fun findEntriesUsing(identity: MealIdentity): List<FoodDiaryEntryIdentity>
+    suspend fun findEntriesUsing(mealId: MealId): List<FoodDiaryEntryId>
 
-    suspend fun saveReference(identity: FoodDiaryEntryIdentity, mealIdentity: MealIdentity)
+    suspend fun saveReference(diaryEntryId: FoodDiaryEntryId, mealId: MealId)
 
-    suspend fun removeReference(identity: FoodDiaryEntryIdentity)
+    suspend fun removeReference(entryId: FoodDiaryEntryId)
 }

@@ -324,7 +324,7 @@ private fun IngredientListItem(
 
     RecipeIngredientListItem(
         headline = headline,
-        isRecipe = resolved.snapshot.identity is FoodSnapshotId.UserRecipe,
+        isRecipe = resolved.snapshot.id is FoodSnapshotId.UserRecipe,
         proteins = measurementFacts.proteins.value,
         carbohydrates = measurementFacts.carbohydrates.value,
         fats = measurementFacts.fats.value,

@@ -48,10 +48,10 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
 import com.maksimowiczm.foodyou.shared.ui.component.FoodListItemSkeleton
@@ -60,9 +60,9 @@ import com.maksimowiczm.foodyou.shared.ui.extension.error
 import com.maksimowiczm.foodyou.shared.ui.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -77,10 +77,10 @@ fun FoodSearchList(
     searchQuery: SearchQuery,
     contentPadding: PaddingValues,
     lazyListState: LazyListState,
-    onFoodDataCentralProduct: (FoodDataCentralProductIdentity, Quantity) -> Unit,
-    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity, Quantity) -> Unit,
-    onUserProduct: (UserProductIdentity, Quantity) -> Unit,
-    onUserRecipe: (UserRecipeIdentity, Quantity) -> Unit,
+    onFoodDataCentralProduct: (FoodDataCentralProductId, Quantity) -> Unit,
+    onOpenFoodFactsProduct: (OpenFoodFactsProductId, Quantity) -> Unit,
+    onUserProduct: (UserProductId, Quantity) -> Unit,
+    onUserRecipe: (UserRecipeId, Quantity) -> Unit,
     shimmer: Shimmer,
     onFill: (String) -> Unit,
     onSearch: (String) -> Unit,
@@ -167,7 +167,7 @@ fun FoodSearchList(
                                     UserProductListItem(
                                         product = product,
                                         onClick = {
-                                            onUserProduct(UserProductIdentity(product.id), it)
+                                            onUserProduct(UserProductId(product.id), it)
                                         },
                                         shimmer = shimmer,
                                         modifier =
@@ -210,7 +210,7 @@ fun FoodSearchList(
                                     UserRecipeListItem(
                                         recipe = product,
                                         onClick = {
-                                            onUserRecipe(UserRecipeIdentity(product.id), it)
+                                            onUserRecipe(UserRecipeId(product.id), it)
                                         },
                                         shimmer = shimmer,
                                         interactionSource = interactionSource,
@@ -224,7 +224,7 @@ fun FoodSearchList(
 
                         items(
                             count = openFoodFacts.itemCount.coerceAtMost(5),
-                            key = openFoodFacts.itemKey { it.identity.barcode },
+                            key = openFoodFacts.itemKey { it.id.barcode },
                         ) { i ->
                             val baseShape =
                                 when (i) {
@@ -270,7 +270,7 @@ fun FoodSearchList(
                                 else ->
                                     OpenFoodFactsListItem(
                                         food = product,
-                                        onClick = { onOpenFoodFactsProduct(product.identity, it) },
+                                        onClick = { onOpenFoodFactsProduct(product.id, it) },
                                         shimmer = shimmer,
                                         interactionSource = interactionSource,
                                         shape = shape,
@@ -282,7 +282,7 @@ fun FoodSearchList(
 
                         items(
                             count = foodDataCentral.itemCount.coerceAtMost(5),
-                            key = foodDataCentral.itemKey { it.identity.fdcId },
+                            key = foodDataCentral.itemKey { it.id.fdcId },
                         ) { i ->
                             val baseShape =
                                 when (i) {
@@ -329,7 +329,7 @@ fun FoodSearchList(
                                     FoodDataCentralListItem(
                                         food = product,
                                         onClick = {
-                                            onFoodDataCentralProduct(product.identity, it)
+                                            onFoodDataCentralProduct(product.id, it)
                                         },
                                         interactionSource = interactionSource,
                                         shape = shape,
@@ -400,7 +400,7 @@ fun FoodSearchList(
                             is SearchResult.UserProduct ->
                                 UserProductListItem(
                                     product = food,
-                                    onClick = { onUserProduct(UserProductIdentity(food.id), it) },
+                                    onClick = { onUserProduct(UserProductId(food.id), it) },
                                     shimmer = shimmer,
                                     modifier = Modifier.animateItem().padding(horizontal = 8.dp),
                                     shape = shape,
@@ -439,7 +439,7 @@ fun FoodSearchList(
 
                                 UserRecipeListItem(
                                     recipe = food,
-                                    onClick = { onUserRecipe(UserRecipeIdentity(food.id), it) },
+                                    onClick = { onUserRecipe(UserRecipeId(food.id), it) },
                                     shimmer = shimmer,
                                     interactionSource = interactionSource,
                                     shape = shape,
@@ -452,7 +452,7 @@ fun FoodSearchList(
                 is SearchCollection.OpenFoodFacts ->
                     items(
                         count = openFoodFacts.itemCount,
-                        key = openFoodFacts.itemKey { it.identity.barcode },
+                        key = openFoodFacts.itemKey { it.id.barcode },
                     ) { i ->
                         val baseShape =
                             when (i) {
@@ -494,7 +494,7 @@ fun FoodSearchList(
                             else ->
                                 OpenFoodFactsListItem(
                                     food = food,
-                                    onClick = { onOpenFoodFactsProduct(food.identity, it) },
+                                    onClick = { onOpenFoodFactsProduct(food.id, it) },
                                     shimmer = shimmer,
                                     interactionSource = interactionSource,
                                     shape = shape,
@@ -506,7 +506,7 @@ fun FoodSearchList(
                 is SearchCollection.FoodDataCentral ->
                     items(
                         count = foodDataCentral.itemCount,
-                        key = foodDataCentral.itemKey { it.identity.fdcId },
+                        key = foodDataCentral.itemKey { it.id.fdcId },
                     ) { i ->
                         val baseShape =
                             when (i) {
@@ -550,7 +550,7 @@ fun FoodSearchList(
                             else ->
                                 FoodDataCentralListItem(
                                     food = food,
-                                    onClick = { onFoodDataCentralProduct(food.identity, it) },
+                                    onClick = { onFoodDataCentralProduct(food.id, it) },
                                     interactionSource = interactionSource,
                                     shape = shape,
                                     modifier = Modifier.animateItem().padding(horizontal = 8.dp),
@@ -607,17 +607,15 @@ fun FoodSearchList(
                                         when (food) {
                                             is RemoteData.Success -> {
                                                 when (val value = food.value) {
-                                                    is UserProduct ->
-                                                        onUserProduct(value.identity, it)
+                                                    is UserProduct -> onUserProduct(value.id, it)
 
-                                                    is UserRecipe ->
-                                                        onUserRecipe(value.identity, it)
+                                                    is UserRecipe -> onUserRecipe(value.id, it)
 
                                                     is OpenFoodFactsProduct ->
-                                                        onOpenFoodFactsProduct(value.identity, it)
+                                                        onOpenFoodFactsProduct(value.id, it)
 
                                                     is FoodDataCentralProduct ->
-                                                        onFoodDataCentralProduct(value.identity, it)
+                                                        onFoodDataCentralProduct(value.id, it)
                                                 }
                                             }
 
@@ -625,20 +623,19 @@ fun FoodSearchList(
                                                 food.partialValue?.let { value ->
                                                     when (value) {
                                                         is UserProduct ->
-                                                            onUserProduct(value.identity, it)
+                                                            onUserProduct(value.id, it)
 
-                                                        is UserRecipe ->
-                                                            onUserRecipe(value.identity, it)
+                                                        is UserRecipe -> onUserRecipe(value.id, it)
 
                                                         is OpenFoodFactsProduct ->
                                                             onOpenFoodFactsProduct(
-                                                                value.identity,
+                                                                value.id,
                                                                 it,
                                                             )
 
                                                         is FoodDataCentralProduct ->
                                                             onFoodDataCentralProduct(
-                                                                value.identity,
+                                                                value.id,
                                                                 it,
                                                             )
                                                     }
@@ -649,20 +646,19 @@ fun FoodSearchList(
                                                 food.partialValue?.let { value ->
                                                     when (value) {
                                                         is UserProduct ->
-                                                            onUserProduct(value.identity, it)
+                                                            onUserProduct(value.id, it)
 
-                                                        is UserRecipe ->
-                                                            onUserRecipe(value.identity, it)
+                                                        is UserRecipe -> onUserRecipe(value.id, it)
 
                                                         is OpenFoodFactsProduct ->
                                                             onOpenFoodFactsProduct(
-                                                                value.identity,
+                                                                value.id,
                                                                 it,
                                                             )
 
                                                         is FoodDataCentralProduct ->
                                                             onFoodDataCentralProduct(
-                                                                value.identity,
+                                                                value.id,
                                                                 it,
                                                             )
                                                     }

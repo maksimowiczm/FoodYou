@@ -51,8 +51,8 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.RefreshIconButton
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
@@ -76,17 +76,17 @@ import org.koin.core.parameter.parametersOf
 fun AddOpenFoodFactsDiaryEntryScreen(
     onBack: () -> Unit,
     onAdd: () -> Unit,
-    mealIdentity: MealIdentity,
-    identity: OpenFoodFactsProductIdentity,
+    mealId: MealId,
+    id: OpenFoodFactsProductId,
     initialQuantity: Quantity,
     date: LocalDate?,
     modifier: Modifier = Modifier,
 ) {
     val foodViewModel: OpenFoodFactsDetailsViewModel = koinViewModel {
-        parametersOf(identity, initialQuantity)
+        parametersOf(id, initialQuantity)
     }
     val foodDiaryEntryViewModel: FoodDiaryEntryViewModel = koinViewModel {
-        parametersOf(mealIdentity)
+        parametersOf(mealId)
     }
 
     LaunchedCollectWithLifecycle(foodDiaryEntryViewModel.uiEvents) {

@@ -16,11 +16,10 @@ import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeEvent
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import com.maksimowiczm.foodyou.userrecipe.domain.remove
 import com.maksimowiczm.foodyou.userrecipe.domain.toUserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.update
-import kotlin.uuid.Uuid
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -33,25 +32,25 @@ class UserRecipeService(
     private val eventBus: EventBus,
     private val compositionRepository: UserRecipeCompositionRepository,
 ) {
-    private fun streamId(identity: UserRecipeIdentity) = "UserRecipe-${identity.id}"
+    private fun streamId(id: UserRecipeId) = "UserRecipe-${id.value}"
 
     private suspend inline fun transact(
-        identity: UserRecipeIdentity,
+        id: UserRecipeId,
         block: (UserRecipe?) -> List<UserRecipeEvent>,
     ) {
-        val recipe = eventStore.load<UserRecipeEvent>(streamId(identity)).toUserRecipe()
+        val recipe = eventStore.load<UserRecipeEvent>(streamId(id)).toUserRecipe()
         val newEvents = block(recipe)
         if (newEvents.isNotEmpty()) {
-            eventStore.append(streamId(identity), newEvents)
+            eventStore.append(streamId(id), newEvents)
             eventBus.publish(newEvents)
         }
     }
 
-    fun observe(identity: UserRecipeIdentity): Flow<UserRecipe?> =
-        eventStore.observe<UserRecipeEvent>(streamId(identity)).map { it.toUserRecipe() }
+    fun observe(id: UserRecipeId): Flow<UserRecipe?> =
+        eventStore.observe<UserRecipeEvent>(streamId(id)).map { it.toUserRecipe() }
 
-    fun observeAncestors(identity: UserRecipeIdentity): Flow<Set<UserRecipeIdentity>> =
-        compositionRepository.observeAncestors(identity)
+    fun observeAncestors(id: UserRecipeId): Flow<Set<UserRecipeId>> =
+        compositionRepository.observeAncestors(id)
 
     suspend fun create(
         name: FoodName,
@@ -59,12 +58,12 @@ class UserRecipeService(
         imageBytes: ByteArray?,
         servings: Double,
         components: List<MeasuredFoodSnapshot>,
-    ): UserRecipeIdentity {
-        val identity = UserRecipeIdentity(Uuid.random())
-        transact(identity) {
+    ): UserRecipeId {
+        val id = UserRecipeId()
+        transact(id) {
             UserRecipe.create(
                 UserRecipe(
-                    identity = identity,
+                    id = id,
                     name = name,
                     note = note,
                     image = imageBytes?.let { blobStorage.store(it) },
@@ -73,19 +72,19 @@ class UserRecipeService(
                 )
             )
         }
-        return identity
+        return id
     }
 
     suspend fun edit(
-        identity: UserRecipeIdentity,
+        id: UserRecipeId,
         name: FoodName,
         note: String?,
         imageBytes: ByteArray?,
         servings: Double,
         components: List<MeasuredFoodSnapshot>,
     ) {
-        transact(identity) { recipe ->
-            checkNotNull(recipe) { "Recipe with ID $identity not found" }
+        transact(id) { recipe ->
+            checkNotNull(recipe) { "Recipe with ID $id not found" }
             recipe.update {
                 it.copy(
                     name = name,
@@ -98,9 +97,9 @@ class UserRecipeService(
         }
     }
 
-    suspend fun delete(identity: UserRecipeIdentity, strategy: DeleteStrategy) {
-        transact(identity) { recipe ->
-            checkNotNull(recipe) { "Recipe with ID $identity not found" }
+    suspend fun delete(id: UserRecipeId, strategy: DeleteStrategy) {
+        transact(id) { recipe ->
+            checkNotNull(recipe) { "Recipe with ID $id not found" }
             recipe.remove(strategy)
         }
     }
@@ -117,9 +116,9 @@ class UserRecipeService(
     ) = coroutineScope {
         compositionRepository
             .findRecipesUsing(snapshot.id)
-            .map { recipeIdentity ->
+            .map { id ->
                 async {
-                    transact(recipeIdentity) { recipe ->
+                    transact(id) { recipe ->
                         recipe?.update {
                             it.copy(
                                 components =
@@ -146,15 +145,15 @@ class UserRecipeService(
             .awaitAll()
     }
 
-    suspend fun removeComponentFromRecipes(identity: FoodSnapshotId.Tracked) = coroutineScope {
+    suspend fun removeComponentFromRecipes(id: FoodSnapshotId.Tracked) = coroutineScope {
         compositionRepository
-            .findRecipesUsing(identity)
-            .map { recipeIdentity ->
+            .findRecipesUsing(id)
+            .map { recipeId ->
                 async {
-                    transact(recipeIdentity) { recipe ->
+                    transact(recipeId) { recipe ->
                         recipe ?: return@transact emptyList()
                         val updatedComposition =
-                            FoodSnapshotUpdateService.remove(recipe.components, identity)
+                            FoodSnapshotUpdateService.remove(recipe.components, id)
                         recipe.update { it.copy(components = updatedComposition) }
                     }
                 }
@@ -162,15 +161,15 @@ class UserRecipeService(
             .awaitAll()
     }
 
-    suspend fun unlinkComponentFromRecipes(identity: FoodSnapshotId.Tracked) = coroutineScope {
+    suspend fun unlinkComponentFromRecipes(snapshotId: FoodSnapshotId.Tracked) = coroutineScope {
         compositionRepository
-            .findRecipesUsing(identity)
-            .map { recipeIdentity ->
+            .findRecipesUsing(snapshotId)
+            .map { id ->
                 async {
-                    transact(recipeIdentity) { recipe ->
+                    transact(id) { recipe ->
                         recipe ?: return@transact emptyList()
                         val updatedComposition =
-                            FoodSnapshotUpdateService.unlink(recipe.components, identity)
+                            FoodSnapshotUpdateService.unlink(recipe.components, snapshotId)
                         recipe.update { it.copy(components = updatedComposition) }
                     }
                 }

@@ -10,10 +10,10 @@ interface FoodDiaryCompositionDao {
         """
             SELECT entryId
             FROM FoodDiaryEntryReference
-            WHERE snapshotId = :identity
+            WHERE snapshotId = :id
             """
     )
-    suspend fun findEntriesBySnapshotId(identity: FoodSnapshotId.Tracked): List<Uuid>
+    suspend fun findEntriesBySnapshotId(id: FoodSnapshotId.Tracked): List<Uuid>
 
     @Query(
         """

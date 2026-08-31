@@ -55,7 +55,7 @@ fun FoodIngredients(
 
     val hasNestedRecipe =
         remember(components) {
-            components.any { it.identity is FoodSnapshotId.Composite }
+            components.any { it.id is FoodSnapshotId.Composite }
         }
 
     Column(
@@ -192,7 +192,7 @@ private fun RecipeIngredientListItemContent(
 
     Surface(
         onClick = {
-            onNavigateToIngredient(component.identity, scaledComponentQuantity.toQuantity())
+            onNavigateToIngredient(component.id, scaledComponentQuantity.toQuantity())
         },
         modifier = modifier,
         color = MaterialTheme.colorScheme.surfaceContainer,
@@ -203,7 +203,7 @@ private fun RecipeIngredientListItemContent(
             headline = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(componentName)
-                    if (component.identity is FoodSnapshotId.UserRecipe) {
+                    if (component.id is FoodSnapshotId.UserRecipe) {
                         Spacer(Modifier.width(8.dp))
                         Icon(
                             painter = painterResource(Res.drawable.ic_skillet_filled),

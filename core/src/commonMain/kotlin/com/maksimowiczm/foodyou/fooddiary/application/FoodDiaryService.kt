@@ -15,16 +15,15 @@ import com.maksimowiczm.foodyou.common.domain.observe
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryIdentity
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryMealRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.edit
 import com.maksimowiczm.foodyou.fooddiary.domain.remove
 import com.maksimowiczm.foodyou.fooddiary.domain.toFoodDiaryEntry
 import com.maksimowiczm.foodyou.fooddiary.domain.unlinkFromMeal
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.time.Instant
-import kotlin.uuid.Uuid
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -37,50 +36,50 @@ class FoodDiaryService(
     private val compositionRepository: FoodDiaryCompositionRepository,
     private val mealRepository: FoodDiaryMealRepository,
 ) {
-    private fun streamId(identity: FoodDiaryEntryIdentity) = "FoodDiaryEntry-${identity.id}"
+    private fun streamId(id: FoodDiaryEntryId) = "FoodDiaryEntry-${id.id}"
 
     private suspend inline fun transact(
-        identity: FoodDiaryEntryIdentity,
+        id: FoodDiaryEntryId,
         block: (FoodDiaryEntry?) -> List<FoodDiaryEvent>,
     ) {
-        val entry = eventStore.load<FoodDiaryEvent>(streamId(identity)).toFoodDiaryEntry()
+        val entry = eventStore.load<FoodDiaryEvent>(streamId(id)).toFoodDiaryEntry()
         val newEvents = block(entry)
         if (newEvents.isNotEmpty()) {
-            eventStore.append(streamId(identity), newEvents)
+            eventStore.append(streamId(id), newEvents)
             eventBus.publish(newEvents)
         }
     }
 
-    fun observe(identity: FoodDiaryEntryIdentity): Flow<FoodDiaryEntry?> =
-        eventStore.observe<FoodDiaryEvent>(streamId(identity)).map { it.toFoodDiaryEntry() }
+    fun observe(id: FoodDiaryEntryId): Flow<FoodDiaryEntry?> =
+        eventStore.observe<FoodDiaryEvent>(streamId(id)).map { it.toFoodDiaryEntry() }
 
     suspend fun create(
         profileIds: Set<ProfileId>,
         composition: MeasuredFoodSnapshot,
-        mealIdentity: MealIdentity,
+        mealId: MealId,
         timestamp: Instant,
-    ): FoodDiaryEntryIdentity {
-        val identity = FoodDiaryEntryIdentity(Uuid.random())
-        transact(identity) {
+    ): FoodDiaryEntryId {
+        val id = FoodDiaryEntryId()
+        transact(id) {
             FoodDiaryEntry.create(
-                identity = identity,
+                id = id,
                 profileIds = profileIds,
                 composition = composition,
-                mealIdentity = mealIdentity,
+                mealId = mealId,
                 timestamp = timestamp,
             )
         }
-        return identity
+        return id
     }
 
     suspend fun edit(
-        identity: FoodDiaryEntryIdentity,
+        id: FoodDiaryEntryId,
         profileIds: Set<ProfileId>,
         quantity: FoodSnapshotQuantity,
         timestamp: Instant,
     ) {
-        transact(identity) { entry ->
-            checkNotNull(entry) { "Food diary entry with ID $identity not found" }
+        transact(id) { entry ->
+            checkNotNull(entry) { "Food diary entry with ID $id not found" }
             entry.edit(
                 profileIds = profileIds,
                 composition = entry.composition.withNewQuantity(quantity),
@@ -89,9 +88,9 @@ class FoodDiaryService(
         }
     }
 
-    suspend fun delete(identity: FoodDiaryEntryIdentity, strategy: DeleteStrategy) {
-        transact(identity) { entry ->
-            checkNotNull(entry) { "Food diary entry with ID $identity not found" }
+    suspend fun delete(id: FoodDiaryEntryId, strategy: DeleteStrategy) {
+        transact(id) { entry ->
+            checkNotNull(entry) { "Food diary entry with ID $id not found" }
             entry.remove(strategy)
         }
     }
@@ -108,9 +107,9 @@ class FoodDiaryService(
     ) = coroutineScope {
         compositionRepository
             .findEntriesUsing(snapshot.id)
-            .map { entryIdentity ->
+            .map { entryId ->
                 async {
-                    transact(entryIdentity) { entry ->
+                    transact(entryId) { entry ->
                         if (entry == null) return@transact emptyList()
                         val updated =
                             FoodSnapshotUpdateService.update(
@@ -135,15 +134,15 @@ class FoodDiaryService(
             .awaitAll()
     }
 
-    suspend fun removeComponentFromEntries(identity: FoodSnapshotId.Tracked) = coroutineScope {
+    suspend fun removeComponentFromEntries(id: FoodSnapshotId.Tracked) = coroutineScope {
         compositionRepository
-            .findEntriesUsing(identity)
-            .map { entryIdentity ->
+            .findEntriesUsing(id)
+            .map { entryId ->
                 async {
-                    transact(entryIdentity) { entry ->
+                    transact(entryId) { entry ->
                         if (entry == null) return@transact emptyList()
                         val wrapped = listOf(entry.composition)
-                        val updatedComposition = FoodSnapshotUpdateService.remove(wrapped, identity)
+                        val updatedComposition = FoodSnapshotUpdateService.remove(wrapped, id)
 
                         if (updatedComposition.isEmpty()) entry.remove(DeleteStrategy.Delete)
                         else entry.edit(composition = updatedComposition.first())
@@ -153,15 +152,15 @@ class FoodDiaryService(
             .awaitAll()
     }
 
-    suspend fun unlinkComponentFromEntries(identity: FoodSnapshotId.Tracked) = coroutineScope {
+    suspend fun unlinkComponentFromEntries(id: FoodSnapshotId.Tracked) = coroutineScope {
         compositionRepository
-            .findEntriesUsing(identity)
-            .map { entryIdentity ->
+            .findEntriesUsing(id)
+            .map { entryId ->
                 async {
-                    transact(entryIdentity) { entry ->
+                    transact(entryId) { entry ->
                         entry ?: return@transact emptyList()
                         val wrapped = listOf(entry.composition)
-                        val updatedComposition = FoodSnapshotUpdateService.unlink(wrapped, identity)
+                        val updatedComposition = FoodSnapshotUpdateService.unlink(wrapped, id)
                         entry.edit(composition = updatedComposition.first())
                     }
                 }
@@ -169,12 +168,12 @@ class FoodDiaryService(
             .awaitAll()
     }
 
-    suspend fun unlinkEntriesFromMeal(mealIdentity: MealIdentity) = coroutineScope {
+    suspend fun unlinkEntriesFromMeal(mealId: MealId) = coroutineScope {
         mealRepository
-            .findEntriesUsing(mealIdentity)
-            .map { entryIdentity ->
+            .findEntriesUsing(mealId)
+            .map { entryId ->
                 async {
-                    transact(entryIdentity) { entry ->
+                    transact(entryId) { entry ->
                         entry?.unlinkFromMeal() ?: emptyList()
                     }
                 }

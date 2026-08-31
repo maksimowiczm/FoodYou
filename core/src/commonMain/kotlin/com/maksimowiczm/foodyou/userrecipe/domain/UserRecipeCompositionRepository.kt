@@ -12,37 +12,37 @@ import kotlinx.coroutines.flow.Flow
 interface UserRecipeCompositionRepository {
 
     /**
-     * Finds all recipes that contain the given component identity in their composition.
+     * Finds all recipes that contain the given snapshot id in their composition.
      *
-     * @param identity The identity of the product or recipe being searched for.
+     * @param id The id of the product or recipe being searched for.
      * @return A list of identities for recipes that use the specified component.
      */
-    suspend fun findRecipesUsing(identity: FoodSnapshotId.Tracked): List<UserRecipeIdentity>
+    suspend fun findRecipesUsing(id: FoodSnapshotId.Tracked): List<UserRecipeId>
 
     /**
-     * Finds all recipes that (recursively) contain the given recipe identity.
+     * Finds all recipes that (recursively) contain the given recipe id.
      *
-     * @param identity The identity of the recipe.
+     * @param id The id of the recipe.
      * @return A flow of sets of identities for recipes that (directly or indirectly) use the
      *   specified recipe.
      */
-    fun observeAncestors(identity: UserRecipeIdentity): Flow<Set<UserRecipeIdentity>>
+    fun observeAncestors(id: UserRecipeId): Flow<Set<UserRecipeId>>
 
     /**
      * Saves the association between a recipe and its component identities.
      *
-     * @param recipeIdentity The identity of the recipe.
-     * @param identities The set of all component identities used in the recipe.
+     * @param id The id of the recipe.
+     * @param trackedIds The set of all component identities used in the recipe.
      */
     suspend fun saveReferences(
-        recipeIdentity: UserRecipeIdentity,
-        identities: Set<FoodSnapshotId.Tracked>,
+        id: UserRecipeId,
+        trackedIds: Set<FoodSnapshotId.Tracked>,
     )
 
     /**
      * Removes all recorded component associations for a specific recipe.
      *
-     * @param recipeIdentity The identity of the recipe to clear references for.
+     * @param id The id of the recipe to clear references for.
      */
-    suspend fun removeReferences(recipeIdentity: UserRecipeIdentity)
+    suspend fun removeReferences(id: UserRecipeId)
 }

@@ -40,7 +40,7 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -48,7 +48,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserRecipeDetailsScreen(
-    identity: UserRecipeIdentity,
+    id: UserRecipeId,
     initialQuantity: Quantity?,
     onBack: () -> Unit,
     onEdit: () -> Unit,
@@ -57,7 +57,7 @@ fun UserRecipeDetailsScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: UserRecipeDetailsViewModel =
-        koinViewModel(parameters = { parametersOf(identity, initialQuantity) })
+        koinViewModel(parameters = { parametersOf(id, initialQuantity) })
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {

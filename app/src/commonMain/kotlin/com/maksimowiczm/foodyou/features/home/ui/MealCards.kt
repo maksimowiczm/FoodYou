@@ -56,8 +56,8 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
 import com.maksimowiczm.foodyou.common.domain.food.NutritionCalculator
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.sum
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryIdentity
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
 import com.maksimowiczm.foodyou.shared.ui.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.shared.ui.component.FoodListItem
@@ -83,8 +83,8 @@ fun MealCards(
     meals: List<HomeMealState>,
     shimmer: Shimmer,
     contentPadding: PaddingValues,
-    onAdd: (MealIdentity) -> Unit,
-    onEntry: (FoodDiaryEntryIdentity) -> Unit,
+    onAdd: (MealId) -> Unit,
+    onEntry: (FoodDiaryEntryId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -98,7 +98,7 @@ fun MealCards(
                         state = it,
                         shimmer = shimmer,
                         onEntry = onEntry,
-                        onAdd = { onAdd(it.identity) },
+                        onAdd = { onAdd(it.id) },
                     )
                 is HomeMealState.Unlinked ->
                     MealCard(
@@ -115,7 +115,7 @@ fun MealCards(
 private fun MealCard(
     state: HomeMealState,
     shimmer: Shimmer,
-    onEntry: (FoodDiaryEntryIdentity) -> Unit,
+    onEntry: (FoodDiaryEntryId) -> Unit,
     modifier: Modifier = Modifier,
     onAdd: (() -> Unit)? = null,
 ) {
@@ -252,7 +252,7 @@ private fun MealCard(
                                 )
 
                             Surface(
-                                onClick = { onEntry(food.identity) },
+                                onClick = { onEntry(food.id) },
                                 color = MaterialTheme.colorScheme.surfaceContainer,
                                 shape = shape,
                                 interactionSource = interactionSource,

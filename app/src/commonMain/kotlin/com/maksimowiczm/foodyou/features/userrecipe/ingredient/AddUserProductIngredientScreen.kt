@@ -56,7 +56,7 @@ import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -68,12 +68,12 @@ fun AddUserProductIngredientScreen(
     onAdd: (Quantity) -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    identity: UserProductIdentity,
+    id: UserProductId,
     initialQuantity: Quantity,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: UserProductDetailsViewModel = koinViewModel {
-        parametersOf(identity, initialQuantity)
+        parametersOf(id, initialQuantity)
     }
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {

@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
+import com.maksimowiczm.foodyou.account.domain.FavoriteFoodId
 import com.maksimowiczm.foodyou.app.application.ObserveIsFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.application.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsQuantityDelegate
@@ -15,7 +15,7 @@ import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class OpenFoodFactsDetailsViewModel(
-    private val identity: OpenFoodFactsProductIdentity,
+    private val id: OpenFoodFactsProductId,
     initialQuantity: Quantity?,
     private val openFoodFactsService: OpenFoodFactsService,
     observeIsFavoriteFoodUseCase: ObserveIsFavoriteFoodUseCase,
@@ -42,8 +42,8 @@ class OpenFoodFactsDetailsViewModel(
 
     val uiState: StateFlow<OpenFoodFactsDetailsUiState> =
         combine(
-                openFoodFactsService.observe(identity),
-                observeIsFavoriteFoodUseCase.observe(identity),
+                openFoodFactsService.observe(id),
+                observeIsFavoriteFoodUseCase.observe(id),
                 isRefreshing,
                 quantityDelegate.selectedQuantityType,
                 quantityDelegate.selectedQuantity,
@@ -94,7 +94,7 @@ class OpenFoodFactsDetailsViewModel(
     fun setFavorite(isFavorite: Boolean) {
         viewModelScope.launch {
             setFavoriteFoodUseCase.setFavoriteFood(
-                identity = FavoriteFoodIdentity.OpenFoodFacts(identity.barcode),
+                id = FavoriteFoodId.OpenFoodFacts(id.barcode),
                 isFavorite = isFavorite,
             )
         }
@@ -118,8 +118,8 @@ class OpenFoodFactsDetailsViewModel(
         viewModelScope.launch {
             isRefreshing.value = true
             delay(500.milliseconds)
-            openFoodFactsService.refresh(identity).onError { error ->
-                logger.e("Error refreshing OpenFoodFacts product: $identity", error)
+            openFoodFactsService.refresh(id).onError { error ->
+                logger.e("Error refreshing OpenFoodFacts product: $id", error)
             }
             isRefreshing.value = false
         }

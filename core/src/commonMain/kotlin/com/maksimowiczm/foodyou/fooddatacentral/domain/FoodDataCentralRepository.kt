@@ -17,13 +17,13 @@ interface FoodDataCentralRepository {
     fun count(parameters: FoodDataCentralSearchParameters): Flow<Int>
 
     fun observe(
-        identity: FoodDataCentralProductIdentity,
+        id: FoodDataCentralProductId,
         remoteEnabled: Boolean,
         apiKey: String?,
     ): Flow<RemoteData<FoodDataCentralProduct>>
 
     suspend fun refresh(
-        identity: FoodDataCentralProductIdentity,
+        id: FoodDataCentralProductId,
         apiKey: String?,
     ): Result<FoodDataCentralProduct, FoodDataCentralApiError>
 }

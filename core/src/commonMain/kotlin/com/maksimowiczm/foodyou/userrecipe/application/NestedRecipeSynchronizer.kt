@@ -25,10 +25,10 @@ class NestedRecipeSynchronizer(private val userRecipeService: UserRecipeService)
                 )
 
             is UserRecipeDeletedEvent -> {
-                val identity = FoodSnapshotId.UserRecipe(event.identity.id)
+                val id = FoodSnapshotId.UserRecipe(event.userRecipeId.value)
                 when (event.strategy) {
-                    DeleteStrategy.Delete -> userRecipeService.removeComponentFromRecipes(identity)
-                    DeleteStrategy.Unlink -> userRecipeService.unlinkComponentFromRecipes(identity)
+                    DeleteStrategy.Delete -> userRecipeService.removeComponentFromRecipes(id)
+                    DeleteStrategy.Unlink -> userRecipeService.unlinkComponentFromRecipes(id)
                 }
             }
         }

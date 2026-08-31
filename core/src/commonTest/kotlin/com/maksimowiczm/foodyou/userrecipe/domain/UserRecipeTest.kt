@@ -19,7 +19,7 @@ import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 class UserRecipeTest {
-    private val identity = UserRecipeIdentity(Uuid.random())
+    private val id = UserRecipeId(Uuid.random())
     private val name = FoodName(fallback = "Apple Pie")
     private val components =
         listOf(
@@ -42,7 +42,7 @@ class UserRecipeTest {
         )
     private val userRecipe =
         UserRecipe(
-            identity = identity,
+            id = id,
             name = name,
             note = "Best pie",
             image = null,
@@ -92,7 +92,7 @@ class UserRecipeTest {
 
         assertEquals(1, events.size)
         val event = assertIs<UserRecipeDeletedEvent>(events[0])
-        assertEquals(identity, event.identity)
+        assertEquals(id, event.userRecipeId)
         assertEquals(DeleteStrategy.Delete, event.strategy)
         assertEquals(now, event.timestamp)
     }
@@ -114,7 +114,7 @@ class UserRecipeTest {
 
     @Test
     fun apply_deleted_event() {
-        val event = UserRecipeDeletedEvent(identity, DeleteStrategy.Delete, Instant.DISTANT_PAST)
+        val event = UserRecipeDeletedEvent(id, DeleteStrategy.Delete, Instant.DISTANT_PAST)
         val result = userRecipe.apply(event)
         assertNull(result)
     }
@@ -138,7 +138,7 @@ class UserRecipeTest {
             listOf(
                 UserRecipeCreatedEvent(userRecipe, Instant.fromEpochSeconds(1)),
                 UserRecipeDeletedEvent(
-                    identity,
+                    id,
                     DeleteStrategy.Delete,
                     Instant.fromEpochSeconds(2),
                 ),
@@ -151,7 +151,7 @@ class UserRecipeTest {
     @Test
     fun should_throw_exception_if_composition_contains_itself() {
         val recipeId = Uuid.random()
-        val identity = UserRecipeIdentity(recipeId)
+        val userRecipeId = UserRecipeId(recipeId)
 
         val selfReferencingComponents =
             listOf(
@@ -175,7 +175,7 @@ class UserRecipeTest {
 
         assertFailsWith<IllegalArgumentException> {
             UserRecipe(
-                identity = identity,
+                id = userRecipeId,
                 name = name,
                 note = null,
                 image = null,

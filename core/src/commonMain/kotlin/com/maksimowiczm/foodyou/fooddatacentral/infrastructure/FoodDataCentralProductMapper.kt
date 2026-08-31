@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsMapper
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.Food
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.FoodNutrient
@@ -93,7 +93,7 @@ internal class FoodDataCentralProductMapper {
             val packageQuantity = parsePackage(packageWeight)
 
             FoodDataCentralProduct(
-                identity = FoodDataCentralProductIdentity(fdcId),
+                id = FoodDataCentralProductId(fdcId),
                 name = description,
                 brand = brandOwner,
                 barcode = gtinUpc,

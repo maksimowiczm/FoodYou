@@ -11,7 +11,7 @@ data class Profile(
     val name: String,
     val avatar: Avatar,
     val homeCardsOrder: List<HomeCard> = HomeCard.defaultOrder,
-    val favoriteFoods: Set<FavoriteFoodIdentity> = setOf(),
+    val favoriteFoods: Set<FavoriteFoodId> = setOf(),
 ) {
     init {
         require(homeCardsOrder.distinct().size == homeCardsOrder.size) {

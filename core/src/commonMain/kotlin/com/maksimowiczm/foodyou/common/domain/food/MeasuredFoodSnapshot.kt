@@ -11,7 +11,7 @@ data class MeasuredFoodSnapshot(
     val snapshot: FoodSnapshot,
     val quantity: FoodSnapshotQuantity,
 ) {
-    val identity: FoodSnapshotId
+    val id: FoodSnapshotId
         get() = snapshot.id
 
     val name: FoodName
@@ -29,7 +29,7 @@ data class MeasuredFoodSnapshot(
     val allIdentities: Set<FoodSnapshotId>
         get() = snapshot.allIdentities
 
-    /** Creates a copy of this component with an anonymous identity. */
+    /** Creates a copy of this snapshot with an anonymous id. */
     fun anonymize(): MeasuredFoodSnapshot =
         copy(
             snapshot =

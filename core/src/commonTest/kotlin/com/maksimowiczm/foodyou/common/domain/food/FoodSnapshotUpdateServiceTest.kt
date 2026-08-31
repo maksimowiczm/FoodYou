@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.grams
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 import kotlin.uuid.Uuid
 
@@ -12,7 +13,7 @@ class FoodSnapshotUpdateServiceTest {
     private val dummyName = FoodName(fallback = "Test Food")
 
     @Test
-    fun update_should_recursively_update_components_matching_identity() {
+    fun update_should_recursively_update_components_matching_id() {
         val targetId = FoodSnapshotId.UserProduct(Uuid.random())
         val otherId = FoodSnapshotId.OpenFoodFacts("789")
         val compositeId = FoodSnapshotId.UserRecipe(Uuid.random())
@@ -104,13 +105,13 @@ class FoodSnapshotUpdateServiceTest {
 
         // Verify other component remained unchanged
         val unchangedSubSimple = compositeSnapshot.components[1]
-        assertEquals(otherId, unchangedSubSimple.identity)
+        assertEquals(otherId, unchangedSubSimple.id)
         assertEquals("Other", unchangedSubSimple.name.fallback)
         assertEquals(null, unchangedSubSimple.image)
     }
 
     @Test
-    fun remove_should_remove_component_by_identity() {
+    fun remove_should_remove_component_by_id() {
         val targetId = FoodSnapshotId.UserProduct(Uuid.random())
         val otherId = FoodSnapshotId.OpenFoodFacts("789")
 
@@ -155,7 +156,7 @@ class FoodSnapshotUpdateServiceTest {
         val updated = FoodSnapshotUpdateService.remove(components, targetId)
 
         assertEquals(1, updated.size)
-        assertEquals(otherId, updated.first().identity)
+        assertEquals(otherId, updated.first().id)
     }
 
     @Test
@@ -318,12 +319,12 @@ class FoodSnapshotUpdateServiceTest {
 
         assertEquals(1, updated.size)
         val updatedComposite2 = updated.first()
-        assertEquals(composite2Id, updatedComposite2.identity)
+        assertEquals(composite2Id, updatedComposite2.id)
         val snapshot = updatedComposite2.snapshot as CompositeFoodSnapshot
         assertEquals(1, snapshot.components.size)
         assertEquals(
             "other",
-            (snapshot.components.first().identity as FoodSnapshotId.OpenFoodFacts).barcode,
+            (snapshot.components.first().id as FoodSnapshotId.OpenFoodFacts).barcode,
         )
     }
 
@@ -378,8 +379,7 @@ class FoodSnapshotUpdateServiceTest {
         val unchanged = updated[1]
 
         assertEquals("Unlinked", unlinked.name.fallback)
-        val identity = unlinked.identity
-        assertEquals(true, identity is FoodSnapshotId.Anonymous)
-        assertEquals(otherId, unchanged.identity)
+        assertIs<FoodSnapshotId.Anonymous>(unlinked.id)
+        assertEquals(otherId, unchanged.id)
     }
 }

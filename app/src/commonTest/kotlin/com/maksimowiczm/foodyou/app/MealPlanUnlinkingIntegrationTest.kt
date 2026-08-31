@@ -11,7 +11,7 @@ import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.Meal
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.mealplan.domain.update
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,9 +29,9 @@ class MealPlanUnlinkingIntegrationTest {
         runKoin {
             val profileId = ProfileId(Uuid.random())
             // 1. Setup a meal plan with two meals
-            val mealId = MealIdentity(Uuid.random())
+            val mealId = MealId(Uuid.random())
             val meal = Meal(mealId, "Breakfast", Meal.TimeWindow.AllDay)
-            val otherMeal = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+            val otherMeal = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
             mealPlanService.transact { it.update(listOf(meal, otherMeal)) }
 
             // 2. Create a diary entry associated with "Breakfast"
@@ -57,17 +57,17 @@ class MealPlanUnlinkingIntegrationTest {
 
             // 3. Verify association
             val entry = foodDiaryService.observe(entryId).filterNotNull().first()
-            assertEquals(mealId, entry.mealIdentity)
+            assertEquals(mealId, entry.mealId)
 
             // 4. Remove "Breakfast" from the plan, keeping "Lunch"
             mealPlanService.transact { it.update(listOf(otherMeal)) }
 
-            // 5. Verify the diary entry is unlinked (mealIdentity becomes null)
+            // 5. Verify the diary entry is unlinked (mealId becomes null)
             val updatedEntry =
                 foodDiaryService.observe(entryId).filterNotNull().first {
-                    it.mealIdentity == null
+                    it.mealId == null
                 }
-            assertEquals(null, updatedEntry.mealIdentity)
+            assertEquals(null, updatedEntry.mealId)
         }
     }
 

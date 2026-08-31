@@ -13,7 +13,7 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.features.home.integration.HomeDao
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -28,7 +28,7 @@ import org.koin.core.Koin
 
 class HomeIntegrationTest {
     private val profileId = ProfileId()
-    private val mealId = MealIdentity()
+    private val mealId = MealId()
 
     @Test
     fun creating_diary_entry_inserts_it_into_home_projection() =
@@ -45,7 +45,7 @@ class HomeIntegrationTest {
 
                 val entry = entries.single { it.entryId == entryId.id }
                 assertEquals(composition, entry.composition)
-                assertEquals(mealId.id, entry.mealId)
+                assertEquals(mealId.value, entry.mealId)
                 assertEquals(dateTime.date, entry.date)
                 assertEquals(dateTime.time.hour, entry.time.hour)
                 assertEquals(dateTime.time.minute, entry.time.minute)
@@ -198,7 +198,7 @@ class HomeIntegrationTest {
 
                 // Add another profile and remove the first one
                 foodDiaryService.edit(
-                    identity = entryId,
+                    id = entryId,
                     profileIds = setOf(otherProfileId),
                     quantity = composition.quantity,
                     timestamp = timestamp,

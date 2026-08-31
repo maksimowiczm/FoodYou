@@ -16,14 +16,14 @@ import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,7 +51,7 @@ class RecipeFormViewModel(
         MutableStateFlow(
             savedStateHandle.get<String>(INGREDIENTS_KEY)?.let {
                 Json.decodeFromString<List<IngredientEntry>>(it)
-            } ?: initialIngredients.map { (id, q) -> IngredientEntry(identity = id, quantity = q) }
+            } ?: initialIngredients.map { (id, q) -> IngredientEntry(id = id, quantity = q) }
         )
 
     private val snapshotFlows =
@@ -64,7 +64,7 @@ class RecipeFormViewModel(
                 else
                     entries
                         .map { entry ->
-                            getComponentFlow(entry.identity, entry.quantity).map { resolved ->
+                            getComponentFlow(entry.id, entry.quantity).map { resolved ->
                                 IngredientItemState(entry, resolved)
                             }
                         }
@@ -88,7 +88,7 @@ class RecipeFormViewModel(
         ingredients
             .onEach { ingredients ->
                 savedStateHandle[INGREDIENTS_KEY] = Json.encodeToString(ingredients)
-                val activeKeys = ingredients.map { it.identity to it.quantity }.toSet()
+                val activeKeys = ingredients.map { it.id to it.quantity }.toSet()
                 snapshotFlows.keys.retainAll(activeKeys)
             }
             .launchIn(viewModelScope)
@@ -113,10 +113,10 @@ class RecipeFormViewModel(
         ingredients.update { current -> current.toMutableList().apply { removeAt(index) } }
     }
 
-    fun addIngredient(identity: FoodSnapshotId.Tracked, quantity: Quantity) {
+    fun addIngredient(id: FoodSnapshotId.Tracked, quantity: Quantity) {
         ingredients.update { current ->
             current.toMutableList().apply {
-                add(IngredientEntry(identity = identity, quantity = quantity))
+                add(IngredientEntry(id = id, quantity = quantity))
             }
         }
     }
@@ -133,7 +133,7 @@ class RecipeFormViewModel(
     ): Flow<ResolvedIngredient?> =
         when (id) {
             is FoodSnapshotId.UserRecipe ->
-                recipeService.observe(UserRecipeIdentity(id.id)).map { recipe ->
+                recipeService.observe(UserRecipeId(id.id)).map { recipe ->
                     recipe?.let {
                         ResolvedIngredient(
                             snapshot =
@@ -158,7 +158,7 @@ class RecipeFormViewModel(
                 }
 
             is FoodSnapshotId.FoodDataCentral ->
-                fdc.observeNullable(FoodDataCentralProductIdentity(id.fdcId)).map { product ->
+                fdc.observeNullable(FoodDataCentralProductId(id.fdcId)).map { product ->
                     product?.let {
                         ResolvedIngredient(
                             snapshot =
@@ -183,7 +183,7 @@ class RecipeFormViewModel(
                 }
 
             is FoodSnapshotId.OpenFoodFacts ->
-                off.observeNullable(OpenFoodFactsProductIdentity(id.barcode)).map { product ->
+                off.observeNullable(OpenFoodFactsProductId(id.barcode)).map { product ->
                     product?.let {
                         ResolvedIngredient(
                             snapshot =
@@ -211,7 +211,7 @@ class RecipeFormViewModel(
                 }
 
             is FoodSnapshotId.UserProduct ->
-                up.observe(UserProductIdentity(id.id)).map { product ->
+                up.observe(UserProductId(id.id)).map { product ->
                     product?.let {
                         ResolvedIngredient(
                             snapshot =
@@ -237,9 +237,9 @@ class RecipeFormViewModel(
         }
 
     private fun FoodDataCentralService.observeNullable(
-        identity: FoodDataCentralProductIdentity
+        id: FoodDataCentralProductId
     ): Flow<FoodDataCentralProduct?> =
-        observe(identity).map {
+        observe(id).map {
             when (it) {
                 is RemoteData.Error<FoodDataCentralProduct> -> it.partialValue
                 is RemoteData.Loading<FoodDataCentralProduct> -> it.partialValue
@@ -249,9 +249,9 @@ class RecipeFormViewModel(
         }
 
     private fun OpenFoodFactsService.observeNullable(
-        identity: OpenFoodFactsProductIdentity
+        id: OpenFoodFactsProductId
     ): Flow<OpenFoodFactsProduct?> =
-        observe(identity).map {
+        observe(id).map {
             when (it) {
                 is RemoteData.Error<OpenFoodFactsProduct> -> it.partialValue
                 is RemoteData.Loading<OpenFoodFactsProduct> -> it.partialValue
@@ -273,7 +273,7 @@ data class RecipeFormUiState(
 @Serializable
 data class IngredientEntry(
     val entryId: Uuid = Uuid.random(),
-    val identity: FoodSnapshotId.Tracked,
+    val id: FoodSnapshotId.Tracked,
     val quantity: Quantity,
 )
 

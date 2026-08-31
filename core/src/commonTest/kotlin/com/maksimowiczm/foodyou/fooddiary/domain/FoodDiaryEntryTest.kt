@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -19,7 +19,7 @@ import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 class FoodDiaryEntryTest {
-    private val identity = FoodDiaryEntryIdentity(Uuid.random())
+    private val diaryEntryId = FoodDiaryEntryId()
     private val composition =
         MeasuredFoodSnapshot(
             snapshot =
@@ -40,16 +40,16 @@ class FoodDiaryEntryTest {
     private val timestamp = Instant.fromEpochSeconds(1000)
     private val profileId = ProfileId(Uuid.random())
     private val profileIds = setOf(profileId)
-    private val mealIdentity = MealIdentity(Uuid.random())
+    private val mealId = MealId(Uuid.random())
     private val entry =
         FoodDiaryEntry(
-            identity = identity,
+            id = diaryEntryId,
             profileIds = profileIds,
             composition = composition,
             timestamp = timestamp,
-            mealIdentity = null,
+            mealId = null,
         )
-    private val entryWithMeal = entry.copy(mealIdentity = mealIdentity)
+    private val entryWithMeal = entry.copy(mealId = mealId)
 
     @Test
     fun create_returns_created_event() {
@@ -58,20 +58,20 @@ class FoodDiaryEntryTest {
 
         val events =
             FoodDiaryEntry.create(
-                identity = identity,
+                id = diaryEntryId,
                 profileIds = profileIds,
                 composition = composition,
-                mealIdentity = mealIdentity,
+                mealId = mealId,
                 timestamp = timestamp,
                 clock = clock,
             )
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryCreatedEvent>(events[0])
-        assertEquals(identity, event.identity)
+        assertEquals(diaryEntryId, event.diaryEntryId)
         assertEquals(profileIds, event.profileIds)
         assertEquals(composition, event.composition)
-        assertEquals(mealIdentity, event.mealIdentity)
+        assertEquals(mealId, event.mealId)
         assertEquals(timestamp, event.entryTimestamp)
         assertEquals(now, event.timestamp)
     }
@@ -92,30 +92,30 @@ class FoodDiaryEntryTest {
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryUpdatedEvent>(events[0])
-        assertEquals(identity, event.identity)
+        assertEquals(diaryEntryId, event.diaryEntryId)
         assertEquals(updatedProfileIds, event.profileIds)
         assertEquals(composition, event.composition)
-        assertNull(event.mealIdentity)
+        assertNull(event.mealId)
         assertEquals(updatedTimestamp, event.entryTimestamp)
         assertEquals(now, event.timestamp)
     }
 
     @Test
-    fun edit_returns_updated_event_when_meal_identity_changed() {
+    fun edit_returns_updated_event_when_meal_id_changed() {
         val now = Instant.fromEpochSeconds(3500)
         val clock = staticClock(now)
-        val newMealIdentity = MealIdentity(Uuid.random())
+        val newMealId = MealId(Uuid.random())
 
         val events =
             entryWithMeal.edit(
-                mealIdentity = newMealIdentity,
+                mealId = newMealId,
                 clock = clock,
             )
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryUpdatedEvent>(events[0])
-        assertEquals(identity, event.identity)
-        assertEquals(newMealIdentity, event.mealIdentity)
+        assertEquals(diaryEntryId, event.diaryEntryId)
+        assertEquals(newMealId, event.mealId)
         assertEquals(now, event.timestamp)
     }
 
@@ -134,7 +134,7 @@ class FoodDiaryEntryTest {
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryDeletedEvent>(events[0])
-        assertEquals(identity, event.identity)
+        assertEquals(diaryEntryId, event.diaryEntryId)
         assertEquals(DeleteStrategy.Delete, event.strategy)
         assertEquals(now, event.timestamp)
     }
@@ -148,7 +148,7 @@ class FoodDiaryEntryTest {
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryUnlinkedFromMealEvent>(events[0])
-        assertEquals(identity, event.identity)
+        assertEquals(diaryEntryId, event.diaryEntryId)
         assertEquals(now, event.timestamp)
     }
 
@@ -156,10 +156,10 @@ class FoodDiaryEntryTest {
     fun apply_created_event() {
         val event =
             FoodDiaryEntryCreatedEvent(
-                identity = identity,
+                diaryEntryId = diaryEntryId,
                 profileIds = profileIds,
                 composition = composition,
-                mealIdentity = mealIdentity,
+                mealId = mealId,
                 entryTimestamp = timestamp,
                 timestamp = Instant.DISTANT_PAST,
             )
@@ -173,10 +173,10 @@ class FoodDiaryEntryTest {
         val updatedProfileIds = setOf(ProfileId(Uuid.random()))
         val event =
             FoodDiaryEntryUpdatedEvent(
-                identity = identity,
+                diaryEntryId = diaryEntryId,
                 profileIds = updatedProfileIds,
                 composition = composition,
-                mealIdentity = mealIdentity,
+                mealId = mealId,
                 entryTimestamp = updatedTimestamp,
                 timestamp = Instant.DISTANT_PAST,
             )
@@ -184,28 +184,28 @@ class FoodDiaryEntryTest {
         assertEquals(updatedProfileIds, result?.profileIds)
         assertEquals(composition, result?.composition)
         assertEquals(updatedTimestamp, result?.timestamp)
-        assertEquals(mealIdentity, result?.mealIdentity)
+        assertEquals(mealId, result?.mealId)
     }
 
     @Test
     fun apply_deleted_event() {
         val event =
-            FoodDiaryEntryDeletedEvent(identity, DeleteStrategy.Delete, Instant.DISTANT_PAST)
+            FoodDiaryEntryDeletedEvent(diaryEntryId, DeleteStrategy.Delete, Instant.DISTANT_PAST)
         val result = entry.apply(event)
         assertNull(result)
     }
 
     @Test
-    fun apply_unlinked_event_clears_meal_identity() {
-        val event = FoodDiaryEntryUnlinkedFromMealEvent(identity, Instant.DISTANT_PAST)
+    fun apply_unlinked_event_clears_meal_id() {
+        val event = FoodDiaryEntryUnlinkedFromMealEvent(diaryEntryId, Instant.DISTANT_PAST)
         val result = entryWithMeal.apply(event)
-        assertEquals(entryWithMeal.copy(mealIdentity = null), result)
-        assertNull(result?.mealIdentity)
+        assertEquals(entryWithMeal.copy(mealId = null), result)
+        assertNull(result?.mealId)
     }
 
     @Test
     fun apply_unlinked_event_on_null_returns_null() {
-        val event = FoodDiaryEntryUnlinkedFromMealEvent(identity, Instant.DISTANT_PAST)
+        val event = FoodDiaryEntryUnlinkedFromMealEvent(diaryEntryId, Instant.DISTANT_PAST)
         val result = null.apply(event)
         assertNull(result)
     }
@@ -216,18 +216,18 @@ class FoodDiaryEntryTest {
         val events =
             listOf(
                 FoodDiaryEntryCreatedEvent(
-                    identity = identity,
+                    diaryEntryId = diaryEntryId,
                     profileIds = profileIds,
                     composition = composition,
-                    mealIdentity = mealIdentity,
+                    mealId = mealId,
                     entryTimestamp = timestamp,
                     timestamp = Instant.fromEpochSeconds(1),
                 ),
                 FoodDiaryEntryUpdatedEvent(
-                    identity = identity,
+                    diaryEntryId = diaryEntryId,
                     profileIds = profileIds,
                     composition = composition,
-                    mealIdentity = mealIdentity,
+                    mealId = mealId,
                     entryTimestamp = updatedTimestamp,
                     timestamp = Instant.fromEpochSeconds(2),
                 ),
@@ -237,7 +237,7 @@ class FoodDiaryEntryTest {
         assertEquals(profileIds, result?.profileIds)
         assertEquals(composition, result?.composition)
         assertEquals(updatedTimestamp, result?.timestamp)
-        assertEquals(mealIdentity, result?.mealIdentity)
+        assertEquals(mealId, result?.mealId)
     }
 
     @Test
@@ -245,15 +245,15 @@ class FoodDiaryEntryTest {
         val events =
             listOf(
                 FoodDiaryEntryCreatedEvent(
-                    identity = identity,
+                    diaryEntryId = diaryEntryId,
                     profileIds = profileIds,
                     composition = composition,
-                    mealIdentity = mealIdentity,
+                    mealId = mealId,
                     entryTimestamp = timestamp,
                     timestamp = Instant.fromEpochSeconds(1),
                 ),
                 FoodDiaryEntryDeletedEvent(
-                    identity,
+                    diaryEntryId,
                     DeleteStrategy.Delete,
                     Instant.fromEpochSeconds(2),
                 ),
@@ -268,18 +268,18 @@ class FoodDiaryEntryTest {
         val events =
             listOf(
                 FoodDiaryEntryCreatedEvent(
-                    identity = identity,
+                    diaryEntryId = diaryEntryId,
                     profileIds = profileIds,
                     composition = composition,
-                    mealIdentity = mealIdentity,
+                    mealId = mealId,
                     entryTimestamp = timestamp,
                     timestamp = Instant.fromEpochSeconds(1),
                 ),
-                FoodDiaryEntryUnlinkedFromMealEvent(identity, Instant.fromEpochSeconds(2)),
+                FoodDiaryEntryUnlinkedFromMealEvent(diaryEntryId, Instant.fromEpochSeconds(2)),
             )
 
         val result = events.toFoodDiaryEntry()
-        assertEquals(entryWithMeal.copy(mealIdentity = null), result)
-        assertNull(result?.mealIdentity)
+        assertEquals(entryWithMeal.copy(mealId = null), result)
+        assertNull(result?.mealId)
     }
 }

@@ -18,11 +18,11 @@ import kotlin.time.Clock
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
 
-@Serializable data class UserRecipeIdentity(val id: Uuid)
+@Serializable data class UserRecipeId(val value: Uuid = Uuid.random())
 
 @Serializable
 data class UserRecipe(
-    val identity: UserRecipeIdentity,
+    val id: UserRecipeId,
     val name: FoodName,
     val note: String?,
     val image: BlobDigest?,
@@ -32,7 +32,7 @@ data class UserRecipe(
     init {
         require(note == null || note.isNotBlank()) { "Note cannot be blank" }
         require(servings > 0) { "Servings must be positive number" }
-        require(FoodSnapshotId.UserRecipe(identity.id) !in components.allComponentIdentities) {
+        require(FoodSnapshotId.UserRecipe(id.value) !in components.allComponentIdentities) {
             "Circular dependency: Recipe cannot contain itself in its components"
         }
     }
@@ -60,9 +60,7 @@ fun UserRecipe.remove(
     strategy: DeleteStrategy,
     clock: Clock = Clock.System,
 ): List<UserRecipeEvent> =
-    listOf(
-        UserRecipeDeletedEvent(identity = identity, strategy = strategy, timestamp = clock.now())
-    )
+    listOf(UserRecipeDeletedEvent(userRecipeId = id, strategy = strategy, timestamp = clock.now()))
 
 fun UserRecipe?.apply(event: UserRecipeEvent): UserRecipe? =
     when (event) {
@@ -76,7 +74,7 @@ fun Iterable<UserRecipeEvent>.toUserRecipe(): UserRecipe? =
 
 fun UserRecipe.toSnapshot() =
     CompositeFoodSnapshot(
-        id = FoodSnapshotId.UserRecipe(identity.id),
+        id = FoodSnapshotId.UserRecipe(id.value),
         name = name,
         brand = null,
         image = image?.let(FoodSnapshotImage::Blob),

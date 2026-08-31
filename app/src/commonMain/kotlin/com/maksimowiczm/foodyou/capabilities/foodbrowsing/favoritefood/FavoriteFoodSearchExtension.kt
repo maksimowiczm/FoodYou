@@ -5,7 +5,7 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
+import com.maksimowiczm.foodyou.account.domain.FavoriteFoodId
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.SearchViewModel
@@ -15,19 +15,19 @@ import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -49,16 +49,16 @@ class FavoriteFoodSearchExtension(
         appProfileManager.observeAppProfile().map { it.favoriteFoods }
 
     private val excludedIds =
-        viewModel.avoidCircularDependencyWith?.let { identity ->
-            userRecipeService.observeAncestors(identity).map { ancestors ->
-                ancestors.map { it.id }.toSet() + identity.id
+        viewModel.avoidCircularDependencyWith?.let { id ->
+            userRecipeService.observeAncestors(id).map { ancestors ->
+                ancestors.map { it.value }.toSet() + id.value
             }
         } ?: flowOf(emptySet())
 
     private val filteredIdentities =
         combine(excludedIds, favoriteFoodIdentities) { excluded, identities ->
             identities.filter {
-                if (it is FavoriteFoodIdentity.Recipe) it.id !in excluded else true
+                if (it is FavoriteFoodId.Recipe) it.id !in excluded else true
             }
         }
 
@@ -68,25 +68,21 @@ class FavoriteFoodSearchExtension(
                 if (list.isEmpty()) return@map flowOf(listOf())
 
                 list
-                    .map { identity ->
-                        when (identity) {
-                            is FavoriteFoodIdentity.FoodDataCentral ->
-                                foodDataCentralService.observe(
-                                    FoodDataCentralProductIdentity(identity.fdcId)
-                                )
+                    .map { id ->
+                        when (id) {
+                            is FavoriteFoodId.FoodDataCentral ->
+                                foodDataCentralService.observe(FoodDataCentralProductId(id.fdcId))
 
-                            is FavoriteFoodIdentity.OpenFoodFacts ->
-                                openFoodFactsService.observe(
-                                    OpenFoodFactsProductIdentity(identity.barcode)
-                                )
+                            is FavoriteFoodId.OpenFoodFacts ->
+                                openFoodFactsService.observe(OpenFoodFactsProductId(id.barcode))
 
-                            is FavoriteFoodIdentity.UserProduct ->
-                                userProductService.observe(UserProductIdentity(identity.id)).map {
+                            is FavoriteFoodId.UserProduct ->
+                                userProductService.observe(UserProductId(id.id)).map {
                                     RemoteData.fromNullable(it)
                                 }
 
-                            is FavoriteFoodIdentity.Recipe ->
-                                userRecipeService.observe(UserRecipeIdentity(identity.id)).map {
+                            is FavoriteFoodId.Recipe ->
+                                userRecipeService.observe(UserRecipeId(id.id)).map {
                                     RemoteData.fromNullable(it)
                                 }
                         }
@@ -102,12 +98,12 @@ class FavoriteFoodSearchExtension(
 
                     is FoodDataCentralUrlSearchQuery ->
                         list.filterIsInstance<RemoteData.Success<FoodDataCentralProduct>>().filter {
-                            it.value.identity.fdcId == query.fdcId
+                            it.value.id.fdcId == query.fdcId
                         }
 
                     is OpenFoodFactsUrlSearchQuery ->
                         list.filterIsInstance<RemoteData.Success<OpenFoodFactsProduct>>().filter {
-                            it.value.identity.barcode == query.barcode
+                            it.value.id.barcode == query.barcode
                         }
 
                     is SearchQuery.NotBlank ->
@@ -170,7 +166,7 @@ private fun Any.barcode(): String? =
     when (this) {
         is UserProduct -> barcode?.value
         is UserRecipe -> null
-        is OpenFoodFactsProduct -> identity.barcode
+        is OpenFoodFactsProduct -> id.barcode
         is FoodDataCentralProduct -> barcode
         else -> error("Unknown type ${this::class}")
     }

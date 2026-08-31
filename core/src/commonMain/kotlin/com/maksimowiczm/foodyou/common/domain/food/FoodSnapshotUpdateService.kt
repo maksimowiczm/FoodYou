@@ -48,7 +48,7 @@ object FoodSnapshotUpdateService {
         targetId: FoodSnapshotId,
         transformer: (MeasuredFoodSnapshot) -> MeasuredFoodSnapshot?,
     ): MeasuredFoodSnapshot? {
-        if (identity == targetId) return transformer(this)
+        if (id == targetId) return transformer(this)
 
         val snapshot = snapshot
         if (snapshot !is CompositeFoodSnapshot) return this

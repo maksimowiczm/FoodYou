@@ -4,7 +4,7 @@ package com.maksimowiczm.foodyou.account.domain
 
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import kotlin.time.Clock
 
 data class Account(
@@ -83,17 +83,17 @@ fun Account.removeProfile(id: ProfileId, clock: Clock = Clock.System) =
 
 fun Account.addFavoriteFood(
     profileId: ProfileId,
-    foodIdentity: FavoriteFoodIdentity,
+    foodId: FavoriteFoodId,
     clock: Clock = Clock.System,
 ) =
     buildList<AccountEvent> {
         val profile = profiles.find { it.id == profileId }
         checkNotNull(profile) { "Profile with ID $profileId not found" }
-        if (foodIdentity in profile.favoriteFoods) return@buildList
+        if (foodId in profile.favoriteFoods) return@buildList
         add(
             FavoriteFoodAddedEvent(
                 profileId = profileId,
-                foodIdentity = foodIdentity,
+                foodId = foodId,
                 timestamp = clock.now(),
             )
         )
@@ -101,33 +101,33 @@ fun Account.addFavoriteFood(
 
 fun Account.removeFavoriteFood(
     profileId: ProfileId,
-    foodIdentity: FavoriteFoodIdentity,
+    foodId: FavoriteFoodId,
     clock: Clock = Clock.System,
 ) =
     buildList<AccountEvent> {
         val profile = profiles.find { it.id == profileId }
         checkNotNull(profile) { "Profile with ID $profileId not found" }
-        if (foodIdentity !in profile.favoriteFoods) return@buildList
+        if (foodId !in profile.favoriteFoods) return@buildList
         add(
             FavoriteFoodRemovedEvent(
                 profileId = profileId,
-                foodIdentity = foodIdentity,
+                favoriteFoodId = foodId,
                 timestamp = clock.now(),
             )
         )
     }
 
 fun Account.removeFavoriteUserFood(
-    identity: UserProductIdentity,
+    id: UserProductId,
     clock: Clock = Clock.System,
 ): List<AccountEvent> {
-    val id = FavoriteFoodIdentity.UserProduct(identity.id)
+    val id = FavoriteFoodId.UserProduct(id.value)
     return profiles
         .filter { id in it.favoriteFoods }
         .map { profile ->
             FavoriteFoodRemovedEvent(
                 profileId = profile.id,
-                foodIdentity = id,
+                favoriteFoodId = id,
                 timestamp = clock.now(),
             )
         }
@@ -143,12 +143,12 @@ fun Account.apply(event: AccountEvent): Account =
         is ProfileRemovedEvent -> copy(profiles = profiles.filterNot { it.id == event.profileId })
         is FavoriteFoodAddedEvent ->
             applyProfileUpdate(event.profileId) { profile ->
-                profile.copy(favoriteFoods = profile.favoriteFoods + event.foodIdentity)
+                profile.copy(favoriteFoods = profile.favoriteFoods + event.foodId)
             }
 
         is FavoriteFoodRemovedEvent ->
             applyProfileUpdate(event.profileId) { profile ->
-                profile.copy(favoriteFoods = profile.favoriteFoods - event.foodIdentity)
+                profile.copy(favoriteFoods = profile.favoriteFoods - event.favoriteFoodId)
             }
     }
 

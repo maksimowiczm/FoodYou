@@ -24,12 +24,12 @@ class UserProductSynchronizer(private val userRecipeService: UserRecipeService) 
                 )
 
             is UserProductDeletedEvent -> {
-                val componentIdentity = FoodSnapshotId.UserProduct(event.identity.id)
+                val snapshotId = FoodSnapshotId.UserProduct(event.userProductId.value)
                 when (event.strategy) {
                     DeleteStrategy.Delete ->
-                        userRecipeService.removeComponentFromRecipes(componentIdentity)
+                        userRecipeService.removeComponentFromRecipes(snapshotId)
                     DeleteStrategy.Unlink ->
-                        userRecipeService.unlinkComponentFromRecipes(componentIdentity)
+                        userRecipeService.unlinkComponentFromRecipes(snapshotId)
                 }
             }
         }

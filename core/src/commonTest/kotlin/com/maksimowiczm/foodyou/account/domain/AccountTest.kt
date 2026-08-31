@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.account.domain
 import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -142,14 +142,14 @@ class AccountTest {
     @Test
     fun addFavoriteFood_returnsFavoriteFoodAddedEvent() {
         val account = Account(profiles = listOf(profile1))
-        val food = FavoriteFoodIdentity.FoodDataCentral(123)
+        val food = FavoriteFoodId.FoodDataCentral(123)
         val events = account.addFavoriteFood(profile1.id, food, staticClock(now))
         assertEquals(listOf(FavoriteFoodAddedEvent(profile1.id, food, now)), events)
     }
 
     @Test
     fun addFavoriteFood_isIdempotent() {
-        val food = FavoriteFoodIdentity.FoodDataCentral(123)
+        val food = FavoriteFoodId.FoodDataCentral(123)
         val account = Account(profiles = listOf(profile1.copy(favoriteFoods = setOf(food))))
         val events = account.addFavoriteFood(profile1.id, food)
         assertTrue(events.isEmpty())
@@ -157,7 +157,7 @@ class AccountTest {
 
     @Test
     fun removeFavoriteFood_returnsFavoriteFoodRemovedEvent() {
-        val food = FavoriteFoodIdentity.FoodDataCentral(123)
+        val food = FavoriteFoodId.FoodDataCentral(123)
         val account = Account(profiles = listOf(profile1.copy(favoriteFoods = setOf(food))))
         val events = account.removeFavoriteFood(profile1.id, food, staticClock(now))
         assertEquals(listOf(FavoriteFoodRemovedEvent(profile1.id, food, now)), events)
@@ -165,7 +165,7 @@ class AccountTest {
 
     @Test
     fun removeFavoriteFood_isIdempotent() {
-        val food = FavoriteFoodIdentity.FoodDataCentral(123)
+        val food = FavoriteFoodId.FoodDataCentral(123)
         val account = Account(profiles = listOf(profile1))
         val events = account.removeFavoriteFood(profile1.id, food)
         assertTrue(events.isEmpty())
@@ -174,7 +174,7 @@ class AccountTest {
     @Test
     fun removeFavoriteUserFood_returnsEventsForAllProfilesContainingTheFood() {
         val productId = Uuid.random()
-        val food = FavoriteFoodIdentity.UserProduct(productId)
+        val food = FavoriteFoodId.UserProduct(productId)
         val account =
             Account(
                 profiles =
@@ -184,9 +184,9 @@ class AccountTest {
                     )
             )
 
-        val events = account.removeFavoriteUserFood(UserProductIdentity(productId))
+        val events = account.removeFavoriteUserFood(UserProductId(productId))
         assertEquals(2, events.size)
-        assertTrue(events.all { it is FavoriteFoodRemovedEvent && it.foodIdentity == food })
+        assertTrue(events.all { it is FavoriteFoodRemovedEvent && it.favoriteFoodId == food })
         assertTrue(events.any { (it as FavoriteFoodRemovedEvent).profileId == profile1.id })
         assertTrue(events.any { (it as FavoriteFoodRemovedEvent).profileId == profile2.id })
     }
@@ -215,7 +215,7 @@ class AccountTest {
         account = account.apply(ProfileRemovedEvent(profile1.id, now))
         assertEquals(listOf(profile2), account.profiles)
 
-        val food = FavoriteFoodIdentity.FoodDataCentral(1)
+        val food = FavoriteFoodId.FoodDataCentral(1)
         account = account.apply(FavoriteFoodAddedEvent(profile2.id, food, now))
         assertTrue(food in account.profiles.first().favoriteFoods)
 

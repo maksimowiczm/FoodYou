@@ -23,9 +23,9 @@ class UserFoodSearchExtension(
     foodNameSelector: FoodNameSelector,
 ) : SearchExtension(viewModel) {
     private val excludedIds: Flow<Set<Uuid>> =
-        viewModel.avoidCircularDependencyWith?.let { identity ->
-            compositionRepository.observeAncestors(identity).map { ancestors ->
-                ancestors.map { it.id }.toSet() + identity.id
+        viewModel.avoidCircularDependencyWith?.let { id ->
+            compositionRepository.observeAncestors(id).map { ancestors ->
+                ancestors.map { it.value }.toSet() + id.value
             }
         } ?: flowOf(emptySet())
 

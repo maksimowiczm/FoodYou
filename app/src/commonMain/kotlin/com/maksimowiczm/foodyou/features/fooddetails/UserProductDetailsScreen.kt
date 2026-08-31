@@ -32,13 +32,13 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserProductDetailsScreen(
-    identity: UserProductIdentity,
+    id: UserProductId,
     initialQuantity: Quantity?,
     onBack: () -> Unit,
     onEdit: () -> Unit,
@@ -46,7 +46,7 @@ fun UserProductDetailsScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: UserProductDetailsViewModel =
-        koinViewModel(parameters = { parametersOf(identity, initialQuantity) })
+        koinViewModel(parameters = { parametersOf(id, initialQuantity) })
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {

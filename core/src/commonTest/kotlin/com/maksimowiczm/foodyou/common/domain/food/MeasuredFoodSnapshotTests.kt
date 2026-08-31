@@ -7,7 +7,7 @@ import kotlin.uuid.Uuid
 
 class MeasuredFoodSnapshotTests {
 
-    private val dummyIdentity = FoodSnapshotId.OpenFoodFacts("123")
+    private val dummyId = FoodSnapshotId.OpenFoodFacts("123")
     private val dummyName = FoodName(fallback = "Test Food")
 
     @Test
@@ -16,7 +16,7 @@ class MeasuredFoodSnapshotTests {
             MeasuredFoodSnapshot(
                 snapshot =
                     LeafFoodSnapshot(
-                        id = dummyIdentity,
+                        id = dummyId,
                         name = dummyName,
                         brand = null,
                         image = null,
@@ -33,7 +33,7 @@ class MeasuredFoodSnapshotTests {
             MeasuredFoodSnapshot(
                 snapshot =
                     LeafFoodSnapshot(
-                        id = dummyIdentity,
+                        id = dummyId,
                         name = dummyName,
                         brand = null,
                         image = null,
@@ -59,7 +59,7 @@ class MeasuredFoodSnapshotTests {
             MeasuredFoodSnapshot(
                 snapshot =
                     LeafFoodSnapshot(
-                        id = dummyIdentity,
+                        id = dummyId,
                         name = FoodName(fallback = "A"),
                         brand = null,
                         image = null,
@@ -78,7 +78,7 @@ class MeasuredFoodSnapshotTests {
             MeasuredFoodSnapshot(
                 snapshot =
                     LeafFoodSnapshot(
-                        id = dummyIdentity,
+                        id = dummyId,
                         name = FoodName(fallback = "B"),
                         brand = null,
                         image = null,
@@ -109,7 +109,7 @@ class MeasuredFoodSnapshotTests {
             MeasuredFoodSnapshot(
                 snapshot =
                     LeafFoodSnapshot(
-                        id = dummyIdentity,
+                        id = dummyId,
                         name = FoodName(fallback = "Sub"),
                         brand = null,
                         image = null,
@@ -147,7 +147,7 @@ class MeasuredFoodSnapshotTests {
             MeasuredFoodSnapshot(
                 snapshot =
                     LeafFoodSnapshot(
-                        id = dummyIdentity,
+                        id = dummyId,
                         name = FoodName(fallback = "Other"),
                         brand = null,
                         image = null,

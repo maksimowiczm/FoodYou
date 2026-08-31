@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.common.domain.search.SearchQueryParser
 import com.maksimowiczm.foodyou.search.application.SearchHistoryService
 import com.maksimowiczm.foodyou.search.domain.recordSearchQuery
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterIsInstance
@@ -25,7 +25,7 @@ import org.koin.core.scope.Scope
 
 class SearchViewModel(
     initialQuery: String?,
-    val avoidCircularDependencyWith: UserRecipeIdentity?,
+    val avoidCircularDependencyWith: UserRecipeId?,
     private val searchQueryParser: SearchQueryParser,
     private val searchHistoryService: SearchHistoryService,
     savedStateHandle: SavedStateHandle,

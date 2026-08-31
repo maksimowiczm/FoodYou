@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters.OpenFoodFactsVersion
@@ -56,12 +56,12 @@ internal class OpenFoodFactsRepositoryImpl(
         resolve(parameters.version).count(parameters)
 
     override fun observe(
-        identity: OpenFoodFactsProductIdentity,
+        id: OpenFoodFactsProductId,
         remoteEnabled: Boolean,
     ): Flow<RemoteData<OpenFoodFactsProduct>> = channelFlow {
         send(RemoteData.Loading(null))
 
-        val barcode = identity.barcode
+        val barcode = id.barcode
 
         val localProduct = productDao.observe(barcode).first()
 
@@ -95,10 +95,10 @@ internal class OpenFoodFactsRepositoryImpl(
     }
 
     override suspend fun refresh(
-        identity: OpenFoodFactsProductIdentity
+        id: OpenFoodFactsProductId
     ): Result<OpenFoodFactsProduct, OpenFoodFactsApiError> =
         try {
-            val remote = apiV2Product.getProduct(identity.barcode).getOrThrow()
+            val remote = apiV2Product.getProduct(id.barcode).getOrThrow()
             val entity = mapper.toEntity(remote)
             productDao.upsertProduct(entity)
             Ok(mapper.toModel(entity))

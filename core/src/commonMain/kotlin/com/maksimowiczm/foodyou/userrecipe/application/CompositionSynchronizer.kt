@@ -15,7 +15,7 @@ class CompositionSynchronizer(private val repository: UserRecipeCompositionRepos
         when (event) {
             is UserRecipeCreatedEvent ->
                 repository.saveReferences(
-                    event.recipe.identity,
+                    event.recipe.id,
                     event.recipe.components.allComponentIdentities
                         .filterIsInstance<FoodSnapshotId.Tracked>()
                         .toSet(),
@@ -23,13 +23,13 @@ class CompositionSynchronizer(private val repository: UserRecipeCompositionRepos
 
             is UserRecipeUpdatedEvent ->
                 repository.saveReferences(
-                    event.recipe.identity,
+                    event.recipe.id,
                     event.recipe.components.allComponentIdentities
                         .filterIsInstance<FoodSnapshotId.Tracked>()
                         .toSet(),
                 )
 
-            is UserRecipeDeletedEvent -> repository.removeReferences(event.identity)
+            is UserRecipeDeletedEvent -> repository.removeReferences(event.userRecipeId)
         }
     }
 }

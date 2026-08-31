@@ -16,7 +16,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
@@ -36,7 +36,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
 class FoodDiaryEntryViewModel(
-    private val mealIdentity: MealIdentity,
+    private val mealId: MealId,
     private val foodDiaryService: FoodDiaryService,
     appProfileManager: AppProfileManager,
     accountService: AccountService,
@@ -79,7 +79,7 @@ class FoodDiaryEntryViewModel(
                 foodDiaryService.create(
                     profileIds = profiles.toSet(),
                     composition = composition,
-                    mealIdentity = mealIdentity,
+                    mealId = mealId,
                     timestamp = timestamp.toInstant(TimeZone.currentSystemDefault()),
                 )
             eventBus.send(FoodDiaryUiEvents.Created(entryId))
@@ -97,7 +97,7 @@ class FoodDiaryEntryViewModel(
                 MeasuredFoodSnapshot(
                     snapshot =
                         LeafFoodSnapshot(
-                            id = FoodSnapshotId.FoodDataCentral(product.identity.fdcId),
+                            id = FoodSnapshotId.FoodDataCentral(product.id.fdcId),
                             name = FoodName(fallback = product.name),
                             brand = null,
                             image = null,
@@ -126,7 +126,7 @@ class FoodDiaryEntryViewModel(
                 MeasuredFoodSnapshot(
                     snapshot =
                         LeafFoodSnapshot(
-                            id = FoodSnapshotId.OpenFoodFacts(product.identity.barcode),
+                            id = FoodSnapshotId.OpenFoodFacts(product.id.barcode),
                             name = product.name,
                             brand = null,
                             image = product.image?.let { FoodSnapshotImage.Uri(it) },
@@ -155,7 +155,7 @@ class FoodDiaryEntryViewModel(
                 MeasuredFoodSnapshot(
                     snapshot =
                         LeafFoodSnapshot(
-                            id = FoodSnapshotId.UserProduct(product.identity.id),
+                            id = FoodSnapshotId.UserProduct(product.id.value),
                             name = product.name,
                             brand = null,
                             image = product.image?.let { FoodSnapshotImage.Blob(it) },
@@ -184,7 +184,7 @@ class FoodDiaryEntryViewModel(
                 MeasuredFoodSnapshot(
                     snapshot =
                         CompositeFoodSnapshot(
-                            id = FoodSnapshotId.UserRecipe(recipe.identity.id),
+                            id = FoodSnapshotId.UserRecipe(recipe.id.value),
                             name = recipe.name,
                             brand = null,
                             image = recipe.image?.let { FoodSnapshotImage.Blob(it) },

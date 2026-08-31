@@ -15,11 +15,11 @@ import kotlin.time.Clock
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
 
-@Serializable data class UserProductIdentity(val id: Uuid)
+@Serializable data class UserProductId(val value: Uuid = Uuid.random())
 
 @Serializable
 data class UserProduct(
-    val identity: UserProductIdentity,
+    val id: UserProductId,
     val name: FoodName,
     val brand: String?,
     val barcode: UserProductBarcode?,
@@ -71,7 +71,7 @@ fun UserProduct.remove(
     clock: Clock = Clock.System,
 ): List<UserProductEvent> =
     listOf(
-        UserProductDeletedEvent(identity = identity, strategy = strategy, timestamp = clock.now())
+        UserProductDeletedEvent(userProductId = id, strategy = strategy, timestamp = clock.now())
     )
 
 fun UserProduct?.apply(event: UserProductEvent): UserProduct? =
@@ -86,7 +86,7 @@ fun Iterable<UserProductEvent>.toUserProduct(): UserProduct? =
 
 fun UserProduct.toSnapshot() =
     LeafFoodSnapshot(
-        id = FoodSnapshotId.UserProduct(identity.id),
+        id = FoodSnapshotId.UserProduct(id.value),
         name = name,
         brand = brand,
         image = image?.let(FoodSnapshotImage::Blob),

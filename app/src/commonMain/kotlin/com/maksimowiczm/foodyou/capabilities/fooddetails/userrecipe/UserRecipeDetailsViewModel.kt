@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
+import com.maksimowiczm.foodyou.account.domain.FavoriteFoodId
 import com.maksimowiczm.foodyou.app.application.ObserveIsFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.application.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsQuantityDelegate
@@ -15,7 +15,7 @@ import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.common.getOrNull
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class UserRecipeDetailsViewModel(
-    private val identity: UserRecipeIdentity,
+    private val id: UserRecipeId,
     initialQuantity: Quantity?,
     private val userRecipeService: UserRecipeService,
     observeIsFavoriteFoodUseCase: ObserveIsFavoriteFoodUseCase,
@@ -38,8 +38,8 @@ class UserRecipeDetailsViewModel(
 
     val uiState =
         combine(
-                userRecipeService.observe(identity),
-                observeIsFavoriteFoodUseCase.observe(identity),
+                userRecipeService.observe(id),
+                observeIsFavoriteFoodUseCase.observe(id),
                 quantityDelegate.selectedQuantityType,
                 quantityDelegate.selectedQuantity,
             ) { recipe, isFavorite, selectedQuantityType, selectedQuantity ->
@@ -115,7 +115,7 @@ class UserRecipeDetailsViewModel(
     fun setFavorite(isFavorite: Boolean) {
         viewModelScope.launch {
             setFavoriteFoodUseCase.setFavoriteFood(
-                identity = FavoriteFoodIdentity.Recipe(identity.id),
+                id = FavoriteFoodId.Recipe(id.value),
                 isFavorite = isFavorite,
             )
         }
@@ -123,7 +123,7 @@ class UserRecipeDetailsViewModel(
 
     fun delete() {
         viewModelScope.launch {
-            userRecipeService.delete(identity, DeleteStrategy.Delete)
+            userRecipeService.delete(id, DeleteStrategy.Delete)
             eventChannel.send(UserRecipeDetailsUiEvent.Deleted)
         }
     }

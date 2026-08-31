@@ -8,9 +8,9 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.observe
 import com.maksimowiczm.foodyou.features.home.integration.HomeDao
 import com.maksimowiczm.foodyou.features.home.integration.HomeEntryEntity
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryIdentity
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.mealplan.domain.activeMeal
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
@@ -43,7 +43,7 @@ class HomeViewModel(
     }
 
     private val userDate = MutableStateFlow<LocalDate?>(null)
-    private val userMealIdentity = MutableStateFlow<MealIdentity?>(null)
+    private val userMealId = MutableStateFlow<MealId?>(null)
 
     private val dateTime =
         combine(
@@ -64,8 +64,8 @@ class HomeViewModel(
             else realDateTime
         }
 
-    private val activeMeal = userMealIdentity.flatMapLatest { mealIdentity ->
-        if (mealIdentity == null)
+    private val activeMeal = userMealId.flatMapLatest { mealId ->
+        if (mealId == null)
             combine(
                 mealPlanService.observe(),
                 dateTime,
@@ -74,7 +74,7 @@ class HomeViewModel(
             }
         else
             mealPlanService.observe().map { mealPlan ->
-                mealPlan.meals.firstOrNull { it.identity == mealIdentity }
+                mealPlan.meals.firstOrNull { it.id == mealId }
             }
     }
 
@@ -82,8 +82,8 @@ class HomeViewModel(
         userDate.value = date
     }
 
-    fun selectMeal(mealIdentity: MealIdentity?) {
-        userMealIdentity.value = mealIdentity
+    fun selectMeal(mealId: MealId?) {
+        userMealId.value = mealId
     }
 
     val uiState =
@@ -96,16 +96,16 @@ class HomeViewModel(
             ) { profiles, selectedProfileId, dateTime, activeMeal, mealPlan ->
                 val entries = homeDao.observeEntries(selectedProfileId.value, dateTime.date)
                 entries.map { homeEntries ->
-                    val mealIds = mealPlan.meals.map { it.identity.id }.toSet()
+                    val mealIds = mealPlan.meals.map { it.id.value }.toSet()
 
                     val linkedMeals =
                         mealPlan.meals.map { meal ->
                             HomeMealState.Linked(
-                                identity = meal.identity,
+                                id = meal.id,
                                 name = meal.name,
                                 foods =
                                     homeEntries
-                                        .filter { it.mealId == meal.identity.id }
+                                        .filter { it.mealId == meal.id.value }
                                         .toFoodStates(),
                             )
                         }
@@ -125,7 +125,7 @@ class HomeViewModel(
                         selectedProfileId = selectedProfileId,
                         date = dateTime.date,
                         meals = meals,
-                        activeMealId = activeMeal?.identity,
+                        activeMealId = activeMeal?.id,
                     )
                 }
             }
@@ -142,7 +142,7 @@ class HomeViewModel(
 
     private fun List<HomeEntryEntity>.toFoodStates() = map { entry ->
         HomeFoodState(
-            identity = FoodDiaryEntryIdentity(entry.entryId),
+            id = FoodDiaryEntryId(entry.entryId),
             time = entry.time,
             snapshot = entry.composition,
         )

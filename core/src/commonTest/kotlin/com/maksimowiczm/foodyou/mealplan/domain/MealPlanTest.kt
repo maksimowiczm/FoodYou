@@ -13,10 +13,10 @@ import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalTime
 
 class MealPlanTest {
-    private val mealIdentity = MealIdentity(Uuid.random())
+    private val mealId = MealId(Uuid.random())
     private val breakfast =
         Meal(
-            identity = mealIdentity,
+            id = mealId,
             name = "Breakfast",
             timeWindow = Meal.TimeWindow.AllDay,
         )
@@ -46,7 +46,7 @@ class MealPlanTest {
     fun `adding meal produces MealAddedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
         val mealPlan = MealPlan(meals = listOf(breakfast))
-        val newMeal = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val newMeal = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         val newMeals = listOf(breakfast, newMeal)
 
         val events = mealPlan.update(newMeals, staticClock(timestamp))
@@ -75,7 +75,7 @@ class MealPlanTest {
     @Test
     fun `removing meal produces MealDeletedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
-        val lunch = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val lunch = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, lunch))
         val newMeals = listOf(lunch)
 
@@ -83,17 +83,17 @@ class MealPlanTest {
 
         assertEquals(1, events.size)
         val event = assertIs<MealDeletedEvent>(events.single())
-        assertEquals(breakfast.identity, event.identity)
+        assertEquals(breakfast.id, event.mealId)
         assertEquals(timestamp, event.timestamp)
     }
 
     @Test
     fun `multiple changes produce multiple granular events`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
-        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
 
-        val lunch = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val lunch = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         val updatedBreakfast = breakfast.copy(name = "Big Breakfast")
 
         // breakfast updated, dinner removed, lunch added
@@ -127,7 +127,7 @@ class MealPlanTest {
     @Test
     fun `reordering meals produces MealsReorderedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
-        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
 
         val reordered = listOf(dinner, breakfast)
@@ -136,14 +136,14 @@ class MealPlanTest {
 
         assertEquals(1, events.size)
         val event = assertIs<MealsReorderedEvent>(events.single())
-        assertEquals(listOf(dinner.identity, breakfast.identity), event.order)
+        assertEquals(listOf(dinner.id, breakfast.id), event.order)
         assertEquals(timestamp, event.timestamp)
     }
 
     @Test
     fun `reordering with simultaneous content change produces both events`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
-        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
 
         val updatedBreakfast = breakfast.copy(name = "Big Breakfast")
@@ -156,16 +156,16 @@ class MealPlanTest {
         assertEquals(updatedBreakfast, updateEvent.meal)
 
         val reorderEvent = assertIs<MealsReorderedEvent>(events.find { it is MealsReorderedEvent })
-        assertEquals(listOf(dinner.identity, breakfast.identity), reorderEvent.order)
+        assertEquals(listOf(dinner.id, breakfast.id), reorderEvent.order)
     }
 
     @Test
     fun `adding a meal in the middle produces MealAddedEvent and MealsReorderedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
-        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
 
-        val lunch = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val lunch = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         // lunch inserted between breakfast and dinner, not appended at the end
         val newMeals = listOf(breakfast, lunch, dinner)
 
@@ -177,7 +177,7 @@ class MealPlanTest {
 
         val reorderEvent = assertIs<MealsReorderedEvent>(events.find { it is MealsReorderedEvent })
         assertEquals(
-            listOf(breakfast.identity, lunch.identity, dinner.identity),
+            listOf(breakfast.id, lunch.id, dinner.id),
             reorderEvent.order,
         )
     }
@@ -186,7 +186,7 @@ class MealPlanTest {
     fun `adding a meal at the end does not produce MealsReorderedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
         val mealPlan = MealPlan(meals = listOf(breakfast))
-        val lunch = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val lunch = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
 
         val events = mealPlan.update(listOf(breakfast, lunch), staticClock(timestamp))
 
@@ -197,7 +197,7 @@ class MealPlanTest {
     @Test
     fun `deleting a meal does not spuriously produce MealsReorderedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
-        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
 
         val events = mealPlan.update(listOf(dinner), staticClock(timestamp))
@@ -209,8 +209,8 @@ class MealPlanTest {
     @Test
     fun `deleting a meal from the middle does not spuriously produce MealsReorderedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(5000)
-        val lunch = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
-        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val lunch = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, lunch, dinner))
 
         // remove lunch, keep breakfast and dinner in their original relative order
@@ -218,15 +218,14 @@ class MealPlanTest {
 
         assertEquals(1, events.size)
         val event = assertIs<MealDeletedEvent>(events.single())
-        assertEquals(lunch.identity, event.identity)
+        assertEquals(lunch.id, event.mealId)
     }
 
     @Test
     fun `applying MealsReorderedEvent reorders meals`() {
-        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
-        val event =
-            MealsReorderedEvent(listOf(dinner.identity, breakfast.identity), Clock.System.now())
+        val event = MealsReorderedEvent(listOf(dinner.id, breakfast.id), Clock.System.now())
 
         val updatedPlan = mealPlan.apply(event)
 
@@ -235,14 +234,14 @@ class MealPlanTest {
 
     @Test
     fun `aggregating update and reorder events produces correct state`() {
-        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val updatedBreakfast = breakfast.copy(name = "Big Breakfast")
         val now = Clock.System.now()
         val events =
             listOf(
                 MealPlanInitializedEvent(Language.English, listOf(breakfast, dinner), now),
                 MealUpdatedEvent(updatedBreakfast, now),
-                MealsReorderedEvent(listOf(dinner.identity, breakfast.identity), now),
+                MealsReorderedEvent(listOf(dinner.id, breakfast.id), now),
             )
 
         val mealPlan = events.toMealPlan()
@@ -252,7 +251,7 @@ class MealPlanTest {
 
     @Test
     fun `updating with no order change and no content change returns no events`() {
-        val dinner = Meal(MealIdentity(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
+        val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
 
         val events = mealPlan.update(listOf(breakfast, dinner))
@@ -274,7 +273,7 @@ class MealPlanTest {
     @Test
     fun `applying MealAddedEvent adds meal`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
-        val newMeal = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val newMeal = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         val event = MealAddedEvent(newMeal, Clock.System.now())
 
         val updatedPlan = mealPlan.apply(event)
@@ -296,7 +295,7 @@ class MealPlanTest {
     @Test
     fun `applying MealDeletedEvent removes meal`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
-        val event = MealDeletedEvent(breakfast.identity, Clock.System.now())
+        val event = MealDeletedEvent(breakfast.id, Clock.System.now())
 
         val updatedPlan = mealPlan.apply(event)
 
@@ -305,7 +304,7 @@ class MealPlanTest {
 
     @Test
     fun `aggregating event sequence produces correct state`() {
-        val meal2 = Meal(MealIdentity(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
+        val meal2 = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         val updatedMeal2 = meal2.copy(name = "Better Lunch")
         val now = Clock.System.now()
         val events =
@@ -313,7 +312,7 @@ class MealPlanTest {
                 MealPlanInitializedEvent(Language.English, listOf(breakfast), now),
                 MealAddedEvent(meal2, now),
                 MealUpdatedEvent(updatedMeal2, now),
-                MealDeletedEvent(breakfast.identity, now),
+                MealDeletedEvent(breakfast.id, now),
             )
 
         val mealPlan = events.toMealPlan()

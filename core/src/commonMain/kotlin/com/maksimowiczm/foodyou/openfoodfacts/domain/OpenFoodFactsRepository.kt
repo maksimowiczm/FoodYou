@@ -17,11 +17,11 @@ interface OpenFoodFactsRepository {
     fun count(parameters: OpenFoodFactsSearchParameters): Flow<Int>
 
     fun observe(
-        identity: OpenFoodFactsProductIdentity,
+        id: OpenFoodFactsProductId,
         remoteEnabled: Boolean,
     ): Flow<RemoteData<OpenFoodFactsProduct>>
 
     suspend fun refresh(
-        identity: OpenFoodFactsProductIdentity
+        id: OpenFoodFactsProductId
     ): Result<OpenFoodFactsProduct, OpenFoodFactsApiError>
 }

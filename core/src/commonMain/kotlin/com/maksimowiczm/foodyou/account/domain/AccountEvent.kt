@@ -48,13 +48,13 @@ data class NutrientsOrderChangedEvent(
 @Serializable
 data class FavoriteFoodAddedEvent(
     val profileId: ProfileId,
-    val foodIdentity: FavoriteFoodIdentity,
+    val foodId: FavoriteFoodId,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : AccountEvent()
 
 @Serializable
 data class FavoriteFoodRemovedEvent(
     val profileId: ProfileId,
-    val foodIdentity: FavoriteFoodIdentity,
+    val favoriteFoodId: FavoriteFoodId,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : AccountEvent()

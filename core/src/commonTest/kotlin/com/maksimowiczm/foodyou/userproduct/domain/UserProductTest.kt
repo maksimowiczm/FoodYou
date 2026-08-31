@@ -10,15 +10,14 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.time.Instant
-import kotlin.uuid.Uuid
 
 class UserProductTest {
-    private val identity = UserProductIdentity(Uuid.random())
+    private val userProductId = UserProductId()
     private val foodName = FoodName(fallback = "Apple")
     private val nutritionFacts = NutritionFacts()
     private val userProduct =
         UserProduct(
-            identity = identity,
+            id = userProductId,
             name = foodName,
             brand = "Test Brand",
             barcode = UserProductBarcode("123456789"),
@@ -106,7 +105,7 @@ class UserProductTest {
 
         assertEquals(1, events.size)
         val event = assertIs<UserProductDeletedEvent>(events[0])
-        assertEquals(identity, event.identity)
+        assertEquals(userProductId, event.userProductId)
         assertEquals(DeleteStrategy.Delete, event.strategy)
         assertEquals(now, event.timestamp)
     }
@@ -128,7 +127,8 @@ class UserProductTest {
 
     @Test
     fun apply_deleted_event() {
-        val event = UserProductDeletedEvent(identity, DeleteStrategy.Delete, Instant.DISTANT_PAST)
+        val event =
+            UserProductDeletedEvent(userProductId, DeleteStrategy.Delete, Instant.DISTANT_PAST)
         val result = userProduct.apply(event)
         assertNull(result)
     }
@@ -152,7 +152,7 @@ class UserProductTest {
             listOf(
                 UserProductCreatedEvent(userProduct, Instant.fromEpochSeconds(1)),
                 UserProductDeletedEvent(
-                    identity,
+                    userProductId,
                     DeleteStrategy.Delete,
                     Instant.fromEpochSeconds(2),
                 ),

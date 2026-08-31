@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.features.userproduct.ProductFormState
 import com.maksimowiczm.foodyou.features.userproduct.ProductFormTransformer
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 internal class EditProductViewModel(
     private val userProductService: UserProductService,
     private val productFormTransformer: ProductFormTransformer,
-    private val identity: UserProductIdentity,
+    private val id: UserProductId,
 ) : ViewModel() {
     private val eventBus = Channel<EditProductEvent>()
     val uiEvents = eventBus.receiveAsFlow()
@@ -28,7 +28,7 @@ internal class EditProductViewModel(
 
     val product =
         userProductService
-            .observe(identity)
+            .observe(id)
             .onEach { isLocked.value = false }
             .stateIn(
                 scope = viewModelScope,
@@ -53,7 +53,7 @@ internal class EditProductViewModel(
                 productFormTransformer.transform(form)
 
             userProductService.edit(
-                identity = identity,
+                id = id,
                 name = foodName,
                 brand = brand,
                 barcode = barcode,

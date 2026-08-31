@@ -11,32 +11,31 @@ fun MealPlan.update(
     updatedMeals: List<Meal>,
     clock: Clock = Clock.System,
 ): List<MealPlanEvent> {
-    require(updatedMeals.map { it.identity }.distinct().size == updatedMeals.size) {
+    require(updatedMeals.map { it.id }.distinct().size == updatedMeals.size) {
         "Meal identities must be unique"
     }
     require(updatedMeals.isNotEmpty()) { "Must provide at least one meal" }
     if (updatedMeals == meals) return emptyList()
 
     val now = clock.now()
-    val currentById = meals.associateBy { it.identity }
-    val updatedById = updatedMeals.associateBy { it.identity }
+    val currentById = meals.associateBy { it.id }
+    val updatedById = updatedMeals.associateBy { it.id }
 
-    val added = updatedMeals.filter { it.identity !in currentById }
-    val removed = meals.filter { it.identity !in updatedById }
+    val added = updatedMeals.filter { it.id !in currentById }
+    val removed = meals.filter { it.id !in updatedById }
     val changed = updatedMeals.filter { meal ->
-        currentById[meal.identity]?.let { it != meal } == true
+        currentById[meal.id]?.let { it != meal } == true
     }
 
-    val removedIds = removed.map { it.identity }.toSet()
-    val naturalOrder =
-        meals.map { it.identity }.filterNot { it in removedIds } + added.map { it.identity }
-    val targetOrder = updatedMeals.map { it.identity }
+    val removedIds = removed.map { it.id }.toSet()
+    val naturalOrder = meals.map { it.id }.filterNot { it in removedIds } + added.map { it.id }
+    val targetOrder = updatedMeals.map { it.id }
     val reordered = targetOrder != naturalOrder
 
     return buildList {
         added.forEach { add(MealAddedEvent(it, now)) }
         changed.forEach { add(MealUpdatedEvent(it, now)) }
-        removed.forEach { add(MealDeletedEvent(it.identity, now)) }
+        removed.forEach { add(MealDeletedEvent(it.id, now)) }
         if (reordered) add(MealsReorderedEvent(targetOrder, now))
     }
 }
@@ -83,10 +82,10 @@ fun MealPlan.apply(event: MealPlanEvent): MealPlan =
         is MealPlanInitializedEvent -> copy(meals = event.meals)
         is MealAddedEvent -> copy(meals = meals + event.meal)
         is MealUpdatedEvent ->
-            copy(meals = meals.map { if (it.identity == event.meal.identity) event.meal else it })
-        is MealDeletedEvent -> copy(meals = meals.filterNot { it.identity == event.identity })
+            copy(meals = meals.map { if (it.id == event.meal.id) event.meal else it })
+        is MealDeletedEvent -> copy(meals = meals.filterNot { it.id == event.mealId })
         is MealsReorderedEvent -> {
-            val byId = meals.associateBy { it.identity }
+            val byId = meals.associateBy { it.id }
             copy(meals = event.order.mapNotNull { byId[it] })
         }
     }

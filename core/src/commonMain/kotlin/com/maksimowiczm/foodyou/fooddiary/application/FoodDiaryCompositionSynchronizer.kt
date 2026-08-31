@@ -15,7 +15,7 @@ class FoodDiaryCompositionSynchronizer(private val repository: FoodDiaryComposit
         when (event) {
             is FoodDiaryEntryCreatedEvent ->
                 repository.saveReferences(
-                    event.identity,
+                    event.diaryEntryId,
                     event.composition.allIdentities
                         .filterIsInstance<FoodSnapshotId.Tracked>()
                         .toSet(),
@@ -23,13 +23,13 @@ class FoodDiaryCompositionSynchronizer(private val repository: FoodDiaryComposit
 
             is FoodDiaryEntryUpdatedEvent ->
                 repository.saveReferences(
-                    event.identity,
+                    event.diaryEntryId,
                     event.composition.allIdentities
                         .filterIsInstance<FoodSnapshotId.Tracked>()
                         .toSet(),
                 )
 
-            is FoodDiaryEntryDeletedEvent -> repository.removeReferences(event.identity)
+            is FoodDiaryEntryDeletedEvent -> repository.removeReferences(event.diaryEntryId)
 
             is FoodDiaryEntryUnlinkedFromMealEvent -> Unit
         }

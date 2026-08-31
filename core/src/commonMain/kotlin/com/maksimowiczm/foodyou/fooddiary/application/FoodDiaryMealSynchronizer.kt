@@ -13,20 +13,20 @@ class FoodDiaryMealSynchronizer(private val repository: FoodDiaryMealRepository)
     override suspend fun handle(event: FoodDiaryEvent) {
         when (event) {
             is FoodDiaryEntryCreatedEvent -> {
-                repository.saveReference(event.identity, event.mealIdentity)
+                repository.saveReference(event.diaryEntryId, event.mealId)
             }
 
             is FoodDiaryEntryUpdatedEvent -> {
-                if (event.mealIdentity != null) {
-                    repository.saveReference(event.identity, event.mealIdentity)
+                if (event.mealId != null) {
+                    repository.saveReference(event.diaryEntryId, event.mealId)
                 } else {
-                    repository.removeReference(event.identity)
+                    repository.removeReference(event.diaryEntryId)
                 }
             }
 
-            is FoodDiaryEntryDeletedEvent -> repository.removeReference(event.identity)
+            is FoodDiaryEntryDeletedEvent -> repository.removeReference(event.diaryEntryId)
 
-            is FoodDiaryEntryUnlinkedFromMealEvent -> repository.removeReference(event.identity)
+            is FoodDiaryEntryUnlinkedFromMealEvent -> repository.removeReference(event.diaryEntryId)
         }
     }
 }

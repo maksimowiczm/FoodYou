@@ -16,13 +16,13 @@ class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEvent
             is FoodDiaryEntryCreatedEvent -> {
                 val dt = event.entryTimestamp.toLocalDateTime(TimeZone.currentSystemDefault())
                 homeDao.replaceEntries(
-                    entryId = event.identity.id,
+                    entryId = event.diaryEntryId.id,
                     entities =
                         event.profileIds.map {
                             HomeEntryEntity(
-                                entryId = event.identity.id,
+                                entryId = event.diaryEntryId.id,
                                 profileId = it.value,
-                                mealId = event.mealIdentity.id,
+                                mealId = event.mealId.value,
                                 date = dt.date,
                                 time = dt.time,
                                 composition = event.composition,
@@ -34,13 +34,13 @@ class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEvent
             is FoodDiaryEntryUpdatedEvent -> {
                 val dt = event.entryTimestamp.toLocalDateTime(TimeZone.currentSystemDefault())
                 homeDao.replaceEntries(
-                    entryId = event.identity.id,
+                    entryId = event.diaryEntryId.id,
                     entities =
                         event.profileIds.map {
                             HomeEntryEntity(
-                                entryId = event.identity.id,
+                                entryId = event.diaryEntryId.id,
                                 profileId = it.value,
-                                mealId = event.mealIdentity?.id,
+                                mealId = event.mealId?.value,
                                 date = dt.date,
                                 time = dt.time,
                                 composition = event.composition,
@@ -51,15 +51,15 @@ class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEvent
 
             is FoodDiaryEntryDeletedEvent ->
                 if (event.strategy == DeleteStrategy.Delete) {
-                    homeDao.delete(event.identity.id)
+                    homeDao.delete(event.diaryEntryId.id)
                 } else {
                     // Unlink strategy - entry becomes anonymous
-                    homeDao.updateEach(event.identity.id) {
+                    homeDao.updateEach(event.diaryEntryId.id) {
                         it.copy(composition = it.composition.anonymize())
                     }
                 }
 
-            is FoodDiaryEntryUnlinkedFromMealEvent -> homeDao.clearMealId(event.identity.id)
+            is FoodDiaryEntryUnlinkedFromMealEvent -> homeDao.clearMealId(event.diaryEntryId.id)
         }
     }
 }

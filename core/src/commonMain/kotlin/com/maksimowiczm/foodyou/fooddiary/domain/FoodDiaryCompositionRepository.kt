@@ -5,28 +5,28 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 /** Repository for tracking which identified components are used in food diary entries. */
 interface FoodDiaryCompositionRepository {
     /**
-     * Finds all food diary entries that contain the given component identity.
+     * Finds all food diary entries that contain the given snapshot id.
      *
-     * @param identity The identity of the product or recipe.
+     * @param id The id of the product or recipe.
      * @return A list of identities for food diary entries that use the specified component.
      */
-    suspend fun findEntriesUsing(identity: FoodSnapshotId.Tracked): List<FoodDiaryEntryIdentity>
+    suspend fun findEntriesUsing(id: FoodSnapshotId.Tracked): List<FoodDiaryEntryId>
 
     /**
      * Saves the association between a food diary entry and its component identities.
      *
-     * @param identity The identity of the food diary entry.
-     * @param identities The set of all component identities used in the entry.
+     * @param id The id of the food diary entry.
+     * @param trackedIds The set of all component identities used in the entry.
      */
     suspend fun saveReferences(
-        identity: FoodDiaryEntryIdentity,
-        identities: Set<FoodSnapshotId.Tracked>,
+        id: FoodDiaryEntryId,
+        trackedIds: Set<FoodSnapshotId.Tracked>,
     )
 
     /**
      * Removes all recorded component associations for a specific food diary entry.
      *
-     * @param identity The identity of the food diary entry to clear references for.
+     * @param id The id of the food diary entry to clear references for.
      */
-    suspend fun removeReferences(identity: FoodDiaryEntryIdentity)
+    suspend fun removeReferences(id: FoodDiaryEntryId)
 }

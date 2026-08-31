@@ -2,30 +2,28 @@ package com.maksimowiczm.foodyou.fooddiary.infrastructure.room
 
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryIdentity
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 
 internal class RoomFoodDiaryCompositionRepository(private val dao: FoodDiaryCompositionDao) :
     FoodDiaryCompositionRepository {
-    override suspend fun findEntriesUsing(
-        identity: FoodSnapshotId.Tracked
-    ): List<FoodDiaryEntryIdentity> {
-        return dao.findEntriesBySnapshotId(identity).map(::FoodDiaryEntryIdentity)
+    override suspend fun findEntriesUsing(id: FoodSnapshotId.Tracked): List<FoodDiaryEntryId> {
+        return dao.findEntriesBySnapshotId(id).map(::FoodDiaryEntryId)
     }
 
     override suspend fun saveReferences(
-        identity: FoodDiaryEntryIdentity,
-        identities: Set<FoodSnapshotId.Tracked>,
+        id: FoodDiaryEntryId,
+        trackedIds: Set<FoodSnapshotId.Tracked>,
     ) {
-        val references = identities.map { componentIdentity ->
+        val references = trackedIds.map { snapshotId ->
             FoodDiaryEntryReferenceEntity(
-                entryId = identity.id,
-                snapshotId = componentIdentity,
+                entryId = id.id,
+                snapshotId = snapshotId,
             )
         }
-        dao.updateReferences(identity.id, references)
+        dao.updateReferences(id.id, references)
     }
 
-    override suspend fun removeReferences(identity: FoodDiaryEntryIdentity) {
-        dao.deleteByEntryId(identity.id)
+    override suspend fun removeReferences(id: FoodDiaryEntryId) {
+        dao.deleteByEntryId(id.id)
     }
 }

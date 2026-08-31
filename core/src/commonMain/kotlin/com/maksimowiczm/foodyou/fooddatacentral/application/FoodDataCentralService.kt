@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.onSuccess
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductUpdatedEvent
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
@@ -55,12 +55,10 @@ class FoodDataCentralService(
         return repository.count(parameters)
     }
 
-    fun observe(
-        identity: FoodDataCentralProductIdentity
-    ): Flow<RemoteData<FoodDataCentralProduct>> {
+    fun observe(id: FoodDataCentralProductId): Flow<RemoteData<FoodDataCentralProduct>> {
         return settingsRepository.observe().distinctUntilChanged().flatMapLatest { settings ->
             repository.observe(
-                identity = identity,
+                id = id,
                 remoteEnabled = settings.remoteEnabled,
                 apiKey = settings.apiKey?.decrypt()?.decodeToString(),
             )
@@ -68,11 +66,11 @@ class FoodDataCentralService(
     }
 
     suspend fun refresh(
-        identity: FoodDataCentralProductIdentity
+        id: FoodDataCentralProductId
     ): Result<FoodDataCentralProduct, FoodDataCentralApiError> {
         val apiKey =
             settingsRepository.observe().map { it.apiKey }.first()?.decrypt()?.decodeToString()
-        return repository.refresh(identity, apiKey).onSuccess {
+        return repository.refresh(id, apiKey).onSuccess {
             eventBus.publish(
                 FoodDataCentralProductUpdatedEvent(product = it, timestamp = clock.now())
             )

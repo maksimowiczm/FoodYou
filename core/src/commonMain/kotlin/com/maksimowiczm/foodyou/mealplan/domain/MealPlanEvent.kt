@@ -30,12 +30,12 @@ data class MealUpdatedEvent(
 
 @Serializable
 data class MealDeletedEvent(
-    val identity: MealIdentity,
+    val mealId: MealId,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : MealPlanEvent()
 
 @Serializable
 data class MealsReorderedEvent(
-    val order: List<MealIdentity>,
+    val order: List<MealId>,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : MealPlanEvent()

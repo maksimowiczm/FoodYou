@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.Nutriments
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsProductNetwork
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsProductEntity
@@ -78,7 +78,7 @@ private fun OpenFoodFactsProductNetwork.toModel(): OpenFoodFactsProduct {
     val packageQuantity = findQuantity(quantity)
 
     return OpenFoodFactsProduct(
-        identity = OpenFoodFactsProductIdentity(code),
+        id = OpenFoodFactsProductId(code),
         name = name,
         brand = brands?.takeIf { it.isNotEmpty() }?.filterNot { it.isBlank() }?.joinToString(),
         nutritionFacts = nutriments?.toNutritionFacts() ?: NutritionFacts(),

@@ -23,10 +23,10 @@ class FoodDiaryRecipeSynchronizer(private val foodDiaryService: FoodDiaryService
                 )
 
             is UserRecipeDeletedEvent -> {
-                val identity = FoodSnapshotId.UserRecipe(event.identity.id)
+                val id = FoodSnapshotId.UserRecipe(event.userRecipeId.value)
                 when (event.strategy) {
-                    DeleteStrategy.Delete -> foodDiaryService.removeComponentFromEntries(identity)
-                    DeleteStrategy.Unlink -> foodDiaryService.unlinkComponentFromEntries(identity)
+                    DeleteStrategy.Delete -> foodDiaryService.removeComponentFromEntries(id)
+                    DeleteStrategy.Unlink -> foodDiaryService.unlinkComponentFromEntries(id)
                 }
             }
         }

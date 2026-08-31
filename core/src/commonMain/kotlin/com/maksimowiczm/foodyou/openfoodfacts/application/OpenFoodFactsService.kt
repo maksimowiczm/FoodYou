@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.onSuccess
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductUpdatedEvent
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
@@ -54,20 +54,20 @@ class OpenFoodFactsService(
         return repository.count(parameters)
     }
 
-    fun observe(identity: OpenFoodFactsProductIdentity): Flow<RemoteData<OpenFoodFactsProduct>> {
+    fun observe(id: OpenFoodFactsProductId): Flow<RemoteData<OpenFoodFactsProduct>> {
         return settingsRepository
             .observe()
             .map { it.remoteEnabled }
             .distinctUntilChanged()
             .flatMapLatest { remoteEnabled ->
-                repository.observe(identity = identity, remoteEnabled = remoteEnabled)
+                repository.observe(id = id, remoteEnabled = remoteEnabled)
             }
     }
 
     suspend fun refresh(
-        identity: OpenFoodFactsProductIdentity
+        id: OpenFoodFactsProductId
     ): Result<OpenFoodFactsProduct, OpenFoodFactsApiError> {
-        return repository.refresh(identity).onSuccess {
+        return repository.refresh(id).onSuccess {
             eventBus.publish(
                 OpenFoodFactsProductUpdatedEvent(product = it, timestamp = clock.now())
             )

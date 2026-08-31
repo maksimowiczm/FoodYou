@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.capabilities.fooddetails.userproduct
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
+import com.maksimowiczm.foodyou.account.domain.FavoriteFoodId
 import com.maksimowiczm.foodyou.app.application.ObserveIsFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.application.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsQuantityDelegate
@@ -12,7 +12,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class UserProductDetailsViewModel(
-    private val identity: UserProductIdentity,
+    private val id: UserProductId,
     initialQuantity: Quantity?,
     private val userProductService: UserProductService,
     observeIsFavoriteFoodUseCase: ObserveIsFavoriteFoodUseCase,
@@ -35,8 +35,8 @@ class UserProductDetailsViewModel(
 
     val uiState =
         combine(
-                userProductService.observe(identity),
-                observeIsFavoriteFoodUseCase.observe(identity),
+                userProductService.observe(id),
+                observeIsFavoriteFoodUseCase.observe(id),
                 quantityDelegate.selectedQuantityType,
                 quantityDelegate.selectedQuantity,
             ) { product, isFavorite, selectedQuantityType, selectedQuantity ->
@@ -90,7 +90,7 @@ class UserProductDetailsViewModel(
     fun setFavorite(isFavorite: Boolean) {
         viewModelScope.launch {
             setFavoriteFoodUseCase.setFavoriteFood(
-                identity = FavoriteFoodIdentity.UserProduct(identity.id),
+                id = FavoriteFoodId.UserProduct(id.value),
                 isFavorite = isFavorite,
             )
         }
@@ -98,7 +98,7 @@ class UserProductDetailsViewModel(
 
     fun delete() {
         viewModelScope.launch {
-            userProductService.delete(identity, DeleteStrategy.Delete)
+            userProductService.delete(id, DeleteStrategy.Delete)
             eventChannel.send(UserProductDetailsUiEvent.Deleted)
         }
     }

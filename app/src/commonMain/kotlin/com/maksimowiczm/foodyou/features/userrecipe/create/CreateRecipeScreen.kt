@@ -13,8 +13,8 @@ import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormViewModel
 import com.maksimowiczm.foodyou.features.userrecipe.rememberRecipeFormState
 import com.maksimowiczm.foodyou.shared.ui.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -22,9 +22,9 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CreateRecipeScreen(
     onBack: () -> Unit,
-    onCreate: (UserRecipeIdentity) -> Unit,
-    onEditUserProduct: (UserProductIdentity) -> Unit,
-    onEditUserRecipe: (UserRecipeIdentity) -> Unit,
+    onCreate: (UserRecipeId) -> Unit,
+    onEditUserProduct: (UserProductId) -> Unit,
+    onEditUserRecipe: (UserRecipeId) -> Unit,
     modifier: Modifier = Modifier.Companion,
 ) {
     val viewModel: CreateRecipeViewModel = koinViewModel()
@@ -60,7 +60,7 @@ fun CreateRecipeScreen(
     )
 
     RecipeApp(
-        identity = null,
+        id = null,
         onBack = { if (isModified) showDiscardDialog = true else onBack() },
         onSave = { viewModel.create(form = recipeFormState, state = uiState) },
         onEditUserProduct = onEditUserProduct,

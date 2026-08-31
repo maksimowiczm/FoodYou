@@ -13,7 +13,7 @@ fun Module.foodDetails() {
     viewModelOf(::FoodDataCentralDetailsViewModel)
     viewModel { params ->
         UserProductDetailsViewModel(
-            identity = params.get(),
+            id = params.get(),
             initialQuantity = params.getOrNull(),
             userProductService = get(),
             observeIsFavoriteFoodUseCase = get(),
@@ -23,7 +23,7 @@ fun Module.foodDetails() {
     }
     viewModel { params ->
         UserRecipeDetailsViewModel(
-            identity = params.get(),
+            id = params.get(),
             initialQuantity = params.getOrNull(),
             userRecipeService = get(),
             observeIsFavoriteFoodUseCase = get(),

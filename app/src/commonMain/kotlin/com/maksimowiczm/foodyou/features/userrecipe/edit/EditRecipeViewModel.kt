@@ -6,7 +6,7 @@ import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormState
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormTransformer
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormUiState
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class EditRecipeViewModel(
     private val recipeService: UserRecipeService,
     private val recipeFormTransformer: RecipeFormTransformer,
-    private val identity: UserRecipeIdentity,
+    private val id: UserRecipeId,
 ) : ViewModel() {
     private val eventBus = Channel<EditRecipeEvent>()
     val uiEvents = eventBus.receiveAsFlow()
@@ -27,7 +27,7 @@ class EditRecipeViewModel(
 
     val recipe =
         recipeService
-            .observe(identity)
+            .observe(id)
             .onEach { isLocked.value = false }
             .stateIn(
                 scope = viewModelScope,
@@ -43,7 +43,7 @@ class EditRecipeViewModel(
                 recipeFormTransformer.transform(form, state)
 
             recipeService.edit(
-                identity = identity,
+                id = id,
                 name = name,
                 note = note,
                 imageBytes = imageBytes,

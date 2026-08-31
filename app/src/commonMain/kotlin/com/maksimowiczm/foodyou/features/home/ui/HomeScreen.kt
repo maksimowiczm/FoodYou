@@ -80,10 +80,10 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.features.home.ui.calendar.CalendarCard
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.shared.ui.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.shared.ui.component.ScrimWithPredictiveBack
@@ -91,8 +91,8 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.horizontal
 import com.maksimowiczm.foodyou.shared.ui.extension.plus
 import com.maksimowiczm.foodyou.shared.ui.saveable.jsonSaver
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -108,12 +108,10 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun HomeScreen(
     onAvatar: () -> Unit,
-    onFoodDataCentralProduct:
-        (FoodDataCentralProductIdentity, Quantity, MealIdentity?, LocalDate?) -> Unit,
-    onOpenFoodFactsProduct:
-        (OpenFoodFactsProductIdentity, Quantity, MealIdentity?, LocalDate?) -> Unit,
-    onUserProduct: (UserProductIdentity, Quantity, MealIdentity?, LocalDate?) -> Unit,
-    onUserRecipe: (UserRecipeIdentity, Quantity, MealIdentity?, LocalDate?) -> Unit,
+    onFoodDataCentralProduct: (FoodDataCentralProductId, Quantity, MealId?, LocalDate?) -> Unit,
+    onOpenFoodFactsProduct: (OpenFoodFactsProductId, Quantity, MealId?, LocalDate?) -> Unit,
+    onUserProduct: (UserProductId, Quantity, MealId?, LocalDate?) -> Unit,
+    onUserRecipe: (UserRecipeId, Quantity, MealId?, LocalDate?) -> Unit,
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
     initialQuery: String?,
@@ -156,16 +154,16 @@ fun HomeScreen(
         onSelectDate = viewModel::selectDate,
         onSelectMeal = viewModel::selectMeal,
         onFoodDataCentralProduct = { product, quantity ->
-            onFoodDataCentralProduct(product, quantity, uiState.activeMeal?.identity, uiState.date)
+            onFoodDataCentralProduct(product, quantity, uiState.activeMeal?.id, uiState.date)
         },
         onOpenFoodFactsProduct = { product, quantity ->
-            onOpenFoodFactsProduct(product, quantity, uiState.activeMeal?.identity, uiState.date)
+            onOpenFoodFactsProduct(product, quantity, uiState.activeMeal?.id, uiState.date)
         },
         onUserProduct = { product, quantity ->
-            onUserProduct(product, quantity, uiState.activeMeal?.identity, uiState.date)
+            onUserProduct(product, quantity, uiState.activeMeal?.id, uiState.date)
         },
         onUserRecipe = { recipe, quantity ->
-            onUserRecipe(recipe, quantity, uiState.activeMeal?.identity, uiState.date)
+            onUserRecipe(recipe, quantity, uiState.activeMeal?.id, uiState.date)
         },
         onCreateProduct = onCreateProduct,
         onCreateRecipe = onCreateRecipe,
@@ -199,11 +197,11 @@ fun HomeScreenContent(
     onSearch: (String?) -> Unit,
     onSelectProfile: (ProfileId) -> Unit,
     onSelectDate: (LocalDate) -> Unit,
-    onSelectMeal: (MealIdentity?) -> Unit,
-    onFoodDataCentralProduct: (FoodDataCentralProductIdentity, Quantity) -> Unit,
-    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity, Quantity) -> Unit,
-    onUserProduct: (UserProductIdentity, Quantity) -> Unit,
-    onUserRecipe: (UserRecipeIdentity, Quantity) -> Unit,
+    onSelectMeal: (MealId?) -> Unit,
+    onFoodDataCentralProduct: (FoodDataCentralProductId, Quantity) -> Unit,
+    onOpenFoodFactsProduct: (OpenFoodFactsProductId, Quantity) -> Unit,
+    onUserProduct: (UserProductId, Quantity) -> Unit,
+    onUserRecipe: (UserRecipeId, Quantity) -> Unit,
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
     onCollectionSelected: (SearchCollection) -> Unit,

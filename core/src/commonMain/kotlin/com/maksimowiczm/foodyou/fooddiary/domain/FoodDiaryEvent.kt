@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.event.DomainEvent
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
@@ -14,33 +14,33 @@ import kotlinx.serialization.builtins.InstantComponentSerializer
 
 @Serializable
 data class FoodDiaryEntryCreatedEvent(
-    val identity: FoodDiaryEntryIdentity,
+    val diaryEntryId: FoodDiaryEntryId,
     val profileIds: Set<ProfileId>,
     val composition: MeasuredFoodSnapshot,
-    val mealIdentity: MealIdentity,
+    val mealId: MealId,
     @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()
 
 @Serializable
 data class FoodDiaryEntryUpdatedEvent(
-    val identity: FoodDiaryEntryIdentity,
+    val diaryEntryId: FoodDiaryEntryId,
     val profileIds: Set<ProfileId>,
     val composition: MeasuredFoodSnapshot,
-    val mealIdentity: MealIdentity?,
+    val mealId: MealId?,
     @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()
 
 @Serializable
 data class FoodDiaryEntryUnlinkedFromMealEvent(
-    val identity: FoodDiaryEntryIdentity,
+    val diaryEntryId: FoodDiaryEntryId,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()
 
 @Serializable
 data class FoodDiaryEntryDeletedEvent(
-    val identity: FoodDiaryEntryIdentity,
+    val diaryEntryId: FoodDiaryEntryId,
     val strategy: DeleteStrategy,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()

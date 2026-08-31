@@ -37,12 +37,12 @@ import com.maksimowiczm.foodyou.features.userrecipe.ingredient.AddFoodDataCentra
 import com.maksimowiczm.foodyou.features.userrecipe.ingredient.AddOpenFoodFactsIngredientScreen
 import com.maksimowiczm.foodyou.features.userrecipe.ingredient.AddUserProductIngredientScreen
 import com.maksimowiczm.foodyou.features.userrecipe.ingredient.AddUserRecipeIngredientScreen
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.extension.add
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import foodyou.app.generated.resources.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -53,11 +53,11 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun RecipeApp(
-    identity: UserRecipeIdentity?,
+    id: UserRecipeId?,
     onBack: () -> Unit,
     onSave: () -> Unit,
-    onEditUserProduct: (UserProductIdentity) -> Unit,
-    onEditUserRecipe: (UserRecipeIdentity) -> Unit,
+    onEditUserProduct: (UserProductId) -> Unit,
+    onEditUserRecipe: (UserRecipeId) -> Unit,
     recipeForm: RecipeFormState,
     title: @Composable () -> Unit,
     isLocked: Boolean,
@@ -104,32 +104,32 @@ internal fun RecipeApp(
                             val entry = recipeFormViewModel.state.value.ingredients[index].entry
 
                             val backStackEntry =
-                                when (val id = entry.identity) {
+                                when (val id = entry.id) {
                                     is FoodSnapshotId.FoodDataCentral ->
                                         EditFoodDataCentral(
                                             index,
-                                            FoodDataCentralProductIdentity(id.fdcId),
+                                            FoodDataCentralProductId(id.fdcId),
                                             entry.quantity,
                                         )
 
                                     is FoodSnapshotId.OpenFoodFacts ->
                                         EditOpenFoodFacts(
                                             index,
-                                            OpenFoodFactsProductIdentity(id.barcode),
+                                            OpenFoodFactsProductId(id.barcode),
                                             entry.quantity,
                                         )
 
                                     is FoodSnapshotId.UserProduct ->
                                         EditUserProduct(
                                             index,
-                                            UserProductIdentity(id.id),
+                                            UserProductId(id.id),
                                             entry.quantity,
                                         )
 
                                     is FoodSnapshotId.UserRecipe ->
                                         EditUserRecipe(
                                             index,
-                                            UserRecipeIdentity(id.id),
+                                            UserRecipeId(id.id),
                                             entry.quantity,
                                         )
                                 }
@@ -144,7 +144,7 @@ internal fun RecipeApp(
                 }
                 entry<Search> {
                     IngredientSearchScreen(
-                        recipeIdentity = identity,
+                        recipeId = id,
                         onBack = { backStack.removeLastIf<Search>() },
                         onFoodDataCentralProduct = { id, quantity ->
                             backStack.add(FoodDataCentral(id, quantity))
@@ -163,12 +163,12 @@ internal fun RecipeApp(
                         onBack = { backStack.removeLastIf<OpenFoodFacts>() },
                         onAdd = { quantity ->
                             recipeFormViewModel.addIngredient(
-                                FoodSnapshotId.OpenFoodFacts(it.identity.barcode),
+                                FoodSnapshotId.OpenFoodFacts(it.id.barcode),
                                 quantity,
                             )
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
-                        identity = it.identity,
+                        id = it.id,
                         initialQuantity = it.quantity,
                     )
                 }
@@ -177,12 +177,12 @@ internal fun RecipeApp(
                         onBack = { backStack.removeLastIf<FoodDataCentral>() },
                         onAdd = { quantity ->
                             recipeFormViewModel.addIngredient(
-                                FoodSnapshotId.FoodDataCentral(it.identity.fdcId),
+                                FoodSnapshotId.FoodDataCentral(it.id.fdcId),
                                 quantity,
                             )
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
-                        identity = it.identity,
+                        id = it.id,
                         initialQuantity = it.quantity,
                     )
                 }
@@ -191,14 +191,14 @@ internal fun RecipeApp(
                         onBack = { backStack.removeLastIf<UserProduct>() },
                         onAdd = { quantity ->
                             recipeFormViewModel.addIngredient(
-                                FoodSnapshotId.UserProduct(it.identity.id),
+                                FoodSnapshotId.UserProduct(it.id.value),
                                 quantity,
                             )
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
-                        onEdit = { onEditUserProduct(it.identity) },
+                        onEdit = { onEditUserProduct(it.id) },
                         onDelete = { backStack.removeLastIf<UserProduct>() },
-                        identity = it.identity,
+                        id = it.id,
                         initialQuantity = it.quantity,
                     )
                 }
@@ -207,35 +207,35 @@ internal fun RecipeApp(
                         onBack = { backStack.removeLastIf<UserRecipe>() },
                         onAdd = { quantity ->
                             recipeFormViewModel.addIngredient(
-                                FoodSnapshotId.UserRecipe(it.identity.id),
+                                FoodSnapshotId.UserRecipe(it.id.value),
                                 quantity,
                             )
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
-                        onEdit = { onEditUserRecipe(it.identity) },
+                        onEdit = { onEditUserRecipe(it.id) },
                         onDelete = { backStack.removeLastIf<UserRecipe>() },
-                        identity = it.identity,
+                        id = it.id,
                         initialQuantity = it.quantity,
-                        onNavigateToIngredient = { identity, quantity ->
+                        onNavigateToIngredient = { id, quantity ->
                             val route =
-                                when (identity) {
+                                when (id) {
                                     is FoodSnapshotId.UserProduct ->
-                                        UserProduct(UserProductIdentity(identity.id), quantity)
+                                        UserProduct(UserProductId(id.id), quantity)
 
                                     is FoodSnapshotId.OpenFoodFacts ->
                                         OpenFoodFacts(
-                                            OpenFoodFactsProductIdentity(identity.barcode),
+                                            OpenFoodFactsProductId(id.barcode),
                                             quantity,
                                         )
 
                                     is FoodSnapshotId.FoodDataCentral ->
                                         FoodDataCentral(
-                                            FoodDataCentralProductIdentity(identity.fdcId),
+                                            FoodDataCentralProductId(id.fdcId),
                                             quantity,
                                         )
 
                                     is FoodSnapshotId.UserRecipe ->
-                                        UserRecipe(UserRecipeIdentity(identity.id), quantity)
+                                        UserRecipe(UserRecipeId(id.id), quantity)
 
                                     is FoodSnapshotId.Anonymous -> TODO()
                                 }
@@ -250,7 +250,7 @@ internal fun RecipeApp(
                             recipeFormViewModel.updateIngredient(it.index, quantity)
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
-                        identity = it.identity,
+                        id = it.id,
                         initialQuantity = it.quantity,
                     )
                 }
@@ -261,7 +261,7 @@ internal fun RecipeApp(
                             recipeFormViewModel.updateIngredient(it.index, quantity)
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
-                        identity = it.identity,
+                        id = it.id,
                         initialQuantity = it.quantity,
                     )
                 }
@@ -272,12 +272,12 @@ internal fun RecipeApp(
                             recipeFormViewModel.updateIngredient(it.index, quantity)
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
-                        onEdit = { onEditUserProduct(it.identity) },
+                        onEdit = { onEditUserProduct(it.id) },
                         onDelete = {
                             recipeFormViewModel.removeIngredient(it.index)
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
-                        identity = it.identity,
+                        id = it.id,
                         initialQuantity = it.quantity,
                     )
                 }
@@ -288,33 +288,33 @@ internal fun RecipeApp(
                             recipeFormViewModel.updateIngredient(it.index, quantity)
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
-                        onEdit = { onEditUserRecipe(it.identity) },
+                        onEdit = { onEditUserRecipe(it.id) },
                         onDelete = {
                             recipeFormViewModel.removeIngredient(it.index)
                             backStack.removeWhile { r -> r !is RecipeForm }
                         },
-                        identity = it.identity,
+                        id = it.id,
                         initialQuantity = it.quantity,
-                        onNavigateToIngredient = { identity, quantity ->
+                        onNavigateToIngredient = { id, quantity ->
                             val route =
-                                when (identity) {
+                                when (id) {
                                     is FoodSnapshotId.UserProduct ->
-                                        UserProduct(UserProductIdentity(identity.id), quantity)
+                                        UserProduct(UserProductId(id.id), quantity)
 
                                     is FoodSnapshotId.OpenFoodFacts ->
                                         OpenFoodFacts(
-                                            OpenFoodFactsProductIdentity(identity.barcode),
+                                            OpenFoodFactsProductId(id.barcode),
                                             quantity,
                                         )
 
                                     is FoodSnapshotId.FoodDataCentral ->
                                         FoodDataCentral(
-                                            FoodDataCentralProductIdentity(identity.fdcId),
+                                            FoodDataCentralProductId(id.fdcId),
                                             quantity,
                                         )
 
                                     is FoodSnapshotId.UserRecipe ->
-                                        UserRecipe(UserRecipeIdentity(identity.id), quantity)
+                                        UserRecipe(UserRecipeId(id.id), quantity)
 
                                     is FoodSnapshotId.Anonymous -> TODO()
                                 }
@@ -413,48 +413,46 @@ private val config = SavedStateConfiguration {
 
 @Serializable
 private data class OpenFoodFacts(
-    val identity: OpenFoodFactsProductIdentity,
+    val id: OpenFoodFactsProductId,
     val quantity: Quantity,
 ) : RecipeNavKey
 
 @Serializable
 private data class FoodDataCentral(
-    val identity: FoodDataCentralProductIdentity,
+    val id: FoodDataCentralProductId,
     val quantity: Quantity,
 ) : RecipeNavKey
 
 @Serializable
-private data class UserProduct(val identity: UserProductIdentity, val quantity: Quantity) :
-    RecipeNavKey
+private data class UserProduct(val id: UserProductId, val quantity: Quantity) : RecipeNavKey
 
 @Serializable
-private data class UserRecipe(val identity: UserRecipeIdentity, val quantity: Quantity) :
-    RecipeNavKey
+private data class UserRecipe(val id: UserRecipeId, val quantity: Quantity) : RecipeNavKey
 
 @Serializable
 private data class EditOpenFoodFacts(
     val index: Int,
-    val identity: OpenFoodFactsProductIdentity,
+    val id: OpenFoodFactsProductId,
     val quantity: Quantity,
 ) : RecipeNavKey
 
 @Serializable
 private data class EditFoodDataCentral(
     val index: Int,
-    val identity: FoodDataCentralProductIdentity,
+    val id: FoodDataCentralProductId,
     val quantity: Quantity,
 ) : RecipeNavKey
 
 @Serializable
 private data class EditUserProduct(
     val index: Int,
-    val identity: UserProductIdentity,
+    val id: UserProductId,
     val quantity: Quantity,
 ) : RecipeNavKey
 
 @Serializable
 private data class EditUserRecipe(
     val index: Int,
-    val identity: UserRecipeIdentity,
+    val id: UserRecipeId,
     val quantity: Quantity,
 ) : RecipeNavKey

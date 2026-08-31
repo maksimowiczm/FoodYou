@@ -13,7 +13,7 @@ import com.maksimowiczm.foodyou.common.Result
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralUrlSearchQuery
@@ -96,13 +96,13 @@ internal class FoodDataCentralRepositoryImpl(
     }
 
     override fun observe(
-        identity: FoodDataCentralProductIdentity,
+        id: FoodDataCentralProductId,
         remoteEnabled: Boolean,
         apiKey: String?,
     ): Flow<RemoteData<FoodDataCentralProduct>> = channelFlow {
         send(RemoteData.Loading(null))
 
-        val fdcId = identity.fdcId
+        val fdcId = id.fdcId
 
         val localProduct = dao.observe(fdcId).first()
 
@@ -137,10 +137,10 @@ internal class FoodDataCentralRepositoryImpl(
     }
 
     override suspend fun refresh(
-        identity: FoodDataCentralProductIdentity,
+        id: FoodDataCentralProductId,
         apiKey: String?,
     ): Result<FoodDataCentralProduct, FoodDataCentralApiError> {
-        val fdcId = identity.fdcId
+        val fdcId = id.fdcId
 
         return try {
             val remote = networkDataSource.getProduct(id = fdcId, apiKey = apiKey).getOrThrow()

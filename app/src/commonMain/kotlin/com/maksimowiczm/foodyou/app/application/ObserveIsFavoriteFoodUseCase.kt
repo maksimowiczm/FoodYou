@@ -1,26 +1,24 @@
 package com.maksimowiczm.foodyou.app.application
 
-import com.maksimowiczm.foodyou.account.domain.FavoriteFoodIdentity
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.account.domain.FavoriteFoodId
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class ObserveIsFavoriteFoodUseCase(private val appProfileManager: AppProfileManager) {
-    fun observe(identity: OpenFoodFactsProductIdentity): Flow<Boolean> =
-        observe(FavoriteFoodIdentity.OpenFoodFacts(identity.barcode))
+    fun observe(id: OpenFoodFactsProductId): Flow<Boolean> =
+        observe(FavoriteFoodId.OpenFoodFacts(id.barcode))
 
-    fun observe(identity: FoodDataCentralProductIdentity): Flow<Boolean> =
-        observe(FavoriteFoodIdentity.FoodDataCentral(identity.fdcId))
+    fun observe(id: FoodDataCentralProductId): Flow<Boolean> =
+        observe(FavoriteFoodId.FoodDataCentral(id.fdcId))
 
-    fun observe(identity: UserProductIdentity): Flow<Boolean> =
-        observe(FavoriteFoodIdentity.UserProduct(identity.id))
+    fun observe(id: UserProductId): Flow<Boolean> = observe(FavoriteFoodId.UserProduct(id.value))
 
-    fun observe(identity: UserRecipeIdentity): Flow<Boolean> =
-        observe(FavoriteFoodIdentity.Recipe(identity.id))
+    fun observe(id: UserRecipeId): Flow<Boolean> = observe(FavoriteFoodId.Recipe(id.value))
 
-    fun observe(identity: FavoriteFoodIdentity): Flow<Boolean> =
-        appProfileManager.observeAppProfile().map { it.favoriteFoods.contains(identity) }
+    fun observe(id: FavoriteFoodId): Flow<Boolean> =
+        appProfileManager.observeAppProfile().map { it.favoriteFoods.contains(id) }
 }

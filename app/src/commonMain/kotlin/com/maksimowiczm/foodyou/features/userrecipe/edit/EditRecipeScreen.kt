@@ -15,8 +15,8 @@ import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormViewModel
 import com.maksimowiczm.foodyou.features.userrecipe.rememberRecipeFormState
 import com.maksimowiczm.foodyou.shared.ui.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -24,13 +24,13 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun EditRecipeScreen(
-    identity: UserRecipeIdentity,
+    id: UserRecipeId,
     onBack: () -> Unit,
-    onEditUserProduct: (UserProductIdentity) -> Unit,
-    onEditUserRecipe: (UserRecipeIdentity) -> Unit,
+    onEditUserProduct: (UserProductId) -> Unit,
+    onEditUserRecipe: (UserRecipeId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: EditRecipeViewModel = koinViewModel { parametersOf(identity) }
+    val viewModel: EditRecipeViewModel = koinViewModel { parametersOf(id) }
 
     LaunchedCollectWithLifecycle(viewModel.uiEvents) {
         when (it) {
@@ -45,12 +45,12 @@ fun EditRecipeScreen(
         remember(recipe.components) {
             recipe.components
                 .map {
-                    when (it.identity) {
+                    when (it.id) {
                         is FoodSnapshotId.Anonymous -> TODO()
                         is FoodSnapshotId.Tracked -> it
                     }
                 }
-                .map { it.identity to it.quantity.toQuantity() }
+                .map { it.id to it.quantity.toQuantity() }
         }
     val recipeFormViewModel: RecipeFormViewModel = koinViewModel {
         parametersOf(initialIngredients)
@@ -66,7 +66,7 @@ fun EditRecipeScreen(
                 recipeFormState.isModified ||
                     uiState.ingredients.size != recipe.components.size ||
                     uiState.ingredients.zip(recipe.components).any { (current, original) ->
-                        current.entry.identity != original.identity ||
+                        current.entry.id != original.id ||
                             current.entry.quantity != original.quantity.toQuantity()
                     }
             }
@@ -84,7 +84,7 @@ fun EditRecipeScreen(
     )
 
     RecipeApp(
-        identity = recipe.identity,
+        id = recipe.id,
         onBack = { if (isModified) showDiscardDialog = true else onBack() },
         onSave = { viewModel.save(form = recipeFormState, state = uiState) },
         onEditUserProduct = onEditUserProduct,

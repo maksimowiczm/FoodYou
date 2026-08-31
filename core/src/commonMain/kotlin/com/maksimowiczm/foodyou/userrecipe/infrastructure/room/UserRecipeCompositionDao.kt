@@ -15,10 +15,10 @@ interface UserRecipeCompositionDao {
             SELECT recipeId
             FROM UserRecipeFlattenedComposition
             WHERE
-                snapshotId = :identity
+                snapshotId = :id
             """
     )
-    suspend fun findRecipesBySnapshotId(identity: FoodSnapshotId.Tracked): List<Uuid>
+    suspend fun findRecipesBySnapshotId(id: FoodSnapshotId.Tracked): List<Uuid>
 
     @Query(
         """

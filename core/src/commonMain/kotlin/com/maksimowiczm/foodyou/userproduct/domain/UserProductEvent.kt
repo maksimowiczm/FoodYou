@@ -23,7 +23,7 @@ data class UserProductUpdatedEvent(
 
 @Serializable
 data class UserProductDeletedEvent(
-    val identity: UserProductIdentity,
+    val userProductId: UserProductId,
     val strategy: DeleteStrategy,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : UserProductEvent()

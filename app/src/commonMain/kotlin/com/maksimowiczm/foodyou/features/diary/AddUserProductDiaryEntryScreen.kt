@@ -48,7 +48,7 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
@@ -57,7 +57,7 @@ import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_add
 import kotlin.time.Clock
@@ -75,17 +75,17 @@ fun AddUserProductDiaryEntryScreen(
     onAdd: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    mealIdentity: MealIdentity,
-    identity: UserProductIdentity,
+    mealId: MealId,
+    id: UserProductId,
     initialQuantity: Quantity,
     date: LocalDate?,
     modifier: Modifier = Modifier,
 ) {
     val foodViewModel: UserProductDetailsViewModel = koinViewModel {
-        parametersOf(identity, initialQuantity)
+        parametersOf(id, initialQuantity)
     }
     val foodDiaryEntryViewModel: FoodDiaryEntryViewModel = koinViewModel {
-        parametersOf(mealIdentity)
+        parametersOf(mealId)
     }
 
     LaunchedCollectWithLifecycle(foodDiaryEntryViewModel.uiEvents) {

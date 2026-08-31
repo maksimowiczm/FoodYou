@@ -90,7 +90,7 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.mealplan.domain.Meal
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.DiscardChangesDialog
@@ -137,7 +137,7 @@ fun MealScheduleScreen(
                     .filterNot { it.isDeleted }
                     .map { state ->
                         Meal(
-                            identity = state.id,
+                            id = state.id,
                             name = state.formField.textFieldState.text.toString(),
                             timeWindow = state.timeState.toTimeWindow(),
                         )
@@ -157,23 +157,23 @@ private fun MealScheduleScreen(
     modifier: Modifier = Modifier,
 ) {
     val initialData = remember {
-        initialMeals.associateBy({ it.identity }, { it.name to it.timeWindow })
+        initialMeals.associateBy({ it.id }, { it.name to it.timeWindow })
     }
     val seeds =
         rememberSaveable(
             saver =
                 Saver(
-                    save = { list -> list.map { it.id.toString() } },
+                    save = { list -> list.map { it.value.toString() } },
                     restore = { saved ->
-                        saved.map { MealIdentity(Uuid.parse(it)) }.toMutableStateList()
+                        saved.map { MealId(Uuid.parse(it)) }.toMutableStateList()
                     },
                 )
         ) {
-            initialMeals.map { it.identity }.toMutableStateList()
+            initialMeals.map { it.id }.toMutableStateList()
         }
 
     val cardStates: List<MealCardState> = seeds.map { id ->
-        key(id.id.toString()) {
+        key(id.value.toString()) {
             val (name, timeWindow) =
                 initialData[id]
                     ?: ("" to Meal.TimeWindow.Range(LocalTime.now(), LocalTime.now() + 1.hours))
@@ -192,7 +192,7 @@ private fun MealScheduleScreen(
         remember(cardStates) {
             derivedStateOf {
                 cardStates.any { it.isModified || it.isDeleted || it.isNew } ||
-                    seeds.map { it.id } != initialMeals.map { it.identity.id }
+                    seeds.map { it.value } != initialMeals.map { it.id.value }
             }
         }
     val isValid by
@@ -278,11 +278,11 @@ private fun MealScheduleScreen(
         ) {
             itemsIndexed(
                 items = cardStates,
-                key = { _, it -> it.id.id.toString() },
+                key = { _, it -> it.id.value.toString() },
             ) { i, state ->
                 ReorderableItem(
                     state = reorderableLazyListState,
-                    key = state.id.id.toString(),
+                    key = state.id.value.toString(),
                     animateItemModifier =
                         Modifier.animateItem(
                             placementSpec = MaterialTheme.motionScheme.fastSpatialSpec()
@@ -386,7 +386,7 @@ private fun MealScheduleScreen(
                     }
 
                 Surface(
-                    onClick = { seeds.add(MealIdentity(Uuid.random())) },
+                    onClick = { seeds.add(MealId(Uuid.random())) },
                     modifier = Modifier.fillMaxWidth(),
                     shape =
                         rememberInteractionAnimatedShape(
@@ -414,7 +414,7 @@ private fun MealScheduleScreen(
 @Composable
 private fun MealCard(
     state: MealCardState,
-    onRemove: (MealIdentity) -> Unit,
+    onRemove: (MealId) -> Unit,
     shapes: InteractionShapes,
     colors: MealCardColors,
     elevation: Dp,
@@ -731,7 +731,7 @@ private fun MealTimePicker(
 
 @Stable
 private class MealCardState(
-    val id: MealIdentity,
+    val id: MealId,
     val formField: FormField,
     private val initialName: String,
     timeStateState: MutableState<TimeState>,
@@ -806,7 +806,7 @@ private fun TimeState.toTimeWindow() =
 
 @Composable
 private fun rememberMealCardState(
-    id: MealIdentity,
+    id: MealId,
     initialName: String,
     initialTimeWindow: Meal.TimeWindow,
     isNew: Boolean,

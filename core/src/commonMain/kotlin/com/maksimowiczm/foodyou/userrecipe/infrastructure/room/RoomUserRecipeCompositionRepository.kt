@@ -2,37 +2,35 @@ package com.maksimowiczm.foodyou.userrecipe.infrastructure.room
 
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class RoomUserRecipeCompositionRepository(private val dao: UserRecipeCompositionDao) :
     UserRecipeCompositionRepository {
-    override suspend fun findRecipesUsing(
-        identity: FoodSnapshotId.Tracked
-    ): List<UserRecipeIdentity> {
-        return dao.findRecipesBySnapshotId(identity).map(::UserRecipeIdentity)
+    override suspend fun findRecipesUsing(id: FoodSnapshotId.Tracked): List<UserRecipeId> {
+        return dao.findRecipesBySnapshotId(id).map(::UserRecipeId)
     }
 
-    override fun observeAncestors(identity: UserRecipeIdentity): Flow<Set<UserRecipeIdentity>> =
-        dao.observeAncestors(identity.id.toString()).map { ids ->
-            ids.map(::UserRecipeIdentity).toSet()
+    override fun observeAncestors(id: UserRecipeId): Flow<Set<UserRecipeId>> =
+        dao.observeAncestors(id.value.toString()).map { ids ->
+            ids.map(::UserRecipeId).toSet()
         }
 
     override suspend fun saveReferences(
-        recipeIdentity: UserRecipeIdentity,
-        identities: Set<FoodSnapshotId.Tracked>,
+        id: UserRecipeId,
+        trackedIds: Set<FoodSnapshotId.Tracked>,
     ) {
-        val references = identities.map { identity ->
+        val references = trackedIds.map { snapshotId ->
             UserRecipeCompositionReferenceEntity(
-                recipeId = recipeIdentity.id,
-                snapshotId = identity,
+                recipeId = id.value,
+                snapshotId = snapshotId,
             )
         }
-        dao.updateReferences(recipeIdentity.id, references)
+        dao.updateReferences(id.value, references)
     }
 
-    override suspend fun removeReferences(recipeIdentity: UserRecipeIdentity) {
-        dao.deleteByRecipeId(recipeIdentity.id)
+    override suspend fun removeReferences(id: UserRecipeId) {
+        dao.deleteByRecipeId(id.value)
     }
 }

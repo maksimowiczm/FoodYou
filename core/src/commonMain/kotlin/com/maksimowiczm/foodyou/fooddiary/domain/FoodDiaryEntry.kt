@@ -5,38 +5,38 @@ package com.maksimowiczm.foodyou.fooddiary.domain
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.InstantComponentSerializer
 
-@Serializable data class FoodDiaryEntryIdentity(val id: Uuid)
+@Serializable data class FoodDiaryEntryId(val id: Uuid = Uuid.random())
 
 @Serializable
 data class FoodDiaryEntry(
-    val identity: FoodDiaryEntryIdentity,
+    val id: FoodDiaryEntryId,
     val profileIds: Set<ProfileId>,
     val composition: MeasuredFoodSnapshot,
     @Serializable(with = InstantComponentSerializer::class) val timestamp: Instant,
-    val mealIdentity: MealIdentity?,
+    val mealId: MealId?,
 ) {
     companion object {
         fun create(
-            identity: FoodDiaryEntryIdentity,
+            id: FoodDiaryEntryId,
             profileIds: Set<ProfileId>,
             composition: MeasuredFoodSnapshot,
-            mealIdentity: MealIdentity,
+            mealId: MealId,
             timestamp: Instant,
             clock: Clock = Clock.System,
         ): List<FoodDiaryEvent> =
             listOf(
                 FoodDiaryEntryCreatedEvent(
-                    identity = identity,
+                    diaryEntryId = id,
                     profileIds = profileIds,
                     composition = composition,
-                    mealIdentity = mealIdentity,
+                    mealId = mealId,
                     entryTimestamp = timestamp,
                     timestamp = clock.now(),
                 )
@@ -47,7 +47,7 @@ data class FoodDiaryEntry(
 fun FoodDiaryEntry.edit(
     profileIds: Set<ProfileId> = this.profileIds,
     composition: MeasuredFoodSnapshot = this.composition,
-    mealIdentity: MealIdentity? = this.mealIdentity,
+    mealId: MealId? = this.mealId,
     timestamp: Instant = this.timestamp,
     clock: Clock = Clock.System,
 ): List<FoodDiaryEvent> = buildList {
@@ -55,16 +55,16 @@ fun FoodDiaryEntry.edit(
         this@edit.copy(
             profileIds = profileIds,
             composition = composition,
-            mealIdentity = mealIdentity,
+            mealId = mealId,
             timestamp = timestamp,
         )
     if (updated != this@edit)
         add(
             FoodDiaryEntryUpdatedEvent(
-                identity = identity,
+                diaryEntryId = id,
                 profileIds = profileIds,
                 composition = composition,
-                mealIdentity = mealIdentity,
+                mealId = mealId,
                 entryTimestamp = timestamp,
                 timestamp = clock.now(),
             )
@@ -77,7 +77,7 @@ fun FoodDiaryEntry.remove(
 ): List<FoodDiaryEvent> =
     listOf(
         FoodDiaryEntryDeletedEvent(
-            identity = identity,
+            diaryEntryId = id,
             strategy = strategy,
             timestamp = clock.now(),
         )
@@ -86,7 +86,7 @@ fun FoodDiaryEntry.remove(
 fun FoodDiaryEntry.unlinkFromMeal(clock: Clock = Clock.System): List<FoodDiaryEvent> =
     listOf(
         FoodDiaryEntryUnlinkedFromMealEvent(
-            identity = identity,
+            diaryEntryId = id,
             timestamp = clock.now(),
         )
     )
@@ -95,21 +95,21 @@ fun FoodDiaryEntry?.apply(event: FoodDiaryEvent): FoodDiaryEntry? =
     when (event) {
         is FoodDiaryEntryCreatedEvent ->
             FoodDiaryEntry(
-                identity = event.identity,
+                id = event.diaryEntryId,
                 profileIds = event.profileIds,
                 composition = event.composition,
                 timestamp = event.entryTimestamp,
-                mealIdentity = event.mealIdentity,
+                mealId = event.mealId,
             )
         is FoodDiaryEntryUpdatedEvent ->
             this?.copy(
                 profileIds = event.profileIds,
                 composition = event.composition,
                 timestamp = event.entryTimestamp,
-                mealIdentity = event.mealIdentity,
+                mealId = event.mealId,
             )
         is FoodDiaryEntryDeletedEvent -> null
-        is FoodDiaryEntryUnlinkedFromMealEvent -> this?.copy(mealIdentity = null)
+        is FoodDiaryEntryUnlinkedFromMealEvent -> this?.copy(mealId = null)
     }
 
 fun Iterable<FoodDiaryEvent>.toFoodDiaryEntry(): FoodDiaryEntry? =

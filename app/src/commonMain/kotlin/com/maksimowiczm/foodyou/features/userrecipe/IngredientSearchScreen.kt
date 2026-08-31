@@ -61,8 +61,8 @@ import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilt
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
-import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
+import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.shared.ui.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.shared.ui.component.StatusBarProtection
 import com.maksimowiczm.foodyou.shared.ui.component.StatusBarProtectionDefaults.rememberScrollConnection
@@ -70,8 +70,8 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.horizontal
 import com.maksimowiczm.foodyou.shared.ui.extension.plus
 import com.maksimowiczm.foodyou.shared.ui.saveable.jsonSaver
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductIdentity
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeIdentity
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -84,15 +84,15 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun IngredientSearchScreen(
-    recipeIdentity: UserRecipeIdentity?,
+    recipeId: UserRecipeId?,
     onBack: () -> Unit,
-    onFoodDataCentralProduct: (FoodDataCentralProductIdentity, Quantity) -> Unit,
-    onOpenFoodFactsProduct: (OpenFoodFactsProductIdentity, Quantity) -> Unit,
-    onUserProduct: (UserProductIdentity, Quantity) -> Unit,
-    onUserRecipe: (UserRecipeIdentity, Quantity) -> Unit,
+    onFoodDataCentralProduct: (FoodDataCentralProductId, Quantity) -> Unit,
+    onOpenFoodFactsProduct: (OpenFoodFactsProductId, Quantity) -> Unit,
+    onUserProduct: (UserProductId, Quantity) -> Unit,
+    onUserRecipe: (UserRecipeId, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val searchViewModel: SearchViewModel = koinViewModel { parametersOf(recipeIdentity) }
+    val searchViewModel: SearchViewModel = koinViewModel { parametersOf(recipeId) }
 
     val density = LocalDensity.current
 

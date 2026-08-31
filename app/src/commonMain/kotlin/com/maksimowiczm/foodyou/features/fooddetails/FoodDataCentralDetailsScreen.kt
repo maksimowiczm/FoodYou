@@ -27,7 +27,7 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductIdentity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.RefreshIconButton
 import com.maksimowiczm.foodyou.shared.ui.extension.add
@@ -39,13 +39,13 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun FoodDataCentralDetailsScreen(
-    identity: FoodDataCentralProductIdentity,
+    id: FoodDataCentralProductId,
     initialQuantity: Quantity?,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: FoodDataCentralDetailsViewModel = koinViewModel {
-        parametersOf(identity, initialQuantity)
+        parametersOf(id, initialQuantity)
     }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value

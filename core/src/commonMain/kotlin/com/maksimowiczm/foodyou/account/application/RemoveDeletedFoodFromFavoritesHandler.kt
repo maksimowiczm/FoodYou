@@ -15,6 +15,6 @@ class RemoveDeletedFoodFromFavoritesHandler(private val accountService: AccountS
     EventHandler<UserProductDeletedEvent> {
 
     override suspend fun handle(event: UserProductDeletedEvent) {
-        accountService.update { removeFavoriteUserFood(event.identity) }
+        accountService.update { removeFavoriteUserFood(event.userProductId) }
     }
 }

@@ -4,8 +4,8 @@ import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryIdentity
-import com.maksimowiczm.foodyou.mealplan.domain.MealIdentity
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
@@ -15,11 +15,11 @@ data class HomeUiState(
     val selectedProfileId: ProfileId? = null,
     val date: LocalDate,
     val meals: List<HomeMealState> = emptyList(),
-    val activeMealId: MealIdentity? = null,
+    val activeMealId: MealId? = null,
 ) {
     val selectedProfile = profiles.singleOrNull { it.id == selectedProfileId }
     val activeMeal =
-        meals.filterIsInstance<HomeMealState.Linked>().singleOrNull { it.identity == activeMealId }
+        meals.filterIsInstance<HomeMealState.Linked>().singleOrNull { it.id == activeMealId }
 }
 
 sealed interface HomeMealState {
@@ -29,7 +29,7 @@ sealed interface HomeMealState {
 
     @Immutable
     data class Linked(
-        val identity: MealIdentity,
+        val id: MealId,
         val name: String,
         override val foods: List<HomeFoodState>,
     ) : HomeMealState
@@ -37,7 +37,7 @@ sealed interface HomeMealState {
 
 @Immutable
 data class HomeFoodState(
-    val identity: FoodDiaryEntryIdentity,
+    val id: FoodDiaryEntryId,
     val time: LocalTime,
     val snapshot: MeasuredFoodSnapshot,
 )
