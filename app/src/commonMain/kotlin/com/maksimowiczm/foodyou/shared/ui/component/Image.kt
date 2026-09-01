@@ -65,7 +65,8 @@ fun FileUri.Image(
             when (state) {
                 AsyncImagePainter.State.Empty,
                 is AsyncImagePainter.State.Success,
-                is AsyncImagePainter.State.Loading -> MaterialTheme.colorScheme.surfaceContainer
+                is AsyncImagePainter.State.Loading ->
+                    MaterialTheme.colorScheme.surfaceContainerHighest
                 is AsyncImagePainter.State.Error -> MaterialTheme.colorScheme.errorContainer
             },
             animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
