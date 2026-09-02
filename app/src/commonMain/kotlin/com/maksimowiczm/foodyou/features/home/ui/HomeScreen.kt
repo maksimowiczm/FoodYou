@@ -1,7 +1,10 @@
 package com.maksimowiczm.foodyou.features.home.ui
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationConstants.DefaultDurationMillis
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +25,6 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.MenuOpen
-import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -86,6 +88,7 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.shared.ui.barcodescanner.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreenContent
 import com.maksimowiczm.foodyou.shared.ui.component.ScrimWithPredictiveBack
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.horizontal
@@ -182,6 +185,7 @@ fun HomeScreen(
     )
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreenContent(
     initialQuery: String?,
@@ -429,59 +433,57 @@ fun HomeScreenContent(
                 )
             }
             if (homeProgressAnimatable.value != 0f || latestEvent != null)
-                if (uiState.selectedProfile != null)
-                    LazyColumn(
-                        modifier =
-                            Modifier.fillMaxSize().graphicsLayer {
-                                alpha =
-                                    when {
-                                        latestEvent != null ->
-                                            (latestEvent.progress -
-                                                Crossfade.PROGRESS_THRESHOLD / 2) /
-                                                Crossfade.PROGRESS_THRESHOLD
+                updateTransition(uiState.selectedProfile, "selected profile").Crossfade(
+                    contentKey = { it != null }
+                ) {
+                    if (it == null) LoadingScreenContent(Modifier.fillMaxSize())
+                    else
+                        LazyColumn(
+                            modifier =
+                                Modifier.fillMaxSize().graphicsLayer {
+                                    alpha =
+                                        when {
+                                            latestEvent != null ->
+                                                (latestEvent.progress -
+                                                    Crossfade.PROGRESS_THRESHOLD / 2) /
+                                                    Crossfade.PROGRESS_THRESHOLD
 
-                                        else -> homeProgressAnimatable.value
-                                    }
-                            },
-                        contentPadding = contentPadding.add(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        uiState.selectedProfile.homeCardsOrder.forEach {
-                            when (it) {
-                                HomeCard.Calendar ->
-                                    item {
-                                        CalendarCard(
-                                            date = uiState.date,
-                                            onSelectDate = onSelectDate,
-                                            contentPadding = PaddingValues(horizontal = 8.dp),
-                                        )
-                                    }
+                                            else -> homeProgressAnimatable.value
+                                        }
+                                },
+                            contentPadding = contentPadding.add(vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            it.homeCardsOrder.forEach {
+                                when (it) {
+                                    HomeCard.Calendar ->
+                                        item {
+                                            CalendarCard(
+                                                date = uiState.date,
+                                                onSelectDate = onSelectDate,
+                                                contentPadding = PaddingValues(horizontal = 8.dp),
+                                            )
+                                        }
 
-                                HomeCard.MealCards ->
-                                    item {
-                                        MealCards(
-                                            meals = uiState.meals,
-                                            shimmer = shimmer,
-                                            contentPadding = PaddingValues(horizontal = 8.dp),
-                                            onAdd = {
-                                                onSelectMeal(it)
-                                                openSearch()
-                                            },
-                                            onEntry = {
-                                                // TODO
-                                            },
-                                        )
-                                    }
+                                    HomeCard.MealCards ->
+                                        item {
+                                            MealCards(
+                                                meals = uiState.meals,
+                                                shimmer = shimmer,
+                                                contentPadding = PaddingValues(horizontal = 8.dp),
+                                                onAdd = {
+                                                    onSelectMeal(it)
+                                                    openSearch()
+                                                },
+                                                onEntry = {
+                                                    // TODO
+                                                },
+                                            )
+                                        }
+                                }
                             }
                         }
-                    }
-                else
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        ContainedLoadingIndicator()
-                    }
+                }
         }
     }
 
