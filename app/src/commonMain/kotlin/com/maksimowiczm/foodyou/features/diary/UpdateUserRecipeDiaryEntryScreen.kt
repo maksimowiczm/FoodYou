@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.features.diary
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -30,149 +31,166 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FetchProgressIndicator
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsCompact
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodImage
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodIngredients
+import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodNote
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodScreenTopBar
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodSourceLink
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantitySuggestions
-import com.maksimowiczm.foodyou.capabilities.fooddetails.fooddatacentral.FoodDataCentralDetailsUiState
-import com.maksimowiczm.foodyou.capabilities.fooddetails.fooddatacentral.FoodDataCentralDetailsViewModel
+import com.maksimowiczm.foodyou.capabilities.fooddetails.UserFoodMenu
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberQuantityFormField
+import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDetailsUiEvent
+import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDetailsViewModel
+import com.maksimowiczm.foodyou.common.domain.FileUri
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
-import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
-import com.maksimowiczm.foodyou.mealplan.domain.MealId
+import com.maksimowiczm.foodyou.common.domain.food.toQuantity
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
-import com.maksimowiczm.foodyou.shared.ui.component.RefreshIconButton
+import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
+import com.maksimowiczm.foodyou.shared.ui.utility.headline
+import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import foodyou.app.generated.resources.*
-import kotlin.time.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import org.jetbrains.compose.resources.painterResource
+import kotlin.time.Instant
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AddFoodDataCentralDiaryEntryScreen(
+fun UpdateUserRecipeDiaryEntryScreen(
     onBack: () -> Unit,
-    onAdd: () -> Unit,
-    mealId: MealId,
-    id: FoodDataCentralProductId,
-    initialQuantity: Quantity,
-    date: LocalDate?,
+    onSave: (Quantity, List<ProfileId>, Instant) -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
+    foodId: UserRecipeId,
+    entry: FoodDiaryEntry,
+    profiles: List<ProfileUiState>,
     modifier: Modifier = Modifier,
 ) {
-    val foodViewModel: FoodDataCentralDetailsViewModel = koinViewModel {
-        parametersOf(id, initialQuantity)
-    }
-    val addFoodDiaryEntryViewModel: AddFoodDiaryEntryViewModel = koinViewModel {
-        parametersOf(mealId)
+    val foodViewModel: UserRecipeDetailsViewModel = koinViewModel {
+        parametersOf(foodId, entry.snapshot.quantity.toQuantity())
     }
 
-    LaunchedCollectWithLifecycle(addFoodDiaryEntryViewModel.createdUiEvent) {
-        onAdd()
+    LaunchedCollectWithLifecycle(foodViewModel.uiEvents) {
+        when (it) {
+            UserRecipeDetailsUiEvent.Deleted -> onDelete()
+        }
     }
 
     val foodUiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
-    val profiles = addFoodDiaryEntryViewModel.profiles.collectAsStateWithLifecycle().value
-    val defaultProfileId = addFoodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
 
-    val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
+    val defaultValue =
+        remember(entry.snapshot.quantity) {
+            entry.snapshot.quantity.toQuantity().amount.formatCompact()
+        }
     val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
-    var selectedProfileIds by rememberSerializable { mutableStateOf(listOf(defaultProfileId)) }
+    var selectedProfileIds by rememberSerializable { mutableStateOf(entry.profileIds.toList()) }
     val selectedProfiles =
         remember(profiles, selectedProfileIds) {
-            profiles?.filter { it.id in selectedProfileIds } ?: emptyList()
+            profiles.filter { it.id in selectedProfileIds }
         }
 
-    val details = foodUiState as? FoodDataCentralDetailsUiState.Details
+    val nameSelector = LocalFoodNameSelector.current
+    val recipe = foodUiState.recipe
 
-    LaunchedEffect(formField.textFieldState.text, details?.selectedQuantityType) {
+    LaunchedEffect(formField.textFieldState.text, foodUiState.selectedQuantityType) {
         foodViewModel.selectQuantity(
             formField.textFieldState.text.toString().toDoubleOrNull(),
-            details?.selectedQuantityType,
+            foodUiState.selectedQuantityType,
         )
     }
 
-    if (profiles != null && details != null) {
-        AddFoodDataCentralDiaryEntryScreenContent(
-            headline = details.food.headline,
-            isFavorite = details.isFavorite,
-            isLoading = details.isLoading,
-            sourceUrl = details.food.source,
-            suggestions = details.suggestions,
-            scaledNutritionFacts = details.scaledNutritionFacts,
-            packageQuantity = details.food.packageQuantity,
-            servingQuantity = details.food.servingQuantity,
-            types = details.quantityTypes,
-            selectedType = details.selectedQuantityType,
-            formField = formField,
-            profiles = profiles,
-            selectedProfiles = selectedProfiles,
-            onBack = onBack,
-            onAdd = {
-                val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-                val timestamp = LocalDateTime(date ?: now.date, now.time)
-
-                addFoodDiaryEntryViewModel.create(
-                    product = details.food,
-                    quantity = details.selectedQuantity,
-                    profiles = selectedProfiles.map { profile -> profile.id },
-                    timestamp = timestamp,
-                )
-            },
-            onRefresh = foodViewModel::refresh,
-            onSetFavorite = foodViewModel::setFavorite,
-            onSelectQuantity = foodViewModel::selectQuantity,
-            onSelectQuantityType = foodViewModel::selectQuantityType,
-            onSelectProfiles = { selectedProfiles ->
-                selectedProfileIds = selectedProfiles.map { profile -> profile.id }
-            },
-            modifier = modifier,
-        )
+    updateTransition(recipe).Crossfade(contentKey = { it != null }) {
+        if (it == null) LoadingScreen(onBack)
+        else {
+            UpdateUserRecipeDiaryEntryScreenContent(
+                headline = it.headline(nameSelector),
+                isFavorite = foodUiState.isFavorite,
+                image = it.image?.let { resolveBlob(it) },
+                suggestions = foodUiState.suggestions,
+                scaledNutritionFacts = foodUiState.scaledNutritionFacts,
+                ingredientScalingFactor = foodUiState.ingredientScalingFactor,
+                packageQuantity = AbsoluteQuantity.Weight(it.totalWeight),
+                servingQuantity = AbsoluteQuantity.Weight(it.servingWeight),
+                note = it.note,
+                components = it.components,
+                types = foodUiState.quantityTypes,
+                selectedType = foodUiState.selectedQuantityType ?: QuantityType.Gram,
+                formField = formField,
+                profiles = profiles,
+                selectedProfiles = selectedProfiles,
+                onBack = onBack,
+                onSave = {
+                    onSave(
+                        foodUiState.selectedQuantity
+                            ?: return@UpdateUserRecipeDiaryEntryScreenContent,
+                        selectedProfileIds,
+                        entry.timestamp,
+                    )
+                },
+                onEdit = onEdit,
+                onDelete = foodViewModel::delete,
+                onNavigateToIngredient = onNavigateToIngredient,
+                onSetFavorite = foodViewModel::setFavorite,
+                onSelectQuantity = foodViewModel::selectQuantity,
+                onSelectQuantityType = foodViewModel::selectQuantityType,
+                onSelectProfiles = { selectedProfiles ->
+                    selectedProfileIds = selectedProfiles.map { profile -> profile.id }
+                },
+                modifier = modifier,
+            )
+        }
     }
 }
 
 @Composable
-private fun AddFoodDataCentralDiaryEntryScreenContent(
+private fun UpdateUserRecipeDiaryEntryScreenContent(
     headline: String?,
     isFavorite: Boolean,
-    isLoading: Boolean,
-    sourceUrl: String,
+    image: FileUri?,
     suggestions: List<Quantity>,
     scaledNutritionFacts: NutritionFacts?,
+    ingredientScalingFactor: Double,
     packageQuantity: AbsoluteQuantity?,
     servingQuantity: AbsoluteQuantity?,
+    note: String?,
+    components: List<MeasuredFoodSnapshot>,
     types: List<QuantityType>,
     selectedType: QuantityType,
     formField: FormField,
     profiles: List<ProfileUiState>,
     selectedProfiles: List<ProfileUiState>,
     onBack: () -> Unit,
-    onRefresh: () -> Unit,
-    onAdd: () -> Unit,
+    onSave: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
     onSetFavorite: (Boolean) -> Unit,
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,
     onSelectProfiles: (List<ProfileUiState>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
         remember(scaledNutritionFacts) {
@@ -190,6 +208,7 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -198,19 +217,18 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
                 title = headline,
                 actions = {
                     FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
-                    RefreshIconButton(onRefresh = onRefresh)
+                    UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
                 },
                 scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {
             LargeExtendedFloatingActionButton(
-                onClick = onAdd,
+                onClick = onSave,
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
-                            !isLoading &&
-                                !LocalNavAnimatedContentScope.current.transition.isRunning &&
+                            !LocalNavAnimatedContentScope.current.transition.isRunning &&
                                 formField.error == null &&
                                 selectedProfiles.isNotEmpty(),
                         alignment = Alignment.BottomEnd,
@@ -222,14 +240,10 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
                     modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
                 )
                 Spacer(Modifier.width(16.dp))
-                Text(stringResource(Res.string.action_add))
+                Text(stringResource(Res.string.action_save))
             }
         },
     ) { contentPadding ->
-        FetchProgressIndicator(
-            isLoading = isLoading,
-            modifier = Modifier.padding(top = contentPadding.calculateTopPadding()).zIndex(100f),
-        )
         LazyColumn(
             modifier = Modifier.imePadding(),
             contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
@@ -237,6 +251,19 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
         ) {
             item {
                 FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
+            }
+            if (image != null) {
+                item {
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                }
+            }
+            item {
+                FoodIngredients(
+                    components = components,
+                    ingredientScalingFactor = ingredientScalingFactor,
+                    onNavigateToIngredient = onNavigateToIngredient,
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                )
             }
             if (suggestions.isNotEmpty()) {
                 item {
@@ -282,23 +309,10 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
                     )
                 }
             }
-            item {
-                FoodSourceLink(
-                    sourceUrl = sourceUrl,
-                    logo = {
-                        Image(
-                            painter = painterResource(Res.drawable.usda_logo),
-                            contentDescription = null,
-                            modifier =
-                                Modifier.sizeIn(
-                                    maxHeight = 32.dp,
-                                    maxWidth = 32.dp,
-                                ),
-                        )
-                    },
-                    headline = stringResource(Res.string.headline_fooddata_central),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                )
+            if (note != null) {
+                item {
+                    FoodNote(note, Modifier.padding(horizontal = 8.dp))
+                }
             }
         }
     }

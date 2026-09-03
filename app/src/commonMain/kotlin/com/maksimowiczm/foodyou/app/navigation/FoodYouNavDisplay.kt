@@ -33,6 +33,7 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.OpenFoodFacts
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Personalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.SwitchProfile
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UpdateDiaryEntry
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserProductAddDiaryEntry
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserRecipeAddDiaryEntry
@@ -47,6 +48,7 @@ import com.maksimowiczm.foodyou.features.diary.AddFoodDataCentralDiaryEntryScree
 import com.maksimowiczm.foodyou.features.diary.AddOpenFoodFactsDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddUserProductDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddUserRecipeDiaryEntryScreen
+import com.maksimowiczm.foodyou.features.diary.UpdateFoodDiaryEntryScreenDispatcher
 import com.maksimowiczm.foodyou.features.fooddatacentral.UpdateFoodDataCentralApiKeyDialog
 import com.maksimowiczm.foodyou.features.fooddetails.FoodDataCentralDetailsScreen
 import com.maksimowiczm.foodyou.features.fooddetails.OpenFoodFactsDetailsScreen
@@ -68,6 +70,7 @@ import com.maksimowiczm.foodyou.features.userproduct.edit.EditProductScreen
 import com.maksimowiczm.foodyou.features.userrecipe.create.CreateRecipeScreen
 import com.maksimowiczm.foodyou.features.userrecipe.edit.EditRecipeScreen
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
@@ -233,6 +236,7 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         },
                         onCreateProduct = { backStack.add(CreateProduct) },
                         onCreateRecipe = { backStack.add(CreateRecipe) },
+                        onEntry = { backStack.add(UpdateDiaryEntry(it)) },
                         initialQuery = it.initialQuery,
                     )
                 }
@@ -403,6 +407,48 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         date = it.date,
                     )
                 }
+                entry<UpdateDiaryEntry> {
+                    UpdateFoodDiaryEntryScreenDispatcher(
+                        onBack = { backStack.removeLastIf<UpdateDiaryEntry>() },
+                        onUpdate = { backStack.removeLastIf<UpdateDiaryEntry>() },
+                        onEditUserProduct = { id -> backStack.add(EditUserProduct(id)) },
+                        onDeleteUserProduct = { backStack.removeLastIf<UpdateDiaryEntry>() },
+                        onEditUserRecipe = { id -> backStack.add(EditRecipe(id)) },
+                        onDeleteUserRecipe = { backStack.removeLastIf<UpdateDiaryEntry>() },
+                        onNavigateToIngredient = { id, quantity, _, _ ->
+                            val ingredientRoute =
+                                when (id) {
+                                    is FoodSnapshotId.FoodDataCentral ->
+                                        FoodDataCentralProductDetails(
+                                            FoodDataCentralProductId(id.fdcId),
+                                            quantity,
+                                        )
+
+                                    is FoodSnapshotId.OpenFoodFacts ->
+                                        OpenFoodFactsProductDetails(
+                                            OpenFoodFactsProductId(id.barcode),
+                                            quantity,
+                                        )
+
+                                    is FoodSnapshotId.UserProduct ->
+                                        UserProductDetails(
+                                            UserProductId(id.id),
+                                            quantity,
+                                        )
+
+                                    is FoodSnapshotId.UserRecipe ->
+                                        UserRecipeDetails(
+                                            UserRecipeId(id.id),
+                                            quantity,
+                                        )
+
+                                    is FoodSnapshotId.Anonymous -> TODO()
+                                }
+                            backStack.add(ingredientRoute)
+                        },
+                        entryIdentity = it.id,
+                    )
+                }
             },
     )
 }
@@ -513,4 +559,6 @@ sealed interface FoodYouNavHostRoute : NavKey {
         val date: LocalDate?,
         val popToHome: Boolean = false,
     ) : FoodYouNavHostRoute
+
+    @Serializable data class UpdateDiaryEntry(val id: FoodDiaryEntryId) : FoodYouNavHostRoute
 }

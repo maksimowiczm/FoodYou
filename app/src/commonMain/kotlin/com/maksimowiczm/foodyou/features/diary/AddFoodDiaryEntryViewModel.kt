@@ -35,7 +35,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
-class FoodDiaryEntryViewModel(
+class AddFoodDiaryEntryViewModel(
     private val mealId: MealId,
     private val foodDiaryService: FoodDiaryService,
     appProfileManager: AppProfileManager,
@@ -66,8 +66,8 @@ class FoodDiaryEntryViewModel(
                 initialValue = null,
             )
 
-    private val eventBus = Channel<FoodDiaryUiEvents>()
-    val uiEvents = eventBus.receiveAsFlow()
+    private val eventBus = Channel<FoodDiaryEntryCreatedUiEvent>()
+    val createdUiEvent = eventBus.receiveAsFlow()
 
     fun create(
         snapshot: MeasuredFoodSnapshot,
@@ -82,7 +82,7 @@ class FoodDiaryEntryViewModel(
                     mealId = mealId,
                     timestamp = timestamp.toInstant(TimeZone.currentSystemDefault()),
                 )
-            eventBus.send(FoodDiaryUiEvents.Created(entryId))
+            eventBus.send(FoodDiaryEntryCreatedUiEvent(entryId))
         }
     }
 

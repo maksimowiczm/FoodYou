@@ -38,3 +38,5 @@ fun OpenFoodFactsProduct.toSnapshot() =
         nutritionFacts = nutritionFacts,
         image = (thumbnail ?: image)?.let(FoodSnapshotImage::Uri),
     )
+
+fun FoodSnapshotId.OpenFoodFacts.toOpenFoodFactsProductId() = OpenFoodFactsProductId(barcode)

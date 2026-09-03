@@ -42,3 +42,5 @@ fun FoodDataCentralProduct.toSnapshot() =
         image = null,
         nutritionFacts = nutritionFacts,
     )
+
+fun FoodSnapshotId.FoodDataCentral.toFoodDataCentralProductId() = FoodDataCentralProductId(fdcId)

@@ -84,14 +84,12 @@ fun AddUserProductDiaryEntryScreen(
     val foodViewModel: UserProductDetailsViewModel = koinViewModel {
         parametersOf(id, initialQuantity)
     }
-    val foodDiaryEntryViewModel: FoodDiaryEntryViewModel = koinViewModel {
+    val addFoodDiaryEntryViewModel: AddFoodDiaryEntryViewModel = koinViewModel {
         parametersOf(mealId)
     }
 
-    LaunchedCollectWithLifecycle(foodDiaryEntryViewModel.uiEvents) {
-        when (it) {
-            is FoodDiaryUiEvents.Created -> onAdd()
-        }
+    LaunchedCollectWithLifecycle(addFoodDiaryEntryViewModel.createdUiEvent) {
+        onAdd()
     }
 
     LaunchedCollectWithLifecycle(foodViewModel.uiEvents) {
@@ -101,8 +99,8 @@ fun AddUserProductDiaryEntryScreen(
     }
 
     val foodUiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
-    val profiles = foodDiaryEntryViewModel.profiles.collectAsStateWithLifecycle().value
-    val defaultProfileId = foodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
+    val profiles = addFoodDiaryEntryViewModel.profiles.collectAsStateWithLifecycle().value
+    val defaultProfileId = addFoodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
 
     val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
     val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
@@ -144,7 +142,7 @@ fun AddUserProductDiaryEntryScreen(
                 val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                 val timestamp = LocalDateTime(date ?: now.date, now.time)
 
-                foodDiaryEntryViewModel.create(
+                addFoodDiaryEntryViewModel.create(
                     product = foodUiState.product,
                     quantity =
                         foodUiState.selectedQuantity

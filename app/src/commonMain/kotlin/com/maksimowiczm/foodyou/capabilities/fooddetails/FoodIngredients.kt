@@ -48,7 +48,7 @@ import org.jetbrains.compose.resources.painterResource
 fun FoodIngredients(
     components: List<MeasuredFoodSnapshot>,
     ingredientScalingFactor: Double,
-    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
+    onNavigateToIngredient: ((FoodSnapshotId, Quantity) -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     if (components.isEmpty()) return
@@ -79,7 +79,7 @@ fun FoodIngredients(
 private fun RecipeIngredientListItem(
     component: MeasuredFoodSnapshot,
     scalingFactor: Double,
-    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
+    onNavigateToIngredient: ((FoodSnapshotId, Quantity) -> Unit)?,
     modifier: Modifier = Modifier,
     unwrap: Boolean = true,
     isLast: Boolean = false,
@@ -151,7 +151,7 @@ private fun RecipeIngredientListItemContent(
     shape: Shape,
     interactionSource: MutableInteractionSource,
     modifier: Modifier = Modifier,
-    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit = { _, _ -> },
+    onNavigateToIngredient: ((FoodSnapshotId, Quantity) -> Unit)? = null,
 ) {
     val nameSelector = LocalFoodNameSelector.current
     val componentName =
@@ -190,43 +190,55 @@ private fun RecipeIngredientListItemContent(
         }
     }
 
-    Surface(
-        onClick = {
-            onNavigateToIngredient(component.id, scaledComponentQuantity.toQuantity())
-        },
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.surfaceContainer,
-        shape = shape,
-        interactionSource = interactionSource,
-    ) {
-        FoodListItem(
-            headline = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(componentName)
-                    if (component.id is FoodSnapshotId.UserRecipe) {
-                        Spacer(Modifier.width(8.dp))
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_skillet_filled),
-                            contentDescription = null,
-                        )
+    val content =
+        @Composable {
+            FoodListItem(
+                headline = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(componentName)
+                        if (component.id is FoodSnapshotId.UserRecipe) {
+                            Spacer(Modifier.width(8.dp))
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_skillet_filled),
+                                contentDescription = null,
+                            )
+                        }
                     }
-                }
+                },
+                proteins = { Text(componentMeasuredFacts.proteins.value?.stringResource() ?: "?") },
+                carbohydrates = {
+                    Text(componentMeasuredFacts.carbohydrates.value?.stringResource() ?: "?")
+                },
+                fats = { Text(componentMeasuredFacts.fats.value?.stringResource() ?: "?") },
+                energy = {
+                    Text(
+                        componentMeasuredFacts.energy.value
+                            ?.inUnit(LocalEnergyUnit.current)
+                            ?.stringResource() ?: "?"
+                    )
+                },
+                quantity = { Text(scaledComponentQuantity.stringResource()) },
+                image = image,
+                modifier = Modifier,
+            )
+        }
+
+    if (onNavigateToIngredient != null)
+        Surface(
+            onClick = {
+                onNavigateToIngredient(component.id, scaledComponentQuantity.toQuantity())
             },
-            proteins = { Text(componentMeasuredFacts.proteins.value?.stringResource() ?: "?") },
-            carbohydrates = {
-                Text(componentMeasuredFacts.carbohydrates.value?.stringResource() ?: "?")
-            },
-            fats = { Text(componentMeasuredFacts.fats.value?.stringResource() ?: "?") },
-            energy = {
-                Text(
-                    componentMeasuredFacts.energy.value
-                        ?.inUnit(LocalEnergyUnit.current)
-                        ?.stringResource() ?: "?"
-                )
-            },
-            quantity = { Text(scaledComponentQuantity.stringResource()) },
-            image = image,
-            modifier = Modifier,
+            modifier = modifier,
+            color = MaterialTheme.colorScheme.surfaceContainer,
+            shape = shape,
+            interactionSource = interactionSource,
+            content = content,
         )
-    }
+    else
+        Surface(
+            modifier = modifier,
+            color = MaterialTheme.colorScheme.surfaceContainer,
+            shape = shape,
+            content = content,
+        )
 }

@@ -83,6 +83,7 @@ import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.features.home.ui.calendar.CalendarCard
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
@@ -117,6 +118,7 @@ fun HomeScreen(
     onUserRecipe: (UserRecipeId, Quantity, MealId?, LocalDate?) -> Unit,
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
+    onEntry: (FoodDiaryEntryId) -> Unit,
     initialQuery: String?,
     modifier: Modifier = Modifier,
 ) {
@@ -181,6 +183,7 @@ fun HomeScreen(
                 else -> Unit
             }
         },
+        onEntry = onEntry,
         modifier = modifier,
     )
 }
@@ -209,6 +212,7 @@ fun HomeScreenContent(
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
     onCollectionSelected: (SearchCollection) -> Unit,
+    onEntry: (FoodDiaryEntryId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -475,9 +479,7 @@ fun HomeScreenContent(
                                                     onSelectMeal(it)
                                                     openSearch()
                                                 },
-                                                onEntry = {
-                                                    // TODO
-                                                },
+                                                onEntry = onEntry,
                                             )
                                         }
                                 }
@@ -610,6 +612,7 @@ private fun HomeScreenPreview() {
             onCreateProduct = {},
             onCreateRecipe = {},
             onCollectionSelected = {},
+            onEntry = {},
         )
     }
 }

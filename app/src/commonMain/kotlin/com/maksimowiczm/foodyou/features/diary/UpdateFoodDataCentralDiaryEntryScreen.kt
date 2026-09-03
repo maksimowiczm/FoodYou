@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.features.diary
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -43,62 +46,54 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.fooddatacentral.FoodDat
 import com.maksimowiczm.foodyou.capabilities.fooddetails.fooddatacentral.FoodDataCentralDetailsViewModel
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberQuantityFormField
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
+import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
-import com.maksimowiczm.foodyou.mealplan.domain.MealId
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
+import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.component.RefreshIconButton
-import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import foodyou.app.generated.resources.*
-import kotlin.time.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AddFoodDataCentralDiaryEntryScreen(
+fun UpdateFoodDataCentralDiaryEntryScreen(
     onBack: () -> Unit,
-    onAdd: () -> Unit,
-    mealId: MealId,
-    id: FoodDataCentralProductId,
-    initialQuantity: Quantity,
-    date: LocalDate?,
+    onSave: (Quantity, List<ProfileId>, Instant) -> Unit,
+    foodId: FoodDataCentralProductId,
+    entry: FoodDiaryEntry,
+    profiles: List<ProfileUiState>,
     modifier: Modifier = Modifier,
 ) {
     val foodViewModel: FoodDataCentralDetailsViewModel = koinViewModel {
-        parametersOf(id, initialQuantity)
-    }
-    val addFoodDiaryEntryViewModel: AddFoodDiaryEntryViewModel = koinViewModel {
-        parametersOf(mealId)
-    }
-
-    LaunchedCollectWithLifecycle(addFoodDiaryEntryViewModel.createdUiEvent) {
-        onAdd()
+        parametersOf(foodId, entry.snapshot.quantity.toQuantity())
     }
 
     val foodUiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
-    val profiles = addFoodDiaryEntryViewModel.profiles.collectAsStateWithLifecycle().value
-    val defaultProfileId = addFoodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
 
-    val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
+    val defaultValue =
+        remember(entry.snapshot.quantity) {
+            entry.snapshot.quantity.toQuantity().amount.formatCompact()
+        }
     val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
-    var selectedProfileIds by rememberSerializable { mutableStateOf(listOf(defaultProfileId)) }
+    var selectedProfileIds by rememberSerializable { mutableStateOf(entry.profileIds.toList()) }
     val selectedProfiles =
         remember(profiles, selectedProfileIds) {
-            profiles?.filter { it.id in selectedProfileIds } ?: emptyList()
+            profiles.filter { it.id in selectedProfileIds }
         }
 
     val details = foodUiState as? FoodDataCentralDetailsUiState.Details
@@ -110,47 +105,39 @@ fun AddFoodDataCentralDiaryEntryScreen(
         )
     }
 
-    if (profiles != null && details != null) {
-        AddFoodDataCentralDiaryEntryScreenContent(
-            headline = details.food.headline,
-            isFavorite = details.isFavorite,
-            isLoading = details.isLoading,
-            sourceUrl = details.food.source,
-            suggestions = details.suggestions,
-            scaledNutritionFacts = details.scaledNutritionFacts,
-            packageQuantity = details.food.packageQuantity,
-            servingQuantity = details.food.servingQuantity,
-            types = details.quantityTypes,
-            selectedType = details.selectedQuantityType,
-            formField = formField,
-            profiles = profiles,
-            selectedProfiles = selectedProfiles,
-            onBack = onBack,
-            onAdd = {
-                val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-                val timestamp = LocalDateTime(date ?: now.date, now.time)
-
-                addFoodDiaryEntryViewModel.create(
-                    product = details.food,
-                    quantity = details.selectedQuantity,
-                    profiles = selectedProfiles.map { profile -> profile.id },
-                    timestamp = timestamp,
-                )
-            },
-            onRefresh = foodViewModel::refresh,
-            onSetFavorite = foodViewModel::setFavorite,
-            onSelectQuantity = foodViewModel::selectQuantity,
-            onSelectQuantityType = foodViewModel::selectQuantityType,
-            onSelectProfiles = { selectedProfiles ->
-                selectedProfileIds = selectedProfiles.map { profile -> profile.id }
-            },
-            modifier = modifier,
-        )
+    updateTransition(details).Crossfade(contentKey = { it != null }) {
+        if (it == null) LoadingScreen(onBack)
+        else
+            UpdateFoodDataCentralDiaryEntryScreen(
+                headline = it.food.headline,
+                isFavorite = it.isFavorite,
+                isLoading = it.isLoading,
+                sourceUrl = it.food.source,
+                suggestions = it.suggestions,
+                scaledNutritionFacts = it.scaledNutritionFacts,
+                packageQuantity = it.food.packageQuantity,
+                servingQuantity = it.food.servingQuantity,
+                types = it.quantityTypes,
+                selectedType = it.selectedQuantityType,
+                formField = formField,
+                profiles = profiles,
+                selectedProfiles = selectedProfiles,
+                onBack = onBack,
+                onSave = { onSave(it.selectedQuantity, selectedProfileIds, entry.timestamp) },
+                onRefresh = foodViewModel::refresh,
+                onSetFavorite = foodViewModel::setFavorite,
+                onSelectQuantity = foodViewModel::selectQuantity,
+                onSelectQuantityType = foodViewModel::selectQuantityType,
+                onSelectProfiles = { selectedProfiles ->
+                    selectedProfileIds = selectedProfiles.map { profile -> profile.id }
+                },
+                modifier = modifier,
+            )
     }
 }
 
 @Composable
-private fun AddFoodDataCentralDiaryEntryScreenContent(
+private fun UpdateFoodDataCentralDiaryEntryScreen(
     headline: String?,
     isFavorite: Boolean,
     isLoading: Boolean,
@@ -166,13 +153,14 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
     selectedProfiles: List<ProfileUiState>,
     onBack: () -> Unit,
     onRefresh: () -> Unit,
-    onAdd: () -> Unit,
+    onSave: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,
     onSelectProfiles: (List<ProfileUiState>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
         remember(scaledNutritionFacts) {
@@ -190,6 +178,7 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -205,14 +194,13 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
         },
         floatingActionButton = {
             LargeExtendedFloatingActionButton(
-                onClick = onAdd,
+                onClick = onSave,
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
                             !isLoading &&
                                 !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                formField.error == null &&
-                                selectedProfiles.isNotEmpty(),
+                                formField.error == null,
                         alignment = Alignment.BottomEnd,
                     ),
             ) {
@@ -222,7 +210,7 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
                     modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
                 )
                 Spacer(Modifier.width(16.dp))
-                Text(stringResource(Res.string.action_add))
+                Text(stringResource(Res.string.action_save))
             }
         },
     ) { contentPadding ->

@@ -92,3 +92,5 @@ fun UserProduct.toSnapshot() =
         image = image?.let(FoodSnapshotImage::Blob),
         nutritionFacts = nutritionFacts,
     )
+
+fun FoodSnapshotId.UserProduct.toUserProductId() = UserProductId(id)

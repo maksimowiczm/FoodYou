@@ -74,7 +74,7 @@ fun DiaryInput(
                         Modifier.weight(1f)
                             .animateBounds(
                                 this,
-                                boundsTransform = { _, _ -> motionScheme.fastSpatialSpec() },
+                                boundsTransform = { _, _ -> motionScheme.fastEffectsSpec() },
                             ),
                 )
                 if (profiles.size > 1) {
@@ -95,7 +95,8 @@ fun DiaryInput(
                         expandVertically(motionScheme.defaultSpatialSpec()),
                 exit =
                     fadeOut(motionScheme.fastEffectsSpec()) +
-                        shrinkVertically(motionScheme.fastSpatialSpec()),
+                        // shrink with effect spec as it looks better
+                        shrinkVertically(motionScheme.fastEffectsSpec()),
             ) {
                 Column(
                     modifier = Modifier.padding(top = 8.dp),
@@ -145,52 +146,6 @@ fun DiaryInput(
                                 Text(profile.name)
                             }
                         }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun DiaryInput(
-    selectedType: QuantityType,
-    types: List<QuantityType>,
-    formField: FormField,
-    profile: ProfileUiState?,
-    onSelectType: (QuantityType) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(modifier) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            LookaheadScope {
-                QuantityInput(
-                    selectedType = selectedType,
-                    types = types,
-                    formField = formField,
-                    onSelectType = onSelectType,
-                    modifier = Modifier.weight(1f),
-                )
-                if (profile != null) {
-                    Spacer(Modifier.width(8.dp))
-                    Box(
-                        modifier =
-                            Modifier.size(40.dp)
-                                .clip(CircleShape)
-                                .wrapContentSize(unbounded = true)
-                                .shadow(4.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        val avatarModifier =
-                            when (profile.avatar) {
-                                is Profile.Avatar.Photo -> Modifier.size(40.dp)
-                                is Profile.Avatar.Predefined ->
-                                    Modifier.background(MaterialTheme.colorScheme.surfaceContainer)
-                                        .padding(8.dp)
-                                        .size(24.dp)
-                                        .wrapContentSize(unbounded = true)
-                            }
-                        profile.avatar.Avatar(avatarModifier)
                     }
                 }
             }

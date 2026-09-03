@@ -80,3 +80,5 @@ fun UserRecipe.toSnapshot() =
         image = image?.let(FoodSnapshotImage::Blob),
         components = components,
     )
+
+fun FoodSnapshotId.UserRecipe.toUserRecipeId() = UserRecipeId(id)
