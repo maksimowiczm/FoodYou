@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.app.infrastructure.room
 
-import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.event.DomainEvent
+import com.maksimowiczm.foodyou.common.event.EventStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

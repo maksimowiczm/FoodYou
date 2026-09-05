@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.analytics.domain
 
-import com.maksimowiczm.foodyou.common.clock.staticClock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -15,7 +14,7 @@ class AnalyticsTest {
     fun recordAppLaunch_whenFirstLaunch_thenEmitsThreeEvents() {
         val analytics = Analytics()
 
-        val events = analytics.recordAppLaunch("1.0.0", staticClock(t0)).toList()
+        val events = analytics.decide(AnalyticsCommand.RecordAppLaunch("1.0.0", t0)).toList()
 
         assertEquals(3, events.size)
 
@@ -37,7 +36,7 @@ class AnalyticsTest {
                 launchCount = 1,
             )
 
-        val events = analytics.recordAppLaunch("1.0.0", staticClock(t1)).toList()
+        val events = analytics.decide(AnalyticsCommand.RecordAppLaunch("1.0.0", t1)).toList()
 
         assertEquals(1, events.size)
 
@@ -55,7 +54,7 @@ class AnalyticsTest {
                 launchCount = 1,
             )
 
-        val events = analytics.recordAppLaunch("2.0.0", staticClock(t1)).toList()
+        val events = analytics.decide(AnalyticsCommand.RecordAppLaunch("2.0.0", t1)).toList()
 
         assertEquals(2, events.size)
 

@@ -3,19 +3,20 @@ package com.maksimowiczm.foodyou.features.onboarding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
+import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.account.domain.Profile
-import com.maksimowiczm.foodyou.account.domain.addProfile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
+import com.maksimowiczm.foodyou.mealplan.domain.MealPlanCommand
 import com.maksimowiczm.foodyou.mealplan.domain.MealTemplates
-import com.maksimowiczm.foodyou.mealplan.domain.initialize
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.shared.ui.component.UiProfileAvatar
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -84,7 +85,9 @@ internal class OnboardingViewModel(
 
                 awaitAll(
                     async {
-                        accountService.update { addProfile(profile) }
+                        accountService.handle(
+                            AccountCommand.AddProfile(profile, Clock.System.now())
+                        )
                         accountManager.setAppProfileId(profile.id)
                     },
                     async { openFoodFacts.update { it.copy(remoteEnabled = allowOpenFoodFacts) } },
@@ -92,9 +95,13 @@ internal class OnboardingViewModel(
                         foodDataCentral.update { it.copy(remoteEnabled = allowFoodDataCentral) }
                     },
                     async {
-                        mealPlanService.transact {
-                            it.initialize(language, MealTemplates.forLanguage(language))
-                        }
+                        mealPlanService.handle(
+                            MealPlanCommand.Initialize(
+                                language = language,
+                                meals = MealTemplates.forLanguage(language),
+                                timestamp = Clock.System.now(),
+                            )
+                        )
                     },
                 )
             }

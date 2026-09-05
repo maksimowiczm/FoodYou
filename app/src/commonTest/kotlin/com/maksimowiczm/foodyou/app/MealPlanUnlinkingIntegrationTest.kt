@@ -9,10 +9,12 @@ import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.Meal
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
-import com.maksimowiczm.foodyou.mealplan.domain.update
+import com.maksimowiczm.foodyou.mealplan.domain.MealPlanCommand
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Clock
@@ -32,7 +34,12 @@ class MealPlanUnlinkingIntegrationTest {
             val mealId = MealId(Uuid.random())
             val meal = Meal(mealId, "Breakfast", Meal.TimeWindow.AllDay)
             val otherMeal = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
-            mealPlanService.transact { it.update(listOf(meal, otherMeal)) }
+            mealPlanService.handle(
+                MealPlanCommand.UpdateMeals(
+                    meals = listOf(meal, otherMeal),
+                    timestamp = Clock.System.now(),
+                )
+            )
 
             // 2. Create a diary entry associated with "Breakfast"
             val composition =
@@ -52,15 +59,31 @@ class MealPlanUnlinkingIntegrationTest {
                             packageWeight = null,
                         ),
                 )
-            val entryId =
-                foodDiaryService.create(setOf(profileId), composition, mealId, Clock.System.now())
+            val entryId = FoodDiaryEntryId()
+            foodDiaryService.handle(
+                id = entryId,
+                command =
+                    FoodDiaryCommand.Create(
+                        id = entryId,
+                        profileIds = setOf(profileId),
+                        snapshot = composition,
+                        mealId = mealId,
+                        entryTimestamp = Clock.System.now(),
+                        timestamp = Clock.System.now(),
+                    ),
+            )
 
             // 3. Verify association
             val entry = foodDiaryService.observe(entryId).filterNotNull().first()
             assertEquals(mealId, entry.mealId)
 
             // 4. Remove "Breakfast" from the plan, keeping "Lunch"
-            mealPlanService.transact { it.update(listOf(otherMeal)) }
+            mealPlanService.handle(
+                MealPlanCommand.UpdateMeals(
+                    meals = listOf(otherMeal),
+                    timestamp = Clock.System.now(),
+                )
+            )
 
             // 5. Verify the diary entry is unlinked (mealId becomes null)
             val updatedEntry =

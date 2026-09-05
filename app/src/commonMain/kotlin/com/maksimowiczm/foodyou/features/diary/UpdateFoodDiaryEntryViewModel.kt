@@ -7,14 +7,15 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -58,18 +59,23 @@ class UpdateFoodDiaryEntryViewModel(
         timestamp: Instant,
     ) {
         viewModelScope.launch {
-            val entry = this@UpdateFoodDiaryEntryViewModel.entry.first() ?: return@launch
-
-            foodDiaryService.edit(
+            foodDiaryService.handle(
                 id = entryId,
-                profileIds = profiles.toSet(),
-                quantity =
-                    FoodSnapshotQuantityUpdateService.map(
-                        quantity = quantity,
-                        servingWeight = entry.snapshot.quantity.servingWeight,
-                        packageWeight = entry.snapshot.quantity.packageWeight,
-                    ),
-                timestamp = timestamp,
+                command =
+                    FoodDiaryCommand.Update(timestamp = Clock.System.now()) { current ->
+                        current.copy(
+                            profileIds = profiles.toSet(),
+                            snapshot =
+                                current.snapshot.withNewQuantity(
+                                    FoodSnapshotQuantityUpdateService.map(
+                                        quantity = quantity,
+                                        servingWeight = current.snapshot.quantity.servingWeight,
+                                        packageWeight = current.snapshot.quantity.packageWeight,
+                                    )
+                                ),
+                            timestamp = timestamp,
+                        )
+                    },
             )
             eventBus.send(FoodDiaryEntryUpdatedUiEvent)
         }

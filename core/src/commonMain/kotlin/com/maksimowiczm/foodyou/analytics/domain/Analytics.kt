@@ -2,7 +2,7 @@
 
 package com.maksimowiczm.foodyou.analytics.domain
 
-import kotlin.time.Clock
+import com.maksimowiczm.foodyou.common.Decider
 import kotlin.time.Instant
 
 /**
@@ -25,42 +25,56 @@ data class Analytics(
     val launchCount: Int = 0,
 )
 
-/**
- * Records an application launch
- *
- * @param versionName The version name of the application at the time of launch (e.g. `"1.4.2"`).
- * @param clock A [Clock] used to obtain the current timestamp.
- */
-fun Analytics.recordAppLaunch(versionName: String, clock: Clock = Clock.System) = buildList {
-    val now = clock.now()
+fun Analytics.decide(command: AnalyticsCommand): List<AnalyticsEvent> =
+    when (command) {
+        is AnalyticsCommand.RecordAppLaunch ->
+            buildList {
+                add(
+                    AppLaunchedEvent(
+                        versionName = command.versionName,
+                        timestamp = command.timestamp,
+                    )
+                )
 
-    add(AppLaunchedEvent(versionName = versionName, timestamp = now))
+                if (appFirstLaunchAt == null) {
+                    add(
+                        FirstAppLaunchRecordedEvent(
+                            versionName = command.versionName,
+                            timestamp = command.timestamp,
+                        )
+                    )
+                }
 
-    if (appFirstLaunchAt == null) {
-        add(FirstAppLaunchRecordedEvent(versionName = versionName, timestamp = now))
+                if (currentVersion != command.versionName) {
+                    add(
+                        AppVersionChangedEvent(
+                            newVersionName = command.versionName,
+                            timestamp = command.timestamp,
+                        )
+                    )
+                }
+            }
     }
-
-    if (currentVersion != versionName) {
-        add(AppVersionChangedEvent(newVersionName = versionName, timestamp = now))
-    }
-}
 
 /** Applies an [AnalyticsEvent] and returns a new immutable [Analytics] instance. */
 fun Analytics.apply(event: AnalyticsEvent): Analytics =
     when (event) {
-        is AppLaunchedEvent -> apply(event)
-        is FirstAppLaunchRecordedEvent -> apply(event)
-        is AppVersionChangedEvent -> apply(event)
+        is AppLaunchedEvent -> copy(launchCount = launchCount + 1)
+        is FirstAppLaunchRecordedEvent ->
+            copy(appFirstLaunchAt = event.timestamp, appFirstLaunchVersion = event.versionName)
+        is AppVersionChangedEvent ->
+            copy(
+                currentVersion = event.newVersionName,
+                currentVersionFirstLaunchAt = event.timestamp,
+            )
     }
-
-@Suppress("unused")
-fun Analytics.apply(event: AppLaunchedEvent): Analytics = copy(launchCount = launchCount + 1)
-
-fun Analytics.apply(event: FirstAppLaunchRecordedEvent): Analytics =
-    copy(appFirstLaunchAt = event.timestamp, appFirstLaunchVersion = event.versionName)
-
-fun Analytics.apply(event: AppVersionChangedEvent): Analytics =
-    copy(currentVersion = event.newVersionName, currentVersionFirstLaunchAt = event.timestamp)
 
 fun Iterable<AnalyticsEvent>.toAnalytics(): Analytics =
     fold(Analytics()) { state, event -> state.apply(event) }
+
+val analyticsDecider =
+    Decider<AnalyticsCommand, AnalyticsEvent, Analytics>(
+        decide = { command, state -> state.decide(command) },
+        evolve = { state, event -> state.apply(event) },
+        initialState = Analytics(),
+    )

@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.Meal
-import com.maksimowiczm.foodyou.mealplan.domain.update
+import com.maksimowiczm.foodyou.mealplan.domain.MealPlanCommand
+import kotlin.time.Clock
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -19,6 +21,7 @@ class MealScheduleViewModel(private val mealPlanService: MealPlanService) : View
     val meals =
         mealPlanService
             .observe()
+            .filterNotNull()
             .map { it.meals }
             .stateIn(
                 scope = viewModelScope,
@@ -28,7 +31,12 @@ class MealScheduleViewModel(private val mealPlanService: MealPlanService) : View
 
     fun update(newMeals: List<Meal>) {
         viewModelScope.launch {
-            mealPlanService.transact { it.update(newMeals) }
+            mealPlanService.handle(
+                MealPlanCommand.UpdateMeals(
+                    meals = newMeals,
+                    timestamp = Clock.System.now(),
+                )
+            )
             eventBus.send(MealScheduleEvent.Updated)
         }
     }

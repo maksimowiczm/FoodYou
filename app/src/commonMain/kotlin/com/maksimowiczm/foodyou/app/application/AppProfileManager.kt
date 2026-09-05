@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 
 /**
  * Manages the currently active profile for the application.
@@ -55,11 +56,9 @@ class AppProfileManager(
      */
     fun observeAppProfile(): Flow<Profile> =
         observeAppProfileId().filterNotNull().flatMapLatest { profileId ->
-            accountService
-                .observe()
-                .filterNotNull()
-                .map { account -> account.profiles.find { it.id == profileId } }
-                .filterNotNull()
+            accountService.observe().filterNotNull().mapNotNull { account ->
+                account.profiles.find { it.id == profileId }
+            }
         }
 
     private companion object {

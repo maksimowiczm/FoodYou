@@ -2,8 +2,8 @@
 
 package com.maksimowiczm.foodyou.userproduct.domain
 
+import com.maksimowiczm.foodyou.common.Decider
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
@@ -11,7 +11,6 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
 import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import kotlin.jvm.JvmInline
-import kotlin.time.Clock
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
 
@@ -41,11 +40,6 @@ data class UserProduct(
             append(brand.let { " ($it)" })
         }
     }
-
-    companion object {
-        fun create(product: UserProduct, clock: Clock = Clock.System): List<UserProductEvent> =
-            listOf(UserProductCreatedEvent(product = product, timestamp = clock.now()))
-    }
 }
 
 @Serializable
@@ -57,22 +51,47 @@ value class UserProductBarcode(val value: String) {
     }
 }
 
-inline fun UserProduct.update(
-    clock: Clock = Clock.System,
-    transform: (UserProduct) -> UserProduct,
-): List<UserProductEvent> = buildList {
-    val updated = transform(this@update)
-    if (updated != this@update)
-        add(UserProductUpdatedEvent(product = updated, timestamp = clock.now()))
-}
+fun UserProduct?.decide(command: UserProductCommand): List<UserProductEvent> =
+    when (command) {
+        is UserProductCommand.Create ->
+            if (this == null) {
+                listOf(
+                    UserProductCreatedEvent(
+                        product = command.product,
+                        timestamp = command.timestamp,
+                    )
+                )
+            } else {
+                emptyList()
+            }
 
-fun UserProduct.remove(
-    strategy: DeleteStrategy,
-    clock: Clock = Clock.System,
-): List<UserProductEvent> =
-    listOf(
-        UserProductDeletedEvent(userProductId = id, strategy = strategy, timestamp = clock.now())
-    )
+        is UserProductCommand.Update ->
+            if (this != null) {
+                val updated = command.transform(this)
+                if (updated != this) {
+                    listOf(
+                        UserProductUpdatedEvent(product = updated, timestamp = command.timestamp)
+                    )
+                } else {
+                    emptyList()
+                }
+            } else {
+                emptyList()
+            }
+
+        is UserProductCommand.Remove ->
+            if (this != null) {
+                listOf(
+                    UserProductDeletedEvent(
+                        userProductId = id,
+                        strategy = command.strategy,
+                        timestamp = command.timestamp,
+                    )
+                )
+            } else {
+                emptyList()
+            }
+    }
 
 fun UserProduct?.apply(event: UserProductEvent): UserProduct? =
     when (event) {
@@ -94,3 +113,10 @@ fun UserProduct.toSnapshot() =
     )
 
 fun FoodSnapshotId.UserProduct.toUserProductId() = UserProductId(id)
+
+val userProductDecider =
+    Decider<UserProductCommand, UserProductEvent, UserProduct?>(
+        decide = { command, state -> state.decide(command) },
+        evolve = { state, event -> state.apply(event) },
+        initialState = null,
+    )

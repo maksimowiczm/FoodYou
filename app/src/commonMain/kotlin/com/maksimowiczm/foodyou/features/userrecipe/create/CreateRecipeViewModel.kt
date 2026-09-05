@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.features.userrecipe.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormState
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormTransformer
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormUiState
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 class CreateRecipeViewModel(
     private val recipeService: UserRecipeService,
     private val recipeFormTransformer: RecipeFormTransformer,
+    private val blobStorage: BlobStorage,
 ) : ViewModel() {
     private val eventBus = Channel<CreateRecipeEvent>()
     val uiEvents = eventBus.receiveAsFlow()
@@ -30,7 +32,7 @@ class CreateRecipeViewModel(
                 recipeService.create(
                     name = name,
                     note = note,
-                    imageBytes = imageBytes,
+                    image = imageBytes?.let { blobStorage.store(it) },
                     servings = servings,
                     components = components,
                 )

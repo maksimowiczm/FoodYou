@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.fooddiary.domain
 
-import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -54,16 +53,17 @@ class FoodDiaryEntryTest {
     @Test
     fun create_returns_created_event() {
         val now = Instant.fromEpochSeconds(2000)
-        val clock = staticClock(now)
 
         val events =
-            FoodDiaryEntry.create(
-                id = diaryEntryId,
-                profileIds = profileIds,
-                snapshot = measuredSnapshot,
-                mealId = mealId,
-                timestamp = timestamp,
-                clock = clock,
+            (null as FoodDiaryEntry?).decide(
+                FoodDiaryCommand.Create(
+                    id = diaryEntryId,
+                    profileIds = profileIds,
+                    snapshot = measuredSnapshot,
+                    mealId = mealId,
+                    entryTimestamp = timestamp,
+                    timestamp = now,
+                )
             )
 
         assertEquals(1, events.size)
@@ -79,15 +79,17 @@ class FoodDiaryEntryTest {
     @Test
     fun edit_returns_granular_events_when_changed() {
         val now = Instant.fromEpochSeconds(3000)
-        val clock = staticClock(now)
         val updatedTimestamp = Instant.fromEpochSeconds(4000)
         val updatedProfileIds = setOf(ProfileId(Uuid.random()))
 
         val events =
-            entry.edit(
-                profileIds = updatedProfileIds,
-                timestamp = updatedTimestamp,
-                clock = clock,
+            entry.decide(
+                FoodDiaryCommand.Update(
+                    timestamp = now,
+                    transform = {
+                        it.copy(profileIds = updatedProfileIds, timestamp = updatedTimestamp)
+                    },
+                )
             )
 
         assertEquals(2, events.size)
@@ -103,7 +105,6 @@ class FoodDiaryEntryTest {
     @Test
     fun edit_returns_granular_events_when_snapshot_changed() {
         val now = Instant.fromEpochSeconds(3200)
-        val clock = staticClock(now)
         val newSnapshot =
             measuredSnapshot.copy(
                 quantity =
@@ -115,9 +116,11 @@ class FoodDiaryEntryTest {
             )
 
         val events =
-            entry.edit(
-                snapshot = newSnapshot,
-                clock = clock,
+            entry.decide(
+                FoodDiaryCommand.Update(
+                    timestamp = now,
+                    transform = { it.copy(snapshot = newSnapshot) },
+                )
             )
 
         assertEquals(1, events.size)
@@ -129,13 +132,14 @@ class FoodDiaryEntryTest {
     @Test
     fun edit_returns_granular_events_when_meal_id_changed() {
         val now = Instant.fromEpochSeconds(3500)
-        val clock = staticClock(now)
         val newMealId = MealId(Uuid.random())
 
         val events =
-            entryWithMeal.edit(
-                mealId = newMealId,
-                clock = clock,
+            entryWithMeal.decide(
+                FoodDiaryCommand.Update(
+                    timestamp = now,
+                    transform = { it.copy(mealId = newMealId) },
+                )
             )
 
         assertEquals(1, events.size)
@@ -147,12 +151,13 @@ class FoodDiaryEntryTest {
     @Test
     fun edit_returns_meal_unlinked_event_when_meal_id_cleared() {
         val now = Instant.fromEpochSeconds(3600)
-        val clock = staticClock(now)
 
         val events =
-            entryWithMeal.edit(
-                mealId = null,
-                clock = clock,
+            entryWithMeal.decide(
+                FoodDiaryCommand.Update(
+                    timestamp = now,
+                    transform = { it.copy(mealId = null) },
+                )
             )
 
         assertEquals(1, events.size)
@@ -162,16 +167,16 @@ class FoodDiaryEntryTest {
 
     @Test
     fun edit_returns_empty_list_when_not_changed() {
-        val events = entry.edit()
+        val events =
+            entry.decide(FoodDiaryCommand.Update(timestamp = Instant.fromEpochSeconds(3700)) { it })
         assertEquals(0, events.size)
     }
 
     @Test
     fun remove_returns_deleted_event() {
         val now = Instant.fromEpochSeconds(5000)
-        val clock = staticClock(now)
 
-        val events = entry.remove(DeleteStrategy.Delete, clock)
+        val events = entry.decide(FoodDiaryCommand.Remove(DeleteStrategy.Delete, now))
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryDeletedEvent>(events[0])
@@ -183,9 +188,8 @@ class FoodDiaryEntryTest {
     @Test
     fun unlinkFromMeal_returns_unlinked_event() {
         val now = Instant.fromEpochSeconds(5500)
-        val clock = staticClock(now)
 
-        val events = entryWithMeal.unlinkFromMeal(clock)
+        val events = entryWithMeal.decide(FoodDiaryCommand.UnlinkFromMeal(now))
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryMealUnlinkedEvent>(events[0])

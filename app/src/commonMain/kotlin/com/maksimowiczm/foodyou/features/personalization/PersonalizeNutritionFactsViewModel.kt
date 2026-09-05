@@ -3,8 +3,9 @@ package com.maksimowiczm.foodyou.features.personalization
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
+import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.account.domain.changeNutrientsOrder
+import kotlin.time.Clock
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
@@ -30,7 +31,7 @@ class PersonalizeNutritionFactsViewModel(private val accountService: AccountServ
 
     fun updateOrder(order: List<NutrientsOrder>) {
         viewModelScope.launch {
-            accountService.update { changeNutrientsOrder(order) }
+            accountService.handle(AccountCommand.ChangeNutrientsOrder(order, Clock.System.now()))
             eventBus.send(PersonalizeNutritionFactsEvent.Updated)
         }
     }

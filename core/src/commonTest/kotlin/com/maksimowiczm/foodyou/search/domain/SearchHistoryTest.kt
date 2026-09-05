@@ -8,29 +8,22 @@ import kotlin.time.Instant
 
 class SearchHistoryTest {
     @Test
-    fun recordSearchQuery_storesOnlyTextQueries() {
+    fun decide_RecordSearchQuery_returnsEvent_whenNewQuery() {
         val history = SearchHistory()
-
-        val barcode = SearchQuery.Barcode("1234567890123")
-        val events1 = history.recordSearchQuery(barcode)
-        assertEquals(0, events1.size)
-
-        val other = TestNotBlankQuery("https://example.com/product/123")
-        val events2 = history.recordSearchQuery(other)
-        assertEquals(0, events2.size)
-
         val text = SearchQuery.Text("apple")
-        val events3 = history.recordSearchQuery(text)
-        assertEquals(1, events3.size)
-        assertEquals(text, (events3[0] as SearchQueryRecordedEvent).query)
+        val events =
+            history.decide(SearchHistoryCommand.RecordSearchQuery(text, Instant.DISTANT_PAST))
+        assertEquals(1, events.size)
+        assertEquals(text, (events[0] as SearchQueryRecordedEvent).query)
     }
 
     @Test
-    fun recordSearchQuery_doesNotStoreDuplicateQueries() {
+    fun decide_RecordSearchQuery_returnsEmptyList_whenDuplicateQuery() {
         val query = SearchQuery.Text("apple")
         val history = SearchHistory(history = listOf(query))
 
-        val events = history.recordSearchQuery(query)
+        val events =
+            history.decide(SearchHistoryCommand.RecordSearchQuery(query, Instant.DISTANT_PAST))
 
         assertTrue(events.isEmpty())
     }
@@ -73,6 +66,4 @@ class SearchHistoryTest {
         )
         assertEquals("query 6", (history.history.last() as SearchQuery.Text).query)
     }
-
-    private data class TestNotBlankQuery(override val query: String) : SearchQuery.NotBlank
 }

@@ -5,13 +5,14 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.os.Build
 import com.maksimowiczm.foodyou.analytics.application.AnalyticsService
-import com.maksimowiczm.foodyou.analytics.domain.recordAppLaunch
+import com.maksimowiczm.foodyou.analytics.domain.AnalyticsCommand
 import com.maksimowiczm.foodyou.app.AppModule
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.app.initFoodYouKoinApplication
 import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.InMemoryEventBus
 import com.maksimowiczm.foodyou.common.event.LoggingEventBus
+import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,9 +59,14 @@ class FoodYouApplication : Application() {
         }
 
         coroutineScope.launch {
-            koin.get<AnalyticsService>().update {
-                recordAppLaunch(versionName = BuildConfig.VERSION_NAME)
-            }
+            koin
+                .get<AnalyticsService>()
+                .handle(
+                    AnalyticsCommand.RecordAppLaunch(
+                        versionName = BuildConfig.VERSION_NAME,
+                        timestamp = Clock.System.now(),
+                    )
+                )
         }
     }
 

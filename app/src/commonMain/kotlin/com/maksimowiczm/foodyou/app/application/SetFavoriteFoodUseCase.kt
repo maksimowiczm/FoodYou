@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.app.application
 
 import com.maksimowiczm.foodyou.account.application.AccountService
+import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodId
-import com.maksimowiczm.foodyou.account.domain.addFavoriteFood
-import com.maksimowiczm.foodyou.account.domain.removeFavoriteFood
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 
@@ -13,7 +13,11 @@ class SetFavoriteFoodUseCase(
 ) {
     suspend fun setFavoriteFood(id: FavoriteFoodId, isFavorite: Boolean) {
         val profileId = appProfileManager.observeAppProfileId().filterNotNull().first()
-        if (isFavorite) accountService.update { addFavoriteFood(profileId, id) }
-        else accountService.update { removeFavoriteFood(profileId, id) }
+        val timestamp = Clock.System.now()
+        if (isFavorite) {
+            accountService.handle(AccountCommand.AddFavoriteFood(profileId, id, timestamp))
+        } else {
+            accountService.handle(AccountCommand.RemoveFavoriteFood(profileId, id, timestamp))
+        }
     }
 }

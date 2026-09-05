@@ -3,15 +3,15 @@ package com.maksimowiczm.foodyou.features.profile.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
+import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.account.domain.Profile
-import com.maksimowiczm.foodyou.account.domain.removeProfile
-import com.maksimowiczm.foodyou.account.domain.updateProfile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.shared.ui.component.UiProfileAvatar
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
+import kotlin.time.Clock
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -76,9 +76,11 @@ internal class EditProfileViewModel(
                 }
 
             val profileId = profile.filterNotNull().first().id
-            accountService.update {
-                updateProfile(profileId) { it.copy(name = name, avatar = profileAvatar) }
-            }
+            accountService.handle(
+                AccountCommand.UpdateProfile(profileId, Clock.System.now()) {
+                    it.copy(name = name, avatar = profileAvatar)
+                }
+            )
 
             _uiEventBus.send(EditProfileEvent.Edited)
         }
@@ -90,7 +92,7 @@ internal class EditProfileViewModel(
         }
 
         viewModelScope.launch {
-            accountService.update { removeProfile(profileId) }
+            accountService.handle(AccountCommand.RemoveProfile(profileId, Clock.System.now()))
 
             val currentSelection = appProfileManager.observeAppProfileId().first()
             if (currentSelection == profileId) {

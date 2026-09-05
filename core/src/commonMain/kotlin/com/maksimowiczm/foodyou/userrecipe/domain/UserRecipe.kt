@@ -2,8 +2,8 @@
 
 package com.maksimowiczm.foodyou.userrecipe.domain
 
+import com.maksimowiczm.foodyou.common.Decider
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -14,7 +14,6 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.allComponentIdentities
 import com.maksimowiczm.foodyou.common.domain.food.nutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.totalWeight
-import kotlin.time.Clock
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
 
@@ -40,27 +39,44 @@ data class UserRecipe(
     val nutritionFacts: NutritionFacts = components.nutritionFacts
     val totalWeight: Weight = components.totalWeight
     val servingWeight: Weight = totalWeight / servings
+}
 
-    companion object {
-        fun create(recipe: UserRecipe, clock: Clock = Clock.System): List<UserRecipeEvent> =
-            listOf(UserRecipeCreatedEvent(recipe = recipe, timestamp = clock.now()))
+fun UserRecipe?.decide(command: UserRecipeCommand): List<UserRecipeEvent> =
+    when (command) {
+        is UserRecipeCommand.Create ->
+            if (this == null) {
+                listOf(
+                    UserRecipeCreatedEvent(recipe = command.recipe, timestamp = command.timestamp)
+                )
+            } else {
+                emptyList()
+            }
+
+        is UserRecipeCommand.Update ->
+            if (this != null) {
+                val updated = command.transform(this)
+                if (updated != this) {
+                    listOf(UserRecipeUpdatedEvent(recipe = updated, timestamp = command.timestamp))
+                } else {
+                    emptyList()
+                }
+            } else {
+                emptyList()
+            }
+
+        is UserRecipeCommand.Remove ->
+            if (this != null) {
+                listOf(
+                    UserRecipeDeletedEvent(
+                        userRecipeId = id,
+                        strategy = command.strategy,
+                        timestamp = command.timestamp,
+                    )
+                )
+            } else {
+                emptyList()
+            }
     }
-}
-
-inline fun UserRecipe.update(
-    clock: Clock = Clock.System,
-    transform: (UserRecipe) -> UserRecipe,
-): List<UserRecipeEvent> = buildList {
-    val updated = transform(this@update)
-    if (updated != this@update)
-        add(UserRecipeUpdatedEvent(recipe = updated, timestamp = clock.now()))
-}
-
-fun UserRecipe.remove(
-    strategy: DeleteStrategy,
-    clock: Clock = Clock.System,
-): List<UserRecipeEvent> =
-    listOf(UserRecipeDeletedEvent(userRecipeId = id, strategy = strategy, timestamp = clock.now()))
 
 fun UserRecipe?.apply(event: UserRecipeEvent): UserRecipe? =
     when (event) {
@@ -82,3 +98,10 @@ fun UserRecipe.toSnapshot() =
     )
 
 fun FoodSnapshotId.UserRecipe.toUserRecipeId() = UserRecipeId(id)
+
+val userRecipeDecider =
+    Decider<UserRecipeCommand, UserRecipeEvent, UserRecipe?>(
+        decide = { command, state -> state.decide(command) },
+        evolve = { state, event -> state.apply(event) },
+        initialState = null,
+    )

@@ -1,8 +1,9 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
-import com.maksimowiczm.foodyou.common.domain.BlobStorage
+import com.maksimowiczm.foodyou.common.asEventSink
+import com.maksimowiczm.foodyou.common.asHandler
+import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
-import com.maksimowiczm.foodyou.common.domain.EventStore
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
@@ -10,16 +11,17 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateSer
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.TrackedFoodSnapshot
-import com.maksimowiczm.foodyou.common.domain.load
-import com.maksimowiczm.foodyou.common.domain.observe
 import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventStore
+import com.maksimowiczm.foodyou.common.event.observe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCommand
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeEvent
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
-import com.maksimowiczm.foodyou.userrecipe.domain.remove
 import com.maksimowiczm.foodyou.userrecipe.domain.toUserRecipe
-import com.maksimowiczm.foodyou.userrecipe.domain.update
+import com.maksimowiczm.foodyou.userrecipe.domain.userRecipeDecider
+import kotlin.time.Clock
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -28,23 +30,17 @@ import kotlinx.coroutines.flow.map
 
 class UserRecipeService(
     private val eventStore: EventStore,
-    private val blobStorage: BlobStorage,
-    private val eventBus: EventBus,
+    eventBus: EventBus,
     private val compositionRepository: UserRecipeCompositionRepository,
 ) {
-    private fun streamId(id: UserRecipeId) = "UserRecipe-${id.value}"
+    private val clock: Clock = Clock.System
+    private val commandHandler =
+        userRecipeDecider.asHandler(
+            eventStore,
+            eventBus.asEventSink(),
+        )
 
-    private suspend inline fun transact(
-        id: UserRecipeId,
-        block: (UserRecipe?) -> List<UserRecipeEvent>,
-    ) {
-        val recipe = eventStore.load<UserRecipeEvent>(streamId(id)).toUserRecipe()
-        val newEvents = block(recipe)
-        if (newEvents.isNotEmpty()) {
-            eventStore.append(streamId(id), newEvents)
-            eventBus.publish(newEvents)
-        }
-    }
+    private fun streamId(id: UserRecipeId) = "UserRecipe-${id.value}"
 
     fun observe(id: UserRecipeId): Flow<UserRecipe?> =
         eventStore.observe<UserRecipeEvent>(streamId(id)).map { it.toUserRecipe() }
@@ -55,23 +51,23 @@ class UserRecipeService(
     suspend fun create(
         name: FoodName,
         note: String?,
-        imageBytes: ByteArray?,
+        image: BlobDigest?,
         servings: Double,
         components: List<MeasuredFoodSnapshot>,
     ): UserRecipeId {
         val id = UserRecipeId()
-        transact(id) {
-            UserRecipe.create(
-                UserRecipe(
-                    id = id,
-                    name = name,
-                    note = note,
-                    image = imageBytes?.let { blobStorage.store(it) },
-                    servings = servings,
-                    components = components,
-                )
+        val recipe =
+            UserRecipe(
+                id = id,
+                name = name,
+                note = note,
+                image = image,
+                servings = servings,
+                components = components,
             )
-        }
+        val command = UserRecipeCommand.Create(recipe = recipe, timestamp = clock.now())
+        val _ = commandHandler(streamId(id), command)
+
         return id
     }
 
@@ -79,29 +75,26 @@ class UserRecipeService(
         id: UserRecipeId,
         name: FoodName,
         note: String?,
-        imageBytes: ByteArray?,
+        image: BlobDigest?,
         servings: Double,
         components: List<MeasuredFoodSnapshot>,
     ) {
-        transact(id) { recipe ->
-            checkNotNull(recipe) { "Recipe with ID $id not found" }
-            recipe.update {
-                it.copy(
+        val command =
+            UserRecipeCommand.Update(timestamp = clock.now()) { recipe ->
+                recipe.copy(
                     name = name,
                     note = note,
-                    image = imageBytes?.let { bytes -> blobStorage.store(bytes) },
+                    image = image,
                     servings = servings,
                     components = components,
                 )
             }
-        }
+        val _ = commandHandler(streamId(id), command)
     }
 
     suspend fun delete(id: UserRecipeId, strategy: DeleteStrategy) {
-        transact(id) { recipe ->
-            checkNotNull(recipe) { "Recipe with ID $id not found" }
-            recipe.remove(strategy)
-        }
+        val command = UserRecipeCommand.Remove(strategy = strategy, timestamp = clock.now())
+        val _ = commandHandler(streamId(id), command)
     }
 
     /**
@@ -118,12 +111,12 @@ class UserRecipeService(
             .findRecipesUsing(snapshot.id)
             .map { id ->
                 async {
-                    transact(id) { recipe ->
-                        recipe?.update {
-                            it.copy(
+                    val command =
+                        UserRecipeCommand.Update(timestamp = clock.now()) { recipe ->
+                            recipe.copy(
                                 components =
                                     FoodSnapshotUpdateService.update(
-                                        components = it.components,
+                                        components = recipe.components,
                                         id = snapshot.id,
                                         transform = { current ->
                                             current.copy(
@@ -138,8 +131,8 @@ class UserRecipeService(
                                         },
                                     )
                             )
-                        } ?: emptyList()
-                    }
+                        }
+                    val _ = commandHandler(streamId(id), command)
                 }
             }
             .awaitAll()
@@ -150,12 +143,13 @@ class UserRecipeService(
             .findRecipesUsing(id)
             .map { recipeId ->
                 async {
-                    transact(recipeId) { recipe ->
-                        recipe ?: return@transact emptyList()
-                        val updatedComposition =
-                            FoodSnapshotUpdateService.remove(recipe.components, id)
-                        recipe.update { it.copy(components = updatedComposition) }
-                    }
+                    val command =
+                        UserRecipeCommand.Update(timestamp = clock.now()) { recipe ->
+                            val updatedComposition =
+                                FoodSnapshotUpdateService.remove(recipe.components, id)
+                            recipe.copy(components = updatedComposition)
+                        }
+                    val _ = commandHandler(streamId(recipeId), command)
                 }
             }
             .awaitAll()
@@ -166,12 +160,13 @@ class UserRecipeService(
             .findRecipesUsing(snapshotId)
             .map { id ->
                 async {
-                    transact(id) { recipe ->
-                        recipe ?: return@transact emptyList()
-                        val updatedComposition =
-                            FoodSnapshotUpdateService.unlink(recipe.components, snapshotId)
-                        recipe.update { it.copy(components = updatedComposition) }
-                    }
+                    val command =
+                        UserRecipeCommand.Update(timestamp = clock.now()) { recipe ->
+                            val updatedComposition =
+                                FoodSnapshotUpdateService.unlink(recipe.components, snapshotId)
+                            recipe.copy(components = updatedComposition)
+                        }
+                    val _ = commandHandler(streamId(id), command)
                 }
             }
             .awaitAll()

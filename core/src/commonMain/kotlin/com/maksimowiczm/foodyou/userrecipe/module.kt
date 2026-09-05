@@ -20,6 +20,7 @@ internal fun Module.userRecipe() {
     single { get<UserRecipeDatabase>().compositionDao }
 
     factoryOf(::UserRecipeService)
+
     eventHandlerOf(::UserProductSynchronizer)
     eventHandlerOf(::OpenFoodFactsSynchronizer)
     eventHandlerOf(::FoodDataCentralSynchronizer)

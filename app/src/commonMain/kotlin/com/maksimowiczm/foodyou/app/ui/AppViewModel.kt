@@ -4,9 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.account.domain.Account
+import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.account.domain.finishOnboarding
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.TimeoutCancellationException
@@ -81,6 +82,8 @@ class AppViewModel(private val accountService: AccountService) : ViewModel() {
             )
 
     fun onFinishOnboarding() {
-        viewModelScope.launch { accountService.update { finishOnboarding() } }
+        viewModelScope.launch {
+            accountService.handle(AccountCommand.FinishOnboarding(Clock.System.now()))
+        }
     }
 }

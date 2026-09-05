@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.userproduct.domain
 
-import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -66,9 +65,8 @@ class UserProductTest {
     @Test
     fun create_returns_created_event() {
         val now = Instant.fromEpochSeconds(1000)
-        val clock = staticClock(now)
 
-        val events = UserProduct.create(userProduct, clock)
+        val events = (null as UserProduct?).decide(UserProductCommand.Create(userProduct, now))
 
         assertEquals(1, events.size)
         val event = assertIs<UserProductCreatedEvent>(events[0])
@@ -79,10 +77,10 @@ class UserProductTest {
     @Test
     fun update_returns_updated_event_when_changed() {
         val now = Instant.fromEpochSeconds(2000)
-        val clock = staticClock(now)
         val updatedName = FoodName(fallback = "Banana")
 
-        val events = userProduct.update(clock) { it.copy(name = updatedName) }
+        val events =
+            userProduct.decide(UserProductCommand.Update(now) { it.copy(name = updatedName) })
 
         assertEquals(1, events.size)
         val event = assertIs<UserProductUpdatedEvent>(events[0])
@@ -92,16 +90,16 @@ class UserProductTest {
 
     @Test
     fun update_returns_empty_list_when_not_changed() {
-        val events = userProduct.update { it }
+        val now = Instant.fromEpochSeconds(2500)
+        val events = userProduct.decide(UserProductCommand.Update(now) { it })
         assertEquals(0, events.size)
     }
 
     @Test
     fun remove_returns_deleted_event() {
         val now = Instant.fromEpochSeconds(3000)
-        val clock = staticClock(now)
 
-        val events = userProduct.remove(DeleteStrategy.Delete, clock)
+        val events = userProduct.decide(UserProductCommand.Remove(DeleteStrategy.Delete, now))
 
         assertEquals(1, events.size)
         val event = assertIs<UserProductDeletedEvent>(events[0])

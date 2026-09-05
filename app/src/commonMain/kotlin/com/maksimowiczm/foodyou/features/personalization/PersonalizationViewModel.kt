@@ -3,9 +3,10 @@ package com.maksimowiczm.foodyou.features.personalization
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
-import com.maksimowiczm.foodyou.account.domain.changeEnergyUnit
+import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -45,6 +46,8 @@ class PersonalizationViewModel(
     }
 
     fun updateEnergyUnit(energyUnit: EnergyUnit) {
-        viewModelScope.launch { accountService.update { changeEnergyUnit(energyUnit) } }
+        viewModelScope.launch {
+            accountService.handle(AccountCommand.ChangeEnergyUnit(energyUnit, Clock.System.now()))
+        }
     }
 }

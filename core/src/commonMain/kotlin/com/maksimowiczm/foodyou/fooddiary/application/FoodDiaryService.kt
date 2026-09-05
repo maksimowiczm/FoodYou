@@ -1,29 +1,25 @@
 package com.maksimowiczm.foodyou.fooddiary.application
 
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
-import com.maksimowiczm.foodyou.common.domain.EventStore
-import com.maksimowiczm.foodyou.common.domain.ProfileId
+import com.maksimowiczm.foodyou.common.asEventSink
+import com.maksimowiczm.foodyou.common.asHandler
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
-import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotUpdateService
-import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.TrackedFoodSnapshot
-import com.maksimowiczm.foodyou.common.domain.load
-import com.maksimowiczm.foodyou.common.domain.observe
 import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventStore
+import com.maksimowiczm.foodyou.common.event.observe
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryMealRepository
-import com.maksimowiczm.foodyou.fooddiary.domain.edit
-import com.maksimowiczm.foodyou.fooddiary.domain.remove
+import com.maksimowiczm.foodyou.fooddiary.domain.foodDiaryDecider
 import com.maksimowiczm.foodyou.fooddiary.domain.toFoodDiaryEntry
-import com.maksimowiczm.foodyou.fooddiary.domain.unlinkFromMeal
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
-import kotlin.time.Instant
+import kotlin.time.Clock
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -32,68 +28,25 @@ import kotlinx.coroutines.flow.map
 
 class FoodDiaryService(
     private val eventStore: EventStore,
-    private val eventBus: EventBus,
+    eventBus: EventBus,
     private val compositionRepository: FoodDiaryCompositionRepository,
     private val mealRepository: FoodDiaryMealRepository,
 ) {
-    private fun streamId(id: FoodDiaryEntryId) = "FoodDiaryEntry-${id.id}"
+    private val clock: Clock = Clock.System
+    private val commandHandler =
+        foodDiaryDecider.asHandler(
+            eventStore,
+            eventBus.asEventSink(),
+        )
 
-    private suspend inline fun transact(
-        id: FoodDiaryEntryId,
-        block: (FoodDiaryEntry?) -> List<FoodDiaryEvent>,
-    ) {
-        val entry = eventStore.load<FoodDiaryEvent>(streamId(id)).toFoodDiaryEntry()
-        val newEvents = block(entry)
-        if (newEvents.isNotEmpty()) {
-            eventStore.append(streamId(id), newEvents)
-            eventBus.publish(newEvents)
-        }
+    private fun stream(id: FoodDiaryEntryId) = "FoodDiaryEntry-${id.id}"
+
+    suspend fun handle(id: FoodDiaryEntryId, command: FoodDiaryCommand) {
+        val _ = commandHandler(stream(id), command)
     }
 
     fun observe(id: FoodDiaryEntryId): Flow<FoodDiaryEntry?> =
-        eventStore.observe<FoodDiaryEvent>(streamId(id)).map { it.toFoodDiaryEntry() }
-
-    suspend fun create(
-        profileIds: Set<ProfileId>,
-        snapshot: MeasuredFoodSnapshot,
-        mealId: MealId,
-        timestamp: Instant,
-    ): FoodDiaryEntryId {
-        val id = FoodDiaryEntryId()
-        transact(id) {
-            FoodDiaryEntry.create(
-                id = id,
-                profileIds = profileIds,
-                snapshot = snapshot,
-                mealId = mealId,
-                timestamp = timestamp,
-            )
-        }
-        return id
-    }
-
-    suspend fun edit(
-        id: FoodDiaryEntryId,
-        profileIds: Set<ProfileId>,
-        quantity: FoodSnapshotQuantity,
-        timestamp: Instant,
-    ) {
-        transact(id) { entry ->
-            checkNotNull(entry) { "Food diary entry with ID $id not found" }
-            entry.edit(
-                profileIds = profileIds,
-                snapshot = entry.snapshot.withNewQuantity(quantity),
-                timestamp = timestamp,
-            )
-        }
-    }
-
-    suspend fun delete(id: FoodDiaryEntryId, strategy: DeleteStrategy) {
-        transact(id) { entry ->
-            checkNotNull(entry) { "Food diary entry with ID $id not found" }
-            entry.remove(strategy)
-        }
-    }
+        eventStore.observe<FoodDiaryEvent>(stream(id)).map { it.toFoodDiaryEntry() }
 
     /**
      * Updates all food diary entries containing the food identified by [TrackedFoodSnapshot.id]
@@ -109,26 +62,29 @@ class FoodDiaryService(
             .findEntriesUsing(snapshot.id)
             .map { entryId ->
                 async {
-                    transact(entryId) { entry ->
-                        if (entry == null) return@transact emptyList()
-                        val updated =
-                            FoodSnapshotUpdateService.update(
-                                components = listOf(entry.snapshot),
-                                id = snapshot.id,
-                                transform = { current ->
-                                    current.copy(
-                                        snapshot = snapshot,
-                                        quantity =
-                                            FoodSnapshotQuantityUpdateService.update(
-                                                current = current.quantity,
-                                                servingWeight = servingWeight,
-                                                packageWeight = packageWeight,
-                                            ),
+                    handle(
+                        id = entryId,
+                        command =
+                            FoodDiaryCommand.Update(timestamp = clock.now()) { entry ->
+                                val updated =
+                                    FoodSnapshotUpdateService.update(
+                                        components = listOf(entry.snapshot),
+                                        id = snapshot.id,
+                                        transform = { current ->
+                                            current.copy(
+                                                snapshot = snapshot,
+                                                quantity =
+                                                    FoodSnapshotQuantityUpdateService.update(
+                                                        current = current.quantity,
+                                                        servingWeight = servingWeight,
+                                                        packageWeight = packageWeight,
+                                                    ),
+                                            )
+                                        },
                                     )
-                                },
-                            )
-                        entry.edit(snapshot = updated.first())
-                    }
+                                entry.copy(snapshot = updated.first())
+                            },
+                    )
                 }
             }
             .awaitAll()
@@ -139,14 +95,17 @@ class FoodDiaryService(
             .findEntriesUsing(id)
             .map { entryId ->
                 async {
-                    transact(entryId) { entry ->
-                        if (entry == null) return@transact emptyList()
-                        val wrapped = listOf(entry.snapshot)
-                        val updatedSnapshot = FoodSnapshotUpdateService.remove(wrapped, id)
+                    handle(
+                        id = entryId,
+                        command =
+                            FoodDiaryCommand.Update(timestamp = clock.now()) { entry ->
+                                val wrapped = listOf(entry.snapshot)
+                                val updatedSnapshot = FoodSnapshotUpdateService.remove(wrapped, id)
 
-                        if (updatedSnapshot.isEmpty()) entry.remove(DeleteStrategy.Delete)
-                        else entry.edit(snapshot = updatedSnapshot.first())
-                    }
+                                if (updatedSnapshot.isEmpty()) null
+                                else entry.copy(snapshot = updatedSnapshot.first())
+                            },
+                    )
                 }
             }
             .awaitAll()
@@ -157,12 +116,15 @@ class FoodDiaryService(
             .findEntriesUsing(id)
             .map { entryId ->
                 async {
-                    transact(entryId) { entry ->
-                        entry ?: return@transact emptyList()
-                        val wrapped = listOf(entry.snapshot)
-                        val updatedSnapshot = FoodSnapshotUpdateService.unlink(wrapped, id)
-                        entry.edit(snapshot = updatedSnapshot.first())
-                    }
+                    handle(
+                        id = entryId,
+                        command =
+                            FoodDiaryCommand.Update(timestamp = clock.now()) { entry ->
+                                val wrapped = listOf(entry.snapshot)
+                                val updatedSnapshot = FoodSnapshotUpdateService.unlink(wrapped, id)
+                                entry.copy(snapshot = updatedSnapshot.first())
+                            },
+                    )
                 }
             }
             .awaitAll()
@@ -173,9 +135,10 @@ class FoodDiaryService(
             .findEntriesUsing(mealId)
             .map { entryId ->
                 async {
-                    transact(entryId) { entry ->
-                        entry?.unlinkFromMeal() ?: emptyList()
-                    }
+                    handle(
+                        id = entryId,
+                        command = FoodDiaryCommand.UnlinkFromMeal(timestamp = clock.now()),
+                    )
                 }
             }
             .awaitAll()

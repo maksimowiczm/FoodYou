@@ -2,9 +2,9 @@
 
 package com.maksimowiczm.foodyou.search.domain
 
+import com.maksimowiczm.foodyou.common.Decider
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
 import com.maksimowiczm.foodyou.search.domain.SearchHistory.Companion.MAX_HISTORY_SIZE
-import kotlin.time.Clock
 
 /**
  * [SearchHistory] is a projection of [SearchHistoryEvent]s.
@@ -17,14 +17,15 @@ data class SearchHistory(val history: List<SearchQuery.NotBlank> = emptyList()) 
     }
 }
 
-/** Records a search query if it's a text query. */
-fun SearchHistory.recordSearchQuery(
-    query: SearchQuery.NotBlank,
-    clock: Clock = Clock.System,
-): List<SearchHistoryEvent> = buildList {
-    if (query is SearchQuery.Text && history.firstOrNull() != query)
-        add(SearchQueryRecordedEvent(query, clock.now()))
-}
+fun SearchHistory.decide(command: SearchHistoryCommand): List<SearchHistoryEvent> =
+    when (command) {
+        is SearchHistoryCommand.RecordSearchQuery ->
+            buildList {
+                if (history.firstOrNull() != command.query) {
+                    add(SearchQueryRecordedEvent(command.query, command.timestamp))
+                }
+            }
+    }
 
 /** Applies a [SearchHistoryEvent] and returns a new immutable [SearchHistory] instance. */
 fun SearchHistory.apply(event: SearchHistoryEvent): SearchHistory =
@@ -37,3 +38,10 @@ fun SearchHistory.apply(event: SearchHistoryEvent): SearchHistory =
 
 fun Iterable<SearchHistoryEvent>.toFoodSearchHistory(): SearchHistory =
     fold(SearchHistory()) { state, event -> state.apply(event) }
+
+val searchHistoryDecider =
+    Decider<SearchHistoryCommand, SearchHistoryEvent, SearchHistory>(
+        decide = { command, state -> state.decide(command) },
+        evolve = { state, event -> state.apply(event) },
+        initialState = SearchHistory(),
+    )

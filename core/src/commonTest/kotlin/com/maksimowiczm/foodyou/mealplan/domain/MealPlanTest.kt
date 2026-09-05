@@ -1,12 +1,10 @@
 package com.maksimowiczm.foodyou.mealplan.domain
 
-import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.domain.Language
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
@@ -25,7 +23,9 @@ class MealPlanTest {
     fun `initialize empty plan produces MealPlanInitializedEvent`() {
         val timestamp = Instant.fromEpochMilliseconds(500)
         val templateMeals = MealTemplates.forLanguage(Language.English)
-        val events = MealPlan().initialize(Language.English, templateMeals, staticClock(timestamp))
+        val events =
+            MealPlan()
+                .decide(MealPlanCommand.Initialize(Language.English, templateMeals, timestamp))
 
         assertEquals(1, events.size)
         val event = assertIs<MealPlanInitializedEvent>(events.single())
@@ -37,8 +37,11 @@ class MealPlanTest {
     @Test
     fun `initialize non-empty plan fails`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
+        val timestamp = Instant.fromEpochMilliseconds(500)
         assertFailsWith<IllegalStateException> {
-            mealPlan.initialize(Language.English, listOf(breakfast))
+            mealPlan.decide(
+                MealPlanCommand.Initialize(Language.English, listOf(breakfast), timestamp)
+            )
         }
     }
 
@@ -49,7 +52,7 @@ class MealPlanTest {
         val newMeal = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         val newMeals = listOf(breakfast, newMeal)
 
-        val events = mealPlan.update(newMeals, staticClock(timestamp))
+        val events = mealPlan.decide(MealPlanCommand.UpdateMeals(newMeals, timestamp))
 
         assertEquals(1, events.size)
         val event = assertIs<MealAddedEvent>(events.single())
@@ -64,7 +67,7 @@ class MealPlanTest {
         val updatedBreakfast = breakfast.copy(name = "Updated Breakfast")
         val newMeals = listOf(updatedBreakfast)
 
-        val events = mealPlan.update(newMeals, staticClock(timestamp))
+        val events = mealPlan.decide(MealPlanCommand.UpdateMeals(newMeals, timestamp))
 
         assertEquals(1, events.size)
         val event = assertIs<MealUpdatedEvent>(events.single())
@@ -79,7 +82,7 @@ class MealPlanTest {
         val mealPlan = MealPlan(meals = listOf(breakfast, lunch))
         val newMeals = listOf(lunch)
 
-        val events = mealPlan.update(newMeals, staticClock(timestamp))
+        val events = mealPlan.decide(MealPlanCommand.UpdateMeals(newMeals, timestamp))
 
         assertEquals(1, events.size)
         val event = assertIs<MealDeletedEvent>(events.single())
@@ -99,7 +102,7 @@ class MealPlanTest {
         // breakfast updated, dinner removed, lunch added
         val newMeals = listOf(updatedBreakfast, lunch)
 
-        val events = mealPlan.update(newMeals, staticClock(timestamp))
+        val events = mealPlan.decide(MealPlanCommand.UpdateMeals(newMeals, timestamp))
 
         assertEquals(3, events.size)
         assertIs<MealUpdatedEvent>(events.find { it is MealUpdatedEvent })
@@ -113,14 +116,20 @@ class MealPlanTest {
         val duplicateMeal = breakfast.copy(name = "Duplicate")
 
         assertFailsWith<IllegalArgumentException> {
-            mealPlan.update(listOf(breakfast, duplicateMeal))
+            mealPlan.decide(
+                MealPlanCommand.UpdateMeals(
+                    listOf(breakfast, duplicateMeal),
+                    Instant.DISTANT_PAST,
+                )
+            )
         }
     }
 
     @Test
     fun `updating with no changes returns no events`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
-        val events = mealPlan.update(listOf(breakfast))
+        val events =
+            mealPlan.decide(MealPlanCommand.UpdateMeals(listOf(breakfast), Instant.DISTANT_PAST))
         assertEquals(0, events.size)
     }
 
@@ -132,7 +141,7 @@ class MealPlanTest {
 
         val reordered = listOf(dinner, breakfast)
 
-        val events = mealPlan.update(reordered, staticClock(timestamp))
+        val events = mealPlan.decide(MealPlanCommand.UpdateMeals(reordered, timestamp))
 
         assertEquals(1, events.size)
         val event = assertIs<MealsReorderedEvent>(events.single())
@@ -149,7 +158,7 @@ class MealPlanTest {
         val updatedBreakfast = breakfast.copy(name = "Big Breakfast")
         val newMeals = listOf(dinner, updatedBreakfast)
 
-        val events = mealPlan.update(newMeals, staticClock(timestamp))
+        val events = mealPlan.decide(MealPlanCommand.UpdateMeals(newMeals, timestamp))
 
         assertEquals(2, events.size)
         val updateEvent = assertIs<MealUpdatedEvent>(events.find { it is MealUpdatedEvent })
@@ -169,7 +178,7 @@ class MealPlanTest {
         // lunch inserted between breakfast and dinner, not appended at the end
         val newMeals = listOf(breakfast, lunch, dinner)
 
-        val events = mealPlan.update(newMeals, staticClock(timestamp))
+        val events = mealPlan.decide(MealPlanCommand.UpdateMeals(newMeals, timestamp))
 
         assertEquals(2, events.size)
         val addedEvent = assertIs<MealAddedEvent>(events.find { it is MealAddedEvent })
@@ -188,7 +197,8 @@ class MealPlanTest {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val lunch = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
 
-        val events = mealPlan.update(listOf(breakfast, lunch), staticClock(timestamp))
+        val events =
+            mealPlan.decide(MealPlanCommand.UpdateMeals(listOf(breakfast, lunch), timestamp))
 
         assertEquals(1, events.size)
         assertIs<MealAddedEvent>(events.single())
@@ -200,7 +210,7 @@ class MealPlanTest {
         val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
 
-        val events = mealPlan.update(listOf(dinner), staticClock(timestamp))
+        val events = mealPlan.decide(MealPlanCommand.UpdateMeals(listOf(dinner), timestamp))
 
         assertEquals(1, events.size)
         assertIs<MealDeletedEvent>(events.single())
@@ -214,7 +224,8 @@ class MealPlanTest {
         val mealPlan = MealPlan(meals = listOf(breakfast, lunch, dinner))
 
         // remove lunch, keep breakfast and dinner in their original relative order
-        val events = mealPlan.update(listOf(breakfast, dinner), staticClock(timestamp))
+        val events =
+            mealPlan.decide(MealPlanCommand.UpdateMeals(listOf(breakfast, dinner), timestamp))
 
         assertEquals(1, events.size)
         val event = assertIs<MealDeletedEvent>(events.single())
@@ -225,7 +236,8 @@ class MealPlanTest {
     fun `applying MealsReorderedEvent reorders meals`() {
         val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
-        val event = MealsReorderedEvent(listOf(dinner.id, breakfast.id), Clock.System.now())
+        val event =
+            MealsReorderedEvent(listOf(dinner.id, breakfast.id), Instant.fromEpochSeconds(1))
 
         val updatedPlan = mealPlan.apply(event)
 
@@ -236,7 +248,7 @@ class MealPlanTest {
     fun `aggregating update and reorder events produces correct state`() {
         val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val updatedBreakfast = breakfast.copy(name = "Big Breakfast")
-        val now = Clock.System.now()
+        val now = Instant.fromEpochSeconds(1)
         val events =
             listOf(
                 MealPlanInitializedEvent(Language.English, listOf(breakfast, dinner), now),
@@ -254,7 +266,10 @@ class MealPlanTest {
         val dinner = Meal(MealId(Uuid.random()), "Dinner", Meal.TimeWindow.AllDay)
         val mealPlan = MealPlan(meals = listOf(breakfast, dinner))
 
-        val events = mealPlan.update(listOf(breakfast, dinner))
+        val events =
+            mealPlan.decide(
+                MealPlanCommand.UpdateMeals(listOf(breakfast, dinner), Instant.DISTANT_PAST)
+            )
 
         assertEquals(0, events.size)
     }
@@ -263,7 +278,8 @@ class MealPlanTest {
     fun `applying MealPlanInitializedEvent sets meals`() {
         val mealPlan = MealPlan()
         val defaultMeals = MealTemplates.forLanguage(Language.English)
-        val event = MealPlanInitializedEvent(Language.English, defaultMeals, Clock.System.now())
+        val event =
+            MealPlanInitializedEvent(Language.English, defaultMeals, Instant.fromEpochSeconds(1))
 
         val updatedPlan = mealPlan.apply(event)
 
@@ -274,7 +290,7 @@ class MealPlanTest {
     fun `applying MealAddedEvent adds meal`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val newMeal = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
-        val event = MealAddedEvent(newMeal, Clock.System.now())
+        val event = MealAddedEvent(newMeal, Instant.fromEpochSeconds(1))
 
         val updatedPlan = mealPlan.apply(event)
 
@@ -285,7 +301,7 @@ class MealPlanTest {
     fun `applying MealUpdatedEvent updates meal`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val updatedBreakfast = breakfast.copy(name = "Better Breakfast")
-        val event = MealUpdatedEvent(updatedBreakfast, Clock.System.now())
+        val event = MealUpdatedEvent(updatedBreakfast, Instant.fromEpochSeconds(1))
 
         val updatedPlan = mealPlan.apply(event)
 
@@ -295,7 +311,7 @@ class MealPlanTest {
     @Test
     fun `applying MealDeletedEvent removes meal`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
-        val event = MealDeletedEvent(breakfast.id, Clock.System.now())
+        val event = MealDeletedEvent(breakfast.id, Instant.fromEpochSeconds(1))
 
         val updatedPlan = mealPlan.apply(event)
 
@@ -306,7 +322,7 @@ class MealPlanTest {
     fun `aggregating event sequence produces correct state`() {
         val meal2 = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
         val updatedMeal2 = meal2.copy(name = "Better Lunch")
-        val now = Clock.System.now()
+        val now = Instant.fromEpochSeconds(1)
         val events =
             listOf(
                 MealPlanInitializedEvent(Language.English, listOf(breakfast), now),

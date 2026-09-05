@@ -16,10 +16,13 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -75,13 +78,19 @@ class AddFoodDiaryEntryViewModel(
         timestamp: LocalDateTime,
     ) {
         viewModelScope.launch {
-            val entryId =
-                foodDiaryService.create(
-                    profileIds = profiles.toSet(),
-                    snapshot = snapshot,
-                    mealId = mealId,
-                    timestamp = timestamp.toInstant(TimeZone.currentSystemDefault()),
-                )
+            val entryId = FoodDiaryEntryId()
+            foodDiaryService.handle(
+                id = entryId,
+                command =
+                    FoodDiaryCommand.Create(
+                        id = entryId,
+                        profileIds = profiles.toSet(),
+                        snapshot = snapshot,
+                        mealId = mealId,
+                        entryTimestamp = timestamp.toInstant(TimeZone.currentSystemDefault()),
+                        timestamp = Clock.System.now(),
+                    ),
+            )
             eventBus.send(FoodDiaryEntryCreatedUiEvent(entryId))
         }
     }

@@ -2,10 +2,9 @@
 
 package com.maksimowiczm.foodyou.account.domain
 
+import com.maksimowiczm.foodyou.common.Decider
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
-import kotlin.time.Clock
 
 data class Account(
     val profiles: List<Profile> = emptyList(),
@@ -30,108 +29,115 @@ data class Account(
     }
 }
 
-fun Account.finishOnboarding(clock: Clock = Clock.System) =
-    buildList<AccountEvent> {
-        check(profiles.isNotEmpty()) { "Cannot finish onboarding without a profile" }
-        if (!onboardingFinished) add(OnboardingFinishedEvent(timestamp = clock.now()))
-    }
+fun Account.decide(command: AccountCommand): List<AccountEvent> =
+    when (command) {
+        is AccountCommand.FinishOnboarding ->
+            buildList {
+                check(profiles.isNotEmpty()) { "Cannot finish onboarding without a profile" }
+                if (!onboardingFinished) add(OnboardingFinishedEvent(timestamp = command.timestamp))
+            }
 
-fun Account.changeEnergyUnit(unit: EnergyUnit, clock: Clock = Clock.System) =
-    buildList<AccountEvent> {
-        if (energyUnit != unit) add(EnergyUnitChangedEvent(unit = unit, timestamp = clock.now()))
-    }
+        is AccountCommand.ChangeEnergyUnit ->
+            buildList {
+                if (energyUnit != command.unit) {
+                    add(EnergyUnitChangedEvent(unit = command.unit, timestamp = command.timestamp))
+                }
+            }
 
-fun Account.changeNutrientsOrder(order: List<NutrientsOrder>, clock: Clock = Clock.System) =
-    buildList<AccountEvent> {
-        val orderSet = order.toSet()
-        require(orderSet.size == order.size) { "Nutrients order cannot contain duplicates" }
-        require(orderSet == NutrientsOrder.entries.toSet()) {
-            "Nutrients order must contain all NutrientsOrder values exactly once"
+        is AccountCommand.ChangeNutrientsOrder ->
+            buildList {
+                val orderSet = command.order.toSet()
+                require(orderSet.size == command.order.size) {
+                    "Nutrients order cannot contain duplicates"
+                }
+                require(orderSet == NutrientsOrder.entries.toSet()) {
+                    "Nutrients order must contain all NutrientsOrder values exactly once"
+                }
+                if (nutrientsOrder != command.order) {
+                    add(
+                        NutrientsOrderChangedEvent(
+                            order = command.order,
+                            timestamp = command.timestamp,
+                        )
+                    )
+                }
+            }
+
+        is AccountCommand.AddProfile ->
+            buildList {
+                check(profiles.none { it.id == command.profile.id }) {
+                    "Profile with ID ${command.profile.id} already exists"
+                }
+                add(ProfileAddedEvent(profile = command.profile, timestamp = command.timestamp))
+            }
+
+        is AccountCommand.UpdateProfile ->
+            buildList {
+                val profile = profiles.find { it.id == command.profileId }
+                checkNotNull(profile) { "Profile with ID ${command.profileId} not found" }
+                val updated = command.transform(profile)
+                if (updated != profile) {
+                    add(ProfileUpdatedEvent(profile = updated, timestamp = command.timestamp))
+                }
+            }
+
+        is AccountCommand.RemoveProfile ->
+            buildList {
+                check(profiles.any { it.id == command.profileId }) {
+                    "Profile with ID ${command.profileId} not found"
+                }
+                check(profiles.size > 1) { "Cannot remove the last profile" }
+                add(
+                    ProfileRemovedEvent(
+                        profileId = command.profileId,
+                        timestamp = command.timestamp,
+                    )
+                )
+            }
+
+        is AccountCommand.AddFavoriteFood ->
+            buildList {
+                val profile = profiles.find { it.id == command.profileId }
+                checkNotNull(profile) { "Profile with ID ${command.profileId} not found" }
+                if (command.foodId !in profile.favoriteFoods) {
+                    add(
+                        FavoriteFoodAddedEvent(
+                            profileId = command.profileId,
+                            foodId = command.foodId,
+                            timestamp = command.timestamp,
+                        )
+                    )
+                }
+            }
+
+        is AccountCommand.RemoveFavoriteFood ->
+            buildList {
+                val profile = profiles.find { it.id == command.profileId }
+                checkNotNull(profile) { "Profile with ID ${command.profileId} not found" }
+                if (command.foodId in profile.favoriteFoods) {
+                    add(
+                        FavoriteFoodRemovedEvent(
+                            profileId = command.profileId,
+                            favoriteFoodId = command.foodId,
+                            timestamp = command.timestamp,
+                        )
+                    )
+                }
+            }
+
+        is AccountCommand.RemoveFavoriteUserFood -> {
+            val favoriteId = FavoriteFoodId.UserProduct(command.id.value)
+            profiles
+                .filter { favoriteId in it.favoriteFoods }
+                .map { profile ->
+                    FavoriteFoodRemovedEvent(
+                        profileId = profile.id,
+                        favoriteFoodId = favoriteId,
+                        timestamp = command.timestamp,
+                    )
+                }
         }
-        if (nutrientsOrder != order)
-            add(NutrientsOrderChangedEvent(order = order, timestamp = clock.now()))
     }
-
-fun Account.addProfile(profile: Profile, clock: Clock = Clock.System) =
-    buildList<AccountEvent> {
-        check(profiles.none { it.id == profile.id }) {
-            "Profile with ID ${profile.id} already exists"
-        }
-        add(ProfileAddedEvent(profile = profile, timestamp = clock.now()))
-    }
-
-fun Account.updateProfile(
-    profileId: ProfileId,
-    clock: Clock = Clock.System,
-    transform: (Profile) -> Profile,
-) =
-    buildList<AccountEvent> {
-        val profile = profiles.find { it.id == profileId }
-        checkNotNull(profile) { "Profile with ID $profileId not found" }
-        val updated = transform(profile)
-        if (updated != profile) {
-            add(ProfileUpdatedEvent(profile = updated, timestamp = clock.now()))
-        }
-    }
-
-fun Account.removeProfile(id: ProfileId, clock: Clock = Clock.System) =
-    buildList<AccountEvent> {
-        check(profiles.any { it.id == id }) { "Profile with ID $id not found" }
-        check(profiles.size > 1) { "Cannot remove the last profile" }
-        add(ProfileRemovedEvent(profileId = id, timestamp = clock.now()))
-    }
-
-fun Account.addFavoriteFood(
-    profileId: ProfileId,
-    foodId: FavoriteFoodId,
-    clock: Clock = Clock.System,
-) =
-    buildList<AccountEvent> {
-        val profile = profiles.find { it.id == profileId }
-        checkNotNull(profile) { "Profile with ID $profileId not found" }
-        if (foodId in profile.favoriteFoods) return@buildList
-        add(
-            FavoriteFoodAddedEvent(
-                profileId = profileId,
-                foodId = foodId,
-                timestamp = clock.now(),
-            )
-        )
-    }
-
-fun Account.removeFavoriteFood(
-    profileId: ProfileId,
-    foodId: FavoriteFoodId,
-    clock: Clock = Clock.System,
-) =
-    buildList<AccountEvent> {
-        val profile = profiles.find { it.id == profileId }
-        checkNotNull(profile) { "Profile with ID $profileId not found" }
-        if (foodId !in profile.favoriteFoods) return@buildList
-        add(
-            FavoriteFoodRemovedEvent(
-                profileId = profileId,
-                favoriteFoodId = foodId,
-                timestamp = clock.now(),
-            )
-        )
-    }
-
-fun Account.removeFavoriteUserFood(
-    id: UserProductId,
-    clock: Clock = Clock.System,
-): List<AccountEvent> {
-    val id = FavoriteFoodId.UserProduct(id.value)
-    return profiles
-        .filter { id in it.favoriteFoods }
-        .map { profile ->
-            FavoriteFoodRemovedEvent(
-                profileId = profile.id,
-                favoriteFoodId = id,
-                timestamp = clock.now(),
-            )
-        }
-}
 
 fun Account.apply(event: AccountEvent): Account =
     when (event) {
@@ -153,13 +159,20 @@ fun Account.apply(event: AccountEvent): Account =
     }
 
 /**
- * Internal helper used during event replay. Unlike [updateProfile], this does not enforce business
- * rules — it applies the event as-is, making replay tolerant of unknown or missing profile IDs that
- * could arise from out-of-order or partial event streams. Missing profiles are silently skipped
- * rather than throwing.
+ * Internal helper used during event replay. Unlike [decide], this does not enforce business rules —
+ * it applies the event as-is, making replay tolerant of unknown or missing profile IDs that could
+ * arise from out-of-order or partial event streams. Missing profiles are silently skipped rather
+ * than throwing.
  */
 private fun Account.applyProfileUpdate(id: ProfileId, transform: (Profile) -> Profile): Account =
     copy(profiles = profiles.map { if (it.id == id) transform(it) else it })
 
 fun Iterable<AccountEvent>.toAccount(): Account =
     fold(Account()) { state, event -> state.apply(event) }
+
+val accountDecider =
+    Decider<AccountCommand, AccountEvent, Account>(
+        decide = { command, state -> state.decide(command) },
+        evolve = { state, event -> state.apply(event) },
+        initialState = Account(),
+    )

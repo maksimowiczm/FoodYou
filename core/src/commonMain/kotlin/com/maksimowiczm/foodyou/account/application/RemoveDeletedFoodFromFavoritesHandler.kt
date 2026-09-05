@@ -1,8 +1,9 @@
 package com.maksimowiczm.foodyou.account.application
 
-import com.maksimowiczm.foodyou.account.domain.removeFavoriteUserFood
+import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductDeletedEvent
+import kotlin.time.Clock
 
 /**
  * Handles the [UserProductDeletedEvent] by removing the deleted food from the owner's account
@@ -13,8 +14,9 @@ import com.maksimowiczm.foodyou.userproduct.domain.UserProductDeletedEvent
  */
 class RemoveDeletedFoodFromFavoritesHandler(private val accountService: AccountService) :
     EventHandler<UserProductDeletedEvent> {
-
     override suspend fun handle(event: UserProductDeletedEvent) {
-        accountService.update { removeFavoriteUserFood(event.userProductId) }
+        accountService.handle(
+            AccountCommand.RemoveFavoriteUserFood(event.userProductId, Clock.System.now())
+        )
     }
 }

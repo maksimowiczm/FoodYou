@@ -1,31 +1,34 @@
 package com.maksimowiczm.foodyou.account.application
 
 import com.maksimowiczm.foodyou.account.domain.Account
+import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.account.domain.AccountEvent
+import com.maksimowiczm.foodyou.account.domain.accountDecider
 import com.maksimowiczm.foodyou.account.domain.toAccount
-import com.maksimowiczm.foodyou.common.domain.EventStore
-import com.maksimowiczm.foodyou.common.domain.load
-import com.maksimowiczm.foodyou.common.domain.observe
+import com.maksimowiczm.foodyou.common.asEventSink
+import com.maksimowiczm.foodyou.common.asHandler
 import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventStore
+import com.maksimowiczm.foodyou.common.event.observe
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class AccountService(private val eventStore: EventStore, private val eventBus: EventBus) {
+class AccountService(
+    private val eventStore: EventStore,
+    eventBus: EventBus,
+) {
+    private val commandHandler = accountDecider.asHandler(eventStore, eventBus.asEventSink())
+
+    suspend fun handle(command: AccountCommand) {
+        val _ = commandHandler(STREAM, command)
+    }
+
     fun observe(): Flow<Account?> =
-        eventStore.observe<AccountEvent>(EVENT_STREAM).map { events ->
+        eventStore.observe<AccountEvent>(STREAM).map { events ->
             if (events.none()) null else events.toAccount()
         }
 
-    suspend fun update(block: Account.() -> List<AccountEvent>) {
-        val account = eventStore.load<AccountEvent>(EVENT_STREAM).toAccount()
-        val newEvents = account.block()
-        if (newEvents.isNotEmpty()) {
-            eventStore.append(EVENT_STREAM, newEvents)
-            eventBus.publish(newEvents)
-        }
-    }
-
     private companion object {
-        private const val EVENT_STREAM = "Account"
+        private const val STREAM = "Account"
     }
 }

@@ -30,13 +30,15 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 class HomeViewModel(
-    private val mealPlanService: MealPlanService,
+    mealPlanService: MealPlanService,
     private val appProfileManager: AppProfileManager,
     private val homeDao: HomeDao,
     accountService: AccountService,
 ) : ViewModel() {
     private val profiles =
         accountService.observe().filterNotNull().map { account -> account.profiles }
+
+    private val observedMealPlan = mealPlanService.observe().filterNotNull()
 
     fun selectProfile(profileId: ProfileId) {
         viewModelScope.launch { appProfileManager.setAppProfileId(profileId) }
@@ -67,13 +69,13 @@ class HomeViewModel(
     private val activeMeal = userMealId.flatMapLatest { mealId ->
         if (mealId == null)
             combine(
-                mealPlanService.observe(),
+                observedMealPlan,
                 dateTime,
             ) { mealPlan, date ->
                 mealPlan.activeMeal(date.time, 10.minutes)
             }
         else
-            mealPlanService.observe().map { mealPlan ->
+            observedMealPlan.map { mealPlan ->
                 mealPlan.meals.firstOrNull { it.id == mealId }
             }
     }
@@ -92,7 +94,7 @@ class HomeViewModel(
                 appProfileManager.observeAppProfileId().filterNotNull(),
                 dateTime,
                 activeMeal,
-                mealPlanService.observe(),
+                observedMealPlan,
             ) { profiles, selectedProfileId, dateTime, activeMeal, mealPlan ->
                 val entries = homeDao.observeEntries(selectedProfileId.value, dateTime.date)
                 entries.map { homeEntries ->

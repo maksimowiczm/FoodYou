@@ -24,12 +24,16 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettings
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
+import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductCommand
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.Uuid
@@ -52,18 +56,27 @@ class UserRecipeIntegrationTest {
                 FoodName(english = "Initial Product", fallback = "Initial Product")
 
             val initialNutrition = NutritionFacts(proteins = NutrientValue.Complete(10.grams))
-            val productId =
-                userProductService.create(
-                    name = initialProductName,
-                    brand = "Brand",
-                    barcode = null,
-                    note = null,
-                    imageBytes = null,
-                    nutritionFacts = initialNutrition,
-                    servingQuantity = null,
-                    packageQuantity = null,
-                    isLiquid = false,
-                )
+            val productId = UserProductId()
+            userProductService.handle(
+                id = productId,
+                command =
+                    UserProductCommand.Create(
+                        product =
+                            UserProduct(
+                                id = productId,
+                                name = initialProductName,
+                                brand = "Brand",
+                                barcode = null,
+                                note = null,
+                                image = null,
+                                nutritionFacts = initialNutrition,
+                                servingQuantity = null,
+                                packageQuantity = null,
+                                isLiquid = false,
+                            ),
+                        timestamp = Clock.System.now(),
+                    ),
+            )
 
             // 2. Create a Recipe using this product
             val components =
@@ -89,7 +102,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = FoodName(english = "Recipe", fallback = "Recipe"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components = components,
                 )
@@ -103,17 +116,22 @@ class UserRecipeIntegrationTest {
                 FoodName(english = "Updated Product", fallback = "Updated Product")
 
             val updatedNutrition = NutritionFacts(proteins = NutrientValue.Complete(20.grams))
-            userProductService.edit(
+            userProductService.handle(
                 id = productId,
-                name = updatedProductName,
-                brand = "Brand",
-                barcode = null,
-                note = null,
-                imageBytes = null,
-                nutritionFacts = updatedNutrition,
-                servingQuantity = null,
-                packageQuantity = null,
-                isLiquid = false,
+                command =
+                    UserProductCommand.Update(timestamp = Clock.System.now()) {
+                        it.copy(
+                            name = updatedProductName,
+                            brand = "Brand",
+                            barcode = null,
+                            note = null,
+                            image = null,
+                            nutritionFacts = updatedNutrition,
+                            servingQuantity = null,
+                            packageQuantity = null,
+                            isLiquid = false,
+                        )
+                    },
             )
 
             // 5. Verify the recipe has been updated
@@ -132,18 +150,27 @@ class UserRecipeIntegrationTest {
     fun updating_user_product_serving_weight_updates_recipes_using_it_by_serving() = runTest {
         runKoin(testModule) {
             // 1. Create a User Product with initial serving weight
-            val productId =
-                userProductService.create(
-                    name = FoodName(english = "Product", fallback = "Product"),
-                    brand = "Brand",
-                    barcode = null,
-                    note = null,
-                    imageBytes = null,
-                    nutritionFacts = NutritionFacts(),
-                    servingQuantity = Weight(30.grams),
-                    packageQuantity = null,
-                    isLiquid = false,
-                )
+            val productId = UserProductId()
+            userProductService.handle(
+                id = productId,
+                command =
+                    UserProductCommand.Create(
+                        product =
+                            UserProduct(
+                                id = productId,
+                                name = FoodName(english = "Product", fallback = "Product"),
+                                brand = "Brand",
+                                barcode = null,
+                                note = null,
+                                image = null,
+                                nutritionFacts = NutritionFacts(),
+                                servingQuantity = Weight(30.grams),
+                                packageQuantity = null,
+                                isLiquid = false,
+                            ),
+                        timestamp = Clock.System.now(),
+                    ),
+            )
 
             // 2. Create a Recipe using 2 servings of this product
             val components =
@@ -169,7 +196,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = FoodName(english = "Recipe", fallback = "Recipe"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components = components,
                 )
@@ -180,17 +207,22 @@ class UserRecipeIntegrationTest {
             assertEquals(60.grams, recipe.totalWeight)
 
             // 4. Update product serving weight to 40g
-            userProductService.edit(
+            userProductService.handle(
                 id = productId,
-                name = FoodName(english = "Product", fallback = "Product"),
-                brand = "Brand",
-                barcode = null,
-                note = null,
-                imageBytes = null,
-                nutritionFacts = NutritionFacts(),
-                servingQuantity = Weight(40.grams),
-                packageQuantity = null,
-                isLiquid = false,
+                command =
+                    UserProductCommand.Update(timestamp = Clock.System.now()) {
+                        it.copy(
+                            name = FoodName(english = "Product", fallback = "Product"),
+                            brand = "Brand",
+                            barcode = null,
+                            note = null,
+                            image = null,
+                            nutritionFacts = NutritionFacts(),
+                            servingQuantity = Weight(40.grams),
+                            packageQuantity = null,
+                            isLiquid = false,
+                        )
+                    },
             )
 
             // 5. Verify the recipe has been updated and absolute weight is now 80g (2 * 40g)
@@ -238,7 +270,7 @@ class UserRecipeIntegrationTest {
                     userRecipeService.create(
                         name = FoodName(english = "Recipe", fallback = "Recipe"),
                         note = null,
-                        imageBytes = null,
+                        image = null,
                         servings = 1.0,
                         components = components,
                     )
@@ -307,7 +339,7 @@ class UserRecipeIntegrationTest {
                     userRecipeService.create(
                         name = FoodName(english = "Recipe", fallback = "Recipe"),
                         note = null,
-                        imageBytes = null,
+                        image = null,
                         servings = 1.0,
                         components = components,
                     )
@@ -343,7 +375,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = childInitialName,
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components = emptyList(),
                 )
@@ -372,7 +404,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = FoodName(english = "Parent Recipe", fallback = "Parent Recipe"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components = parentComponents,
                 )
@@ -389,7 +421,7 @@ class UserRecipeIntegrationTest {
                 id = childId,
                 name = childUpdatedName,
                 note = "Updated",
-                imageBytes = null,
+                image = null,
                 servings = 1.0,
                 components = emptyList(),
             )
@@ -413,7 +445,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = FoodName(english = "Child", fallback = "Child"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components =
                         listOf(
@@ -445,7 +477,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = FoodName(english = "Parent", fallback = "Parent"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components =
                         listOf(
@@ -479,7 +511,7 @@ class UserRecipeIntegrationTest {
                 id = childId,
                 name = FoodName(english = "Child", fallback = "Child"),
                 note = "Updated",
-                imageBytes = null,
+                image = null,
                 servings = 2.0,
                 components =
                     listOf(
@@ -518,25 +550,34 @@ class UserRecipeIntegrationTest {
     @Test
     fun deleting_user_product_removes_it_from_recipes() = runTest {
         runKoin(testModule) {
-            val productId =
-                userProductService.create(
-                    name = FoodName(english = "Product", fallback = "Product"),
-                    brand = "Brand",
-                    barcode = UserProductBarcode("123456789"),
-                    note = null,
-                    imageBytes = null,
-                    servingQuantity = null,
-                    packageQuantity = null,
-                    isLiquid = false,
-                    nutritionFacts = NutritionFacts(),
-                )
+            val productId = UserProductId()
+            userProductService.handle(
+                id = productId,
+                command =
+                    UserProductCommand.Create(
+                        product =
+                            UserProduct(
+                                id = productId,
+                                name = FoodName(english = "Product", fallback = "Product"),
+                                brand = "Brand",
+                                barcode = UserProductBarcode("123456789"),
+                                note = null,
+                                image = null,
+                                servingQuantity = null,
+                                packageQuantity = null,
+                                isLiquid = false,
+                                nutritionFacts = NutritionFacts(),
+                            ),
+                        timestamp = Clock.System.now(),
+                    ),
+            )
 
             val otherIngredientId = FoodSnapshotId.OpenFoodFacts("other")
             val recipeId =
                 userRecipeService.create(
                     name = FoodName(english = "Recipe", fallback = "Recipe"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components =
                         listOf(
@@ -579,7 +620,14 @@ class UserRecipeIntegrationTest {
             userRecipeService.observe(recipeId).filterNotNull().first()
             waitForComposition(recipeId, FoodSnapshotId.UserProduct(productId.value))
 
-            userProductService.delete(productId, DeleteStrategy.Delete)
+            userProductService.handle(
+                id = productId,
+                command =
+                    UserProductCommand.Remove(
+                        strategy = DeleteStrategy.Delete,
+                        timestamp = Clock.System.now(),
+                    ),
+            )
 
             val updatedRecipe =
                 userRecipeService.observe(recipeId).filterNotNull().first {
@@ -594,18 +642,27 @@ class UserRecipeIntegrationTest {
     @Test
     fun unlinking_user_product_anonymizes_it_in_recipes() = runTest {
         runKoin(testModule) {
-            val productId =
-                userProductService.create(
-                    name = FoodName(english = "Product", fallback = "Product"),
-                    brand = "Brand",
-                    barcode = UserProductBarcode("123456789"),
-                    note = null,
-                    imageBytes = null,
-                    servingQuantity = null,
-                    packageQuantity = null,
-                    isLiquid = false,
-                    nutritionFacts = NutritionFacts(),
-                )
+            val productId = UserProductId()
+            userProductService.handle(
+                id = productId,
+                command =
+                    UserProductCommand.Create(
+                        product =
+                            UserProduct(
+                                id = productId,
+                                name = FoodName(english = "Product", fallback = "Product"),
+                                brand = "Brand",
+                                barcode = UserProductBarcode("123456789"),
+                                note = null,
+                                image = null,
+                                servingQuantity = null,
+                                packageQuantity = null,
+                                isLiquid = false,
+                                nutritionFacts = NutritionFacts(),
+                            ),
+                        timestamp = Clock.System.now(),
+                    ),
+            )
 
             val name = FoodName(english = "To Unlink", fallback = "To Unlink")
 
@@ -614,7 +671,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = FoodName(english = "Recipe", fallback = "Recipe"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components =
                         listOf(
@@ -641,7 +698,14 @@ class UserRecipeIntegrationTest {
             userRecipeService.observe(recipeId).filterNotNull().first()
             waitForComposition(recipeId, FoodSnapshotId.UserProduct(productId.value))
 
-            userProductService.delete(productId, DeleteStrategy.Unlink)
+            userProductService.handle(
+                id = productId,
+                command =
+                    UserProductCommand.Remove(
+                        strategy = DeleteStrategy.Unlink,
+                        timestamp = Clock.System.now(),
+                    ),
+            )
 
             val updatedRecipe =
                 userRecipeService.observe(recipeId).filterNotNull().first {
@@ -664,7 +728,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = FoodName(english = "Child", fallback = "Child"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components = emptyList(),
                 )
@@ -675,7 +739,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = FoodName(english = "Parent", fallback = "Parent"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components =
                         listOf(
@@ -740,7 +804,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = FoodName(english = "Child", fallback = "Child"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components = emptyList(),
                 )
@@ -750,7 +814,7 @@ class UserRecipeIntegrationTest {
                 userRecipeService.create(
                     name = FoodName(english = "Parent", fallback = "Parent"),
                     note = null,
-                    imageBytes = null,
+                    image = null,
                     servings = 1.0,
                     components =
                         listOf(

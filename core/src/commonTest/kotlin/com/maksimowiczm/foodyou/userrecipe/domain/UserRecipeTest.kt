@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.userrecipe.domain
 
-import com.maksimowiczm.foodyou.common.clock.staticClock
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -51,11 +50,11 @@ class UserRecipeTest {
         )
 
     @Test
-    fun create_returns_created_event() {
+    fun decide_create_returns_created_event() {
         val now = Instant.fromEpochSeconds(1000)
-        val clock = staticClock(now)
+        val command = UserRecipeCommand.Create(userRecipe, now)
 
-        val events = UserRecipe.create(userRecipe, clock)
+        val events = null.decide(command)
 
         assertEquals(1, events.size)
         val event = assertIs<UserRecipeCreatedEvent>(events[0])
@@ -64,12 +63,12 @@ class UserRecipeTest {
     }
 
     @Test
-    fun update_returns_updated_event_when_changed() {
+    fun decide_update_returns_updated_event_when_changed() {
         val now = Instant.fromEpochSeconds(2000)
-        val clock = staticClock(now)
         val updatedName = FoodName(fallback = "Banana Bread")
+        val command = UserRecipeCommand.Update(now) { it.copy(name = updatedName) }
 
-        val events = userRecipe.update(clock) { it.copy(name = updatedName) }
+        val events = userRecipe.decide(command)
 
         assertEquals(1, events.size)
         val event = assertIs<UserRecipeUpdatedEvent>(events[0])
@@ -78,17 +77,18 @@ class UserRecipeTest {
     }
 
     @Test
-    fun update_returns_empty_list_when_not_changed() {
-        val events = userRecipe.update { it }
+    fun decide_update_returns_empty_list_when_not_changed() {
+        val command = UserRecipeCommand.Update(Instant.fromEpochSeconds(2000)) { it }
+        val events = userRecipe.decide(command)
         assertEquals(0, events.size)
     }
 
     @Test
-    fun remove_returns_deleted_event() {
+    fun decide_remove_returns_deleted_event() {
         val now = Instant.fromEpochSeconds(3000)
-        val clock = staticClock(now)
+        val command = UserRecipeCommand.Remove(DeleteStrategy.Delete, now)
 
-        val events = userRecipe.remove(DeleteStrategy.Delete, clock)
+        val events = userRecipe.decide(command)
 
         assertEquals(1, events.size)
         val event = assertIs<UserRecipeDeletedEvent>(events[0])

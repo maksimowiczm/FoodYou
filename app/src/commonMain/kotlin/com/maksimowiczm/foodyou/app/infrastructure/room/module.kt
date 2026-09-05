@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.app.infrastructure.room
 
 import com.maksimowiczm.foodyou.app.infrastructure.room.EventStoreDatabase.Companion.buildDatabase
 import com.maksimowiczm.foodyou.app.infrastructure.room.ReadModelDatabase.Companion.buildDatabase
-import com.maksimowiczm.foodyou.common.domain.EventStore
+import com.maksimowiczm.foodyou.common.event.EventStore
 import com.maksimowiczm.foodyou.common.extension.databaseBuilder
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.search.infrastructure.SearchDatabase

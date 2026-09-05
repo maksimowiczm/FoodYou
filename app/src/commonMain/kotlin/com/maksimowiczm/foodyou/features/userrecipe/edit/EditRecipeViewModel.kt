@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.features.userrecipe.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormState
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormTransformer
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormUiState
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 class EditRecipeViewModel(
     private val recipeService: UserRecipeService,
     private val recipeFormTransformer: RecipeFormTransformer,
+    private val blobStorage: BlobStorage,
     private val id: UserRecipeId,
 ) : ViewModel() {
     private val eventBus = Channel<EditRecipeEvent>()
@@ -46,7 +48,7 @@ class EditRecipeViewModel(
                 id = id,
                 name = name,
                 note = note,
-                imageBytes = imageBytes,
+                image = imageBytes?.let { blobStorage.store(it) },
                 servings = servings,
                 components = components,
             )

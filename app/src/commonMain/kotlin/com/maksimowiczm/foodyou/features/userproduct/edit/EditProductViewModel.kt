@@ -2,10 +2,13 @@ package com.maksimowiczm.foodyou.features.userproduct.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.features.userproduct.ProductFormState
 import com.maksimowiczm.foodyou.features.userproduct.ProductFormTransformer
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductCommand
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
+import kotlin.time.Clock
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,6 +20,7 @@ import kotlinx.coroutines.launch
 
 internal class EditProductViewModel(
     private val userProductService: UserProductService,
+    private val blobStorage: BlobStorage,
     private val productFormTransformer: ProductFormTransformer,
     private val id: UserProductId,
 ) : ViewModel() {
@@ -45,24 +49,30 @@ internal class EditProductViewModel(
                 brand,
                 barcode,
                 note,
-                image,
+                imageBytes,
                 nutritionFacts,
                 servingQuantity,
                 packageQuantity,
                 isLiquid) =
                 productFormTransformer.transform(form)
 
-            userProductService.edit(
+            val image = imageBytes?.let { bytes -> blobStorage.store(bytes) }
+            userProductService.handle(
                 id = id,
-                name = foodName,
-                brand = brand,
-                barcode = barcode,
-                note = note,
-                imageBytes = image,
-                nutritionFacts = nutritionFacts,
-                servingQuantity = servingQuantity,
-                packageQuantity = packageQuantity,
-                isLiquid = isLiquid,
+                command =
+                    UserProductCommand.Update(timestamp = Clock.System.now()) { product ->
+                        product.copy(
+                            name = foodName,
+                            brand = brand,
+                            barcode = barcode,
+                            note = note,
+                            image = image,
+                            nutritionFacts = nutritionFacts,
+                            servingQuantity = servingQuantity,
+                            packageQuantity = packageQuantity,
+                            isLiquid = isLiquid,
+                        )
+                    },
             )
 
             eventBus.send(EditProductEvent.Edited)

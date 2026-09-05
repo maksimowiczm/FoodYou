@@ -1,30 +1,34 @@
 package com.maksimowiczm.foodyou.mealplan.application
 
-import com.maksimowiczm.foodyou.common.domain.EventStore
-import com.maksimowiczm.foodyou.common.domain.load
-import com.maksimowiczm.foodyou.common.domain.observe
+import com.maksimowiczm.foodyou.common.asEventSink
+import com.maksimowiczm.foodyou.common.asHandler
 import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventStore
+import com.maksimowiczm.foodyou.common.event.observe
 import com.maksimowiczm.foodyou.mealplan.domain.MealPlan
+import com.maksimowiczm.foodyou.mealplan.domain.MealPlanCommand
 import com.maksimowiczm.foodyou.mealplan.domain.MealPlanEvent
+import com.maksimowiczm.foodyou.mealplan.domain.mealPlanDecider
 import com.maksimowiczm.foodyou.mealplan.domain.toMealPlan
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class MealPlanService(
     private val eventStore: EventStore,
-    private val eventBus: EventBus,
+    eventBus: EventBus,
 ) {
-    private val streamId = "MealPlan"
+    private val commandHandler = mealPlanDecider.asHandler(eventStore, eventBus.asEventSink())
 
-    suspend fun transact(block: (MealPlan) -> List<MealPlanEvent>) {
-        val plan = eventStore.load<MealPlanEvent>(streamId).toMealPlan()
-        val newEvents = block(plan)
-        if (newEvents.isNotEmpty()) {
-            eventStore.append(streamId, newEvents)
-            eventBus.publish(newEvents)
-        }
+    suspend fun handle(command: MealPlanCommand) {
+        val _ = commandHandler(STREAM, command)
     }
 
-    fun observe(): Flow<MealPlan> =
-        eventStore.observe<MealPlanEvent>(streamId).map { it.toMealPlan() }
+    fun observe(): Flow<MealPlan?> =
+        eventStore.observe<MealPlanEvent>(STREAM).map { events ->
+            if (events.none()) null else events.toMealPlan()
+        }
+
+    private companion object {
+        private const val STREAM = "MealPlan"
+    }
 }
