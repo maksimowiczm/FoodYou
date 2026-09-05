@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.features.openfoodfacts
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 
 @Immutable
 data class OpenFoodFactsLoginUiState(

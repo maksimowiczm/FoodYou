@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.common.extension
 
 import androidx.room3.*
-import androidx.sqlite.SQLiteDriver
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.scope.Scope
 

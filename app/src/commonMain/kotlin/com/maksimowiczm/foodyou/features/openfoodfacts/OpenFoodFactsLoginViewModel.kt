@@ -33,10 +33,11 @@ class OpenFoodFactsLoginViewModel(
                 .onSuccess {
                     repository.update {
                         it.copy(
-                            credentials = OpenFoodFactsCredentials(
-                                login = SoftwareEncrypted.encryptString(login),
-                                password = SoftwareEncrypted.encryptString(password),
-                            )
+                            credentials =
+                                OpenFoodFactsCredentials(
+                                    login = SoftwareEncrypted.encryptString(login),
+                                    password = SoftwareEncrypted.encryptString(password),
+                                )
                         )
                     }
                     signInUiEventBus.send(OpenFoodFactsLoginSignedInUiEvent)
@@ -49,4 +50,3 @@ class OpenFoodFactsLoginViewModel(
         }
     }
 }
-
