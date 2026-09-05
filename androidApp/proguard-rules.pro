@@ -1,0 +1,1 @@
+-keepnames class * implements com.maksimowiczm.foodyou.common.event.DomainEvent { }
