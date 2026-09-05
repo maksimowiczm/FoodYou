@@ -21,19 +21,12 @@
           config.allowUnfree = true;
         };
 
-        buildToolsVersion = "36.0.0";
-        platformVersion = "36";
+        buildToolsVersion = "37.0.0";
+        platformVersion = "37";
 
         androidComposition = pkgs.androidenv.composeAndroidPackages {
           platformVersions = [ platformVersion ];
           buildToolsVersions = [ buildToolsVersion ];
-          includeEmulator = true;
-          includeNDK = false;
-          abiVersions = [
-            (if system == "aarch64-darwin" then "arm64-v8a" else "x86_64")
-          ];
-          includeSystemImages = true;
-          systemImageTypes = [ "google_apis" ];
         };
 
         ktfmtJar = pkgs.fetchurl {
