@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.app.infrastructure.room
 
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.common.event.EventStore
+import kotlin.collections.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -16,8 +17,11 @@ internal class RoomEventStore(private val eventStoreDao: EventStoreDao) : EventS
             entities.map(mapper::toDomainEvent)
         }
 
-    override suspend fun append(stream: String, event: Iterable<DomainEvent>) {
-        val roomEvents = event.map { mapper.toRoomStoredEventEntity(it, stream) }
+    override suspend fun publish(
+        stream: String,
+        events: Iterable<DomainEvent>,
+    ) {
+        val roomEvents = events.map { mapper.toRoomStoredEventEntity(it, stream) }
         eventStoreDao.insertAll(roomEvents)
     }
 }

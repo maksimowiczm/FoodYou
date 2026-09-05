@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.app
 
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
-import com.maksimowiczm.foodyou.common.event.EventBus
-import com.maksimowiczm.foodyou.common.event.InMemoryEventBus
-import com.maksimowiczm.foodyou.common.event.LoggingEventBus
+import com.maksimowiczm.foodyou.common.event.EventNotifier
+import com.maksimowiczm.foodyou.common.event.InMemoryEventNotifier
+import com.maksimowiczm.foodyou.common.event.LoggingEventNotifier
 import kotlinx.coroutines.test.TestScope
 import org.koin.core.Koin
 import org.koin.core.KoinApplication
@@ -22,7 +22,8 @@ fun TestScope.testFoodYouKoinApplication(config: KoinAppDeclaration? = null): Ko
     ) {
         modules(
             module {
-                single { LoggingEventBus(get<InMemoryEventBus>(), get()) }.bind<EventBus>()
+                single { LoggingEventNotifier(get<InMemoryEventNotifier>(), get()) }
+                    .bind<EventNotifier>()
             }
         )
         platformConfig.invoke(this)

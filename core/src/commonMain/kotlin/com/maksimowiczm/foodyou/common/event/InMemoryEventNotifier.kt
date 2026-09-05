@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asSharedFlow
  * This implementation stores events in memory with a large buffer capacity, suspending on overflow
  * to prevent event loss. Events are not replayed to new subscribers.
  */
-class InMemoryEventBus : EventBus {
+class InMemoryEventNotifier : EventNotifier {
     private val _events =
         MutableSharedFlow<DomainEvent>(
             replay = 0,
@@ -21,11 +21,11 @@ class InMemoryEventBus : EventBus {
 
     override val events: Flow<DomainEvent> = _events.asSharedFlow()
 
-    override suspend fun publish(event: DomainEvent) {
+    override suspend fun notify(event: DomainEvent) {
         _events.emit(event)
     }
 
-    override suspend fun publish(events: List<DomainEvent>) {
+    override suspend fun notify(events: Iterable<DomainEvent>) {
         events.forEach { _events.emit(it) }
     }
 }

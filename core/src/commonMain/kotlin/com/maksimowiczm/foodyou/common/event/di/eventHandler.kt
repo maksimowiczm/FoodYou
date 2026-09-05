@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.common.event.di
 
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
 import com.maksimowiczm.foodyou.common.event.DomainEvent
-import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.EventHandler
+import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.event.subscribe
 import kotlinx.coroutines.Job
 import org.koin.core.definition.KoinDefinition
@@ -27,7 +27,7 @@ import org.koin.dsl.onClose
  *
  * @param E The type of event this handler processes
  * @param definition A factory function that creates the EventHandler instance
- * @see EventBus
+ * @see EventNotifier
  * @see EventHandler
  */
 inline fun <reified E : DomainEvent, reified H : EventHandler<E>> Module.eventHandler(
@@ -35,7 +35,7 @@ inline fun <reified E : DomainEvent, reified H : EventHandler<E>> Module.eventHa
     noinline definition: Scope.(ParametersHolder) -> H,
 ): KoinDefinition<Job> =
     single(qualifier = qualifier, createdAtStart = true) {
-            get<EventBus>().subscribe<E>(applicationCoroutineScope(), definition(it))
+            get<EventNotifier>().subscribe<E>(applicationCoroutineScope(), definition(it))
         }
         .onClose { it?.cancel() }
 

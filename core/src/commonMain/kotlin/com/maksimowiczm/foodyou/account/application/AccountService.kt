@@ -5,19 +5,24 @@ import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.account.domain.AccountEvent
 import com.maksimowiczm.foodyou.account.domain.accountDecider
 import com.maksimowiczm.foodyou.account.domain.toAccount
-import com.maksimowiczm.foodyou.common.asEventSink
-import com.maksimowiczm.foodyou.common.asHandler
-import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.event.EventStore
-import com.maksimowiczm.foodyou.common.event.observe
+import com.maksimowiczm.foodyou.common.event.asEventSink
+import com.maksimowiczm.foodyou.common.event.asHandler
+import com.maksimowiczm.foodyou.common.observe
+import com.maksimowiczm.foodyou.common.plus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class AccountService(
     private val eventStore: EventStore,
-    eventBus: EventBus,
+    eventNotifier: EventNotifier,
 ) {
-    private val commandHandler = accountDecider.asHandler(eventStore, eventBus.asEventSink())
+    private val commandHandler =
+        accountDecider.asHandler(
+            eventStore,
+            eventStore + eventNotifier.asEventSink(),
+        )
 
     suspend fun handle(command: AccountCommand) {
         val _ = commandHandler(STREAM, command)

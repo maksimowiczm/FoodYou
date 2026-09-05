@@ -4,7 +4,7 @@ import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 
-class LoggingEventBus(private val delegate: EventBus, logger: Logger) : EventBus {
+class LoggingEventNotifier(private val delegate: EventNotifier, logger: Logger) : EventNotifier {
     private val logger = logger.withTag("EventBus")
 
     override val events: Flow<DomainEvent> =
@@ -12,12 +12,13 @@ class LoggingEventBus(private val delegate: EventBus, logger: Logger) : EventBus
             logger.d { "Event received: ${event::class.simpleName} | $event" }
         }
 
-    override suspend fun publish(event: DomainEvent) {
+    override suspend fun notify(event: DomainEvent) {
         logger.d { "Publishing event: ${event::class.simpleName} | $event" }
-        delegate.publish(event)
+        delegate.notify(event)
     }
 
-    override suspend fun publish(events: List<DomainEvent>) {
+    override suspend fun notify(events: Iterable<DomainEvent>) {
+        val events = events as? Collection ?: events.toList()
         logger.d {
             buildString {
                 appendLine(
@@ -26,6 +27,6 @@ class LoggingEventBus(private val delegate: EventBus, logger: Logger) : EventBus
                 events.forEachIndexed { i, event -> appendLine("[$i] $event") }
             }
         }
-        delegate.publish(events)
+        delegate.notify(events)
     }
 }

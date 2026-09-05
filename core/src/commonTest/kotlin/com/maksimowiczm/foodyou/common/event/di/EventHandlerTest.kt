@@ -1,15 +1,15 @@
 package com.maksimowiczm.foodyou.common.event.di
 
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
-import com.maksimowiczm.foodyou.common.event.ChannelEventBus
 import com.maksimowiczm.foodyou.common.event.DomainEvent
-import com.maksimowiczm.foodyou.common.event.EventBus
 import com.maksimowiczm.foodyou.common.event.EventHandler
+import com.maksimowiczm.foodyou.common.event.EventNotifier
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.koin.core.Koin
@@ -93,7 +93,17 @@ class EventHandlerTest {
     context(scope: TestScope)
     private fun Module.configureTestModule() {
         applicationCoroutineScope { scope.backgroundScope }
-        single<EventBus> { ChannelEventBus() }
+        single<EventNotifier> {
+            object : EventNotifier {
+                override suspend fun notify(event: DomainEvent) = TODO("Not yet implemented")
+
+                override suspend fun notify(events: Iterable<DomainEvent>) =
+                    TODO("Not yet implemented")
+
+                override val events: Flow<DomainEvent>
+                    get() = TODO("Not yet implemented")
+            }
+        }
     }
 
     private class TestHandler : EventHandler<DomainEvent> {

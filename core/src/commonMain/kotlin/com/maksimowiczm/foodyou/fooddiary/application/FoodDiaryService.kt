@@ -1,15 +1,16 @@
 package com.maksimowiczm.foodyou.fooddiary.application
 
-import com.maksimowiczm.foodyou.common.asEventSink
-import com.maksimowiczm.foodyou.common.asHandler
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.TrackedFoodSnapshot
-import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.event.EventStore
-import com.maksimowiczm.foodyou.common.event.observe
+import com.maksimowiczm.foodyou.common.event.asEventSink
+import com.maksimowiczm.foodyou.common.event.asHandler
+import com.maksimowiczm.foodyou.common.observe
+import com.maksimowiczm.foodyou.common.plus
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
@@ -28,7 +29,7 @@ import kotlinx.coroutines.flow.map
 
 class FoodDiaryService(
     private val eventStore: EventStore,
-    eventBus: EventBus,
+    eventNotifier: EventNotifier,
     private val compositionRepository: FoodDiaryCompositionRepository,
     private val mealRepository: FoodDiaryMealRepository,
 ) {
@@ -36,7 +37,7 @@ class FoodDiaryService(
     private val commandHandler =
         foodDiaryDecider.asHandler(
             eventStore,
-            eventBus.asEventSink(),
+            eventStore + eventNotifier.asEventSink(),
         )
 
     private fun stream(id: FoodDiaryEntryId) = "FoodDiaryEntry-${id.id}"

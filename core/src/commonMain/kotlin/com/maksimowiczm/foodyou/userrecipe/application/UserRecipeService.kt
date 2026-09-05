@@ -1,7 +1,5 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
-import com.maksimowiczm.foodyou.common.asEventSink
-import com.maksimowiczm.foodyou.common.asHandler
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.Weight
@@ -11,9 +9,12 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateSer
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.TrackedFoodSnapshot
-import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.event.EventStore
-import com.maksimowiczm.foodyou.common.event.observe
+import com.maksimowiczm.foodyou.common.event.asEventSink
+import com.maksimowiczm.foodyou.common.event.asHandler
+import com.maksimowiczm.foodyou.common.observe
+import com.maksimowiczm.foodyou.common.plus
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCommand
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepository
@@ -30,14 +31,14 @@ import kotlinx.coroutines.flow.map
 
 class UserRecipeService(
     private val eventStore: EventStore,
-    eventBus: EventBus,
+    eventNotifier: EventNotifier,
     private val compositionRepository: UserRecipeCompositionRepository,
 ) {
     private val clock: Clock = Clock.System
     private val commandHandler =
         userRecipeDecider.asHandler(
             eventStore,
-            eventBus.asEventSink(),
+            eventStore + eventNotifier.asEventSink(),
         )
 
     private fun streamId(id: UserRecipeId) = "UserRecipe-${id.value}"

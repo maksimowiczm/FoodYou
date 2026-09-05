@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.openfoodfacts.application
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.onSuccess
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.map
 class OpenFoodFactsService(
     private val repository: OpenFoodFactsRepository,
     private val settingsRepository: OpenFoodFactsSettingsRepository,
-    private val eventBus: EventBus,
+    private val eventNotifier: EventNotifier,
     private val clock: Clock = Clock.System,
 ) {
     fun search(
@@ -36,7 +36,7 @@ class OpenFoodFactsService(
                 credentials = settings.credentials?.decrypt(),
                 onNewProduct = { products ->
                     if (products.isNotEmpty()) {
-                        eventBus.publish(
+                        eventNotifier.notify(
                             products.map {
                                 OpenFoodFactsProductUpdatedEvent(
                                     product = it,
@@ -68,7 +68,7 @@ class OpenFoodFactsService(
         id: OpenFoodFactsProductId
     ): Result<OpenFoodFactsProduct, OpenFoodFactsApiError> {
         return repository.refresh(id).onSuccess {
-            eventBus.publish(
+            eventNotifier.notify(
                 OpenFoodFactsProductUpdatedEvent(product = it, timestamp = clock.now())
             )
         }

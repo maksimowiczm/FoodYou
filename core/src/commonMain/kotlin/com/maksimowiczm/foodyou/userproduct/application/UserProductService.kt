@@ -1,10 +1,11 @@
 package com.maksimowiczm.foodyou.userproduct.application
 
-import com.maksimowiczm.foodyou.common.asEventSink
-import com.maksimowiczm.foodyou.common.asHandler
-import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.event.EventStore
-import com.maksimowiczm.foodyou.common.event.observe
+import com.maksimowiczm.foodyou.common.event.asEventSink
+import com.maksimowiczm.foodyou.common.event.asHandler
+import com.maksimowiczm.foodyou.common.observe
+import com.maksimowiczm.foodyou.common.plus
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductCommand
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductEvent
@@ -16,9 +17,13 @@ import kotlinx.coroutines.flow.map
 
 class UserProductService(
     private val eventStore: EventStore,
-    eventBus: EventBus,
+    eventNotifier: EventNotifier,
 ) {
-    private val commandHandler = userProductDecider.asHandler(eventStore, eventBus.asEventSink())
+    private val commandHandler =
+        userProductDecider.asHandler(
+            eventStore,
+            eventStore + eventNotifier.asEventSink(),
+        )
 
     private fun stream(id: UserProductId): String = "UserProduct-${id.value}"
 

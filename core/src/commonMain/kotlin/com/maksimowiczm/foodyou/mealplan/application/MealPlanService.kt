@@ -1,10 +1,11 @@
 package com.maksimowiczm.foodyou.mealplan.application
 
-import com.maksimowiczm.foodyou.common.asEventSink
-import com.maksimowiczm.foodyou.common.asHandler
-import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.event.EventStore
-import com.maksimowiczm.foodyou.common.event.observe
+import com.maksimowiczm.foodyou.common.event.asEventSink
+import com.maksimowiczm.foodyou.common.event.asHandler
+import com.maksimowiczm.foodyou.common.observe
+import com.maksimowiczm.foodyou.common.plus
 import com.maksimowiczm.foodyou.mealplan.domain.MealPlan
 import com.maksimowiczm.foodyou.mealplan.domain.MealPlanCommand
 import com.maksimowiczm.foodyou.mealplan.domain.MealPlanEvent
@@ -15,9 +16,13 @@ import kotlinx.coroutines.flow.map
 
 class MealPlanService(
     private val eventStore: EventStore,
-    eventBus: EventBus,
+    eventNotifier: EventNotifier,
 ) {
-    private val commandHandler = mealPlanDecider.asHandler(eventStore, eventBus.asEventSink())
+    private val commandHandler =
+        mealPlanDecider.asHandler(
+            eventStore,
+            eventStore + eventNotifier.asEventSink(),
+        )
 
     suspend fun handle(command: MealPlanCommand) {
         val _ = commandHandler(STREAM, command)

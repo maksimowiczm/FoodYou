@@ -9,9 +9,9 @@ import com.maksimowiczm.foodyou.analytics.domain.AnalyticsCommand
 import com.maksimowiczm.foodyou.app.AppModule
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.app.initFoodYouKoinApplication
-import com.maksimowiczm.foodyou.common.event.EventBus
-import com.maksimowiczm.foodyou.common.event.InMemoryEventBus
-import com.maksimowiczm.foodyou.common.event.LoggingEventBus
+import com.maksimowiczm.foodyou.common.event.EventNotifier
+import com.maksimowiczm.foodyou.common.event.InMemoryEventNotifier
+import com.maksimowiczm.foodyou.common.event.LoggingEventNotifier
 import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -42,8 +42,8 @@ class FoodYouApplication : Application() {
                 modules(
                     module {
                         if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
-                            single { LoggingEventBus(get<InMemoryEventBus>(), get()) }
-                                .bind<EventBus>()
+                            single { LoggingEventNotifier(get<InMemoryEventNotifier>(), get()) }
+                                .bind<EventNotifier>()
                         }
                     }
                 )

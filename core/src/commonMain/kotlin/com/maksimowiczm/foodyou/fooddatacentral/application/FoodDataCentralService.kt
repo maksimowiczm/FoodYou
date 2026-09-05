@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.fooddatacentral.application
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.event.EventBus
+import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.onSuccess
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.map
 class FoodDataCentralService(
     private val repository: FoodDataCentralRepository,
     private val settingsRepository: FoodDataCentralSettingsRepository,
-    private val eventBus: EventBus,
+    private val eventNotifier: EventNotifier,
     private val clock: Clock = Clock.System,
 ) {
     fun search(
@@ -37,7 +37,7 @@ class FoodDataCentralService(
                 apiKey = settings.apiKey?.decrypt()?.decodeToString(),
                 onNewProduct = { products ->
                     if (products.isNotEmpty()) {
-                        eventBus.publish(
+                        eventNotifier.notify(
                             products.map {
                                 FoodDataCentralProductUpdatedEvent(
                                     product = it,
@@ -71,7 +71,7 @@ class FoodDataCentralService(
         val apiKey =
             settingsRepository.observe().map { it.apiKey }.first()?.decrypt()?.decodeToString()
         return repository.refresh(id, apiKey).onSuccess {
-            eventBus.publish(
+            eventNotifier.notify(
                 FoodDataCentralProductUpdatedEvent(product = it, timestamp = clock.now())
             )
         }
