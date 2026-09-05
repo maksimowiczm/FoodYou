@@ -2,47 +2,26 @@
 <resources>
     <string name="not_available_short">N/B</string>
     <string name="headline_create_product">Product maken</string>
-    <string name="headline_settings">Instellingen</string>
-    <string name="headline_daily_goals">Dagelijkse doelen</string>
-    <string name="headline_general">Algemeen</string>
     <string name="headline_macronutrients">Macronutriënten</string>
     <string name="headline_meals">Maaltijden</string>
-    <string name="headline_delete_food">Verwijder voeding</string>
     <string name="headline_edit_product">Product aanpassen</string>
     <string name="headline_permission_required">Toestemming vereist</string>
     <string name="headline_language">Taal</string>
     <string name="headline_system">Systeem</string>
-    <string name="headline_system_language_settings">Systeemtaal instellingen</string>
     <string name="headline_secure_screen">Scherm beveiligen</string>
     <string name="headline_about">Over</string>
     <string name="headline_version">Versie</string>
     <string name="headline_all_day" description="All-day (meal)">Hele dag</string>
-    <string name="headline_time_based_ordering">Sorteren op tijd</string>
-    <string name="headline_incomplete_products">Onvolledige producten</string>
     <string name="headline_product">Product</string>
     <string name="headline_recipe">Recept</string>
     <string name="headline_create_recipe">Maak recept</string>
-    <string name="headline_ingredients" description="Recipe ingredients">Ingrediënten</string>
-    <string name="headline_summary">Samenvatting</string>
-    <string name="headline_whats_new">Wat is er nieuw</string>
     <string name="headline_changelog">Wijzigingen</string>
-    <string name="headline_installed" description="Installed version of the app">Geïnstalleerd</string>
-    <string name="headline_home" description="Home screen">Voorpagina</string>
-    <string name="headline_home_settings" description="Home screen settings">Voorpagina instellingen</string>
-    <string name="headline_calendar">Kalender</string>
-    <string name="headline_meals_settings">Maaltijd instellingen</string>
-    <string name="headline_horizontal">Horizontaal</string>
-    <string name="headline_vertical">Verticaal</string>
     <string name="headline_values_per">Voedingswaarde per</string>
     <string name="headline_other">Andere</string>
     <string name="headline_vitamins">Vitamines</string>
     <string name="headline_minerals">Mineralen</string>
-    <string name="headline_supported_URLs" description="URLs that can be used to add products">Ondersteunde URL's</string>
     <string name="headline_something_went_wrong">Oeps! Er ging iets verkeerd</string>
-    <string name="headline_daily_goals_settings">Dagelijkse doelen instellingen</string>
     <string name="headline_api_key">API-sleutel</string>
-    <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Bron</string>
-    <string name="headline_features">Kenmerken</string>
     <string name="weight">Gewicht</string>
     <string name="unit_energy" description="Energy as calories">Energie</string>
     <string name="unit_kcal">kcal</string>
@@ -57,14 +36,11 @@
     </plurals>
     <string name="unit_ounce_short">oz</string>
     <string name="unit_fluid_ounce_short">fl oz</string>
-    <string name="product_package_weight">Verpakkingsgewicht</string>
     <string name="product_package">Verpakking</string>
-    <string name="product_serving_weight">Portiegewicht</string>
     <string name="product_serving">Portie</string>
     <string name="product_name">Naam</string>
     <string name="product_brand">Merk</string>
     <string name="product_barcode">Barcode</string>
-    <string name="product_link">Product link</string>
     <string name="recipe_servings">Porties</string>
     <string name="description_recipe_servings">Hoeveel porties zitten er in dit recept</string>
     <string name="nutriment_proteins">Eiwitten</string>
@@ -127,8 +103,6 @@
     <string name="action_add_meal">Maaltijd toevoegen</string>
     <string name="action_edit">Aanpassen</string>
     <string name="action_insert_suggested_search">Voorgestelde zoekopdracht invoegen</string>
-    <string name="action_edit_entry">Pas item aan</string>
-    <string name="action_delete_entry">Verwijder item</string>
     <string name="action_close">Sluiten</string>
     <string name="action_discard">Annuleren</string>
     <string name="action_translate">Vertalen</string>
@@ -137,28 +111,16 @@
     <string name="action_prevent_screen_capture">Schermopname blokkeren</string>
     <string name="action_go_to_today">Ga naar vandaag</string>
     <string name="action_feature_request_on_github">Verzoek een functie op GitHub</string>
-    <string name="action_show_calendar">Open kalender</string>
-    <string name="action_reorder">Rangschikken</string>
     <string name="action_move_up" description="reorder list item up">Omhoog verplaatsen</string>
     <string name="action_move_down" description="reorder list item down">Omlaag verplaatsen</string>
-    <string name="action_use_time_based_ordering">Gebruik tijd-gebaseerde rangschikking</string>
-    <string name="action_ignore_all_day_meals">Maaltijden zonder begin- of eindtijd negeren</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Ingrediënt toevoegen</string>
     <string name="action_delete_ingredient">Verwijder ingrediënt</string>
-    <string name="action_download">Downloaden</string>
-    <string name="action_paste_url">Plak URL</string>
-    <string name="action_browse_open_food_facts">Blader door Open Food Facts</string>
-    <string name="action_copy">Kopiëren</string>
     <string name="action_choose_other_date">Kies een andere datum</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Laat meer zien</string>
-    <string name="action_download_product">Product downloaden</string>
-    <string name="action_copy_and_open_bug_report">Kopieer en open bug rapport</string>
     <string name="action_copy_and_report" description="Copy bug report and report a bug">Kopieer &amp; rapport</string>
     <string name="action_show_details">Laat details zien</string>
-    <string name="action_browse_usda">Doorzoek FoodData Central (USDA)</string>
     <string name="action_set_key">Stel sleutel in</string>
     <string name="action_obtain_key">Sleutel ophalen</string>
-    <string name="action_dont_show_again">Niet nog nogmaals zien</string>
     <string name="neutral_barcode_scanner_camera_request">Keur toegang tot camera goed om barcodes te scannen</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Je moet toestemming verlenen om barcodes te scannen</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera toegang is nodig om barcodes te scannen. Sta dit toe bij systeeminstellingen.</string>
@@ -171,30 +133,19 @@
         <item quantity="one">%1$d kilojoule over</item>
         <item quantity="other">%1$d kilojoules over</item>
     </plurals>
-    <string name="neutral_set_your_daily_goals">Stel jouw dagelijkse voedingsdoelen in</string>
     <string name="neutral_set_your_meal_schedule">Stel de tijd in van je maaltijden</string>
-    <string name="neutral_permanently_delete_meal">Permanent deze maaltijd verwijderen?</string>
-    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Deze maaltijd wordt permanent verwijderd. Alle data gerelateerd aan de maaltijd gaat verloren.</string>
     <string name="neutral_required">Verplicht</string>
     <string name="neutral_help_translating_the_app">Help de app te vertalen</string>
     <string name="neutral_copied">Info naar klembord gekopieerd</string>
-    <string name="neutral_product_created">Product aangemaakt</string>
     <string name="question_discard_product">Product verwijderen?</string>
     <string name="question_discard_changes">Aanpassingen verwijderen?</string>
     <string name="question_discard_recipe">Recept verwijderen?</string>
     <string name="error_invalid_number">Ongeldig getal</string>
     <string name="error_value_cannot_be_negative">Waarde mag niet negatief zijn</string>
-    <string name="error_value_must_be_integer">Waarde moet een getal zijn</string>
     <string name="error_value_must_be_positive">Waarde moet positief zijn</string>
-    <string name="error_url_not_found">URL niet gevonden</string>
-    <string name="error_url_is_not_supported">URL wordt niet ondersteund</string>
-    <string name="error_failed_to_download_product">Niet gelukt product te downloaden</string>
-    <string name="error_product_not_found">Product niet gevonden</string>
     <string name="error_unknown_error">Onbekende fout</string>
-    <string name="error_measurement_error">Meet fout, controleer het portie- en verpakkingsgewicht</string>
     <string name="error_api_key_is_invalid">API sleutel is niet geldig</string>
     <string name="error_not_a_barcode">Geen barcode</string>
-    <string name="positive_goal_reached">Doel gehaald</string>
     <string name="positive_ok">Oké</string>
     <plurals name="negative_exceeded_by_calories">
         <item quantity="one">Overschreden met %1$d calorie</item>
@@ -205,101 +156,31 @@
         <item quantity="other">Overschreden met %1$d kilojoules</item>
     </plurals>
     <string name="description_delete_food">Voeding zal permanent worden verwijderd</string>
-    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Deze notitie wordt verwijderd uit je dagboek. Je kan dit in de toekomst altijd weer toevoegen.</string>
-    <string name="description_about_setting">Meer informatie over FoodYou</string>
-    <string name="description_time_based_meals_sorting">Wanneer deze optie wordt geselecteerd, wordt de maaltijd die bezig is als eerste weergegeven</string>
-    <string name="description_action_ignore_all_day_meals">Maaltijden zonder begin- of eindtijd worden aan het einde van de lijst weergegeven</string>
     <string name="description_incomplete_nutrition_data">Sommige van de producten, die gebruikt worden, hebben deze waarde niet, het totaal kan dus afwijken van de werkelijkheid</string>
-    <string name="description_translation_warning">Vertalingen worden gemaakt door vrijwilligers. Het kan voorkomen dat een vertaling niet klopt of ontbreekt. Wil je helpen met de vertaling van FoodYou? Dan stellen we dat zeer op prijs.</string>
-    <string name="description_home_settings">Pas je voorpagina aan</string>
-    <string name="description_download_product">Vul een link naar een product in en haal automatisch voedingswaarde-informatie op.</string>
-    <string name="description_download_product_hint">Alle tekst wordt geaccepteerd, de eerste URL zal worden gebruikt.</string>
-    <string name="description_show_macronutrients_goals">Laat doelen van macronutriënten zien</string>
-    <string name="description_please_wait_while_importing_products">Even geduld terwijl de producten worden geïmporteerd</string>
-    <string name="description_please_wait_while_exporting_products">Eén moment terwijl producten worden geëxporteerd</string>
     <string name="description_open_food_facts">Een samenwerkend, gratis en open database van voedselproducten van over de hele wereld</string>
-    <string name="error_open_food_facts_rate_limit">Open Food Facts API verzoeklimiet overschreden</string>
-    <!-- Don't translate changelog strings -->
-    <string name="notification_exporting_products">Producten aan het exporteren</string>
-    <string name="notification_importing_products">Producten aan het importeren</string>
-    <string name="notification_importing_products_success">Importeren van producten voltooid</string>
-    <string name="description_food_data_central_usda">FoodData Central is de uitgebreide bron van USDA voor gegevens over voedselsamenstelling met meerdere afzonderlijke gegevenstypen</string>
     <string name="error_usda_rate_limit">API limiet van FoodData Central (USDA) overschreden</string>
-    <string name="description_swiss_food_composition_database_short">De Swiss Food Composition Database bevat voedingsinformatie van meer dan 1100 algemene voedingsproducten</string>
-    <string name="description2_swiss_food_composition_database">De Swiss Food Composition Database bevat voedingsinformatie van meer dan 1100 algemene voedingsproducten. De database is beschikbaar in vier talen. Om deze producten in uw voedingsdagboek te importeren, selecteert u uw voorkeurstaal.</string>
-    <string name="headline_external_databases">Externe Databases</string>
-    <string name="description_external_databases">Bekijk ondersteunde databases</string>
-    <string name="feature_manual_database_import">Handmatige database import</string>
-    <string name="action_unpack" description="Unpack the recipe ingredients">Uitpakken</string>
-    <string name="headline_sponsor">Sponsor</string>
-    <string name="description_sponsor_short_2">Ondersteun de groei van deze app</string>
     <string name="headline_source_code">Bron code</string>
     <string name="action_write_an_email">Schrijf een e-mail</string>
-    <string name="headline_contact">Contact</string>
-    <string name="description_sponsor_contact">Als je vragen hebt over sponsoring, voel je vrij om contact met me op te nemen via e-mail of GitHub.</string>
-    <string name="sponsor_bank_or_card">Bank rekening of creditcard</string>
-    <string name="action_treat_as_liquid">Beschouw als vloeibaar</string>
-    <string name="description_treat_as_liquid">Geef de voorkeur aan milliliters bij het meten</string>
     <string name="headline_personalization">Aanpassen naar persoonlijke voorkeur</string>
     <string name="description_personalization">Pas jouw ervaring aan</string>
     <string name="headline_nutrition_facts">Voedingsfeiten</string>
     <string name="description_personalize_nutrition_facts_short">Voedingsinformatie opnieuw rangschikken</string>
-    <string name="action_reset_ordering">Volgorde terugzetten</string>
     <string name="headline_reset_to_default">Terugzetten naar standaard</string>
     <string name="action_reset" description="Confirm resetting">Terugzetten</string>
-    <string name="description_reset_nutrition_facts">Personalisering van voedingsfeiten terugzetten naar standaard</string>
     <string name="headline_note">Notitie</string>
     <string name="description_add_note">Optionele notities (Bijv., Ingrediënten, vegan status, allergenen, toevoegingen) of andere niet-voedingsdetails</string>
-    <string name="action_try_again">Probeer nog een keer</string>
-    <string name="description_calories_are_calculated">Energie wordt automatisch berekend uit macronutriënten. Je kan deze functie uitschakelen en de waarde handmatig invullen als het nodig is. Alcohol wordt niet meegenomen in de berekening.</string>
     <string name="neutral_an_error_occurred">Er is een fout opgetreden</string>
     <string name="action_retry">Opnieuw proberen</string>
-    <string name="action_import">Importeren</string>
-    <string name="headline_today" description="Today, date">Vandaag, %1$s</string>
-    <string name="headline_yesterday" description="Yesterday, date">Gisteren, %1$s</string>
-    <string name="headline_tomorrow" description="Tomorrow, date">Morgen, %1$s</string>
-    <string name="headline_user" description="User, person who uses the app">Gebruiker</string>
-    <string name="description_food_source">Specificeer waar de voedingsdata vandaan komt. Je kan er een koppeling aan toevoegen</string>
-    <string name="error_food_is_missing_required_fields">Voeding mist nog verplichte velden</string>
-    <string name="headline_preview_release">Preview versie</string>
-    <string name="description_preview_release">Je maakt op het moment gebruik van een preview versie. Het kan incompleet zijn, onstabiel zijn, of veranderd worden.</string>
     <string name="headline_your_food">Jouw voedsel</string>
-    <string name="headline_filters">Filters</string>
-    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">Kies ingrediënt</string>
     <string name="headline_edit_recipe">Bewerk recept</string>
-    <string name="description_delete_ingredient">Ingrediënt zal worden verwijderd van het recept</string>
     <string name="neutral_remote_database_error">Kon product niet downloaden uit externe database. Je kan nog steeds al gedownloade producten bekijken.</string>
     <string name="headline_before_you_start">Voordat je begint</string>
     <string name="action_agree_and_continue">Akkoord &amp; Doorgaan</string>
     <string name="headline_food_database">Voedingsdatabase</string>
     <string name="description_food_database">Je kan kiezen of je deze optionele externe diensten wil gebruiken, welke hun eigen voorwaarden en privacybeleid kunnen hebben</string>
-    <string name="action_skip">Overslaan</string>
     <string name="headline_almost_done">Bijna klaar!</string>
     <string name="headline_preparing_your_food_diary">Jouw voedingsdagboek voorbereiden</string>
     <string name="headline_please_wait">Even wachten, alsjeblieft</string>
-    <string name="headline_created">Aangemaakt</string>
-    <string name="headline_imported">Geïmporteerd</string>
-    <string name="headline_downloaded">Gedownload</string>
-    <string name="headline_edited">Bewerkt</string>
-    <string name="headline_history">Geschiedenis</string>
-    <string name="headline_anonymous">Anoniem</string>
-    <string name="headline_recent">Recent</string>
-    <string name="headline_database">Database</string>
-    <string name="description_manage_database">Beheer jouw databases</string>
-    <string name="action_done">Klaar</string>
-    <string name="neutral_measurement_added">Begrepen! We hebben je afmetingen aangepast</string>
-    <string name="headline_imported_from_food_you_2">Geïmporteerd uit Food You 2</string>
-    <string name="action_set_goals">Doelen instellen</string>
-    <string name="headline_pick_the_days">Kies de dagen</string>
-    <string name="action_set_separate_goals">Stel aparte doelen in verschillende dagen</string>
-    <string name="headline_percentages">Percentages</string>
-    <string name="action_import_csv_food_products">Importeer CSV-bestand met voedsel producten</string>
-    <string name="description_import_csv_food_products">Importeer voedsel producten uit CSV-bestand</string>
-    <string name="description_import_csv_food_products_hint">We willen alleen weten wat wat is. Vertel ons welke kolom in jouw bestand het productnaam, merk, enz. is.</string>
-    <string name="description_import_csv_food_products_hint_2">Alle nutriënt waardes moeten in aantal gram of kcal per 100g worden gegeven</string>
-    <string name="action_export_csv_food_products">Exporteer CSV-bestand met voedsel producten</string>
-    <string name="description_export_csv_food_products">Exporteer voedsel producten naar CSV-bestand</string>
-    <string name="neutral_no_column">Geen kolom</string>
     <plurals name="neutral_imported_x_food_products">
         <item quantity="one">%1$d voedsel product geïmporteerd</item>
         <item quantity="other">%1$d voedsel producten geïmporteerd</item>
@@ -310,11 +191,6 @@
         <item quantity="one">%1$d voedsel product geëxporteerd</item>
         <item quantity="other">%1$d voedsel producten geëxporteerd</item>
     </plurals>
-    <string name="headline_auto_calculate_energy">Energie automatisch berekenen</string>
-    <string name="headline_manual_energy_input">Handmatig energie invoeren</string>
-    <string name="headline_quick_add">Snel toevoegen</string>
-    <string name="description_quick_add">Snel toevoegen laat je invullen zonder te zoeken naar specifieke voeding. Het is een snelle manier om je maaltijden op te schrijven waarvan je het aantal calorieën weet.</string>
-    <string name="action_open_poll">Open peiling</string>
     <string name="headline_colors">Kleuren</string>
     <string name="description_colors">Pas de kleuren in de app aan</string>
     <string name="headline_custom_palette">Aangepaste palet</string>
@@ -326,34 +202,10 @@
     <string name="headline_amoled">AMOLED</string>
     <string name="headline_light">Licht</string>
     <string name="headline_dark">Donker</string>
-    <string name="headline_appearance">Uiterlijk</string>
-    <string name="headline_theme">Thema</string>
     <string name="headline_pick_a_color">Kies een kleur</string>
-    <string name="headline_nutrients_colors">Nutriënt kleuren</string>
     <string name="description_nutrients_colors_reset">Nutriënt kleuren instellingen zullen naar standaard waarden worden teruggezet</string>
-    <string name="headline_sponsorship_goals">Doelen</string>
-    <string name="description_sponsorship_goals">Door te sponsoren, help je dit project onafhankelijk en duurzaam te houden zonder afhankelijk te zijn van uitbuitende bedrijfsmodellen. Veel commerciële apps verdienen geld door gebruikersgegevens te verzamelen en te verkopen, advertenties te targeten of gebruikers aan te zetten tot verslavende interactiepatronen. Sponsoring zorgt ervoor dat deze app privacyvriendelijk, transparant en gericht blijft op het leveren van echte waarde, zonder je vertrouwen of welzijn in gevaar te brengen.</string>
-    <string name="description_x_away_from_next_goal">%1$s te gaan voor volgende doel</string>
-    <string name="headline_sponsors">Sponsoren</string>
-    <string name="description_no_sponsors_this_month">Geen sponsoren deze maand</string>
-    <string name="headline_latest" description="Latest, most recent">Nieuwste</string>
-    <string name="headline_top_sponsorships" description="Most money contributed">Top</string>
-    <string name="headline_this_month_we_raised">Deze maand hebben we %1$s opgehaald</string>
-    <string name="description_sponsors_privacy">Food You neemt je privacy serieus. Daarom maakt het geen verbinding met externe diensten, tenzij je daarvoor toestemming geeft. Om de nieuwste sponsors te zien, moeten de gegevens worden gedownload van de servers van Food You.</string>
-    <string name="action_allow" description="Allow something">Toestaan</string>
-    <string name="action_next_month">Volgende maand</string>
-    <string name="action_previous_month">Vorige maand</string>
-    <string name="headline_sponsor_methods">Methodes</string>
-    <string name="headline_save_database">Database opslaan</string>
-    <string name="description_save_database">Sla een kopie van jouw database op.</string>
-    <string name="headline_replace_database">Database vervangen</string>
-    <string name="description_replace_database">Vervang jouw database met een hiervoor opgeslagen versie</string>
-    <string name="action_replace">Vervang</string>
-    <string name="warning_replace_database" description="Warning message shown when user wants to replace their database with a previously saved copy. All uppercase letters are intentional and will be shown in red color.">Uw database wordt VERVANGEN en alle huidige gegevens gaan VERLOREN. De app wordt opnieuw opgestart nadat de database is vervangen. Mogelijk moet u de app opnieuw openen.</string>
     <string name="action_sign_in">Inloggen</string>
-    <string name="headline_terms_of_service">Algemene voorwaarden</string>
     <string name="headline_privacy_policy">Privacy beleid</string>
-    <string name="error_there_was_an_error_while_signing_in">Er is een fout opgetreden tijdens het inloggen</string>
     <string name="headline_random_theme">Willekeurige thema</string>
     <string name="description_random_theme">Iedere keer dat je de app start zal er een willekeurig thema worden toegepast</string>
     <string name="headline_terms_of_use">Algemene voorwaarden</string>
@@ -364,7 +216,6 @@
     <string name="headline_profile_picture">Profiel foto</string>
     <string name="action_continue">Doorgaan</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Hoi, %1$s!</string>
-    <string name="headline_data_backup_and_export">Gegevens backup &amp; export.</string>
     <string name="headline_privacy">Privacy</string>
     <string name="action_switch_profile">Profiel wisselen</string>
     <string name="action_add_profile">Profiel toevoegen</string>
@@ -375,7 +226,6 @@
     <string name="action_delete_profile">Verwijder profiel</string>
     <string name="headline_delete_profile">Verwijder profiel</string>
     <string name="description_delete_profile">Dit profiel zal permanent worden verwijderd. Alle gegevens die eraan gekoppeld zijn, zullen voor altijd verloren gaan.</string>
-    <string name="action_today" description="Set date to today">Vandaag</string>
     <string name="action_fill_in_details">Vul gegevens in</string>
     <string name="action_skip_for_now">Voorlopig overslaan</string>
     <string name="headline_add_more_details">Meer gegevens toevoegen</string>
@@ -385,8 +235,4 @@
     <string name="action_remove_a_photo">Een foto verwijderen</string>
     <string name="description_values_per">Selecteer de hoeveelheid waarop uw voedingswaarden gebaseerd zijn</string>
     <string name="description_privacy">Beheer uw persoonlijke gegevens</string>
-    <string name="headline_database_backup">Database back-up</string>
-    <string name="description_replacing_database">Database vervangen, even geduld...</string>
-    <string name="headline_experimental">Experimenteel</string>
-    <string name="description_privacy_policy">Zie hoe uw gegevens worden verwerkt</string>
-</resources>
+    </resources>
