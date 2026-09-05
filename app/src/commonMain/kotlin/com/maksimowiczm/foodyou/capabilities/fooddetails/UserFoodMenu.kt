@@ -39,7 +39,7 @@ fun UserFoodMenu(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text(stringResource(Res.string.headline_delete_food)) },
+            title = { Text(stringResource(Res.string.question_delete_food)) },
             text = { Text(stringResource(Res.string.description_delete_food)) },
             confirmButton = {
                 Button(

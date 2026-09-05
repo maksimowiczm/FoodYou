@@ -12,6 +12,7 @@
     <string name="headline_macronutrients">Macronutrients</string>
     <string name="headline_meals">Meals</string>
     <string name="headline_delete_food">Delete food</string>
+    <string name="question_delete_food">Delete food?</string>
     <string name="headline_edit_product">Edit product</string>
     <string name="headline_permission_required">Permission required</string>
     <string name="headline_language">Language</string>
@@ -545,5 +546,8 @@
     <string name="action_collapse" description="Opposite of expand">Collapse</string>
 
     <string name="headline_meal_unlinked">Unlinked</string>
+
+    <string name="question_delete_diary_entry">Delete diary entry?</string>
+    <string name="description_delete_diary_entry">Diary entry will be permanently deleted</string>
 
 </resources>

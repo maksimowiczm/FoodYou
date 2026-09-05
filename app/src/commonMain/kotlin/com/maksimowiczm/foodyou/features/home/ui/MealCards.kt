@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.features.home.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.expandVertically
@@ -12,7 +14,9 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,13 +34,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -48,8 +57,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
@@ -63,6 +74,7 @@ import com.maksimowiczm.foodyou.shared.ui.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.shared.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.shared.ui.component.Image
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
+import com.maksimowiczm.foodyou.shared.ui.saveable.jsonSaver
 import com.maksimowiczm.foodyou.shared.ui.utility.EnergyFormatter.stringResource
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalEnergyUnit
@@ -76,6 +88,8 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.isActive
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -85,6 +99,7 @@ fun MealCards(
     contentPadding: PaddingValues,
     onAdd: (MealId) -> Unit,
     onEntry: (FoodDiaryEntryId) -> Unit,
+    onDeleteEntry: (FoodDiaryEntryId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -99,12 +114,14 @@ fun MealCards(
                         shimmer = shimmer,
                         onEntry = onEntry,
                         onAdd = { onAdd(it.id) },
+                        onDeleteEntry = onDeleteEntry,
                     )
                 is HomeMealState.Unlinked ->
                     MealCard(
                         state = it,
                         shimmer = shimmer,
                         onEntry = onEntry,
+                        onDeleteEntry = onDeleteEntry,
                     )
             }
         }
@@ -116,6 +133,7 @@ private fun MealCard(
     state: HomeMealState,
     shimmer: Shimmer,
     onEntry: (FoodDiaryEntryId) -> Unit,
+    onDeleteEntry: (FoodDiaryEntryId) -> Unit,
     modifier: Modifier = Modifier,
     onAdd: (() -> Unit)? = null,
 ) {
@@ -124,6 +142,49 @@ private fun MealCard(
         remember(state.foods) {
             state.foods.map { it.snapshot.measuredNutritionFacts }.sum(NutritionFacts())
         }
+
+    var selectedEntryId by
+        rememberSaveable(stateSaver = jsonSaver()) { mutableStateOf<FoodDiaryEntryId?>(null) }
+    val selectedFood =
+        remember(selectedEntryId, state.foods) {
+            state.foods.singleOrNull { it.id == selectedEntryId }
+        }
+    if (selectedFood != null)
+        AlertDialog(
+            onDismissRequest = { selectedEntryId = null },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onDeleteEntry(selectedFood.id)
+                        selectedEntryId = null
+                    },
+                    shapes = ButtonDefaults.shapes(),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                        ),
+                ) {
+                    Text(stringResource(Res.string.action_delete))
+                }
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = null,
+                )
+            },
+            title = { Text(stringResource(Res.string.question_delete_diary_entry)) },
+            text = { Text(stringResource(Res.string.description_delete_diary_entry)) },
+            dismissButton = {
+                TextButton(
+                    onClick = { selectedEntryId = null },
+                    shapes = ButtonDefaults.shapes(),
+                ) {
+                    Text(stringResource(Res.string.action_cancel))
+                }
+            },
+        )
 
     val header =
         @Composable {
@@ -250,75 +311,82 @@ private fun MealCard(
                                         ),
                                     interactionSource = interactionSource,
                                 )
+                            val progress = rememberPressProgress(interactionSource)
 
-                            Surface(
-                                onClick = { onEntry(food.id) },
-                                color = MaterialTheme.colorScheme.surfaceContainer,
-                                shape = shape,
-                                interactionSource = interactionSource,
-                            ) {
-                                FoodListItem(
-                                    headline = {
-                                        Text(nameSelector.select(food.snapshot.name))
-                                    },
-                                    image =
-                                        run {
-                                            when (val image = food.snapshot.image) {
-                                                is FoodSnapshotImage.Blob -> {
-                                                    @Composable {
-                                                        resolveBlob(image.blob)
-                                                            .Image(
-                                                                shimmer,
-                                                                Modifier.size(56.dp),
-                                                            )
-                                                    }
-                                                }
-
-                                                is FoodSnapshotImage.Uri -> {
-                                                    @Composable {
-                                                        image.uri.Image(
+                            FoodListItem(
+                                headline = {
+                                    Text(nameSelector.select(food.snapshot.name))
+                                },
+                                image =
+                                    run {
+                                        when (val image = food.snapshot.image) {
+                                            is FoodSnapshotImage.Blob -> {
+                                                @Composable {
+                                                    resolveBlob(image.blob)
+                                                        .Image(
                                                             shimmer,
                                                             Modifier.size(56.dp),
                                                         )
-                                                    }
                                                 }
-
-                                                null -> null
                                             }
-                                        },
-                                    proteins = {
-                                        Text(
-                                            food.snapshot.measuredNutritionFacts.proteins.value
-                                                ?.stringResource() ?: "?"
-                                        )
+
+                                            is FoodSnapshotImage.Uri -> {
+                                                @Composable {
+                                                    image.uri.Image(
+                                                        shimmer,
+                                                        Modifier.size(56.dp),
+                                                    )
+                                                }
+                                            }
+
+                                            null -> null
+                                        }
                                     },
-                                    carbohydrates = {
-                                        Text(
-                                            food.snapshot.measuredNutritionFacts.carbohydrates.value
-                                                ?.stringResource() ?: "?"
-                                        )
-                                    },
-                                    fats = {
-                                        Text(
-                                            food.snapshot.measuredNutritionFacts.fats.value
-                                                ?.stringResource() ?: "?"
-                                        )
-                                    },
-                                    energy = {
-                                        Text(
-                                            food.snapshot.measuredNutritionFacts.energy.value
-                                                ?.inUnit(LocalEnergyUnit.current)
-                                                ?.stringResource() ?: "?"
-                                        )
-                                    },
-                                    quantity = {
-                                        Text(food.snapshot.quantity.stringResource())
-                                    },
-                                    overline = {
-                                        Text(dateFormatter.formatTime(food.time))
-                                    },
-                                )
-                            }
+                                proteins = {
+                                    Text(
+                                        food.snapshot.measuredNutritionFacts.proteins.value
+                                            ?.stringResource() ?: "?"
+                                    )
+                                },
+                                carbohydrates = {
+                                    Text(
+                                        food.snapshot.measuredNutritionFacts.carbohydrates.value
+                                            ?.stringResource() ?: "?"
+                                    )
+                                },
+                                fats = {
+                                    Text(
+                                        food.snapshot.measuredNutritionFacts.fats.value
+                                            ?.stringResource() ?: "?"
+                                    )
+                                },
+                                energy = {
+                                    Text(
+                                        food.snapshot.measuredNutritionFacts.energy.value
+                                            ?.inUnit(LocalEnergyUnit.current)
+                                            ?.stringResource() ?: "?"
+                                    )
+                                },
+                                quantity = {
+                                    Text(food.snapshot.quantity.stringResource())
+                                },
+                                modifier =
+                                    Modifier.graphicsLayer {
+                                            this.shape = shape
+                                            clip = true
+                                            alpha = lerp(1f, .25f, progress.value)
+                                        }
+                                        .background(MaterialTheme.colorScheme.surfaceContainer)
+                                        .combinedClickable(
+                                            interactionSource = interactionSource,
+                                            indication = ripple(),
+                                            onClick = { onEntry(food.id) },
+                                            onLongClick = { selectedEntryId = food.id },
+                                        ),
+                                overline = {
+                                    Text(dateFormatter.formatTime(food.time))
+                                },
+                            )
                         }
                     }
                 }
@@ -542,6 +610,42 @@ private fun MealCard(
     }
 }
 
+@Composable
+private fun rememberPressProgress(
+    interactionSource: MutableInteractionSource,
+    durationMillis: Long = LocalViewConfiguration.current.longPressTimeoutMillis,
+    releaseAnimationSpec: AnimationSpec<Float> = MaterialTheme.motionScheme.fastEffectsSpec(),
+): State<Float> {
+    val progress = remember { Animatable(0f) }
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is PressInteraction.Press -> {
+                    var startNanos = -1L
+                    while (currentCoroutineContext().isActive) {
+                        val value = withFrameNanos { frameNanos ->
+                            if (startNanos < 0L) startNanos = frameNanos
+                            val elapsedMillis = (frameNanos - startNanos) / 1_000_000f
+                            (elapsedMillis / durationMillis).coerceIn(0f, 1f)
+                        }
+                        progress.snapTo(value)
+                        if (value >= 1f) break
+                    }
+                }
+                is PressInteraction.Release,
+                is PressInteraction.Cancel ->
+                    progress.animateTo(
+                        targetValue = 0f,
+                        animationSpec = releaseAnimationSpec,
+                    )
+            }
+        }
+    }
+
+    return progress.asState()
+}
+
 @Preview
 @Composable
 private fun MealCardsPreview() {
@@ -552,6 +656,7 @@ private fun MealCardsPreview() {
             shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View),
             onAdd = {},
             onEntry = {},
+            onDeleteEntry = {},
             modifier = Modifier.verticalScroll(rememberScrollState()),
         )
     }

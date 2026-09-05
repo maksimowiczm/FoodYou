@@ -184,6 +184,7 @@ fun HomeScreen(
             }
         },
         onEntry = onEntry,
+        onDeleteEntry = viewModel::deleteDiaryEntry,
         modifier = modifier,
     )
 }
@@ -213,6 +214,7 @@ fun HomeScreenContent(
     onCreateRecipe: () -> Unit,
     onCollectionSelected: (SearchCollection) -> Unit,
     onEntry: (FoodDiaryEntryId) -> Unit,
+    onDeleteEntry: (FoodDiaryEntryId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -475,11 +477,12 @@ fun HomeScreenContent(
                                                 meals = uiState.meals,
                                                 shimmer = shimmer,
                                                 contentPadding = PaddingValues(horizontal = 8.dp),
-                                                onAdd = {
-                                                    onSelectMeal(it)
+                                                onAdd = { id ->
+                                                    onSelectMeal(id)
                                                     openSearch()
                                                 },
                                                 onEntry = onEntry,
+                                                onDeleteEntry = onDeleteEntry,
                                             )
                                         }
                                 }
@@ -613,6 +616,7 @@ private fun HomeScreenPreview() {
             onCreateRecipe = {},
             onCollectionSelected = {},
             onEntry = {},
+            onDeleteEntry = {},
         )
     }
 }

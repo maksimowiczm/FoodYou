@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.observe
 import com.maksimowiczm.foodyou.features.home.integration.HomeDao
 import com.maksimowiczm.foodyou.features.home.integration.HomeEntryEntity
+import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
@@ -34,6 +37,7 @@ class HomeViewModel(
     private val appProfileManager: AppProfileManager,
     private val homeDao: HomeDao,
     accountService: AccountService,
+    private val foodDiaryService: FoodDiaryService,
 ) : ViewModel() {
     private val profiles =
         accountService.observe().filterNotNull().map { account -> account.profiles }
@@ -148,5 +152,17 @@ class HomeViewModel(
             time = entry.time,
             snapshot = entry.snapshot,
         )
+    }
+
+    fun deleteDiaryEntry(id: FoodDiaryEntryId) {
+        viewModelScope.launch {
+            foodDiaryService.handle(
+                id,
+                FoodDiaryCommand.Remove(
+                    strategy = DeleteStrategy.Delete,
+                    timestamp = Clock.System.now(),
+                ),
+            )
+        }
     }
 }
