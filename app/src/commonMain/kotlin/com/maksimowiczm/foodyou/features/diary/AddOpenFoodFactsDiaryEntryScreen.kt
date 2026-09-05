@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.features.diary
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -54,6 +57,7 @@ import com.maksimowiczm.foodyou.common.domain.food.amount
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
+import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.component.RefreshIconButton
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
@@ -72,6 +76,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AddOpenFoodFactsDiaryEntryScreen(
     onBack: () -> Unit,
@@ -95,7 +100,8 @@ fun AddOpenFoodFactsDiaryEntryScreen(
 
     val foodUiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
     val profiles = addFoodDiaryEntryViewModel.profiles.collectAsStateWithLifecycle().value
-    val defaultProfileId = addFoodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
+    val defaultProfileId =
+        addFoodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
 
     val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
     val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
@@ -116,43 +122,49 @@ fun AddOpenFoodFactsDiaryEntryScreen(
         )
     }
 
-    if (profiles != null && details != null) {
-        AddOpenFoodFactsDiaryEntryScreenContent(
-            headline = details.food.headline(nameSelector),
-            isFavorite = details.isFavorite,
-            isLoading = details.isLoading,
-            image = details.food.image,
-            sourceUrl = details.food.source,
-            suggestions = details.suggestions,
-            scaledNutritionFacts = details.scaledNutritionFacts,
-            packageQuantity = details.food.packageQuantity,
-            servingQuantity = details.food.servingQuantity,
-            types = details.quantityTypes,
-            selectedType = details.selectedQuantityType,
-            formField = formField,
-            profiles = profiles,
-            selectedProfiles = selectedProfiles,
-            onBack = onBack,
-            onAdd = {
-                val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-                val timestamp = LocalDateTime(date ?: now.date, now.time)
+    val requiredState = if (profiles != null && details != null) profiles to details else null
 
-                addFoodDiaryEntryViewModel.create(
-                    product = details.food,
-                    quantity = details.selectedQuantity,
-                    profiles = selectedProfiles.map { profile -> profile.id },
-                    timestamp = timestamp,
-                )
-            },
-            onRefresh = foodViewModel::refresh,
-            onSetFavorite = foodViewModel::setFavorite,
-            onSelectQuantity = foodViewModel::selectQuantity,
-            onSelectQuantityType = foodViewModel::selectQuantityType,
-            onSelectProfiles = { selectedProfiles ->
-                selectedProfileIds = selectedProfiles.map { profile -> profile.id }
-            },
-            modifier = modifier,
-        )
+    updateTransition(requiredState).Crossfade(contentKey = { it != null }) {
+        if (it == null) LoadingScreen(onBack)
+        else {
+            val (profiles, details) = it
+            AddOpenFoodFactsDiaryEntryScreenContent(
+                headline = details.food.headline(nameSelector),
+                isFavorite = details.isFavorite,
+                isLoading = details.isLoading,
+                image = details.food.image,
+                sourceUrl = details.food.source,
+                suggestions = details.suggestions,
+                scaledNutritionFacts = details.scaledNutritionFacts,
+                packageQuantity = details.food.packageQuantity,
+                servingQuantity = details.food.servingQuantity,
+                types = details.quantityTypes,
+                selectedType = details.selectedQuantityType,
+                formField = formField,
+                profiles = profiles,
+                selectedProfiles = selectedProfiles,
+                onBack = onBack,
+                onAdd = {
+                    val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                    val timestamp = LocalDateTime(date ?: now.date, now.time)
+
+                    addFoodDiaryEntryViewModel.create(
+                        product = details.food,
+                        quantity = details.selectedQuantity,
+                        profiles = selectedProfiles.map { profile -> profile.id },
+                        timestamp = timestamp,
+                    )
+                },
+                onRefresh = foodViewModel::refresh,
+                onSetFavorite = foodViewModel::setFavorite,
+                onSelectQuantity = foodViewModel::selectQuantity,
+                onSelectQuantityType = foodViewModel::selectQuantityType,
+                onSelectProfiles = { selectedProfiles ->
+                    selectedProfileIds = selectedProfiles.map { profile -> profile.id }
+                },
+                modifier = modifier,
+            )
+        }
     }
 }
 
