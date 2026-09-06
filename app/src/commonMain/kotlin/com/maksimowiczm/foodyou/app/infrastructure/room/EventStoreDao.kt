@@ -11,7 +11,7 @@ internal interface EventStoreDao {
         SELECT *
         FROM EventStore
         WHERE eventStream = :stream
-        ORDER BY occurredAtEpochMs ASC
+        ORDER BY occurredAtEpochMs ASC, rowid ASC
         """
     )
     suspend fun getAllByStream(stream: String): List<DomainEventEntity>
@@ -21,7 +21,7 @@ internal interface EventStoreDao {
         SELECT *
         FROM EventStore
         WHERE eventStream = :stream
-        ORDER BY occurredAtEpochMs ASC
+        ORDER BY occurredAtEpochMs ASC, rowid ASC
         """
     )
     fun observeAllByStream(stream: String): Flow<List<DomainEventEntity>>
