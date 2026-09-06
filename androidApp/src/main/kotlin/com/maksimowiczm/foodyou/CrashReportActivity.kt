@@ -1,11 +1,12 @@
 package com.maksimowiczm.foodyou
 
 import android.os.Bundle
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.AnnotatedString
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.capabilities.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.features.crash.CrashReportScreen
-import com.maksimowiczm.foodyou.shared.ui.utility.LocalClipboardManager
 import org.koin.android.ext.android.inject
 
 class CrashReportActivity : FoodYouAbstractActivity() {
@@ -24,7 +25,7 @@ class CrashReportActivity : FoodYouAbstractActivity() {
                 CrashReportScreen(
                     message = errorMessage,
                     onCopyAndSend = {
-                        clipboardManager.copy("Report", errorMessage)
+                        clipboardManager.setText(AnnotatedString(errorMessage))
                         uriHandler.openUri(appConfig.bugReportUri)
                     },
                 )

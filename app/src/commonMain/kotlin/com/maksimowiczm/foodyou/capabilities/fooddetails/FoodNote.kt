@@ -12,8 +12,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.shared.ui.utility.LocalClipboardManager
+import com.maksimowiczm.foodyou.shared.ui.extension.copy
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.headline_note
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun FoodNote(
@@ -21,7 +26,9 @@ fun FoodNote(
     modifier: Modifier = Modifier,
 ) {
     val note = note ?: return
-    val clipboardManager = LocalClipboardManager.current
+    val scope = rememberCoroutineScope()
+    val clipboardManager = LocalClipboard.current
+    val noteLabel = stringResource(Res.string.headline_note)
 
     Box(
         modifier
@@ -31,7 +38,7 @@ fun FoodNote(
                 interactionSource = null,
                 indication = null,
                 onClick = {},
-                onLongClick = { clipboardManager.copy("note", note) },
+                onLongClick = { scope.launch { clipboardManager.copy(noteLabel, note) } },
             )
     ) {
         Column(

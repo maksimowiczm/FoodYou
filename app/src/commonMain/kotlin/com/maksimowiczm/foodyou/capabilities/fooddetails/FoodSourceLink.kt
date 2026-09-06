@@ -14,9 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.shared.ui.utility.LocalClipboardManager
+import com.maksimowiczm.foodyou.shared.ui.extension.copy
+import kotlinx.coroutines.launch
 
 @Composable
 fun FoodSourceLink(
@@ -26,7 +28,8 @@ fun FoodSourceLink(
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
-    val clipboardManager = LocalClipboardManager.current
+    val clipboardManager = LocalClipboard.current
+    val scope = rememberCoroutineScope()
 
     Box(
         modifier
@@ -36,7 +39,11 @@ fun FoodSourceLink(
                 interactionSource = null,
                 indication = ripple(),
                 onClick = { uriHandler.openUri(sourceUrl) },
-                onLongClick = { clipboardManager.copy("url", sourceUrl) },
+                onLongClick = {
+                    scope.launch {
+                        clipboardManager.copy(headline, sourceUrl)
+                    }
+                },
             )
     ) {
         Row(

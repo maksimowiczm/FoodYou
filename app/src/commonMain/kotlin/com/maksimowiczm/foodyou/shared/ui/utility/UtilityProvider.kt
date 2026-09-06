@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.common.domain.BlobResolver
 
 @Composable
 fun UtilityProvider(
-    clipboardManager: ClipboardManager,
     dateFormatter: DateFormatter,
     foodNameSelector: FoodNameSelector,
     appConfig: FoodYouConfig,
@@ -15,7 +14,6 @@ fun UtilityProvider(
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalClipboardManager provides clipboardManager,
         LocalDateFormatter provides dateFormatter,
         LocalFoodNameSelector provides foodNameSelector,
         LocalBlobResolver provides blobResolver,

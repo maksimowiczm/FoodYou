@@ -29,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -39,11 +40,12 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.maksimowiczm.foodyou.device.domain.Theme
 import com.maksimowiczm.foodyou.device.domain.ThemeContrast
 import com.maksimowiczm.foodyou.device.domain.ThemeStyle
-import com.maksimowiczm.foodyou.shared.ui.utility.LocalClipboardManager
+import com.maksimowiczm.foodyou.shared.ui.extension.copy
 import com.materialkolor.ktx.toHex
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -53,7 +55,8 @@ fun CustomThemePickerDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val clipboardManager = LocalClipboardManager.current
+    val scope = rememberCoroutineScope()
+    val clipboardManager = LocalClipboard.current
 
     val initialColor = initialTheme?.seedColor?.let { Color(it) }
     val controller = rememberColorPickerController()
@@ -101,10 +104,13 @@ fun CustomThemePickerDialog(
                                     interactionSource = null,
                                     indication = null,
                                     onClick = {
-                                        clipboardManager.copy(
-                                            "Color",
-                                            controller.selectedColor.value.toHex(),
-                                        )
+                                        val color = controller.selectedColor.value.toHex()
+                                        scope.launch {
+                                            clipboardManager.copy(
+                                                color,
+                                                color,
+                                            )
+                                        }
                                     },
                                 ),
                         )
@@ -226,7 +232,8 @@ fun ColorPickerDialog(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val clipboardManager = LocalClipboardManager.current
+    val scope = rememberCoroutineScope()
+    val clipboardManager = LocalClipboard.current
 
     val controller = rememberColorPickerController()
     LaunchedEffect(Unit) { initialColor?.let { controller.selectByColor(it, false) } }
@@ -256,10 +263,13 @@ fun ColorPickerDialog(
                             interactionSource = null,
                             indication = null,
                             onClick = {
-                                clipboardManager.copy(
-                                    "Color",
-                                    controller.selectedColor.value.toHex(),
-                                )
+                                val color = controller.selectedColor.value.toHex()
+                                scope.launch {
+                                    clipboardManager.copy(
+                                        color,
+                                        color,
+                                    )
+                                }
                             },
                         ),
                 )

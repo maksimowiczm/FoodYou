@@ -11,7 +11,6 @@ import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.common.domain.BlobResolver
 import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
-import com.maksimowiczm.foodyou.shared.ui.utility.ClipboardManagerImpl
 import com.maksimowiczm.foodyou.shared.ui.utility.DateFormatterImpl
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.UIFeatureFlags
@@ -35,13 +34,11 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
 
         FileKit.init(this)
 
-        val clipboardManager = ClipboardManagerImpl(this)
         val dateFormatter = DateFormatterImpl(this)
 
         with<AppCompatActivity, Unit>(this) {
             setContent {
                 UtilityProvider(
-                    clipboardManager = clipboardManager,
                     dateFormatter = dateFormatter,
                     foodNameSelector = foodNameSelector,
                     appConfig = appConfig,
