@@ -57,6 +57,7 @@ fun QuantityInput(
     types: List<QuantityType>,
     formField: FormField,
     onSelectType: (QuantityType) -> Unit,
+    onKeyboardAction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -116,6 +117,7 @@ fun QuantityInput(
                         .padding(horizontal = 16.dp)
                         .focusRequester(focusRequester),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                onKeyboardAction = { onKeyboardAction() },
                 textStyle = LocalTextStyle.current.merge(LocalContentColor.current),
                 lineLimits = TextFieldLineLimits.SingleLine,
                 cursorBrush = SolidColor(LocalContentColor.current),
@@ -219,6 +221,7 @@ private fun QuantityInputPreview() {
             types = listOf(QuantityType.Gram, QuantityType.Serving),
             formField = FormField(),
             onSelectType = {},
+            onKeyboardAction = {},
         )
     }
 }

@@ -297,6 +297,7 @@ private fun AddUserProductDiaryEntryScreenContent(
                     selectedProfiles = selectedProfiles,
                     onSelectType = onSelectQuantityType,
                     onSelectProfiles = onSelectProfiles,
+                    onKeyboardAction = onAdd,
                     modifier =
                         Modifier.focusRequester(focusRequester)
                             .fillMaxWidth()

@@ -292,6 +292,7 @@ private fun UpdateUserRecipeDiaryEntryScreenContent(
                     selectedProfiles = selectedProfiles,
                     onSelectType = onSelectQuantityType,
                     onSelectProfiles = onSelectProfiles,
+                    onKeyboardAction = onSave,
                     modifier =
                         Modifier.focusRequester(focusRequester)
                             .fillMaxWidth()

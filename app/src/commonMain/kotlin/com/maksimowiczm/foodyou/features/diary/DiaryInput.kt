@@ -57,6 +57,7 @@ fun DiaryInput(
     selectedProfiles: List<ProfileUiState>,
     onSelectType: (QuantityType) -> Unit,
     onSelectProfiles: (List<ProfileUiState>) -> Unit,
+    onKeyboardAction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val motionScheme = MaterialTheme.motionScheme
@@ -70,6 +71,7 @@ fun DiaryInput(
                     types = types,
                     formField = formField,
                     onSelectType = onSelectType,
+                    onKeyboardAction = onKeyboardAction,
                     modifier =
                         Modifier.weight(1f)
                             .animateBounds(
@@ -239,6 +241,7 @@ private fun DiaryInputPreview() {
             selectedProfiles = listOf(previewProfiles.first(), previewProfiles.last()),
             onSelectType = {},
             onSelectProfiles = {},
+            onKeyboardAction = {},
         )
     }
 }

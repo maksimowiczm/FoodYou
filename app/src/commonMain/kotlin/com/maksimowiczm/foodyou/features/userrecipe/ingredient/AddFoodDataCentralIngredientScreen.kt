@@ -216,6 +216,7 @@ private fun AddFoodDataCentralIngredientScreenContent(
                     types = types,
                     formField = formField,
                     onSelectType = onSelectQuantityType,
+                    onKeyboardAction = onAdd,
                     modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                 )
             }
