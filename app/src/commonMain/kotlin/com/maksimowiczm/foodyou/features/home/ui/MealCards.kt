@@ -374,7 +374,9 @@ private fun MealCard(
                                     Modifier.graphicsLayer {
                                             this.shape = shape
                                             clip = true
-                                            alpha = lerp(1f, .25f, progress.value)
+                                            alpha =
+                                                if (selectedEntryId == food.id) .25f
+                                                else lerp(1f, .25f, progress.value)
                                         }
                                         .background(MaterialTheme.colorScheme.surfaceContainer)
                                         .combinedClickable(
