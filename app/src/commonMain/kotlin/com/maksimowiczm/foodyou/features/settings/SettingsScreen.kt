@@ -12,10 +12,13 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.expandIn
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.InteractionSource
@@ -38,12 +41,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material.icons.outlined.Tune
+import androidx.compose.material.icons.outlined.VolunteerActivism
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -55,6 +62,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,6 +75,8 @@ import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -76,12 +86,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
 import com.maksimowiczm.foodyou.shared.ui.extension.add
+import com.maksimowiczm.foodyou.shared.ui.extension.copy
 import com.maksimowiczm.foodyou.shared.ui.extension.toDp
+import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -134,6 +151,7 @@ private fun SettingsScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     var profileExpanded by rememberSaveable { mutableStateOf(true) }
+    var sponsorExpanded by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -176,6 +194,12 @@ private fun SettingsScreen(
                     }
                     AnimatedName(selectedProfile?.name)
                 }
+            }
+            item {
+                Sponsor(
+                    expanded = sponsorExpanded,
+                    onExpandedChange = { sponsorExpanded = it },
+                )
             }
             item {
                 ProfileSwitcher(
@@ -564,6 +588,183 @@ private fun Settings(
             colors = colors,
             content = { Text(stringResource(Res.string.headline_about)) },
         )
+    }
+}
+
+private const val BITCOIN = "bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2"
+private const val MONERO =
+    "41eXqs6zg8PFQ8Fec3iyYcVA3rFHc7wgj9hLRuiVh2FtbE2q2TGoCbhSmVX5R76SmYPpSM2VR7qmD4SQ4YMZCEFK6DGGWfB"
+
+@Composable
+private fun Sponsor(
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scope = rememberCoroutineScope()
+    val uriHandler = LocalUriHandler.current
+    val clipboard = LocalClipboard.current
+
+    val expandedTransition = updateTransition(expanded, label = "SponsorExpanded")
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val shape =
+        rememberInteractionAnimatedShape(
+            InteractionShapes(
+                shape =
+                    if (expanded)
+                        MaterialTheme.shapes.extraSmall.copy(
+                            topStart = MaterialTheme.shapes.large.topStart,
+                            topEnd = MaterialTheme.shapes.large.topEnd,
+                        )
+                    else MaterialTheme.shapes.large,
+                pressedShape =
+                    if (expanded) MaterialTheme.shapes.large else MaterialTheme.shapes.extraLarge,
+            ),
+            interactionSource,
+        )
+
+    Column(modifier) {
+        SegmentedListItem(
+            onClick = { onExpandedChange(!expanded) },
+            shapes = ListItemDefaults.segmentedShapes(0, 4),
+            modifier =
+                Modifier.graphicsLayer {
+                    this.shape = shape
+                    clip = true
+                },
+            leadingContent = { Icon(Icons.Outlined.VolunteerActivism, contentDescription = null) },
+            colors =
+                ListItemDefaults.segmentedColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    leadingContentColor = MaterialTheme.colorScheme.onPrimary,
+                    supportingContentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
+            supportingContent = { Text(stringResource(Res.string.description_sponsor)) },
+            content = { Text(stringResource(Res.string.headline_sponsor)) },
+            interactionSource = interactionSource,
+        )
+        expandedTransition.AnimatedVisibility(
+            visible = { it },
+            enter =
+                fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                    expandIn(MaterialTheme.motionScheme.defaultSpatialSpec()),
+            exit =
+                fadeOut(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                    shrinkOut(MaterialTheme.motionScheme.fastSpatialSpec()),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                run {}
+                SegmentedListItem(
+                    onClick = { uriHandler.openUri("https://ko-fi.com/maksimowiczm/5") },
+                    shapes = ListItemDefaults.segmentedShapes(1, 4),
+                    leadingContent = {
+                        Image(
+                            painterResource(Res.drawable.kofi_logo),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                        )
+                    },
+                    colors =
+                        ListItemDefaults.segmentedColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            trailingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        ),
+                    content = {
+                        Text("ko-fi.com/maksimowiczm", style = MaterialTheme.typography.bodySmall)
+                    },
+                    trailingContent = {
+                        Icon(
+                            Icons.Outlined.Link,
+                            contentDescription = stringResource(Res.string.action_open),
+                            modifier = Modifier.size(20.dp),
+                        )
+                    },
+                )
+                run {
+                    var copied by remember { mutableStateOf(false) }
+                    LaunchedEffect(copied) {
+                        if (copied) {
+                            delay(2.seconds)
+                            copied = false
+                        }
+                    }
+                    SegmentedListItem(
+                        onClick = {
+                            scope.launch { clipboard.copy("Bitcoin", BITCOIN) }
+                            copied = true
+                        },
+                        shapes = ListItemDefaults.segmentedShapes(2, 4),
+                        leadingContent = {
+                            Image(
+                                painterResource(Res.drawable.bitcoin_logo),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        },
+                        colors =
+                            ListItemDefaults.segmentedColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                            ),
+                        content = { Text(BITCOIN, style = MaterialTheme.typography.bodySmall) },
+                        trailingContent = {
+                            Icon(
+                                if (copied) Icons.Outlined.Check else Icons.Outlined.ContentCopy,
+                                contentDescription = stringResource(Res.string.action_copy),
+                                modifier = Modifier.size(20.dp),
+                                tint =
+                                    if (copied) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurface,
+                            )
+                        },
+                    )
+                }
+                run {
+                    var copied by remember { mutableStateOf(false) }
+                    LaunchedEffect(copied) {
+                        if (copied) {
+                            delay(2.seconds)
+                            copied = false
+                        }
+                    }
+                    SegmentedListItem(
+                        onClick = {
+                            scope.launch { clipboard.copy("Monero", MONERO) }
+                            copied = true
+                        },
+                        shapes = ListItemDefaults.segmentedShapes(3, 4),
+                        leadingContent = {
+                            Image(
+                                painterResource(Res.drawable.monero_logo),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        },
+                        colors =
+                            ListItemDefaults.segmentedColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                            ),
+                        content = { Text(MONERO, style = MaterialTheme.typography.bodySmall) },
+                        trailingContent = {
+                            Icon(
+                                if (copied) Icons.Outlined.Check else Icons.Outlined.ContentCopy,
+                                contentDescription = stringResource(Res.string.action_copy),
+                                modifier = Modifier.size(20.dp),
+                                tint =
+                                    if (copied) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurface,
+                            )
+                        },
+                    )
+                }
+            }
+        }
     }
 }
 

@@ -139,6 +139,9 @@
     <string name="action_set_key">Set key</string>
     <string name="action_obtain_key">Obtain key</string>
 
+    <string name="action_open">Open</string>
+    <string name="action_copy">Copy</string>
+
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera permission is required to scan barcodes. Please allow it in the app settings.</string>
@@ -277,6 +280,8 @@
     <string name="headline_welcome_user_message" description="Must be short welcome message">Hi, %1$s!</string>
 
     <string name="headline_privacy">Privacy</string>
+    <string name="headline_sponsor">Sponsor</string>
+    <string name="description_sponsor">Support the app's growth</string>
 
     <string name="action_switch_profile">Switch profile</string>
     <string name="action_add_profile">Add profile</string>
