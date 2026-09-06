@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
@@ -114,8 +116,22 @@ fun FoodSearchList(
             when (selectedCollection) {
                 null -> {
                     if (showQuickResults) {
+                        val userFoodCount = userFood.itemCount.coerceAtMost(5)
+                        val offCount = openFoodFacts.itemCount.coerceAtMost(5)
+                        val fdcCount = foodDataCentral.itemCount.coerceAtMost(5)
+
+                        val userFoodLoading =
+                            userFood.loadState.refresh is LoadState.Loading ||
+                                userFood.loadState.append is LoadState.Loading
+                        val offLoading =
+                            openFoodFacts.loadState.refresh is LoadState.Loading ||
+                                openFoodFacts.loadState.append is LoadState.Loading
+                        val fdcLoading =
+                            foodDataCentral.loadState.refresh is LoadState.Loading ||
+                                foodDataCentral.loadState.append is LoadState.Loading
+
                         items(
-                            count = userFood.itemCount.coerceAtMost(5),
+                            count = userFoodCount,
                             key =
                                 userFood.itemKey {
                                     when (it) {
@@ -124,32 +140,17 @@ fun FoodSearchList(
                                     }
                                 },
                         ) { i ->
-                            val baseShape =
-                                when (i) {
-                                    0 if userFood.itemCount == 1 -> MaterialTheme.shapes.extraLarge
-                                    0 ->
-                                        MaterialTheme.shapes.extraSmall.copy(
-                                            topStart = MaterialTheme.shapes.extraLarge.topStart,
-                                            topEnd = MaterialTheme.shapes.extraLarge.topEnd,
-                                        )
-
-                                    userFood.itemCount - 1 ->
-                                        MaterialTheme.shapes.extraSmall.copy(
-                                            bottomStart =
-                                                MaterialTheme.shapes.extraLarge.bottomStart,
-                                            bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
-                                        )
-
-                                    else -> MaterialTheme.shapes.extraSmall
-                                }
                             val interactionSource = remember { MutableInteractionSource() }
                             val shape =
-                                rememberInteractionAnimatedShape(
-                                    shapes =
-                                        InteractionShapes(
-                                            shape = baseShape,
-                                            pressedShape = MaterialTheme.shapes.extraLarge,
-                                        ),
+                                rememberItemShape(
+                                    isFirst = i == 0,
+                                    isLast =
+                                        i == userFoodCount - 1 &&
+                                            !userFoodLoading &&
+                                            offCount == 0 &&
+                                            !offLoading &&
+                                            fdcCount == 0 &&
+                                            !fdcLoading,
                                     interactionSource = interactionSource,
                                 )
 
@@ -176,37 +177,7 @@ fun FoodSearchList(
                                         interactionSource = interactionSource,
                                     )
 
-                                is SearchResult.UserRecipe -> {
-                                    val baseShape =
-                                        when (i) {
-                                            0 ->
-                                                MaterialTheme.shapes.extraSmall.copy(
-                                                    topStart =
-                                                        MaterialTheme.shapes.extraLarge.topStart,
-                                                    topEnd = MaterialTheme.shapes.extraLarge.topEnd,
-                                                )
-
-                                            userFood.itemCount - 1 ->
-                                                MaterialTheme.shapes.extraSmall.copy(
-                                                    bottomStart =
-                                                        MaterialTheme.shapes.extraLarge.bottomStart,
-                                                    bottomEnd =
-                                                        MaterialTheme.shapes.extraLarge.bottomEnd,
-                                                )
-
-                                            else -> MaterialTheme.shapes.extraSmall
-                                        }
-                                    val interactionSource = remember { MutableInteractionSource() }
-                                    val shape =
-                                        rememberInteractionAnimatedShape(
-                                            shapes =
-                                                InteractionShapes(
-                                                    shape = baseShape,
-                                                    pressedShape = MaterialTheme.shapes.extraLarge,
-                                                ),
-                                            interactionSource = interactionSource,
-                                        )
-
+                                is SearchResult.UserRecipe ->
                                     UserRecipeListItem(
                                         recipe = product,
                                         onClick = {
@@ -218,42 +189,44 @@ fun FoodSearchList(
                                         modifier =
                                             Modifier.animateItem().padding(horizontal = 8.dp),
                                     )
-                                }
+                            }
+                        }
+
+                        if (userFoodLoading && userFoodCount < 5) {
+                            items(3) { i ->
+                                val shape =
+                                    rememberItemShape(
+                                        isFirst = i == 0 && userFoodCount == 0,
+                                        isLast =
+                                            i == 2 &&
+                                                offCount == 0 &&
+                                                !offLoading &&
+                                                fdcCount == 0 &&
+                                                !fdcLoading,
+                                        interactionSource = remember { MutableInteractionSource() },
+                                    )
+                                FoodListItemSkeleton(
+                                    shimmer = shimmer,
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    shape = shape,
+                                )
                             }
                         }
 
                         items(
-                            count = openFoodFacts.itemCount.coerceAtMost(5),
+                            count = offCount,
                             key = openFoodFacts.itemKey { it.id.barcode },
                         ) { i ->
-                            val baseShape =
-                                when (i) {
-                                    0 if openFoodFacts.itemCount == 1 ->
-                                        MaterialTheme.shapes.extraLarge
-
-                                    0 ->
-                                        MaterialTheme.shapes.extraSmall.copy(
-                                            topStart = MaterialTheme.shapes.extraLarge.topStart,
-                                            topEnd = MaterialTheme.shapes.extraLarge.topEnd,
-                                        )
-
-                                    openFoodFacts.itemCount - 1 ->
-                                        MaterialTheme.shapes.extraSmall.copy(
-                                            bottomStart =
-                                                MaterialTheme.shapes.extraLarge.bottomStart,
-                                            bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
-                                        )
-
-                                    else -> MaterialTheme.shapes.extraSmall
-                                }
                             val interactionSource = remember { MutableInteractionSource() }
                             val shape =
-                                rememberInteractionAnimatedShape(
-                                    shapes =
-                                        InteractionShapes(
-                                            shape = baseShape,
-                                            pressedShape = MaterialTheme.shapes.extraLarge,
-                                        ),
+                                rememberItemShape(
+                                    isFirst = i == 0 && userFoodCount == 0 && !userFoodLoading,
+                                    isLast =
+                                        i == offCount - 1 &&
+                                            !offLoading &&
+                                            fdcCount == 0 &&
+                                            !fdcLoading,
                                     interactionSource = interactionSource,
                                 )
 
@@ -280,38 +253,41 @@ fun FoodSearchList(
                             }
                         }
 
+                        if (offLoading && offCount < 5) {
+                            items(3) { i ->
+                                val shape =
+                                    rememberItemShape(
+                                        isFirst =
+                                            i == 0 &&
+                                                userFoodCount == 0 &&
+                                                !userFoodLoading &&
+                                                offCount == 0,
+                                        isLast = i == 2 && fdcCount == 0 && !fdcLoading,
+                                        interactionSource = remember { MutableInteractionSource() },
+                                    )
+                                FoodListItemSkeleton(
+                                    shimmer = shimmer,
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    shape = shape,
+                                )
+                            }
+                        }
+
                         items(
-                            count = foodDataCentral.itemCount.coerceAtMost(5),
+                            count = fdcCount,
                             key = foodDataCentral.itemKey { it.id.fdcId },
                         ) { i ->
-                            val baseShape =
-                                when (i) {
-                                    0 if foodDataCentral.itemCount == 1 ->
-                                        MaterialTheme.shapes.extraLarge
-
-                                    0 ->
-                                        MaterialTheme.shapes.extraSmall.copy(
-                                            topStart = MaterialTheme.shapes.extraLarge.topStart,
-                                            topEnd = MaterialTheme.shapes.extraLarge.topEnd,
-                                        )
-
-                                    foodDataCentral.itemCount - 1 ->
-                                        MaterialTheme.shapes.extraSmall.copy(
-                                            bottomStart =
-                                                MaterialTheme.shapes.extraLarge.bottomStart,
-                                            bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
-                                        )
-
-                                    else -> MaterialTheme.shapes.extraSmall
-                                }
                             val interactionSource = remember { MutableInteractionSource() }
                             val shape =
-                                rememberInteractionAnimatedShape(
-                                    shapes =
-                                        InteractionShapes(
-                                            shape = baseShape,
-                                            pressedShape = MaterialTheme.shapes.extraLarge,
-                                        ),
+                                rememberItemShape(
+                                    isFirst =
+                                        i == 0 &&
+                                            userFoodCount == 0 &&
+                                            !userFoodLoading &&
+                                            offCount == 0 &&
+                                            !offLoading,
+                                    isLast = i == fdcCount - 1 && !fdcLoading,
                                     interactionSource = interactionSource,
                                 )
 
@@ -338,6 +314,29 @@ fun FoodSearchList(
                                     )
                             }
                         }
+
+                        if (fdcLoading && fdcCount < 5) {
+                            items(3) { i ->
+                                val shape =
+                                    rememberItemShape(
+                                        isFirst =
+                                            i == 0 &&
+                                                userFoodCount == 0 &&
+                                                !userFoodLoading &&
+                                                offCount == 0 &&
+                                                !offLoading &&
+                                                fdcCount == 0,
+                                        isLast = i == 2,
+                                        interactionSource = remember { MutableInteractionSource() },
+                                    )
+                                FoodListItemSkeleton(
+                                    shimmer = shimmer,
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    shape = shape,
+                                )
+                            }
+                        }
                     } else if (history != null) {
                         items(history, key = { "history_$it" }) { query ->
                             FoodSearchHistoryItem(
@@ -360,31 +359,14 @@ fun FoodSearchList(
                                 }
                             },
                     ) { i ->
-                        val baseShape =
-                            when (i) {
-                                0 if userFood.itemCount == 1 -> MaterialTheme.shapes.extraLarge
-                                0 ->
-                                    MaterialTheme.shapes.extraSmall.copy(
-                                        topStart = MaterialTheme.shapes.extraLarge.topStart,
-                                        topEnd = MaterialTheme.shapes.extraLarge.topEnd,
-                                    )
-
-                                userFood.itemCount - 1 ->
-                                    MaterialTheme.shapes.extraSmall.copy(
-                                        bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
-                                        bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
-                                    )
-
-                                else -> MaterialTheme.shapes.extraSmall
-                            }
                         val interactionSource = remember { MutableInteractionSource() }
+                        val isLoading =
+                            userFood.loadState.refresh is LoadState.Loading ||
+                                userFood.loadState.append is LoadState.Loading
                         val shape =
-                            rememberInteractionAnimatedShape(
-                                shapes =
-                                    InteractionShapes(
-                                        shape = baseShape,
-                                        pressedShape = MaterialTheme.shapes.extraLarge,
-                                    ),
+                            rememberItemShape(
+                                isFirst = i == 0,
+                                isLast = i == userFood.itemCount - 1 && !isLoading,
                                 interactionSource = interactionSource,
                             )
 
@@ -407,36 +389,7 @@ fun FoodSearchList(
                                     interactionSource = interactionSource,
                                 )
 
-                            is SearchResult.UserRecipe -> {
-                                val baseShape =
-                                    when (i) {
-                                        0 ->
-                                            MaterialTheme.shapes.extraSmall.copy(
-                                                topStart = MaterialTheme.shapes.extraLarge.topStart,
-                                                topEnd = MaterialTheme.shapes.extraLarge.topEnd,
-                                            )
-
-                                        userFood.itemCount - 1 ->
-                                            MaterialTheme.shapes.extraSmall.copy(
-                                                bottomStart =
-                                                    MaterialTheme.shapes.extraLarge.bottomStart,
-                                                bottomEnd =
-                                                    MaterialTheme.shapes.extraLarge.bottomEnd,
-                                            )
-
-                                        else -> MaterialTheme.shapes.extraSmall
-                                    }
-                                val interactionSource = remember { MutableInteractionSource() }
-                                val shape =
-                                    rememberInteractionAnimatedShape(
-                                        shapes =
-                                            InteractionShapes(
-                                                shape = baseShape,
-                                                pressedShape = MaterialTheme.shapes.extraLarge,
-                                            ),
-                                        interactionSource = interactionSource,
-                                    )
-
+                            is SearchResult.UserRecipe ->
                                 UserRecipeListItem(
                                     recipe = food,
                                     onClick = { onUserRecipe(UserRecipeId(food.id), it) },
@@ -445,7 +398,6 @@ fun FoodSearchList(
                                     shape = shape,
                                     modifier = Modifier.animateItem().padding(horizontal = 8.dp),
                                 )
-                            }
                         }
                     }
 
@@ -454,31 +406,14 @@ fun FoodSearchList(
                         count = openFoodFacts.itemCount,
                         key = openFoodFacts.itemKey { it.id.barcode },
                     ) { i ->
-                        val baseShape =
-                            when (i) {
-                                0 if openFoodFacts.itemCount == 1 -> MaterialTheme.shapes.extraLarge
-                                0 ->
-                                    MaterialTheme.shapes.extraSmall.copy(
-                                        topStart = MaterialTheme.shapes.extraLarge.topStart,
-                                        topEnd = MaterialTheme.shapes.extraLarge.topEnd,
-                                    )
-
-                                openFoodFacts.itemCount - 1 ->
-                                    MaterialTheme.shapes.extraSmall.copy(
-                                        bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
-                                        bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
-                                    )
-
-                                else -> MaterialTheme.shapes.extraSmall
-                            }
                         val interactionSource = remember { MutableInteractionSource() }
+                        val isLoading =
+                            openFoodFacts.loadState.refresh is LoadState.Loading ||
+                                openFoodFacts.loadState.append is LoadState.Loading
                         val shape =
-                            rememberInteractionAnimatedShape(
-                                shapes =
-                                    InteractionShapes(
-                                        shape = baseShape,
-                                        pressedShape = MaterialTheme.shapes.extraLarge,
-                                    ),
+                            rememberItemShape(
+                                isFirst = i == 0,
+                                isLast = i == openFoodFacts.itemCount - 1 && !isLoading,
                                 interactionSource = interactionSource,
                             )
 
@@ -508,33 +443,14 @@ fun FoodSearchList(
                         count = foodDataCentral.itemCount,
                         key = foodDataCentral.itemKey { it.id.fdcId },
                     ) { i ->
-                        val baseShape =
-                            when (i) {
-                                0 if foodDataCentral.itemCount == 1 ->
-                                    MaterialTheme.shapes.extraLarge
-
-                                0 ->
-                                    MaterialTheme.shapes.extraSmall.copy(
-                                        topStart = MaterialTheme.shapes.extraLarge.topStart,
-                                        topEnd = MaterialTheme.shapes.extraLarge.topEnd,
-                                    )
-
-                                foodDataCentral.itemCount - 1 ->
-                                    MaterialTheme.shapes.extraSmall.copy(
-                                        bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
-                                        bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
-                                    )
-
-                                else -> MaterialTheme.shapes.extraSmall
-                            }
                         val interactionSource = remember { MutableInteractionSource() }
+                        val isLoading =
+                            foodDataCentral.loadState.refresh is LoadState.Loading ||
+                                foodDataCentral.loadState.append is LoadState.Loading
                         val shape =
-                            rememberInteractionAnimatedShape(
-                                shapes =
-                                    InteractionShapes(
-                                        shape = baseShape,
-                                        pressedShape = MaterialTheme.shapes.extraLarge,
-                                    ),
+                            rememberItemShape(
+                                isFirst = i == 0,
+                                isLast = i == foodDataCentral.itemCount - 1 && !isLoading,
                                 interactionSource = interactionSource,
                             )
 
@@ -560,31 +476,14 @@ fun FoodSearchList(
 
                 is SearchCollection.Favorite ->
                     items(favoriteFood.itemCount) { i ->
-                        val baseShape =
-                            when (i) {
-                                0 if favoriteFood.itemCount == 1 -> MaterialTheme.shapes.extraLarge
-                                0 ->
-                                    MaterialTheme.shapes.extraSmall.copy(
-                                        topStart = MaterialTheme.shapes.extraLarge.topStart,
-                                        topEnd = MaterialTheme.shapes.extraLarge.topEnd,
-                                    )
-
-                                favoriteFood.itemCount - 1 ->
-                                    MaterialTheme.shapes.extraSmall.copy(
-                                        bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
-                                        bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
-                                    )
-
-                                else -> MaterialTheme.shapes.extraSmall
-                            }
                         val interactionSource = remember { MutableInteractionSource() }
+                        val isLoading =
+                            favoriteFood.loadState.refresh is LoadState.Loading ||
+                                favoriteFood.loadState.append is LoadState.Loading
                         val shape =
-                            rememberInteractionAnimatedShape(
-                                shapes =
-                                    InteractionShapes(
-                                        shape = baseShape,
-                                        pressedShape = MaterialTheme.shapes.extraLarge,
-                                    ),
+                            rememberItemShape(
+                                isFirst = i == 0,
+                                isLast = i == favoriteFood.itemCount - 1 && !isLoading,
                                 interactionSource = interactionSource,
                             )
 
@@ -710,43 +609,42 @@ fun FoodSearchList(
             if (loadState is LoadState.Loading) {
                 val itemCountBeforeLoading =
                     when (selectedCollection) {
-                        null ->
-                            if (showQuickResults) {
-                                userFood.itemCount.coerceAtMost(5) +
-                                    openFoodFacts.itemCount.coerceAtMost(5) +
-                                    foodDataCentral.itemCount.coerceAtMost(5)
-                            } else history?.size ?: 0
-
+                        null -> if (showQuickResults) 0 else history?.size ?: 0
                         is SearchCollection.Favorite -> favoriteFood.itemCount
                         is SearchCollection.FoodDataCentral -> foodDataCentral.itemCount
                         is SearchCollection.OpenFoodFacts -> openFoodFacts.itemCount
                         is SearchCollection.UserFood -> userFood.itemCount
                     }
 
-                items(10) { i ->
-                    val baseShape =
-                        when (i) {
-                            0 if itemCountBeforeLoading == 0 ->
-                                MaterialTheme.shapes.extraSmall.copy(
-                                    topStart = MaterialTheme.shapes.extraLarge.topStart,
-                                    topEnd = MaterialTheme.shapes.extraLarge.topEnd,
-                                )
+                if (selectedCollection == null && !showQuickResults) {
+                    items(10) { i ->
+                        val isFirst = i == 0 && itemCountBeforeLoading == 0
+                        val isLast = i == 9
+                        val baseShape =
+                            when {
+                                isFirst && isLast -> MaterialTheme.shapes.extraLarge
+                                isFirst ->
+                                    MaterialTheme.shapes.extraSmall.copy(
+                                        topStart = MaterialTheme.shapes.extraLarge.topStart,
+                                        topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                                    )
 
-                            9 ->
-                                MaterialTheme.shapes.extraSmall.copy(
-                                    bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
-                                    bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
-                                )
+                                isLast ->
+                                    MaterialTheme.shapes.extraSmall.copy(
+                                        bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
+                                        bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
+                                    )
 
-                            else -> MaterialTheme.shapes.extraSmall
-                        }
+                                else -> MaterialTheme.shapes.extraSmall
+                            }
 
-                    FoodListItemSkeleton(
-                        shimmer = shimmer,
-                        modifier = Modifier.animateItem().padding(horizontal = 8.dp),
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        shape = baseShape,
-                    )
+                        FoodListItemSkeleton(
+                            shimmer = shimmer,
+                            modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            shape = baseShape,
+                        )
+                    }
                 }
             }
         }
@@ -875,5 +773,36 @@ private fun FoodSearchHistoryItem(
             }
         },
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+    )
+}
+
+@Composable
+private fun rememberItemShape(
+    isFirst: Boolean,
+    isLast: Boolean,
+    interactionSource: InteractionSource,
+): Shape {
+    val baseShape =
+        when {
+            isFirst && isLast -> MaterialTheme.shapes.extraLarge
+            isFirst ->
+                MaterialTheme.shapes.extraSmall.copy(
+                    topStart = MaterialTheme.shapes.extraLarge.topStart,
+                    topEnd = MaterialTheme.shapes.extraLarge.topEnd,
+                )
+            isLast ->
+                MaterialTheme.shapes.extraSmall.copy(
+                    bottomStart = MaterialTheme.shapes.extraLarge.bottomStart,
+                    bottomEnd = MaterialTheme.shapes.extraLarge.bottomEnd,
+                )
+            else -> MaterialTheme.shapes.extraSmall
+        }
+    return rememberInteractionAnimatedShape(
+        shapes =
+            InteractionShapes(
+                shape = baseShape,
+                pressedShape = MaterialTheme.shapes.extraLarge,
+            ),
+        interactionSource = interactionSource,
     )
 }
