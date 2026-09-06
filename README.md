@@ -28,10 +28,9 @@ to [reproducible builds](https://f-droid.org/docs/Reproducible_Builds/)
 ## Screenshots
 
 <div align="center">
-  <img src="metadata/en-US/images/phoneScreenshots/1.png" width="23%" alt="Modular home screen" />
-  <img src="metadata/en-US/images/phoneScreenshots/2.png" width="23%" alt="Food database" />
-  <img src="metadata/en-US/images/phoneScreenshots/3.png" width="23%" alt="Nutrition tracking" />
-  <img src="metadata/en-US/images/phoneScreenshots/4.png" width="23%" alt="Recipe creation" />
+  <img src="metadata/en-US/images/phoneScreenshots/1.png" width="32%" alt="Modular home screen" />
+  <img src="metadata/en-US/images/phoneScreenshots/2.png" width="32%" alt="Food database" />
+  <img src="metadata/en-US/images/phoneScreenshots/4.png" width="32%" alt="Recipe creation" />
 </div>
 
 ## Goals
