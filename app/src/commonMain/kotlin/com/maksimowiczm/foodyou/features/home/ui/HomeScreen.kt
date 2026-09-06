@@ -492,8 +492,6 @@ fun HomeScreenContent(
         }
     }
 
-    // TODO: Navigation rail is invisible on first launch when dynamic colors are enabled. Requires
-    //       activity recreation to render correctly (e.g. theme change or screen rotation).
     ModalWideNavigationRail(
         header = {
             Column(
