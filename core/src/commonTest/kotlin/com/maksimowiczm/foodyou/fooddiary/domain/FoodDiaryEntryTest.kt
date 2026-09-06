@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.fooddiary.domain
 
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
@@ -173,15 +172,26 @@ class FoodDiaryEntryTest {
     }
 
     @Test
-    fun remove_returns_deleted_event() {
+    fun delete_returns_deleted_event() {
         val now = Instant.fromEpochSeconds(5000)
 
-        val events = entry.decide(FoodDiaryCommand.Remove(DeleteStrategy.Delete, now))
+        val events = entry.decide(FoodDiaryCommand.Delete(now))
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryDeletedEvent>(events[0])
         assertEquals(diaryEntryId, event.diaryEntryId)
-        assertEquals(DeleteStrategy.Delete, event.strategy)
+        assertEquals(now, event.timestamp)
+    }
+
+    @Test
+    fun anonymize_returns_anonymized_event() {
+        val now = Instant.fromEpochSeconds(5100)
+
+        val events = entry.decide(FoodDiaryCommand.Anonymize(now))
+
+        assertEquals(1, events.size)
+        val event = assertIs<FoodDiaryEntryAnonymizedEvent>(events[0])
+        assertEquals(diaryEntryId, event.diaryEntryId)
         assertEquals(now, event.timestamp)
     }
 
@@ -267,8 +277,14 @@ class FoodDiaryEntryTest {
 
     @Test
     fun apply_deleted_event() {
-        val event =
-            FoodDiaryEntryDeletedEvent(diaryEntryId, DeleteStrategy.Delete, Instant.DISTANT_PAST)
+        val event = FoodDiaryEntryDeletedEvent(diaryEntryId, Instant.DISTANT_PAST)
+        val result = entry.apply(event)
+        assertNull(result)
+    }
+
+    @Test
+    fun apply_anonymized_event() {
+        val event = FoodDiaryEntryAnonymizedEvent(diaryEntryId, Instant.DISTANT_PAST)
         val result = entry.apply(event)
         assertNull(result)
     }
@@ -321,7 +337,6 @@ class FoodDiaryEntryTest {
                 ),
                 FoodDiaryEntryDeletedEvent(
                     diaryEntryId,
-                    DeleteStrategy.Delete,
                     Instant.fromEpochSeconds(2),
                 ),
             )

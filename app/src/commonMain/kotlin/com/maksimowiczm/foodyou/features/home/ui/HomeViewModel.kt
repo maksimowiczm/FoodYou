@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.observe
 import com.maksimowiczm.foodyou.features.home.integration.HomeDao
@@ -158,10 +157,7 @@ class HomeViewModel(
         viewModelScope.launch {
             foodDiaryService.handle(
                 id,
-                FoodDiaryCommand.Remove(
-                    strategy = DeleteStrategy.Delete,
-                    timestamp = Clock.System.now(),
-                ),
+                FoodDiaryCommand.Delete(timestamp = Clock.System.now()),
             )
         }
     }

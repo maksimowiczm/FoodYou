@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.fooddiary.domain
 
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
@@ -21,10 +20,9 @@ sealed interface FoodDiaryCommand {
         val transform: (FoodDiaryEntry) -> FoodDiaryEntry?,
     ) : FoodDiaryCommand
 
-    data class Remove(
-        val strategy: DeleteStrategy,
-        val timestamp: Instant,
-    ) : FoodDiaryCommand
+    data class Delete(val timestamp: Instant) : FoodDiaryCommand
+
+    data class Anonymize(val timestamp: Instant) : FoodDiaryCommand
 
     data class UnlinkFromMeal(val timestamp: Instant) : FoodDiaryCommand
 }

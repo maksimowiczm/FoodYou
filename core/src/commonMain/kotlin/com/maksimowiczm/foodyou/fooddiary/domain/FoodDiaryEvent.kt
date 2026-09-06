@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.fooddiary.domain
 
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.event.DomainEvent
@@ -57,8 +56,13 @@ data class FoodDiaryEntryMealUnlinkedEvent(
 ) : FoodDiaryEvent()
 
 @Serializable
+data class FoodDiaryEntryAnonymizedEvent(
+    val diaryEntryId: FoodDiaryEntryId,
+    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
+) : FoodDiaryEvent()
+
+@Serializable
 data class FoodDiaryEntryDeletedEvent(
     val diaryEntryId: FoodDiaryEntryId,
-    val strategy: DeleteStrategy,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : FoodDiaryEvent()

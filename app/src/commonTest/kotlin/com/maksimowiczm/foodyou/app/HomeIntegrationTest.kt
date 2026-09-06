@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.app
 
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AnonymousFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -146,11 +145,7 @@ class HomeIntegrationTest {
 
                 foodDiaryService.handle(
                     id = entryId,
-                    command =
-                        FoodDiaryCommand.Remove(
-                            strategy = DeleteStrategy.Delete,
-                            timestamp = Clock.System.now(),
-                        ),
+                    command = FoodDiaryCommand.Delete(timestamp = Clock.System.now()),
                 )
 
                 val entries = homeDao.observeEntries(profileId.value, date).first { it.isEmpty() }
@@ -185,11 +180,7 @@ class HomeIntegrationTest {
 
                 foodDiaryService.handle(
                     id = entryId,
-                    command =
-                        FoodDiaryCommand.Remove(
-                            strategy = DeleteStrategy.Unlink,
-                            timestamp = Clock.System.now(),
-                        ),
+                    command = FoodDiaryCommand.Anonymize(timestamp = Clock.System.now()),
                 )
 
                 val entries =

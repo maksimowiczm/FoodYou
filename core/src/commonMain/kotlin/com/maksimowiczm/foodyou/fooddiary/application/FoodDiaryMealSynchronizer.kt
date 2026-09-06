@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.fooddiary.application
 
 import com.maksimowiczm.foodyou.common.event.EventHandler
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryAnonymizedEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealLinkedEvent
@@ -19,6 +20,8 @@ class FoodDiaryMealSynchronizer(private val repository: FoodDiaryMealRepository)
                 repository.saveReference(event.diaryEntryId, event.mealId)
 
             is FoodDiaryEntryMealUnlinkedEvent -> repository.removeReference(event.diaryEntryId)
+
+            is FoodDiaryEntryAnonymizedEvent -> repository.removeReference(event.diaryEntryId)
 
             is FoodDiaryEntryDeletedEvent -> repository.removeReference(event.diaryEntryId)
 

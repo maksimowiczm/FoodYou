@@ -3,7 +3,6 @@
 package com.maksimowiczm.foodyou.fooddiary.domain
 
 import com.maksimowiczm.foodyou.common.Decider
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
@@ -48,7 +47,6 @@ fun FoodDiaryEntry?.decide(command: FoodDiaryCommand): List<FoodDiaryEvent> =
                     listOf(
                         FoodDiaryEntryDeletedEvent(
                             diaryEntryId = entry.id,
-                            strategy = DeleteStrategy.Delete,
                             timestamp = command.timestamp,
                         )
                     )
@@ -103,12 +101,21 @@ fun FoodDiaryEntry?.decide(command: FoodDiaryCommand): List<FoodDiaryEvent> =
                 }
             } ?: emptyList()
 
-        is FoodDiaryCommand.Remove ->
+        is FoodDiaryCommand.Delete ->
             this?.let { entry ->
                 listOf(
                     FoodDiaryEntryDeletedEvent(
                         diaryEntryId = entry.id,
-                        strategy = command.strategy,
+                        timestamp = command.timestamp,
+                    )
+                )
+            } ?: emptyList()
+
+        is FoodDiaryCommand.Anonymize ->
+            this?.let { entry ->
+                listOf(
+                    FoodDiaryEntryAnonymizedEvent(
+                        diaryEntryId = entry.id,
                         timestamp = command.timestamp,
                     )
                 )
@@ -145,6 +152,8 @@ fun FoodDiaryEntry?.apply(event: FoodDiaryEvent): FoodDiaryEntry? =
         is FoodDiaryEntryMealLinkedEvent -> this?.copy(mealId = event.mealId)
 
         is FoodDiaryEntryMealUnlinkedEvent -> this?.copy(mealId = null)
+
+        is FoodDiaryEntryAnonymizedEvent -> null
 
         is FoodDiaryEntryDeletedEvent -> null
     }

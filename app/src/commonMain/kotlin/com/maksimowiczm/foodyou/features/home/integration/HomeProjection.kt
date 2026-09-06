@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.features.home.integration
 
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.event.EventHandler
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryAnonymizedEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealLinkedEvent
@@ -63,15 +63,12 @@ class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEvent
 
             is FoodDiaryEntryMealUnlinkedEvent -> homeDao.clearMealId(event.diaryEntryId.id)
 
-            is FoodDiaryEntryDeletedEvent ->
-                if (event.strategy == DeleteStrategy.Delete) {
-                    homeDao.delete(event.diaryEntryId.id)
-                } else {
-                    // Unlink strategy - entry becomes anonymous
-                    homeDao.updateEach(event.diaryEntryId.id) {
-                        it.copy(snapshot = it.snapshot.anonymize())
-                    }
+            is FoodDiaryEntryAnonymizedEvent ->
+                homeDao.updateEach(event.diaryEntryId.id) {
+                    it.copy(snapshot = it.snapshot.anonymize())
                 }
+
+            is FoodDiaryEntryDeletedEvent -> homeDao.delete(event.diaryEntryId.id)
         }
     }
 }
