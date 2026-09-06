@@ -4,11 +4,11 @@
 [![GitHub Repo stars](https://img.shields.io/github/stars/maksimowiczm/FoodYou?style=flat&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIC05NjAgOTYwIDk2MCIgd2lkdGg9IjI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxwYXRoIGQ9Im0zNTQtMjQ3IDEyNi03NiAxMjYgNzctMzMtMTQ0IDExMS05Ni0xNDYtMTMtNTgtMTM2LTU4IDEzNS0xNDYgMTMgMTExIDk3LTMzIDE0M1pNMjMzLTgwbDY1LTI4MUw4MC01NTBsMjg4LTI1IDExMi0yNjUgMTEyIDI2NSAyODggMjUtMjE4IDE4OSA2NSAyODEtMjQ3LTE0OUwyMzMtODBabTI0Ny0zNTBaIiBzdHlsZT0iZmlsbDogcmdiKDI0NSwgMjI3LCA2Nik7Ii8%2BCjwvc3ZnPg%3D%3D&color=%23f8e444)](https://github.com/maksimowiczm/FoodYou/stargazers)
 
 <div align="center">
-    <img src="./metadata/en-US/images/featureGraphic.png" alt="Feature Graphic" />
+  <img src="./metadata/en-US/images/featureGraphic.png" alt="Food You feature graphic" />
 </div>
 
 **Food You** is a free, open-source, and privacy-focused food diary and nutrition tracker built
-using [Material Design](https://m3.material.io/) principles.
+with [Material Design](https://m3.material.io/) principles.
 
 ## Installation
 
@@ -19,83 +19,77 @@ using [Material Design](https://m3.material.io/) principles.
 
 </div>
 
-SHA-256 hash of signing certificate: `cd74b0aedd8ead8184063a65909d639a8c885cf6465829690a9be83a8904bdea`
+SHA-256 hash of signing certificate:
+`cd74b0aedd8ead8184063a65909d639a8c885cf6465829690a9be83a8904bdea`
 
-The above signature is also valid for the F-Droid, thanks to [reproducible builds](https://f-droid.org/docs/Reproducible_Builds/)
+The above signature is also valid for the F-Droid, thanks
+to [reproducible builds](https://f-droid.org/docs/Reproducible_Builds/)
 
-
-## ✨ Features
-
-<br>
+## Screenshots
 
 <div align="center">
-  <img src="metadata/en-US/images/phoneScreenshots/1.png" width="23%" alt="Modular Home Screen"/>
-  <img src="metadata/en-US/images/phoneScreenshots/2.png" width="23%" alt="Comprehensive Food Databases"/>
-  <img src="metadata/en-US/images/phoneScreenshots/3.png" width="23%" alt="Full Nutrition Tracking"/>
-  <img src="metadata/en-US/images/phoneScreenshots/4.png" width="23%" alt="Recipe Creation"/>
+  <img src="metadata/en-US/images/phoneScreenshots/1.png" width="23%" alt="Modular home screen" />
+  <img src="metadata/en-US/images/phoneScreenshots/2.png" width="23%" alt="Food database" />
+  <img src="metadata/en-US/images/phoneScreenshots/3.png" width="23%" alt="Nutrition tracking" />
+  <img src="metadata/en-US/images/phoneScreenshots/4.png" width="23%" alt="Recipe creation" />
 </div>
 
-<br>
+## Goals
 
-- 🔒 **Privacy First** – No account required, all data stored locally on your device
-- 🧩 **Modular Home Screen** – Customize your home view with functional cards that suit your habits
-- 📚 **Comprehensive Food Databases** – Seamlessly integrates Open Food Facts, USDA FoodData Central,
-  and Swiss Food Composition Database
-- 🧪 **Full Nutrition Tracking** – Set and track personalized nutrition targets, monitoring not only
-  calories and macros but also vitamins, minerals, and other essential nutrients
-- 🍲 **Recipe Creation** – Create custom recipes by combining foods, with nutrition calculated
-  instantly
-- 🎨 **Material You Design** – Adaptive theming and modern UI
+Many nutrition apps are built around ads, subscriptions, engagement metrics, or opaque data
+collection. They keep adding features to capture more of your attention and turn a simple need into
+an increasingly bloated product.
 
-## 🤝 Contributing
+Food You takes the opposite approach. It is a privacy-focused **food diary app** whose primary
+purpose is simply to help you keep track of what you eat.
 
-Want to help make Food You even better? Here are some great ways to contribute:
+Its core values are:
 
-- 🌍 **Translate the App** – Help improve international accessibility
-  via [Crowdin](https://crowdin.com/project/food-you). Let me know if you'd like to credited
-- 💡 **Request a Feature** – Got an idea? Open
-  a [GitHub issue](https://github.com/maksimowiczm/FoodYou/issues) to suggest a new feature or
-  improvement
-- 🐞 **Report Bugs** – Found a bug? Submit it
-  via [GitHub issue](https://github.com/maksimowiczm/FoodYou/issues) so it can be fixed
-- ⭐ **Star the Repository** – If you like the project, give it a star
+- **Privacy** — keep personal data local by default and avoid mandatory accounts
+- **Modern experience** — fast, clean, and built with Material Design principles
+- **Simplicity** — prioritize clarity over feature bloat
 
-**Important Note:** I am currently not accepting any code contributions due to licensing and the
-fact that this app generates some income.
+Food You is not opposed to new features. However, every addition should have a clear purpose and fit
+naturally within the app. Features that add complexity and distract from the core food diary
+experience should be carefully evaluated.
 
-## ❤️ Sponsor
+## Contributing
 
-This app is free, open-source, and ad-free. You directly support full-time development of the
-project.
+- **Star the project** — the easiest way to support the app if you find it useful
+- **Translate the app** — help improve accessibility
+  via [Crowdin](https://crowdin.com/project/food-you)
+- **Report bugs or suggest features** — open an issue
+  on [GitHub](https://github.com/maksimowiczm/FoodYou/issues)
+
+Not every feature request will be implemented. As with all contributions, suggestions are evaluated
+based on their usefulness, simplicity, and fit with the project's goals.
+
+## Sponsor
+
+If you find app useful, you can support its development. Sponsorship is entirely optional and helps
+make continued development possible, but sponsorship does not buy influence over the project or
+guarantee that a requested feature will be added.
 
 - [Support on Ko-fi](https://ko-fi.com/maksimowiczm)
-- **BTC**: `bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2`
-- **ETH**: `0x7C794aF78235504014cC5c987161b80a803ee514`
-- **Monero**:
+- **BTC** `bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2`
+- **Monero**
   `41eXqs6zg8PFQ8Fec3iyYcVA3rFHc7wgj9hLRuiVh2FtbE2q2TGoCbhSmVX5R76SmYPpSM2VR7qmD4SQ4YMZCEFK6DGGWfB`
 
-## ✉️ Contact
+## Contact
 
-Have questions, feedback, or want to collaborate? Reach out!
+- [maksimowicz.dev@gmail.com](mailto:maksimowicz.dev@gmail.com?subject=Food%20You)
+- https://discord.gg/MuF6VZjufn
 
-- **Email**: [maksimowicz.dev@gmail.com](mailto:maksimowicz.dev@gmail.com?subject=Food%20You)
-- **Discord**: https://discord.gg/MuF6VZjufn
+## Similar open-source apps
 
-## 🔄 Similar Open-Source Apps
-
-Looking for alternatives or similar tools?
+If you are exploring alternatives, these are worth checking out:
 
 - [OpenNutriTracker](https://github.com/simonoppowa/OpenNutriTracker)
 - [Energize](https://codeberg.org/epinez/Energize)
 - [FitBook](https://github.com/brandonp2412/FitBook)
 - [Waistline](https://github.com/davidhealey/waistline)
 
-## 💡 Credits
-
-- [ReadYou](https://github.com/Ashinch/ReadYou) — I shamelessly borrowed inspiration from this
-  project 🙃
-
-## 📜 License
+## License
 
 ```
 Copyright (C) 2024-2026 Mateusz Maksimowicz
