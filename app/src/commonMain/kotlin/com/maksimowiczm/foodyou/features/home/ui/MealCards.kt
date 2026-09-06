@@ -76,7 +76,6 @@ import com.maksimowiczm.foodyou.shared.ui.component.Image
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
 import com.maksimowiczm.foodyou.shared.ui.saveable.jsonSaver
 import com.maksimowiczm.foodyou.shared.ui.utility.EnergyFormatter.stringResource
-import com.maksimowiczm.foodyou.shared.ui.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalNutrientsOrder
@@ -274,7 +273,6 @@ private fun MealCard(
     val foods =
         @Composable {
             val nameSelector = LocalFoodNameSelector.current
-            val dateFormatter = LocalDateFormatter.current
             val motionScheme = MaterialTheme.motionScheme
             val transition = updateTransition(state.foods)
 
@@ -385,9 +383,6 @@ private fun MealCard(
                                             onClick = { onEntry(food.id) },
                                             onLongClick = { selectedEntryId = food.id },
                                         ),
-                                overline = {
-                                    Text(dateFormatter.formatTime(food.time))
-                                },
                             )
                         }
                     }
