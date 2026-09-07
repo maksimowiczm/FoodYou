@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
@@ -57,22 +58,28 @@ class UpdateFoodDiaryEntryViewModel(
         quantity: Quantity,
         profiles: List<ProfileId>,
         timestamp: Instant,
+        isTracked: Boolean,
     ) {
         viewModelScope.launch {
             foodDiaryService.handle(
                 id = entryId,
                 command =
                     FoodDiaryCommand.Update(timestamp = Clock.System.now()) { current ->
+                        val snapshot =
+                            current.snapshot.withNewQuantity(
+                                FoodSnapshotQuantityUpdateService.map(
+                                    quantity = quantity,
+                                    servingWeight = current.snapshot.quantity.servingWeight,
+                                    packageWeight = current.snapshot.quantity.packageWeight,
+                                )
+                            )
+
                         current.copy(
                             profileIds = profiles.toSet(),
                             snapshot =
-                                current.snapshot.withNewQuantity(
-                                    FoodSnapshotQuantityUpdateService.map(
-                                        quantity = quantity,
-                                        servingWeight = current.snapshot.quantity.servingWeight,
-                                        packageWeight = current.snapshot.quantity.packageWeight,
-                                    )
-                                ),
+                                if (!isTracked && snapshot.id !is FoodSnapshotId.Anonymous)
+                                    snapshot.anonymize()
+                                else snapshot,
                             timestamp = timestamp,
                         )
                     },

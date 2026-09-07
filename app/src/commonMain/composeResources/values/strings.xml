@@ -341,4 +341,7 @@
     <string name="question_delete_diary_entry">Delete diary entry?</string>
     <string name="description_delete_diary_entry">Diary entry will be permanently deleted</string>
 
+    <string name="headline_diary_sync">Sync diary with food changes</string>
+    <string name="description_diary_sync">When enabled, updating a food item also updates its matching diary entries</string>
+
 </resources>

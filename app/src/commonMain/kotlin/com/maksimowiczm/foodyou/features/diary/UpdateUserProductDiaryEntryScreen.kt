@@ -4,22 +4,14 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
@@ -47,6 +39,7 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.userproduct.UserProduct
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
@@ -64,9 +57,7 @@ import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
-import foodyou.app.generated.resources.*
 import kotlin.time.Instant
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -74,7 +65,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun UpdateUserProductDiaryEntryScreen(
     onBack: () -> Unit,
-    onSave: (Quantity, List<ProfileId>, Instant) -> Unit,
+    onSave: (Quantity, List<ProfileId>, Instant, Boolean) -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     foodId: UserProductId,
@@ -104,6 +95,9 @@ fun UpdateUserProductDiaryEntryScreen(
         remember(profiles, selectedProfileIds) {
             profiles.filter { it.id in selectedProfileIds }
         }
+    var isTracked by rememberSaveable {
+        mutableStateOf(entry.snapshot.id !is FoodSnapshotId.Anonymous)
+    }
 
     val nameSelector = LocalFoodNameSelector.current
     val product = foodUiState.product
@@ -132,13 +126,17 @@ fun UpdateUserProductDiaryEntryScreen(
                 formField = formField,
                 profiles = profiles,
                 selectedProfiles = selectedProfiles,
+                isTracked = isTracked,
+                isTrackingEnabled = entry.snapshot.id !is FoodSnapshotId.Anonymous,
+                onIsTrackedChange = { isTracked = it },
                 onBack = onBack,
-                onSave = {
+                onSave = { trackFood ->
                     onSave(
                         foodUiState.selectedQuantity
                             ?: return@UpdateUserProductDiaryEntryScreenContent,
                         selectedProfileIds,
                         entry.timestamp,
+                        trackFood,
                     )
                 },
                 onEdit = onEdit,
@@ -170,8 +168,11 @@ private fun UpdateUserProductDiaryEntryScreenContent(
     formField: FormField,
     profiles: List<ProfileUiState>,
     selectedProfiles: List<ProfileUiState>,
+    isTracked: Boolean,
+    isTrackingEnabled: Boolean,
+    onIsTrackedChange: (Boolean) -> Unit,
     onBack: () -> Unit,
-    onSave: () -> Unit,
+    onSave: (trackFood: Boolean) -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
@@ -213,26 +214,22 @@ private fun UpdateUserProductDiaryEntryScreenContent(
             )
         },
         floatingActionButton = {
-            LargeExtendedFloatingActionButton(
-                onClick = onSave,
+            AddFoodDiaryEntryFab(
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
                             !LocalNavAnimatedContentScope.current.transition.isRunning &&
                                 formField.error == null &&
                                 selectedProfiles.isNotEmpty(),
-                        alignment = Alignment.BottomEnd,
+                        alignment = Alignment.BottomCenter,
                     ),
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = null,
-                    modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
-                )
-                Spacer(Modifier.width(16.dp))
-                Text(stringResource(Res.string.action_save))
-            }
+                isTracked = isTracked,
+                onIsTrackedChange = onIsTrackedChange,
+                onAdd = onSave,
+                isTrackingEnabled = isTrackingEnabled,
+            )
         },
+        floatingActionButtonPosition = FabPosition.Center,
     ) { contentPadding ->
         LazyColumn(
             modifier = Modifier.imePadding(),
@@ -274,7 +271,7 @@ private fun UpdateUserProductDiaryEntryScreenContent(
                     selectedProfiles = selectedProfiles,
                     onSelectType = onSelectQuantityType,
                     onSelectProfiles = onSelectProfiles,
-                    onKeyboardAction = onSave,
+                    onKeyboardAction = { onSave(isTracked) },
                     modifier =
                         Modifier.focusRequester(focusRequester)
                             .fillMaxWidth()

@@ -11,7 +11,7 @@ sealed interface FoodSnapshotId {
 
     @Serializable sealed interface Tracked : FoodSnapshotId
 
-    @Serializable data class Anonymous(val id: Uuid) : Leaf
+    @Serializable data class Anonymous(val id: Uuid = Uuid.random()) : Leaf
 
     @Serializable data class UserProduct(val id: Uuid) : Leaf, Tracked
 

@@ -5,23 +5,15 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
@@ -48,6 +40,7 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpande
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberQuantityFormField
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
@@ -73,7 +66,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun UpdateFoodDataCentralDiaryEntryScreen(
     onBack: () -> Unit,
-    onSave: (Quantity, List<ProfileId>, Instant) -> Unit,
+    onSave: (Quantity, List<ProfileId>, Instant, Boolean) -> Unit,
     foodId: FoodDataCentralProductId,
     entry: FoodDiaryEntry,
     profiles: List<ProfileUiState>,
@@ -95,6 +88,9 @@ fun UpdateFoodDataCentralDiaryEntryScreen(
         remember(profiles, selectedProfileIds) {
             profiles.filter { it.id in selectedProfileIds }
         }
+    var isTracked by rememberSaveable {
+        mutableStateOf(entry.snapshot.id !is FoodSnapshotId.Anonymous)
+    }
 
     val details = foodUiState as? FoodDataCentralDetailsUiState.Details
 
@@ -108,7 +104,7 @@ fun UpdateFoodDataCentralDiaryEntryScreen(
     updateTransition(details).Crossfade(contentKey = { it != null }) {
         if (it == null) LoadingScreen(onBack)
         else
-            UpdateFoodDataCentralDiaryEntryScreen(
+            UpdateFoodDataCentralDiaryEntryScreenContent(
                 headline = it.food.headline,
                 isFavorite = it.isFavorite,
                 isLoading = it.isLoading,
@@ -122,8 +118,18 @@ fun UpdateFoodDataCentralDiaryEntryScreen(
                 formField = formField,
                 profiles = profiles,
                 selectedProfiles = selectedProfiles,
+                isTracked = isTracked,
+                isTrackingEnabled = entry.snapshot.id !is FoodSnapshotId.Anonymous,
+                onIsTrackedChange = { isTracked = it },
                 onBack = onBack,
-                onSave = { onSave(it.selectedQuantity, selectedProfileIds, entry.timestamp) },
+                onSave = { trackFood ->
+                    onSave(
+                        it.selectedQuantity,
+                        selectedProfileIds,
+                        entry.timestamp,
+                        trackFood,
+                    )
+                },
                 onRefresh = foodViewModel::refresh,
                 onSetFavorite = foodViewModel::setFavorite,
                 onSelectQuantity = foodViewModel::selectQuantity,
@@ -137,7 +143,7 @@ fun UpdateFoodDataCentralDiaryEntryScreen(
 }
 
 @Composable
-private fun UpdateFoodDataCentralDiaryEntryScreen(
+private fun UpdateFoodDataCentralDiaryEntryScreenContent(
     headline: String?,
     isFavorite: Boolean,
     isLoading: Boolean,
@@ -151,9 +157,12 @@ private fun UpdateFoodDataCentralDiaryEntryScreen(
     formField: FormField,
     profiles: List<ProfileUiState>,
     selectedProfiles: List<ProfileUiState>,
+    isTracked: Boolean,
+    isTrackingEnabled: Boolean,
+    onIsTrackedChange: (Boolean) -> Unit,
     onBack: () -> Unit,
     onRefresh: () -> Unit,
-    onSave: () -> Unit,
+    onSave: (trackFood: Boolean) -> Unit,
     onSetFavorite: (Boolean) -> Unit,
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,
@@ -193,26 +202,23 @@ private fun UpdateFoodDataCentralDiaryEntryScreen(
             )
         },
         floatingActionButton = {
-            LargeExtendedFloatingActionButton(
-                onClick = onSave,
+            AddFoodDiaryEntryFab(
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
                             !isLoading &&
                                 !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                formField.error == null,
-                        alignment = Alignment.BottomEnd,
+                                formField.error == null &&
+                                selectedProfiles.isNotEmpty(),
+                        alignment = Alignment.BottomCenter,
                     ),
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = null,
-                    modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
-                )
-                Spacer(Modifier.width(16.dp))
-                Text(stringResource(Res.string.action_save))
-            }
+                isTracked = isTracked,
+                onIsTrackedChange = onIsTrackedChange,
+                onAdd = onSave,
+                isTrackingEnabled = isTrackingEnabled,
+            )
         },
+        floatingActionButtonPosition = FabPosition.Center,
     ) { contentPadding ->
         FetchProgressIndicator(
             isLoading = isLoading,
@@ -253,7 +259,7 @@ private fun UpdateFoodDataCentralDiaryEntryScreen(
                     selectedProfiles = selectedProfiles,
                     onSelectType = onSelectQuantityType,
                     onSelectProfiles = onSelectProfiles,
-                    onKeyboardAction = onSave,
+                    onKeyboardAction = { onSave(isTracked) },
                     modifier =
                         Modifier.focusRequester(focusRequester)
                             .fillMaxWidth()

@@ -4,22 +4,14 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
@@ -62,13 +54,11 @@ import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
-import foodyou.app.generated.resources.*
 import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -150,7 +140,7 @@ fun AddUserProductDiaryEntryScreen(
                 servingQuantity = product.servingQuantity,
                 note = product.note,
                 onBack = onBack,
-                onAdd = {
+                onAdd = { trackFood ->
                     val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                     val timestamp = LocalDateTime(date ?: now.date, now.time)
 
@@ -161,6 +151,7 @@ fun AddUserProductDiaryEntryScreen(
                                 ?: return@AddUserProductDiaryEntryScreenContent,
                         profiles = selectedProfiles.map { profile -> profile.id },
                         timestamp = timestamp,
+                        isTracked = trackFood,
                     )
                 },
                 onEdit = onEdit,
@@ -193,7 +184,7 @@ private fun AddUserProductDiaryEntryScreenContent(
     servingQuantity: AbsoluteQuantity?,
     note: String?,
     onBack: () -> Unit,
-    onAdd: () -> Unit,
+    onAdd: (trackFood: Boolean) -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     onSetFavorite: (Boolean) -> Unit,
@@ -218,6 +209,8 @@ private fun AddUserProductDiaryEntryScreenContent(
         }
     }
 
+    var isTracked by rememberSaveable { mutableStateOf(false) }
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -236,26 +229,21 @@ private fun AddUserProductDiaryEntryScreenContent(
             )
         },
         floatingActionButton = {
-            LargeExtendedFloatingActionButton(
-                onClick = onAdd,
+            AddFoodDiaryEntryFab(
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
                             !LocalNavAnimatedContentScope.current.transition.isRunning &&
                                 formField.error == null &&
                                 selectedProfiles.isNotEmpty(),
-                        alignment = Alignment.BottomEnd,
+                        alignment = Alignment.BottomCenter,
                     ),
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = null,
-                    modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
-                )
-                Spacer(Modifier.width(16.dp))
-                Text(stringResource(Res.string.action_add))
-            }
+                isTracked = isTracked,
+                onIsTrackedChange = { isTracked = it },
+                onAdd = onAdd,
+            )
         },
+        floatingActionButtonPosition = FabPosition.Center,
     ) { contentPadding ->
         LazyColumn(
             modifier = Modifier.imePadding(),
@@ -297,7 +285,7 @@ private fun AddUserProductDiaryEntryScreenContent(
                     selectedProfiles = selectedProfiles,
                     onSelectType = onSelectQuantityType,
                     onSelectProfiles = onSelectProfiles,
-                    onKeyboardAction = onAdd,
+                    onKeyboardAction = { onAdd(isTracked) },
                     modifier =
                         Modifier.focusRequester(focusRequester)
                             .fillMaxWidth()

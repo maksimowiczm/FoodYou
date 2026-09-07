@@ -5,23 +5,22 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
-import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
-import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
-import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
+import com.maksimowiczm.foodyou.fooddatacentral.domain.toSnapshot
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.openfoodfacts.domain.toSnapshot
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
+import com.maksimowiczm.foodyou.userproduct.domain.toSnapshot
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
+import com.maksimowiczm.foodyou.userrecipe.domain.toSnapshot
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel
@@ -100,25 +99,20 @@ class AddFoodDiaryEntryViewModel(
         quantity: Quantity,
         profiles: List<ProfileId>,
         timestamp: LocalDateTime,
+        isTracked: Boolean,
     ) {
+        val snapshot =
+            MeasuredFoodSnapshot(
+                snapshot = product.toSnapshot(),
+                quantity =
+                    FoodSnapshotQuantityUpdateService.map(
+                        quantity = quantity,
+                        servingWeight = product.servingQuantity?.forceWeight(),
+                        packageWeight = product.packageQuantity?.forceWeight(),
+                    ),
+            )
         create(
-            snapshot =
-                MeasuredFoodSnapshot(
-                    snapshot =
-                        LeafFoodSnapshot(
-                            id = FoodSnapshotId.FoodDataCentral(product.id.fdcId),
-                            name = FoodName(fallback = product.name),
-                            brand = null,
-                            image = null,
-                            nutritionFacts = product.nutritionFacts,
-                        ),
-                    quantity =
-                        FoodSnapshotQuantityUpdateService.map(
-                            quantity = quantity,
-                            servingWeight = product.servingQuantity?.forceWeight(),
-                            packageWeight = product.packageQuantity?.forceWeight(),
-                        ),
-                ),
+            snapshot = if (isTracked) snapshot else snapshot.anonymize(),
             profiles = profiles,
             timestamp = timestamp,
         )
@@ -129,25 +123,20 @@ class AddFoodDiaryEntryViewModel(
         quantity: Quantity,
         profiles: List<ProfileId>,
         timestamp: LocalDateTime,
+        isTracked: Boolean,
     ) {
+        val snapshot =
+            MeasuredFoodSnapshot(
+                snapshot = product.toSnapshot(),
+                quantity =
+                    FoodSnapshotQuantityUpdateService.map(
+                        quantity = quantity,
+                        servingWeight = product.servingQuantity?.forceWeight(),
+                        packageWeight = product.packageQuantity?.forceWeight(),
+                    ),
+            )
         create(
-            snapshot =
-                MeasuredFoodSnapshot(
-                    snapshot =
-                        LeafFoodSnapshot(
-                            id = FoodSnapshotId.OpenFoodFacts(product.id.barcode),
-                            name = product.name,
-                            brand = null,
-                            image = product.image?.let { FoodSnapshotImage.Uri(it) },
-                            nutritionFacts = product.nutritionFacts,
-                        ),
-                    quantity =
-                        FoodSnapshotQuantityUpdateService.map(
-                            quantity = quantity,
-                            servingWeight = product.servingQuantity?.forceWeight(),
-                            packageWeight = product.packageQuantity?.forceWeight(),
-                        ),
-                ),
+            snapshot = if (isTracked) snapshot else snapshot.anonymize(),
             profiles = profiles,
             timestamp = timestamp,
         )
@@ -158,25 +147,20 @@ class AddFoodDiaryEntryViewModel(
         quantity: Quantity,
         profiles: List<ProfileId>,
         timestamp: LocalDateTime,
+        isTracked: Boolean,
     ) {
+        val snapshot =
+            MeasuredFoodSnapshot(
+                snapshot = product.toSnapshot(),
+                quantity =
+                    FoodSnapshotQuantityUpdateService.map(
+                        quantity = quantity,
+                        servingWeight = product.servingQuantity?.forceWeight(),
+                        packageWeight = product.packageQuantity?.forceWeight(),
+                    ),
+            )
         create(
-            snapshot =
-                MeasuredFoodSnapshot(
-                    snapshot =
-                        LeafFoodSnapshot(
-                            id = FoodSnapshotId.UserProduct(product.id.value),
-                            name = product.name,
-                            brand = null,
-                            image = product.image?.let { FoodSnapshotImage.Blob(it) },
-                            nutritionFacts = product.nutritionFacts,
-                        ),
-                    quantity =
-                        FoodSnapshotQuantityUpdateService.map(
-                            quantity = quantity,
-                            servingWeight = product.servingQuantity?.forceWeight(),
-                            packageWeight = product.packageQuantity?.forceWeight(),
-                        ),
-                ),
+            snapshot = if (isTracked) snapshot else snapshot.anonymize(),
             profiles = profiles,
             timestamp = timestamp,
         )
@@ -187,25 +171,20 @@ class AddFoodDiaryEntryViewModel(
         quantity: Quantity,
         profiles: List<ProfileId>,
         timestamp: LocalDateTime,
+        isTracked: Boolean,
     ) {
+        val snapshot =
+            MeasuredFoodSnapshot(
+                snapshot = recipe.toSnapshot(),
+                quantity =
+                    FoodSnapshotQuantityUpdateService.map(
+                        quantity = quantity,
+                        servingWeight = recipe.servingWeight,
+                        packageWeight = recipe.totalWeight,
+                    ),
+            )
         create(
-            snapshot =
-                MeasuredFoodSnapshot(
-                    snapshot =
-                        CompositeFoodSnapshot(
-                            id = FoodSnapshotId.UserRecipe(recipe.id.value),
-                            name = recipe.name,
-                            brand = null,
-                            image = recipe.image?.let { FoodSnapshotImage.Blob(it) },
-                            components = recipe.components,
-                        ),
-                    quantity =
-                        FoodSnapshotQuantityUpdateService.map(
-                            quantity = quantity,
-                            servingWeight = recipe.servingWeight,
-                            packageWeight = recipe.totalWeight,
-                        ),
-                ),
+            snapshot = if (isTracked) snapshot else snapshot.anonymize(),
             profiles = profiles,
             timestamp = timestamp,
         )
