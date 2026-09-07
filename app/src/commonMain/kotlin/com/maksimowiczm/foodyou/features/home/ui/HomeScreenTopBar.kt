@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.features.home.ui
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -41,11 +40,16 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
@@ -55,10 +59,13 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -69,12 +76,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.navigation.Crossfade
@@ -83,9 +92,13 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.sum
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
+import com.maksimowiczm.foodyou.common.extension.observeDate
 import com.maksimowiczm.foodyou.shared.ui.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.shared.ui.brand
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
+import com.maksimowiczm.foodyou.shared.ui.extension.confirm
+import com.maksimowiczm.foodyou.shared.ui.extension.now
+import com.maksimowiczm.foodyou.shared.ui.extension.plus
 import com.maksimowiczm.foodyou.shared.ui.extension.toDp
 import com.maksimowiczm.foodyou.shared.ui.utility.EnergyFormatter.stringResource
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalDateFormatter
@@ -98,8 +111,15 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.abs
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HomeScreenTopBar(
@@ -119,9 +139,28 @@ fun HomeScreenTopBar(
     onBarcodeScanner: () -> Unit,
     onMenu: () -> Unit,
     onMeal: (HomeMealState.Linked) -> Unit,
+    onSelectDate: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val motionScheme = MaterialTheme.motionScheme
+    val hapticFeedback = LocalHapticFeedback.current
+    val dateFlow = remember { Clock.System.observeDate() }
+    val today by dateFlow.collectAsStateWithLifecycle(LocalDate.now())
+
+    val showDatePickerDialog = rememberSaveable { mutableStateOf(false) }
+
+    if (showDatePickerDialog.value) {
+        HomeScreenDatePickerDialog(
+            selectedDate = date,
+            today = today,
+            onDismissRequest = { showDatePickerDialog.value = false },
+            onSelectDate = {
+                onSelectDate(it)
+                hapticFeedback.confirm()
+                showDatePickerDialog.value = false
+            },
+        )
+    }
 
     TopBarLayout(
         modifier = modifier.windowInsetsPadding(TopAppBarDefaults.windowInsets),
@@ -264,7 +303,15 @@ fun HomeScreenTopBar(
                         )
                     Text(
                         text = LocalDateFormatter.current.formatDateShort(date),
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier =
+                            Modifier.fillMaxWidth()
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = { showDatePickerDialog.value = true },
+                                    onClickLabel =
+                                        stringResource(Res.string.action_choose_other_date),
+                                ),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         autoSize =
                             TextAutoSize.StepBased(
@@ -652,6 +699,87 @@ fun SearchInputField(
     )
 }
 
+@Composable
+private fun HomeScreenDatePickerDialog(
+    selectedDate: LocalDate,
+    today: LocalDate,
+    onDismissRequest: () -> Unit,
+    onSelectDate: (LocalDate) -> Unit,
+) {
+    val zero = remember {
+        Instant.fromEpochMilliseconds(0).toLocalDateTime(TimeZone.UTC).date
+    }
+    val last = remember { zero + Int.MAX_VALUE.days }
+    val yearRange = remember { zero.year..last.year }
+
+    val initialSelectedDateMillis =
+        selectedDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds().takeIf { it >= 0 } ?: 0
+
+    val pickerState =
+        rememberDatePickerState(
+            initialSelectedDateMillis = initialSelectedDateMillis,
+            initialDisplayedMonthMillis = initialSelectedDateMillis,
+            yearRange = yearRange,
+            selectableDates =
+                object : SelectableDates {
+                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                        val date =
+                            Instant.fromEpochMilliseconds(utcTimeMillis)
+                                .toLocalDateTime(TimeZone.UTC)
+                                .date
+                        return date in zero..last
+                    }
+
+                    override fun isSelectableYear(year: Int) = year in yearRange
+                },
+        )
+
+    DatePickerDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    pickerState.selectedDateMillis?.let {
+                        val date =
+                            Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date
+                        onSelectDate(date)
+                    }
+                },
+                shapes = ButtonDefaults.shapes(),
+            ) {
+                Text(stringResource(Res.string.positive_ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest, shapes = ButtonDefaults.shapes()) {
+                Text(stringResource(Res.string.action_cancel))
+            }
+        },
+    ) {
+        DatePicker(
+            state = pickerState,
+            title = {
+                Row(
+                    modifier =
+                        Modifier.fillMaxWidth().padding(start = 24.dp, end = 12.dp, top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    DatePickerDefaults.DatePickerTitle(pickerState.displayMode)
+
+                    TextButton(
+                        onClick = { onSelectDate(today) },
+                        shapes = ButtonDefaults.shapes(),
+                    ) {
+                        Text(stringResource(Res.string.action_go_to_today))
+                    }
+                }
+            },
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+        )
+    }
+}
+
 /**
  * Detects a vertical swipe and switches to the previous or next item in [items] once the
  * accumulated drag reaches [swipeThresholdPx].
@@ -659,7 +787,7 @@ fun SearchInputField(
  * Positive drag selects the previous item, negative drag selects the next item. The list is treated
  * as closed loop, so swiping past either end wraps around.
  */
-fun <T> Modifier.swipeThroughList(
+private fun <T> Modifier.swipeThroughList(
     items: List<T>,
     currentItem: T?,
     swipeThresholdPx: Float,
@@ -738,6 +866,7 @@ private fun HomeScreenTopBar_Home_Preview() {
                 onBarcodeScanner = {},
                 onMenu = {},
                 onMeal = {},
+                onSelectDate = {},
             )
         }
     }
@@ -769,6 +898,7 @@ private fun HomeScreenTopBar_SearchWithMeal_Preview() {
                 onBarcodeScanner = {},
                 onMenu = {},
                 onMeal = {},
+                onSelectDate = {},
             )
         }
     }
@@ -800,6 +930,7 @@ private fun HomeScreenTopBar_SearchNoMeal_Preview() {
                 onBarcodeScanner = {},
                 onMenu = {},
                 onMeal = {},
+                onSelectDate = {},
             )
         }
     }

@@ -364,6 +364,7 @@ fun HomeScreenContent(
                         onBarcodeScanner = { showBarcodeScanner.value = true },
                         onMenu = { scope.launch { railState.expand() } },
                         onMeal = { onSelectMeal(it.id) },
+                        onSelectDate = onSelectDate,
                         modifier =
                             Modifier.focusRequester(focusRequester).onGloballyPositioned {
                                 topBarHeight.value = it.size.height
