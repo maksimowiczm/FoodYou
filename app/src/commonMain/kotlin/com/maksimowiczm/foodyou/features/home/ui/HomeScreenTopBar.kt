@@ -11,6 +11,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -45,16 +46,21 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.DropdownMenuGroup
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -95,12 +101,12 @@ import kotlin.math.abs
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreenTopBar(
     profile: Profile?,
     profiles: List<Profile>,
-    meal: HomeMealState.Linked?,
+    meals: List<HomeMealState.Linked>,
+    activeMeal: HomeMealState.Linked?,
     date: LocalDate,
     textFieldState: TextFieldState,
     shimmer: Shimmer,
@@ -112,6 +118,7 @@ fun HomeScreenTopBar(
     onSelectProfile: (ProfileId) -> Unit,
     onBarcodeScanner: () -> Unit,
     onMenu: () -> Unit,
+    onMeal: (HomeMealState.Linked) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val motionScheme = MaterialTheme.motionScheme
@@ -191,31 +198,62 @@ fun HomeScreenTopBar(
             }
         },
         mealInfoSlot = {
+            var expanded by rememberSaveable { mutableStateOf(false) }
             Box(
-                Modifier.padding(top = 8.dp, bottom = if (meal == null) 8.dp else 0.dp)
+                Modifier.padding(top = 8.dp, bottom = if (activeMeal == null) 8.dp else 0.dp)
                     .graphicsLayer { alpha = 1 - homeProgress() }
             ) {
-                Column(Modifier.wrapContentHeight(unbounded = true)) {
-                    if (meal != null)
-                        Text(
-                            text = meal.name,
-                            modifier =
-                                Modifier.fillMaxWidth()
-                                    .heightIn(
-                                        max =
-                                            MaterialTheme.typography.brand.displayMedium.toDp() *
-                                                1.5f
+                Column(
+                    modifier = Modifier.wrapContentHeight(unbounded = true),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    if (activeMeal != null) {
+                        Box {
+                            DropdownMenuPopup(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                            ) {
+                                DropdownMenuGroup(shapes = MenuDefaults.groupShape(0, meals.size)) {
+                                    meals.forEachIndexed { i, meal ->
+                                        DropdownMenuItem(
+                                            selected = meal == activeMeal,
+                                            onClick = {
+                                                expanded = false
+                                                onMeal(meal)
+                                            },
+                                            text = { Text(meal.name) },
+                                            shapes = MenuDefaults.itemShape(i, meals.size),
+                                            horizontalArrangement = Arrangement.Center,
+                                        )
+                                    }
+                                }
+                            }
+                            Text(
+                                text = activeMeal.name,
+                                modifier =
+                                    Modifier.clickable(
+                                            interactionSource =
+                                                remember { MutableInteractionSource() },
+                                            indication = null,
+                                            onClick = { expanded = !expanded },
+                                        )
+                                        .heightIn(
+                                            max =
+                                                MaterialTheme.typography.brand.displayMedium
+                                                    .toDp() * 1.5f
+                                        ),
+                                autoSize =
+                                    TextAutoSize.StepBased(
+                                        minFontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                        maxFontSize =
+                                            MaterialTheme.typography.displayMedium.fontSize,
                                     ),
-                            autoSize =
-                                TextAutoSize.StepBased(
-                                    minFontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                                    maxFontSize = MaterialTheme.typography.displayMedium.fontSize,
-                                ),
-                            textAlign = TextAlign.Center,
-                            maxLines = 2,
-                            style = MaterialTheme.typography.brand.displayMedium,
-                        )
-                    else
+                                textAlign = TextAlign.Center,
+                                maxLines = 2,
+                                style = MaterialTheme.typography.brand.displayMedium,
+                            )
+                        }
+                    } else
                         Spacer(
                             Modifier.shimmer(shimmer)
                                 .height(MaterialTheme.typography.brand.displayMedium.toDp() - 8.dp)
@@ -241,7 +279,7 @@ fun HomeScreenTopBar(
             }
         },
         nutrientsSlot = {
-            if (meal != null) {
+            if (activeMeal != null) {
                 Box(
                     Modifier.fillMaxWidth().padding(vertical = 8.dp).graphicsLayer {
                         alpha = 1 - homeProgress()
@@ -250,8 +288,8 @@ fun HomeScreenTopBar(
                     val nutrientsOrder = LocalNutrientsOrder.current
                     val nutrientsPalette = LocalNutrientsPalette.current
                     val nutrition =
-                        remember(meal.foods) {
-                            meal.foods.map { it.snapshot.measuredNutritionFacts }.sum()
+                        remember(activeMeal.foods) {
+                            activeMeal.foods.map { it.snapshot.measuredNutritionFacts }.sum()
                         }
                     Row(
                         modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
@@ -686,7 +724,8 @@ private fun HomeScreenTopBar_Home_Preview() {
             HomeScreenTopBar(
                 profile = uiState.selectedProfile,
                 profiles = uiState.profiles,
-                meal = uiState.activeMeal,
+                activeMeal = uiState.activeMeal,
+                meals = uiState.meals.filterIsInstance<HomeMealState.Linked>(),
                 date = uiState.date,
                 textFieldState = textFieldState,
                 shimmer = shimmer,
@@ -698,6 +737,7 @@ private fun HomeScreenTopBar_Home_Preview() {
                 onSelectProfile = {},
                 onBarcodeScanner = {},
                 onMenu = {},
+                onMeal = {},
             )
         }
     }
@@ -715,7 +755,8 @@ private fun HomeScreenTopBar_SearchWithMeal_Preview() {
             HomeScreenTopBar(
                 profile = uiState.selectedProfile,
                 profiles = uiState.profiles,
-                meal = uiState.activeMeal,
+                activeMeal = uiState.activeMeal,
+                meals = uiState.meals.filterIsInstance<HomeMealState.Linked>(),
                 date = uiState.date,
                 textFieldState = textFieldState,
                 shimmer = shimmer,
@@ -727,6 +768,7 @@ private fun HomeScreenTopBar_SearchWithMeal_Preview() {
                 onSelectProfile = {},
                 onBarcodeScanner = {},
                 onMenu = {},
+                onMeal = {},
             )
         }
     }
@@ -744,7 +786,8 @@ private fun HomeScreenTopBar_SearchNoMeal_Preview() {
             HomeScreenTopBar(
                 profile = null,
                 profiles = emptyList(),
-                meal = null,
+                meals = emptyList(),
+                activeMeal = null,
                 date = uiState.date,
                 textFieldState = textFieldState,
                 shimmer = shimmer,
@@ -756,6 +799,7 @@ private fun HomeScreenTopBar_SearchNoMeal_Preview() {
                 onSelectProfile = {},
                 onBarcodeScanner = {},
                 onMenu = {},
+                onMeal = {},
             )
         }
     }

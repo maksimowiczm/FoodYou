@@ -344,7 +344,8 @@ fun HomeScreenContent(
                     HomeScreenTopBar(
                         profile = uiState.selectedProfile,
                         profiles = uiState.profiles,
-                        meal = uiState.activeMeal,
+                        meals = uiState.meals.filterIsInstance<HomeMealState.Linked>(),
+                        activeMeal = uiState.activeMeal,
                         date = uiState.date,
                         textFieldState = textFieldState,
                         shimmer = shimmer,
@@ -362,6 +363,7 @@ fun HomeScreenContent(
                         onSelectProfile = onSelectProfile,
                         onBarcodeScanner = { showBarcodeScanner.value = true },
                         onMenu = { scope.launch { railState.expand() } },
+                        onMeal = { onSelectMeal(it.id) },
                         modifier =
                             Modifier.focusRequester(focusRequester).onGloballyPositioned {
                                 topBarHeight.value = it.size.height
