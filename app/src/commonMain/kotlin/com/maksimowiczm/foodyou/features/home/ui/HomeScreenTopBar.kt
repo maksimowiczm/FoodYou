@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.features.home.ui
 
+import androidx.collection.mutableIntListOf
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -57,6 +58,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SelectableDates
@@ -251,6 +253,23 @@ fun HomeScreenTopBar(
                             DropdownMenuPopup(
                                 expanded = expanded,
                                 onDismissRequest = { expanded = false },
+                                popupPositionProvider =
+                                    MenuDefaults.rememberDropdownMenuPopupPositionProvider(
+                                        remember {
+                                            MenuAnchorPosition.Custom(
+                                                xCandidates = {
+                                                    val centeredX =
+                                                        anchorBounds.left +
+                                                            (anchorBounds.width - menuSize.width) /
+                                                                2
+                                                    mutableIntListOf(centeredX)
+                                                },
+                                                yCandidates = {
+                                                    mutableIntListOf(anchorBounds.bottom)
+                                                },
+                                            )
+                                        }
+                                    ),
                             ) {
                                 DropdownMenuGroup(shapes = MenuDefaults.groupShape(0, meals.size)) {
                                     meals.forEachIndexed { i, meal ->
