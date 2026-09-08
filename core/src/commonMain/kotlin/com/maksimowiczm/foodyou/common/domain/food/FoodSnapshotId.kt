@@ -11,7 +11,18 @@ sealed interface FoodSnapshotId {
 
     @Serializable sealed interface Tracked : FoodSnapshotId
 
-    @Serializable data class Anonymous(val id: Uuid = Uuid.random()) : Leaf
+    /**
+     * An identity for food snapshots that are not tracked.
+     *
+     * @property id Unique identifier for this anonymous snapshot.
+     * @property trackedId The original tracked identity this snapshot was created from, if any.
+     *   This allows for potential re-tracking in the future.
+     */
+    @Serializable
+    data class Anonymous(
+        val id: Uuid = Uuid.random(),
+        val trackedId: Tracked? = null,
+    ) : Leaf
 
     @Serializable data class UserProduct(val id: Uuid) : Leaf, Tracked
 

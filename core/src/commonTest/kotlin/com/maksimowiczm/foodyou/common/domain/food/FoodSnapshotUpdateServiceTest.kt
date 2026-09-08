@@ -379,7 +379,8 @@ class FoodSnapshotUpdateServiceTest {
         val unchanged = updated[1]
 
         assertEquals("Unlinked", unlinked.name.fallback)
-        assertIs<FoodSnapshotId.Anonymous>(unlinked.id)
+        val anonymousId = assertIs<FoodSnapshotId.Anonymous>(unlinked.id)
+        assertEquals(targetId, anonymousId.trackedId)
         assertEquals(otherId, unchanged.id)
     }
 }

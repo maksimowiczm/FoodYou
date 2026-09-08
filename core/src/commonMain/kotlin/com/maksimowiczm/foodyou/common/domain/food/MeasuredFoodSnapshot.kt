@@ -29,18 +29,29 @@ data class MeasuredFoodSnapshot(
     val allIdentities: Set<FoodSnapshotId>
         get() = snapshot.allIdentities
 
-    /** Creates a copy of this snapshot with an anonymous id. */
+    /**
+     * Creates a copy of this snapshot with an anonymous id.
+     *
+     * If the current snapshot has a tracked identity, it is preserved in the new anonymous id to
+     * allow for potential re-tracking. If the snapshot is already anonymous, it is returned as is.
+     */
     fun anonymize(): MeasuredFoodSnapshot =
-        copy(
-            snapshot =
-                AnonymousFoodSnapshot(
-                    id = FoodSnapshotId.Anonymous(Uuid.random()),
-                    name = name,
-                    brand = snapshot.brand,
-                    image = image,
-                    nutritionFacts = nutritionFacts,
-                )
-        )
+        if (snapshot.id is FoodSnapshotId.Anonymous) this
+        else
+            copy(
+                snapshot =
+                    AnonymousFoodSnapshot(
+                        id =
+                            FoodSnapshotId.Anonymous(
+                                id = Uuid.random(),
+                                trackedId = snapshot.id as? FoodSnapshotId.Tracked,
+                            ),
+                        name = name,
+                        brand = snapshot.brand,
+                        image = image,
+                        nutritionFacts = nutritionFacts,
+                    )
+            )
 
     /** Creates a copy of this component with a new quantity. */
     fun withNewQuantity(quantity: FoodSnapshotQuantity): MeasuredFoodSnapshot =

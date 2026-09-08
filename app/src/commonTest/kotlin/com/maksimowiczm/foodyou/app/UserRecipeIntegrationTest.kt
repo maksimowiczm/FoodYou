@@ -33,6 +33,7 @@ import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCompositionRepositor
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -714,7 +715,8 @@ class UserRecipeIntegrationTest {
 
             assertEquals(1, updatedRecipe.components.size)
             val component = updatedRecipe.components.first()
-            assertEquals(true, component.id is FoodSnapshotId.Anonymous)
+            val anonymousId = assertIs<FoodSnapshotId.Anonymous>(component.id)
+            assertEquals(FoodSnapshotId.UserProduct(productId.value), anonymousId.trackedId)
             assertEquals(name, component.name)
             assertEquals(nutrition, component.nutritionFacts)
         }
@@ -851,10 +853,9 @@ class UserRecipeIntegrationTest {
                 }
 
             assertEquals(1, updatedParent.components.size)
-            assertEquals(
-                true,
-                updatedParent.components.first().id is FoodSnapshotId.Anonymous,
-            )
+            val anonymousId =
+                assertIs<FoodSnapshotId.Anonymous>(updatedParent.components.first().id)
+            assertEquals(FoodSnapshotId.UserRecipe(childId.value), anonymousId.trackedId)
         }
     }
 

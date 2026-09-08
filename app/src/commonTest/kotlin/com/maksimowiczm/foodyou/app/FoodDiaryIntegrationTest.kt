@@ -533,7 +533,8 @@ class FoodDiaryIntegrationTest {
                     it.snapshot.id is FoodSnapshotId.Anonymous
                 }
 
-            assertIs<FoodSnapshotId.Anonymous>(updatedEntry.snapshot.id)
+            val anonymousId = assertIs<FoodSnapshotId.Anonymous>(updatedEntry.snapshot.id)
+            assertEquals(FoodSnapshotId.UserProduct(productId.value), anonymousId.trackedId)
         }
     }
 
@@ -968,7 +969,8 @@ class FoodDiaryIntegrationTest {
                     it.snapshot.id is FoodSnapshotId.Anonymous
                 }
 
-            assertIs<FoodSnapshotId.Anonymous>(updatedEntry.snapshot.id)
+            val anonymousId = assertIs<FoodSnapshotId.Anonymous>(updatedEntry.snapshot.id)
+            assertEquals(FoodSnapshotId.UserRecipe(recipeId.value), anonymousId.trackedId)
             assertEquals(name, updatedEntry.snapshot.name)
         }
     }
