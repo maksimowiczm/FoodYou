@@ -81,7 +81,7 @@ internal class OnboardingViewModel(
                         }
                     }
 
-                val profile = Profile(name = name, avatar = profileAvatar)
+                val profile = Profile(name = name.trim(), avatar = profileAvatar)
 
                 awaitAll(
                     async {
