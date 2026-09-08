@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,12 +25,10 @@ import androidx.compose.ui.graphics.Shader
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.tooling.preview.Preview
+import com.maksimowiczm.foodyou.capabilities.brand.AppNameText
+import com.maksimowiczm.foodyou.capabilities.brand.InteractiveLogo
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
-import com.maksimowiczm.foodyou.shared.ui.brand
-import com.maksimowiczm.foodyou.shared.ui.component.InteractiveLogo
-import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.seconds
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier) {
@@ -72,10 +69,7 @@ fun SplashScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text(
-            text = stringResource(Res.string.app_name),
-            style = MaterialTheme.typography.brand.displayMedium.copy(brush = brush),
-        )
+        AppNameText(brush)
         InteractiveLogo(
             modifier = Modifier.safeContentPadding().fillMaxWidth().aspectRatio(1f),
             rotationAnimationSpec =

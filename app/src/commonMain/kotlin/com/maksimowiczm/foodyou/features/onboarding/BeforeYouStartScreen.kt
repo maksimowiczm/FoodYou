@@ -40,12 +40,11 @@ import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.capabilities.brand.AppNameText
+import com.maksimowiczm.foodyou.capabilities.brand.InteractiveLogo
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
-import com.maksimowiczm.foodyou.shared.ui.brand
-import com.maksimowiczm.foodyou.shared.ui.component.InteractiveLogo
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
@@ -141,11 +140,7 @@ private fun BeforeYouStartScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     InteractiveLogo(Modifier.widthIn(max = 400.dp).aspectRatio(1f).fillMaxSize())
-                    Text(
-                        text = stringResource(Res.string.app_name),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.brand.displayMedium.copy(brush = brush),
-                    )
+                    AppNameText(brush)
                 }
             }
             item {

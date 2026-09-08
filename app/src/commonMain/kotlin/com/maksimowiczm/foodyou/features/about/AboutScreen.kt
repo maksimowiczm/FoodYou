@@ -49,15 +49,14 @@ import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
+import com.maksimowiczm.foodyou.capabilities.brand.AppNameText
+import com.maksimowiczm.foodyou.capabilities.brand.InteractiveLogo
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
-import com.maksimowiczm.foodyou.shared.ui.brand
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.component.InteractiveLogo
 import com.maksimowiczm.foodyou.shared.ui.component.StatusBarProtection
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
@@ -128,12 +127,8 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             Spacer(Modifier.windowInsetsTopHeight(WindowInsets.systemBars))
             InteractiveLogo(Modifier.widthIn(max = 400.dp).aspectRatio(1f).fillMaxSize())
             Spacer(Modifier.height(16.dp))
-            Text(
-                text = stringResource(Res.string.app_name),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.brand.displayMedium.copy(brush = brush),
-            )
+            AppNameText(brush)
+            Spacer(Modifier.height(8.dp))
             Text(
                 text =
                     buildString {

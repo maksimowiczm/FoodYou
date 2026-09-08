@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.shared.ui.component
+package com.maksimowiczm.foodyou.capabilities.brand
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
