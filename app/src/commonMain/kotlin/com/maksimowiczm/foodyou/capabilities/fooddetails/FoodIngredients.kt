@@ -54,9 +54,7 @@ fun FoodIngredients(
     if (components.isEmpty()) return
 
     val hasNestedRecipe =
-        remember(components) {
-            components.any { it.id is FoodSnapshotId.Composite }
-        }
+        remember(components) { components.any { it.snapshot is CompositeFoodSnapshot } }
 
     Column(
         modifier = modifier.clip(MaterialTheme.shapes.large),

@@ -4,14 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.common.RemoteData
-import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
-import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.TrackedCompositeFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
@@ -139,7 +139,7 @@ class RecipeFormViewModel(
                             snapshot =
                                 MeasuredFoodSnapshot(
                                     snapshot =
-                                        CompositeFoodSnapshot(
+                                        TrackedCompositeFoodSnapshot(
                                             id = id,
                                             name = it.name,
                                             brand = null,
@@ -164,7 +164,7 @@ class RecipeFormViewModel(
                             snapshot =
                                 MeasuredFoodSnapshot(
                                     snapshot =
-                                        LeafFoodSnapshot(
+                                        TrackedLeafFoodSnapshot(
                                             id = id,
                                             name = FoodName(fallback = it.name),
                                             brand = null,
@@ -189,7 +189,7 @@ class RecipeFormViewModel(
                             snapshot =
                                 MeasuredFoodSnapshot(
                                     snapshot =
-                                        LeafFoodSnapshot(
+                                        TrackedLeafFoodSnapshot(
                                             id = id,
                                             name = it.name,
                                             brand = it.brand,
@@ -217,7 +217,7 @@ class RecipeFormViewModel(
                             snapshot =
                                 MeasuredFoodSnapshot(
                                     snapshot =
-                                        LeafFoodSnapshot(
+                                        TrackedLeafFoodSnapshot(
                                             id = id,
                                             name = it.name,
                                             brand = it.brand,

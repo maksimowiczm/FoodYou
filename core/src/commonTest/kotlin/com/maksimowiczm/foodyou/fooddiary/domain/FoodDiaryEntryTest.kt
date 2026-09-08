@@ -4,9 +4,9 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
-import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.test.Test
@@ -21,7 +21,7 @@ class FoodDiaryEntryTest {
     private val measuredSnapshot =
         MeasuredFoodSnapshot(
             snapshot =
-                LeafFoodSnapshot(
+                TrackedLeafFoodSnapshot(
                     id = FoodSnapshotId.OpenFoodFacts("123"),
                     name = FoodName(fallback = "Apple"),
                     brand = null,

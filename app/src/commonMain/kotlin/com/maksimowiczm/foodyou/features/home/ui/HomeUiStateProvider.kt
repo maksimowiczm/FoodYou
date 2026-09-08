@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.features.home.ui
 
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.AnonymousFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.AnonymousLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
@@ -48,7 +48,7 @@ internal class HomeUiStateProvider {
                                     snapshot =
                                         MeasuredFoodSnapshot(
                                             snapshot =
-                                                AnonymousFoodSnapshot(
+                                                AnonymousLeafFoodSnapshot(
                                                     id = FoodSnapshotId.Anonymous(Uuid.random()),
                                                     name =
                                                         FoodName(
@@ -87,7 +87,7 @@ internal class HomeUiStateProvider {
                                     snapshot =
                                         MeasuredFoodSnapshot(
                                             snapshot =
-                                                AnonymousFoodSnapshot(
+                                                AnonymousLeafFoodSnapshot(
                                                     id = FoodSnapshotId.Anonymous(Uuid.random()),
                                                     name =
                                                         FoodName(
@@ -123,7 +123,7 @@ internal class HomeUiStateProvider {
                                 snapshot =
                                     MeasuredFoodSnapshot(
                                         snapshot =
-                                            AnonymousFoodSnapshot(
+                                            AnonymousLeafFoodSnapshot(
                                                 id = FoodSnapshotId.Anonymous(Uuid.random()),
                                                 name =
                                                     FoodName(fallback = "Grilled Chicken Breast"),

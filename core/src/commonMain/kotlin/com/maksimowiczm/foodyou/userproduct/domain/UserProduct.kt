@@ -8,8 +8,8 @@ import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
-import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
@@ -104,7 +104,7 @@ fun Iterable<UserProductEvent>.toUserProduct(): UserProduct? =
     fold(null) { state, event -> state.apply(event) }
 
 fun UserProduct.toSnapshot() =
-    LeafFoodSnapshot(
+    TrackedLeafFoodSnapshot(
         id = FoodSnapshotId.UserProduct(id.value),
         name = name,
         brand = brand,

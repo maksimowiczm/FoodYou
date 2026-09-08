@@ -2,15 +2,16 @@ package com.maksimowiczm.foodyou.app
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity.Weight
-import com.maksimowiczm.foodyou.common.domain.food.AnonymousFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.AnonymousLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
-import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.TrackedCompositeFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.expect
 import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
@@ -84,7 +85,7 @@ class UserRecipeIntegrationTest {
                 listOf(
                     MeasuredFoodSnapshot(
                         snapshot =
-                            LeafFoodSnapshot(
+                            TrackedLeafFoodSnapshot(
                                 id = FoodSnapshotId.UserProduct(productId.value),
                                 name = initialProductName,
                                 brand = null,
@@ -141,7 +142,7 @@ class UserRecipeIntegrationTest {
                     it.components.first().name == updatedProductName
                 }
 
-            val component = updatedRecipe.components.first().snapshot as LeafFoodSnapshot
+            val component = updatedRecipe.components.first().snapshot as TrackedLeafFoodSnapshot
             assertEquals(updatedProductName, component.name)
             assertEquals(updatedNutrition, component.nutritionFacts)
         }
@@ -178,7 +179,7 @@ class UserRecipeIntegrationTest {
                 listOf(
                     MeasuredFoodSnapshot(
                         snapshot =
-                            LeafFoodSnapshot(
+                            TrackedLeafFoodSnapshot(
                                 id = FoodSnapshotId.UserProduct(productId.value),
                                 name = FoodName(english = "Product", fallback = "Product"),
                                 brand = null,
@@ -252,7 +253,7 @@ class UserRecipeIntegrationTest {
                     listOf(
                         MeasuredFoodSnapshot(
                             snapshot =
-                                LeafFoodSnapshot(
+                                TrackedLeafFoodSnapshot(
                                     id = FoodSnapshotId.OpenFoodFacts(barcode),
                                     name = initialProductName,
                                     brand = null,
@@ -301,7 +302,7 @@ class UserRecipeIntegrationTest {
                         it.components.first().name != initialProductName
                     }
 
-                val component = updatedRecipe.components.first().snapshot as LeafFoodSnapshot
+                val component = updatedRecipe.components.first().snapshot as TrackedLeafFoodSnapshot
                 // Verify that the name is no longer the fallback
                 assertEquals(false, component.name == initialProductName)
             }
@@ -321,7 +322,7 @@ class UserRecipeIntegrationTest {
                     listOf(
                         MeasuredFoodSnapshot(
                             snapshot =
-                                LeafFoodSnapshot(
+                                TrackedLeafFoodSnapshot(
                                     id = FoodSnapshotId.FoodDataCentral(fdcId),
                                     name = initialProductName,
                                     brand = null,
@@ -361,7 +362,7 @@ class UserRecipeIntegrationTest {
                         it.components.first().name != initialProductName
                     }
 
-                val component = updatedRecipe.components.first().snapshot as LeafFoodSnapshot
+                val component = updatedRecipe.components.first().snapshot as TrackedLeafFoodSnapshot
                 assertEquals(false, component.name == initialProductName)
             }
         }
@@ -386,7 +387,7 @@ class UserRecipeIntegrationTest {
                 listOf(
                     MeasuredFoodSnapshot(
                         snapshot =
-                            CompositeFoodSnapshot(
+                            TrackedCompositeFoodSnapshot(
                                 id = FoodSnapshotId.UserRecipe(childId.value),
                                 name = childInitialName,
                                 brand = null,
@@ -452,7 +453,7 @@ class UserRecipeIntegrationTest {
                         listOf(
                             MeasuredFoodSnapshot(
                                 snapshot =
-                                    AnonymousFoodSnapshot(
+                                    AnonymousLeafFoodSnapshot(
                                         id = FoodSnapshotId.Anonymous(Uuid.random()),
                                         name =
                                             FoodName(
@@ -484,7 +485,7 @@ class UserRecipeIntegrationTest {
                         listOf(
                             MeasuredFoodSnapshot(
                                 snapshot =
-                                    CompositeFoodSnapshot(
+                                    TrackedCompositeFoodSnapshot(
                                         id = FoodSnapshotId.UserRecipe(childId.value),
                                         name = FoodName(english = "Child", fallback = "Child"),
                                         brand = null,
@@ -518,7 +519,7 @@ class UserRecipeIntegrationTest {
                     listOf(
                         MeasuredFoodSnapshot(
                             snapshot =
-                                AnonymousFoodSnapshot(
+                                AnonymousLeafFoodSnapshot(
                                     id = FoodSnapshotId.Anonymous(Uuid.random()),
                                     name =
                                         FoodName(english = "Ingredient", fallback = "Ingredient"),
@@ -584,7 +585,7 @@ class UserRecipeIntegrationTest {
                         listOf(
                             MeasuredFoodSnapshot(
                                 snapshot =
-                                    LeafFoodSnapshot(
+                                    TrackedLeafFoodSnapshot(
                                         id = FoodSnapshotId.UserProduct(productId.value),
                                         name =
                                             FoodName(english = "To Delete", fallback = "To Delete"),
@@ -601,7 +602,7 @@ class UserRecipeIntegrationTest {
                             ),
                             MeasuredFoodSnapshot(
                                 snapshot =
-                                    LeafFoodSnapshot(
+                                    TrackedLeafFoodSnapshot(
                                         id = otherIngredientId,
                                         name = FoodName(english = "Keep Me", fallback = "Keep Me"),
                                         brand = null,
@@ -678,7 +679,7 @@ class UserRecipeIntegrationTest {
                         listOf(
                             MeasuredFoodSnapshot(
                                 snapshot =
-                                    LeafFoodSnapshot(
+                                    TrackedLeafFoodSnapshot(
                                         id = FoodSnapshotId.UserProduct(productId.value),
                                         name = name,
                                         brand = null,
@@ -747,7 +748,7 @@ class UserRecipeIntegrationTest {
                         listOf(
                             MeasuredFoodSnapshot(
                                 snapshot =
-                                    CompositeFoodSnapshot(
+                                    TrackedCompositeFoodSnapshot(
                                         id = FoodSnapshotId.UserRecipe(childId.value),
                                         name = FoodName(english = "Child", fallback = "Child"),
                                         brand = null,
@@ -763,7 +764,7 @@ class UserRecipeIntegrationTest {
                             ),
                             MeasuredFoodSnapshot(
                                 snapshot =
-                                    LeafFoodSnapshot(
+                                    TrackedLeafFoodSnapshot(
                                         id = otherIngredientId,
                                         name = FoodName(english = "Other", fallback = "Other"),
                                         brand = null,
@@ -822,7 +823,7 @@ class UserRecipeIntegrationTest {
                         listOf(
                             MeasuredFoodSnapshot(
                                 snapshot =
-                                    CompositeFoodSnapshot(
+                                    TrackedCompositeFoodSnapshot(
                                         id = FoodSnapshotId.UserRecipe(childId.value),
                                         name = FoodName(english = "Child", fallback = "Child"),
                                         brand = null,

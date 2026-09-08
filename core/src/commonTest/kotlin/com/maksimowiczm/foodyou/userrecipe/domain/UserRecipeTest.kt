@@ -1,13 +1,13 @@
 package com.maksimowiczm.foodyou.userrecipe.domain
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
-import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
-import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.TrackedCompositeFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.grams
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,7 +24,7 @@ class UserRecipeTest {
         listOf(
             MeasuredFoodSnapshot(
                 snapshot =
-                    LeafFoodSnapshot(
+                    TrackedLeafFoodSnapshot(
                         id = FoodSnapshotId.OpenFoodFacts("123"),
                         name = FoodName(fallback = "Apple"),
                         brand = null,
@@ -157,7 +157,7 @@ class UserRecipeTest {
             listOf(
                 MeasuredFoodSnapshot(
                     snapshot =
-                        CompositeFoodSnapshot(
+                        TrackedCompositeFoodSnapshot(
                             id = FoodSnapshotId.UserRecipe(recipeId),
                             name = FoodName(fallback = "Self"),
                             brand = null,

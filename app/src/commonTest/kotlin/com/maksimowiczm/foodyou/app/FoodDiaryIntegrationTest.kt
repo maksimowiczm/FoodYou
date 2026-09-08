@@ -3,15 +3,16 @@ package com.maksimowiczm.foodyou.app
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity.Weight
-import com.maksimowiczm.foodyou.common.domain.food.AnonymousFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.AnonymousLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
-import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.TrackedCompositeFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.expect
 import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
@@ -89,7 +90,7 @@ class FoodDiaryIntegrationTest {
             val snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
-                        LeafFoodSnapshot(
+                        TrackedLeafFoodSnapshot(
                             id = FoodSnapshotId.UserProduct(productId.value),
                             name = initialProductName,
                             brand = null,
@@ -151,7 +152,7 @@ class FoodDiaryIntegrationTest {
                     it.snapshot.name == updatedProductName
                 }
 
-            val updatedComponent = updatedEntry.snapshot.snapshot as LeafFoodSnapshot
+            val updatedComponent = updatedEntry.snapshot.snapshot as TrackedLeafFoodSnapshot
             assertEquals(updatedProductName, updatedComponent.name)
             assertEquals(updatedNutrition, updatedComponent.nutritionFacts)
         }
@@ -167,7 +168,7 @@ class FoodDiaryIntegrationTest {
                 listOf(
                     MeasuredFoodSnapshot(
                         snapshot =
-                            LeafFoodSnapshot(
+                            TrackedLeafFoodSnapshot(
                                 id = FoodSnapshotId.OpenFoodFacts("1"),
                                 name = FoodName(english = "Ingredient", fallback = "Ingredient"),
                                 brand = null,
@@ -195,7 +196,7 @@ class FoodDiaryIntegrationTest {
             val entrySnapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
-                        CompositeFoodSnapshot(
+                        TrackedCompositeFoodSnapshot(
                             id = FoodSnapshotId.UserRecipe(recipeId.value),
                             name = initialRecipeName,
                             brand = null,
@@ -283,7 +284,7 @@ class FoodDiaryIntegrationTest {
                 listOf(
                     MeasuredFoodSnapshot(
                         snapshot =
-                            LeafFoodSnapshot(
+                            TrackedLeafFoodSnapshot(
                                 id = FoodSnapshotId.UserProduct(productId.value),
                                 name = initialProductName,
                                 brand = null,
@@ -311,7 +312,7 @@ class FoodDiaryIntegrationTest {
             val entrySnapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
-                        CompositeFoodSnapshot(
+                        TrackedCompositeFoodSnapshot(
                             id = FoodSnapshotId.UserRecipe(recipeId.value),
                             name = FoodName(english = "Recipe", fallback = "Recipe"),
                             brand = null,
@@ -372,7 +373,7 @@ class FoodDiaryIntegrationTest {
                 }
 
             val composite = updatedEntry.snapshot.snapshot as CompositeFoodSnapshot
-            val simple = composite.components.first().snapshot as LeafFoodSnapshot
+            val simple = composite.components.first().snapshot as TrackedLeafFoodSnapshot
             assertEquals(updatedProductName, simple.name)
         }
     }
@@ -407,7 +408,7 @@ class FoodDiaryIntegrationTest {
             val snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
-                        LeafFoodSnapshot(
+                        TrackedLeafFoodSnapshot(
                             id = FoodSnapshotId.UserProduct(productId.value),
                             name = FoodName(english = "To Delete", fallback = "To Delete"),
                             brand = null,
@@ -485,7 +486,7 @@ class FoodDiaryIntegrationTest {
             val snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
-                        LeafFoodSnapshot(
+                        TrackedLeafFoodSnapshot(
                             id = FoodSnapshotId.UserProduct(productId.value),
                             name = FoodName(english = "To Unlink", fallback = "To Unlink"),
                             brand = null,
@@ -568,7 +569,7 @@ class FoodDiaryIntegrationTest {
             val snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
-                        LeafFoodSnapshot(
+                        TrackedLeafFoodSnapshot(
                             id = FoodSnapshotId.UserProduct(productId.value),
                             name = FoodName(english = "Product", fallback = "Product"),
                             brand = null,
@@ -642,7 +643,7 @@ class FoodDiaryIntegrationTest {
                 val snapshot =
                     MeasuredFoodSnapshot(
                         snapshot =
-                            LeafFoodSnapshot(
+                            TrackedLeafFoodSnapshot(
                                 id = FoodSnapshotId.OpenFoodFacts(barcode),
                                 name = initialProductName,
                                 brand = null,
@@ -699,7 +700,7 @@ class FoodDiaryIntegrationTest {
                 val snapshot =
                     MeasuredFoodSnapshot(
                         snapshot =
-                            LeafFoodSnapshot(
+                            TrackedLeafFoodSnapshot(
                                 id = FoodSnapshotId.FoodDataCentral(fdcId),
                                 name = initialProductName,
                                 brand = null,
@@ -758,7 +759,7 @@ class FoodDiaryIntegrationTest {
                         listOf(
                             MeasuredFoodSnapshot(
                                 snapshot =
-                                    AnonymousFoodSnapshot(
+                                    AnonymousLeafFoodSnapshot(
                                         id = FoodSnapshotId.Anonymous(Uuid.random()),
                                         name =
                                             FoodName(
@@ -783,7 +784,7 @@ class FoodDiaryIntegrationTest {
             val snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
-                        CompositeFoodSnapshot(
+                        TrackedCompositeFoodSnapshot(
                             id = FoodSnapshotId.UserRecipe(recipeId.value),
                             name = FoodName(english = "Recipe", fallback = "Recipe"),
                             brand = null,
@@ -828,7 +829,7 @@ class FoodDiaryIntegrationTest {
                     listOf(
                         MeasuredFoodSnapshot(
                             snapshot =
-                                AnonymousFoodSnapshot(
+                                AnonymousLeafFoodSnapshot(
                                     id = FoodSnapshotId.Anonymous(Uuid.random()),
                                     name =
                                         FoodName(english = "Ingredient", fallback = "Ingredient"),
@@ -873,7 +874,7 @@ class FoodDiaryIntegrationTest {
             val snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
-                        CompositeFoodSnapshot(
+                        TrackedCompositeFoodSnapshot(
                             id = FoodSnapshotId.UserRecipe(recipeId.value),
                             name = FoodName(english = "To Delete", fallback = "To Delete"),
                             brand = null,
@@ -929,7 +930,7 @@ class FoodDiaryIntegrationTest {
             val snapshot =
                 MeasuredFoodSnapshot(
                     snapshot =
-                        CompositeFoodSnapshot(
+                        TrackedCompositeFoodSnapshot(
                             id = FoodSnapshotId.UserRecipe(recipeId.value),
                             name = name,
                             brand = null,

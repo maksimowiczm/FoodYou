@@ -5,12 +5,12 @@ package com.maksimowiczm.foodyou.userrecipe.domain
 import com.maksimowiczm.foodyou.common.Decider
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.Weight
-import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.TrackedCompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.allComponentIdentities
 import com.maksimowiczm.foodyou.common.domain.food.nutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.totalWeight
@@ -89,7 +89,7 @@ fun Iterable<UserRecipeEvent>.toUserRecipe(): UserRecipe? =
     fold(null) { state, event -> state.apply(event) }
 
 fun UserRecipe.toSnapshot() =
-    CompositeFoodSnapshot(
+    TrackedCompositeFoodSnapshot(
         id = FoodSnapshotId.UserRecipe(id.value),
         name = name,
         brand = null,

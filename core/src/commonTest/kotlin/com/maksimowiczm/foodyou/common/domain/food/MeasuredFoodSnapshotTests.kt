@@ -15,7 +15,7 @@ class MeasuredFoodSnapshotTests {
         val component1 =
             MeasuredFoodSnapshot(
                 snapshot =
-                    LeafFoodSnapshot(
+                    TrackedLeafFoodSnapshot(
                         id = dummyId,
                         name = dummyName,
                         brand = null,
@@ -32,7 +32,7 @@ class MeasuredFoodSnapshotTests {
         val component2 =
             MeasuredFoodSnapshot(
                 snapshot =
-                    LeafFoodSnapshot(
+                    TrackedLeafFoodSnapshot(
                         id = dummyId,
                         name = dummyName,
                         brand = null,
@@ -58,7 +58,7 @@ class MeasuredFoodSnapshotTests {
         val componentA =
             MeasuredFoodSnapshot(
                 snapshot =
-                    LeafFoodSnapshot(
+                    TrackedLeafFoodSnapshot(
                         id = dummyId,
                         name = FoodName(fallback = "A"),
                         brand = null,
@@ -77,7 +77,7 @@ class MeasuredFoodSnapshotTests {
         val componentB =
             MeasuredFoodSnapshot(
                 snapshot =
-                    LeafFoodSnapshot(
+                    TrackedLeafFoodSnapshot(
                         id = dummyId,
                         name = FoodName(fallback = "B"),
                         brand = null,
@@ -108,7 +108,7 @@ class MeasuredFoodSnapshotTests {
         val subComponent =
             MeasuredFoodSnapshot(
                 snapshot =
-                    LeafFoodSnapshot(
+                    TrackedLeafFoodSnapshot(
                         id = dummyId,
                         name = FoodName(fallback = "Sub"),
                         brand = null,
@@ -129,7 +129,7 @@ class MeasuredFoodSnapshotTests {
         val compositeComponent =
             MeasuredFoodSnapshot(
                 snapshot =
-                    CompositeFoodSnapshot(
+                    TrackedCompositeFoodSnapshot(
                         id = FoodSnapshotId.UserRecipe(Uuid.random()),
                         name = FoodName(fallback = "Composite"),
                         brand = null,
@@ -146,7 +146,7 @@ class MeasuredFoodSnapshotTests {
         val otherComponent =
             MeasuredFoodSnapshot(
                 snapshot =
-                    LeafFoodSnapshot(
+                    TrackedLeafFoodSnapshot(
                         id = dummyId,
                         name = FoodName(fallback = "Other"),
                         brand = null,
@@ -185,7 +185,7 @@ class MeasuredFoodSnapshotTests {
             listOf(
                 MeasuredFoodSnapshot(
                     snapshot =
-                        LeafFoodSnapshot(
+                        TrackedLeafFoodSnapshot(
                             id = id1,
                             name = dummyName,
                             brand = null,
@@ -204,7 +204,7 @@ class MeasuredFoodSnapshotTests {
         val composite =
             MeasuredFoodSnapshot(
                 snapshot =
-                    CompositeFoodSnapshot(
+                    TrackedCompositeFoodSnapshot(
                         id = id3,
                         name = dummyName,
                         brand = null,
@@ -222,7 +222,7 @@ class MeasuredFoodSnapshotTests {
         val simple2 =
             MeasuredFoodSnapshot(
                 snapshot =
-                    LeafFoodSnapshot(
+                    TrackedLeafFoodSnapshot(
                         id = id2,
                         name = dummyName,
                         brand = null,
@@ -240,7 +240,7 @@ class MeasuredFoodSnapshotTests {
         val simple4 =
             MeasuredFoodSnapshot(
                 snapshot =
-                    LeafFoodSnapshot(
+                    TrackedLeafFoodSnapshot(
                         id = id4,
                         name = dummyName,
                         brand = null,

@@ -66,12 +66,13 @@ class UpdateFoodDiaryEntryViewModel(
                 command =
                     FoodDiaryCommand.Update(timestamp = Clock.System.now()) { current ->
                         val snapshot =
-                            current.snapshot.withNewQuantity(
-                                FoodSnapshotQuantityUpdateService.map(
-                                    quantity = quantity,
-                                    servingWeight = current.snapshot.quantity.servingWeight,
-                                    packageWeight = current.snapshot.quantity.packageWeight,
-                                )
+                            current.snapshot.copy(
+                                quantity =
+                                    FoodSnapshotQuantityUpdateService.map(
+                                        quantity = quantity,
+                                        servingWeight = current.snapshot.quantity.servingWeight,
+                                        packageWeight = current.snapshot.quantity.packageWeight,
+                                    )
                             )
 
                         current.copy(

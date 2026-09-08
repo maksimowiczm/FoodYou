@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.common.domain.food
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.sum
-import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -35,27 +34,7 @@ data class MeasuredFoodSnapshot(
      * If the current snapshot has a tracked identity, it is preserved in the new anonymous id to
      * allow for potential re-tracking. If the snapshot is already anonymous, it is returned as is.
      */
-    fun anonymize(): MeasuredFoodSnapshot =
-        if (snapshot.id is FoodSnapshotId.Anonymous) this
-        else
-            copy(
-                snapshot =
-                    AnonymousFoodSnapshot(
-                        id =
-                            FoodSnapshotId.Anonymous(
-                                id = Uuid.random(),
-                                trackedId = snapshot.id as? FoodSnapshotId.Tracked,
-                            ),
-                        name = name,
-                        brand = snapshot.brand,
-                        image = image,
-                        nutritionFacts = nutritionFacts,
-                    )
-            )
-
-    /** Creates a copy of this component with a new quantity. */
-    fun withNewQuantity(quantity: FoodSnapshotQuantity): MeasuredFoodSnapshot =
-        copy(quantity = quantity)
+    fun anonymize() = copy(snapshot = snapshot.anonymize())
 }
 
 /** Sum of the absolute weights of all components. */

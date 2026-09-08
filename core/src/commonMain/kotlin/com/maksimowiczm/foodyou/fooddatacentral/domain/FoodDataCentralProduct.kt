@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.fooddatacentral.domain
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
-import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
@@ -35,7 +35,7 @@ data class FoodDataCentralProduct(
 }
 
 fun FoodDataCentralProduct.toSnapshot() =
-    LeafFoodSnapshot(
+    TrackedLeafFoodSnapshot(
         id = FoodSnapshotId.FoodDataCentral(id.fdcId),
         name = FoodName(fallback = name),
         brand = brand,

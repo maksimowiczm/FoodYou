@@ -10,6 +10,17 @@ sealed interface FoodSnapshot {
     val image: FoodSnapshotImage?
     val nutritionFacts: NutritionFacts
     val allIdentities: Set<FoodSnapshotId>
+
+    fun anonymize(): FoodSnapshot
+}
+
+@Serializable sealed interface LeafFoodSnapshot : FoodSnapshot
+
+@Serializable
+sealed interface CompositeFoodSnapshot : FoodSnapshot {
+    val components: List<MeasuredFoodSnapshot>
+
+    fun copy(components: List<MeasuredFoodSnapshot>): CompositeFoodSnapshot
 }
 
 @Serializable
@@ -18,35 +29,81 @@ sealed interface TrackedFoodSnapshot : FoodSnapshot {
 }
 
 @Serializable
-data class AnonymousFoodSnapshot(
+data class AnonymousLeafFoodSnapshot(
     override val id: FoodSnapshotId.Anonymous,
     override val name: FoodName,
     override val brand: String?,
     override val image: FoodSnapshotImage?,
     override val nutritionFacts: NutritionFacts,
-) : FoodSnapshot {
+) : LeafFoodSnapshot {
     override val allIdentities = emptySet<FoodSnapshotId>()
+
+    override fun anonymize() = this
 }
 
 @Serializable
-data class CompositeFoodSnapshot(
+data class AnonymousCompositeFoodSnapshot(
+    override val id: FoodSnapshotId.Anonymous,
+    override val name: FoodName,
+    override val brand: String?,
+    override val image: FoodSnapshotImage?,
+    override val components: List<MeasuredFoodSnapshot>,
+) : CompositeFoodSnapshot {
+    override val nutritionFacts = components.nutritionFacts
+    override val allIdentities = components.allComponentIdentities
+
+    override fun anonymize() = this
+
+    override fun copy(components: List<MeasuredFoodSnapshot>) =
+        copy(
+            name = name,
+            components = components,
+        )
+}
+
+@Serializable
+data class TrackedCompositeFoodSnapshot(
     override val id: FoodSnapshotId.Tracked,
     override val name: FoodName,
     override val brand: String?,
     override val image: FoodSnapshotImage?,
-    val components: List<MeasuredFoodSnapshot>,
-) : TrackedFoodSnapshot {
+    override val components: List<MeasuredFoodSnapshot>,
+) : CompositeFoodSnapshot, TrackedFoodSnapshot {
     override val nutritionFacts = components.nutritionFacts
     override val allIdentities = setOf(id) + components.allComponentIdentities
+
+    override fun anonymize() =
+        AnonymousCompositeFoodSnapshot(
+            id = FoodSnapshotId.Anonymous(trackedId = id),
+            name = name,
+            brand = brand,
+            image = image,
+            components = components.map { it.anonymize() },
+        )
+
+    override fun copy(components: List<MeasuredFoodSnapshot>) =
+        copy(
+            name = name,
+            components = components,
+        )
 }
 
 @Serializable
-data class LeafFoodSnapshot(
+data class TrackedLeafFoodSnapshot(
     override val id: FoodSnapshotId.Tracked,
     override val name: FoodName,
     override val brand: String?,
     override val image: FoodSnapshotImage?,
     override val nutritionFacts: NutritionFacts,
-) : TrackedFoodSnapshot {
+) : LeafFoodSnapshot, TrackedFoodSnapshot {
     override val allIdentities = setOf(id)
+
+    override fun anonymize() =
+        AnonymousLeafFoodSnapshot(
+            id = FoodSnapshotId.Anonymous(trackedId = id),
+            name = name,
+            brand = brand,
+            image = image,
+            nutritionFacts = nutritionFacts,
+        )
 }

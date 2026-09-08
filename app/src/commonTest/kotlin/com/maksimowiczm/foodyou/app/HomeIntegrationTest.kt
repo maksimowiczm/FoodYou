@@ -1,14 +1,13 @@
 package com.maksimowiczm.foodyou.app
 
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.AnonymousFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
-import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.features.home.integration.HomeDao
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
@@ -18,6 +17,7 @@ import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
@@ -102,7 +102,7 @@ class HomeIntegrationTest {
                         FoodDiaryCommand.Update(timestamp = Clock.System.now()) { current ->
                             current.copy(
                                 profileIds = setOf(profileId),
-                                snapshot = current.snapshot.withNewQuantity(updatedQuantity),
+                                snapshot = current.snapshot.copy(quantity = updatedQuantity),
                                 timestamp = timestamp,
                             )
                         },
@@ -186,11 +186,12 @@ class HomeIntegrationTest {
                 val entries =
                     homeDao.observeEntries(profileId.value, date).first {
                         it.any { e ->
-                            e.entryId == entryId.id && e.snapshot.snapshot is AnonymousFoodSnapshot
+                            e.entryId == entryId.id &&
+                                e.snapshot.snapshot.id is FoodSnapshotId.Anonymous
                         }
                     }
                 val entry = entries.first { it.entryId == entryId.id }
-                assertEquals(true, entry.snapshot.snapshot is AnonymousFoodSnapshot)
+                assertIs<FoodSnapshotId.Anonymous>(entry.snapshot.snapshot.id)
             }
         }
 
@@ -294,7 +295,7 @@ class HomeIntegrationTest {
                         FoodDiaryCommand.Update(timestamp = Clock.System.now()) { current ->
                             current.copy(
                                 profileIds = setOf(otherProfileId),
-                                snapshot = current.snapshot.withNewQuantity(composition.quantity),
+                                snapshot = current.snapshot.copy(quantity = composition.quantity),
                                 timestamp = timestamp,
                             )
                         },
@@ -315,7 +316,7 @@ class HomeIntegrationTest {
     private fun createComposition() =
         MeasuredFoodSnapshot(
             snapshot =
-                LeafFoodSnapshot(
+                TrackedLeafFoodSnapshot(
                     id = FoodSnapshotId.UserProduct(Uuid.random()),
                     name = FoodName(english = "Test Product", fallback = "Test Product"),
                     brand = null,
