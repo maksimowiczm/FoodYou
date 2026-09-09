@@ -119,7 +119,6 @@ fun UpdateFoodDataCentralDiaryEntryScreen(
                 profiles = profiles,
                 selectedProfiles = selectedProfiles,
                 isTracked = isTracked,
-                isTrackingEnabled = entry.snapshot.id !is FoodSnapshotId.Anonymous,
                 onIsTrackedChange = { isTracked = it },
                 onBack = onBack,
                 onSave = { trackFood ->
@@ -158,7 +157,6 @@ private fun UpdateFoodDataCentralDiaryEntryScreenContent(
     profiles: List<ProfileUiState>,
     selectedProfiles: List<ProfileUiState>,
     isTracked: Boolean,
-    isTrackingEnabled: Boolean,
     onIsTrackedChange: (Boolean) -> Unit,
     onBack: () -> Unit,
     onRefresh: () -> Unit,
@@ -215,7 +213,6 @@ private fun UpdateFoodDataCentralDiaryEntryScreenContent(
                 isTracked = isTracked,
                 onIsTrackedChange = onIsTrackedChange,
                 onAdd = onSave,
-                isTrackingEnabled = isTrackingEnabled,
             )
         },
         floatingActionButtonPosition = FabPosition.Center,

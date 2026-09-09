@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.common.domain.ProfileId
-import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
+import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
@@ -54,6 +54,27 @@ class UpdateFoodDiaryEntryViewModel(
     private val eventBus = Channel<FoodDiaryEntryUpdatedUiEvent>()
     val updatedEvent = eventBus.receiveAsFlow()
 
+    fun relink(
+        profiles: List<ProfileId>,
+        timestamp: Instant,
+        relinkedSnapshot: MeasuredFoodSnapshot,
+    ) {
+        viewModelScope.launch {
+            foodDiaryService.handle(
+                id = entryId,
+                command =
+                    FoodDiaryCommand.Update(timestamp = Clock.System.now()) { current ->
+                        current.copy(
+                            profileIds = profiles.toSet(),
+                            snapshot = relinkedSnapshot,
+                            timestamp = timestamp,
+                        )
+                    },
+            )
+            eventBus.send(FoodDiaryEntryUpdatedUiEvent)
+        }
+    }
+
     fun update(
         quantity: Quantity,
         profiles: List<ProfileId>,
@@ -77,10 +98,7 @@ class UpdateFoodDiaryEntryViewModel(
 
                         current.copy(
                             profileIds = profiles.toSet(),
-                            snapshot =
-                                if (!isTracked && snapshot.id !is FoodSnapshotId.Anonymous)
-                                    snapshot.anonymize()
-                                else snapshot,
+                            snapshot = if (!isTracked) snapshot.anonymize() else snapshot,
                             timestamp = timestamp,
                         )
                     },

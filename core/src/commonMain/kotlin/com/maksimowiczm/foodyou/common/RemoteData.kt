@@ -17,3 +17,11 @@ sealed interface RemoteData<out T> {
             }
     }
 }
+
+fun <T> RemoteData<T>.getOrNull(): T? =
+    when (this) {
+        is RemoteData.Success -> value
+        is RemoteData.Error -> partialValue
+        is RemoteData.Loading -> partialValue
+        RemoteData.NotFound -> null
+    }

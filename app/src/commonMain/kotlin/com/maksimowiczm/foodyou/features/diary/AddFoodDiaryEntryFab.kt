@@ -34,7 +34,6 @@ fun AddFoodDiaryEntryFab(
     onIsTrackedChange: (Boolean) -> Unit,
     onAdd: (trackFood: Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    isTrackingEnabled: Boolean = true,
 ) {
     Row(
         modifier = modifier,
@@ -54,7 +53,6 @@ fun AddFoodDiaryEntryFab(
             IconToggleButton(
                 checked = isTracked,
                 onCheckedChange = onIsTrackedChange,
-                enabled = isTrackingEnabled,
                 shapes = IconButtonDefaults.toggleableShapes(),
                 colors =
                     IconButtonDefaults.iconToggleButtonColors(

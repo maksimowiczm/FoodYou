@@ -1,8 +1,5 @@
 package com.maksimowiczm.foodyou.features.diary
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,126 +26,101 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsCom
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodImage
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodIngredients
-import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodNote
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodScreenTopBar
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantitySuggestions
-import com.maksimowiczm.foodyou.capabilities.fooddetails.UserFoodMenu
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberQuantityFormField
-import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDetailsUiEvent
-import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDetailsViewModel
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
+import com.maksimowiczm.foodyou.common.domain.food.toAbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
-import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
-import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
-import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
-import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlin.time.Instant
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun UpdateUserRecipeDiaryEntryScreen(
+fun UpdateAnonymousFoodDiaryEntryScreen(
     onBack: () -> Unit,
-    onSave: (Quantity, List<ProfileId>, Instant, Boolean) -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
-    foodId: UserRecipeId,
+    onRelink: (List<ProfileId>, Instant, MeasuredFoodSnapshot) -> Unit,
+    onSave: (Quantity, List<ProfileId>, Instant) -> Unit,
     entry: FoodDiaryEntry,
     profiles: List<ProfileUiState>,
     modifier: Modifier = Modifier,
 ) {
-    val foodViewModel: UserRecipeDetailsViewModel = koinViewModel {
-        parametersOf(foodId, entry.snapshot.quantity.toQuantity())
+    val viewModel: UpdateAnonymousFoodDiaryEntryViewModel = koinViewModel {
+        parametersOf(entry.snapshot)
     }
 
-    LaunchedCollectWithLifecycle(foodViewModel.uiEvents) {
-        when (it) {
-            UserRecipeDetailsUiEvent.Deleted -> onDelete()
-        }
-    }
+    when (val uiState = viewModel.uiState.collectAsStateWithLifecycle().value) {
+        UpdateAnonymousFoodDiaryEntryUiState.Loading -> LoadingScreen(onBack, modifier)
+        is UpdateAnonymousFoodDiaryEntryUiState.Loaded -> {
+            val defaultValue =
+                remember(entry.snapshot.quantity) {
+                    entry.snapshot.quantity.toQuantity().amount.formatCompact()
+                }
+            val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
+            var selectedProfileIds by rememberSerializable {
+                mutableStateOf(entry.profileIds.toList())
+            }
+            val selectedProfiles =
+                remember(profiles, selectedProfileIds) {
+                    profiles.filter { it.id in selectedProfileIds }
+                }
 
-    val foodUiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
+            LaunchedEffect(formField.textFieldState.text, uiState.selectedQuantityType) {
+                viewModel.selectQuantity(
+                    formField.textFieldState.text.toString().toDoubleOrNull(),
+                    uiState.selectedQuantityType,
+                )
+            }
 
-    val defaultValue =
-        remember(entry.snapshot.quantity) {
-            entry.snapshot.quantity.toQuantity().amount.formatCompact()
-        }
-    val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
-    var selectedProfileIds by rememberSerializable { mutableStateOf(entry.profileIds.toList()) }
-    val selectedProfiles =
-        remember(profiles, selectedProfileIds) {
-            profiles.filter { it.id in selectedProfileIds }
-        }
-    var isTracked by rememberSaveable {
-        mutableStateOf(entry.snapshot.id !is FoodSnapshotId.Anonymous)
-    }
-
-    val nameSelector = LocalFoodNameSelector.current
-    val recipe = foodUiState.recipe
-
-    LaunchedEffect(formField.textFieldState.text, foodUiState.selectedQuantityType) {
-        foodViewModel.selectQuantity(
-            formField.textFieldState.text.toString().toDoubleOrNull(),
-            foodUiState.selectedQuantityType,
-        )
-    }
-
-    updateTransition(recipe).Crossfade(contentKey = { it != null }) {
-        if (it == null) LoadingScreen(onBack)
-        else {
-            UpdateUserRecipeDiaryEntryScreenContent(
-                headline = it.headline(nameSelector),
-                isFavorite = foodUiState.isFavorite,
-                image = it.image?.let { resolveBlob(it) },
-                suggestions = foodUiState.suggestions,
-                scaledNutritionFacts = foodUiState.scaledNutritionFacts,
-                ingredientScalingFactor = foodUiState.ingredientScalingFactor,
-                packageQuantity = AbsoluteQuantity.Weight(it.totalWeight),
-                servingQuantity = AbsoluteQuantity.Weight(it.servingWeight),
-                note = it.note,
-                components = it.components,
-                types = foodUiState.quantityTypes,
-                selectedType = foodUiState.selectedQuantityType ?: QuantityType.Gram,
+            UpdateAnonymousFoodDiaryEntryScreenContent(
+                headline = LocalFoodNameSelector.current.select(uiState.snapshot.name),
+                image =
+                    uiState.snapshot.image?.let {
+                        when (it) {
+                            is FoodSnapshotImage.Uri -> it.uri
+                            is FoodSnapshotImage.Blob -> resolveBlob(it.blob)
+                        }
+                    },
+                suggestions = uiState.suggestions,
+                scaledNutritionFacts = uiState.scaledNutritionFacts,
+                ingredientScalingFactor = uiState.ingredientScalingFactor,
+                packageQuantity = entry.snapshot.quantity.packageWeight?.toAbsoluteQuantity(),
+                servingQuantity = entry.snapshot.quantity.servingWeight?.toAbsoluteQuantity(),
+                components =
+                    (uiState.snapshot as? CompositeFoodSnapshot)?.components ?: emptyList(),
+                types = uiState.quantityTypes,
+                selectedType = uiState.selectedQuantityType,
                 formField = formField,
                 profiles = profiles,
                 selectedProfiles = selectedProfiles,
-                isTracked = isTracked,
-                onIsTrackedChange = { isTracked = it },
+                isTracked = uiState.isTracked,
+                onIsTrackedChange = viewModel::setIsTracked,
                 onBack = onBack,
                 onSave = { trackFood ->
-                    onSave(
-                        foodUiState.selectedQuantity
-                            ?: return@UpdateUserRecipeDiaryEntryScreenContent,
-                        selectedProfileIds,
-                        entry.timestamp,
-                        trackFood,
-                    )
+                    if (trackFood)
+                        onRelink(selectedProfileIds, entry.timestamp, uiState.relinkedSnapshot)
+                    else onSave(uiState.selectedQuantity, selectedProfileIds, entry.timestamp)
                 },
-                onEdit = onEdit,
-                onDelete = foodViewModel::delete,
-                onNavigateToIngredient = onNavigateToIngredient,
-                onSetFavorite = foodViewModel::setFavorite,
-                onSelectQuantity = foodViewModel::selectQuantity,
-                onSelectQuantityType = foodViewModel::selectQuantityType,
+                onSelectQuantity = viewModel::selectQuantity,
+                onSelectQuantityType = viewModel::selectQuantityType,
                 onSelectProfiles = { selectedProfiles ->
                     selectedProfileIds = selectedProfiles.map { profile -> profile.id }
                 },
@@ -159,16 +131,14 @@ fun UpdateUserRecipeDiaryEntryScreen(
 }
 
 @Composable
-private fun UpdateUserRecipeDiaryEntryScreenContent(
+private fun UpdateAnonymousFoodDiaryEntryScreenContent(
     headline: String?,
-    isFavorite: Boolean,
     image: FileUri?,
     suggestions: List<Quantity>,
     scaledNutritionFacts: NutritionFacts?,
     ingredientScalingFactor: Double,
     packageQuantity: AbsoluteQuantity?,
     servingQuantity: AbsoluteQuantity?,
-    note: String?,
     components: List<MeasuredFoodSnapshot>,
     types: List<QuantityType>,
     selectedType: QuantityType,
@@ -179,16 +149,11 @@ private fun UpdateUserRecipeDiaryEntryScreenContent(
     onIsTrackedChange: (Boolean) -> Unit,
     onBack: () -> Unit,
     onSave: (trackFood: Boolean) -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-    onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
-    onSetFavorite: (Boolean) -> Unit,
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,
     onSelectProfiles: (List<ProfileUiState>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     var expanded by rememberNutrientExpanded()
     val expandingEnabled =
         remember(scaledNutritionFacts) {
@@ -197,7 +162,7 @@ private fun UpdateUserRecipeDiaryEntryScreenContent(
         }
 
     val focusRequester = remember { FocusRequester() }
-    var focusRequested by rememberSaveable { mutableStateOf(false) }
+    var focusRequested by rememberSaveable { mutableStateOf(value = false) }
     LaunchedEffect(Unit) {
         if (!focusRequested) {
             val _ = runCatching { focusRequester.requestFocus() }
@@ -213,10 +178,7 @@ private fun UpdateUserRecipeDiaryEntryScreenContent(
             FoodScreenTopBar(
                 onBack = onBack,
                 title = headline,
-                actions = {
-                    FavoriteIconButton(isFavorite = isFavorite, onChange = onSetFavorite)
-                    UserFoodMenu(onEdit = onEdit, onDelete = onDelete)
-                },
+                actions = {},
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -239,7 +201,7 @@ private fun UpdateUserRecipeDiaryEntryScreenContent(
     ) { contentPadding ->
         LazyColumn(
             modifier = Modifier.imePadding(),
-            contentPadding = contentPadding.add(top = 8.dp, bottom = 128.dp),
+            contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
@@ -250,13 +212,15 @@ private fun UpdateUserRecipeDiaryEntryScreenContent(
                     FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
             }
-            item {
-                FoodIngredients(
-                    components = components,
-                    ingredientScalingFactor = ingredientScalingFactor,
-                    onNavigateToIngredient = onNavigateToIngredient,
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                )
+            if (components.isNotEmpty()) {
+                item {
+                    FoodIngredients(
+                        components = components,
+                        ingredientScalingFactor = ingredientScalingFactor,
+                        onNavigateToIngredient = null,
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                    )
+                }
             }
             if (suggestions.isNotEmpty()) {
                 item {
@@ -301,11 +265,6 @@ private fun UpdateUserRecipeDiaryEntryScreenContent(
                         expandingEnabled = expandingEnabled,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     )
-                }
-            }
-            if (note != null) {
-                item {
-                    FoodNote(note, Modifier.padding(horizontal = 8.dp))
                 }
             }
         }

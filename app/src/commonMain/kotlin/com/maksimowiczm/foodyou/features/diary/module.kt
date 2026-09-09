@@ -6,4 +6,5 @@ import org.koin.core.module.dsl.viewModelOf
 internal fun Module.diary() {
     viewModelOf(::AddFoodDiaryEntryViewModel)
     viewModelOf(::UpdateFoodDiaryEntryViewModel)
+    viewModelOf(::UpdateAnonymousFoodDiaryEntryViewModel)
 }

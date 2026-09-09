@@ -56,7 +56,29 @@ fun UpdateFoodDiaryEntryScreenDispatcher(
                         modifier = modifier,
                     )
 
-                is FoodSnapshotId.Anonymous -> LoadingScreen(onBack, modifier)
+                is FoodSnapshotId.Anonymous ->
+                    UpdateAnonymousFoodDiaryEntryScreen(
+                        onBack = onBack,
+                        onRelink = { profiles, timestamp, relinkedSnapshot ->
+                            viewModel.relink(
+                                profiles = profiles,
+                                timestamp = timestamp,
+                                relinkedSnapshot = relinkedSnapshot,
+                            )
+                        },
+                        onSave = { quantity, profiles, timestamp ->
+                            viewModel.update(
+                                quantity = quantity,
+                                profiles = profiles,
+                                timestamp = timestamp,
+                                isTracked = false,
+                            )
+                        },
+                        entry = entry,
+                        profiles = profiles,
+                        modifier = modifier,
+                    )
+
                 is FoodSnapshotId.FoodDataCentral ->
                     UpdateFoodDataCentralDiaryEntryScreen(
                         onBack = onBack,
