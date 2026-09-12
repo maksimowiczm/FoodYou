@@ -93,6 +93,7 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.copy
 import com.maksimowiczm.foodyou.shared.ui.extension.toDp
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalUIFeatureFlags
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.seconds
@@ -149,6 +150,7 @@ private fun SettingsScreen(
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val featureFlags = LocalUIFeatureFlags.current
 
     var profileExpanded by rememberSaveable { mutableStateOf(true) }
     var sponsorExpanded by rememberSaveable { mutableStateOf(false) }
@@ -201,16 +203,18 @@ private fun SettingsScreen(
                     onExpandedChange = { sponsorExpanded = it },
                 )
             }
-            item {
-                ProfileSwitcher(
-                    profiles = profiles,
-                    selectedProfile = selectedProfile,
-                    expanded = !profileExpanded,
-                    onExpandedChange = { profileExpanded = !it },
-                    onSelectProfile = onSelectProfile,
-                    onAddProfile = onAddProfile,
-                    onEditProfile = onEditProfile,
-                )
+            if (!featureFlags.singleProfileMode) {
+                item {
+                    ProfileSwitcher(
+                        profiles = profiles,
+                        selectedProfile = selectedProfile,
+                        expanded = !profileExpanded,
+                        onExpandedChange = { profileExpanded = !it },
+                        onSelectProfile = onSelectProfile,
+                        onAddProfile = onAddProfile,
+                        onEditProfile = onEditProfile,
+                    )
+                }
             }
             item {
                 Settings(

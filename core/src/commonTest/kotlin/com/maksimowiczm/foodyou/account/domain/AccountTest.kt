@@ -92,10 +92,45 @@ class AccountTest {
     }
 
     @Test
+    fun changeEnableMultipleProfiles_returnsEnableMultipleProfilesChangedEvent_whenStateIsDifferent() {
+        val account = Account(profiles = listOf(profile1), singleProfileMode = true)
+        val events = account.decide(AccountCommand.ChangeEnableSingleProfileMode(false, now))
+        assertEquals(listOf(EnableSingleProfileModeChangedEvent(false, now)), events)
+    }
+
+    @Test
+    fun changeEnableMultipleProfiles_returnsEmptyList_whenStateIsSame() {
+        val account = Account(singleProfileMode = true)
+        val events = account.decide(AccountCommand.ChangeEnableSingleProfileMode(true, now))
+        assertTrue(events.isEmpty())
+    }
+
+    @Test
+    fun changeEnableSingleProfileMode_fails_whenDisablingSingleProfileModeWithMoreThanOneProfile() {
+        val account = Account(profiles = listOf(profile1, profile2), singleProfileMode = false)
+        assertFailsWith<IllegalStateException> {
+            account.decide(AccountCommand.ChangeEnableSingleProfileMode(true, now))
+        }
+    }
+
+    @Test
     fun addProfile_returnsProfileAddedEvent() {
         val account = Account(profiles = listOf(profile1))
         val events = account.decide(AccountCommand.AddProfile(profile2, now))
         assertEquals(listOf(ProfileAddedEvent(profile2, now)), events)
+    }
+
+    @Test
+    fun addProfile_returnsProfileAddedAndEnableSingleProfileModeEvents_whenAddingSecondProfileAndSingleProfileModeEnabled() {
+        val account = Account(profiles = listOf(profile1), singleProfileMode = true)
+        val events = account.decide(AccountCommand.AddProfile(profile2, now))
+        assertEquals(
+            listOf(
+                ProfileAddedEvent(profile2, now),
+                EnableSingleProfileModeChangedEvent(enable = false, timestamp = now),
+            ),
+            events,
+        )
     }
 
     @Test

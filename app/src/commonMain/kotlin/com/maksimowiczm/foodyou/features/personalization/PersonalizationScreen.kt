@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.Bolt
+import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Palette
@@ -72,32 +73,37 @@ fun PersonalizationScreen(
 ) {
     val viewModel: PersonalizationViewModel = koinViewModel()
 
-    val secureScreen by viewModel.secureScreen.collectAsStateWithLifecycle()
-    val energyFormat by viewModel.energyFormat.collectAsStateWithLifecycle()
+    val device by viewModel.device.collectAsStateWithLifecycle()
+    val account by viewModel.account.collectAsStateWithLifecycle()
 
     PersonalizationScreen(
-        secureScreen = secureScreen,
-        energyFormat = energyFormat,
+        singleProfileMode = account.singleProfileMode,
+        allowSingleProfileMode = account.profiles.size == 1,
+        secureScreen = device.hideScreen,
+        energyUnit = account.energyUnit,
         onBack = onBack,
         onNutritionFacts = onNutritionFacts,
         onMeals = onMeals,
         onColors = onColors,
         onUpdateEnergyUnit = viewModel::updateEnergyUnit,
         onUpdateSecureScreen = viewModel::updateSecureScreen,
+        onUpdateSingleProfileMode = viewModel::updateSingleProfileMode,
         modifier = modifier,
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PersonalizationScreen(
+    singleProfileMode: Boolean,
+    allowSingleProfileMode: Boolean,
     secureScreen: Boolean,
-    energyFormat: EnergyUnit,
+    energyUnit: EnergyUnit,
     onBack: () -> Unit,
     onNutritionFacts: () -> Unit,
     onMeals: () -> Unit,
     onColors: () -> Unit,
     onUpdateEnergyUnit: (EnergyUnit) -> Unit,
+    onUpdateSingleProfileMode: (Boolean) -> Unit,
     onUpdateSecureScreen: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -193,7 +199,7 @@ fun PersonalizationScreen(
                 EnergyUnitSection(
                     expanded = energyExpanded,
                     onExpandedChange = { energyExpanded = it },
-                    energyUnit = energyFormat,
+                    energyUnit = energyUnit,
                     onUpdateEnergyUnit = onUpdateEnergyUnit,
                     colors = colors,
                     modifier =
@@ -230,6 +236,43 @@ fun PersonalizationScreen(
                         },
                         supportingContent = { Text(stringResource(Res.string.description_colors)) },
                         content = { Text(stringResource(Res.string.headline_colors)) },
+                    )
+                    SegmentedListItem(
+                        checked = singleProfileMode,
+                        onCheckedChange = {
+                            onUpdateSingleProfileMode(it)
+                            hapticFeedback.toggle(it)
+                        },
+                        shapes = ListItemDefaults.shapes(),
+                        enabled = allowSingleProfileMode,
+                        colors = colors,
+                        leadingContent = {
+                            Icon(
+                                imageVector = Icons.Outlined.Groups,
+                                contentDescription = null,
+                            )
+                        },
+                        supportingContent = {
+                            if (!allowSingleProfileMode)
+                                Text(
+                                    stringResource(
+                                        Res.string
+                                            .error_remove_extra_profiles_before_single_profile_mode
+                                    )
+                                )
+                            else Text(stringResource(Res.string.description_single_profile_mode))
+                        },
+                        trailingContent = {
+                            Switch(
+                                checked = singleProfileMode,
+                                onCheckedChange = null,
+                                enabled = allowSingleProfileMode,
+                            )
+                        },
+                        verticalAlignment = Alignment.CenterVertically,
+                        content = {
+                            Text(stringResource(Res.string.headline_single_profile_mode))
+                        },
                     )
                     SegmentedListItem(
                         checked = secureScreen,
@@ -353,13 +396,16 @@ private fun EnergyUnitSection(
 private fun PersonalizationScreenPreview() {
     PreviewFoodYouTheme {
         PersonalizationScreen(
+            singleProfileMode = false,
+            allowSingleProfileMode = false,
             secureScreen = false,
-            energyFormat = EnergyUnit.Kilocalories,
+            energyUnit = EnergyUnit.Kilocalories,
             onBack = {},
             onNutritionFacts = {},
             onMeals = {},
             onColors = {},
             onUpdateEnergyUnit = {},
+            onUpdateSingleProfileMode = {},
             onUpdateSecureScreen = {},
         )
     }

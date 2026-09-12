@@ -2,9 +2,10 @@ package com.maksimowiczm.foodyou.shared.ui.utility
 
 import androidx.compose.runtime.*
 
-interface UIFeatureFlags {
+@Immutable
+data class UIFeatureFlags(
     /** Whether to use a gradient painter for the app logo. */
-    val gradientPainterLogo: Boolean
+    val gradientPainterLogo: Boolean = false,
 
     /**
      * Whether to download images from Open Food Facts in the search screen.
@@ -15,13 +16,10 @@ interface UIFeatureFlags {
      * This is intended to prevent DDOSing Open Food Facts servers during search usage. Note that
      * images will still be downloaded on other screens.
      */
-    val downloadOpenFoodFactsSearchImages: Boolean
+    val downloadOpenFoodFactsSearchImages: Boolean = true,
 
-    // Hardcode for now
-    companion object : UIFeatureFlags {
-        override val gradientPainterLogo: Boolean = false
-        override val downloadOpenFoodFactsSearchImages: Boolean = true
-    }
-}
+    /** Whether to hide all multiple profile features */
+    val singleProfileMode: Boolean = false,
+)
 
-val LocalUIFeatureFlags = compositionLocalOf<UIFeatureFlags> { UIFeatureFlags }
+val LocalUIFeatureFlags = compositionLocalOf { UIFeatureFlags() }

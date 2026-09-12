@@ -13,6 +13,9 @@ sealed interface AccountCommand {
     data class ChangeNutrientsOrder(val order: List<NutrientsOrder>, val timestamp: Instant) :
         AccountCommand
 
+    data class ChangeEnableSingleProfileMode(val enable: Boolean, val timestamp: Instant) :
+        AccountCommand
+
     data class AddProfile(val profile: Profile, val timestamp: Instant) : AccountCommand
 
     data class UpdateProfile(

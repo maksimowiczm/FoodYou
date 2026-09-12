@@ -11,6 +11,7 @@ data class Account(
     val energyUnit: EnergyUnit = EnergyUnit.Kilocalories,
     val nutrientsOrder: List<NutrientsOrder> = NutrientsOrder.defaultOrder,
     val onboardingFinished: Boolean = false,
+    val singleProfileMode: Boolean = false,
 )
 
 fun Account.decide(command: AccountCommand): List<AccountEvent> =
@@ -47,12 +48,36 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
                 }
             }
 
+        is AccountCommand.ChangeEnableSingleProfileMode ->
+            buildList {
+                if (singleProfileMode == command.enable) return@buildList
+
+                if (command.enable)
+                    check(profiles.size == 1) {
+                        "Cannot enable single profile mode when there is more than one profile"
+                    }
+
+                add(
+                    EnableSingleProfileModeChangedEvent(
+                        enable = command.enable,
+                        timestamp = command.timestamp,
+                    )
+                )
+            }
+
         is AccountCommand.AddProfile ->
             buildList {
                 check(profiles.none { it.id == command.profile.id }) {
                     "Profile with ID ${command.profile.id} already exists"
                 }
                 add(ProfileAddedEvent(profile = command.profile, timestamp = command.timestamp))
+                if (profiles.size == 1 && singleProfileMode)
+                    add(
+                        EnableSingleProfileModeChangedEvent(
+                            enable = false,
+                            timestamp = command.timestamp,
+                        )
+                    )
             }
 
         is AccountCommand.UpdateProfile ->
@@ -129,6 +154,7 @@ fun Account.apply(event: AccountEvent): Account =
         is OnboardingFinishedEvent -> copy(onboardingFinished = true)
         is EnergyUnitChangedEvent -> copy(energyUnit = event.unit)
         is NutrientsOrderChangedEvent -> copy(nutrientsOrder = event.order)
+        is EnableSingleProfileModeChangedEvent -> copy(singleProfileMode = event.enable)
         is ProfileAddedEvent -> copy(profiles = profiles + event.profile)
         is ProfileUpdatedEvent -> applyProfileUpdate(event.profile.id) { event.profile }
         is ProfileRemovedEvent -> copy(profiles = profiles.filterNot { it.id == event.profileId })

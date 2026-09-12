@@ -46,6 +46,12 @@ data class NutrientsOrderChangedEvent(
 ) : AccountEvent()
 
 @Serializable
+data class EnableSingleProfileModeChangedEvent(
+    val enable: Boolean,
+    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
+) : AccountEvent()
+
+@Serializable
 data class FavoriteFoodAddedEvent(
     val profileId: ProfileId,
     val foodId: FavoriteFoodId,

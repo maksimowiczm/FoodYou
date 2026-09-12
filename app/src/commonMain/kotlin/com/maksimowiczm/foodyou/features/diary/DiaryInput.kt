@@ -41,6 +41,7 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalUIFeatureFlags
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
 
@@ -79,7 +80,7 @@ fun DiaryInput(
                                 boundsTransform = { _, _ -> motionScheme.fastEffectsSpec() },
                             ),
                 )
-                if (profiles.size > 1) {
+                if (!LocalUIFeatureFlags.current.singleProfileMode && profiles.size > 1) {
                     Spacer(Modifier.width(8.dp))
                     ProfileStack(
                         selectedProfiles = selectedProfiles,
@@ -89,7 +90,7 @@ fun DiaryInput(
                 }
             }
         }
-        if (profiles.size > 1) {
+        if (!LocalUIFeatureFlags.current.singleProfileMode && profiles.size > 1) {
             AnimatedVisibility(
                 visible = expanded,
                 enter =

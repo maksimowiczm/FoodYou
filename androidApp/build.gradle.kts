@@ -13,6 +13,7 @@ kotlin {
         implementation(libs.compose.components.resources)
         implementation(libs.compose.runtime)
         implementation(libs.insert.koin.android)
+        implementation(libs.jetbrains.androidx.lifecycle.runtimeCompose)
         implementation(libs.touchlab.kermit)
         implementation(libs.vinceglb.filekitDialogsCompose)
     }

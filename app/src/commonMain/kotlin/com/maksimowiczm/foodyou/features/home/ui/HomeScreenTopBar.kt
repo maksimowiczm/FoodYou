@@ -106,6 +106,7 @@ import com.maksimowiczm.foodyou.shared.ui.utility.EnergyFormatter.stringResource
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalNutrientsOrder
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalUIFeatureFlags
 import com.maksimowiczm.foodyou.shared.ui.utility.WeightFormatter.stringResource
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
@@ -208,15 +209,21 @@ fun HomeScreenTopBar(
                     onClick = onAvatar,
                     shapes = IconButtonDefaults.shapes(),
                     modifier =
-                        Modifier.wrapContentSize(unbounded = true).swipeThroughList(
-                            items = profiles,
-                            currentItem = p,
-                            swipeThresholdPx = LocalDensity.current.run { 32.dp.toPx() },
-                        ) { direction, nextProfile ->
-                            profileSwitchDirection = direction
-                            animateProfileSwitch = true
-                            onSelectProfile(nextProfile.id)
-                        },
+                        Modifier.wrapContentSize(unbounded = true)
+                            .then(
+                                if (LocalUIFeatureFlags.current.singleProfileMode) Modifier
+                                else
+                                    Modifier.swipeThroughList(
+                                        items = profiles,
+                                        currentItem = p,
+                                        swipeThresholdPx =
+                                            LocalDensity.current.run { 32.dp.toPx() },
+                                    ) { direction, nextProfile ->
+                                        profileSwitchDirection = direction
+                                        animateProfileSwitch = true
+                                        onSelectProfile(nextProfile.id)
+                                    }
+                            ),
                 ) {
                     if (p != null) {
                         val avatarModifier =
