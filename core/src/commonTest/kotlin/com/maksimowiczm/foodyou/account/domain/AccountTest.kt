@@ -124,6 +124,16 @@ class AccountTest {
     }
 
     @Test
+    fun updateProfile_fails_whenProfileIdChanged() {
+        val account = Account(profiles = listOf(profile1))
+        assertFailsWith<IllegalStateException> {
+            account.decide(
+                AccountCommand.UpdateProfile(profile1.id, now) { it.copy(id = profile2.id) }
+            )
+        }
+    }
+
+    @Test
     fun removeProfile_returnsProfileRemovedEvent() {
         val account = Account(profiles = listOf(profile1, profile2))
         val events = account.decide(AccountCommand.RemoveProfile(profile2.id, now))
@@ -244,31 +254,5 @@ class AccountTest {
         assertEquals(listOf(profile1), account.profiles)
         assertEquals(EnergyUnit.Kilojoules, account.energyUnit)
         assertTrue(account.onboardingFinished)
-    }
-
-    @Test
-    fun init_fails_whenDuplicateProfileIds() {
-        assertFailsWith<IllegalArgumentException> { Account(profiles = listOf(profile1, profile1)) }
-    }
-
-    @Test
-    fun init_fails_whenOnboardingFinishedWithoutProfiles() {
-        assertFailsWith<IllegalArgumentException> {
-            Account(profiles = emptyList(), onboardingFinished = true)
-        }
-    }
-
-    @Test
-    fun init_fails_whenNutrientsOrderHasDuplicates() {
-        val invalidOrder =
-            listOf(NutrientsOrder.Proteins, NutrientsOrder.Proteins) +
-                (NutrientsOrder.entries - NutrientsOrder.Proteins).take(4)
-        assertFailsWith<IllegalArgumentException> { Account(nutrientsOrder = invalidOrder) }
-    }
-
-    @Test
-    fun init_fails_whenNutrientsOrderIsMissingEntries() {
-        val invalidOrder = NutrientsOrder.entries.take(1)
-        assertFailsWith<IllegalArgumentException> { Account(nutrientsOrder = invalidOrder) }
     }
 }

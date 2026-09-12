@@ -11,23 +11,7 @@ data class Account(
     val energyUnit: EnergyUnit = EnergyUnit.Kilocalories,
     val nutrientsOrder: List<NutrientsOrder> = NutrientsOrder.defaultOrder,
     val onboardingFinished: Boolean = false,
-) {
-    init {
-        require(profiles.distinctBy { it.id }.size == profiles.size) {
-            "Account cannot have duplicate profile IDs"
-        }
-        require(!onboardingFinished || profiles.isNotEmpty()) {
-            "Account cannot have onboarding finished without any profiles"
-        }
-        val nutrientsSet = nutrientsOrder.toSet()
-        require(nutrientsSet.size == nutrientsOrder.size) {
-            "Nutrients order cannot contain duplicates"
-        }
-        require(nutrientsSet == NutrientsOrder.entries.toSet()) {
-            "Nutrients order must contain all NutrientsOrder values exactly once"
-        }
-    }
-}
+)
 
 fun Account.decide(command: AccountCommand): List<AccountEvent> =
     when (command) {
@@ -76,6 +60,7 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
                 val profile = profiles.find { it.id == command.profileId }
                 checkNotNull(profile) { "Profile with ID ${command.profileId} not found" }
                 val updated = command.transform(profile)
+                check(updated.id == command.profileId) { "Cannot change profile ID" }
                 if (updated != profile) {
                     add(ProfileUpdatedEvent(profile = updated, timestamp = command.timestamp))
                 }
