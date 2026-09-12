@@ -117,12 +117,24 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
             entryProvider {
                 entry<About> { AboutScreen(onBack = { backStack.removeLastIf<About>() }) }
                 entry<Colors> { ColorsScreen(onBack = { backStack.removeLastIf<Colors>() }) }
-                entry<CreateProduct> {
+                entry<CreateProduct> { route ->
                     CreateProductScreen(
                         onBack = { backStack.removeLastIf<CreateProduct>() },
                         onCreate = { id ->
                             backStack.removeLastIf<CreateProduct>()
-                            backStack.add(UserProductDetails(id, null))
+                            val mealId = route.mealId
+                            if (mealId != null) {
+                                backStack.add(
+                                    UserProductAddDiaryEntry(
+                                        id = id,
+                                        quantity = null,
+                                        mealId = mealId,
+                                        date = route.date,
+                                    )
+                                )
+                            } else {
+                                backStack.add(UserProductDetails(id, null))
+                            }
                         },
                     )
                 }
@@ -234,8 +246,12 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                             if (mealId == null) backStack.add(UserRecipeDetails(id, quantity))
                             else backStack.add(UserRecipeAddDiaryEntry(id, quantity, mealId, date))
                         },
-                        onCreateProduct = { backStack.add(CreateProduct) },
-                        onCreateRecipe = { backStack.add(CreateRecipe) },
+                        onCreateProduct = { mealId, date ->
+                            backStack.add(CreateProduct(mealId, date))
+                        },
+                        onCreateRecipe = { mealId, date ->
+                            backStack.add(CreateRecipe(mealId, date))
+                        },
                         onEntry = { backStack.add(UpdateDiaryEntry(it)) },
                         initialQuery = it.initialQuery,
                     )
@@ -272,12 +288,24 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onOpenFoodFactsLogin = { backStack.add(OpenFoodFactsLoginDialog) },
                     )
                 }
-                entry<CreateRecipe> {
+                entry<CreateRecipe> { route ->
                     CreateRecipeScreen(
                         onBack = { backStack.removeLastIf<CreateRecipe>() },
                         onCreate = { id ->
                             backStack.removeLastIf<CreateRecipe>()
-                            backStack.add(UserRecipeDetails(id, null))
+                            val mealId = route.mealId
+                            if (mealId != null) {
+                                backStack.add(
+                                    UserRecipeAddDiaryEntry(
+                                        id = id,
+                                        quantity = null,
+                                        mealId = mealId,
+                                        date = route.date,
+                                    )
+                                )
+                            } else {
+                                backStack.add(UserRecipeDetails(id, null))
+                            }
                         },
                         onEditUserProduct = { backStack.add(EditUserProduct(it)) },
                         onEditUserRecipe = { backStack.add(EditRecipe(it)) },
@@ -474,7 +502,9 @@ sealed interface FoodYouNavHostRoute : NavKey {
 
     @Serializable data object Colors : FoodYouNavHostRoute
 
-    @Serializable data object CreateProduct : FoodYouNavHostRoute
+    @Serializable
+    data class CreateProduct(val mealId: MealId? = null, val date: LocalDate? = null) :
+        FoodYouNavHostRoute
 
     @Serializable data object CreateProfile : FoodYouNavHostRoute
 
@@ -514,7 +544,9 @@ sealed interface FoodYouNavHostRoute : NavKey {
 
     @Serializable data object Privacy : FoodYouNavHostRoute
 
-    @Serializable data object CreateRecipe : FoodYouNavHostRoute
+    @Serializable
+    data class CreateRecipe(val mealId: MealId? = null, val date: LocalDate? = null) :
+        FoodYouNavHostRoute
 
     @Serializable data class EditRecipe(val id: UserRecipeId) : FoodYouNavHostRoute
 
@@ -527,7 +559,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable
     data class FoodDataCentralAddDiaryEntry(
         val id: FoodDataCentralProductId,
-        val quantity: Quantity,
+        val quantity: Quantity?,
         val mealId: MealId,
         val date: LocalDate?,
         val popToHome: Boolean = false,
@@ -536,7 +568,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable
     data class OpenFoodFactsAddDiaryEntry(
         val id: OpenFoodFactsProductId,
-        val quantity: Quantity,
+        val quantity: Quantity?,
         val mealId: MealId,
         val date: LocalDate?,
         val popToHome: Boolean = false,
@@ -545,7 +577,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable
     data class UserProductAddDiaryEntry(
         val id: UserProductId,
-        val quantity: Quantity,
+        val quantity: Quantity?,
         val mealId: MealId,
         val date: LocalDate?,
         val popToHome: Boolean = false,
@@ -554,7 +586,7 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable
     data class UserRecipeAddDiaryEntry(
         val id: UserRecipeId,
-        val quantity: Quantity,
+        val quantity: Quantity?,
         val mealId: MealId,
         val date: LocalDate?,
         val popToHome: Boolean = false,

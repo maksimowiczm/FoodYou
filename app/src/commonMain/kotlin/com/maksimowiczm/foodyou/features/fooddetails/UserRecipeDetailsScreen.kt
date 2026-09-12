@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.features.fooddetails
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,6 +38,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
+import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
@@ -46,6 +50,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun UserRecipeDetailsScreen(
     id: UserRecipeId,
@@ -67,29 +72,29 @@ fun UserRecipeDetailsScreen(
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
-    val nameSelector = LocalFoodNameSelector.current
-
-    if (uiState.recipe != null) {
-        UserRecipeDetailsScreenContent(
-            headline = uiState.recipe.headline(nameSelector),
-            isFavorite = uiState.isFavorite,
-            image = uiState.recipe.image?.let { resolveBlob(it) },
-            note = uiState.recipe.note,
-            components = uiState.recipe.components,
-            ingredientScalingFactor = uiState.ingredientScalingFactor,
-            suggestions = uiState.suggestions,
-            selectedQuantity = uiState.selectedQuantity,
-            scaledNutritionFacts = uiState.scaledNutritionFacts,
-            packageQuantity = AbsoluteQuantity.Weight(uiState.recipe.totalWeight),
-            servingQuantity = AbsoluteQuantity.Weight(uiState.recipe.servingWeight),
-            onBack = onBack,
-            onEdit = onEdit,
-            onDelete = viewModel::delete,
-            onSetFavorite = viewModel::setFavorite,
-            onSelectQuantity = viewModel::selectQuantity,
-            onNavigateToIngredient = onNavigateToIngredient,
-            modifier = modifier,
-        )
+    updateTransition(uiState).Crossfade(contentKey = { it != null }) { uiState ->
+        if (uiState == null) LoadingScreen(onBack, modifier)
+        else
+            UserRecipeDetailsScreenContent(
+                headline = uiState.recipe.headline(LocalFoodNameSelector.current),
+                isFavorite = uiState.isFavorite,
+                image = uiState.recipe.image?.let { resolveBlob(it) },
+                note = uiState.recipe.note,
+                components = uiState.recipe.components,
+                ingredientScalingFactor = uiState.ingredientScalingFactor,
+                suggestions = uiState.suggestions,
+                selectedQuantity = uiState.selectedQuantity,
+                scaledNutritionFacts = uiState.scaledNutritionFacts,
+                packageQuantity = AbsoluteQuantity.Weight(uiState.recipe.totalWeight),
+                servingQuantity = AbsoluteQuantity.Weight(uiState.recipe.servingWeight),
+                onBack = onBack,
+                onEdit = onEdit,
+                onDelete = viewModel::delete,
+                onSetFavorite = viewModel::setFavorite,
+                onSelectQuantity = viewModel::selectQuantity,
+                onNavigateToIngredient = onNavigateToIngredient,
+                modifier = modifier,
+            )
     }
 }
 

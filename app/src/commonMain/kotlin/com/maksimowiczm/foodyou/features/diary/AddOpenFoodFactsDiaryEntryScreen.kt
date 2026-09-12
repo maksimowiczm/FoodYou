@@ -75,7 +75,7 @@ fun AddOpenFoodFactsDiaryEntryScreen(
     onAdd: () -> Unit,
     mealId: MealId,
     id: OpenFoodFactsProductId,
-    initialQuantity: Quantity,
+    initialQuantity: Quantity?,
     date: LocalDate?,
     modifier: Modifier = Modifier,
 ) {
@@ -95,33 +95,33 @@ fun AddOpenFoodFactsDiaryEntryScreen(
     val defaultProfileId =
         addFoodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
 
-    val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
-    val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
-    var selectedProfileIds by rememberSerializable { mutableStateOf(listOf(defaultProfileId)) }
-    val selectedProfiles =
-        remember(profiles, selectedProfileIds) {
-            profiles?.filter { it.id in selectedProfileIds } ?: emptyList()
-        }
-
-    val nameSelector = LocalFoodNameSelector.current
-
     val details = foodUiState as? OpenFoodFactsDetailsUiState.Details
-
-    LaunchedEffect(formField.textFieldState.text, details?.selectedQuantityType) {
-        foodViewModel.selectQuantity(
-            formField.textFieldState.text.toString().toDoubleOrNull(),
-            details?.selectedQuantityType,
-        )
-    }
-
     val requiredState = if (profiles != null && details != null) profiles to details else null
 
     updateTransition(requiredState).Crossfade(contentKey = { it != null }) {
         if (it == null) LoadingScreen(onBack)
         else {
             val (profiles, details) = it
+
+            var selectedProfileIds by rememberSerializable {
+                mutableStateOf(listOf(defaultProfileId))
+            }
+            val selectedProfiles =
+                remember(profiles, selectedProfileIds) {
+                    profiles.filter { it.id in selectedProfileIds }
+                }
+
+            val defaultValue = remember { details.selectedQuantity.amount.formatCompact() }
+            val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
+            LaunchedEffect(formField.textFieldState.text, details.selectedQuantityType) {
+                foodViewModel.selectQuantity(
+                    formField.textFieldState.text.toString().toDoubleOrNull(),
+                    details.selectedQuantityType,
+                )
+            }
+
             AddOpenFoodFactsDiaryEntryScreenContent(
-                headline = details.food.headline(nameSelector),
+                headline = details.food.headline(LocalFoodNameSelector.current),
                 isFavorite = details.isFavorite,
                 isLoading = details.isLoading,
                 image = details.food.image,
@@ -291,7 +291,7 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
                 item {
                     FoodDetailsNutrientsCompact(
                         scaledNutritionFacts = scaledNutritionFacts,
-                        expanded = if (!expandingEnabled) false else expanded,
+                        expanded = expandingEnabled && expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),

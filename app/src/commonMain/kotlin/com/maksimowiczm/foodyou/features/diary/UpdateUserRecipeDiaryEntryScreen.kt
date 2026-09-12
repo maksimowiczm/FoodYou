@@ -86,48 +86,47 @@ fun UpdateUserRecipeDiaryEntryScreen(
         }
     }
 
-    val foodUiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
+    val uiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
 
-    val defaultValue =
-        remember(entry.snapshot.quantity) {
-            entry.snapshot.quantity.toQuantity().amount.formatCompact()
-        }
-    val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
-    var selectedProfileIds by rememberSerializable { mutableStateOf(entry.profileIds.toList()) }
-    val selectedProfiles =
-        remember(profiles, selectedProfileIds) {
-            profiles.filter { it.id in selectedProfileIds }
-        }
-    var isTracked by rememberSaveable {
-        mutableStateOf(entry.snapshot.id !is FoodSnapshotId.Anonymous)
-    }
-
-    val nameSelector = LocalFoodNameSelector.current
-    val recipe = foodUiState.recipe
-
-    LaunchedEffect(formField.textFieldState.text, foodUiState.selectedQuantityType) {
-        foodViewModel.selectQuantity(
-            formField.textFieldState.text.toString().toDoubleOrNull(),
-            foodUiState.selectedQuantityType,
-        )
-    }
-
-    updateTransition(recipe).Crossfade(contentKey = { it != null }) {
-        if (it == null) LoadingScreen(onBack)
+    updateTransition(uiState).Crossfade(contentKey = { it != null }) { uiState ->
+        if (uiState == null) LoadingScreen(onBack)
         else {
+            val defaultValue =
+                remember(entry.snapshot.quantity) {
+                    entry.snapshot.quantity.toQuantity().amount.formatCompact()
+                }
+            val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
+            var selectedProfileIds by rememberSerializable {
+                mutableStateOf(entry.profileIds.toList())
+            }
+            val selectedProfiles =
+                remember(profiles, selectedProfileIds) {
+                    profiles.filter { it.id in selectedProfileIds }
+                }
+            var isTracked by rememberSaveable {
+                mutableStateOf(entry.snapshot.id !is FoodSnapshotId.Anonymous)
+            }
+
+            LaunchedEffect(formField.textFieldState.text, uiState.selectedQuantityType) {
+                foodViewModel.selectQuantity(
+                    formField.textFieldState.text.toString().toDoubleOrNull(),
+                    uiState.selectedQuantityType,
+                )
+            }
+
             UpdateUserRecipeDiaryEntryScreenContent(
-                headline = it.headline(nameSelector),
-                isFavorite = foodUiState.isFavorite,
-                image = it.image?.let { resolveBlob(it) },
-                suggestions = foodUiState.suggestions,
-                scaledNutritionFacts = foodUiState.scaledNutritionFacts,
-                ingredientScalingFactor = foodUiState.ingredientScalingFactor,
-                packageQuantity = AbsoluteQuantity.Weight(it.totalWeight),
-                servingQuantity = AbsoluteQuantity.Weight(it.servingWeight),
-                note = it.note,
-                components = it.components,
-                types = foodUiState.quantityTypes,
-                selectedType = foodUiState.selectedQuantityType ?: QuantityType.Gram,
+                headline = uiState.recipe.headline(LocalFoodNameSelector.current),
+                isFavorite = uiState.isFavorite,
+                image = uiState.recipe.image?.let { resolveBlob(it) },
+                suggestions = uiState.suggestions,
+                scaledNutritionFacts = uiState.scaledNutritionFacts,
+                ingredientScalingFactor = uiState.ingredientScalingFactor,
+                packageQuantity = AbsoluteQuantity.Weight(uiState.recipe.totalWeight),
+                servingQuantity = AbsoluteQuantity.Weight(uiState.recipe.servingWeight),
+                note = uiState.recipe.note,
+                components = uiState.recipe.components,
+                types = uiState.quantityTypes,
+                selectedType = uiState.selectedQuantityType,
                 formField = formField,
                 profiles = profiles,
                 selectedProfiles = selectedProfiles,
@@ -136,8 +135,7 @@ fun UpdateUserRecipeDiaryEntryScreen(
                 onBack = onBack,
                 onSave = { trackFood ->
                     onSave(
-                        foodUiState.selectedQuantity
-                            ?: return@UpdateUserRecipeDiaryEntryScreenContent,
+                        uiState.selectedQuantity,
                         selectedProfileIds,
                         entry.timestamp,
                         trackFood,

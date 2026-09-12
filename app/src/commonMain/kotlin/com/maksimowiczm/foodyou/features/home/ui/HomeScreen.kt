@@ -116,8 +116,8 @@ fun HomeScreen(
     onOpenFoodFactsProduct: (OpenFoodFactsProductId, Quantity, MealId?, LocalDate?) -> Unit,
     onUserProduct: (UserProductId, Quantity, MealId?, LocalDate?) -> Unit,
     onUserRecipe: (UserRecipeId, Quantity, MealId?, LocalDate?) -> Unit,
-    onCreateProduct: () -> Unit,
-    onCreateRecipe: () -> Unit,
+    onCreateProduct: (MealId?, LocalDate?) -> Unit,
+    onCreateRecipe: (MealId?, LocalDate?) -> Unit,
     onEntry: (FoodDiaryEntryId) -> Unit,
     initialQuery: String?,
     modifier: Modifier = Modifier,
@@ -170,8 +170,8 @@ fun HomeScreen(
         onUserRecipe = { recipe, quantity ->
             onUserRecipe(recipe, quantity, uiState.activeMeal?.id, uiState.date)
         },
-        onCreateProduct = onCreateProduct,
-        onCreateRecipe = onCreateRecipe,
+        onCreateProduct = { onCreateProduct(uiState.activeMeal?.id, uiState.date) },
+        onCreateRecipe = { onCreateRecipe(uiState.activeMeal?.id, uiState.date) },
         onCollectionSelected = { collection ->
             when (collection) {
                 is SearchCollection.FoodDataCentral ->

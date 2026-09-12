@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.features.fooddetails
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +30,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Nutrient
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
+import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
@@ -36,6 +40,7 @@ import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun UserProductDetailsScreen(
     id: UserProductId,
@@ -56,26 +61,26 @@ fun UserProductDetailsScreen(
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
-    val nameSelector = LocalFoodNameSelector.current
-
-    if (uiState.product != null) {
-        UserProductDetailsScreenContent(
-            headline = uiState.product.headline(nameSelector),
-            isFavorite = uiState.isFavorite,
-            image = uiState.product.image?.let { resolveBlob(it) },
-            note = uiState.product.note,
-            suggestions = uiState.suggestions,
-            selectedQuantity = uiState.selectedQuantity,
-            scaledNutritionFacts = uiState.scaledNutritionFacts,
-            packageQuantity = uiState.product.packageQuantity,
-            servingQuantity = uiState.product.servingQuantity,
-            onBack = onBack,
-            onEdit = onEdit,
-            onDelete = viewModel::delete,
-            onSetFavorite = viewModel::setFavorite,
-            onSelectQuantity = viewModel::selectQuantity,
-            modifier = modifier,
-        )
+    updateTransition(uiState).Crossfade(contentKey = { it != null }) { uiState ->
+        if (uiState == null) LoadingScreen(onBack)
+        else
+            UserProductDetailsScreenContent(
+                headline = uiState.product.headline(LocalFoodNameSelector.current),
+                isFavorite = uiState.isFavorite,
+                image = uiState.product.image?.let { resolveBlob(it) },
+                note = uiState.product.note,
+                suggestions = uiState.suggestions,
+                selectedQuantity = uiState.selectedQuantity,
+                scaledNutritionFacts = uiState.scaledNutritionFacts,
+                packageQuantity = uiState.product.packageQuantity,
+                servingQuantity = uiState.product.servingQuantity,
+                onBack = onBack,
+                onEdit = onEdit,
+                onDelete = viewModel::delete,
+                onSetFavorite = viewModel::setFavorite,
+                onSelectQuantity = viewModel::selectQuantity,
+                modifier = modifier,
+            )
     }
 }
 

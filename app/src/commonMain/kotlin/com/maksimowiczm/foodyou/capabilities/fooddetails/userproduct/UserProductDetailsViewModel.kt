@@ -43,7 +43,7 @@ class UserProductDetailsViewModel(
                 quantityDelegate.selectedQuantity,
             ) { product, isFavorite, selectedQuantityType, selectedQuantity ->
                 if (product == null) {
-                    return@combine UserProductDetailsUiState(isFavorite = isFavorite)
+                    return@combine null
                 }
 
                 val result =
@@ -72,7 +72,7 @@ class UserProductDetailsViewModel(
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
-                initialValue = UserProductDetailsUiState(),
+                initialValue = null,
             )
 
     fun selectQuantity(quantity: Quantity) {

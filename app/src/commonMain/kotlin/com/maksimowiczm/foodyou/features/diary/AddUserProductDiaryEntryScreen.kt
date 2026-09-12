@@ -71,7 +71,7 @@ fun AddUserProductDiaryEntryScreen(
     onDelete: () -> Unit,
     mealId: MealId,
     id: UserProductId,
-    initialQuantity: Quantity,
+    initialQuantity: Quantity?,
     date: LocalDate?,
     modifier: Modifier = Modifier,
 ) {
@@ -92,63 +92,58 @@ fun AddUserProductDiaryEntryScreen(
         }
     }
 
-    val foodUiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
+    val uiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
     val profiles = addFoodDiaryEntryViewModel.profiles.collectAsStateWithLifecycle().value
     val defaultProfileId =
         addFoodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
 
-    val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
-    val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
-    var selectedProfileIds by rememberSerializable { mutableStateOf(listOf(defaultProfileId)) }
-    val selectedProfiles =
-        remember(profiles, selectedProfileIds) {
-            profiles?.filter { it.id in selectedProfileIds } ?: emptyList()
-        }
-
-    val nameSelector = LocalFoodNameSelector.current
-    val image = foodUiState.product?.image?.let { resolveBlob(it) }
-
-    val selectedType = foodUiState.selectedQuantityType ?: QuantityType.Gram
-
-    LaunchedEffect(formField.textFieldState.text, selectedType) {
-        foodViewModel.selectQuantity(
-            formField.textFieldState.text.toString().toDoubleOrNull(),
-            selectedType,
-        )
-    }
-
-    val requiredState =
-        if (profiles != null && foodUiState.product != null) profiles to foodUiState.product
-        else null
+    val requiredState = if (profiles != null && uiState != null) profiles to uiState else null
 
     updateTransition(requiredState).Crossfade(contentKey = { it != null }) {
-        if (it == null) LoadingScreen(onBack)
+        if (it == null) LoadingScreen(onBack, modifier)
         else {
-            val (profiles, product) = it
+            val (profiles, uiState) = it
+
+            var selectedProfileIds by rememberSerializable {
+                mutableStateOf(listOf(defaultProfileId))
+            }
+            val selectedProfiles =
+                remember(profiles, selectedProfileIds) {
+                    profiles.filter { it.id in selectedProfileIds }
+                }
+
+            val defaultValue = remember { uiState.selectedQuantity.amount.formatCompact() }
+            val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
+
+            LaunchedEffect(formField.textFieldState.text, uiState.selectedQuantityType) {
+                foodViewModel.selectQuantity(
+                    formField.textFieldState.text.toString().toDoubleOrNull(),
+                    uiState.selectedQuantityType,
+                )
+            }
+
             AddUserProductDiaryEntryScreenContent(
-                headline = product.headline(nameSelector),
-                isFavorite = foodUiState.isFavorite,
-                image = image,
-                suggestions = foodUiState.suggestions,
-                scaledNutritionFacts = foodUiState.scaledNutritionFacts,
-                types = foodUiState.quantityTypes,
-                selectedType = selectedType,
+                headline = uiState.product.headline(LocalFoodNameSelector.current),
+                isFavorite = uiState.isFavorite,
+                image = uiState.product.image?.let { resolveBlob(it) },
+                suggestions = uiState.suggestions,
+                scaledNutritionFacts = uiState.scaledNutritionFacts,
+                types = uiState.quantityTypes,
+                selectedType = uiState.selectedQuantityType,
                 formField = formField,
                 profiles = profiles,
                 selectedProfiles = selectedProfiles,
-                packageQuantity = product.packageQuantity,
-                servingQuantity = product.servingQuantity,
-                note = product.note,
+                packageQuantity = uiState.product.packageQuantity,
+                servingQuantity = uiState.product.servingQuantity,
+                note = uiState.product.note,
                 onBack = onBack,
                 onAdd = { trackFood ->
                     val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                     val timestamp = LocalDateTime(date ?: now.date, now.time)
 
                     addFoodDiaryEntryViewModel.create(
-                        product = product,
-                        quantity =
-                            foodUiState.selectedQuantity
-                                ?: return@AddUserProductDiaryEntryScreenContent,
+                        product = uiState.product,
+                        quantity = uiState.selectedQuantity,
                         profiles = selectedProfiles.map { profile -> profile.id },
                         timestamp = timestamp,
                         isTracked = trackFood,
@@ -296,7 +291,7 @@ private fun AddUserProductDiaryEntryScreenContent(
                 item {
                     FoodDetailsNutrientsCompact(
                         scaledNutritionFacts = scaledNutritionFacts,
-                        expanded = if (!expandingEnabled) false else expanded,
+                        expanded = expandingEnabled && expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),

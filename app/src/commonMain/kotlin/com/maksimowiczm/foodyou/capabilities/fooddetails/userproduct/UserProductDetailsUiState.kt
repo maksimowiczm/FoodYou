@@ -8,11 +8,11 @@ import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 
 @Immutable
 data class UserProductDetailsUiState(
-    val product: UserProduct? = null,
-    val isFavorite: Boolean = false,
-    val suggestions: List<Quantity> = emptyList(),
-    val selectedQuantity: Quantity? = null,
-    val scaledNutritionFacts: NutritionFacts? = null,
-    val quantityTypes: List<QuantityType> = emptyList(),
-    val selectedQuantityType: QuantityType? = null,
+    val product: UserProduct,
+    val isFavorite: Boolean,
+    val suggestions: List<Quantity>,
+    val selectedQuantity: Quantity,
+    val scaledNutritionFacts: NutritionFacts?,
+    val quantityTypes: List<QuantityType>,
+    val selectedQuantityType: QuantityType,
 )

@@ -75,7 +75,7 @@ fun AddUserRecipeDiaryEntryScreen(
     onNavigateToIngredient: (FoodSnapshotId, Quantity) -> Unit,
     mealId: MealId,
     id: UserRecipeId,
-    initialQuantity: Quantity,
+    initialQuantity: Quantity?,
     date: LocalDate?,
     modifier: Modifier = Modifier,
 ) {
@@ -96,60 +96,52 @@ fun AddUserRecipeDiaryEntryScreen(
         }
     }
 
-    val foodUiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
+    val uiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
     val profiles = addFoodDiaryEntryViewModel.profiles.collectAsStateWithLifecycle().value
     val defaultProfileId =
         addFoodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
 
-    val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
-    val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
-    var selectedProfileIds by rememberSerializable { mutableStateOf(listOf(defaultProfileId)) }
-    val selectedProfiles =
-        remember(profiles, selectedProfileIds) {
-            profiles?.filter { it.id in selectedProfileIds } ?: emptyList()
-        }
-
-    val nameSelector = LocalFoodNameSelector.current
-    val image = foodUiState.recipe?.image?.let { resolveBlob(it) }
-
-    val recipe = foodUiState.recipe
-    val selectedType = foodUiState.selectedQuantityType
-
-    val requiredState =
-        if (profiles != null && recipe != null && selectedType != null)
-            Triple(profiles, recipe, selectedType)
-        else null
+    val requiredState = if (profiles != null && uiState != null) profiles to uiState else null
 
     updateTransition(requiredState).Crossfade(contentKey = { it != null }) {
         if (it == null) LoadingScreen(onBack)
         else {
-            val (profiles, recipe, selectedType) = it
+            val (profiles, uiState) = it
+
+            val defaultValue = remember { uiState.selectedQuantity.amount.formatCompact() }
+            val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
+            var selectedProfileIds by rememberSerializable {
+                mutableStateOf(listOf(defaultProfileId))
+            }
+            val selectedProfiles =
+                remember(profiles, selectedProfileIds) {
+                    profiles.filter { it.id in selectedProfileIds }
+                }
+
             AddUserRecipeDiaryEntryScreenContent(
-                headline = recipe.headline(nameSelector),
-                isFavorite = foodUiState.isFavorite,
-                image = image,
-                suggestions = foodUiState.suggestions,
-                scaledNutritionFacts = foodUiState.scaledNutritionFacts,
-                types = foodUiState.quantityTypes,
-                selectedType = selectedType,
+                headline = uiState.recipe.headline(LocalFoodNameSelector.current),
+                isFavorite = uiState.isFavorite,
+                image = uiState.recipe.image?.let { resolveBlob(it) },
+                suggestions = uiState.suggestions,
+                scaledNutritionFacts = uiState.scaledNutritionFacts,
+                types = uiState.quantityTypes,
+                selectedType = uiState.selectedQuantityType,
                 formField = formField,
                 profiles = profiles,
                 selectedProfiles = selectedProfiles,
-                ingredientScalingFactor = foodUiState.ingredientScalingFactor,
-                packageQuantity = AbsoluteQuantity.Weight(recipe.totalWeight),
-                servingQuantity = AbsoluteQuantity.Weight(recipe.servingWeight),
-                note = recipe.note,
-                components = recipe.components,
+                ingredientScalingFactor = uiState.ingredientScalingFactor,
+                packageQuantity = AbsoluteQuantity.Weight(uiState.recipe.totalWeight),
+                servingQuantity = AbsoluteQuantity.Weight(uiState.recipe.servingWeight),
+                note = uiState.recipe.note,
+                components = uiState.recipe.components,
                 onBack = onBack,
                 onAdd = { trackFood ->
                     val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                     val timestamp = LocalDateTime(date ?: now.date, now.time)
 
                     addFoodDiaryEntryViewModel.create(
-                        recipe = recipe,
-                        quantity =
-                            foodUiState.selectedQuantity
-                                ?: return@AddUserRecipeDiaryEntryScreenContent,
+                        recipe = uiState.recipe,
+                        quantity = uiState.selectedQuantity,
                         profiles = selectedProfiles.map { profile -> profile.id },
                         timestamp = timestamp,
                         isTracked = trackFood,
@@ -309,7 +301,7 @@ private fun AddUserRecipeDiaryEntryScreenContent(
                 item {
                     FoodDetailsNutrientsCompact(
                         scaledNutritionFacts = scaledNutritionFacts,
-                        expanded = if (!expandingEnabled) false else expanded,
+                        expanded = expandingEnabled && expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),

@@ -43,9 +43,7 @@ class UserRecipeDetailsViewModel(
                 quantityDelegate.selectedQuantityType,
                 quantityDelegate.selectedQuantity,
             ) { recipe, isFavorite, selectedQuantityType, selectedQuantity ->
-                if (recipe == null) {
-                    return@combine UserRecipeDetailsUiState(isFavorite = isFavorite)
-                }
+                if (recipe == null) return@combine null
 
                 val servingQuantity = AbsoluteQuantity.Weight(recipe.servingWeight)
                 val packageQuantity = AbsoluteQuantity.Weight(recipe.totalWeight)
@@ -95,7 +93,7 @@ class UserRecipeDetailsViewModel(
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
-                initialValue = UserRecipeDetailsUiState(),
+                initialValue = null,
             )
 
     fun selectQuantity(quantity: Quantity) {

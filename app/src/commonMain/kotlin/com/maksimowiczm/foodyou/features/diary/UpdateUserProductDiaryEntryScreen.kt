@@ -83,46 +83,46 @@ fun UpdateUserProductDiaryEntryScreen(
         }
     }
 
-    val foodUiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
+    val uiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
 
-    val defaultValue =
-        remember(entry.snapshot.quantity) {
-            entry.snapshot.quantity.toQuantity().amount.formatCompact()
-        }
-    val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
-    var selectedProfileIds by rememberSerializable { mutableStateOf(entry.profileIds.toList()) }
-    val selectedProfiles =
-        remember(profiles, selectedProfileIds) {
-            profiles.filter { it.id in selectedProfileIds }
-        }
-    var isTracked by rememberSaveable {
-        mutableStateOf(entry.snapshot.id !is FoodSnapshotId.Anonymous)
-    }
-
-    val nameSelector = LocalFoodNameSelector.current
-    val product = foodUiState.product
-
-    LaunchedEffect(formField.textFieldState.text, foodUiState.selectedQuantityType) {
-        foodViewModel.selectQuantity(
-            formField.textFieldState.text.toString().toDoubleOrNull(),
-            foodUiState.selectedQuantityType,
-        )
-    }
-
-    updateTransition(product).Crossfade(contentKey = { it != null }) {
-        if (it == null) LoadingScreen(onBack)
+    updateTransition(uiState).Crossfade(contentKey = { it != null }) { uiState ->
+        if (uiState == null) LoadingScreen(onBack)
         else {
+            val defaultValue =
+                remember(entry.snapshot.quantity) {
+                    entry.snapshot.quantity.toQuantity().amount.formatCompact()
+                }
+            val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
+
+            LaunchedEffect(formField.textFieldState.text, uiState.selectedQuantityType) {
+                foodViewModel.selectQuantity(
+                    formField.textFieldState.text.toString().toDoubleOrNull(),
+                    uiState.selectedQuantityType,
+                )
+            }
+
+            var selectedProfileIds by rememberSerializable {
+                mutableStateOf(entry.profileIds.toList())
+            }
+            val selectedProfiles =
+                remember(profiles, selectedProfileIds) {
+                    profiles.filter { it.id in selectedProfileIds }
+                }
+            var isTracked by rememberSaveable {
+                mutableStateOf(entry.snapshot.id !is FoodSnapshotId.Anonymous)
+            }
+
             UpdateUserProductDiaryEntryScreenContent(
-                headline = it.headline(nameSelector),
-                isFavorite = foodUiState.isFavorite,
-                image = it.image?.let { resolveBlob(it) },
-                suggestions = foodUiState.suggestions,
-                scaledNutritionFacts = foodUiState.scaledNutritionFacts,
-                packageQuantity = it.packageQuantity,
-                servingQuantity = it.servingQuantity,
-                note = it.note,
-                types = foodUiState.quantityTypes,
-                selectedType = foodUiState.selectedQuantityType ?: QuantityType.Gram,
+                headline = uiState.product.headline(LocalFoodNameSelector.current),
+                isFavorite = uiState.isFavorite,
+                image = uiState.product.image?.let { resolveBlob(it) },
+                suggestions = uiState.suggestions,
+                scaledNutritionFacts = uiState.scaledNutritionFacts,
+                packageQuantity = uiState.product.packageQuantity,
+                servingQuantity = uiState.product.servingQuantity,
+                note = uiState.product.note,
+                types = uiState.quantityTypes,
+                selectedType = uiState.selectedQuantityType,
                 formField = formField,
                 profiles = profiles,
                 selectedProfiles = selectedProfiles,
@@ -131,8 +131,7 @@ fun UpdateUserProductDiaryEntryScreen(
                 onBack = onBack,
                 onSave = { trackFood ->
                     onSave(
-                        foodUiState.selectedQuantity
-                            ?: return@UpdateUserProductDiaryEntryScreenContent,
+                        uiState.selectedQuantity,
                         selectedProfileIds,
                         entry.timestamp,
                         trackFood,

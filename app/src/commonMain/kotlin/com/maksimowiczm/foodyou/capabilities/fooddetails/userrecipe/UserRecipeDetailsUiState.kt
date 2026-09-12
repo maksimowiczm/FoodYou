@@ -8,12 +8,12 @@ import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 
 @Immutable
 data class UserRecipeDetailsUiState(
-    val recipe: UserRecipe? = null,
-    val isFavorite: Boolean = false,
-    val suggestions: List<Quantity> = emptyList(),
-    val selectedQuantity: Quantity? = null,
-    val scaledNutritionFacts: NutritionFacts? = null,
-    val ingredientScalingFactor: Double = 1.0,
-    val quantityTypes: List<QuantityType> = emptyList(),
-    val selectedQuantityType: QuantityType? = null,
+    val recipe: UserRecipe,
+    val isFavorite: Boolean,
+    val suggestions: List<Quantity>,
+    val selectedQuantity: Quantity,
+    val scaledNutritionFacts: NutritionFacts?,
+    val ingredientScalingFactor: Double,
+    val quantityTypes: List<QuantityType>,
+    val selectedQuantityType: QuantityType,
 )

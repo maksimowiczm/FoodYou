@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.features.userrecipe.ingredient
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,6 +52,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
+import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
@@ -62,6 +66,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AddUserProductIngredientScreen(
     onBack: () -> Unit,
@@ -84,47 +89,50 @@ fun AddUserProductIngredientScreen(
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
-    val nameSelector = LocalFoodNameSelector.current
+    updateTransition(uiState).Crossfade(contentKey = { it != null }) { uiState ->
+        if (uiState == null) LoadingScreen(onBack, modifier)
+        else {
+            val defaultValue = remember { initialQuantity.amount.formatCompact() }
+            val formField =
+                rememberQuantityFormField(
+                    defaultValue,
+                    defaultValue = defaultValue,
+                )
 
-    val defaultValue = remember(initialQuantity) { initialQuantity.amount.formatCompact() }
-    val formField =
-        rememberQuantityFormField(
-            defaultValue,
-            defaultValue = defaultValue,
-        )
+            LaunchedEffect(formField.textFieldState.text, uiState.selectedQuantityType) {
+                viewModel.selectQuantity(
+                    formField.textFieldState.text.toString().toDoubleOrNull(),
+                    uiState.selectedQuantityType,
+                )
+            }
 
-    LaunchedEffect(formField.textFieldState.text, uiState.selectedQuantityType) {
-        viewModel.selectQuantity(
-            formField.textFieldState.text.toString().toDoubleOrNull(),
-            uiState.selectedQuantityType,
-        )
-    }
-
-    if (uiState.product != null) {
-        AddUserProductIngredientScreenContent(
-            headline = uiState.product.headline(nameSelector),
-            isFavorite = uiState.isFavorite,
-            image = uiState.product.image?.let { resolveBlob(it) },
-            note = uiState.product.note,
-            suggestions = uiState.suggestions,
-            scaledNutritionFacts = uiState.scaledNutritionFacts,
-            packageQuantity = uiState.product.packageQuantity,
-            servingQuantity = uiState.product.servingQuantity,
-            types = uiState.quantityTypes,
-            selectedType = uiState.selectedQuantityType ?: QuantityType.Gram,
-            formField = formField,
-            onBack = onBack,
-            onAdd = { uiState.selectedQuantity?.let { onAdd(it) } },
-            onEdit = onEdit,
-            onDelete = viewModel::delete,
-            onSetFavorite = viewModel::setFavorite,
-            onSelectQuantity = { quantity ->
-                viewModel.selectQuantity(quantity)
-                formField.textFieldState.setTextAndPlaceCursorAtEnd(quantity.amount.formatCompact())
-            },
-            onSelectQuantityType = viewModel::selectQuantityType,
-            modifier = modifier,
-        )
+            AddUserProductIngredientScreenContent(
+                headline = uiState.product.headline(LocalFoodNameSelector.current),
+                isFavorite = uiState.isFavorite,
+                image = uiState.product.image?.let { resolveBlob(it) },
+                note = uiState.product.note,
+                suggestions = uiState.suggestions,
+                scaledNutritionFacts = uiState.scaledNutritionFacts,
+                packageQuantity = uiState.product.packageQuantity,
+                servingQuantity = uiState.product.servingQuantity,
+                types = uiState.quantityTypes,
+                selectedType = uiState.selectedQuantityType,
+                formField = formField,
+                onBack = onBack,
+                onAdd = { onAdd(uiState.selectedQuantity) },
+                onEdit = onEdit,
+                onDelete = viewModel::delete,
+                onSetFavorite = viewModel::setFavorite,
+                onSelectQuantity = { quantity ->
+                    viewModel.selectQuantity(quantity)
+                    formField.textFieldState.setTextAndPlaceCursorAtEnd(
+                        quantity.amount.formatCompact()
+                    )
+                },
+                onSelectQuantityType = viewModel::selectQuantityType,
+                modifier = modifier,
+            )
+        }
     }
 }
 
