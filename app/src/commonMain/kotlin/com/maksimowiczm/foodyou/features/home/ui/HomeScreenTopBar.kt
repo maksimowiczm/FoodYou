@@ -90,13 +90,13 @@ import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.navigation.Crossfade
 import com.maksimowiczm.foodyou.capabilities.brand.brand
+import com.maksimowiczm.foodyou.capabilities.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.sum
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.common.extension.observeDate
-import com.maksimowiczm.foodyou.shared.ui.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
 import com.maksimowiczm.foodyou.shared.ui.extension.confirm
 import com.maksimowiczm.foodyou.shared.ui.extension.now

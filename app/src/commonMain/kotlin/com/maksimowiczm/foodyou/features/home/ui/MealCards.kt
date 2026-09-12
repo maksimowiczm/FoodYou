@@ -62,6 +62,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.capabilities.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
 import com.maksimowiczm.foodyou.common.domain.food.NutritionCalculator
@@ -70,7 +71,6 @@ import com.maksimowiczm.foodyou.common.domain.food.sum
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
-import com.maksimowiczm.foodyou.shared.ui.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.shared.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.shared.ui.component.Image
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape

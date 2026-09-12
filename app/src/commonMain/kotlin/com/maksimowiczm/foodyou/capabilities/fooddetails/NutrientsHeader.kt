@@ -20,9 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.capabilities.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.NutritionCalculator
-import com.maksimowiczm.foodyou.shared.ui.LocalNutrientsPalette
 
 private const val barHeight = 32
 

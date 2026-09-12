@@ -26,13 +26,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.capabilities.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.capabilities.theme.isDark
 import com.maksimowiczm.foodyou.device.domain.NutrientsColors
 import com.maksimowiczm.foodyou.device.domain.Theme
 import com.maksimowiczm.foodyou.device.domain.ThemeOption
 import com.maksimowiczm.foodyou.device.domain.ThemeSettings
-import com.maksimowiczm.foodyou.shared.ui.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.ReadYouImage
 import com.maksimowiczm.foodyou.shared.ui.extension.add

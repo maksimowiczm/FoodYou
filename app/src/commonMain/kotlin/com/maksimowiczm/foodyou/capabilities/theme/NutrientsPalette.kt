@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.shared.ui
+package com.maksimowiczm.foodyou.capabilities.theme
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color

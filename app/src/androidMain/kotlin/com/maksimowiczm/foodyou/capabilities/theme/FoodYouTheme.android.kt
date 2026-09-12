@@ -14,9 +14,6 @@ import androidx.compose.ui.platform.LocalView
 import com.maksimowiczm.foodyou.device.domain.NutrientsColors
 import com.maksimowiczm.foodyou.device.domain.Theme
 import com.maksimowiczm.foodyou.device.domain.ThemeSettings
-import com.maksimowiczm.foodyou.shared.ui.DarkNutrientsPalette
-import com.maksimowiczm.foodyou.shared.ui.LightNutrientsPalette
-import com.maksimowiczm.foodyou.shared.ui.LocalNutrientsPalette
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.ktx.animateColorScheme
