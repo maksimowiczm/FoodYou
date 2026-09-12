@@ -71,7 +71,7 @@ private fun FoodYouTheme(
                     seedColor = MaterialDeepPurple,
                     isDark = isDark,
                     specVersion = ColorSpec.SpecVersion.SPEC_2025,
-                    style = PaletteStyle.Expressive,
+                    style = PaletteStyle.TonalSpot,
                 )
         }
 
