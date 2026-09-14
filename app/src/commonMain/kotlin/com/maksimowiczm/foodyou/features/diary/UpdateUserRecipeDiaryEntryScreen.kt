@@ -33,7 +33,7 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodNote
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodScreenTopBar
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantitySuggestions
 import com.maksimowiczm.foodyou.capabilities.fooddetails.UserFoodMenu
-import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientsExpanded
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberQuantityFormField
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDetailsUiEvent
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userrecipe.UserRecipeDetailsViewModel
@@ -187,7 +187,7 @@ private fun UpdateUserRecipeDiaryEntryScreenContent(
     modifier: Modifier = Modifier,
 ) {
 
-    var expanded by rememberNutrientExpanded()
+    var expanded by rememberNutrientsExpanded()
     val expandingEnabled =
         remember(scaledNutritionFacts) {
             val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false

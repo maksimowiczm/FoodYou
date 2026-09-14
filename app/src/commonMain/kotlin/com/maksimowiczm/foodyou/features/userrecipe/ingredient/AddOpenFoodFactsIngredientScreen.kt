@@ -42,7 +42,7 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantityInput
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantitySuggestions
 import com.maksimowiczm.foodyou.capabilities.fooddetails.openfoodfacts.OpenFoodFactsDetailsUiState
 import com.maksimowiczm.foodyou.capabilities.fooddetails.openfoodfacts.OpenFoodFactsDetailsViewModel
-import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientsExpanded
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberQuantityFormField
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
@@ -143,7 +143,7 @@ private fun AddOpenFoodFactsIngredientScreenContent(
     onSelectQuantityType: (QuantityType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var expanded by rememberNutrientExpanded()
+    var expanded by rememberNutrientsExpanded()
     val expandingEnabled =
         remember(scaledNutritionFacts) {
             val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false

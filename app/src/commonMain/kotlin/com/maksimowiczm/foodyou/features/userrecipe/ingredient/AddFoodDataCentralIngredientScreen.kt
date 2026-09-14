@@ -41,7 +41,7 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantityInput
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantitySuggestions
 import com.maksimowiczm.foodyou.capabilities.fooddetails.fooddatacentral.FoodDataCentralDetailsUiState
 import com.maksimowiczm.foodyou.capabilities.fooddetails.fooddatacentral.FoodDataCentralDetailsViewModel
-import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientsExpanded
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberQuantityFormField
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
@@ -146,7 +146,7 @@ private fun AddFoodDataCentralIngredientScreenContent(
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    var expanded by rememberNutrientExpanded()
+    var expanded by rememberNutrientsExpanded()
     val expandingEnabled =
         remember(scaledNutritionFacts) {
             val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false

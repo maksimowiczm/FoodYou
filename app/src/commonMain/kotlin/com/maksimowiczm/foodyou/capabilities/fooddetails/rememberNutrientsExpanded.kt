@@ -4,8 +4,8 @@ import androidx.compose.runtime.*
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.maksimowiczm.foodyou.shared.ui.saveable.rememberBlockingDataStore
 
-private val nutrientExpandedKey = booleanPreferencesKey("FoodDetailsScreenExpanded")
+private val nutrientsExpandedKey = booleanPreferencesKey("ui:NutrientsExpanded")
 
 @Composable
-fun rememberNutrientExpanded() =
-    rememberBlockingDataStore(key = nutrientExpandedKey) { mutableStateOf(true) }
+fun rememberNutrientsExpanded() =
+    rememberBlockingDataStore(key = nutrientsExpandedKey) { mutableStateOf(true) }

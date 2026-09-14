@@ -28,7 +28,7 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodImage
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodIngredients
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodScreenTopBar
 import com.maksimowiczm.foodyou.capabilities.fooddetails.QuantitySuggestions
-import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientsExpanded
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberQuantityFormField
 import com.maksimowiczm.foodyou.common.domain.FileUri
 import com.maksimowiczm.foodyou.common.domain.ProfileId
@@ -154,7 +154,7 @@ private fun UpdateAnonymousFoodDiaryEntryScreenContent(
     onSelectProfiles: (List<ProfileUiState>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var expanded by rememberNutrientExpanded()
+    var expanded by rememberNutrientsExpanded()
     val expandingEnabled =
         remember(scaledNutritionFacts) {
             val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false

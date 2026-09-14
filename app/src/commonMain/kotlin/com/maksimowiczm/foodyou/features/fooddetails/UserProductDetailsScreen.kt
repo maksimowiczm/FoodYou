@@ -21,7 +21,7 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodImage
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodNote
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodScreenTopBar
 import com.maksimowiczm.foodyou.capabilities.fooddetails.UserFoodMenu
-import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientExpanded
+import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientsExpanded
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userproduct.UserProductDetailsUiEvent
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userproduct.UserProductDetailsViewModel
 import com.maksimowiczm.foodyou.common.domain.FileUri
@@ -103,7 +103,7 @@ private fun UserProductDetailsScreenContent(
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    var expanded by rememberNutrientExpanded()
+    var expanded by rememberNutrientsExpanded()
     val expandingEnabled =
         remember(scaledNutritionFacts) {
             val scaledNutritionFacts = scaledNutritionFacts ?: return@remember false
