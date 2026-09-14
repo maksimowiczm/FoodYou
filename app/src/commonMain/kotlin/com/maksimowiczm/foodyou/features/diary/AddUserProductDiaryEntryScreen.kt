@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.features.diary
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
@@ -22,9 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.ui.LocalNavAnimatedContentScope
+import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsCompact
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodImage
@@ -36,13 +39,18 @@ import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberNutrientsExpand
 import com.maksimowiczm.foodyou.capabilities.fooddetails.rememberQuantityFormField
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userproduct.UserProductDetailsUiEvent
 import com.maksimowiczm.foodyou.capabilities.fooddetails.userproduct.UserProductDetailsViewModel
+import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.FileUri
+import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Nutrient
+import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
@@ -55,6 +63,7 @@ import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import kotlin.time.Clock
+import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -64,6 +73,7 @@ import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 fun AddUserProductDiaryEntryScreen(
     onBack: () -> Unit,
     onAdd: () -> Unit,
@@ -164,6 +174,7 @@ fun AddUserProductDiaryEntryScreen(
 }
 
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 private fun AddUserProductDiaryEntryScreenContent(
     headline: String?,
     isFavorite: Boolean,
@@ -228,7 +239,7 @@ private fun AddUserProductDiaryEntryScreenContent(
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
-                            !LocalNavAnimatedContentScope.current.transition.isRunning &&
+                            !animatedContentScope.transition.isRunning &&
                                 formField.error == null &&
                                 selectedProfiles.isNotEmpty(),
                         alignment = Alignment.BottomCenter,
@@ -303,6 +314,63 @@ private fun AddUserProductDiaryEntryScreenContent(
                     FoodNote(note, Modifier.padding(horizontal = 8.dp))
                 }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun AddUserProductDiaryEntryScreenPreview() {
+    PreviewFoodYouTheme {
+        AnimatedContent(targetState = true) {
+            val profiles =
+                listOf(
+                    ProfileUiState(
+                        id = ProfileId(Uuid.parse("00000000-0000-0000-0000-000000000001")),
+                        name = "Max",
+                        avatar = Profile.Avatar.Predefined.Variant.Man.toAvatar(),
+                    ),
+                    ProfileUiState(
+                        id = ProfileId(Uuid.parse("00000000-0000-0000-0000-000000000002")),
+                        name = "Anna",
+                        avatar = Profile.Avatar.Predefined.Variant.Woman.toAvatar(),
+                    ),
+                )
+            val nutritionFacts =
+                NutritionFacts(
+                    energy = NutrientValue.Complete(250.kilocalories),
+                    proteins = NutrientValue.Complete(15.grams),
+                    carbohydrates = NutrientValue.Complete(30.grams),
+                    fats = NutrientValue.Complete(10.grams),
+                )
+
+            AddUserProductDiaryEntryScreenContent(
+                headline = "Apple Pie",
+                isFavorite = true,
+                image = null,
+                suggestions =
+                    listOf(
+                        AbsoluteQuantity.Weight(100.grams),
+                        AbsoluteQuantity.Weight(200.grams),
+                    ),
+                scaledNutritionFacts = nutritionFacts,
+                types = listOf(QuantityType.Gram, QuantityType.Serving),
+                selectedType = QuantityType.Gram,
+                formField = rememberQuantityFormField("100", defaultValue = "100"),
+                profiles = profiles,
+                selectedProfiles = listOf(profiles[0]),
+                packageQuantity = null,
+                servingQuantity = AbsoluteQuantity.Weight(150.grams),
+                note = "Home made apple pie",
+                onBack = {},
+                onAdd = {},
+                onEdit = {},
+                onDelete = {},
+                onSetFavorite = {},
+                onSelectQuantity = {},
+                onSelectQuantityType = {},
+                onSelectProfiles = {},
+            )
         }
     }
 }

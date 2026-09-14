@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.features.userrecipe.ingredient
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
@@ -33,7 +34,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsCompact
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodImage
@@ -73,6 +73,7 @@ import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 fun AddUserRecipeIngredientScreen(
     onBack: () -> Unit,
     onAdd: (Quantity) -> Unit,
@@ -147,6 +148,7 @@ fun AddUserRecipeIngredientScreen(
 }
 
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 private fun AddUserRecipeIngredientScreenContent(
     headline: String?,
     isFavorite: Boolean,
@@ -210,8 +212,7 @@ private fun AddUserRecipeIngredientScreenContent(
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
-                            !LocalNavAnimatedContentScope.current.transition.isRunning &&
-                                formField.error == null,
+                            !animatedContentScope.transition.isRunning && formField.error == null,
                         alignment = Alignment.BottomEnd,
                     ),
             ) {

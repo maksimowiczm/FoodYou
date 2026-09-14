@@ -25,6 +25,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.ForwardBackwardTransition
@@ -159,168 +160,184 @@ internal fun RecipeApp(
                     )
                 }
                 entry<OpenFoodFacts> {
-                    AddOpenFoodFactsIngredientScreen(
-                        onBack = { backStack.removeLastIf<OpenFoodFacts>() },
-                        onAdd = { quantity ->
-                            recipeFormViewModel.addIngredient(
-                                FoodSnapshotId.OpenFoodFacts(it.id.barcode),
-                                quantity,
-                            )
-                            backStack.removeWhile { r -> r !is RecipeForm }
-                        },
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                    )
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddOpenFoodFactsIngredientScreen(
+                            onBack = { backStack.removeLastIf<OpenFoodFacts>() },
+                            onAdd = { quantity ->
+                                recipeFormViewModel.addIngredient(
+                                    FoodSnapshotId.OpenFoodFacts(it.id.barcode),
+                                    quantity,
+                                )
+                                backStack.removeWhile { r -> r !is RecipeForm }
+                            },
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                        )
+                    }
                 }
                 entry<FoodDataCentral> {
-                    AddFoodDataCentralIngredientScreen(
-                        onBack = { backStack.removeLastIf<FoodDataCentral>() },
-                        onAdd = { quantity ->
-                            recipeFormViewModel.addIngredient(
-                                FoodSnapshotId.FoodDataCentral(it.id.fdcId),
-                                quantity,
-                            )
-                            backStack.removeWhile { r -> r !is RecipeForm }
-                        },
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                    )
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddFoodDataCentralIngredientScreen(
+                            onBack = { backStack.removeLastIf<FoodDataCentral>() },
+                            onAdd = { quantity ->
+                                recipeFormViewModel.addIngredient(
+                                    FoodSnapshotId.FoodDataCentral(it.id.fdcId),
+                                    quantity,
+                                )
+                                backStack.removeWhile { r -> r !is RecipeForm }
+                            },
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                        )
+                    }
                 }
                 entry<UserProduct> {
-                    AddUserProductIngredientScreen(
-                        onBack = { backStack.removeLastIf<UserProduct>() },
-                        onAdd = { quantity ->
-                            recipeFormViewModel.addIngredient(
-                                FoodSnapshotId.UserProduct(it.id.value),
-                                quantity,
-                            )
-                            backStack.removeWhile { r -> r !is RecipeForm }
-                        },
-                        onEdit = { onEditUserProduct(it.id) },
-                        onDelete = { backStack.removeLastIf<UserProduct>() },
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                    )
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddUserProductIngredientScreen(
+                            onBack = { backStack.removeLastIf<UserProduct>() },
+                            onAdd = { quantity ->
+                                recipeFormViewModel.addIngredient(
+                                    FoodSnapshotId.UserProduct(it.id.value),
+                                    quantity,
+                                )
+                                backStack.removeWhile { r -> r !is RecipeForm }
+                            },
+                            onEdit = { onEditUserProduct(it.id) },
+                            onDelete = { backStack.removeLastIf<UserProduct>() },
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                        )
+                    }
                 }
                 entry<UserRecipe> {
-                    AddUserRecipeIngredientScreen(
-                        onBack = { backStack.removeLastIf<UserRecipe>() },
-                        onAdd = { quantity ->
-                            recipeFormViewModel.addIngredient(
-                                FoodSnapshotId.UserRecipe(it.id.value),
-                                quantity,
-                            )
-                            backStack.removeWhile { r -> r !is RecipeForm }
-                        },
-                        onEdit = { onEditUserRecipe(it.id) },
-                        onDelete = { backStack.removeLastIf<UserRecipe>() },
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                        onNavigateToIngredient = { id, quantity ->
-                            val route =
-                                when (id) {
-                                    is FoodSnapshotId.UserProduct ->
-                                        UserProduct(UserProductId(id.id), quantity)
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddUserRecipeIngredientScreen(
+                            onBack = { backStack.removeLastIf<UserRecipe>() },
+                            onAdd = { quantity ->
+                                recipeFormViewModel.addIngredient(
+                                    FoodSnapshotId.UserRecipe(it.id.value),
+                                    quantity,
+                                )
+                                backStack.removeWhile { r -> r !is RecipeForm }
+                            },
+                            onEdit = { onEditUserRecipe(it.id) },
+                            onDelete = { backStack.removeLastIf<UserRecipe>() },
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                            onNavigateToIngredient = { id, quantity ->
+                                val route =
+                                    when (id) {
+                                        is FoodSnapshotId.UserProduct ->
+                                            UserProduct(UserProductId(id.id), quantity)
 
-                                    is FoodSnapshotId.OpenFoodFacts ->
-                                        OpenFoodFacts(
-                                            OpenFoodFactsProductId(id.barcode),
-                                            quantity,
-                                        )
+                                        is FoodSnapshotId.OpenFoodFacts ->
+                                            OpenFoodFacts(
+                                                OpenFoodFactsProductId(id.barcode),
+                                                quantity,
+                                            )
 
-                                    is FoodSnapshotId.FoodDataCentral ->
-                                        FoodDataCentral(
-                                            FoodDataCentralProductId(id.fdcId),
-                                            quantity,
-                                        )
+                                        is FoodSnapshotId.FoodDataCentral ->
+                                            FoodDataCentral(
+                                                FoodDataCentralProductId(id.fdcId),
+                                                quantity,
+                                            )
 
-                                    is FoodSnapshotId.UserRecipe ->
-                                        UserRecipe(UserRecipeId(id.id), quantity)
+                                        is FoodSnapshotId.UserRecipe ->
+                                            UserRecipe(UserRecipeId(id.id), quantity)
 
-                                    is FoodSnapshotId.Anonymous -> TODO()
-                                }
-                            backStack.add(route)
-                        },
-                    )
+                                        is FoodSnapshotId.Anonymous -> TODO()
+                                    }
+                                backStack.add(route)
+                            },
+                        )
+                    }
                 }
                 entry<EditOpenFoodFacts> {
-                    AddOpenFoodFactsIngredientScreen(
-                        onBack = { backStack.removeLastIf<EditOpenFoodFacts>() },
-                        onAdd = { quantity ->
-                            recipeFormViewModel.updateIngredient(it.index, quantity)
-                            backStack.removeWhile { r -> r !is RecipeForm }
-                        },
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                    )
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddOpenFoodFactsIngredientScreen(
+                            onBack = { backStack.removeLastIf<EditOpenFoodFacts>() },
+                            onAdd = { quantity ->
+                                recipeFormViewModel.updateIngredient(it.index, quantity)
+                                backStack.removeWhile { r -> r !is RecipeForm }
+                            },
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                        )
+                    }
                 }
                 entry<EditFoodDataCentral> {
-                    AddFoodDataCentralIngredientScreen(
-                        onBack = { backStack.removeLastIf<EditFoodDataCentral>() },
-                        onAdd = { quantity ->
-                            recipeFormViewModel.updateIngredient(it.index, quantity)
-                            backStack.removeWhile { r -> r !is RecipeForm }
-                        },
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                    )
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddFoodDataCentralIngredientScreen(
+                            onBack = { backStack.removeLastIf<EditFoodDataCentral>() },
+                            onAdd = { quantity ->
+                                recipeFormViewModel.updateIngredient(it.index, quantity)
+                                backStack.removeWhile { r -> r !is RecipeForm }
+                            },
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                        )
+                    }
                 }
                 entry<EditUserProduct> {
-                    AddUserProductIngredientScreen(
-                        onBack = { backStack.removeLastIf<EditUserProduct>() },
-                        onAdd = { quantity ->
-                            recipeFormViewModel.updateIngredient(it.index, quantity)
-                            backStack.removeWhile { r -> r !is RecipeForm }
-                        },
-                        onEdit = { onEditUserProduct(it.id) },
-                        onDelete = {
-                            recipeFormViewModel.removeIngredient(it.index)
-                            backStack.removeWhile { r -> r !is RecipeForm }
-                        },
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                    )
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddUserProductIngredientScreen(
+                            onBack = { backStack.removeLastIf<EditUserProduct>() },
+                            onAdd = { quantity ->
+                                recipeFormViewModel.updateIngredient(it.index, quantity)
+                                backStack.removeWhile { r -> r !is RecipeForm }
+                            },
+                            onEdit = { onEditUserProduct(it.id) },
+                            onDelete = {
+                                recipeFormViewModel.removeIngredient(it.index)
+                                backStack.removeWhile { r -> r !is RecipeForm }
+                            },
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                        )
+                    }
                 }
                 entry<EditUserRecipe> {
-                    AddUserRecipeIngredientScreen(
-                        onBack = { backStack.removeLastIf<EditUserRecipe>() },
-                        onAdd = { quantity ->
-                            recipeFormViewModel.updateIngredient(it.index, quantity)
-                            backStack.removeWhile { r -> r !is RecipeForm }
-                        },
-                        onEdit = { onEditUserRecipe(it.id) },
-                        onDelete = {
-                            recipeFormViewModel.removeIngredient(it.index)
-                            backStack.removeWhile { r -> r !is RecipeForm }
-                        },
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                        onNavigateToIngredient = { id, quantity ->
-                            val route =
-                                when (id) {
-                                    is FoodSnapshotId.UserProduct ->
-                                        UserProduct(UserProductId(id.id), quantity)
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddUserRecipeIngredientScreen(
+                            onBack = { backStack.removeLastIf<EditUserRecipe>() },
+                            onAdd = { quantity ->
+                                recipeFormViewModel.updateIngredient(it.index, quantity)
+                                backStack.removeWhile { r -> r !is RecipeForm }
+                            },
+                            onEdit = { onEditUserRecipe(it.id) },
+                            onDelete = {
+                                recipeFormViewModel.removeIngredient(it.index)
+                                backStack.removeWhile { r -> r !is RecipeForm }
+                            },
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                            onNavigateToIngredient = { id, quantity ->
+                                val route =
+                                    when (id) {
+                                        is FoodSnapshotId.UserProduct ->
+                                            UserProduct(UserProductId(id.id), quantity)
 
-                                    is FoodSnapshotId.OpenFoodFacts ->
-                                        OpenFoodFacts(
-                                            OpenFoodFactsProductId(id.barcode),
-                                            quantity,
-                                        )
+                                        is FoodSnapshotId.OpenFoodFacts ->
+                                            OpenFoodFacts(
+                                                OpenFoodFactsProductId(id.barcode),
+                                                quantity,
+                                            )
 
-                                    is FoodSnapshotId.FoodDataCentral ->
-                                        FoodDataCentral(
-                                            FoodDataCentralProductId(id.fdcId),
-                                            quantity,
-                                        )
+                                        is FoodSnapshotId.FoodDataCentral ->
+                                            FoodDataCentral(
+                                                FoodDataCentralProductId(id.fdcId),
+                                                quantity,
+                                            )
 
-                                    is FoodSnapshotId.UserRecipe ->
-                                        UserRecipe(UserRecipeId(id.id), quantity)
+                                        is FoodSnapshotId.UserRecipe ->
+                                            UserRecipe(UserRecipeId(id.id), quantity)
 
-                                    is FoodSnapshotId.Anonymous -> TODO()
-                                }
-                            backStack.add(route)
-                        },
-                    )
+                                        is FoodSnapshotId.Anonymous -> TODO()
+                                    }
+                                backStack.add(route)
+                            },
+                        )
+                    }
                 }
             },
     )

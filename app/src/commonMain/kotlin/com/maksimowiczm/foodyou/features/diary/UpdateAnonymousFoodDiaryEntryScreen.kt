@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.features.diary
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +22,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsCompact
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodImage
@@ -55,6 +55,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 fun UpdateAnonymousFoodDiaryEntryScreen(
     onBack: () -> Unit,
     onRelink: (List<ProfileId>, Instant, MeasuredFoodSnapshot) -> Unit,
@@ -131,6 +132,7 @@ fun UpdateAnonymousFoodDiaryEntryScreen(
 }
 
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 private fun UpdateAnonymousFoodDiaryEntryScreenContent(
     headline: String?,
     image: FileUri?,
@@ -187,7 +189,7 @@ private fun UpdateAnonymousFoodDiaryEntryScreenContent(
                 modifier =
                     Modifier.animateFloatingActionButton(
                         visible =
-                            !LocalNavAnimatedContentScope.current.transition.isRunning &&
+                            !animatedContentScope.transition.isRunning &&
                                 formField.error == null &&
                                 selectedProfiles.isNotEmpty(),
                         alignment = Alignment.BottomCenter,

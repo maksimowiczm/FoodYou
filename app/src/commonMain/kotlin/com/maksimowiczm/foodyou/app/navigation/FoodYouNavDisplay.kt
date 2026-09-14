@@ -10,6 +10,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
@@ -337,145 +338,155 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                     )
                 }
                 entry<FoodDataCentralAddDiaryEntry> { route ->
-                    AddFoodDataCentralDiaryEntryScreen(
-                        onBack = { backStack.removeLastIf<FoodDataCentralAddDiaryEntry>() },
-                        onAdd = {
-                            if (route.popToHome) backStack.removeWhile { it !is Home }
-                            else backStack.removeLastIf<FoodDataCentralAddDiaryEntry>()
-                        },
-                        mealId = route.mealId,
-                        id = route.id,
-                        initialQuantity = route.quantity,
-                        date = route.date,
-                    )
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddFoodDataCentralDiaryEntryScreen(
+                            onBack = { backStack.removeLastIf<FoodDataCentralAddDiaryEntry>() },
+                            onAdd = {
+                                if (route.popToHome) backStack.removeWhile { it !is Home }
+                                else backStack.removeLastIf<FoodDataCentralAddDiaryEntry>()
+                            },
+                            mealId = route.mealId,
+                            id = route.id,
+                            initialQuantity = route.quantity,
+                            date = route.date,
+                        )
+                    }
                 }
                 entry<OpenFoodFactsAddDiaryEntry> {
-                    AddOpenFoodFactsDiaryEntryScreen(
-                        onBack = { backStack.removeLastIf<OpenFoodFactsAddDiaryEntry>() },
-                        onAdd = {
-                            if (it.popToHome) backStack.removeWhile { route -> route !is Home }
-                            else backStack.removeLastIf<OpenFoodFactsAddDiaryEntry>()
-                        },
-                        mealId = it.mealId,
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                        date = it.date,
-                    )
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddOpenFoodFactsDiaryEntryScreen(
+                            onBack = { backStack.removeLastIf<OpenFoodFactsAddDiaryEntry>() },
+                            onAdd = {
+                                if (it.popToHome) backStack.removeWhile { route -> route !is Home }
+                                else backStack.removeLastIf<OpenFoodFactsAddDiaryEntry>()
+                            },
+                            mealId = it.mealId,
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                            date = it.date,
+                        )
+                    }
                 }
                 entry<UserProductAddDiaryEntry> {
-                    AddUserProductDiaryEntryScreen(
-                        onBack = { backStack.removeLastIf<UserProductAddDiaryEntry>() },
-                        onAdd = {
-                            if (it.popToHome) backStack.removeWhile { route -> route !is Home }
-                            else backStack.removeLastIf<UserProductAddDiaryEntry>()
-                        },
-                        onEdit = { backStack.add(EditUserProduct(it.id)) },
-                        onDelete = { backStack.removeLastIf<UserProductAddDiaryEntry>() },
-                        mealId = it.mealId,
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                        date = it.date,
-                    )
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddUserProductDiaryEntryScreen(
+                            onBack = { backStack.removeLastIf<UserProductAddDiaryEntry>() },
+                            onAdd = {
+                                if (it.popToHome) backStack.removeWhile { route -> route !is Home }
+                                else backStack.removeLastIf<UserProductAddDiaryEntry>()
+                            },
+                            onEdit = { backStack.add(EditUserProduct(it.id)) },
+                            onDelete = { backStack.removeLastIf<UserProductAddDiaryEntry>() },
+                            mealId = it.mealId,
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                            date = it.date,
+                        )
+                    }
                 }
                 entry<UserRecipeAddDiaryEntry> {
-                    AddUserRecipeDiaryEntryScreen(
-                        onBack = { backStack.removeLastIf<UserRecipeAddDiaryEntry>() },
-                        onAdd = {
-                            if (it.popToHome) backStack.removeWhile { route -> route !is Home }
-                            else backStack.removeLastIf<UserRecipeAddDiaryEntry>()
-                        },
-                        onEdit = { backStack.add(EditRecipe(it.id)) },
-                        onDelete = { backStack.removeLastIf<UserRecipeAddDiaryEntry>() },
-                        onNavigateToIngredient = { id, quantity ->
-                            val ingredientRoute =
-                                when (id) {
-                                    is FoodSnapshotId.UserProduct ->
-                                        UserProductAddDiaryEntry(
-                                            UserProductId(id.id),
-                                            quantity,
-                                            it.mealId,
-                                            popToHome = true,
-                                            date = it.date,
-                                        )
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddUserRecipeDiaryEntryScreen(
+                            onBack = { backStack.removeLastIf<UserRecipeAddDiaryEntry>() },
+                            onAdd = {
+                                if (it.popToHome) backStack.removeWhile { route -> route !is Home }
+                                else backStack.removeLastIf<UserRecipeAddDiaryEntry>()
+                            },
+                            onEdit = { backStack.add(EditRecipe(it.id)) },
+                            onDelete = { backStack.removeLastIf<UserRecipeAddDiaryEntry>() },
+                            onNavigateToIngredient = { id, quantity ->
+                                val ingredientRoute =
+                                    when (id) {
+                                        is FoodSnapshotId.UserProduct ->
+                                            UserProductAddDiaryEntry(
+                                                UserProductId(id.id),
+                                                quantity,
+                                                it.mealId,
+                                                popToHome = true,
+                                                date = it.date,
+                                            )
 
-                                    is FoodSnapshotId.OpenFoodFacts ->
-                                        OpenFoodFactsAddDiaryEntry(
-                                            OpenFoodFactsProductId(id.barcode),
-                                            quantity,
-                                            it.mealId,
-                                            popToHome = true,
-                                            date = it.date,
-                                        )
+                                        is FoodSnapshotId.OpenFoodFacts ->
+                                            OpenFoodFactsAddDiaryEntry(
+                                                OpenFoodFactsProductId(id.barcode),
+                                                quantity,
+                                                it.mealId,
+                                                popToHome = true,
+                                                date = it.date,
+                                            )
 
-                                    is FoodSnapshotId.FoodDataCentral ->
-                                        FoodDataCentralAddDiaryEntry(
-                                            FoodDataCentralProductId(id.fdcId),
-                                            quantity,
-                                            it.mealId,
-                                            popToHome = true,
-                                            date = it.date,
-                                        )
+                                        is FoodSnapshotId.FoodDataCentral ->
+                                            FoodDataCentralAddDiaryEntry(
+                                                FoodDataCentralProductId(id.fdcId),
+                                                quantity,
+                                                it.mealId,
+                                                popToHome = true,
+                                                date = it.date,
+                                            )
 
-                                    is FoodSnapshotId.UserRecipe ->
-                                        UserRecipeAddDiaryEntry(
-                                            UserRecipeId(id.id),
-                                            quantity,
-                                            it.mealId,
-                                            popToHome = true,
-                                            date = it.date,
-                                        )
+                                        is FoodSnapshotId.UserRecipe ->
+                                            UserRecipeAddDiaryEntry(
+                                                UserRecipeId(id.id),
+                                                quantity,
+                                                it.mealId,
+                                                popToHome = true,
+                                                date = it.date,
+                                            )
 
-                                    is FoodSnapshotId.Anonymous -> TODO()
-                                }
-                            backStack.add(ingredientRoute)
-                        },
-                        mealId = it.mealId,
-                        id = it.id,
-                        initialQuantity = it.quantity,
-                        date = it.date,
-                    )
+                                        is FoodSnapshotId.Anonymous -> TODO()
+                                    }
+                                backStack.add(ingredientRoute)
+                            },
+                            mealId = it.mealId,
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                            date = it.date,
+                        )
+                    }
                 }
                 entry<UpdateDiaryEntry> {
-                    UpdateFoodDiaryEntryScreenDispatcher(
-                        onBack = { backStack.removeLastIf<UpdateDiaryEntry>() },
-                        onUpdate = { backStack.removeLastIf<UpdateDiaryEntry>() },
-                        onEditUserProduct = { id -> backStack.add(EditUserProduct(id)) },
-                        onDeleteUserProduct = { backStack.removeLastIf<UpdateDiaryEntry>() },
-                        onEditUserRecipe = { id -> backStack.add(EditRecipe(id)) },
-                        onDeleteUserRecipe = { backStack.removeLastIf<UpdateDiaryEntry>() },
-                        onNavigateToIngredient = { id, quantity, _, _ ->
-                            val ingredientRoute =
-                                when (id) {
-                                    is FoodSnapshotId.FoodDataCentral ->
-                                        FoodDataCentralProductDetails(
-                                            FoodDataCentralProductId(id.fdcId),
-                                            quantity,
-                                        )
+                    context(LocalNavAnimatedContentScope.current) {
+                        UpdateFoodDiaryEntryScreenDispatcher(
+                            onBack = { backStack.removeLastIf<UpdateDiaryEntry>() },
+                            onUpdate = { backStack.removeLastIf<UpdateDiaryEntry>() },
+                            onEditUserProduct = { id -> backStack.add(EditUserProduct(id)) },
+                            onDeleteUserProduct = { backStack.removeLastIf<UpdateDiaryEntry>() },
+                            onEditUserRecipe = { id -> backStack.add(EditRecipe(id)) },
+                            onDeleteUserRecipe = { backStack.removeLastIf<UpdateDiaryEntry>() },
+                            onNavigateToIngredient = { id, quantity, _, _ ->
+                                val ingredientRoute =
+                                    when (id) {
+                                        is FoodSnapshotId.FoodDataCentral ->
+                                            FoodDataCentralProductDetails(
+                                                FoodDataCentralProductId(id.fdcId),
+                                                quantity,
+                                            )
 
-                                    is FoodSnapshotId.OpenFoodFacts ->
-                                        OpenFoodFactsProductDetails(
-                                            OpenFoodFactsProductId(id.barcode),
-                                            quantity,
-                                        )
+                                        is FoodSnapshotId.OpenFoodFacts ->
+                                            OpenFoodFactsProductDetails(
+                                                OpenFoodFactsProductId(id.barcode),
+                                                quantity,
+                                            )
 
-                                    is FoodSnapshotId.UserProduct ->
-                                        UserProductDetails(
-                                            UserProductId(id.id),
-                                            quantity,
-                                        )
+                                        is FoodSnapshotId.UserProduct ->
+                                            UserProductDetails(
+                                                UserProductId(id.id),
+                                                quantity,
+                                            )
 
-                                    is FoodSnapshotId.UserRecipe ->
-                                        UserRecipeDetails(
-                                            UserRecipeId(id.id),
-                                            quantity,
-                                        )
+                                        is FoodSnapshotId.UserRecipe ->
+                                            UserRecipeDetails(
+                                                UserRecipeId(id.id),
+                                                quantity,
+                                            )
 
-                                    is FoodSnapshotId.Anonymous -> TODO()
-                                }
-                            backStack.add(ingredientRoute)
-                        },
-                        entryIdentity = it.id,
-                    )
+                                        is FoodSnapshotId.Anonymous -> TODO()
+                                    }
+                                backStack.add(ingredientRoute)
+                            },
+                            entryIdentity = it.id,
+                        )
+                    }
                 }
             },
     )

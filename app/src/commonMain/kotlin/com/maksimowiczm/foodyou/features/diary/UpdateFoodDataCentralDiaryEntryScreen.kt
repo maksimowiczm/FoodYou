@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.features.diary
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
@@ -27,7 +28,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FetchProgressIndicator
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsCompact
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
@@ -64,6 +64,7 @@ import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 fun UpdateFoodDataCentralDiaryEntryScreen(
     onBack: () -> Unit,
     onSave: (Quantity, List<ProfileId>, Instant, Boolean) -> Unit,
@@ -142,6 +143,7 @@ fun UpdateFoodDataCentralDiaryEntryScreen(
 }
 
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 private fun UpdateFoodDataCentralDiaryEntryScreenContent(
     headline: String?,
     isFavorite: Boolean,
@@ -205,7 +207,7 @@ private fun UpdateFoodDataCentralDiaryEntryScreenContent(
                     Modifier.animateFloatingActionButton(
                         visible =
                             !isLoading &&
-                                !LocalNavAnimatedContentScope.current.transition.isRunning &&
+                                !animatedContentScope.transition.isRunning &&
                                 formField.error == null &&
                                 selectedProfiles.isNotEmpty(),
                         alignment = Alignment.BottomCenter,

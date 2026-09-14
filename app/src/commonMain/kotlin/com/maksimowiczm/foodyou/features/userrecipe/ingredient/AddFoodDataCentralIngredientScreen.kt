@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.features.userrecipe.ingredient
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +32,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FetchProgressIndicator
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsNutrientsCompact
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodHeadline
@@ -62,6 +62,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 fun AddFoodDataCentralIngredientScreen(
     onBack: () -> Unit,
     onAdd: (Quantity) -> Unit,
@@ -116,6 +117,7 @@ fun AddFoodDataCentralIngredientScreen(
 }
 
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 private fun AddFoodDataCentralIngredientScreenContent(
     headline: String?,
     isFavorite: Boolean,
@@ -173,7 +175,7 @@ private fun AddFoodDataCentralIngredientScreenContent(
                     Modifier.animateFloatingActionButton(
                         visible =
                             !isLoading &&
-                                !LocalNavAnimatedContentScope.current.transition.isRunning &&
+                                !animatedContentScope.transition.isRunning &&
                                 formField.error == null,
                         alignment = Alignment.BottomEnd,
                     ),

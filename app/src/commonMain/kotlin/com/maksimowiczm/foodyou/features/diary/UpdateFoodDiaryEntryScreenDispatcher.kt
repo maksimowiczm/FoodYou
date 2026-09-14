@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.features.diary
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,6 +21,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
+context(animatedContentScope: AnimatedContentScope)
 fun UpdateFoodDiaryEntryScreenDispatcher(
     onBack: () -> Unit,
     onUpdate: () -> Unit,
