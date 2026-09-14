@@ -1,14 +1,13 @@
 package com.maksimowiczm.foodyou.shared.ui.saveable
 
 import androidx.compose.runtime.*
-import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.koin.compose.koinInject
 
 /**
  * Remember a mutable state that is persisted to DataStore. Similar to rememberSaveable but uses
@@ -23,7 +22,7 @@ fun <T> rememberDataStore(
     key: Preferences.Key<T>,
     init: () -> MutableState<T>,
 ): MutableState<T> {
-    val dataStore: DataStore<Preferences> = koinInject()
+    val dataStore = LocalDataStore.current
     val scope = rememberCoroutineScope()
 
     val state = remember(*inputs) { init() }
@@ -60,6 +59,11 @@ fun <T> rememberDataStore(
  *
  * It's useful for small pieces of data that need to be persisted across app launches without
  * bloating the view model or repository.
+ *
+ * > **Warning:** This blocks the UI thread on first composition while reading from DataStore, which
+ * > can make the UI feel clunky, especially if the underlying storage is slow or the value is
+ * > large. Only use this for small, quick-to-read pieces of data, and consider whether an
+ * > asynchronous alternative is more appropriate before reaching for this.
  */
 @Composable
 fun <T> rememberBlockingDataStore(
@@ -67,7 +71,7 @@ fun <T> rememberBlockingDataStore(
     key: Preferences.Key<T>,
     init: () -> MutableState<T>,
 ): MutableState<T> {
-    val dataStore: DataStore<Preferences> = koinInject()
+    val dataStore = LocalDataStore.current
     val scope = rememberCoroutineScope()
 
     // Block and load the persisted value first, or use init if null

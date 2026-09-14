@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.account.application.AccountService
@@ -49,6 +51,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
                     initialValue = UIFeatureFlags(),
                 )
         }
+    private val dataStore: DataStore<Preferences> by inject()
 
     fun setContent(content: @Composable () -> Unit) {
         val dateFormatter = DateFormatterImpl(this)
@@ -61,6 +64,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
                     appConfig = appConfig,
                     blobResolver = blobResolver,
                     uiFeatureFlags = uiFeatureFlags,
+                    dataStore = dataStore,
                     content = content,
                 )
             }
