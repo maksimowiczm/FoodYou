@@ -1,17 +1,11 @@
 package com.maksimowiczm.foodyou.account.domain
 
-import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import kotlin.time.Instant
 
 sealed interface AccountCommand {
     data class FinishOnboarding(val timestamp: Instant) : AccountCommand
-
-    data class ChangeEnergyUnit(val unit: EnergyUnit, val timestamp: Instant) : AccountCommand
-
-    data class ChangeNutrientsOrder(val order: List<NutrientsOrder>, val timestamp: Instant) :
-        AccountCommand
 
     data class ChangeEnableSingleProfileMode(val enable: Boolean, val timestamp: Instant) :
         AccountCommand

@@ -38,7 +38,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.capabilities.theme.rememberColorScheme
-import com.maksimowiczm.foodyou.device.domain.Theme
+import com.maksimowiczm.foodyou.preferences.domain.Theme
 import com.maksimowiczm.foodyou.shared.ui.extension.confirm
 import kotlin.math.absoluteValue
 import kotlinx.coroutines.launch

@@ -2,26 +2,16 @@ package com.maksimowiczm.foodyou.capabilities.theme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
+import com.maksimowiczm.foodyou.preferences.domain.ThemePreference
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
+import com.maksimowiczm.foodyou.preferences.domain.observe
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-class ThemeViewModel(deviceSettingsRepository: DeviceSettingsRepository) : ViewModel() {
+class ThemeViewModel(preferencesRepository: UserPreferencesRepository) : ViewModel() {
     val themeSettings =
-        deviceSettingsRepository
-            .observe()
-            .map { it.themeSettings }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
-                initialValue = null,
-            )
-
-    val nutrientsColors =
-        deviceSettingsRepository
-            .observe()
-            .map { it.nutrientsColors }
+        preferencesRepository
+            .observe<ThemePreference>()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),

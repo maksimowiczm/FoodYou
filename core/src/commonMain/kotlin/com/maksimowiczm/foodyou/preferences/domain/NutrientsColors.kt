@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.device.domain
+package com.maksimowiczm.foodyou.preferences.domain
 
 /**
  * Colors for nutrients used in the app theme.

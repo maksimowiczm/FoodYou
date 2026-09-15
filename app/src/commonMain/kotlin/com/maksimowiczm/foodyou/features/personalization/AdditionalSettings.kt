@@ -13,15 +13,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.device.domain.Theme
-import com.maksimowiczm.foodyou.device.domain.ThemeSettings
+import com.maksimowiczm.foodyou.preferences.domain.Theme
+import com.maksimowiczm.foodyou.preferences.domain.ThemePreference
 import com.maksimowiczm.foodyou.shared.ui.extension.toggle
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AdditionalSettings(
-    themeSettings: ThemeSettings,
+    themeSettings: ThemePreference,
     onRandomizeTheme: (Boolean) -> Unit,
     onUpdateTheme: (Theme) -> Unit,
     modifier: Modifier = Modifier,
@@ -57,6 +57,6 @@ internal expect fun platformAdditionalSettingsCount(): Int
 
 @Composable
 expect fun ColumnScope.PlatformAdditionalSettings(
-    themeSettings: ThemeSettings,
+    themeSettings: ThemePreference,
     onUpdateTheme: (Theme) -> Unit,
 )

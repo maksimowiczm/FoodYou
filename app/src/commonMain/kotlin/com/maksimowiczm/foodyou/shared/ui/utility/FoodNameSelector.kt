@@ -3,8 +3,10 @@ package com.maksimowiczm.foodyou.shared.ui.utility
 import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.preferences.domain.LanguagePreference
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
+import com.maksimowiczm.foodyou.preferences.domain.observe
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
@@ -39,17 +41,18 @@ interface FoodNameSelector {
     fun observeLanguage(): Flow<Language>
 }
 
-internal class FoodNameSelectorImpl(private val systemDetails: SystemDetails) : FoodNameSelector {
+internal class FoodNameSelectorImpl(private val preferencesRepository: UserPreferencesRepository) :
+    FoodNameSelector {
     override fun select(foodName: FoodName): String {
-        val tag = runBlocking { systemDetails.languageTag.first() }
-        val language = localizedLanguage(tag) ?: Language.English
+        val tag = runBlocking {
+            preferencesRepository.observe<LanguagePreference>().map { it.language }.first()
+        }
+        val language = tag ?: Language.English
         return foodName[language] ?: foodName.fallback
     }
 
     override fun observeLanguage(): Flow<Language> =
-        systemDetails.languageTag.map { localizedLanguage(it) ?: Language.English }
-
-    private fun localizedLanguage(tag: String): Language? = Language.fromTag(tag)
+        preferencesRepository.observe<LanguagePreference>().map { it.language ?: Language.English }
 }
 
 fun OpenFoodFactsProduct.headline(nameSelector: FoodNameSelector) = buildString {

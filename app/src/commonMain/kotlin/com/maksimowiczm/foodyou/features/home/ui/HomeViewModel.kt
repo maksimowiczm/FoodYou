@@ -99,8 +99,7 @@ class HomeViewModel(
                 activeMeal,
                 observedMealPlan,
             ) { profiles, selectedProfileId, dateTime, activeMeal, mealPlan ->
-                val entries = homeDao.observeEntries(selectedProfileId.value, dateTime.date)
-                entries.map { homeEntries ->
+                homeDao.observeEntries(selectedProfileId.value, dateTime.date).map { homeEntries ->
                     val mealIds = mealPlan.meals.map { it.id.value }.toSet()
 
                     val linkedMeals =

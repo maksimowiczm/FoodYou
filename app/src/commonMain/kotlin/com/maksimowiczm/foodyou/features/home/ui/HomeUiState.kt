@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.features.home.ui
 
 import androidx.compose.runtime.*
+import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
@@ -16,6 +17,7 @@ data class HomeUiState(
     val date: LocalDate,
     val meals: List<HomeMealState> = emptyList(),
     val activeMealId: MealId? = null,
+    val homeCardsOrder: List<HomeCard> = HomeCard.defaultOrder,
 ) {
     val selectedProfile = profiles.singleOrNull { it.id == selectedProfileId }
     val activeMeal =

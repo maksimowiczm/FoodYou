@@ -463,7 +463,7 @@ fun HomeScreenContent(
                             contentPadding = contentPadding.add(vertical = 8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            it.homeCardsOrder.forEach {
+                            uiState.homeCardsOrder.forEach {
                                 when (it) {
                                     HomeCard.Calendar ->
                                         item {

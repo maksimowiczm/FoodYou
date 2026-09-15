@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.account.domain
 
-import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import kotlin.time.Instant
@@ -30,18 +29,6 @@ data class ProfileUpdatedEvent(
 @Serializable
 data class ProfileRemovedEvent(
     val profileId: ProfileId,
-    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
-) : AccountEvent()
-
-@Serializable
-data class EnergyUnitChangedEvent(
-    val unit: EnergyUnit,
-    @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
-) : AccountEvent()
-
-@Serializable
-data class NutrientsOrderChangedEvent(
-    val order: List<NutrientsOrder>,
     @Serializable(with = InstantComponentSerializer::class) override val timestamp: Instant,
 ) : AccountEvent()
 

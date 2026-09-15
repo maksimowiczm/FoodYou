@@ -2,23 +2,22 @@ package com.maksimowiczm.foodyou.features.personalization
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
-import com.maksimowiczm.foodyou.device.domain.RandomColorProvider
-import com.maksimowiczm.foodyou.device.domain.Theme
-import com.maksimowiczm.foodyou.device.domain.ThemeOption
-import com.maksimowiczm.foodyou.device.domain.randomizeTheme
+import com.maksimowiczm.foodyou.preferences.domain.NutrientsColors
+import com.maksimowiczm.foodyou.preferences.domain.Theme
+import com.maksimowiczm.foodyou.preferences.domain.ThemeOption
+import com.maksimowiczm.foodyou.preferences.domain.ThemePreference
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
+import com.maksimowiczm.foodyou.preferences.domain.observe
+import com.maksimowiczm.foodyou.preferences.domain.random
+import com.maksimowiczm.foodyou.preferences.domain.update
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ColorsViewModel(
-    private val deviceSettingsRepository: DeviceSettingsRepository,
-    private val colorProvider: RandomColorProvider,
-) : ViewModel() {
-    private val _themeSettings = deviceSettingsRepository.observe().map { it.themeSettings }
+class ColorsViewModel(private val preferencesRepository: UserPreferencesRepository) : ViewModel() {
+    private val _themeSettings = preferencesRepository.observe<ThemePreference>()
 
     val themeSettings =
         _themeSettings.stateIn(
@@ -27,28 +26,20 @@ class ColorsViewModel(
             initialValue = runBlocking { _themeSettings.first() },
         )
 
-    private val _nutrientsColors = deviceSettingsRepository.observe().map { it.nutrientsColors }
-    val nutrientsColors =
-        _nutrientsColors.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = runBlocking { _nutrientsColors.first() },
-        )
-
     fun updateThemeOption(themeOption: ThemeOption) {
         viewModelScope.launch {
-            deviceSettingsRepository.update { device ->
-                device.copy(themeSettings = device.themeSettings.copy(themeOption = themeOption))
+            preferencesRepository.update<ThemePreference> {
+                it.copy(themeOption = themeOption)
             }
         }
     }
 
     fun updateTheme(theme: Theme) {
         viewModelScope.launch {
-            deviceSettingsRepository.update { device ->
-                device.copy(
-                    themeSettings =
-                        device.themeSettings.copy(theme = theme, randomizeOnLaunch = false)
+            preferencesRepository.update<ThemePreference> {
+                it.copy(
+                    randomizeOnLaunch = false,
+                    theme = theme,
                 )
             }
         }
@@ -56,12 +47,11 @@ class ColorsViewModel(
 
     fun setRandomizeTheme(randomize: Boolean) {
         viewModelScope.launch {
-            deviceSettingsRepository.update { settings ->
-                val updatedSettings =
-                    settings.copy(
-                        themeSettings = settings.themeSettings.copy(randomizeOnLaunch = randomize)
-                    )
-                if (randomize) updatedSettings.randomizeTheme(colorProvider) else updatedSettings
+            preferencesRepository.update<ThemePreference> {
+                it.copy(
+                    randomizeOnLaunch = randomize,
+                    theme = if (randomize) it.theme.random() else it.theme,
+                )
             }
         }
     }
@@ -79,14 +69,13 @@ class ColorsViewModel(
         fatsColor: ULong? = null,
     ) {
         viewModelScope.launch {
-            deviceSettingsRepository.update { device ->
-                device.copy(
+            preferencesRepository.update<ThemePreference> {
+                it.copy(
                     nutrientsColors =
-                        device.nutrientsColors.copy(
-                            proteins = proteinsColor ?: device.nutrientsColors.proteins,
-                            carbohydrates =
-                                carbohydratesColor ?: device.nutrientsColors.carbohydrates,
-                            fats = fatsColor ?: device.nutrientsColors.fats,
+                        it.nutrientsColors.copy(
+                            proteins = proteinsColor ?: it.nutrientsColors.proteins,
+                            carbohydrates = carbohydratesColor ?: it.nutrientsColors.carbohydrates,
+                            fats = fatsColor ?: it.nutrientsColors.fats,
                         )
                 )
             }
@@ -95,10 +84,10 @@ class ColorsViewModel(
 
     fun resetNutrientsColors() {
         viewModelScope.launch {
-            deviceSettingsRepository.update { device ->
-                device.copy(
+            preferencesRepository.update<ThemePreference> {
+                it.copy(
                     nutrientsColors =
-                        device.nutrientsColors.copy(
+                        NutrientsColors(
                             proteins = null,
                             carbohydrates = null,
                             fats = null,

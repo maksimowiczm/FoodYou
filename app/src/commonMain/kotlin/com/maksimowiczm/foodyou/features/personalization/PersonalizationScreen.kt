@@ -73,14 +73,16 @@ fun PersonalizationScreen(
 ) {
     val viewModel: PersonalizationViewModel = koinViewModel()
 
-    val device by viewModel.device.collectAsStateWithLifecycle()
-    val account by viewModel.account.collectAsStateWithLifecycle()
+    val singleProfileMode by viewModel.singleProfileMode.collectAsStateWithLifecycle()
+    val singleProfileModeAllowed by viewModel.singleProfileModeAllowed.collectAsStateWithLifecycle()
+    val energyUnit by viewModel.energyUnit.collectAsStateWithLifecycle()
+    val hideScreen by viewModel.hideScreen.collectAsStateWithLifecycle()
 
     PersonalizationScreen(
-        singleProfileMode = account.singleProfileMode,
-        allowSingleProfileMode = account.profiles.size == 1,
-        secureScreen = device.hideScreen,
-        energyUnit = account.energyUnit,
+        singleProfileMode = singleProfileMode,
+        allowSingleProfileMode = singleProfileModeAllowed,
+        secureScreen = hideScreen,
+        energyUnit = energyUnit,
         onBack = onBack,
         onNutritionFacts = onNutritionFacts,
         onMeals = onMeals,

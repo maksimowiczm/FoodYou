@@ -29,10 +29,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.capabilities.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.capabilities.theme.isDark
-import com.maksimowiczm.foodyou.device.domain.NutrientsColors
-import com.maksimowiczm.foodyou.device.domain.Theme
-import com.maksimowiczm.foodyou.device.domain.ThemeOption
-import com.maksimowiczm.foodyou.device.domain.ThemeSettings
+import com.maksimowiczm.foodyou.preferences.domain.NutrientsColors
+import com.maksimowiczm.foodyou.preferences.domain.Theme
+import com.maksimowiczm.foodyou.preferences.domain.ThemeOption
+import com.maksimowiczm.foodyou.preferences.domain.ThemePreference
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.ReadYouImage
 import com.maksimowiczm.foodyou.shared.ui.extension.add
@@ -46,11 +46,9 @@ fun ColorsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: ColorsViewModel = koinViewModel()
 
     val themeSettings by viewModel.themeSettings.collectAsStateWithLifecycle()
-    val nutrientsColors by viewModel.nutrientsColors.collectAsStateWithLifecycle()
 
     ColorsScreen(
         themeSettings = themeSettings,
-        nutrientsColors = nutrientsColors,
         onBack = onBack,
         onThemeOptionChange = viewModel::updateThemeOption,
         onThemeChange = viewModel::updateTheme,
@@ -63,8 +61,7 @@ fun ColorsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 fun ColorsScreen(
-    themeSettings: ThemeSettings,
-    nutrientsColors: NutrientsColors,
+    themeSettings: ThemePreference,
     onBack: () -> Unit,
     onThemeOptionChange: (ThemeOption) -> Unit,
     onThemeChange: (Theme) -> Unit,
@@ -126,13 +123,14 @@ fun ColorsScreen(
                 val nutrientsPalette = LocalNutrientsPalette.current
 
                 val proteinsColor =
-                    nutrientsColors.proteins?.let(::Color)
+                    themeSettings.nutrientsColors.proteins?.let(::Color)
                         ?: nutrientsPalette.proteinsOnSurfaceContainer
                 val carbsColor =
-                    nutrientsColors.carbohydrates?.let(::Color)
+                    themeSettings.nutrientsColors.carbohydrates?.let(::Color)
                         ?: nutrientsPalette.carbohydratesOnSurfaceContainer
                 val fatsColor =
-                    nutrientsColors.fats?.let(::Color) ?: nutrientsPalette.fatsOnSurfaceContainer
+                    themeSettings.nutrientsColors.fats?.let(::Color)
+                        ?: nutrientsPalette.fatsOnSurfaceContainer
 
                 NutrientsColors(
                     proteinsColor = proteinsColor,
@@ -210,12 +208,13 @@ private fun ColorsScreenPreview() {
     PreviewFoodYouTheme {
         ColorsScreen(
             themeSettings =
-                ThemeSettings(
+                ThemePreference(
                     randomizeOnLaunch = false,
                     themeOption = ThemeOption.System,
                     theme = Theme.Dynamic,
+                    nutrientsColors =
+                        NutrientsColors(proteins = null, carbohydrates = null, fats = null),
                 ),
-            nutrientsColors = NutrientsColors(proteins = null, carbohydrates = null, fats = null),
             onBack = {},
             onThemeOptionChange = {},
             onThemeChange = {},

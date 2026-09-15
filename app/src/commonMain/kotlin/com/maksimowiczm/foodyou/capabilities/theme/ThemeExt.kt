@@ -4,17 +4,17 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import com.maksimowiczm.foodyou.device.domain.Theme
-import com.maksimowiczm.foodyou.device.domain.ThemeContrast
-import com.maksimowiczm.foodyou.device.domain.ThemeOption
-import com.maksimowiczm.foodyou.device.domain.ThemeSettings
-import com.maksimowiczm.foodyou.device.domain.ThemeStyle
+import com.maksimowiczm.foodyou.preferences.domain.Theme
+import com.maksimowiczm.foodyou.preferences.domain.ThemeContrast
+import com.maksimowiczm.foodyou.preferences.domain.ThemeOption
+import com.maksimowiczm.foodyou.preferences.domain.ThemePreference
+import com.maksimowiczm.foodyou.preferences.domain.ThemeStyle
 import com.materialkolor.Contrast
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
 
 @Composable
-fun ThemeSettings.isDark(): Boolean =
+fun ThemePreference.isDark(): Boolean =
     when (themeOption) {
         ThemeOption.System -> isSystemInDarkTheme()
         ThemeOption.Light -> false

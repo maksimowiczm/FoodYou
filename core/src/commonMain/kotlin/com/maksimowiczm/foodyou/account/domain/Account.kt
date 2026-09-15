@@ -3,13 +3,10 @@
 package com.maksimowiczm.foodyou.account.domain
 
 import com.maksimowiczm.foodyou.common.Decider
-import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 
 data class Account(
     val profiles: List<Profile> = emptyList(),
-    val energyUnit: EnergyUnit = EnergyUnit.Kilocalories,
-    val nutrientsOrder: List<NutrientsOrder> = NutrientsOrder.defaultOrder,
     val onboardingFinished: Boolean = false,
     val singleProfileMode: Boolean = false,
 )
@@ -20,32 +17,6 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
             buildList {
                 check(profiles.isNotEmpty()) { "Cannot finish onboarding without a profile" }
                 if (!onboardingFinished) add(OnboardingFinishedEvent(timestamp = command.timestamp))
-            }
-
-        is AccountCommand.ChangeEnergyUnit ->
-            buildList {
-                if (energyUnit != command.unit) {
-                    add(EnergyUnitChangedEvent(unit = command.unit, timestamp = command.timestamp))
-                }
-            }
-
-        is AccountCommand.ChangeNutrientsOrder ->
-            buildList {
-                val orderSet = command.order.toSet()
-                require(orderSet.size == command.order.size) {
-                    "Nutrients order cannot contain duplicates"
-                }
-                require(orderSet == NutrientsOrder.entries.toSet()) {
-                    "Nutrients order must contain all NutrientsOrder values exactly once"
-                }
-                if (nutrientsOrder != command.order) {
-                    add(
-                        NutrientsOrderChangedEvent(
-                            order = command.order,
-                            timestamp = command.timestamp,
-                        )
-                    )
-                }
             }
 
         is AccountCommand.ChangeEnableSingleProfileMode ->
@@ -152,8 +123,6 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
 fun Account.apply(event: AccountEvent): Account =
     when (event) {
         is OnboardingFinishedEvent -> copy(onboardingFinished = true)
-        is EnergyUnitChangedEvent -> copy(energyUnit = event.unit)
-        is NutrientsOrderChangedEvent -> copy(nutrientsOrder = event.order)
         is EnableSingleProfileModeChangedEvent -> copy(singleProfileMode = event.enable)
         is ProfileAddedEvent -> copy(profiles = profiles + event.profile)
         is ProfileUpdatedEvent -> applyProfileUpdate(event.profile.id) { event.profile }

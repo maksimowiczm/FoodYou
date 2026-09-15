@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.account.domain
 
-import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import kotlin.test.Test
@@ -46,48 +45,6 @@ class AccountTest {
         val account = Account(profiles = emptyList(), onboardingFinished = false)
         assertFailsWith<IllegalStateException> {
             account.decide(AccountCommand.FinishOnboarding(now))
-        }
-    }
-
-    @Test
-    fun changeEnergyUnit_returnsEnergyUnitChangedEvent_whenUnitIsDifferent() {
-        val account = Account(energyUnit = EnergyUnit.Kilocalories)
-        val events = account.decide(AccountCommand.ChangeEnergyUnit(EnergyUnit.Kilojoules, now))
-        assertEquals(listOf(EnergyUnitChangedEvent(EnergyUnit.Kilojoules, now)), events)
-    }
-
-    @Test
-    fun changeEnergyUnit_returnsEmptyList_whenUnitIsSame() {
-        val account = Account(energyUnit = EnergyUnit.Kilocalories)
-        val events = account.decide(AccountCommand.ChangeEnergyUnit(EnergyUnit.Kilocalories, now))
-        assertTrue(events.isEmpty())
-    }
-
-    @Test
-    fun changeNutrientsOrder_returnsNutrientsOrderChangedEvent_whenOrderIsDifferent() {
-        val account = Account(nutrientsOrder = NutrientsOrder.defaultOrder)
-        val newOrder = NutrientsOrder.defaultOrder.reversed()
-        val events = account.decide(AccountCommand.ChangeNutrientsOrder(newOrder, now))
-        assertEquals(listOf(NutrientsOrderChangedEvent(newOrder, now)), events)
-    }
-
-    @Test
-    fun changeNutrientsOrder_fails_whenOrderHasDuplicates() {
-        val account = Account()
-        val invalidOrder =
-            listOf(NutrientsOrder.Proteins, NutrientsOrder.Proteins) +
-                (NutrientsOrder.entries - NutrientsOrder.Proteins).take(4)
-        assertFailsWith<IllegalArgumentException> {
-            account.decide(AccountCommand.ChangeNutrientsOrder(invalidOrder, now))
-        }
-    }
-
-    @Test
-    fun changeNutrientsOrder_fails_whenOrderIsMissingEntries() {
-        val account = Account()
-        val invalidOrder = NutrientsOrder.entries.take(1)
-        assertFailsWith<IllegalArgumentException> {
-            account.decide(AccountCommand.ChangeNutrientsOrder(invalidOrder, now))
         }
     }
 
@@ -253,13 +210,6 @@ class AccountTest {
         account = account.apply(OnboardingFinishedEvent(now))
         assertTrue(account.onboardingFinished)
 
-        account = account.apply(EnergyUnitChangedEvent(EnergyUnit.Kilojoules, now))
-        assertEquals(EnergyUnit.Kilojoules, account.energyUnit)
-
-        val newOrder = NutrientsOrder.defaultOrder.reversed()
-        account = account.apply(NutrientsOrderChangedEvent(newOrder, now))
-        assertEquals(newOrder, account.nutrientsOrder)
-
         val updatedProfile = profile1.copy(name = "New Name")
         account = account.apply(ProfileUpdatedEvent(updatedProfile, now))
         assertEquals("New Name", account.profiles.first().name)
@@ -281,13 +231,11 @@ class AccountTest {
         val events =
             listOf(
                 ProfileAddedEvent(profile1, now),
-                EnergyUnitChangedEvent(EnergyUnit.Kilojoules, now),
                 OnboardingFinishedEvent(now),
             )
 
         val account = events.toAccount()
         assertEquals(listOf(profile1), account.profiles)
-        assertEquals(EnergyUnit.Kilojoules, account.energyUnit)
         assertTrue(account.onboardingFinished)
     }
 }

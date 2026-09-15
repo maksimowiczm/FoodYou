@@ -13,8 +13,10 @@ import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.common.domain.BlobResolver
-import com.maksimowiczm.foodyou.common.infrastructure.SystemDetails
-import com.maksimowiczm.foodyou.device.domain.DeviceSettingsRepository
+import com.maksimowiczm.foodyou.preferences.domain.HideScreenPreference
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
+import com.maksimowiczm.foodyou.preferences.domain.observe
+import com.maksimowiczm.foodyou.preferences.infrastructure.LanguagePreferenceProvider
 import com.maksimowiczm.foodyou.shared.ui.utility.DateFormatterImpl
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.UIFeatureFlags
@@ -33,8 +35,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 abstract class FoodYouAbstractActivity : AppCompatActivity() {
-    private val systemDetails: SystemDetails by inject()
-    private val deviceSettingsRepository: DeviceSettingsRepository by inject()
+    private val languagePreferenceProvider: LanguagePreferenceProvider by inject()
     private val foodNameSelector: FoodNameSelector by inject()
     private val appConfig: FoodYouConfig by inject()
     private val blobResolver: BlobResolver by inject()
@@ -52,6 +53,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
                 )
         }
     private val dataStore: DataStore<Preferences> by inject()
+    private val userPreferencesRepository: UserPreferencesRepository by inject()
 
     fun setContent(content: @Composable () -> Unit) {
         val dateFormatter = DateFormatterImpl(this)
@@ -73,20 +75,20 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycle.addObserver(systemDetails)
+        lifecycle.addObserver(languagePreferenceProvider)
         lifecycleScope.launch { observeShowContentSecurity() }
         FileKit.init(this)
         enableEdgeToEdge()
     }
 
     override fun onDestroy() {
-        lifecycle.removeObserver(systemDetails)
+        lifecycle.removeObserver(languagePreferenceProvider)
         super.onDestroy()
     }
 
     private suspend fun observeShowContentSecurity() {
-        deviceSettingsRepository
-            .observe()
+        userPreferencesRepository
+            .observe<HideScreenPreference>()
             .map { it.hideScreen }
             .collectLatest {
                 if (it) {

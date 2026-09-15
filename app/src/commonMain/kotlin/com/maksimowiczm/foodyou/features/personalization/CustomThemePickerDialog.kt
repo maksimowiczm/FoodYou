@@ -37,9 +37,9 @@ import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
-import com.maksimowiczm.foodyou.device.domain.Theme
-import com.maksimowiczm.foodyou.device.domain.ThemeContrast
-import com.maksimowiczm.foodyou.device.domain.ThemeStyle
+import com.maksimowiczm.foodyou.preferences.domain.Theme
+import com.maksimowiczm.foodyou.preferences.domain.ThemeContrast
+import com.maksimowiczm.foodyou.preferences.domain.ThemeStyle
 import com.maksimowiczm.foodyou.shared.ui.extension.copy
 import com.materialkolor.ktx.toHex
 import foodyou.app.generated.resources.*

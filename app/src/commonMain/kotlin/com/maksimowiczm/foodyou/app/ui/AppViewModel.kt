@@ -3,81 +3,61 @@ package com.maksimowiczm.foodyou.app.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
-import com.maksimowiczm.foodyou.account.domain.Account
 import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
+import com.maksimowiczm.foodyou.preferences.domain.EnergyUnitPreference
+import com.maksimowiczm.foodyou.preferences.domain.NutrientsOrderPreference
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
+import com.maksimowiczm.foodyou.preferences.domain.observe
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.timeout
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
-@OptIn(FlowPreview::class)
-class AppViewModel(private val accountService: AccountService) : ViewModel() {
-    private val primaryAccount: StateFlow<Account?> =
-        accountService
-            .observe()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
-                initialValue =
-                    runBlocking {
-                        accountService
-                            .observe()
-                            .timeout(1.seconds)
-                            .catch {
-                                when (it) {
-                                    is TimeoutCancellationException -> emit(null)
-                                    else -> throw it
-                                }
-                            }
-                            .first()
-                    },
-            )
+class AppViewModel(
+    private val accountService: AccountService,
+    preferencesRepository: UserPreferencesRepository,
+) : ViewModel() {
 
     val appPage: StateFlow<AppPage> =
-        primaryAccount
+        accountService
+            .observe()
             .map { account ->
-                if (account == null || !account.onboardingFinished) {
-                    AppPage.Onboarding
-                } else {
-                    AppPage.Main
-                }
+                if (account == null || !account.onboardingFinished) AppPage.Onboarding
+                else AppPage.Main
             }
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
+                started = SharingStarted.WhileSubscribed(5.seconds),
                 initialValue = AppPage.Splash,
             )
 
     val nutrientsOrder: StateFlow<List<NutrientsOrder>> =
-        primaryAccount
-            .map { account -> account?.nutrientsOrder ?: NutrientsOrder.defaultOrder }
+        preferencesRepository
+            .observe<NutrientsOrderPreference>()
+            .map { it.nutrientsOrder }
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
+                started = SharingStarted.WhileSubscribed(5.seconds),
                 initialValue = NutrientsOrder.defaultOrder,
             )
 
     val energyUnit: StateFlow<EnergyUnit> =
-        primaryAccount
-            .map { it?.energyUnit ?: EnergyUnit.Kilocalories }
+        preferencesRepository
+            .observe<EnergyUnitPreference>()
+            .map { it.energyUnit }
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
+                started = SharingStarted.WhileSubscribed(5.seconds),
                 initialValue = EnergyUnit.Kilocalories,
             )
 

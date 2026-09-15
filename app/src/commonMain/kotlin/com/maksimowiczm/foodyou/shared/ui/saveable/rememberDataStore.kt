@@ -3,11 +3,22 @@ package com.maksimowiczm.foodyou.shared.ui.saveable
 import androidx.compose.runtime.*
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferences
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
+import com.maksimowiczm.foodyou.preferences.domain.observe
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalDataStore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.koin.compose.koinInject
+
+@Composable
+inline fun <reified T : UserPreferences> UserPreferencesRepository.Companion.observe(): Flow<T> {
+    val userPreferencesRepository: UserPreferencesRepository = koinInject()
+    return remember { userPreferencesRepository.observe<T>() }
+}
 
 /**
  * Remember a mutable state that is persisted to DataStore. Similar to rememberSaveable but uses

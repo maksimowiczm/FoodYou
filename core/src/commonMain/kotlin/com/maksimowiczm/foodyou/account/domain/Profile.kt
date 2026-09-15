@@ -10,15 +10,8 @@ data class Profile(
     val id: ProfileId = ProfileId(Uuid.random()),
     val name: String,
     val avatar: Avatar,
-    val homeCardsOrder: List<HomeCard> = HomeCard.defaultOrder,
     val favoriteFoods: Set<FavoriteFoodId> = setOf(),
 ) {
-    init {
-        require(homeCardsOrder.distinct().size == homeCardsOrder.size) {
-            "Home cards order cannot contain duplicates"
-        }
-    }
-
     @Serializable
     sealed interface Avatar {
         @Serializable data class Photo(val digest: BlobDigest) : Avatar

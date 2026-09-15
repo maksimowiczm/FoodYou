@@ -9,15 +9,15 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalHapticFeedback
-import com.maksimowiczm.foodyou.device.domain.Theme
-import com.maksimowiczm.foodyou.device.domain.ThemeSettings
+import com.maksimowiczm.foodyou.preferences.domain.Theme
+import com.maksimowiczm.foodyou.preferences.domain.ThemePreference
 import com.maksimowiczm.foodyou.shared.ui.extension.toggle
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 actual fun ColumnScope.PlatformAdditionalSettings(
-    themeSettings: ThemeSettings,
+    themeSettings: ThemePreference,
     onUpdateTheme: (Theme) -> Unit,
 ) {
     val hapticFeedback = LocalHapticFeedback.current

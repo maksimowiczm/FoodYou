@@ -2,9 +2,9 @@ package com.maksimowiczm.foodyou.features.personalization
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import com.maksimowiczm.foodyou.device.domain.Theme
-import com.maksimowiczm.foodyou.device.domain.ThemeContrast
-import com.maksimowiczm.foodyou.device.domain.ThemeStyle
+import com.maksimowiczm.foodyou.preferences.domain.Theme
+import com.maksimowiczm.foodyou.preferences.domain.ThemeContrast
+import com.maksimowiczm.foodyou.preferences.domain.ThemeStyle
 import com.materialkolor.hct.Hct
 
 internal val MaterialDeepPurple = Color(0xFF6200EE)

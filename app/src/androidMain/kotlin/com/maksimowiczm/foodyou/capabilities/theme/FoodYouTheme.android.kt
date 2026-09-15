@@ -11,9 +11,9 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import com.maksimowiczm.foodyou.device.domain.NutrientsColors
-import com.maksimowiczm.foodyou.device.domain.Theme
-import com.maksimowiczm.foodyou.device.domain.ThemeSettings
+import com.maksimowiczm.foodyou.preferences.domain.NutrientsColors
+import com.maksimowiczm.foodyou.preferences.domain.Theme
+import com.maksimowiczm.foodyou.preferences.domain.ThemePreference
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.ktx.animateColorScheme
@@ -21,14 +21,13 @@ import com.materialkolor.rememberDynamicColorScheme
 
 @Composable
 internal actual fun FoodYouTheme(
-    themeSettings: ThemeSettings?,
-    nutrientsColors: NutrientsColors?,
+    themeSettings: ThemePreference?,
     content: @Composable (() -> Unit),
 ) {
     FoodYouTheme(
         isDark = themeSettings?.isDark() ?: isSystemInDarkTheme(),
         theme = themeSettings?.theme ?: Theme.Default,
-        nutrientsColors = nutrientsColors,
+        nutrientsColors = themeSettings?.nutrientsColors,
         content = content,
     )
 }
