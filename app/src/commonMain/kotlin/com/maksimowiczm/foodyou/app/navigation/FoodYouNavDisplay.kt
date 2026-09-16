@@ -15,6 +15,7 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.About
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Colors
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Contributors
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProduct
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.CreateRecipe
@@ -45,6 +46,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.common.extension.removeWhile
 import com.maksimowiczm.foodyou.features.about.AboutScreen
+import com.maksimowiczm.foodyou.features.about.ContributorsScreen
 import com.maksimowiczm.foodyou.features.diary.AddFoodDataCentralDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddOpenFoodFactsDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddUserProductDiaryEntryScreen
@@ -116,7 +118,15 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
         },
         entryProvider =
             entryProvider {
-                entry<About> { AboutScreen(onBack = { backStack.removeLastIf<About>() }) }
+                entry<About> {
+                    AboutScreen(
+                        onBack = { backStack.removeLastIf<About>() },
+                        onContributors = { backStack.add(Contributors) },
+                    )
+                }
+                entry<Contributors> {
+                    ContributorsScreen(onBack = { backStack.removeLastIf<Contributors>() })
+                }
                 entry<Colors> { ColorsScreen(onBack = { backStack.removeLastIf<Colors>() }) }
                 entry<CreateProduct> { route ->
                     CreateProductScreen(
@@ -604,4 +614,6 @@ sealed interface FoodYouNavHostRoute : NavKey {
     ) : FoodYouNavHostRoute
 
     @Serializable data class UpdateDiaryEntry(val id: FoodDiaryEntryId) : FoodYouNavHostRoute
+
+    @Serializable data object Contributors : FoodYouNavHostRoute
 }

@@ -15,7 +15,9 @@
     <string name="headline_system">System</string>
     <string name="headline_secure_screen">Secure screen</string>
     <string name="headline_about">About</string>
+    <string name="headline_contributors">Contributors</string>
     <string name="headline_version">Version</string>
+    <string name="headline_special_thanks_to">Special thanks to</string>
     <string name="headline_all_day" description="All-day (meal)">All-day</string>
     <string name="headline_product">Product</string>
     <string name="headline_recipe">Recipe</string>

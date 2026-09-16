@@ -27,11 +27,11 @@ import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.TrendingUp
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -47,28 +47,29 @@ import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.graphics.Shader
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.capabilities.brand.AppNameText
 import com.maksimowiczm.foodyou.capabilities.brand.InteractiveLogo
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.shared.ui.component.StatusBarProtection
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalAppConfig
 import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+fun AboutScreen(
+    onBack: () -> Unit,
+    onContributors: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val appConfig = LocalAppConfig.current
     val uriHandler = LocalUriHandler.current
 
     val scrollState = rememberScrollState()
-    val systemTopBarHeight = WindowInsets.systemBars.getTop(LocalDensity.current)
 
     val colorScheme = MaterialTheme.colorScheme
     val offset =
@@ -142,26 +143,21 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             Spacer(Modifier.height(64.dp))
             AboutButtons(
                 onSourceCode = { uriHandler.openUri(appConfig.sourceCodeUri) },
-                onChangelog = { uriHandler.openUri(appConfig.changelogUri) },
                 onIdea = { uriHandler.openUri(appConfig.featureRequestUri) },
                 onEmail = { uriHandler.openUri(appConfig.emailContactUri) },
+                onContributors = onContributors,
             )
             Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
         }
     }
-    StatusBarProtection(
-        progress = {
-            lerp(start = 0f, stop = 1f, fraction = scrollState.value.toFloat() / systemTopBarHeight)
-        }
-    )
 }
 
 @Composable
 private fun AboutButtons(
     onSourceCode: () -> Unit,
-    onChangelog: () -> Unit,
     onIdea: () -> Unit,
     onEmail: () -> Unit,
+    onContributors: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val buttonHeight = 56.dp
@@ -179,18 +175,6 @@ private fun AboutButtons(
             Icon(
                 imageVector = Icons.Outlined.Code,
                 contentDescription = stringResource(Res.string.headline_source_code),
-                modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
-            )
-        }
-        OutlinedButton(
-            onClick = onChangelog,
-            shapes = ButtonDefaults.shapesFor(buttonHeight),
-            modifier = Modifier.height(buttonHeight),
-            contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
-                contentDescription = stringResource(Res.string.headline_changelog),
                 modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
             )
         }
@@ -218,6 +202,18 @@ private fun AboutButtons(
                 modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
             )
         }
+        FilledTonalButton(
+            onClick = onContributors,
+            shapes = ButtonDefaults.shapesFor(buttonHeight),
+            modifier = Modifier.height(buttonHeight),
+            contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
+        ) {
+            Icon(
+                painterResource(Res.drawable.ic_crowdsource),
+                contentDescription = stringResource(Res.string.headline_contributors),
+                modifier = Modifier.size(ButtonDefaults.iconSizeFor(buttonHeight)),
+            )
+        }
     }
 }
 
@@ -226,7 +222,7 @@ private fun AboutButtons(
 private fun AboutScreenPreview() {
     PreviewFoodYouTheme {
         Surface {
-            AboutScreen(onBack = {})
+            AboutScreen(onBack = {}, onContributors = {})
         }
     }
 }
