@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.features.home.ui
 
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import com.maksimowiczm.foodyou.common.domain.food.AnonymousCompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.AnonymousLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
@@ -110,6 +111,112 @@ internal class HomeUiStateProvider {
                                                     servingWeight = null,
                                                     packageWeight = null,
                                                     absoluteWeight = 180.grams,
+                                                ),
+                                        ),
+                                )
+                            ),
+                    ),
+                    HomeMealState.Linked(
+                        id = MealId(Uuid.random()),
+                        name = "Dinner",
+                        foods =
+                            listOf(
+                                HomeFoodState(
+                                    id = FoodDiaryEntryId(Uuid.random()),
+                                    time = LocalTime(hour = 19, minute = 0),
+                                    snapshot =
+                                        MeasuredFoodSnapshot(
+                                            snapshot =
+                                                AnonymousCompositeFoodSnapshot(
+                                                    id = FoodSnapshotId.Anonymous(Uuid.random()),
+                                                    name = FoodName(fallback = "Chicken Salad"),
+                                                    brand = null,
+                                                    image = null,
+                                                    components =
+                                                        listOf(
+                                                            MeasuredFoodSnapshot(
+                                                                snapshot =
+                                                                    AnonymousLeafFoodSnapshot(
+                                                                        id =
+                                                                            FoodSnapshotId
+                                                                                .Anonymous(
+                                                                                    Uuid.random()
+                                                                                ),
+                                                                        name =
+                                                                            FoodName(
+                                                                                fallback =
+                                                                                    "Grilled Chicken Breast"
+                                                                            ),
+                                                                        brand = null,
+                                                                        image = null,
+                                                                        nutritionFacts =
+                                                                            NutritionFacts(
+                                                                                proteins =
+                                                                                    23.3
+                                                                                        .grams
+                                                                                        .toNutrientValue(),
+                                                                                carbohydrates =
+                                                                                    0.grams
+                                                                                        .toNutrientValue(),
+                                                                                fats =
+                                                                                    2.8.grams
+                                                                                        .toNutrientValue(),
+                                                                                energy =
+                                                                                    122.kilocalories
+                                                                                        .toNutrientValue(),
+                                                                            ),
+                                                                    ),
+                                                                quantity =
+                                                                    FoodSnapshotQuantity.Weight(
+                                                                        servingWeight = null,
+                                                                        packageWeight = null,
+                                                                        absoluteWeight = 150.grams,
+                                                                    ),
+                                                            ),
+                                                            MeasuredFoodSnapshot(
+                                                                snapshot =
+                                                                    AnonymousLeafFoodSnapshot(
+                                                                        id =
+                                                                            FoodSnapshotId
+                                                                                .Anonymous(
+                                                                                    Uuid.random()
+                                                                                ),
+                                                                        name =
+                                                                            FoodName(
+                                                                                fallback = "Lettuce"
+                                                                            ),
+                                                                        brand = null,
+                                                                        image = null,
+                                                                        nutritionFacts =
+                                                                            NutritionFacts(
+                                                                                proteins =
+                                                                                    1.4.grams
+                                                                                        .toNutrientValue(),
+                                                                                carbohydrates =
+                                                                                    2.9.grams
+                                                                                        .toNutrientValue(),
+                                                                                fats =
+                                                                                    0.2.grams
+                                                                                        .toNutrientValue(),
+                                                                                energy =
+                                                                                    15.kilocalories
+                                                                                        .toNutrientValue(),
+                                                                            ),
+                                                                    ),
+                                                                quantity =
+                                                                    FoodSnapshotQuantity.Weight(
+                                                                        servingWeight = null,
+                                                                        packageWeight = null,
+                                                                        absoluteWeight = 100.grams,
+                                                                    ),
+                                                            ),
+                                                        ),
+                                                ),
+                                            quantity =
+                                                FoodSnapshotQuantity.Serving(
+                                                    servings = 1.0,
+                                                    servingWeight = 250.grams,
+                                                    packageWeight = null,
                                                 ),
                                         ),
                                 )

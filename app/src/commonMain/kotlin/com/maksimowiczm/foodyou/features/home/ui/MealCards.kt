@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -64,6 +65,7 @@ import androidx.compose.ui.util.lerp
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.capabilities.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
+import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
 import com.maksimowiczm.foodyou.common.domain.food.NutritionCalculator
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
@@ -89,6 +91,7 @@ import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.isActive
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -313,7 +316,17 @@ private fun MealCard(
 
                             FoodListItem(
                                 headline = {
-                                    Text(nameSelector.select(food.snapshot.name))
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(nameSelector.select(food.snapshot.name))
+                                        if (food.snapshot.snapshot is CompositeFoodSnapshot) {
+                                            Spacer(Modifier.width(8.dp))
+                                            Icon(
+                                                painter =
+                                                    painterResource(Res.drawable.ic_skillet_filled),
+                                                contentDescription = null,
+                                            )
+                                        }
+                                    }
                                 },
                                 image =
                                     run {
