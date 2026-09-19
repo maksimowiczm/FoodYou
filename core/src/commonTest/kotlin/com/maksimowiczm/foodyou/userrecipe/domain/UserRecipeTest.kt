@@ -14,7 +14,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNull
-import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 class UserRecipeTest {
@@ -51,42 +50,37 @@ class UserRecipeTest {
 
     @Test
     fun decide_create_returns_created_event() {
-        val now = Instant.fromEpochSeconds(1000)
-        val command = UserRecipeCommand.Create(userRecipe, now)
+        val command = UserRecipeCommand.Create(userRecipe)
 
         val events = null.decide(command)
 
         assertEquals(1, events.size)
         val event = assertIs<UserRecipeCreatedEvent>(events[0])
         assertEquals(userRecipe, event.recipe)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun decide_update_returns_updated_event_when_changed() {
-        val now = Instant.fromEpochSeconds(2000)
         val updatedName = FoodName(fallback = "Banana Bread")
-        val command = UserRecipeCommand.Update(now) { it.copy(name = updatedName) }
+        val command = UserRecipeCommand.Update { it.copy(name = updatedName) }
 
         val events = userRecipe.decide(command)
 
         assertEquals(1, events.size)
         val event = assertIs<UserRecipeUpdatedEvent>(events[0])
         assertEquals(updatedName, event.recipe.name)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun decide_update_returns_empty_list_when_not_changed() {
-        val command = UserRecipeCommand.Update(Instant.fromEpochSeconds(2000)) { it }
+        val command = UserRecipeCommand.Update { it }
         val events = userRecipe.decide(command)
         assertEquals(0, events.size)
     }
 
     @Test
     fun decide_remove_returns_deleted_event() {
-        val now = Instant.fromEpochSeconds(3000)
-        val command = UserRecipeCommand.Remove(DeleteStrategy.Delete, now)
+        val command = UserRecipeCommand.Remove(DeleteStrategy.Delete)
 
         val events = userRecipe.decide(command)
 
@@ -94,12 +88,11 @@ class UserRecipeTest {
         val event = assertIs<UserRecipeDeletedEvent>(events[0])
         assertEquals(id, event.userRecipeId)
         assertEquals(DeleteStrategy.Delete, event.strategy)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun apply_created_event() {
-        val event = UserRecipeCreatedEvent(userRecipe, Instant.DISTANT_PAST)
+        val event = UserRecipeCreatedEvent(userRecipe)
         val result = null.apply(event)
         assertEquals(userRecipe, result)
     }
@@ -107,14 +100,14 @@ class UserRecipeTest {
     @Test
     fun apply_updated_event() {
         val updatedRecipe = userRecipe.copy(note = "New Note")
-        val event = UserRecipeUpdatedEvent(updatedRecipe, Instant.DISTANT_PAST)
+        val event = UserRecipeUpdatedEvent(updatedRecipe)
         val result = userRecipe.apply(event)
         assertEquals(updatedRecipe, result)
     }
 
     @Test
     fun apply_deleted_event() {
-        val event = UserRecipeDeletedEvent(id, DeleteStrategy.Delete, Instant.DISTANT_PAST)
+        val event = UserRecipeDeletedEvent(id, DeleteStrategy.Delete)
         val result = userRecipe.apply(event)
         assertNull(result)
     }
@@ -124,8 +117,8 @@ class UserRecipeTest {
         val updatedRecipe = userRecipe.copy(note = "Updated Note")
         val events =
             listOf(
-                UserRecipeCreatedEvent(userRecipe, Instant.fromEpochSeconds(1)),
-                UserRecipeUpdatedEvent(updatedRecipe, Instant.fromEpochSeconds(2)),
+                UserRecipeCreatedEvent(userRecipe),
+                UserRecipeUpdatedEvent(updatedRecipe),
             )
 
         val result = events.toUserRecipe()
@@ -136,11 +129,10 @@ class UserRecipeTest {
     fun toUserRecipe_returns_null_if_deleted() {
         val events =
             listOf(
-                UserRecipeCreatedEvent(userRecipe, Instant.fromEpochSeconds(1)),
+                UserRecipeCreatedEvent(userRecipe),
                 UserRecipeDeletedEvent(
                     id,
                     DeleteStrategy.Delete,
-                    Instant.fromEpochSeconds(2),
                 ),
             )
 

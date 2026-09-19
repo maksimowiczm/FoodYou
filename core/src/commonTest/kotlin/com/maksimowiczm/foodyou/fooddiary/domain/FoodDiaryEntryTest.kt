@@ -51,8 +51,6 @@ class FoodDiaryEntryTest {
 
     @Test
     fun create_returns_created_event() {
-        val now = Instant.fromEpochSeconds(2000)
-
         val events =
             (null as FoodDiaryEntry?).decide(
                 FoodDiaryCommand.Create(
@@ -61,7 +59,6 @@ class FoodDiaryEntryTest {
                     snapshot = measuredSnapshot,
                     mealId = mealId,
                     entryTimestamp = timestamp,
-                    timestamp = now,
                 )
             )
 
@@ -72,38 +69,32 @@ class FoodDiaryEntryTest {
         assertEquals(measuredSnapshot, event.snapshot)
         assertEquals(mealId, event.mealId)
         assertEquals(timestamp, event.entryTimestamp)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun edit_returns_granular_events_when_changed() {
-        val now = Instant.fromEpochSeconds(3000)
         val updatedTimestamp = Instant.fromEpochSeconds(4000)
         val updatedProfileIds = setOf(ProfileId(Uuid.random()))
 
         val events =
             entry.decide(
                 FoodDiaryCommand.Update(
-                    timestamp = now,
                     transform = {
                         it.copy(profileIds = updatedProfileIds, timestamp = updatedTimestamp)
-                    },
+                    }
                 )
             )
 
         assertEquals(2, events.size)
         val profileIdsEvent = assertIs<FoodDiaryEntryProfileIdsChangedEvent>(events[0])
         assertEquals(updatedProfileIds, profileIdsEvent.profileIds)
-        assertEquals(now, profileIdsEvent.timestamp)
 
         val timestampEvent = assertIs<FoodDiaryEntryTimestampChangedEvent>(events[1])
         assertEquals(updatedTimestamp, timestampEvent.entryTimestamp)
-        assertEquals(now, timestampEvent.timestamp)
     }
 
     @Test
     fun edit_returns_granular_events_when_snapshot_changed() {
-        val now = Instant.fromEpochSeconds(3200)
         val newSnapshot =
             measuredSnapshot.copy(
                 quantity =
@@ -115,59 +106,39 @@ class FoodDiaryEntryTest {
             )
 
         val events =
-            entry.decide(
-                FoodDiaryCommand.Update(
-                    timestamp = now,
-                    transform = { it.copy(snapshot = newSnapshot) },
-                )
-            )
+            entry.decide(FoodDiaryCommand.Update(transform = { it.copy(snapshot = newSnapshot) }))
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntrySnapshotChangedEvent>(events[0])
         assertEquals(newSnapshot, event.snapshot)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun edit_returns_granular_events_when_meal_id_changed() {
-        val now = Instant.fromEpochSeconds(3500)
         val newMealId = MealId(Uuid.random())
 
         val events =
             entryWithMeal.decide(
-                FoodDiaryCommand.Update(
-                    timestamp = now,
-                    transform = { it.copy(mealId = newMealId) },
-                )
+                FoodDiaryCommand.Update(transform = { it.copy(mealId = newMealId) })
             )
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryMealLinkedEvent>(events[0])
         assertEquals(newMealId, event.mealId)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun edit_returns_meal_unlinked_event_when_meal_id_cleared() {
-        val now = Instant.fromEpochSeconds(3600)
-
         val events =
-            entryWithMeal.decide(
-                FoodDiaryCommand.Update(
-                    timestamp = now,
-                    transform = { it.copy(mealId = null) },
-                )
-            )
+            entryWithMeal.decide(FoodDiaryCommand.Update(transform = { it.copy(mealId = null) }))
 
         assertEquals(1, events.size)
-        val event = assertIs<FoodDiaryEntryMealUnlinkedEvent>(events[0])
-        assertEquals(now, event.timestamp)
+        assertIs<FoodDiaryEntryMealUnlinkedEvent>(events[0])
     }
 
     @Test
     fun edit_returns_empty_list_when_not_changed() {
-        val events =
-            entry.decide(FoodDiaryCommand.Update(timestamp = Instant.fromEpochSeconds(3700)) { it })
+        val events = entry.decide(FoodDiaryCommand.Update { it })
         assertEquals(0, events.size)
     }
 
@@ -175,36 +146,33 @@ class FoodDiaryEntryTest {
     fun delete_returns_deleted_event() {
         val now = Instant.fromEpochSeconds(5000)
 
-        val events = entry.decide(FoodDiaryCommand.Delete(now))
+        val events = entry.decide(FoodDiaryCommand.Delete)
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryDeletedEvent>(events[0])
         assertEquals(diaryEntryId, event.diaryEntryId)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun anonymize_returns_anonymized_event() {
         val now = Instant.fromEpochSeconds(5100)
 
-        val events = entry.decide(FoodDiaryCommand.Anonymize(now))
+        val events = entry.decide(FoodDiaryCommand.Anonymize)
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryAnonymizedEvent>(events[0])
         assertEquals(diaryEntryId, event.diaryEntryId)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun unlinkFromMeal_returns_unlinked_event() {
         val now = Instant.fromEpochSeconds(5500)
 
-        val events = entryWithMeal.decide(FoodDiaryCommand.UnlinkFromMeal(now))
+        val events = entryWithMeal.decide(FoodDiaryCommand.UnlinkFromMeal)
 
         assertEquals(1, events.size)
         val event = assertIs<FoodDiaryEntryMealUnlinkedEvent>(events[0])
         assertEquals(diaryEntryId, event.diaryEntryId)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
@@ -216,7 +184,6 @@ class FoodDiaryEntryTest {
                 snapshot = measuredSnapshot,
                 mealId = mealId,
                 entryTimestamp = timestamp,
-                timestamp = Instant.DISTANT_PAST,
             )
         val result = null.apply(event)
         assertEquals(entryWithMeal, result)
@@ -244,15 +211,11 @@ class FoodDiaryEntryTest {
                 FoodDiaryEntryProfileIdsChangedEvent(
                     diaryEntryId,
                     updatedProfileIds,
-                    Instant.DISTANT_PAST,
                 )
             )
         assertEquals(updatedProfileIds, state?.profileIds)
 
-        state =
-            state.apply(
-                FoodDiaryEntrySnapshotChangedEvent(diaryEntryId, newSnapshot, Instant.DISTANT_PAST)
-            )
+        state = state.apply(FoodDiaryEntrySnapshotChangedEvent(diaryEntryId, newSnapshot))
         assertEquals(newSnapshot, state?.snapshot)
 
         state =
@@ -260,38 +223,34 @@ class FoodDiaryEntryTest {
                 FoodDiaryEntryTimestampChangedEvent(
                     diaryEntryId,
                     updatedTimestamp,
-                    Instant.DISTANT_PAST,
                 )
             )
         assertEquals(updatedTimestamp, state?.timestamp)
 
-        state =
-            state.apply(
-                FoodDiaryEntryMealLinkedEvent(diaryEntryId, newMealId, Instant.DISTANT_PAST)
-            )
+        state = state.apply(FoodDiaryEntryMealLinkedEvent(diaryEntryId, newMealId))
         assertEquals(newMealId, state?.mealId)
 
-        state = state.apply(FoodDiaryEntryMealUnlinkedEvent(diaryEntryId, Instant.DISTANT_PAST))
+        state = state.apply(FoodDiaryEntryMealUnlinkedEvent(diaryEntryId))
         assertNull(state?.mealId)
     }
 
     @Test
     fun apply_deleted_event() {
-        val event = FoodDiaryEntryDeletedEvent(diaryEntryId, Instant.DISTANT_PAST)
+        val event = FoodDiaryEntryDeletedEvent(diaryEntryId)
         val result = entry.apply(event)
         assertNull(result)
     }
 
     @Test
     fun apply_anonymized_event() {
-        val event = FoodDiaryEntryAnonymizedEvent(diaryEntryId, Instant.DISTANT_PAST)
+        val event = FoodDiaryEntryAnonymizedEvent(diaryEntryId)
         val result = entry.apply(event)
         assertNull(result)
     }
 
     @Test
     fun apply_unlinked_event_on_null_returns_null() {
-        val event = FoodDiaryEntryMealUnlinkedEvent(diaryEntryId, Instant.DISTANT_PAST)
+        val event = FoodDiaryEntryMealUnlinkedEvent(diaryEntryId)
         val result = null.apply(event)
         assertNull(result)
     }
@@ -307,12 +266,10 @@ class FoodDiaryEntryTest {
                     snapshot = measuredSnapshot,
                     mealId = mealId,
                     entryTimestamp = timestamp,
-                    timestamp = Instant.fromEpochSeconds(1),
                 ),
                 FoodDiaryEntryTimestampChangedEvent(
                     diaryEntryId = diaryEntryId,
                     entryTimestamp = updatedTimestamp,
-                    timestamp = Instant.fromEpochSeconds(2),
                 ),
             )
 
@@ -333,12 +290,8 @@ class FoodDiaryEntryTest {
                     snapshot = measuredSnapshot,
                     mealId = mealId,
                     entryTimestamp = timestamp,
-                    timestamp = Instant.fromEpochSeconds(1),
                 ),
-                FoodDiaryEntryDeletedEvent(
-                    diaryEntryId,
-                    Instant.fromEpochSeconds(2),
-                ),
+                FoodDiaryEntryDeletedEvent(diaryEntryId),
             )
 
         val result = events.toFoodDiaryEntry()
@@ -355,9 +308,8 @@ class FoodDiaryEntryTest {
                     snapshot = measuredSnapshot,
                     mealId = mealId,
                     entryTimestamp = timestamp,
-                    timestamp = Instant.fromEpochSeconds(1),
                 ),
-                FoodDiaryEntryMealUnlinkedEvent(diaryEntryId, Instant.fromEpochSeconds(2)),
+                FoodDiaryEntryMealUnlinkedEvent(diaryEntryId),
             )
 
         val result = events.toFoodDiaryEntry()

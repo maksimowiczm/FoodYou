@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.app.infrastructure.room
 
 import com.maksimowiczm.foodyou.common.event.DomainEvent
 import com.maksimowiczm.foodyou.common.event.EventStore
+import kotlin.time.Clock
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -20,7 +22,15 @@ internal class RoomEventStore(private val eventStoreDao: EventStoreDao) : EventS
         stream: String,
         events: Iterable<DomainEvent>,
     ) {
-        val roomEvents = events.map { mapper.toRoomStoredEventEntity(it, stream) }
+        val now = Clock.System.now()
+        val roomEvents = events.map {
+            mapper.toRoomStoredEventEntity(
+                event = it,
+                stream = stream,
+                dbId = Uuid.random(),
+                persistedAtTimestamp = now,
+            )
+        }
         eventStoreDao.insertAll(roomEvents)
     }
 }

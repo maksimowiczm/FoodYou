@@ -22,7 +22,7 @@ fun SearchHistory.decide(command: SearchHistoryCommand): List<SearchHistoryEvent
         is SearchHistoryCommand.RecordSearchQuery ->
             buildList {
                 if (history.firstOrNull() != command.query) {
-                    add(SearchQueryRecordedEvent(command.query, command.timestamp))
+                    add(SearchQueryRecordedEvent(command.query))
                 }
             }
     }

@@ -12,7 +12,6 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductUpd
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralRepository
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
-import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -23,7 +22,6 @@ class FoodDataCentralService(
     private val repository: FoodDataCentralRepository,
     private val settingsRepository: FoodDataCentralSettingsRepository,
     private val eventNotifier: EventNotifier,
-    private val clock: Clock = Clock.System,
 ) {
     fun search(
         parameters: FoodDataCentralSearchParameters,
@@ -39,10 +37,7 @@ class FoodDataCentralService(
                     if (products.isNotEmpty()) {
                         eventNotifier.notify(
                             products.map {
-                                FoodDataCentralProductUpdatedEvent(
-                                    product = it,
-                                    timestamp = clock.now(),
-                                )
+                                FoodDataCentralProductUpdatedEvent(product = it)
                             }
                         )
                     }
@@ -71,9 +66,7 @@ class FoodDataCentralService(
         val apiKey =
             settingsRepository.observe().map { it.apiKey }.first()?.decrypt()?.decodeToString()
         return repository.refresh(id, apiKey).onSuccess {
-            eventNotifier.notify(
-                FoodDataCentralProductUpdatedEvent(product = it, timestamp = clock.now())
-            )
+            eventNotifier.notify(FoodDataCentralProductUpdatedEvent(product = it))
         }
     }
 }

@@ -20,7 +20,6 @@ import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryMealRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.foodDiaryDecider
 import com.maksimowiczm.foodyou.fooddiary.domain.toFoodDiaryEntry
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
-import kotlin.time.Clock
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -33,7 +32,6 @@ class FoodDiaryService(
     private val compositionRepository: FoodDiaryCompositionRepository,
     private val mealRepository: FoodDiaryMealRepository,
 ) {
-    private val clock: Clock = Clock.System
     private val commandHandler =
         foodDiaryDecider.asHandler(
             eventStore,
@@ -66,7 +64,7 @@ class FoodDiaryService(
                     handle(
                         id = entryId,
                         command =
-                            FoodDiaryCommand.Update(timestamp = clock.now()) { entry ->
+                            FoodDiaryCommand.Update { entry ->
                                 val updated =
                                     FoodSnapshotUpdateService.update(
                                         components = listOf(entry.snapshot),
@@ -99,7 +97,7 @@ class FoodDiaryService(
                     handle(
                         id = entryId,
                         command =
-                            FoodDiaryCommand.Update(timestamp = clock.now()) { entry ->
+                            FoodDiaryCommand.Update { entry ->
                                 val wrapped = listOf(entry.snapshot)
                                 val updatedSnapshot = FoodSnapshotUpdateService.remove(wrapped, id)
 
@@ -120,7 +118,7 @@ class FoodDiaryService(
                     handle(
                         id = entryId,
                         command =
-                            FoodDiaryCommand.Update(timestamp = clock.now()) { entry ->
+                            FoodDiaryCommand.Update { entry ->
                                 val wrapped = listOf(entry.snapshot)
                                 val updatedSnapshot = FoodSnapshotUpdateService.unlink(wrapped, id)
                                 entry.copy(snapshot = updatedSnapshot.first())
@@ -138,7 +136,7 @@ class FoodDiaryService(
                 async {
                     handle(
                         id = entryId,
-                        command = FoodDiaryCommand.UnlinkFromMeal(timestamp = clock.now()),
+                        command = FoodDiaryCommand.UnlinkFromMeal,
                     )
                 }
             }

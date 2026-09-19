@@ -10,7 +10,6 @@ import com.maksimowiczm.foodyou.preferences.domain.EnergyUnitPreference
 import com.maksimowiczm.foodyou.preferences.domain.NutrientsOrderPreference
 import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
 import com.maksimowiczm.foodyou.preferences.domain.observe
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -63,7 +62,7 @@ class AppViewModel(
 
     fun onFinishOnboarding() {
         viewModelScope.launch {
-            accountService.handle(AccountCommand.FinishOnboarding(Clock.System.now()))
+            accountService.handle(AccountCommand.FinishOnboarding)
         }
     }
 }

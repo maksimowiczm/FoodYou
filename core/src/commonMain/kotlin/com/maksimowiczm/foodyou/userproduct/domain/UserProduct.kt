@@ -55,12 +55,7 @@ fun UserProduct?.decide(command: UserProductCommand): List<UserProductEvent> =
     when (command) {
         is UserProductCommand.Create ->
             if (this == null) {
-                listOf(
-                    UserProductCreatedEvent(
-                        product = command.product,
-                        timestamp = command.timestamp,
-                    )
-                )
+                listOf(UserProductCreatedEvent(product = command.product))
             } else {
                 emptyList()
             }
@@ -69,9 +64,7 @@ fun UserProduct?.decide(command: UserProductCommand): List<UserProductEvent> =
             if (this != null) {
                 val updated = command.transform(this)
                 if (updated != this) {
-                    listOf(
-                        UserProductUpdatedEvent(product = updated, timestamp = command.timestamp)
-                    )
+                    listOf(UserProductUpdatedEvent(product = updated))
                 } else {
                     emptyList()
                 }
@@ -85,7 +78,6 @@ fun UserProduct?.decide(command: UserProductCommand): List<UserProductEvent> =
                     UserProductDeletedEvent(
                         userProductId = id,
                         strategy = command.strategy,
-                        timestamp = command.timestamp,
                     )
                 )
             } else {

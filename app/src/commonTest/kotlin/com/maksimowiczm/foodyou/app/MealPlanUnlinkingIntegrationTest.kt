@@ -34,12 +34,7 @@ class MealPlanUnlinkingIntegrationTest {
             val mealId = MealId(Uuid.random())
             val meal = Meal(mealId, "Breakfast", Meal.TimeWindow.AllDay)
             val otherMeal = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
-            mealPlanService.handle(
-                MealPlanCommand.UpdateMeals(
-                    meals = listOf(meal, otherMeal),
-                    timestamp = Clock.System.now(),
-                )
-            )
+            mealPlanService.handle(MealPlanCommand.UpdateMeals(meals = listOf(meal, otherMeal)))
 
             // 2. Create a diary entry associated with "Breakfast"
             val composition =
@@ -69,7 +64,6 @@ class MealPlanUnlinkingIntegrationTest {
                         snapshot = composition,
                         mealId = mealId,
                         entryTimestamp = Clock.System.now(),
-                        timestamp = Clock.System.now(),
                     ),
             )
 
@@ -78,12 +72,7 @@ class MealPlanUnlinkingIntegrationTest {
             assertEquals(mealId, entry.mealId)
 
             // 4. Remove "Breakfast" from the plan, keeping "Lunch"
-            mealPlanService.handle(
-                MealPlanCommand.UpdateMeals(
-                    meals = listOf(otherMeal),
-                    timestamp = Clock.System.now(),
-                )
-            )
+            mealPlanService.handle(MealPlanCommand.UpdateMeals(meals = listOf(otherMeal)))
 
             // 5. Verify the diary entry is unlinked (mealId becomes null)
             val updatedEntry =

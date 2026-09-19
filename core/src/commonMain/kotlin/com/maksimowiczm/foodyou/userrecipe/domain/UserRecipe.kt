@@ -45,9 +45,7 @@ fun UserRecipe?.decide(command: UserRecipeCommand): List<UserRecipeEvent> =
     when (command) {
         is UserRecipeCommand.Create ->
             if (this == null) {
-                listOf(
-                    UserRecipeCreatedEvent(recipe = command.recipe, timestamp = command.timestamp)
-                )
+                listOf(UserRecipeCreatedEvent(recipe = command.recipe))
             } else {
                 emptyList()
             }
@@ -56,7 +54,7 @@ fun UserRecipe?.decide(command: UserRecipeCommand): List<UserRecipeEvent> =
             if (this != null) {
                 val updated = command.transform(this)
                 if (updated != this) {
-                    listOf(UserRecipeUpdatedEvent(recipe = updated, timestamp = command.timestamp))
+                    listOf(UserRecipeUpdatedEvent(recipe = updated))
                 } else {
                     emptyList()
                 }
@@ -70,7 +68,6 @@ fun UserRecipe?.decide(command: UserRecipeCommand): List<UserRecipeEvent> =
                     UserRecipeDeletedEvent(
                         userRecipeId = id,
                         strategy = command.strategy,
-                        timestamp = command.timestamp,
                     )
                 )
             } else {

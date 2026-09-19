@@ -12,7 +12,6 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductUpdated
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsRepository
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSearchParameters
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
-import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -22,7 +21,6 @@ class OpenFoodFactsService(
     private val repository: OpenFoodFactsRepository,
     private val settingsRepository: OpenFoodFactsSettingsRepository,
     private val eventNotifier: EventNotifier,
-    private val clock: Clock = Clock.System,
 ) {
     fun search(
         parameters: OpenFoodFactsSearchParameters,
@@ -38,10 +36,7 @@ class OpenFoodFactsService(
                     if (products.isNotEmpty()) {
                         eventNotifier.notify(
                             products.map {
-                                OpenFoodFactsProductUpdatedEvent(
-                                    product = it,
-                                    timestamp = clock.now(),
-                                )
+                                OpenFoodFactsProductUpdatedEvent(product = it)
                             }
                         )
                     }
@@ -68,9 +63,7 @@ class OpenFoodFactsService(
         id: OpenFoodFactsProductId
     ): Result<OpenFoodFactsProduct, OpenFoodFactsApiError> {
         return repository.refresh(id).onSuccess {
-            eventNotifier.notify(
-                OpenFoodFactsProductUpdatedEvent(product = it, timestamp = clock.now())
-            )
+            eventNotifier.notify(OpenFoodFactsProductUpdatedEvent(product = it))
         }
     }
 }

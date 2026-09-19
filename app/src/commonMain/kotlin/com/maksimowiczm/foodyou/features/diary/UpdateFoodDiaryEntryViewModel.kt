@@ -10,7 +10,6 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 import kotlinx.coroutines.channels.Channel
@@ -63,7 +62,7 @@ class UpdateFoodDiaryEntryViewModel(
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Update(timestamp = Clock.System.now()) { current ->
+                    FoodDiaryCommand.Update { current ->
                         current.copy(
                             profileIds = profiles.toSet(),
                             snapshot = relinkedSnapshot,
@@ -85,7 +84,7 @@ class UpdateFoodDiaryEntryViewModel(
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Update(timestamp = Clock.System.now()) { current ->
+                    FoodDiaryCommand.Update { current ->
                         val snapshot =
                             current.snapshot.copy(
                                 quantity =

@@ -94,7 +94,6 @@ internal fun Module.openFoodFacts() {
     factoryOf(::OpenFoodFactsRepositoryImpl).bind<OpenFoodFactsRepository>()
 
     factoryOf(::OpenFoodFactsService)
-    factory { OpenFoodFactsService(get(), get(), get()) }
 
     single(named(OpenFoodFactsUrlSearchQuery::class.qualifiedName!!)) {
         OpenFoodFactsUrlSearchQuery.recognizer

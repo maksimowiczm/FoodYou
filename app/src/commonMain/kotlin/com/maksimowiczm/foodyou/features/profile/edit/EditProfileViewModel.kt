@@ -11,7 +11,6 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.shared.ui.component.UiProfileAvatar
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
-import kotlin.time.Clock
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -77,7 +76,7 @@ internal class EditProfileViewModel(
 
             val profileId = profile.filterNotNull().first().id
             accountService.handle(
-                AccountCommand.UpdateProfile(profileId, Clock.System.now()) {
+                AccountCommand.UpdateProfile(profileId) {
                     it.copy(name = name, avatar = profileAvatar)
                 }
             )
@@ -92,7 +91,7 @@ internal class EditProfileViewModel(
         }
 
         viewModelScope.launch {
-            accountService.handle(AccountCommand.RemoveProfile(profileId, Clock.System.now()))
+            accountService.handle(AccountCommand.RemoveProfile(profileId))
 
             val currentSelection = appProfileManager.observeAppProfileId().first()
             if (currentSelection == profileId) {

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.Meal
 import com.maksimowiczm.foodyou.mealplan.domain.MealPlanCommand
-import kotlin.time.Clock
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
@@ -31,12 +30,7 @@ class MealScheduleViewModel(private val mealPlanService: MealPlanService) : View
 
     fun update(newMeals: List<Meal>) {
         viewModelScope.launch {
-            mealPlanService.handle(
-                MealPlanCommand.UpdateMeals(
-                    meals = newMeals,
-                    timestamp = Clock.System.now(),
-                )
-            )
+            mealPlanService.handle(MealPlanCommand.UpdateMeals(meals = newMeals))
             eventBus.send(MealScheduleEvent.Updated)
         }
     }

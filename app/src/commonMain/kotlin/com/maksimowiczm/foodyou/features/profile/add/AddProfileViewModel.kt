@@ -10,7 +10,6 @@ import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.shared.ui.component.UiProfileAvatar
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
-import kotlin.time.Clock
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,7 +45,7 @@ internal class AddProfileViewModel(
                 }
 
             val profile = Profile(name = name, avatar = profileAvatar)
-            accountService.handle(AccountCommand.AddProfile(profile, Clock.System.now()))
+            accountService.handle(AccountCommand.AddProfile(profile))
 
             appProfileManager.setAppProfileId(profile.id)
 

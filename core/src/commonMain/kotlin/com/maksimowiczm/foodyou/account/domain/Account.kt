@@ -16,7 +16,7 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
         is AccountCommand.FinishOnboarding ->
             buildList {
                 check(profiles.isNotEmpty()) { "Cannot finish onboarding without a profile" }
-                if (!onboardingFinished) add(OnboardingFinishedEvent(timestamp = command.timestamp))
+                if (!onboardingFinished) add(OnboardingFinishedEvent)
             }
 
         is AccountCommand.ChangeEnableSingleProfileMode ->
@@ -28,12 +28,7 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
                         "Cannot enable single profile mode when there is more than one profile"
                     }
 
-                add(
-                    EnableSingleProfileModeChangedEvent(
-                        enable = command.enable,
-                        timestamp = command.timestamp,
-                    )
-                )
+                add(EnableSingleProfileModeChangedEvent(enable = command.enable))
             }
 
         is AccountCommand.AddProfile ->
@@ -41,14 +36,9 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
                 check(profiles.none { it.id == command.profile.id }) {
                     "Profile with ID ${command.profile.id} already exists"
                 }
-                add(ProfileAddedEvent(profile = command.profile, timestamp = command.timestamp))
+                add(ProfileAddedEvent(profile = command.profile))
                 if (profiles.size == 1 && singleProfileMode)
-                    add(
-                        EnableSingleProfileModeChangedEvent(
-                            enable = false,
-                            timestamp = command.timestamp,
-                        )
-                    )
+                    add(EnableSingleProfileModeChangedEvent(enable = false))
             }
 
         is AccountCommand.UpdateProfile ->
@@ -58,7 +48,7 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
                 val updated = command.transform(profile)
                 check(updated.id == command.profileId) { "Cannot change profile ID" }
                 if (updated != profile) {
-                    add(ProfileUpdatedEvent(profile = updated, timestamp = command.timestamp))
+                    add(ProfileUpdatedEvent(profile = updated))
                 }
             }
 
@@ -68,12 +58,7 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
                     "Profile with ID ${command.profileId} not found"
                 }
                 check(profiles.size > 1) { "Cannot remove the last profile" }
-                add(
-                    ProfileRemovedEvent(
-                        profileId = command.profileId,
-                        timestamp = command.timestamp,
-                    )
-                )
+                add(ProfileRemovedEvent(profileId = command.profileId))
             }
 
         is AccountCommand.AddFavoriteFood ->
@@ -85,7 +70,6 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
                         FavoriteFoodAddedEvent(
                             profileId = command.profileId,
                             foodId = command.foodId,
-                            timestamp = command.timestamp,
                         )
                     )
                 }
@@ -100,7 +84,6 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
                         FavoriteFoodRemovedEvent(
                             profileId = command.profileId,
                             favoriteFoodId = command.foodId,
-                            timestamp = command.timestamp,
                         )
                     )
                 }
@@ -114,7 +97,6 @@ fun Account.decide(command: AccountCommand): List<AccountEvent> =
                     FavoriteFoodRemovedEvent(
                         profileId = profile.id,
                         favoriteFoodId = favoriteId,
-                        timestamp = command.timestamp,
                     )
                 }
         }

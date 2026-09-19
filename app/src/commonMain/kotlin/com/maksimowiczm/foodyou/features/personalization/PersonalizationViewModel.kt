@@ -10,7 +10,6 @@ import com.maksimowiczm.foodyou.preferences.domain.HideScreenPreference
 import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
 import com.maksimowiczm.foodyou.preferences.domain.observe
 import com.maksimowiczm.foodyou.preferences.domain.update
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.WhileSubscribed
@@ -80,9 +79,7 @@ class PersonalizationViewModel(
 
     fun updateSingleProfileMode(enable: Boolean) {
         viewModelScope.launch {
-            accountService.handle(
-                AccountCommand.ChangeEnableSingleProfileMode(enable, Clock.System.now())
-            )
+            accountService.handle(AccountCommand.ChangeEnableSingleProfileMode(enable))
         }
     }
 }

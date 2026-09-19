@@ -12,17 +12,13 @@ sealed interface FoodDiaryCommand {
         val snapshot: MeasuredFoodSnapshot,
         val mealId: MealId,
         val entryTimestamp: Instant,
-        val timestamp: Instant,
     ) : FoodDiaryCommand
 
-    data class Update(
-        val timestamp: Instant,
-        val transform: (FoodDiaryEntry) -> FoodDiaryEntry?,
-    ) : FoodDiaryCommand
+    data class Update(val transform: (FoodDiaryEntry) -> FoodDiaryEntry?) : FoodDiaryCommand
 
-    data class Delete(val timestamp: Instant) : FoodDiaryCommand
+    data object Delete : FoodDiaryCommand
 
-    data class Anonymize(val timestamp: Instant) : FoodDiaryCommand
+    data object Anonymize : FoodDiaryCommand
 
-    data class UnlinkFromMeal(val timestamp: Instant) : FoodDiaryCommand
+    data object UnlinkFromMeal : FoodDiaryCommand
 }

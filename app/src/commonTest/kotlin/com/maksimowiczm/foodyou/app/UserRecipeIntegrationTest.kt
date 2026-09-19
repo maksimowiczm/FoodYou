@@ -35,7 +35,6 @@ import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.Uuid
@@ -75,8 +74,7 @@ class UserRecipeIntegrationTest {
                                 servingQuantity = null,
                                 packageQuantity = null,
                                 isLiquid = false,
-                            ),
-                        timestamp = Clock.System.now(),
+                            )
                     ),
             )
 
@@ -121,7 +119,7 @@ class UserRecipeIntegrationTest {
             userProductService.handle(
                 id = productId,
                 command =
-                    UserProductCommand.Update(timestamp = Clock.System.now()) {
+                    UserProductCommand.Update {
                         it.copy(
                             name = updatedProductName,
                             brand = "Brand",
@@ -169,8 +167,7 @@ class UserRecipeIntegrationTest {
                                 servingQuantity = Weight(30.grams),
                                 packageQuantity = null,
                                 isLiquid = false,
-                            ),
-                        timestamp = Clock.System.now(),
+                            )
                     ),
             )
 
@@ -212,7 +209,7 @@ class UserRecipeIntegrationTest {
             userProductService.handle(
                 id = productId,
                 command =
-                    UserProductCommand.Update(timestamp = Clock.System.now()) {
+                    UserProductCommand.Update {
                         it.copy(
                             name = FoodName(english = "Product", fallback = "Product"),
                             brand = "Brand",
@@ -569,8 +566,7 @@ class UserRecipeIntegrationTest {
                                 packageQuantity = null,
                                 isLiquid = false,
                                 nutritionFacts = NutritionFacts(),
-                            ),
-                        timestamp = Clock.System.now(),
+                            )
                     ),
             )
 
@@ -624,11 +620,7 @@ class UserRecipeIntegrationTest {
 
             userProductService.handle(
                 id = productId,
-                command =
-                    UserProductCommand.Remove(
-                        strategy = DeleteStrategy.Delete,
-                        timestamp = Clock.System.now(),
-                    ),
+                command = UserProductCommand.Remove(strategy = DeleteStrategy.Delete),
             )
 
             val updatedRecipe =
@@ -661,8 +653,7 @@ class UserRecipeIntegrationTest {
                                 packageQuantity = null,
                                 isLiquid = false,
                                 nutritionFacts = NutritionFacts(),
-                            ),
-                        timestamp = Clock.System.now(),
+                            )
                     ),
             )
 
@@ -702,11 +693,7 @@ class UserRecipeIntegrationTest {
 
             userProductService.handle(
                 id = productId,
-                command =
-                    UserProductCommand.Remove(
-                        strategy = DeleteStrategy.Unlink,
-                        timestamp = Clock.System.now(),
-                    ),
+                command = UserProductCommand.Remove(strategy = DeleteStrategy.Unlink),
             )
 
             val updatedRecipe =

@@ -8,7 +8,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNull
-import kotlin.time.Instant
 
 class UserProductTest {
     private val userProductId = UserProductId()
@@ -64,53 +63,43 @@ class UserProductTest {
 
     @Test
     fun create_returns_created_event() {
-        val now = Instant.fromEpochSeconds(1000)
-
-        val events = (null as UserProduct?).decide(UserProductCommand.Create(userProduct, now))
+        val events = (null as UserProduct?).decide(UserProductCommand.Create(userProduct))
 
         assertEquals(1, events.size)
         val event = assertIs<UserProductCreatedEvent>(events[0])
         assertEquals(userProduct, event.product)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun update_returns_updated_event_when_changed() {
-        val now = Instant.fromEpochSeconds(2000)
         val updatedName = FoodName(fallback = "Banana")
 
-        val events =
-            userProduct.decide(UserProductCommand.Update(now) { it.copy(name = updatedName) })
+        val events = userProduct.decide(UserProductCommand.Update { it.copy(name = updatedName) })
 
         assertEquals(1, events.size)
         val event = assertIs<UserProductUpdatedEvent>(events[0])
         assertEquals(updatedName, event.product.name)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun update_returns_empty_list_when_not_changed() {
-        val now = Instant.fromEpochSeconds(2500)
-        val events = userProduct.decide(UserProductCommand.Update(now) { it })
+        val events = userProduct.decide(UserProductCommand.Update { it })
         assertEquals(0, events.size)
     }
 
     @Test
     fun remove_returns_deleted_event() {
-        val now = Instant.fromEpochSeconds(3000)
-
-        val events = userProduct.decide(UserProductCommand.Remove(DeleteStrategy.Delete, now))
+        val events = userProduct.decide(UserProductCommand.Remove(DeleteStrategy.Delete))
 
         assertEquals(1, events.size)
         val event = assertIs<UserProductDeletedEvent>(events[0])
         assertEquals(userProductId, event.userProductId)
         assertEquals(DeleteStrategy.Delete, event.strategy)
-        assertEquals(now, event.timestamp)
     }
 
     @Test
     fun apply_created_event() {
-        val event = UserProductCreatedEvent(userProduct, Instant.DISTANT_PAST)
+        val event = UserProductCreatedEvent(userProduct)
         val result = null.apply(event)
         assertEquals(userProduct, result)
     }
@@ -118,15 +107,14 @@ class UserProductTest {
     @Test
     fun apply_updated_event() {
         val updatedProduct = userProduct.copy(brand = "Updated Brand")
-        val event = UserProductUpdatedEvent(updatedProduct, Instant.DISTANT_PAST)
+        val event = UserProductUpdatedEvent(updatedProduct)
         val result = userProduct.apply(event)
         assertEquals(updatedProduct, result)
     }
 
     @Test
     fun apply_deleted_event() {
-        val event =
-            UserProductDeletedEvent(userProductId, DeleteStrategy.Delete, Instant.DISTANT_PAST)
+        val event = UserProductDeletedEvent(userProductId, DeleteStrategy.Delete)
         val result = userProduct.apply(event)
         assertNull(result)
     }
@@ -136,8 +124,8 @@ class UserProductTest {
         val updatedProduct = userProduct.copy(brand = "Updated Brand")
         val events =
             listOf(
-                UserProductCreatedEvent(userProduct, Instant.fromEpochSeconds(1)),
-                UserProductUpdatedEvent(updatedProduct, Instant.fromEpochSeconds(2)),
+                UserProductCreatedEvent(userProduct),
+                UserProductUpdatedEvent(updatedProduct),
             )
 
         val result = events.toUserProduct()
@@ -148,11 +136,10 @@ class UserProductTest {
     fun toUserProduct_returns_null_if_deleted() {
         val events =
             listOf(
-                UserProductCreatedEvent(userProduct, Instant.fromEpochSeconds(1)),
+                UserProductCreatedEvent(userProduct),
                 UserProductDeletedEvent(
                     userProductId,
                     DeleteStrategy.Delete,
-                    Instant.fromEpochSeconds(2),
                 ),
             )
 

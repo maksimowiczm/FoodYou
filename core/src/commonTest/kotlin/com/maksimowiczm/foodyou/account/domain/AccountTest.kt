@@ -6,11 +6,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 class AccountTest {
-    private val now = Instant.fromEpochMilliseconds(1000)
 
     private val profile1 =
         Profile(
@@ -29,14 +27,14 @@ class AccountTest {
     @Test
     fun finishOnboarding_returnsOnboardingFinishedEvent_whenNotFinished() {
         val account = Account(profiles = listOf(profile1), onboardingFinished = false)
-        val events = account.decide(AccountCommand.FinishOnboarding(now))
-        assertEquals(listOf(OnboardingFinishedEvent(now)), events)
+        val events = account.decide(AccountCommand.FinishOnboarding)
+        assertEquals(listOf(OnboardingFinishedEvent), events)
     }
 
     @Test
     fun finishOnboarding_returnsEmptyList_whenAlreadyFinished() {
         val account = Account(profiles = listOf(profile1), onboardingFinished = true)
-        val events = account.decide(AccountCommand.FinishOnboarding(now))
+        val events = account.decide(AccountCommand.FinishOnboarding)
         assertTrue(events.isEmpty())
     }
 
@@ -44,21 +42,21 @@ class AccountTest {
     fun finishOnboarding_fails_whenNoProfiles() {
         val account = Account(profiles = emptyList(), onboardingFinished = false)
         assertFailsWith<IllegalStateException> {
-            account.decide(AccountCommand.FinishOnboarding(now))
+            account.decide(AccountCommand.FinishOnboarding)
         }
     }
 
     @Test
     fun changeEnableMultipleProfiles_returnsEnableMultipleProfilesChangedEvent_whenStateIsDifferent() {
         val account = Account(profiles = listOf(profile1), singleProfileMode = true)
-        val events = account.decide(AccountCommand.ChangeEnableSingleProfileMode(false, now))
-        assertEquals(listOf(EnableSingleProfileModeChangedEvent(false, now)), events)
+        val events = account.decide(AccountCommand.ChangeEnableSingleProfileMode(false))
+        assertEquals(listOf(EnableSingleProfileModeChangedEvent(false)), events)
     }
 
     @Test
     fun changeEnableMultipleProfiles_returnsEmptyList_whenStateIsSame() {
         val account = Account(singleProfileMode = true)
-        val events = account.decide(AccountCommand.ChangeEnableSingleProfileMode(true, now))
+        val events = account.decide(AccountCommand.ChangeEnableSingleProfileMode(true))
         assertTrue(events.isEmpty())
     }
 
@@ -66,25 +64,25 @@ class AccountTest {
     fun changeEnableSingleProfileMode_fails_whenDisablingSingleProfileModeWithMoreThanOneProfile() {
         val account = Account(profiles = listOf(profile1, profile2), singleProfileMode = false)
         assertFailsWith<IllegalStateException> {
-            account.decide(AccountCommand.ChangeEnableSingleProfileMode(true, now))
+            account.decide(AccountCommand.ChangeEnableSingleProfileMode(true))
         }
     }
 
     @Test
     fun addProfile_returnsProfileAddedEvent() {
         val account = Account(profiles = listOf(profile1))
-        val events = account.decide(AccountCommand.AddProfile(profile2, now))
-        assertEquals(listOf(ProfileAddedEvent(profile2, now)), events)
+        val events = account.decide(AccountCommand.AddProfile(profile2))
+        assertEquals(listOf(ProfileAddedEvent(profile2)), events)
     }
 
     @Test
     fun addProfile_returnsProfileAddedAndEnableSingleProfileModeEvents_whenAddingSecondProfileAndSingleProfileModeEnabled() {
         val account = Account(profiles = listOf(profile1), singleProfileMode = true)
-        val events = account.decide(AccountCommand.AddProfile(profile2, now))
+        val events = account.decide(AccountCommand.AddProfile(profile2))
         assertEquals(
             listOf(
-                ProfileAddedEvent(profile2, now),
-                EnableSingleProfileModeChangedEvent(enable = false, timestamp = now),
+                ProfileAddedEvent(profile2),
+                EnableSingleProfileModeChangedEvent(enable = false),
             ),
             events,
         )
@@ -94,7 +92,7 @@ class AccountTest {
     fun addProfile_fails_whenProfileAlreadyExists() {
         val account = Account(profiles = listOf(profile1))
         assertFailsWith<IllegalStateException> {
-            account.decide(AccountCommand.AddProfile(profile1, now))
+            account.decide(AccountCommand.AddProfile(profile1))
         }
     }
 
@@ -102,16 +100,16 @@ class AccountTest {
     fun updateProfile_returnsProfileUpdatedEvent() {
         val account = Account(profiles = listOf(profile1))
         val transform: (Profile) -> Profile = { it.copy(name = "Updated Name") }
-        val events = account.decide(AccountCommand.UpdateProfile(profile1.id, now, transform))
+        val events = account.decide(AccountCommand.UpdateProfile(profile1.id, transform))
         val updatedProfile = profile1.copy(name = "Updated Name")
-        assertEquals(listOf(ProfileUpdatedEvent(updatedProfile, now)), events)
+        assertEquals(listOf(ProfileUpdatedEvent(updatedProfile)), events)
     }
 
     @Test
     fun updateProfile_fails_whenProfileDoesNotExist() {
         val account = Account(profiles = listOf(profile1))
         assertFailsWith<IllegalStateException> {
-            account.decide(AccountCommand.UpdateProfile(profile2.id, now) { it })
+            account.decide(AccountCommand.UpdateProfile(profile2.id) { it })
         }
     }
 
@@ -119,24 +117,22 @@ class AccountTest {
     fun updateProfile_fails_whenProfileIdChanged() {
         val account = Account(profiles = listOf(profile1))
         assertFailsWith<IllegalStateException> {
-            account.decide(
-                AccountCommand.UpdateProfile(profile1.id, now) { it.copy(id = profile2.id) }
-            )
+            account.decide(AccountCommand.UpdateProfile(profile1.id) { it.copy(id = profile2.id) })
         }
     }
 
     @Test
     fun removeProfile_returnsProfileRemovedEvent() {
         val account = Account(profiles = listOf(profile1, profile2))
-        val events = account.decide(AccountCommand.RemoveProfile(profile2.id, now))
-        assertEquals(listOf(ProfileRemovedEvent(profile2.id, now)), events)
+        val events = account.decide(AccountCommand.RemoveProfile(profile2.id))
+        assertEquals(listOf(ProfileRemovedEvent(profile2.id)), events)
     }
 
     @Test
     fun removeProfile_fails_whenProfileDoesNotExist() {
         val account = Account(profiles = listOf(profile1, profile2))
         assertFailsWith<IllegalStateException> {
-            account.decide(AccountCommand.RemoveProfile(ProfileId(Uuid.random()), now))
+            account.decide(AccountCommand.RemoveProfile(ProfileId(Uuid.random())))
         }
     }
 
@@ -144,7 +140,7 @@ class AccountTest {
     fun removeProfile_fails_whenItsTheLastProfile() {
         val account = Account(profiles = listOf(profile1))
         assertFailsWith<IllegalStateException> {
-            account.decide(AccountCommand.RemoveProfile(profile1.id, now))
+            account.decide(AccountCommand.RemoveProfile(profile1.id))
         }
     }
 
@@ -152,15 +148,15 @@ class AccountTest {
     fun addFavoriteFood_returnsFavoriteFoodAddedEvent() {
         val account = Account(profiles = listOf(profile1))
         val food = FavoriteFoodId.FoodDataCentral(123)
-        val events = account.decide(AccountCommand.AddFavoriteFood(profile1.id, food, now))
-        assertEquals(listOf(FavoriteFoodAddedEvent(profile1.id, food, now)), events)
+        val events = account.decide(AccountCommand.AddFavoriteFood(profile1.id, food))
+        assertEquals(listOf(FavoriteFoodAddedEvent(profile1.id, food)), events)
     }
 
     @Test
     fun addFavoriteFood_isIdempotent() {
         val food = FavoriteFoodId.FoodDataCentral(123)
         val account = Account(profiles = listOf(profile1.copy(favoriteFoods = setOf(food))))
-        val events = account.decide(AccountCommand.AddFavoriteFood(profile1.id, food, now))
+        val events = account.decide(AccountCommand.AddFavoriteFood(profile1.id, food))
         assertTrue(events.isEmpty())
     }
 
@@ -168,15 +164,15 @@ class AccountTest {
     fun removeFavoriteFood_returnsFavoriteFoodRemovedEvent() {
         val food = FavoriteFoodId.FoodDataCentral(123)
         val account = Account(profiles = listOf(profile1.copy(favoriteFoods = setOf(food))))
-        val events = account.decide(AccountCommand.RemoveFavoriteFood(profile1.id, food, now))
-        assertEquals(listOf(FavoriteFoodRemovedEvent(profile1.id, food, now)), events)
+        val events = account.decide(AccountCommand.RemoveFavoriteFood(profile1.id, food))
+        assertEquals(listOf(FavoriteFoodRemovedEvent(profile1.id, food)), events)
     }
 
     @Test
     fun removeFavoriteFood_isIdempotent() {
         val food = FavoriteFoodId.FoodDataCentral(123)
         val account = Account(profiles = listOf(profile1))
-        val events = account.decide(AccountCommand.RemoveFavoriteFood(profile1.id, food, now))
+        val events = account.decide(AccountCommand.RemoveFavoriteFood(profile1.id, food))
         assertTrue(events.isEmpty())
     }
 
@@ -193,8 +189,7 @@ class AccountTest {
                     )
             )
 
-        val events =
-            account.decide(AccountCommand.RemoveFavoriteUserFood(UserProductId(productId), now))
+        val events = account.decide(AccountCommand.RemoveFavoriteUserFood(UserProductId(productId)))
         assertEquals(2, events.size)
         assertTrue(events.all { it is FavoriteFoodRemovedEvent && it.favoriteFoodId == food })
         assertTrue(events.any { (it as FavoriteFoodRemovedEvent).profileId == profile1.id })
@@ -205,24 +200,24 @@ class AccountTest {
     fun apply_eventsUpdateAccountState() {
         var account = Account()
 
-        account = account.apply(ProfileAddedEvent(profile1, now))
+        account = account.apply(ProfileAddedEvent(profile1))
 
-        account = account.apply(OnboardingFinishedEvent(now))
+        account = account.apply(OnboardingFinishedEvent)
         assertTrue(account.onboardingFinished)
 
         val updatedProfile = profile1.copy(name = "New Name")
-        account = account.apply(ProfileUpdatedEvent(updatedProfile, now))
+        account = account.apply(ProfileUpdatedEvent(updatedProfile))
         assertEquals("New Name", account.profiles.first().name)
 
-        account = account.apply(ProfileAddedEvent(profile2, now))
-        account = account.apply(ProfileRemovedEvent(profile1.id, now))
+        account = account.apply(ProfileAddedEvent(profile2))
+        account = account.apply(ProfileRemovedEvent(profile1.id))
         assertEquals(listOf(profile2), account.profiles)
 
         val food = FavoriteFoodId.FoodDataCentral(1)
-        account = account.apply(FavoriteFoodAddedEvent(profile2.id, food, now))
+        account = account.apply(FavoriteFoodAddedEvent(profile2.id, food))
         assertTrue(food in account.profiles.first().favoriteFoods)
 
-        account = account.apply(FavoriteFoodRemovedEvent(profile2.id, food, now))
+        account = account.apply(FavoriteFoodRemovedEvent(profile2.id, food))
         assertTrue(food !in account.profiles.first().favoriteFoods)
     }
 
@@ -230,8 +225,8 @@ class AccountTest {
     fun toAccount_reconstructsAccountFromEvents() {
         val events =
             listOf(
-                ProfileAddedEvent(profile1, now),
-                OnboardingFinishedEvent(now),
+                ProfileAddedEvent(profile1),
+                OnboardingFinishedEvent,
             )
 
         val account = events.toAccount()

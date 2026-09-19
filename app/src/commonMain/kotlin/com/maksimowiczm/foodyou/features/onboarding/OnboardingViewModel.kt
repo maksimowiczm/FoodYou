@@ -16,7 +16,6 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsReposi
 import com.maksimowiczm.foodyou.shared.ui.component.UiProfileAvatar
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -85,9 +84,7 @@ internal class OnboardingViewModel(
 
                 awaitAll(
                     async {
-                        accountService.handle(
-                            AccountCommand.AddProfile(profile, Clock.System.now())
-                        )
+                        accountService.handle(AccountCommand.AddProfile(profile))
                         accountManager.setAppProfileId(profile.id)
                     },
                     async { openFoodFacts.update { it.copy(remoteEnabled = allowOpenFoodFacts) } },
@@ -99,7 +96,6 @@ internal class OnboardingViewModel(
                             MealPlanCommand.Initialize(
                                 language = language,
                                 meals = MealTemplates.forLanguage(language),
-                                timestamp = Clock.System.now(),
                             )
                         )
                     },

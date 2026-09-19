@@ -21,7 +21,6 @@ import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.toSnapshot
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.maksimowiczm.foodyou.userrecipe.domain.toSnapshot
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -87,7 +86,6 @@ class AddFoodDiaryEntryViewModel(
                         snapshot = snapshot,
                         mealId = mealId,
                         entryTimestamp = timestamp.toInstant(TimeZone.currentSystemDefault()),
-                        timestamp = Clock.System.now(),
                     ),
             )
             eventBus.send(FoodDiaryEntryCreatedUiEvent(entryId))

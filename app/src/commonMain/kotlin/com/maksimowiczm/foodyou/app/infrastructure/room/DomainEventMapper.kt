@@ -8,6 +8,8 @@ import com.maksimowiczm.foodyou.mealplan.domain.MealPlanEvent
 import com.maksimowiczm.foodyou.search.domain.SearchHistoryEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductEvent
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeEvent
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.json.Json
@@ -21,13 +23,18 @@ internal object DomainEventMapper {
             entity.payloadJson,
         )
 
-    fun toRoomStoredEventEntity(event: DomainEvent, stream: String): DomainEventEntity =
+    fun toRoomStoredEventEntity(
+        event: DomainEvent,
+        stream: String,
+        dbId: Uuid,
+        persistedAtTimestamp: Instant,
+    ): DomainEventEntity =
         DomainEventEntity(
-            id = event.id,
+            dbId = dbId,
             eventStream = stream,
             payloadJson =
                 roomEventJson.encodeToString(PolymorphicSerializer(DomainEvent::class), event),
-            occurredAtEpochMs = event.timestamp.toEpochMilliseconds(),
+            persistedAtEpochMs = persistedAtTimestamp.toEpochMilliseconds(),
         )
 }
 

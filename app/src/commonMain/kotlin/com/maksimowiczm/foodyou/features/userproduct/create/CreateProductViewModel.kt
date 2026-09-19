@@ -11,7 +11,6 @@ import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductCommand
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
-import kotlin.time.Clock
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -75,8 +74,7 @@ internal class CreateProductViewModel(
 
             userProductService.handle(
                 id = id,
-                command =
-                    UserProductCommand.Create(product = product, timestamp = Clock.System.now()),
+                command = UserProductCommand.Create(product = product),
             )
 
             eventBus.send(CreateProductEvent.Created(id))

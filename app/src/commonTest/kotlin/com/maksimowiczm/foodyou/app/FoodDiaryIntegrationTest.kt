@@ -81,8 +81,7 @@ class FoodDiaryIntegrationTest {
                                 servingQuantity = null,
                                 packageQuantity = null,
                                 isLiquid = false,
-                            ),
-                        timestamp = Clock.System.now(),
+                            )
                     ),
             )
 
@@ -114,7 +113,6 @@ class FoodDiaryIntegrationTest {
                         snapshot = snapshot,
                         mealId = mealId,
                         entryTimestamp = Clock.System.now(),
-                        timestamp = Clock.System.now(),
                     ),
             )
 
@@ -131,7 +129,7 @@ class FoodDiaryIntegrationTest {
             userProductService.handle(
                 id = productId,
                 command =
-                    UserProductCommand.Update(timestamp = Clock.System.now()) {
+                    UserProductCommand.Update {
                         it.copy(
                             name = updatedProductName,
                             brand = "Brand",
@@ -220,7 +218,6 @@ class FoodDiaryIntegrationTest {
                         snapshot = entrySnapshot,
                         mealId = mealId,
                         entryTimestamp = Clock.System.now(),
-                        timestamp = Clock.System.now(),
                     ),
             )
 
@@ -274,8 +271,7 @@ class FoodDiaryIntegrationTest {
                                 servingQuantity = null,
                                 packageQuantity = null,
                                 isLiquid = false,
-                            ),
-                        timestamp = Clock.System.now(),
+                            )
                     ),
             )
 
@@ -336,7 +332,6 @@ class FoodDiaryIntegrationTest {
                         snapshot = entrySnapshot,
                         mealId = mealId,
                         entryTimestamp = Clock.System.now(),
-                        timestamp = Clock.System.now(),
                     ),
             )
 
@@ -350,7 +345,7 @@ class FoodDiaryIntegrationTest {
             userProductService.handle(
                 id = productId,
                 command =
-                    UserProductCommand.Update(timestamp = Clock.System.now()) {
+                    UserProductCommand.Update {
                         it.copy(
                             name = updatedProductName,
                             brand = "Brand",
@@ -399,8 +394,7 @@ class FoodDiaryIntegrationTest {
                                 packageQuantity = null,
                                 isLiquid = false,
                                 nutritionFacts = NutritionFacts(),
-                            ),
-                        timestamp = Clock.System.now(),
+                            )
                     ),
             )
 
@@ -432,7 +426,6 @@ class FoodDiaryIntegrationTest {
                         snapshot = snapshot,
                         mealId = mealId,
                         entryTimestamp = Clock.System.now(),
-                        timestamp = Clock.System.now(),
                     ),
             )
 
@@ -443,11 +436,7 @@ class FoodDiaryIntegrationTest {
             // 4. Delete the User Product
             userProductService.handle(
                 id = productId,
-                command =
-                    UserProductCommand.Remove(
-                        strategy = DeleteStrategy.Delete,
-                        timestamp = Clock.System.now(),
-                    ),
+                command = UserProductCommand.Remove(strategy = DeleteStrategy.Delete),
             )
 
             // 5. Verify the diary entry has been deleted
@@ -477,8 +466,7 @@ class FoodDiaryIntegrationTest {
                                 packageQuantity = null,
                                 isLiquid = false,
                                 nutritionFacts = NutritionFacts(),
-                            ),
-                        timestamp = Clock.System.now(),
+                            )
                     ),
             )
 
@@ -510,7 +498,6 @@ class FoodDiaryIntegrationTest {
                         snapshot = snapshot,
                         mealId = mealId,
                         entryTimestamp = Clock.System.now(),
-                        timestamp = Clock.System.now(),
                     ),
             )
 
@@ -521,11 +508,7 @@ class FoodDiaryIntegrationTest {
             // 4. Unlink the User Product
             userProductService.handle(
                 id = productId,
-                command =
-                    UserProductCommand.Remove(
-                        strategy = DeleteStrategy.Unlink,
-                        timestamp = Clock.System.now(),
-                    ),
+                command = UserProductCommand.Remove(strategy = DeleteStrategy.Unlink),
             )
 
             // 5. Verify the diary entry has been anonymized
@@ -560,8 +543,7 @@ class FoodDiaryIntegrationTest {
                                 servingQuantity = Weight(30.grams),
                                 packageQuantity = null,
                                 isLiquid = false,
-                            ),
-                        timestamp = Clock.System.now(),
+                            )
                     ),
             )
 
@@ -593,7 +575,6 @@ class FoodDiaryIntegrationTest {
                         snapshot = snapshot,
                         mealId = mealId,
                         entryTimestamp = Clock.System.now(),
-                        timestamp = Clock.System.now(),
                     ),
             )
 
@@ -606,7 +587,7 @@ class FoodDiaryIntegrationTest {
             userProductService.handle(
                 id = productId,
                 command =
-                    UserProductCommand.Update(timestamp = Clock.System.now()) {
+                    UserProductCommand.Update {
                         it.copy(
                             name = FoodName(english = "Product", fallback = "Product"),
                             brand = "Brand",
@@ -667,7 +648,6 @@ class FoodDiaryIntegrationTest {
                             snapshot = snapshot,
                             mealId = mealId,
                             entryTimestamp = Clock.System.now(),
-                            timestamp = Clock.System.now(),
                         ),
                 )
 
@@ -724,7 +704,6 @@ class FoodDiaryIntegrationTest {
                             snapshot = snapshot,
                             mealId = mealId,
                             entryTimestamp = Clock.System.now(),
-                            timestamp = Clock.System.now(),
                         ),
                 )
 
@@ -808,7 +787,6 @@ class FoodDiaryIntegrationTest {
                         snapshot = snapshot,
                         mealId = mealId,
                         entryTimestamp = Clock.System.now(),
-                        timestamp = Clock.System.now(),
                     ),
             )
 
@@ -898,7 +876,6 @@ class FoodDiaryIntegrationTest {
                         snapshot = snapshot,
                         mealId = mealId,
                         entryTimestamp = Clock.System.now(),
-                        timestamp = Clock.System.now(),
                     ),
             )
 
@@ -954,7 +931,6 @@ class FoodDiaryIntegrationTest {
                         snapshot = snapshot,
                         mealId = mealId,
                         entryTimestamp = Clock.System.now(),
-                        timestamp = Clock.System.now(),
                     ),
             )
 

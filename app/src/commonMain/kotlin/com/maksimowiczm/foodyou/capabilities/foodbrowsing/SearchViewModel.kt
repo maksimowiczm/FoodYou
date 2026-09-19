@@ -9,7 +9,6 @@ import com.maksimowiczm.foodyou.common.domain.search.SearchQueryParser
 import com.maksimowiczm.foodyou.search.application.SearchHistoryService
 import com.maksimowiczm.foodyou.search.domain.SearchHistoryCommand
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
-import kotlin.time.Clock
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterIsInstance
@@ -79,7 +78,7 @@ class SearchViewModel(
                 val profileId = appProfileManager.observeAppProfileId().filterNotNull().first()
                 searchHistoryService.handle(
                     profileId = profileId,
-                    command = SearchHistoryCommand.RecordSearchQuery(query, Clock.System.now()),
+                    command = SearchHistoryCommand.RecordSearchQuery(query),
                 )
             }
             .launchIn(viewModelScope)

@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.features.userproduct.ProductFormTransformer
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductCommand
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
-import kotlin.time.Clock
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -60,7 +59,7 @@ internal class EditProductViewModel(
             userProductService.handle(
                 id = id,
                 command =
-                    UserProductCommand.Update(timestamp = Clock.System.now()) { product ->
+                    UserProductCommand.Update { product ->
                         product.copy(
                             name = foodName,
                             brand = brand,

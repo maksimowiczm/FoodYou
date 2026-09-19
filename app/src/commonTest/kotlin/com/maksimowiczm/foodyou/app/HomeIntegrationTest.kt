@@ -50,7 +50,6 @@ class HomeIntegrationTest {
                             snapshot = composition,
                             mealId = mealId,
                             entryTimestamp = timestamp,
-                            timestamp = Clock.System.now(),
                         ),
                 )
 
@@ -83,7 +82,6 @@ class HomeIntegrationTest {
                             snapshot = composition,
                             mealId = mealId,
                             entryTimestamp = timestamp,
-                            timestamp = Clock.System.now(),
                         ),
                 )
 
@@ -99,7 +97,7 @@ class HomeIntegrationTest {
                 foodDiaryService.handle(
                     id = entryId,
                     command =
-                        FoodDiaryCommand.Update(timestamp = Clock.System.now()) { current ->
+                        FoodDiaryCommand.Update { current ->
                             current.copy(
                                 profileIds = setOf(profileId),
                                 snapshot = current.snapshot.copy(quantity = updatedQuantity),
@@ -136,7 +134,6 @@ class HomeIntegrationTest {
                             snapshot = composition,
                             mealId = mealId,
                             entryTimestamp = timestamp,
-                            timestamp = Clock.System.now(),
                         ),
                 )
 
@@ -145,7 +142,7 @@ class HomeIntegrationTest {
 
                 foodDiaryService.handle(
                     id = entryId,
-                    command = FoodDiaryCommand.Delete(timestamp = Clock.System.now()),
+                    command = FoodDiaryCommand.Delete,
                 )
 
                 val entries = homeDao.observeEntries(profileId.value, date).first { it.isEmpty() }
@@ -171,7 +168,6 @@ class HomeIntegrationTest {
                             snapshot = composition,
                             mealId = mealId,
                             entryTimestamp = timestamp,
-                            timestamp = Clock.System.now(),
                         ),
                 )
 
@@ -180,7 +176,7 @@ class HomeIntegrationTest {
 
                 foodDiaryService.handle(
                     id = entryId,
-                    command = FoodDiaryCommand.Anonymize(timestamp = Clock.System.now()),
+                    command = FoodDiaryCommand.Anonymize,
                 )
 
                 val entries =
@@ -211,7 +207,6 @@ class HomeIntegrationTest {
                             snapshot = composition,
                             mealId = mealId,
                             entryTimestamp = timestamp,
-                            timestamp = Clock.System.now(),
                         ),
                 )
 
@@ -246,7 +241,6 @@ class HomeIntegrationTest {
                             snapshot = composition,
                             mealId = mealId,
                             entryTimestamp = timestamp,
-                            timestamp = Clock.System.now(),
                         ),
                 )
 
@@ -281,7 +275,6 @@ class HomeIntegrationTest {
                             snapshot = composition,
                             mealId = mealId,
                             entryTimestamp = timestamp,
-                            timestamp = Clock.System.now(),
                         ),
                 )
 
@@ -292,7 +285,7 @@ class HomeIntegrationTest {
                 foodDiaryService.handle(
                     id = entryId,
                     command =
-                        FoodDiaryCommand.Update(timestamp = Clock.System.now()) { current ->
+                        FoodDiaryCommand.Update { current ->
                             current.copy(
                                 profileIds = setOf(otherProfileId),
                                 snapshot = current.snapshot.copy(quantity = composition.quantity),

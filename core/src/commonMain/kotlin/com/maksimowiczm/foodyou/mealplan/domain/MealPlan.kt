@@ -17,14 +17,12 @@ fun MealPlan.decide(command: MealPlanCommand): List<MealPlanEvent> =
                 MealPlanInitializedEvent(
                     language = command.language,
                     meals = command.meals,
-                    timestamp = command.timestamp,
                 )
             )
         }
 
         is MealPlanCommand.UpdateMeals -> {
             val updatedMeals = command.meals
-            val timestamp = command.timestamp
             require(updatedMeals.map { it.id }.distinct().size == updatedMeals.size) {
                 "Meal identities must be unique"
             }
@@ -48,10 +46,10 @@ fun MealPlan.decide(command: MealPlanCommand): List<MealPlanEvent> =
                 val reordered = targetOrder != naturalOrder
 
                 buildList {
-                    added.forEach { add(MealAddedEvent(it, timestamp)) }
-                    changed.forEach { add(MealUpdatedEvent(it, timestamp)) }
-                    removed.forEach { add(MealDeletedEvent(it.id, timestamp)) }
-                    if (reordered) add(MealsReorderedEvent(targetOrder, timestamp))
+                    added.forEach { add(MealAddedEvent(it)) }
+                    changed.forEach { add(MealUpdatedEvent(it)) }
+                    removed.forEach { add(MealDeletedEvent(it.id)) }
+                    if (reordered) add(MealsReorderedEvent(targetOrder))
                 }
             }
         }

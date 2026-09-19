@@ -156,7 +156,7 @@ class HomeViewModel(
         viewModelScope.launch {
             foodDiaryService.handle(
                 id,
-                FoodDiaryCommand.Delete(timestamp = Clock.System.now()),
+                FoodDiaryCommand.Delete,
             )
         }
     }

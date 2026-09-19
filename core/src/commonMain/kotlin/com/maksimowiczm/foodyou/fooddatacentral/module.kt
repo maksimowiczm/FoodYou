@@ -52,7 +52,7 @@ internal fun Module.foodDataCentral() {
 
     factoryOf(::FoodDataCentralRepositoryImpl).bind<FoodDataCentralRepository>()
 
-    factory { FoodDataCentralService(get(), get(), get()) }
+    factoryOf(::FoodDataCentralService)
 
     factoryOf(::FoodDataCentralSettingsRepositoryImpl).bind<FoodDataCentralSettingsRepository>()
 

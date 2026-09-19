@@ -14,7 +14,6 @@ import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductCommand
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
-import kotlin.time.Clock
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -102,11 +101,7 @@ class UserProductDetailsViewModel(
         viewModelScope.launch {
             userProductService.handle(
                 id = id,
-                command =
-                    UserProductCommand.Remove(
-                        strategy = DeleteStrategy.Delete,
-                        timestamp = Clock.System.now(),
-                    ),
+                command = UserProductCommand.Remove(strategy = DeleteStrategy.Delete),
             )
             eventChannel.send(UserProductDetailsUiEvent.Deleted)
         }
