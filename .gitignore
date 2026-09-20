@@ -14,7 +14,8 @@
 .cxx
 local.properties
 .kotlin
-.idea
+/.idea/*
+!/.idea/icon.svg
 *.keystore
 *.kdbx
 *.apk
