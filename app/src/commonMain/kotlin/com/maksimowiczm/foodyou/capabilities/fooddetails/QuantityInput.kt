@@ -19,7 +19,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
@@ -148,16 +147,6 @@ fun QuantityInput(
                     textAlign = TextAlign.Center,
                 )
                 Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                    val arrowRotation =
-                        animateFloatAsState(
-                            targetValue = if (expanded) 180f else 0f,
-                            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-                        )
-                    Icon(
-                        imageVector = Icons.Outlined.KeyboardArrowDown,
-                        contentDescription = null,
-                        modifier = Modifier.graphicsLayer { rotationZ = arrowRotation.value },
-                    )
                     DropdownMenuPopup(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
