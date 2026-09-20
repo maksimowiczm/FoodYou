@@ -6,6 +6,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
@@ -242,39 +243,39 @@ private fun UpdateOpenFoodFactsDiaryEntryScreenContent(
                     FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
                 }
             }
-            if (suggestions.isNotEmpty()) {
-                item {
-                    QuantitySuggestions(
-                        suggestions = suggestions,
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (suggestions.isNotEmpty()) {
+                        QuantitySuggestions(
+                            suggestions = suggestions,
+                            selectedType = selectedType,
+                            formField = formField,
+                            packageQuantity = packageQuantity,
+                            servingQuantity = servingQuantity,
+                            onSelectQuantity = {
+                                onSelectQuantity(it)
+                                formField.textFieldState.setTextAndPlaceCursorAtEnd(
+                                    it.amount.formatCompact()
+                                )
+                            },
+                            modifier = Modifier.height(32.dp),
+                        )
+                    }
+                    DiaryInput(
                         selectedType = selectedType,
+                        types = types,
                         formField = formField,
-                        packageQuantity = packageQuantity,
-                        servingQuantity = servingQuantity,
-                        onSelectQuantity = {
-                            onSelectQuantity(it)
-                            formField.textFieldState.setTextAndPlaceCursorAtEnd(
-                                it.amount.formatCompact()
-                            )
-                        },
-                        modifier = Modifier.height(32.dp),
+                        profiles = profiles,
+                        selectedProfiles = selectedProfiles,
+                        onSelectType = onSelectQuantityType,
+                        onSelectProfiles = onSelectProfiles,
+                        onKeyboardAction = { onSave(isTracked) },
+                        modifier =
+                            Modifier.focusRequester(focusRequester)
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
                     )
                 }
-            }
-            item {
-                DiaryInput(
-                    selectedType = selectedType,
-                    types = types,
-                    formField = formField,
-                    profiles = profiles,
-                    selectedProfiles = selectedProfiles,
-                    onSelectType = onSelectQuantityType,
-                    onSelectProfiles = onSelectProfiles,
-                    onKeyboardAction = { onSave(isTracked) },
-                    modifier =
-                        Modifier.focusRequester(focusRequester)
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                )
             }
             if (scaledNutritionFacts != null) {
                 item {

@@ -247,27 +247,29 @@ private fun AddUserRecipeIngredientScreenContent(
                         modifier = Modifier.padding(horizontal = 8.dp),
                     )
                 }
-            if (suggestions.isNotEmpty())
-                item {
-                    QuantitySuggestions(
-                        suggestions = suggestions,
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (suggestions.isNotEmpty()) {
+                        QuantitySuggestions(
+                            suggestions = suggestions,
+                            selectedType = selectedType,
+                            formField = formField,
+                            packageQuantity = packageQuantity,
+                            servingQuantity = servingQuantity,
+                            onSelectQuantity = onSelectQuantity,
+                            modifier = Modifier.height(32.dp),
+                        )
+                    }
+                    QuantityInput(
                         selectedType = selectedType,
+                        types = types,
                         formField = formField,
-                        packageQuantity = packageQuantity,
-                        servingQuantity = servingQuantity,
-                        onSelectQuantity = onSelectQuantity,
-                        modifier = Modifier.height(32.dp),
+                        onSelectType = onSelectQuantityType,
+                        onKeyboardAction = onAdd,
+                        modifier =
+                            Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                     )
                 }
-            item {
-                QuantityInput(
-                    selectedType = selectedType,
-                    types = types,
-                    formField = formField,
-                    onSelectType = onSelectQuantityType,
-                    onKeyboardAction = onAdd,
-                    modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
-                )
             }
             if (scaledNutritionFacts != null)
                 item {

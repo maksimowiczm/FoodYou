@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.features.userrecipe.ingredient
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -200,27 +201,29 @@ private fun AddFoodDataCentralIngredientScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item { FoodHeadline(headline, Modifier.padding(horizontal = 8.dp)) }
-            if (suggestions.isNotEmpty())
-                item {
-                    QuantitySuggestions(
-                        suggestions = suggestions,
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (suggestions.isNotEmpty()) {
+                        QuantitySuggestions(
+                            suggestions = suggestions,
+                            selectedType = selectedType,
+                            formField = formField,
+                            packageQuantity = packageQuantity,
+                            servingQuantity = servingQuantity,
+                            onSelectQuantity = onSelectQuantity,
+                            modifier = Modifier.height(32.dp),
+                        )
+                    }
+                    QuantityInput(
                         selectedType = selectedType,
+                        types = types,
                         formField = formField,
-                        packageQuantity = packageQuantity,
-                        servingQuantity = servingQuantity,
-                        onSelectQuantity = onSelectQuantity,
-                        modifier = Modifier.height(32.dp),
+                        onSelectType = onSelectQuantityType,
+                        onKeyboardAction = onAdd,
+                        modifier =
+                            Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
                     )
                 }
-            item {
-                QuantityInput(
-                    selectedType = selectedType,
-                    types = types,
-                    formField = formField,
-                    onSelectType = onSelectQuantityType,
-                    onKeyboardAction = onAdd,
-                    modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
-                )
             }
             if (scaledNutritionFacts != null)
                 item {
