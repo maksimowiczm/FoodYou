@@ -251,8 +251,7 @@
     <string name="description_dynamic_colors">Apply colors from system</string>
     <string name="headline_single_profile_mode">Single profile mode</string>
     <string name="description_single_profile_mode">Hide profile management features</string>
-    <string name="error_remove_extra_profiles_before_single_profile_mode">Remove extra profiles before enabling single profile mode</string>
-
+    <string name="error_single_profile_mode">Remove extra profiles first</string>
 
     <string name="headline_palette_style">Palette style</string>
 

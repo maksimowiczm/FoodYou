@@ -256,12 +256,7 @@ fun PersonalizationScreen(
                         },
                         supportingContent = {
                             if (!allowSingleProfileMode)
-                                Text(
-                                    stringResource(
-                                        Res.string
-                                            .error_remove_extra_profiles_before_single_profile_mode
-                                    )
-                                )
+                                Text(stringResource(Res.string.error_single_profile_mode))
                             else Text(stringResource(Res.string.description_single_profile_mode))
                         },
                         trailingContent = {
