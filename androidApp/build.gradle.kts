@@ -12,6 +12,7 @@ kotlin {
         implementation(libs.androidx.appcompat)
         implementation(libs.androidx.datastore.preferencesCore)
         implementation(libs.compose.components.resources)
+        implementation(libs.compose.material3)
         implementation(libs.compose.runtime)
         implementation(libs.insert.koin.android)
         implementation(libs.jetbrains.androidx.lifecycle.runtimeCompose)
