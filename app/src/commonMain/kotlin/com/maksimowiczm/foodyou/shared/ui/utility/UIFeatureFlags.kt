@@ -16,7 +16,7 @@ data class UIFeatureFlags(
      * This is intended to prevent DDOSing Open Food Facts servers during search usage. Note that
      * images will still be downloaded on other screens.
      */
-    val downloadOpenFoodFactsSearchImages: Boolean = true,
+    val downloadOpenFoodFactsSearchImages: Boolean = false,
 
     /** Whether to hide all multiple profile features */
     val singleProfileMode: Boolean = false,
