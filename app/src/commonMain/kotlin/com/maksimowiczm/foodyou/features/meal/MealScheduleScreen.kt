@@ -659,10 +659,12 @@ private fun MealTimePicker(
             },
             title = {
                 Text(
-                    when (showTimePicker) {
-                        TimePicker.Start -> startTimeLabel
-                        TimePicker.End -> endTimeLabel
-                    }
+                    text =
+                        when (showTimePicker) {
+                            TimePicker.Start -> startTimeLabel
+                            TimePicker.End -> endTimeLabel
+                        },
+                    style = MaterialTheme.typography.headlineSmall,
                 )
             },
             dismissButton = {
