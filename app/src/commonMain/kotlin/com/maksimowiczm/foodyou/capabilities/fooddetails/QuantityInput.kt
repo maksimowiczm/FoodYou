@@ -1,9 +1,7 @@
 package com.maksimowiczm.foodyou.capabilities.fooddetails
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -36,17 +34,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.lerp
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
+import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.shared.ui.form.validateDouble
+import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -76,35 +74,34 @@ fun QuantityInput(
 
     val focusRequester = remember { FocusRequester() }
     val inputInteractionSource = remember { MutableInteractionSource() }
-    val inputIsPressed = inputInteractionSource.collectIsPressedAsState()
-    val inputProgress =
-        animateFloatAsState(
-            if (inputIsPressed.value) 1f else 0f,
-            MaterialTheme.motionScheme.fastSpatialSpec(),
+    val inputShape =
+        rememberInteractionAnimatedShape(
+            shapes =
+                InteractionShapes(
+                    shape = RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp),
+                    pressedShape = MaterialTheme.shapes.large,
+                    focusedShape = MaterialTheme.shapes.large,
+                ),
+            interactionSource = inputInteractionSource,
         )
 
     val quantityInteractionSource = remember { MutableInteractionSource() }
-    val quantityIsPressed = quantityInteractionSource.collectIsPressedAsState()
-    val quantityProgress =
-        animateFloatAsState(
-            if (quantityIsPressed.value || expanded) 1f else 0f,
-            MaterialTheme.motionScheme.fastSpatialSpec(),
+    val quantityShape =
+        rememberInteractionAnimatedShape(
+            shapes =
+                InteractionShapes(
+                    shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp),
+                    pressedShape = MaterialTheme.shapes.large,
+                    focusedShape = MaterialTheme.shapes.large,
+                ),
+            interactionSource = quantityInteractionSource,
         )
 
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
         Surface(
             onClick = { focusRequester.requestFocus() },
-            modifier =
-                Modifier.height(48.dp).weight(1f).graphicsLayer {
-                    clip = true
-                    shape =
-                        RoundedCornerShape(
-                            topStart = lerp(16.dp, 8.dp, inputProgress.value),
-                            bottomStart = lerp(16.dp, 8.dp, inputProgress.value),
-                            topEnd = lerp(12.dp, 8.dp, inputProgress.value),
-                            bottomEnd = lerp(12.dp, 8.dp, inputProgress.value),
-                        )
-                },
+            modifier = Modifier.height(48.dp).weight(1f),
+            shape = inputShape,
             color = inputColor,
             contentColor = contentColor,
             interactionSource = inputInteractionSource,
@@ -125,17 +122,8 @@ fun QuantityInput(
         }
         Surface(
             onClick = { expanded = true },
-            modifier =
-                Modifier.heightIn(min = 48.dp).weight(1f).graphicsLayer {
-                    clip = true
-                    shape =
-                        RoundedCornerShape(
-                            topStart = lerp(12.dp, 8.dp, quantityProgress.value),
-                            bottomStart = lerp(12.dp, 8.dp, quantityProgress.value),
-                            topEnd = lerp(16.dp, 8.dp, quantityProgress.value),
-                            bottomEnd = lerp(16.dp, 8.dp, quantityProgress.value),
-                        )
-                },
+            modifier = Modifier.heightIn(min = 48.dp).weight(1f),
+            shape = quantityShape,
             color = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             interactionSource = quantityInteractionSource,
