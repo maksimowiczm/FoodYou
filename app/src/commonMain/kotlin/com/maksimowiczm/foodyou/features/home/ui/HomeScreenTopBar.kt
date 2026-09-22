@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.features.home.ui
 
-import androidx.collection.mutableIntListOf
+import androidx.collection.intListOf
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -269,10 +269,10 @@ fun HomeScreenTopBar(
                                                         anchorBounds.left +
                                                             (anchorBounds.width - menuSize.width) /
                                                                 2
-                                                    mutableIntListOf(centeredX)
+                                                    intListOf(centeredX)
                                                 },
                                                 yCandidates = {
-                                                    mutableIntListOf(anchorBounds.bottom)
+                                                    intListOf(anchorBounds.bottom)
                                                 },
                                             )
                                         }
