@@ -19,6 +19,7 @@ package com.maksimowiczm.foodyou.shared.ui
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Interpolatable
@@ -68,9 +69,32 @@ internal class AnimatedShapeState(
 
         val morphed =
             Interpolatable.lerp(startShape, targetShape, currentProgress) as CornerBasedShape
+        val sanitized =
+            morphed.copy(
+                topStart =
+                    object : CornerSize {
+                        override fun toPx(shapeSize: Size, density: Density) =
+                            morphed.topStart.toPx(shapeSize, density).coerceAtLeast(0f)
+                    },
+                topEnd =
+                    object : CornerSize {
+                        override fun toPx(shapeSize: Size, density: Density) =
+                            morphed.topEnd.toPx(shapeSize, density).coerceAtLeast(0f)
+                    },
+                bottomEnd =
+                    object : CornerSize {
+                        override fun toPx(shapeSize: Size, density: Density) =
+                            morphed.bottomEnd.toPx(shapeSize, density).coerceAtLeast(0f)
+                    },
+                bottomStart =
+                    object : CornerSize {
+                        override fun toPx(shapeSize: Size, density: Density) =
+                            morphed.bottomStart.toPx(shapeSize, density).coerceAtLeast(0f)
+                    },
+            )
         cachedProgress = currentProgress
-        cachedMorphedShape = morphed
-        return morphed
+        cachedMorphedShape = sanitized
+        return sanitized
     }
 
     suspend fun animateToShape(newTarget: CornerBasedShape) {
