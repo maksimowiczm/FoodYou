@@ -20,6 +20,9 @@ data class UIFeatureFlags(
 
     /** Whether to hide all multiple profile features */
     val singleProfileMode: Boolean = false,
+
+    /** Whether to display exact timestamps for food diary entries. */
+    val foodDiaryEntryTimestamps: Boolean = true,
 )
 
 val LocalUIFeatureFlags = compositionLocalOf { UIFeatureFlags() }

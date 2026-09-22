@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.common.domain.BlobResolver
+import com.maksimowiczm.foodyou.preferences.domain.FoodDiaryEntryTimestampsPreference
 import com.maksimowiczm.foodyou.preferences.domain.HideScreenPreference
 import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
 import com.maksimowiczm.foodyou.preferences.domain.observe
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -42,10 +44,15 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     private val accountService: AccountService by inject()
     private val featureFlags: StateFlow<UIFeatureFlags> by
         lazy(LazyThreadSafetyMode.NONE) {
-            accountService
-                .observe()
-                .filterNotNull()
-                .map { UIFeatureFlags(singleProfileMode = it.singleProfileMode) }
+            combine(
+                    accountService.observe().filterNotNull(),
+                    userPreferencesRepository.observe<FoodDiaryEntryTimestampsPreference>(),
+                ) { account, timestampsPref ->
+                    UIFeatureFlags(
+                        singleProfileMode = account.singleProfileMode,
+                        foodDiaryEntryTimestamps = timestampsPref.enabled,
+                    )
+                }
                 .stateIn(
                     scope = lifecycleScope,
                     started = SharingStarted.WhileSubscribed(5.seconds),

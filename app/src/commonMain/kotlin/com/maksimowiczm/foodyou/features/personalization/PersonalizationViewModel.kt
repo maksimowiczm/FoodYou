@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.preferences.domain.EnergyUnitPreference
+import com.maksimowiczm.foodyou.preferences.domain.FoodDiaryEntryTimestampsPreference
 import com.maksimowiczm.foodyou.preferences.domain.HideScreenPreference
 import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
 import com.maksimowiczm.foodyou.preferences.domain.observe
@@ -61,6 +62,16 @@ class PersonalizationViewModel(
                 initialValue = false,
             )
 
+    private val _foodDiaryEntryTimestamps =
+        userPreferencesRepository.observe<FoodDiaryEntryTimestampsPreference>().map { it.enabled }
+
+    val foodDiaryEntryTimestamps =
+        _foodDiaryEntryTimestamps.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5.seconds),
+            initialValue = runBlocking { _foodDiaryEntryTimestamps.first() },
+        )
+
     fun updateSecureScreen(secureScreen: Boolean) {
         viewModelScope.launch {
             userPreferencesRepository.update<HideScreenPreference> {
@@ -80,6 +91,14 @@ class PersonalizationViewModel(
     fun updateSingleProfileMode(enable: Boolean) {
         viewModelScope.launch {
             accountService.handle(AccountCommand.ChangeEnableSingleProfileMode(enable))
+        }
+    }
+
+    fun updateFoodDiaryEntryTimestamps(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.update<FoodDiaryEntryTimestampsPreference> {
+                FoodDiaryEntryTimestampsPreference(enabled)
+            }
         }
     }
 }

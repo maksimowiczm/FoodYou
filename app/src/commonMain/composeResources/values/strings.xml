@@ -349,4 +349,7 @@
     <string name="headline_diary_sync">Sync diary with food changes</string>
     <string name="description_diary_sync">When enabled, updating a food item also updates its matching diary entries</string>
 
+    <string name="headline_diary_timestamps">Diary timestamps</string>
+    <string name="description_diary_timestamps">See the exact time you ate something</string>
+
 </resources>

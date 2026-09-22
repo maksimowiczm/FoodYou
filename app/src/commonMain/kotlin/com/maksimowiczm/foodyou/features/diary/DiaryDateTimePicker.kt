@@ -43,6 +43,7 @@ import com.maksimowiczm.foodyou.shared.ui.extension.confirm
 import com.maksimowiczm.foodyou.shared.ui.extension.now
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalDateFormatter
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalUIFeatureFlags
 import foodyou.app.generated.resources.*
 import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
@@ -63,6 +64,8 @@ fun DiaryDateTimePicker(
     onTimeChange: (LocalTime) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val showTimestamps = LocalUIFeatureFlags.current.foodDiaryEntryTimestamps
+
     Row(
         modifier = modifier.height(IntrinsicSize.Min),
         horizontalArrangement = Arrangement.spacedBy(2.dp),
@@ -71,18 +74,21 @@ fun DiaryDateTimePicker(
             selectedMeal = selectedMeal,
             meals = meals,
             onMealChange = onMealChange,
-            modifier = Modifier.weight(2f).fillMaxHeight(),
+            modifier = Modifier.weight(if (showTimestamps) 2f else 1f).fillMaxHeight(),
         )
         DatePicker(
             date = selectedDateTime.date,
             onDateChange = onDateChange,
-            modifier = Modifier.weight(2f).fillMaxHeight(),
+            hasTimePicker = showTimestamps,
+            modifier = Modifier.weight(if (showTimestamps) 2f else 1f).fillMaxHeight(),
         )
-        TimePicker(
-            time = selectedDateTime.time,
-            onTimeChange = onTimeChange,
-            modifier = Modifier.weight(1f).fillMaxHeight(),
-        )
+        if (showTimestamps) {
+            TimePicker(
+                time = selectedDateTime.time,
+                onTimeChange = onTimeChange,
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+            )
+        }
     }
 }
 
@@ -165,6 +171,7 @@ private fun MealPicker(
 private fun DatePicker(
     date: LocalDate,
     onDateChange: (LocalDate) -> Unit,
+    hasTimePicker: Boolean,
     modifier: Modifier = Modifier,
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
@@ -175,7 +182,13 @@ private fun DatePicker(
         rememberInteractionAnimatedShape(
             shapes =
                 InteractionShapes(
-                    shape = MaterialTheme.shapes.extraSmall,
+                    shape =
+                        if (hasTimePicker) MaterialTheme.shapes.extraSmall
+                        else
+                            MaterialTheme.shapes.extraSmall.copy(
+                                topEnd = MaterialTheme.shapes.large.topEnd,
+                                bottomEnd = MaterialTheme.shapes.large.bottomEnd,
+                            ),
                     pressedShape = MaterialTheme.shapes.large,
                 ),
             interactionSource = interactionSource,

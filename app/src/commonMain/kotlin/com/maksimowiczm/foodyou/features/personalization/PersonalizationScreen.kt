@@ -31,6 +31,7 @@ import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Restaurant
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItemColors
@@ -75,12 +76,14 @@ fun PersonalizationScreen(
 
     val singleProfileMode by viewModel.singleProfileMode.collectAsStateWithLifecycle()
     val singleProfileModeAllowed by viewModel.singleProfileModeAllowed.collectAsStateWithLifecycle()
+    val foodDiaryEntryTimestamps by viewModel.foodDiaryEntryTimestamps.collectAsStateWithLifecycle()
     val energyUnit by viewModel.energyUnit.collectAsStateWithLifecycle()
     val hideScreen by viewModel.hideScreen.collectAsStateWithLifecycle()
 
     PersonalizationScreen(
         singleProfileMode = singleProfileMode,
         allowSingleProfileMode = singleProfileModeAllowed,
+        foodDiaryEntryTimestamps = foodDiaryEntryTimestamps,
         secureScreen = hideScreen,
         energyUnit = energyUnit,
         onBack = onBack,
@@ -90,6 +93,7 @@ fun PersonalizationScreen(
         onUpdateEnergyUnit = viewModel::updateEnergyUnit,
         onUpdateSecureScreen = viewModel::updateSecureScreen,
         onUpdateSingleProfileMode = viewModel::updateSingleProfileMode,
+        onUpdateFoodDiaryEntryTimestamps = viewModel::updateFoodDiaryEntryTimestamps,
         modifier = modifier,
     )
 }
@@ -98,6 +102,7 @@ fun PersonalizationScreen(
 fun PersonalizationScreen(
     singleProfileMode: Boolean,
     allowSingleProfileMode: Boolean,
+    foodDiaryEntryTimestamps: Boolean,
     secureScreen: Boolean,
     energyUnit: EnergyUnit,
     onBack: () -> Unit,
@@ -106,6 +111,7 @@ fun PersonalizationScreen(
     onColors: () -> Unit,
     onUpdateEnergyUnit: (EnergyUnit) -> Unit,
     onUpdateSingleProfileMode: (Boolean) -> Unit,
+    onUpdateFoodDiaryEntryTimestamps: (Boolean) -> Unit,
     onUpdateSecureScreen: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -272,6 +278,31 @@ fun PersonalizationScreen(
                         },
                     )
                     SegmentedListItem(
+                        checked = foodDiaryEntryTimestamps,
+                        onCheckedChange = {
+                            onUpdateFoodDiaryEntryTimestamps(it)
+                            hapticFeedback.toggle(it)
+                        },
+                        shapes = ListItemDefaults.shapes(),
+                        colors = colors,
+                        leadingContent = {
+                            Icon(
+                                imageVector = Icons.Outlined.Schedule,
+                                contentDescription = null,
+                            )
+                        },
+                        supportingContent = {
+                            Text(stringResource(Res.string.description_diary_timestamps))
+                        },
+                        trailingContent = {
+                            Switch(checked = foodDiaryEntryTimestamps, onCheckedChange = null)
+                        },
+                        verticalAlignment = Alignment.CenterVertically,
+                        content = {
+                            Text(stringResource(Res.string.headline_diary_timestamps))
+                        },
+                    )
+                    SegmentedListItem(
                         checked = secureScreen,
                         onCheckedChange = {
                             onUpdateSecureScreen(!secureScreen)
@@ -395,6 +426,7 @@ private fun PersonalizationScreenPreview() {
         PersonalizationScreen(
             singleProfileMode = false,
             allowSingleProfileMode = false,
+            foodDiaryEntryTimestamps = false,
             secureScreen = false,
             energyUnit = EnergyUnit.Kilocalories,
             onBack = {},
@@ -403,6 +435,7 @@ private fun PersonalizationScreenPreview() {
             onColors = {},
             onUpdateEnergyUnit = {},
             onUpdateSingleProfileMode = {},
+            onUpdateFoodDiaryEntryTimestamps = {},
             onUpdateSecureScreen = {},
         )
     }
