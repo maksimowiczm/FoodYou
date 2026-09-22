@@ -203,7 +203,7 @@ private fun CalendarCardDatePickerDialog(
     onSelectDate: (LocalDate) -> Unit,
 ) {
     val zero = remember { Instant.fromEpochMilliseconds(0).toLocalDateTime(TimeZone.UTC).date }
-    val last = remember { zero + Int.MAX_VALUE.days }
+    val last = remember { LocalDate(2100, 12, 31) }
     val yearRange = remember { zero.year..last.year }
 
     val selectedDate = state.selectedDate
