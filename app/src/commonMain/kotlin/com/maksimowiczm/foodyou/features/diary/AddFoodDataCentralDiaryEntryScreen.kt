@@ -20,7 +20,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -46,6 +45,7 @@ import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
+import com.maksimowiczm.foodyou.mealplan.domain.Meal
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
@@ -55,11 +55,9 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import foodyou.app.generated.resources.*
-import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -81,7 +79,7 @@ fun AddFoodDataCentralDiaryEntryScreen(
         parametersOf(id, initialQuantity)
     }
     val addFoodDiaryEntryViewModel: AddFoodDiaryEntryViewModel = koinViewModel {
-        parametersOf(mealId)
+        parametersOf(mealId, date)
     }
 
     LaunchedCollectWithLifecycle(addFoodDiaryEntryViewModel.createdUiEvent) {
@@ -89,24 +87,21 @@ fun AddFoodDataCentralDiaryEntryScreen(
     }
 
     val foodUiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
-    val profiles = addFoodDiaryEntryViewModel.profiles.collectAsStateWithLifecycle().value
-    val defaultProfileId =
-        addFoodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
+    val diaryState = addFoodDiaryEntryViewModel.uiState.collectAsStateWithLifecycle().value
 
     val details = foodUiState as? FoodDataCentralDetailsUiState.Details
-    val requiredState = if (profiles != null && details != null) profiles to details else null
+    val requiredState =
+        if (details != null && diaryState is AddFoodDiaryEntryUiState.Ready) diaryState to details
+        else null
 
     updateTransition(requiredState).Crossfade(contentKey = { it != null }) {
         if (it == null) LoadingScreen(onBack)
         else {
-            val (profiles, details) = it
+            val (diaryState, details) = it
 
-            var selectedProfileIds by rememberSerializable {
-                mutableStateOf(listOf(defaultProfileId))
-            }
             val selectedProfiles =
-                remember(profiles, selectedProfileIds) {
-                    profiles.filter { it.id in selectedProfileIds }
+                remember(diaryState.profiles, diaryState.selectedProfileIds) {
+                    diaryState.profiles.filter { it.id in diaryState.selectedProfileIds }
                 }
 
             val defaultValue = remember { details.selectedQuantity.amount.formatCompact() }
@@ -130,18 +125,16 @@ fun AddFoodDataCentralDiaryEntryScreen(
                 types = details.quantityTypes,
                 selectedType = details.selectedQuantityType,
                 formField = formField,
-                profiles = profiles,
+                profiles = diaryState.profiles,
                 selectedProfiles = selectedProfiles,
+                meals = diaryState.meals,
+                selectedMeal = diaryState.selectedMeal,
+                selectedDateTime = diaryState.selectedDateTime,
                 onBack = onBack,
                 onAdd = { trackFood ->
-                    val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-                    val timestamp = LocalDateTime(date ?: now.date, now.time)
-
                     addFoodDiaryEntryViewModel.create(
                         product = details.food,
                         quantity = details.selectedQuantity,
-                        profiles = selectedProfiles.map { profile -> profile.id },
-                        timestamp = timestamp,
                         isTracked = trackFood,
                     )
                 },
@@ -149,9 +142,12 @@ fun AddFoodDataCentralDiaryEntryScreen(
                 onSetFavorite = foodViewModel::setFavorite,
                 onSelectQuantity = foodViewModel::selectQuantity,
                 onSelectQuantityType = foodViewModel::selectQuantityType,
-                onSelectProfiles = { selectedProfiles ->
-                    selectedProfileIds = selectedProfiles.map { profile -> profile.id }
+                onSelectProfiles = {
+                    addFoodDiaryEntryViewModel.selectProfiles(it.map { profile -> profile.id })
                 },
+                onSelectMeal = { addFoodDiaryEntryViewModel.selectMeal(it.id) },
+                onSelectDate = addFoodDiaryEntryViewModel::selectDate,
+                onSelectTime = addFoodDiaryEntryViewModel::selectTime,
                 modifier = modifier,
             )
         }
@@ -174,6 +170,9 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
     formField: FormField,
     profiles: List<ProfileUiState>,
     selectedProfiles: List<ProfileUiState>,
+    meals: List<Meal>,
+    selectedMeal: Meal,
+    selectedDateTime: LocalDateTime,
     onBack: () -> Unit,
     onRefresh: () -> Unit,
     onAdd: (trackFood: Boolean) -> Unit,
@@ -181,6 +180,9 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,
     onSelectProfiles: (List<ProfileUiState>) -> Unit,
+    onSelectMeal: (Meal) -> Unit,
+    onSelectDate: (LocalDate) -> Unit,
+    onSelectTime: (LocalTime) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by rememberNutrientsExpanded()
@@ -247,6 +249,15 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
             }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    DiaryDateTimePicker(
+                        meals = meals,
+                        selectedMeal = selectedMeal,
+                        selectedDateTime = selectedDateTime,
+                        onMealChange = onSelectMeal,
+                        onDateChange = onSelectDate,
+                        onTimeChange = onSelectTime,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
                     if (suggestions.isNotEmpty()) {
                         QuantitySuggestions(
                             suggestions = suggestions,

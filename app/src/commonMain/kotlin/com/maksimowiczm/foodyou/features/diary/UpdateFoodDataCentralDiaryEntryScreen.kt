@@ -20,7 +20,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -50,6 +49,7 @@ import com.maksimowiczm.foodyou.common.domain.food.amount
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
+import com.maksimowiczm.foodyou.mealplan.domain.Meal
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.component.RefreshIconButton
@@ -57,7 +57,9 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import foodyou.app.generated.resources.*
-import kotlin.time.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -68,10 +70,18 @@ import org.koin.core.parameter.parametersOf
 context(animatedContentScope: AnimatedContentScope)
 fun UpdateFoodDataCentralDiaryEntryScreen(
     onBack: () -> Unit,
-    onSave: (Quantity, List<ProfileId>, Instant, Boolean) -> Unit,
+    onSave: (Quantity, Boolean) -> Unit,
     foodId: FoodDataCentralProductId,
     entry: FoodDiaryEntry,
     profiles: List<ProfileUiState>,
+    meals: List<Meal>,
+    selectedMeal: Meal,
+    selectedDateTime: LocalDateTime,
+    selectedProfileIds: List<ProfileId>,
+    onSelectMeal: (Meal) -> Unit,
+    onSelectDate: (LocalDate) -> Unit,
+    onSelectTime: (LocalTime) -> Unit,
+    onSelectProfiles: (List<ProfileUiState>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val foodViewModel: FoodDataCentralDetailsViewModel = koinViewModel {
@@ -85,7 +95,6 @@ fun UpdateFoodDataCentralDiaryEntryScreen(
             entry.snapshot.quantity.toQuantity().amount.formatCompact()
         }
     val formField = rememberQuantityFormField(defaultValue, defaultValue = defaultValue)
-    var selectedProfileIds by rememberSerializable { mutableStateOf(entry.profileIds.toList()) }
     val selectedProfiles =
         remember(profiles, selectedProfileIds) {
             profiles.filter { it.id in selectedProfileIds }
@@ -120,24 +129,21 @@ fun UpdateFoodDataCentralDiaryEntryScreen(
                 formField = formField,
                 profiles = profiles,
                 selectedProfiles = selectedProfiles,
+                meals = meals,
+                selectedMeal = selectedMeal,
+                selectedDateTime = selectedDateTime,
                 isTracked = isTracked,
                 onIsTrackedChange = { isTracked = it },
                 onBack = onBack,
-                onSave = { trackFood ->
-                    onSave(
-                        it.selectedQuantity,
-                        selectedProfileIds,
-                        entry.timestamp,
-                        trackFood,
-                    )
-                },
+                onSave = { trackFood -> onSave(it.selectedQuantity, trackFood) },
                 onRefresh = foodViewModel::refresh,
                 onSetFavorite = foodViewModel::setFavorite,
                 onSelectQuantity = foodViewModel::selectQuantity,
                 onSelectQuantityType = foodViewModel::selectQuantityType,
-                onSelectProfiles = { selectedProfiles ->
-                    selectedProfileIds = selectedProfiles.map { profile -> profile.id }
-                },
+                onSelectProfiles = onSelectProfiles,
+                onSelectMeal = onSelectMeal,
+                onSelectDate = onSelectDate,
+                onSelectTime = onSelectTime,
                 modifier = modifier,
             )
     }
@@ -159,6 +165,9 @@ private fun UpdateFoodDataCentralDiaryEntryScreenContent(
     formField: FormField,
     profiles: List<ProfileUiState>,
     selectedProfiles: List<ProfileUiState>,
+    meals: List<Meal>,
+    selectedMeal: Meal,
+    selectedDateTime: LocalDateTime,
     isTracked: Boolean,
     onIsTrackedChange: (Boolean) -> Unit,
     onBack: () -> Unit,
@@ -168,6 +177,9 @@ private fun UpdateFoodDataCentralDiaryEntryScreenContent(
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,
     onSelectProfiles: (List<ProfileUiState>) -> Unit,
+    onSelectMeal: (Meal) -> Unit,
+    onSelectDate: (LocalDate) -> Unit,
+    onSelectTime: (LocalTime) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -234,6 +246,15 @@ private fun UpdateFoodDataCentralDiaryEntryScreenContent(
             }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    DiaryDateTimePicker(
+                        meals = meals,
+                        selectedMeal = selectedMeal,
+                        selectedDateTime = selectedDateTime,
+                        onMealChange = onSelectMeal,
+                        onDateChange = onSelectDate,
+                        onTimeChange = onSelectTime,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
                     if (suggestions.isNotEmpty()) {
                         QuantitySuggestions(
                             suggestions = suggestions,

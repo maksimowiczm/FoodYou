@@ -4,7 +4,6 @@ import androidx.compose.runtime.*
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.YearMonth
 import kotlinx.datetime.number
 
 interface DateFormatter {
@@ -28,7 +27,17 @@ interface DateFormatter {
      */
     fun formatMonthYear(date: LocalDate): String
 
-    fun formatMonthYear(date: YearMonth): String = formatMonthYear(date.firstDay)
+    /**
+     * Formats the specified [date] as a string in the "d MMMM" format.
+     *
+     * The formatting respects the system's locale, using the day of the month and the full month
+     *
+     * For example, in English (US), this could return "23 February".
+     *
+     * @param date The date to format.
+     * @return A string representing the formatted day and month.
+     */
+    fun formatDayMonth(date: LocalDate): String
 
     /**
      * Formats the specified [date] as a string in the "d MMMM yyyy, EEEE" format.
@@ -73,6 +82,8 @@ expect class DateFormatterImpl : DateFormatter {
 
     override fun formatMonthYear(date: LocalDate): String
 
+    override fun formatDayMonth(date: LocalDate): String
+
     override fun formatDate(date: LocalDate): String
 
     override fun formatDateShort(date: LocalDate): String
@@ -103,6 +114,8 @@ private val defaultDateFormatter: DateFormatter =
         private fun Int.pad2(): String = toString().padStart(2, '0')
 
         override fun formatMonthYear(date: LocalDate): String = "${monthName(date)} ${date.year}"
+
+        override fun formatDayMonth(date: LocalDate): String = "${date.day} ${monthName(date)}"
 
         override fun formatDate(date: LocalDate): String =
             "${date.day} ${monthName(date)} ${date.year}, ${dayOfWeekName(date)}"

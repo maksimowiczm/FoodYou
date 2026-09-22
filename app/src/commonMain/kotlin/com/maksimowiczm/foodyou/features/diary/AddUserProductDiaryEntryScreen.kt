@@ -19,7 +19,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -52,6 +51,7 @@ import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
+import com.maksimowiczm.foodyou.mealplan.domain.Meal
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
@@ -63,12 +63,10 @@ import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
 import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
-import kotlin.time.Clock
 import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalTime
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -90,7 +88,7 @@ fun AddUserProductDiaryEntryScreen(
         parametersOf(id, initialQuantity)
     }
     val addFoodDiaryEntryViewModel: AddFoodDiaryEntryViewModel = koinViewModel {
-        parametersOf(mealId)
+        parametersOf(mealId, date)
     }
 
     LaunchedCollectWithLifecycle(addFoodDiaryEntryViewModel.createdUiEvent) {
@@ -104,23 +102,20 @@ fun AddUserProductDiaryEntryScreen(
     }
 
     val uiState = foodViewModel.uiState.collectAsStateWithLifecycle().value
-    val profiles = addFoodDiaryEntryViewModel.profiles.collectAsStateWithLifecycle().value
-    val defaultProfileId =
-        addFoodDiaryEntryViewModel.appProfileId.collectAsStateWithLifecycle().value
+    val diaryState = addFoodDiaryEntryViewModel.uiState.collectAsStateWithLifecycle().value
 
-    val requiredState = if (profiles != null && uiState != null) profiles to uiState else null
+    val requiredState =
+        if (uiState != null && diaryState is AddFoodDiaryEntryUiState.Ready) diaryState to uiState
+        else null
 
     updateTransition(requiredState).Crossfade(contentKey = { it != null }) {
         if (it == null) LoadingScreen(onBack, modifier)
         else {
-            val (profiles, uiState) = it
+            val (diaryState, uiState) = it
 
-            var selectedProfileIds by rememberSerializable {
-                mutableStateOf(listOf(defaultProfileId))
-            }
             val selectedProfiles =
-                remember(profiles, selectedProfileIds) {
-                    profiles.filter { it.id in selectedProfileIds }
+                remember(diaryState.profiles, diaryState.selectedProfileIds) {
+                    diaryState.profiles.filter { it.id in diaryState.selectedProfileIds }
                 }
 
             val defaultValue = remember { uiState.selectedQuantity.amount.formatCompact() }
@@ -142,21 +137,19 @@ fun AddUserProductDiaryEntryScreen(
                 types = uiState.quantityTypes,
                 selectedType = uiState.selectedQuantityType,
                 formField = formField,
-                profiles = profiles,
+                profiles = diaryState.profiles,
                 selectedProfiles = selectedProfiles,
                 packageQuantity = uiState.product.packageQuantity,
                 servingQuantity = uiState.product.servingQuantity,
                 note = uiState.product.note,
+                meals = diaryState.meals,
+                selectedMeal = diaryState.selectedMeal,
+                selectedDateTime = diaryState.selectedDateTime,
                 onBack = onBack,
                 onAdd = { trackFood ->
-                    val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-                    val timestamp = LocalDateTime(date ?: now.date, now.time)
-
                     addFoodDiaryEntryViewModel.create(
                         product = uiState.product,
                         quantity = uiState.selectedQuantity,
-                        profiles = selectedProfiles.map { profile -> profile.id },
-                        timestamp = timestamp,
                         isTracked = trackFood,
                     )
                 },
@@ -165,9 +158,12 @@ fun AddUserProductDiaryEntryScreen(
                 onSetFavorite = foodViewModel::setFavorite,
                 onSelectQuantity = foodViewModel::selectQuantity,
                 onSelectQuantityType = foodViewModel::selectQuantityType,
-                onSelectProfiles = { selectedProfiles ->
-                    selectedProfileIds = selectedProfiles.map { profile -> profile.id }
+                onSelectProfiles = {
+                    addFoodDiaryEntryViewModel.selectProfiles(it.map { profile -> profile.id })
                 },
+                onSelectMeal = { addFoodDiaryEntryViewModel.selectMeal(it.id) },
+                onSelectDate = addFoodDiaryEntryViewModel::selectDate,
+                onSelectTime = addFoodDiaryEntryViewModel::selectTime,
                 modifier = modifier,
             )
         }
@@ -190,6 +186,9 @@ private fun AddUserProductDiaryEntryScreenContent(
     packageQuantity: AbsoluteQuantity?,
     servingQuantity: AbsoluteQuantity?,
     note: String?,
+    meals: List<Meal>,
+    selectedMeal: Meal,
+    selectedDateTime: LocalDateTime,
     onBack: () -> Unit,
     onAdd: (trackFood: Boolean) -> Unit,
     onEdit: () -> Unit,
@@ -198,6 +197,9 @@ private fun AddUserProductDiaryEntryScreenContent(
     onSelectQuantity: (Quantity) -> Unit,
     onSelectQuantityType: (QuantityType) -> Unit,
     onSelectProfiles: (List<ProfileUiState>) -> Unit,
+    onSelectMeal: (Meal) -> Unit,
+    onSelectDate: (LocalDate) -> Unit,
+    onSelectTime: (LocalTime) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by rememberNutrientsExpanded()
@@ -267,6 +269,15 @@ private fun AddUserProductDiaryEntryScreenContent(
             }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    DiaryDateTimePicker(
+                        meals = meals,
+                        selectedMeal = selectedMeal,
+                        selectedDateTime = selectedDateTime,
+                        onMealChange = onSelectMeal,
+                        onDateChange = onSelectDate,
+                        onTimeChange = onSelectTime,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    )
                     if (suggestions.isNotEmpty()) {
                         QuantitySuggestions(
                             suggestions = suggestions,
@@ -363,6 +374,23 @@ private fun AddUserProductDiaryEntryScreenPreview() {
                 packageQuantity = null,
                 servingQuantity = AbsoluteQuantity.Weight(150.grams),
                 note = "Home made apple pie",
+                meals =
+                    listOf(
+                        Meal(
+                            name = "Breakfast",
+                            timeWindow = Meal.TimeWindow.AllDay,
+                        ),
+                        Meal(
+                            name = "Dinner",
+                            timeWindow = Meal.TimeWindow.AllDay,
+                        ),
+                    ),
+                selectedMeal =
+                    Meal(
+                        name = "Breakfast",
+                        timeWindow = Meal.TimeWindow.AllDay,
+                    ),
+                selectedDateTime = LocalDateTime(2026, 9, 21, 12, 0),
                 onBack = {},
                 onAdd = {},
                 onEdit = {},
@@ -371,6 +399,9 @@ private fun AddUserProductDiaryEntryScreenPreview() {
                 onSelectQuantity = {},
                 onSelectQuantityType = {},
                 onSelectProfiles = {},
+                onSelectMeal = {},
+                onSelectDate = {},
+                onSelectTime = {},
             )
         }
     }

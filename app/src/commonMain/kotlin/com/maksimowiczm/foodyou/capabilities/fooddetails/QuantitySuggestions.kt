@@ -28,7 +28,7 @@ fun QuantitySuggestions(
     packageQuantity: AbsoluteQuantity?,
     servingQuantity: AbsoluteQuantity?,
     onSelectQuantity: (Quantity) -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 8.dp),
 ) {
     val stringedQuantities = suggestions.mapNotNull { quantity ->

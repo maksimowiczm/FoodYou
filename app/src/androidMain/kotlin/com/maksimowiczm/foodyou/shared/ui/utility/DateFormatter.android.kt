@@ -26,6 +26,11 @@ actual class DateFormatterImpl(private val context: Context) : DateFormatter {
         return date.toJavaLocalDate().format(formatter)
     }
 
+    actual override fun formatDayMonth(date: LocalDate): String {
+        val formatter = DateTimeFormatter.ofPattern("d MMMM", defaultLocale)
+        return date.toJavaLocalDate().format(formatter)
+    }
+
     actual override fun formatDate(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy, EEEE", defaultLocale)
         return date.toJavaLocalDate().format(formatter)

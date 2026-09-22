@@ -17,6 +17,8 @@ import com.maksimowiczm.foodyou.userproduct.domain.toUserProductId
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import com.maksimowiczm.foodyou.userrecipe.domain.toUserRecipeId
 import kotlin.time.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -34,50 +36,61 @@ fun UpdateFoodDiaryEntryScreenDispatcher(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: UpdateFoodDiaryEntryViewModel = koinViewModel { parametersOf(entryIdentity) }
-    val entry = viewModel.entry.collectAsStateWithLifecycle().value
-    val profiles = viewModel.profiles.collectAsStateWithLifecycle().value
 
     LaunchedCollectWithLifecycle(viewModel.updatedEvent) { onUpdate() }
 
-    when {
-        profiles == null || entry == null -> LoadingScreen(onBack, modifier)
-        else ->
-            when (val id = entry.snapshot.id) {
+    when (val uiState = viewModel.uiState.collectAsStateWithLifecycle().value) {
+        UpdateFoodDiaryEntryUiState.Loading -> LoadingScreen(onBack, modifier)
+
+        is UpdateFoodDiaryEntryUiState.Ready ->
+            when (val id = uiState.entry.snapshot.id) {
                 is FoodSnapshotId.UserRecipe ->
                     UpdateUserRecipeDiaryEntryScreen(
                         onBack = onBack,
                         onSave = viewModel::update,
                         onEdit = { onEditUserRecipe(id.toUserRecipeId()) },
                         onDelete = onDeleteUserRecipe,
-                        onNavigateToIngredient = { id, quantity ->
-                            onNavigateToIngredient(id, quantity, entry.mealId, entry.timestamp)
+                        onNavigateToIngredient = { snapshotId, quantity ->
+                            onNavigateToIngredient(
+                                snapshotId,
+                                quantity,
+                                uiState.selectedMeal.id,
+                                uiState.selectedDateTime.toInstant(TimeZone.currentSystemDefault()),
+                            )
                         },
                         foodId = id.toUserRecipeId(),
-                        entry = entry,
-                        profiles = profiles,
+                        entry = uiState.entry,
+                        profiles = uiState.profiles,
+                        meals = uiState.meals,
+                        selectedMeal = uiState.selectedMeal,
+                        selectedDateTime = uiState.selectedDateTime,
+                        selectedProfileIds = uiState.selectedProfileIds,
+                        onSelectMeal = { viewModel.selectMeal(it.id) },
+                        onSelectDate = viewModel::selectDate,
+                        onSelectTime = viewModel::selectTime,
+                        onSelectProfiles = {
+                            viewModel.selectProfiles(it.map { profile -> profile.id })
+                        },
                         modifier = modifier,
                     )
 
                 is FoodSnapshotId.Anonymous ->
                     UpdateAnonymousFoodDiaryEntryScreen(
                         onBack = onBack,
-                        onRelink = { profiles, timestamp, relinkedSnapshot ->
-                            viewModel.relink(
-                                profiles = profiles,
-                                timestamp = timestamp,
-                                relinkedSnapshot = relinkedSnapshot,
-                            )
+                        onRelink = viewModel::relink,
+                        onSave = { quantity -> viewModel.update(quantity, isTracked = false) },
+                        entry = uiState.entry,
+                        profiles = uiState.profiles,
+                        meals = uiState.meals,
+                        selectedMeal = uiState.selectedMeal,
+                        selectedDateTime = uiState.selectedDateTime,
+                        selectedProfileIds = uiState.selectedProfileIds,
+                        onSelectMeal = { viewModel.selectMeal(it.id) },
+                        onSelectDate = viewModel::selectDate,
+                        onSelectTime = viewModel::selectTime,
+                        onSelectProfiles = {
+                            viewModel.selectProfiles(it.map { profile -> profile.id })
                         },
-                        onSave = { quantity, profiles, timestamp ->
-                            viewModel.update(
-                                quantity = quantity,
-                                profiles = profiles,
-                                timestamp = timestamp,
-                                isTracked = false,
-                            )
-                        },
-                        entry = entry,
-                        profiles = profiles,
                         modifier = modifier,
                     )
 
@@ -86,8 +99,18 @@ fun UpdateFoodDiaryEntryScreenDispatcher(
                         onBack = onBack,
                         onSave = viewModel::update,
                         foodId = id.toFoodDataCentralProductId(),
-                        entry = entry,
-                        profiles = profiles,
+                        entry = uiState.entry,
+                        profiles = uiState.profiles,
+                        meals = uiState.meals,
+                        selectedMeal = uiState.selectedMeal,
+                        selectedDateTime = uiState.selectedDateTime,
+                        selectedProfileIds = uiState.selectedProfileIds,
+                        onSelectMeal = { viewModel.selectMeal(it.id) },
+                        onSelectDate = viewModel::selectDate,
+                        onSelectTime = viewModel::selectTime,
+                        onSelectProfiles = {
+                            viewModel.selectProfiles(it.map { profile -> profile.id })
+                        },
                         modifier = modifier,
                     )
 
@@ -96,8 +119,18 @@ fun UpdateFoodDiaryEntryScreenDispatcher(
                         onBack = onBack,
                         onSave = viewModel::update,
                         foodId = id.toOpenFoodFactsProductId(),
-                        entry = entry,
-                        profiles = profiles,
+                        entry = uiState.entry,
+                        profiles = uiState.profiles,
+                        meals = uiState.meals,
+                        selectedMeal = uiState.selectedMeal,
+                        selectedDateTime = uiState.selectedDateTime,
+                        selectedProfileIds = uiState.selectedProfileIds,
+                        onSelectMeal = { viewModel.selectMeal(it.id) },
+                        onSelectDate = viewModel::selectDate,
+                        onSelectTime = viewModel::selectTime,
+                        onSelectProfiles = {
+                            viewModel.selectProfiles(it.map { profile -> profile.id })
+                        },
                         modifier = modifier,
                     )
 
@@ -108,8 +141,18 @@ fun UpdateFoodDiaryEntryScreenDispatcher(
                         onEdit = { onEditUserProduct(id.toUserProductId()) },
                         onDelete = onDeleteUserProduct,
                         foodId = id.toUserProductId(),
-                        entry = entry,
-                        profiles = profiles,
+                        entry = uiState.entry,
+                        profiles = uiState.profiles,
+                        meals = uiState.meals,
+                        selectedMeal = uiState.selectedMeal,
+                        selectedDateTime = uiState.selectedDateTime,
+                        selectedProfileIds = uiState.selectedProfileIds,
+                        onSelectMeal = { viewModel.selectMeal(it.id) },
+                        onSelectDate = viewModel::selectDate,
+                        onSelectTime = viewModel::selectTime,
+                        onSelectProfiles = {
+                            viewModel.selectProfiles(it.map { profile -> profile.id })
+                        },
                         modifier = modifier,
                     )
             }
