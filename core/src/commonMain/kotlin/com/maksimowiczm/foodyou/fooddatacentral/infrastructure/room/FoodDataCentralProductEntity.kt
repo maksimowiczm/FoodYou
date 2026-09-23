@@ -1,0 +1,19 @@
+package com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room
+
+import androidx.room3.*
+import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSearchParameters.DataType
+
+@Entity(tableName = "FoodDataCentralProduct", indices = [Index("gtinUpc")])
+internal data class FoodDataCentralProductEntity(
+    @PrimaryKey val fdcId: Int,
+    val brandOwner: String?,
+    val brandName: String?,
+    val gtinUpc: String?,
+    val servingSize: Double?,
+    val servingSizeUnit: String?,
+    val description: String,
+    val packageWeight: String?,
+    @Embedded val nutrients: NutrientsEntity,
+    val dataType: DataType,
+)

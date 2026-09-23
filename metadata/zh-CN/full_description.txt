@@ -11,5 +11,3 @@
 </ul>
 
 今天就开始使用 Food You 跟踪您的营养 - 干净、完整且完全属于您。
-
-启动器图标由 <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>提供

@@ -1,0 +1,74 @@
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral
+
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.FoodSearchListItem
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
+import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
+import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.expect
+import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
+import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
+
+@Composable
+fun FoodDataCentralListItem(
+    food: FoodDataCentralProduct,
+    onClick: (Quantity) -> Unit,
+    interactionSource: MutableInteractionSource,
+    shape: Shape,
+    modifier: Modifier = Modifier,
+    preferredQuantity: Quantity =
+        remember(food.servingQuantity, food.packageQuantity) {
+            when {
+                food.servingQuantity != null -> ServingQuantity(1.0)
+                food.packageQuantity != null -> PackageQuantity(1.0)
+                else -> AbsoluteQuantity.Weight(100.grams)
+            }
+        },
+) {
+    val factor =
+        remember(preferredQuantity, food.packageQuantity, food.servingQuantity) {
+            when (preferredQuantity) {
+                is AbsoluteQuantity.Volume -> preferredQuantity.volume.milliliters / 100.0
+                is AbsoluteQuantity.Weight -> preferredQuantity.weight.grams / 100.0
+                is PackageQuantity ->
+                    when (val packageQuantity = food.packageQuantity) {
+                        is AbsoluteQuantity.Volume -> packageQuantity.volume.milliliters / 100.0
+                        is AbsoluteQuantity.Weight -> packageQuantity.weight.grams / 100.0
+                        null -> error("Unreachable")
+                    }
+                is ServingQuantity ->
+                    when (val servingQuantity = food.servingQuantity) {
+                        is AbsoluteQuantity.Volume -> servingQuantity.volume.milliliters / 100.0
+                        is AbsoluteQuantity.Weight -> servingQuantity.weight.grams / 100.0
+                        null -> error("Unreachable")
+                    }
+            }
+        }
+
+    val measurementFacts = remember(food.nutritionFacts, factor) { food.nutritionFacts * factor }
+
+    val measurementString =
+        preferredQuantity
+            .stringResource(food.packageQuantity, food.servingQuantity)
+            .expect("PreferredQuantity string can't be null")
+
+    FoodSearchListItem(
+        headline = food.headline,
+        proteins = measurementFacts.proteins.value,
+        carbohydrates = measurementFacts.carbohydrates.value,
+        fats = measurementFacts.fats.value,
+        energy = measurementFacts.energy.value,
+        quantity = { Text(measurementString) },
+        image = null,
+        onClick = { onClick(preferredQuantity) },
+        interactionSource = interactionSource,
+        shape = shape,
+        modifier = modifier,
+    )
+}

@@ -1,2 +1,2 @@
 [*.{kt,kts}]
-ij_kotlin_packages_to_use_import_on_demand = foodyou.app.generated.resources.*, androidx.compose.runtime.*
+ij_kotlin_packages_to_use_import_on_demand = foodyou.app.generated.resources.*, androidx.compose.runtime.*, androidx.room3.*

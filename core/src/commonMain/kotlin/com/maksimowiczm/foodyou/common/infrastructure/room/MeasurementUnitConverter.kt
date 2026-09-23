@@ -1,0 +1,37 @@
+package com.maksimowiczm.foodyou.common.infrastructure.room
+
+import androidx.room3.*
+
+class MeasurementUnitConverter {
+    @ColumnTypeConverter
+    fun fromUnit(value: MeasurementUnit): Int =
+        when (value) {
+            MeasurementUnit.Grams -> GRAMS
+            MeasurementUnit.Ounces -> OUNCES
+            MeasurementUnit.Milliliters -> MILLILITERS
+            MeasurementUnit.FluidOunces -> FLUID_OUNCES
+            MeasurementUnit.Milligrams -> MILLIGRAMS
+            MeasurementUnit.Micrograms -> MICROGRAMS
+        }
+
+    @ColumnTypeConverter
+    fun toUnit(value: Int): MeasurementUnit =
+        when (value) {
+            GRAMS -> MeasurementUnit.Grams
+            OUNCES -> MeasurementUnit.Ounces
+            MILLILITERS -> MeasurementUnit.Milliliters
+            FLUID_OUNCES -> MeasurementUnit.FluidOunces
+            MILLIGRAMS -> MeasurementUnit.Milligrams
+            MICROGRAMS -> MeasurementUnit.Micrograms
+            else -> error("Unknown measurement unit: $value")
+        }
+
+    private companion object {
+        private const val GRAMS = 0
+        private const val OUNCES = 1
+        private const val MILLILITERS = 2
+        private const val FLUID_OUNCES = 3
+        private const val MILLIGRAMS = 4
+        private const val MICROGRAMS = 5
+    }
+}

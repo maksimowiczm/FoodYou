@@ -1,47 +1,56 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.androidMultiplatformLibrary)
+    alias(libs.plugins.androidxRoom)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.gmazzo.buildconfig)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
 }
 
-room { schemaDirectory("$projectDir/schemas") }
+room3 { schemaDirectory("$projectDir/schemas") }
 
-buildConfig {
-    packageName("com.maksimowiczm.foodyou.app")
-    className("BuildConfig")
-
-    val versionName = libs.versions.version.name.get()
-    buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
+val localProperties by lazy {
+    Properties().apply {
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { load(it) }
+        }
+    }
 }
 
 kotlin {
-    sourceSets.all {
-        languageSettings.enableLanguageFeature("ExpectActualClasses")
-        languageSettings.enableLanguageFeature("ContextParameters")
-    }
-
     compilerOptions {
-        optIn.add("androidx.compose.ui.ExperimentalComposeUiApi")
+        allWarningsAsErrors = true
+
         optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
+        optIn.add("kotlin.time.ExperimentalTime")
         optIn.add("kotlinx.coroutines.ExperimentalCoroutinesApi")
+        optIn.add("kotlin.contracts.ExperimentalContracts")
+        freeCompilerArgs.add("-Xexpect-actual-classes")
         freeCompilerArgs.add("-Xreturn-value-checker=check")
     }
 
-    androidTarget {
+    android {
+        namespace = "com.maksimowiczm.foodyou.app"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
         compilerOptions { jvmTarget.set(JvmTarget.JVM_21) }
 
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
+        androidResources.enable = true
+
+        withHostTest {}
+        withDeviceTestBuilder { sourceSetTreeName = "test" }
+            .configure {
+                localProperties.getProperty("usda.api.key")?.let {
+                    instrumentationRunnerArguments["usda.api.key"] = it
+                }
+            }
     }
 
     listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
@@ -52,125 +61,62 @@ kotlin {
     }
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.androidx.camera.camera2)
+            implementation(libs.androidx.camera.lifecycle)
+            implementation(libs.androidx.camera.view)
+            implementation(libs.google.accompanistPermissions)
+            implementation(libs.google.zxing.core)
+        }
+
         commonMain.dependencies {
-            implementation(projects.shared.resources)
-            implementation(projects.shared.barcodescanner)
-
-            implementation(libs.jetbrains.compose.runtime)
-            implementation(libs.jetbrains.compose.foundation)
-            implementation(libs.jetbrains.compose.material3)
-            implementation(libs.jetbrains.compose.material.icons.extended)
-            implementation(libs.jetbrains.compose.ui)
-            implementation(libs.jetbrains.compose.components.resources)
-            implementation(libs.jetbrains.compose.navigationevent.compose)
-
-            implementation(libs.jetbrains.compose.navigation.compose)
-
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-
-            implementation(libs.androidx.datastore.preferences.core)
-
-            implementation(libs.material.kolor)
-
-            implementation(libs.kotlinx.serialization.json)
-
-            implementation(libs.kotlinx.datetime)
-
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.paging)
-
-            // Ktor
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.serialization.kotlinx.json)
-
-            implementation(libs.androidx.paging.common)
+            implementation(libs.androidx.datastore.preferencesCore)
             implementation(libs.androidx.paging.compose)
-
-            implementation(libs.reorderable)
-
-            implementation(libs.compose.shimmer)
-
-            implementation(libs.colorpicker.compose)
+            implementation(libs.androidx.room.paging)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.calvin.reorderable)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.networkKtor3)
+            implementation(libs.compose.components.resources)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material.iconsExtended)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.navigation3.ui)
+            implementation(libs.compose.navigationevent.compose)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.ui.toolingPreview)
+            implementation(libs.insert.koin.compose)
+            implementation(libs.insert.koin.composeViewmodel)
+            implementation(libs.jetbrains.androidx.lifecycle.viewmodelNavigation3)
+            implementation(libs.konform)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serializationJson)
+            implementation(libs.materialKolor)
+            implementation(libs.skydoves.colorpickerCompose)
+            implementation(libs.touchlab.kermit)
+            implementation(libs.valentinilk.shimmer.composeShimmer)
+            implementation(libs.vinceglb.filekitCoil)
+            implementation(libs.vinceglb.filekitDialogsCompose)
+            api(projects.core)
         }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.androidx.room.testing)
-            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.kotlinx.coroutinesTest)
         }
 
-        androidMain.dependencies {
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.appcompat)
-            implementation(libs.koin.android)
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.sqlite.android)
+        getByName("androidDeviceTest").dependencies {
+            implementation(libs.androidx.test.core)
+            implementation(libs.androidx.test.coreKtx)
+            implementation(libs.androidx.test.ext.junit)
+            implementation(libs.androidx.test.runner)
         }
-
-        androidInstrumentedTest.dependencies {
-            implementation(libs.androidx.testCore)
-            implementation(libs.androidx.testCore.ktx)
-            implementation(libs.androidx.testRunner)
-            implementation(libs.androidx.testExt.junit)
-        }
-
-        iosMain.dependencies { implementation(libs.ktor.client.darwin) }
-    }
-}
-
-android {
-    namespace = "com.maksimowiczm.foodyou"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    defaultConfig {
-        applicationId = "com.maksimowiczm.foodyou"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = libs.versions.android.versionCode.get().toInt()
-        versionName = libs.versions.version.name.get()
-
-        manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher"
-        manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
-        }
-        create("devRelease") {
-            initWith(getByName("release"))
-            isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
-        }
-        create("miniDevRelease") {
-            initWith(getByName("devRelease"))
-            isMinifyEnabled = true
-        }
-        create("preview") {
-            initWith(getByName("release"))
-
-            applicationIdSuffix = ".preview"
-            versionNameSuffix = "-preview"
-            manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher_preview"
-            manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round_preview"
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
     }
 }
 
 dependencies {
-    debugImplementation(libs.jetbrains.compose.ui.tooling)
+    androidRuntimeClasspath(libs.compose.ui.tooling)
 
     listOf("kspCommonMainMetadata", "kspAndroid", "kspIosArm64", "kspIosSimulatorArm64").forEach {
         add(it, libs.androidx.room.compiler)
@@ -179,6 +125,6 @@ dependencies {
 
 compose.resources {
     publicResClass = true
-    packageOfResClass = "com.maksimowiczm.foodyou.app.generated.resources"
+    packageOfResClass = "foodyou.app.generated.resources"
     generateResClass = always
 }
