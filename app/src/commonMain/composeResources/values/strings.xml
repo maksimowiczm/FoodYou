@@ -1,0 +1,355 @@
+<resources>
+    <string name="app_name" translatable="false">Food You</string>
+
+    <string name="en_dash" translatable="false">–</string>
+    <string name="em_dash" translatable="false">—</string>
+    <string name="not_available_short">N/A</string>
+
+    <string name="headline_create_product">Create product</string>
+    <string name="headline_macronutrients">Macronutrients</string>
+    <string name="headline_meals">Meals</string>
+    <string name="question_delete_food">Delete food?</string>
+    <string name="headline_edit_product">Edit product</string>
+    <string name="headline_permission_required">Permission required</string>
+    <string name="headline_language">Language</string>
+    <string name="headline_system">System</string>
+    <string name="headline_secure_screen">Secure screen</string>
+    <string name="headline_about">About</string>
+    <string name="headline_contributors">Contributors</string>
+    <string name="headline_version">Version</string>
+    <string name="headline_special_thanks_to">Special thanks to</string>
+    <string name="headline_all_day" description="All-day (meal)">All-day</string>
+    <string name="headline_product">Product</string>
+    <string name="headline_recipe">Recipe</string>
+    <string name="headline_create_recipe">Create recipe</string>
+    <string name="headline_changelog">Changelog</string>
+    <string name="headline_values_per">Values per</string>
+    <string name="headline_other">Other</string>
+    <string name="headline_vitamins">Vitamins</string>
+    <string name="headline_minerals">Minerals</string>
+    <string name="headline_something_went_wrong">Oops! Something went wrong</string>
+    <string name="headline_api_key">API key</string>
+
+    <string name="x_times_y" translatable="false">%1$s x %2$s</string>
+    <string name="weight">Weight</string>
+    <string name="unit_energy" description="Energy as calories">Energy</string>
+    <string name="unit_kcal">kcal</string>
+    <string name="unit_kilojoules">kJ</string>
+    <string name="unit_gram_short" translatable="false">g</string>
+    <string name="unit_milliliter_short" translatable="false">ml</string>
+    <string name="unit_milligram_short" translatable="false">mg</string>
+    <string name="unit_microgram_short" translatable="false">µg</string>
+    <plurals name="unit_gram">
+        <item quantity="one">gram</item>
+        <item quantity="other">grams</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">milliliter</item>
+        <item quantity="other">milliliters</item>
+    </plurals>
+    <string name="unit_ounce_short">oz</string>
+    <string name="unit_fluid_ounce_short">fl oz</string>
+
+    <string name="product_package">Package</string>
+    <string name="product_serving">Serving</string>
+    <string name="product_name">Name</string>
+    <string name="product_brand">Brand</string>
+    <string name="product_barcode">Barcode</string>
+
+    <string name="recipe_servings">Servings</string>
+    <string name="description_recipe_servings">How many servings does this recipe make</string>
+
+    <string name="nutriment_proteins">Proteins</string>
+    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_carbohydrates">Carbohydrates</string>
+    <string name="nutriment_carbohydrates_short">C</string>
+    <string name="nutriment_sugars">Sugars</string>
+    <string name="nutriment_fats">Fats</string>
+    <string name="nutriment_fats_short">F</string>
+    <string name="nutriment_saturated_fats">Saturated fats</string>
+    <string name="nutriment_polyunsaturated_fats">Polyunsaturated fats</string>
+    <string name="nutriment_monounsaturated_fats">Monounsaturated fats</string>
+    <string name="nutriment_omega_3">Omega-3 fatty acids</string>
+    <string name="nutriment_omega_6">Omega-6 fatty acids</string>
+    <string name="nutriment_salt">Salt</string>
+    <string name="nutriment_fiber">Dietary fiber</string>
+    <string name="nutriment_cholesterol">Cholesterol</string>
+    <string name="nutriment_caffeine">Caffeine</string>
+    <string name="nutriment_trans_fats">Trans fats</string>
+    <string name="nutriment_added_sugars">Added sugars</string>
+    <string name="nutriment_soluble_fiber">Soluble fiber</string>
+    <string name="nutriment_insoluble_fiber">Insoluble fiber</string>
+
+    <string name="vitamin_a">Vitamin A (Retinol)</string>
+    <string name="vitamin_b1">Vitamin B1 (Thamin)</string>
+    <string name="vitamin_b2">Vitamin B2 (Riboflavin)</string>
+    <string name="vitamin_b3">Vitamin B3 (Niacin)</string>
+    <string name="vitamin_b5">Vitamin B5 (Pantothenic acid)</string>
+    <string name="vitamin_b6">Vitamin B6 (Pyridoxine)</string>
+    <string name="vitamin_b7">Vitamin B7 (Biotin)</string>
+    <string name="vitamin_b9">Vitamin B9 (Folate)</string>
+    <string name="vitamin_b12">Vitamin B12 (Cobalamins)</string>
+    <string name="vitamin_c">Vitamin C (Ascorbic acid)</string>
+    <string name="vitamin_d">Vitamin D (Calciferols)</string>
+    <string name="vitamin_e">Vitamin E</string>
+    <string name="vitamin_k">Vitamin K</string>
+
+    <string name="mineral_manganese">Manganese</string>
+    <string name="mineral_magnesium">Magnesium</string>
+    <string name="mineral_potassium">Potassium</string>
+    <string name="mineral_calcium">Calcium</string>
+    <string name="mineral_copper">Copper</string>
+    <string name="mineral_zinc">Zinc</string>
+    <string name="mineral_sodium">Sodium</string>
+    <string name="mineral_iron">Iron</string>
+    <string name="mineral_phosphorus">Phosphorus</string>
+    <string name="mineral_selenium">Selenium</string>
+    <string name="mineral_iodine">Iodine</string>
+    <string name="mineral_chromium">Chromium</string>
+
+    <string name="action_search">Search</string>
+    <string name="action_scan_barcode">Scan barcode</string>
+    <string name="action_add">Add</string>
+    <string name="action_go_back">Go back</string>
+    <string name="action_tap_to_allow_access">Tap to allow access</string>
+    <string name="action_create">Create</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_go_to_settings">Go to settings</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_add_meal">Add meal</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_insert_suggested_search">Insert suggested search</string>
+    <string name="action_close">Close</string>
+    <string name="action_discard">Discard</string>
+    <string name="action_translate">Translate</string>
+    <string name="action_enable_camera_flash">Enable camera flash</string>
+    <string name="action_disable_camera_flash">Disable camera flash</string>
+    <string name="action_prevent_screen_capture">Prevent screen capture</string>
+    <string name="action_go_to_today">Go to today</string>
+    <string name="action_feature_request_on_github">Feature request on GitHub</string>
+    <string name="action_move_up" description="reorder list item up">Move up</string>
+    <string name="action_move_down" description="reorder list item down">Move down</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Add ingredient</string>
+    <string name="action_delete_ingredient">Delete ingredient</string>
+    <string name="action_choose_other_date">Choose other date</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Show more</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Copy &amp; report</string>
+    <string name="action_show_details">Show details</string>
+    <string name="action_set_key">Set key</string>
+    <string name="action_obtain_key">Obtain key</string>
+
+    <string name="action_open">Open</string>
+    <string name="action_copy">Copy</string>
+
+    <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera permission is required to scan barcodes. Please allow it in the app settings.</string>
+    <string name="neutral_no_food_found">No food found</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">%1$d calorie left</item>
+        <item quantity="other">%1$d calories left</item>
+    </plurals>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">%1$d kilojoule left</item>
+        <item quantity="other">%1$d kilojoules left</item>
+    </plurals>
+    <string name="neutral_set_your_meal_schedule">Set your meal schedule</string>
+    <string name="neutral_required">Required</string>
+    <string name="neutral_help_translating_the_app">Help translate the app</string>
+    <string name="neutral_copied">Info copied to clipboard</string>
+
+    <string name="question_discard_product">Discard product?</string>
+    <string name="question_discard_changes">Discard changes?</string>
+    <string name="question_discard_recipe">Discard recipe?</string>
+
+    <string name="error_invalid_number">Invalid number</string>
+    <string name="error_value_cannot_be_negative">Value cannot be negative</string>
+    <string name="error_value_must_be_positive">Value must be positive</string>
+    <string name="error_unknown_error">Unknown error</string>
+    <string name="error_api_key_is_invalid">API key is invalid</string>
+    <string name="error_not_a_barcode">Not a barcode</string>
+
+    <string name="positive_ok">OK</string>
+
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">Exceeded by %1$d calorie</item>
+        <item quantity="other">Exceeded by %1$d calories</item>
+    </plurals>
+    <plurals name="negative_exceeded_by_kilojoules">
+        <item quantity="one">Exceeded by %1$d kilojoule</item>
+        <item quantity="other">Exceeded by %1$d kilojoules</item>
+    </plurals>
+
+    <string name="description_delete_food">Food will be deleted permanently</string>
+
+    <string name="description_incomplete_nutrition_data">Some of the used products lack this value; therefore, the displayed value might not be accurate</string>
+    <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
+    <string name="description_open_food_facts">A collaborative, free and open database of food products from around the world</string>
+    <string name="openfoodfacts_version_legacy" description="Old OpenFoodFacts search API">Legacy</string>
+    <string name="action_register">Register</string>
+    <string name="description_open_food_facts_credentials_message">Login credentials are encrypted and stored only on your device. Sensitive data is not accessible to anyone else.</string>
+    <string name="error_open_food_facts_failed_to_authenticate">Failed to authenticate with Open Food Facts</string>
+    <string name="error_open_food_facts_service_unavailable">Open Food Facts service temporary unavailable. Registered users are not subject to request limits and get priority access during peak times.</string>
+
+    <string name="headline_fooddata_central" translatable="false">FoodData Central</string>
+    <string name="description_fooddata_central">FoodData Central is USDA's comprehensive source of food composition data with multiple distinct data types</string>
+    <string name="error_usda_rate_limit">FoodData Central API rate limit exceeded</string>
+    <string name="error_usda_not_verified">The API key supplied has not been verified yet. Please check your e-mail to verify the API key.</string>
+
+    <string name="headline_source_code">Source code</string>
+    <string name="action_write_an_email">Write an email</string>
+    <string name="headline_personalization">Personalization</string>
+    <string name="description_personalization">Customize your experience</string>
+
+    <string name="headline_nutrition_facts">Nutrition facts</string>
+    <string name="description_personalize_nutrition_facts_short">Rearrange the nutritional information</string>
+
+    <string name="headline_reset_to_default">Reset to default</string>
+    <string name="action_reset" description="Confirm resetting">Reset</string>
+
+    <string name="headline_note">Note</string>
+    <string name="description_add_note">Optional notes (e.g., ingredients, vegan status, allergens, additives) or any other non-nutrient details</string>
+
+    <string name="neutral_an_error_occurred">An error occurred</string>
+    <string name="action_retry">Retry</string>
+    <string name="headline_your_food">Your food</string>
+
+    <string name="headline_edit_recipe">Edit recipe</string>
+    <string name="neutral_remote_database_error">Couldn't download product from remote database. You can still view your previously downloaded products.</string>
+
+    <string name="headline_before_you_start">Before you start</string>
+    <string name="action_agree_and_continue">Agree &amp; Continue</string>
+
+    <string name="headline_food_database">Food database</string>
+    <string name="description_food_database">You can choose whether to use these optional external services, which might have their own terms and privacy policies</string>
+
+    <string name="headline_almost_done">Almost done</string>
+    <string name="headline_preparing_your_food_diary">Preparing your food diary</string>
+    <string name="headline_please_wait">Please wait</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="one">Imported %1$d food product</item>
+        <item quantity="other">Imported %1$d food products</item>
+    </plurals>
+
+    <string name="headline_energy_unit">Energy unit</string>
+    <string name="description_energy_unit">Select preferred energy unit</string>
+
+    <plurals name="neutral_exported_x_food_products">
+        <item quantity="one">Exported %1$d food product</item>
+        <item quantity="other">Exported %1$d food products</item>
+    </plurals>
+
+    <string name="headline_colors">Colors</string>
+    <string name="description_colors">Customize the app colors</string>
+
+    <string name="headline_custom_palette">Custom palette</string>
+    <string name="description_custom_palette">Setup your own palette</string>
+    <string name="headline_dynamic_colors">Dynamic colors</string>
+    <string name="description_dynamic_colors">Apply colors from system</string>
+    <string name="headline_single_profile_mode">Single profile mode</string>
+    <string name="description_single_profile_mode">Hide profile management features</string>
+    <string name="error_single_profile_mode">Remove extra profiles first</string>
+
+    <string name="headline_palette_style">Palette style</string>
+
+    <string name="headline_contrast">Contrast</string>
+    <string name="headline_amoled">AMOLED</string>
+
+    <string name="headline_light">Light</string>
+    <string name="headline_dark">Dark</string>
+
+    <string name="headline_pick_a_color">Pick a color</string>
+
+    <string name="description_nutrients_colors_reset">Nutrients colors settings will be reset to default values</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_out">Sign out</string>
+    <string name="headline_privacy_policy">Privacy policy</string>
+
+    <string name="headline_random_theme">Random theme</string>
+    <string name="description_random_theme">A random theme will be applied each time the app is started</string>
+
+    <string name="headline_terms_of_use">Terms of use</string>
+    <string name="onboarding_privacy_tip">This app is open-source and built for you. It respects your privacy, your information stays private.</string>
+
+    <string name="headline_add_profile">Add profile</string>
+    <string name="headline_how_do_you_want_to_be_called">How do you want to be called?</string>
+    <string name="headline_profile_name">Profile name</string>
+
+    <string name="headline_profile_picture">Profile picture</string>
+
+    <string name="action_continue">Continue</string>
+
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Hi, %1$s!</string>
+
+    <string name="headline_privacy">Privacy</string>
+    <string name="headline_sponsor">Sponsor</string>
+    <string name="description_sponsor">Support the app's growth</string>
+
+    <string name="action_switch_profile">Switch profile</string>
+    <string name="action_add_profile">Add profile</string>
+
+    <string name="action_refresh">Refresh</string>
+
+    <string name="description_not_sure_yet">Not sure yet? You can change it anytime</string>
+
+    <string name="question_discard_profile">Discard profile?</string>
+
+    <string name="headline_edit_profile">Edit profile</string>
+
+    <string name="action_delete_profile">Delete profile</string>
+    <string name="headline_delete_profile">Delete profile</string>
+    <string name="description_delete_profile">This profile will be permanently deleted. All data associated with it will be lost forever.</string>
+
+    <string name="action_fill_in_details">Fill in details</string>
+    <string name="action_skip_for_now">Skip for now</string>
+
+    <string name="headline_add_more_details">Add more details</string>
+    <string name="description_add_more_details_product_form">Filling in proteins, fats, carbohydrates, and energy values helps provide more accurate nutritional insights</string>
+
+    <string name="headline_favorite">Favorite</string>
+
+    <string name="action_add_a_photo">Add a photo</string>
+    <string name="action_remove_a_photo">Remove a photo</string>
+
+    <string name="description_values_per">Select the quantity your nutrition values are based on</string>
+
+    <string name="description_privacy">Control your personal information</string>
+
+    <string name="error_open_food_facts_timeout">Open Food Facts is taking too long to respond. The service may be temporarily slow or unavailable. Try scanning the product barcode instead.</string>
+
+    <string name="headline_collections" description="Collections of food products, e.g. favorite foods, Open Food Facts, recipes">Collections</string>
+    <string name="action_search_foods">Search foods</string>
+
+    <string name="headline_no_recent_searches">No recent searches yet</string>
+
+    <string name="headline_search_ingredients">Search ingredients</string>
+
+    <string name="headline_username">Username</string>
+    <string name="headline_password">Password</string>
+    <string name="action_show" description="Show password, show credentials, text field">Show</string>
+    <string name="action_hide" description="Hide password, hide credentials, text field">Hide</string>
+
+    <string name="action_undo">Undo</string>
+
+    <string name="headline_meal_name">Meal name</string>
+    <string name="headline_start_time">Start time</string>
+    <string name="headline_end_time">End time</string>
+
+    <string name="action_expand">Expand</string>
+    <string name="action_collapse" description="Opposite of expand">Collapse</string>
+
+    <string name="headline_meal_unlinked">Unlinked</string>
+
+    <string name="question_delete_diary_entry">Delete diary entry?</string>
+    <string name="description_delete_diary_entry">Diary entry will be permanently deleted</string>
+
+    <string name="headline_diary_sync">Sync diary with food changes</string>
+    <string name="description_diary_sync">When enabled, updating a food item also updates its matching diary entries</string>
+
+    <string name="headline_diary_timestamps">Diary timestamps</string>
+    <string name="description_diary_timestamps">See the exact time you ate something</string>
+
+</resources>

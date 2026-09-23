@@ -11,5 +11,3 @@
 </ul>
 
 Почніть відстежувати своє харчування вже сьогодні з Food You — простим, функціональним та повністю вашим.
-
-Іконку запуску створено <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

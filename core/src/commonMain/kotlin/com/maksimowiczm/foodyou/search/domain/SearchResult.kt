@@ -1,0 +1,34 @@
+package com.maksimowiczm.foodyou.search.domain
+
+import com.maksimowiczm.foodyou.common.domain.BlobDigest
+import com.maksimowiczm.foodyou.common.domain.Weight
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
+import kotlin.uuid.Uuid
+
+sealed interface SearchResult {
+    data class UserProduct(
+        val id: Uuid,
+        val name: FoodName,
+        val brand: String?,
+        val barcode: UserProductBarcode?,
+        val note: String?,
+        val image: BlobDigest?,
+        val nutritionFacts: NutritionFacts,
+        val servingQuantity: AbsoluteQuantity?,
+        val packageQuantity: AbsoluteQuantity?,
+        val isLiquid: Boolean,
+    ) : SearchResult
+
+    data class UserRecipe(
+        val id: Uuid,
+        val name: FoodName,
+        val note: String?,
+        val image: BlobDigest?,
+        val nutritionFacts: NutritionFacts,
+        val servingWeight: Weight,
+        val totalWeight: Weight,
+    ) : SearchResult
+}

@@ -1,0 +1,35 @@
+package com.maksimowiczm.foodyou.fooddiary.application
+
+import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.forceWeight
+import com.maksimowiczm.foodyou.common.event.EventHandler
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductCreatedEvent
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductDeletedEvent
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductEvent
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductUpdatedEvent
+import com.maksimowiczm.foodyou.userproduct.domain.toSnapshot
+
+class FoodDiaryProductSynchronizer(private val foodDiaryService: FoodDiaryService) :
+    EventHandler<UserProductEvent> {
+    override suspend fun handle(event: UserProductEvent) {
+        when (event) {
+            is UserProductCreatedEvent -> Unit
+
+            is UserProductUpdatedEvent ->
+                foodDiaryService.updateEntriesUsing(
+                    snapshot = event.product.toSnapshot(),
+                    servingWeight = event.product.servingQuantity?.forceWeight(),
+                    packageWeight = event.product.packageQuantity?.forceWeight(),
+                )
+
+            is UserProductDeletedEvent -> {
+                val snapshotId = FoodSnapshotId.UserProduct(event.userProductId.value)
+                when (event.strategy) {
+                    DeleteStrategy.Delete -> foodDiaryService.removeComponentFromEntries(snapshotId)
+                    DeleteStrategy.Unlink -> foodDiaryService.unlinkComponentFromEntries(snapshotId)
+                }
+            }
+        }
+    }
+}

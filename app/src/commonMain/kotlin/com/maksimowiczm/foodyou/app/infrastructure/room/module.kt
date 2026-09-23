@@ -1,0 +1,31 @@
+package com.maksimowiczm.foodyou.app.infrastructure.room
+
+import com.maksimowiczm.foodyou.app.infrastructure.room.EventStoreDatabase.Companion.buildDatabase
+import com.maksimowiczm.foodyou.app.infrastructure.room.ReadModelDatabase.Companion.buildDatabase
+import com.maksimowiczm.foodyou.common.event.EventStore
+import com.maksimowiczm.foodyou.common.extension.databaseBuilder
+import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryDatabase
+import com.maksimowiczm.foodyou.search.infrastructure.SearchDatabase
+import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeDatabase
+import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
+import org.koin.dsl.binds
+
+private const val EVENT_STORE_DATABASE_NAME = "EventStore.db"
+
+private const val READ_MODEL_DATABASE_NAME = "ReadModelDatabase.db"
+
+internal fun Module.room() {
+    single {
+        databaseBuilder<EventStoreDatabase>(EVENT_STORE_DATABASE_NAME).buildDatabase().eventStoreDao
+    }
+    factoryOf(::RoomEventStore).bind<EventStore>()
+
+    single<ReadModelDatabase> {
+            databaseBuilder<ReadModelDatabase>(READ_MODEL_DATABASE_NAME).buildDatabase()
+        }
+        .binds(arrayOf(SearchDatabase::class, UserRecipeDatabase::class, FoodDiaryDatabase::class))
+
+    single { get<ReadModelDatabase>().homeDao }
+}

@@ -14,7 +14,8 @@
 .cxx
 local.properties
 .kotlin
-.idea
+/.idea/*
+!/.idea/icon.svg
 *.keystore
 *.kdbx
 *.apk
@@ -29,3 +30,16 @@ captures
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
+
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
+
+.artifacts

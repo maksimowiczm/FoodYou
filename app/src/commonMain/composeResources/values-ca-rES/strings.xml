@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">S/D</string>
+    <string name="headline_create_product">Crea un producte</string>
+    <string name="headline_macronutrients">Macronutrients</string>
+    <string name="headline_meals">Àpats</string>
+    <string name="headline_edit_product">Editar producte</string>
+    <string name="headline_permission_required">Permís necessari</string>
+    <string name="headline_language">Idioma</string>
+    <string name="headline_system">Sistema</string>
+    <string name="headline_secure_screen">Protegir pantalla</string>
+    <string name="headline_about">Informació</string>
+    <string name="headline_version">Versió</string>
+    <string name="headline_all_day" description="All-day (meal)">Tot el dia</string>
+    <string name="headline_product">Producte</string>
+    <string name="headline_recipe">Recepta</string>
+    <string name="headline_create_recipe">Crea una recepta</string>
+    <string name="headline_changelog">Llista de canvis</string>
+    <string name="headline_values_per">Valors per</string>
+    <string name="headline_other">Altres</string>
+    <string name="headline_vitamins">Vitamines</string>
+    <string name="headline_minerals">Minerals</string>
+    <string name="headline_something_went_wrong">Oops! Algo ha anat malament</string>
+    <string name="headline_api_key">Clau API</string>
+    <string name="weight">Pes</string>
+    <string name="unit_energy" description="Energy as calories">Energia</string>
+    <string name="unit_kcal">kcal</string>
+    <plurals name="unit_gram">
+        <item quantity="one">gram</item>
+        <item quantity="other">grams</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">mil·lilitre</item>
+        <item quantity="other">mil·lilitres</item>
+    </plurals>
+    <string name="product_package">Paquet</string>
+    <string name="product_serving">Porció</string>
+    <string name="product_name">Nom</string>
+    <string name="product_brand">Marca</string>
+    <string name="product_barcode">Codi de barres</string>
+    <string name="recipe_servings">Porcions</string>
+    <string name="description_recipe_servings">Quantes porcions té aquesta recepta</string>
+    <string name="nutriment_proteins">Proteïnes</string>
+    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_carbohydrates">Carbohidrats</string>
+    <string name="nutriment_carbohydrates_short">C</string>
+    <string name="nutriment_sugars">Sucres</string>
+    <string name="nutriment_fats">Greixos</string>
+    <string name="nutriment_fats_short">F</string>
+    <string name="nutriment_saturated_fats">Greixos saturats</string>
+    <string name="nutriment_polyunsaturated_fats">Greixos poliinsaturats</string>
+    <string name="nutriment_monounsaturated_fats">Greixos monoinsaturats</string>
+    <string name="nutriment_omega_3">Àcids grassos Omega-3</string>
+    <string name="nutriment_omega_6">Àcids grassos Omega-6</string>
+    <string name="nutriment_salt">Sal</string>
+    <string name="nutriment_cholesterol">Colesterol</string>
+    <string name="nutriment_caffeine">Cafeïna</string>
+    <string name="vitamin_e">Vitamina E</string>
+    <string name="vitamin_k">Vitamina K</string>
+    <string name="mineral_manganese">Manganès</string>
+    <string name="mineral_magnesium">Magnesi</string>
+    <string name="mineral_potassium">Potassi</string>
+    <string name="mineral_calcium">Calci</string>
+    <string name="mineral_copper">Coure</string>
+    <string name="mineral_zinc">Zinc</string>
+    <string name="mineral_sodium">Sodi</string>
+    <string name="mineral_iron">Ferro</string>
+    <string name="mineral_phosphorus">Fòsfor</string>
+    <string name="mineral_selenium">Seleni</string>
+    <string name="mineral_iodine">Iode</string>
+    <string name="mineral_chromium">Cromo</string>
+    <string name="action_search">Buscar</string>
+    <string name="action_scan_barcode">Escanejar codi de barres</string>
+    <string name="action_add">Afegir</string>
+    <string name="action_go_back">Tornar</string>
+    <string name="action_tap_to_allow_access">Toca per permetre l'accés</string>
+    <string name="action_create">Crear</string>
+    <string name="action_clear">Esborrar</string>
+    <string name="action_cancel">Cancel·lar</string>
+    <string name="action_go_to_settings">Anar a configuració</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_add_meal">Afegeix un àpat</string>
+    <string name="action_edit">Editar</string>
+    <string name="action_insert_suggested_search">Inserta la cerca suggerida</string>
+    <string name="action_close">Tancar</string>
+    <string name="action_discard">Descartar</string>
+    <string name="action_translate">Traduir</string>
+    <string name="action_enable_camera_flash">Habilitar el flash</string>
+    <string name="action_disable_camera_flash">Deshabilita el flash</string>
+    <string name="action_prevent_screen_capture">Prevenir captures de pantalla</string>
+    <string name="action_go_to_today">Ves a avui</string>
+    <string name="action_move_up" description="reorder list item up">Moure amunt</string>
+    <string name="action_move_down" description="reorder list item down">Moure avall</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Afegir ingredient</string>
+    <string name="action_delete_ingredient">Eliminar ingredient</string>
+    <string name="action_choose_other_date">Escull una altra data</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Mostrar més</string>
+    <string name="action_show_details">Mostrar detalls</string>
+    <string name="action_set_key">Establir clau</string>
+    <string name="action_obtain_key">Obtenir clau</string>
+    <string name="neutral_barcode_scanner_camera_request">Permetre accés a la càmera per escanejar el codi de barres</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Necessites tenir accés a la cámara per poder escanejar el codi de barres</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Es requereix accés a la càmera per escanejar codis de barres. Permet-ho a la configuració de l'aplicació.</string>
+    <string name="neutral_no_food_found">Cap aliment trobat</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">%1$d caloria restant</item>
+        <item quantity="other">%1$d calories restants</item>
+    </plurals>
+    <string name="neutral_set_your_meal_schedule">Estableix l'horari dels àpats</string>
+    <string name="neutral_required">Obligatori</string>
+    <string name="neutral_help_translating_the_app">Ajuda a traduir l'aplicació</string>
+    <string name="neutral_copied">Informació copiada al porta-retalls</string>
+    <string name="question_discard_product">Descartar producte?</string>
+    <string name="question_discard_changes">Descartar canvis?</string>
+    <string name="question_discard_recipe">Descartar recepta?</string>
+    <string name="error_invalid_number">Número invàlid</string>
+    <string name="error_value_cannot_be_negative">El valor no pot ser negatiu</string>
+    <string name="error_value_must_be_positive">El valor ha de ser positiu</string>
+    <string name="error_unknown_error">Error desconegut</string>
+    <string name="error_api_key_is_invalid">Clau API invàlida</string>
+    <string name="positive_ok">D'acord</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">Excedit per %1$d caloria</item>
+        <item quantity="other">Excedit per %1$d calories</item>
+    </plurals>
+    <string name="description_incomplete_nutrition_data">Alguns dels productes utilitzats no tenen aquest valor; per tant, el valor mostrat pot no ser precís</string>
+    <string name="description_open_food_facts">Una base de dades col·laborativa, lliure i oberta de productes alimentaris d'arreu del món</string>
+    
+    <string name="action_write_an_email">Escriure un correu electrònic</string>
+    <string name="headline_personalization">Personalització</string>
+    <string name="description_personalization">Personalitza la teva experiència</string>
+    <string name="headline_nutrition_facts">Informació nutricional</string>
+    <string name="headline_reset_to_default">Restableix als valors predeterminats</string>
+    <string name="action_reset" description="Confirm resetting">Reiniciar</string>
+    </resources>

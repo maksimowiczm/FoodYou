@@ -1,0 +1,43 @@
+package com.maksimowiczm.foodyou.features.userrecipe.create
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.common.domain.BlobStorage
+import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormState
+import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormTransformer
+import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormUiState
+import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
+
+class CreateRecipeViewModel(
+    private val recipeService: UserRecipeService,
+    private val recipeFormTransformer: RecipeFormTransformer,
+    private val blobStorage: BlobStorage,
+) : ViewModel() {
+    private val eventBus = Channel<CreateRecipeEvent>()
+    val uiEvents = eventBus.receiveAsFlow()
+    val isLocked = MutableStateFlow(value = false)
+
+    fun create(form: RecipeFormState, state: RecipeFormUiState) {
+        if (!isLocked.compareAndSet(expect = false, update = true)) return
+
+        viewModelScope.launch {
+            val (name, note, imageBytes, servings, components) =
+                recipeFormTransformer.transform(form, state)
+
+            val id =
+                recipeService.create(
+                    name = name,
+                    note = note,
+                    image = imageBytes?.let { blobStorage.store(it) },
+                    servings = servings,
+                    components = components,
+                )
+
+            eventBus.send(CreateRecipeEvent.Created(id))
+        }
+    }
+}

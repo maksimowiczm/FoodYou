@@ -11,5 +11,3 @@
 </ul>
 
 Empieza a registrar tu nutrición con Food You. Sin distracciones, completo y únicamente tuyo.
-
-Icono hecho con <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer"> Icons8</a>

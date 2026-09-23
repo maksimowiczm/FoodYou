@@ -14,6 +14,8 @@ pluginManagement {
     }
 }
 
+plugins { id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0" }
+
 dependencyResolutionManagement {
     repositories {
         google {
@@ -24,14 +26,13 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
-        maven { url = uri("https://jitpack.io") }
     }
 }
 
 rootProject.name = "FoodYou"
 
+include(":core")
+
 include(":app")
 
-include(":shared:barcodescanner")
-
-include(":shared:resources")
+include(":androidApp")

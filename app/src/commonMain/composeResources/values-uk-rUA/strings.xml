@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">Немає</string>
+    <string name="headline_create_product">Додати продукт</string>
+    <string name="headline_macronutrients">Макроелементи</string>
+    <string name="headline_meals">Страви</string>
+    <string name="headline_edit_product">Редагувати продукт</string>
+    <string name="headline_permission_required">Потрібен дозвіл</string>
+    <string name="headline_language">Мова</string>
+    <string name="headline_system">Система</string>
+    <string name="headline_secure_screen">Заборонити знімки екрану</string>
+    <string name="headline_about">Про додаток</string>
+    <string name="headline_version">Версія</string>
+    <string name="headline_all_day" description="All-day (meal)">Увесь день</string>
+    <string name="headline_product">Продукт</string>
+    <string name="headline_recipe">Рецепт</string>
+    <string name="headline_create_recipe">Створити рецепт</string>
+    <string name="headline_changelog">Перелік змін</string>
+    <string name="headline_values_per">Значення на</string>
+    <string name="headline_other">Інше</string>
+    <string name="headline_vitamins">Вітаміни</string>
+    <string name="headline_minerals">Мінерали</string>
+    <string name="headline_something_went_wrong">Ой! Щось пішло не так</string>
+    <string name="headline_api_key">Ключ API</string>
+    <string name="weight">Вага</string>
+    <string name="unit_energy" description="Energy as calories">Енергетична цінність</string>
+    <string name="unit_kcal">ккал</string>
+    <string name="unit_kilojoules">кДж</string>
+    <plurals name="unit_gram">
+        <item quantity="one">грам</item>
+        <item quantity="few">грам</item>
+        <item quantity="many">грам</item>
+        <item quantity="other">грами</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">мілілітр</item>
+        <item quantity="few">мілілітрів</item>
+        <item quantity="many">мілілітрів</item>
+        <item quantity="other">мілілітри</item>
+    </plurals>
+    <string name="unit_ounce_short">унц.</string>
+    <string name="unit_fluid_ounce_short">рідких унц.</string>
+    <string name="product_package">Паковання</string>
+    <string name="product_serving">Порція</string>
+    <string name="product_name">Назва</string>
+    <string name="product_brand">Марка</string>
+    <string name="product_barcode">Штрихкод</string>
+    <string name="recipe_servings">Порції</string>
+    <string name="description_recipe_servings">На скільки порцій розрахований цей рецепт</string>
+    <string name="nutriment_proteins">Білки</string>
+    <string name="nutriment_proteins_short">Б</string>
+    <string name="nutriment_carbohydrates">Вуглеводи</string>
+    <string name="nutriment_carbohydrates_short">В</string>
+    <string name="nutriment_sugars">Цукри</string>
+    <string name="nutriment_fats">Жири</string>
+    <string name="nutriment_fats_short">Ж</string>
+    <string name="nutriment_saturated_fats">Насичені жири</string>
+    <string name="nutriment_polyunsaturated_fats">Поліненасичені жири</string>
+    <string name="nutriment_monounsaturated_fats">Мононенасичені жири</string>
+    <string name="nutriment_omega_3">Омега-3 жирні кислоти</string>
+    <string name="nutriment_omega_6">Омега-6 жирні кислоти</string>
+    <string name="nutriment_salt">Сіль</string>
+    <string name="nutriment_fiber">Клітковина</string>
+    <string name="nutriment_cholesterol">Холестерин</string>
+    <string name="nutriment_caffeine">Кофеїн</string>
+    <string name="nutriment_trans_fats">Трансжири</string>
+    <string name="nutriment_added_sugars">Додані цукри</string>
+    <string name="nutriment_soluble_fiber">Розчинна клітковина</string>
+    <string name="nutriment_insoluble_fiber">Нерозчинна клітковина</string>
+    <string name="vitamin_a">Вітамін A (Ретинол)</string>
+    <string name="vitamin_b1">Вітамін B1 (Тіамін)</string>
+    <string name="vitamin_b2">Вітамін B2 (Рибофлавін)</string>
+    <string name="vitamin_b3">Вітамін B3 (Ніацин)</string>
+    <string name="vitamin_b5">Вітамін B5 (Пантотенова кислота)</string>
+    <string name="vitamin_b6">Вітамін B6 (Піридоксин)</string>
+    <string name="vitamin_b7">Вітамін B7 (Біотин)</string>
+    <string name="vitamin_b9">Вітамін B9 (Фолієва кислота)</string>
+    <string name="vitamin_b12">Вітамін B12 (Кобаламін)</string>
+    <string name="vitamin_c">Вітамін C (Аскорбінова кислота)</string>
+    <string name="vitamin_d">Вітамін D (Кальцифероли)</string>
+    <string name="vitamin_e">Вітамін E</string>
+    <string name="vitamin_k">Вітамін K</string>
+    <string name="mineral_manganese">Марганець</string>
+    <string name="mineral_magnesium">Магній</string>
+    <string name="mineral_potassium">Калій</string>
+    <string name="mineral_calcium">Кальцій</string>
+    <string name="mineral_copper">Мідь</string>
+    <string name="mineral_zinc">Цинк</string>
+    <string name="mineral_sodium">Натрій</string>
+    <string name="mineral_iron">Залізо</string>
+    <string name="mineral_phosphorus">Фосфор</string>
+    <string name="mineral_selenium">Селен</string>
+    <string name="mineral_iodine">Йод</string>
+    <string name="mineral_chromium">Хром</string>
+    <string name="action_search">Пошук</string>
+    <string name="action_scan_barcode">Просканувати штрихкод</string>
+    <string name="action_add">Додати</string>
+    <string name="action_go_back">Повернутися</string>
+    <string name="action_tap_to_allow_access">Натисніть, щоб надати доступ</string>
+    <string name="action_create">Створити</string>
+    <string name="action_clear">Очистити</string>
+    <string name="action_cancel">Скасувати</string>
+    <string name="action_go_to_settings">Перейти до налаштувань</string>
+    <string name="action_save">Зберегти</string>
+    <string name="action_delete">Видалити</string>
+    <string name="action_confirm">Підтвердити</string>
+    <string name="action_add_meal">Додати страву</string>
+    <string name="action_edit">Редагувати</string>
+    <string name="action_insert_suggested_search">Вставити запропонований пошук</string>
+    <string name="action_close">Закрити</string>
+    <string name="action_discard">Відмовитися</string>
+    <string name="action_translate">Перекласти</string>
+    <string name="action_enable_camera_flash">Включити спалах камери</string>
+    <string name="action_disable_camera_flash">Відключити спалах камери</string>
+    <string name="action_prevent_screen_capture">Заборонити знімок екрану</string>
+    <string name="action_go_to_today">Перейти до сьогодні</string>
+    <string name="action_move_up" description="reorder list item up">Вгору</string>
+    <string name="action_move_down" description="reorder list item down">Вниз</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Додати інгредієнт</string>
+    <string name="action_delete_ingredient">Видалити інгредієнт</string>
+    <string name="action_choose_other_date">Обрати іншу дату</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Показати більше</string>
+    <string name="action_show_details">Показати деталі</string>
+    <string name="action_set_key">Встановити ключ</string>
+    <string name="action_obtain_key">Отримати ключ</string>
+    <string name="neutral_barcode_scanner_camera_request">Надати доступ до вашої камери для сканування штрихкодів</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Ви маєте надати доступ, щоб мати змогу сканувати штрихкоди</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Доступ до камери необхідний для сканування штрихкодів. Надайте його в налаштуваннях додатку.</string>
+    <string name="neutral_no_food_found">Продукти не знайдено</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">Залишилася %1$d калорія</item>
+        <item quantity="few">Залишилось %1$d калорій</item>
+        <item quantity="many">Залишилось %1$d калорій</item>
+        <item quantity="other">Залишилось %1$d калорій</item>
+    </plurals>
+    <plurals name="neutral_remaining_kilojoules">
+        <item quantity="one">Залишився %1$d кілоджоуль</item>
+        <item quantity="few">Залишилося %1$d кілоджоулів</item>
+        <item quantity="many">Залишилося %1$d кілоджоулів</item>
+        <item quantity="other">Залишилося %1$d кілоджоулів</item>
+    </plurals>
+    <string name="neutral_set_your_meal_schedule">Визначте свій розклад страв.</string>
+    <string name="neutral_required">Обов'язкове</string>
+    <string name="neutral_help_translating_the_app">Допомогти перекласти додаток</string>
+    <string name="neutral_copied">Інформацію скопійовано в буфер обміну</string>
+    <string name="question_discard_product">Не зберігати продукт?</string>
+    <string name="question_discard_changes">Не зберігати зміни?</string>
+    <string name="question_discard_recipe">Не зберігати рецепт?</string>
+    <string name="error_invalid_number">Некоректне число</string>
+    <string name="error_value_cannot_be_negative">Значення не може бути від'ємним</string>
+    <string name="error_value_must_be_positive">Значення має бути додатним</string>
+    <string name="error_unknown_error">Невідома помилка</string>
+    <string name="error_api_key_is_invalid">Ключ API недійсний</string>
+    <string name="positive_ok">ОК</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">Перевищено на %1$d калорію</item>
+        <item quantity="few">Перевищено на %1$d калорії</item>
+        <item quantity="many">Перевищено на %1$d калорії</item>
+        <item quantity="other">Перевищено на %1$d калорії</item>
+    </plurals>
+    <string name="description_incomplete_nutrition_data">У деяких з використаних продуктів відсутнє це значення; через це, показане значення може бути неточним</string>
+    <string name="description_open_food_facts">Спільна, безкоштовна та відкрита база даних продуктів харчування з усього світу</string>
+    
+    <string name="error_usda_rate_limit">Перевищено ліміт API FoodData Central (USDA)</string>
+    <string name="action_write_an_email">Написати листа</string>
+    <string name="headline_personalization">Персоналізація</string>
+    <string name="description_personalization">Налаштуйте додаток під себе</string>
+    <string name="headline_nutrition_facts">Харчова цінність</string>
+    <string name="headline_reset_to_default">Скинути до стандартних</string>
+    <string name="action_reset" description="Confirm resetting">Скинути</string>
+    <string name="headline_note">Примітка</string>
+    <string name="neutral_an_error_occurred">Сталася помилка</string>
+    <string name="action_retry">Повторити спробу</string>
+    <string name="headline_your_food">Ваша їжа</string>
+    <string name="headline_edit_recipe">Редагувати рецепт</string>
+    <string name="headline_before_you_start">Перед тим, як почати</string>
+    <string name="action_agree_and_continue">Погодитися та продовжити</string>
+    <string name="description_food_database">Ви можете вирішити чи будете ви користуватися цими опціональними зовнішніми сервісами, в яких можуть бути свої умови та політики конфіденційності</string>
+    <string name="headline_please_wait">Зачекайте, будь ласка</string>
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="one">Імпортовано %1$d продукт</item>
+        <item quantity="few">Імпортовано %1$d продукти</item>
+        <item quantity="many">Імпортовано %1$d продуктів</item>
+        <item quantity="other">Імпортовано %1$d продуктів</item>
+    </plurals>
+    <string name="headline_energy_unit">Одиниці енергії</string>
+    </resources>
