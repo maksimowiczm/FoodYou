@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.app.infrastructure
 
-import com.maksimowiczm.foodyou.common.application.AppConfig
 import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 
 /**
@@ -8,7 +7,7 @@ import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
  *
  * @param versionName The current app version name (e.g. "1.2.3")
  */
-class FoodYouConfig(override val versionName: String) : AppConfig, NetworkConfig {
+class FoodYouConfig(val versionName: String) : NetworkConfig {
     val privacyPolicyUri = "https://foodyou.maksimowiczm.com/privacy-policy"
     val openFoodFactsTermsOfUseUri = "https://world.openfoodfacts.org/terms-of-use"
     val openFoodFactsPrivacyPolicyUri = "https://world.openfoodfacts.org/privacy"

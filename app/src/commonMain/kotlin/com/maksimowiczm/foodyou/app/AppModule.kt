@@ -9,7 +9,6 @@ import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.app.infrastructure.dataStore
 import com.maksimowiczm.foodyou.app.infrastructure.room.room
 import com.maksimowiczm.foodyou.app.ui.AppViewModel
-import com.maksimowiczm.foodyou.common.application.AppConfig
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
 import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
@@ -30,7 +29,7 @@ class AppModule(
     coroutineScope: Scope.(ParametersHolder) -> CoroutineScope,
 ) {
     val module = module {
-        foodYouConfig().binds(arrayOf(AppConfig::class, NetworkConfig::class))
+        foodYouConfig().binds(arrayOf(NetworkConfig::class))
         applicationCoroutineScope(coroutineScope)
 
         factoryOf(::AppProfileManager)
