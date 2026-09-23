@@ -160,7 +160,7 @@ private fun MealPicker(
         ) {
             Text(
                 text = selectedMeal.name,
-                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 2.dp).fillMaxWidth(),
                 textAlign = TextAlign.Center,
             )
         }
@@ -221,7 +221,7 @@ private fun DatePicker(
                 text =
                     if (date.year == currentYear) dateFormatter.formatDayMonth(date)
                     else dateFormatter.formatDateShort(date),
-                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 2.dp).fillMaxWidth(),
                 textAlign = TextAlign.Center,
             )
         }
@@ -360,7 +360,7 @@ private fun TimePicker(
         ) {
             Text(
                 text = dateFormatter.formatTime(time),
-                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 2.dp).fillMaxWidth(),
                 textAlign = TextAlign.Center,
             )
         }
