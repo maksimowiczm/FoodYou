@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.features.diary
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.mealplan.domain.Meal
 import kotlinx.datetime.LocalDateTime

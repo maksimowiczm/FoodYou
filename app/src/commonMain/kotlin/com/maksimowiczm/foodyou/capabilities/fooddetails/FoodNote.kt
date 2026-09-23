@@ -15,8 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.shared.ui.extension.copy
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.headline_note
+import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
