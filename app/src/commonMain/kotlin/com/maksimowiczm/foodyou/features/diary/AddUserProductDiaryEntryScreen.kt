@@ -58,10 +58,10 @@ import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalDate
@@ -131,7 +131,7 @@ fun AddUserProductDiaryEntryScreen(
             AddUserProductDiaryEntryScreenContent(
                 headline = uiState.product.headline(LocalFoodNameSelector.current),
                 isFavorite = uiState.isFavorite,
-                image = uiState.product.image?.let { resolveBlob(it) },
+                image = uiState.product.image?.let { LocalBlobResolver.current.resolve(it) },
                 suggestions = uiState.suggestions,
                 scaledNutritionFacts = uiState.scaledNutritionFacts,
                 types = uiState.quantityTypes,

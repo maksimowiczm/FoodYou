@@ -34,11 +34,11 @@ import com.maksimowiczm.foodyou.shared.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.shared.ui.component.Image
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
 import com.maksimowiczm.foodyou.shared.ui.utility.EnergyFormatter.stringResource
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.shared.ui.utility.WeightFormatter.stringResource
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -177,7 +177,11 @@ private fun RecipeIngredientListItemContent(
     val image: @Composable (() -> Unit)? = run {
         when (val image = component.image) {
             is FoodSnapshotImage.Blob -> {
-                @Composable { resolveBlob(image.blob).Image(shimmer, Modifier.size(56.dp)) }
+                @Composable {
+                    LocalBlobResolver.current
+                        .resolve(image.blob)
+                        .Image(shimmer, Modifier.size(56.dp))
+                }
             }
 
             is FoodSnapshotImage.Uri -> {

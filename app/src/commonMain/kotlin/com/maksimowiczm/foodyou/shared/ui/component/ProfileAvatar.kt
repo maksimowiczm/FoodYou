@@ -15,7 +15,7 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.common.domain.FileUri
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.coil.securelyAccessFile
@@ -50,7 +50,7 @@ private fun Profile.Avatar.Predefined.Variant.Avatar(modifier: Modifier = Modifi
 
 @Composable
 fun Profile.Avatar.Photo.Avatar(modifier: Modifier = Modifier) {
-    val uri = resolveBlob(digest)
+    val uri = LocalBlobResolver.current.resolve(digest)
     Avatar(uri, modifier)
 }
 

@@ -4,7 +4,6 @@ import androidx.compose.runtime.*
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
-import com.maksimowiczm.foodyou.common.domain.BlobResolver
 
 @Composable
 fun UtilityProvider(

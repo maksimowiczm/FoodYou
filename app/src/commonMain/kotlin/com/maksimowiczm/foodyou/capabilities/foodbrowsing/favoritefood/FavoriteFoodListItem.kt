@@ -27,9 +27,9 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.shared.ui.component.Image
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.valentinilk.shimmer.Shimmer
@@ -214,8 +214,8 @@ private fun RemoteData<Any>.nutritionFacts(): NutritionFacts? =
 @Composable
 private fun Any.image(): FileUri? =
     when (this) {
-        is UserProduct -> image?.let { resolveBlob(it) }
-        is UserRecipe -> image?.let { resolveBlob(it) }
+        is UserProduct -> image?.let { LocalBlobResolver.current.resolve(it) }
+        is UserRecipe -> image?.let { LocalBlobResolver.current.resolve(it) }
         is OpenFoodFactsProduct -> image
         is FoodDataCentralProduct -> null
         else -> error("Unknown type ${this::class}")

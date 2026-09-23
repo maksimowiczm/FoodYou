@@ -61,10 +61,10 @@ import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -117,7 +117,7 @@ fun AddUserRecipeIngredientScreen(
             AddUserRecipeIngredientScreenContent(
                 headline = uiState.recipe.headline(nameSelector),
                 isFavorite = uiState.isFavorite,
-                image = uiState.recipe.image?.let { resolveBlob(it) },
+                image = uiState.recipe.image?.let { LocalBlobResolver.current.resolve(it) },
                 note = uiState.recipe.note,
                 components = uiState.recipe.components,
                 ingredientScalingFactor = uiState.ingredientScalingFactor,

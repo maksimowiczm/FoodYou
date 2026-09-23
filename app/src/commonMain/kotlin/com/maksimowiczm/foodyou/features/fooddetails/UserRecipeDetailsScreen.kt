@@ -41,9 +41,9 @@ import com.maksimowiczm.foodyou.shared.ui.component.FavoriteIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -78,7 +78,7 @@ fun UserRecipeDetailsScreen(
             UserRecipeDetailsScreenContent(
                 headline = uiState.recipe.headline(LocalFoodNameSelector.current),
                 isFavorite = uiState.isFavorite,
-                image = uiState.recipe.image?.let { resolveBlob(it) },
+                image = uiState.recipe.image?.let { LocalBlobResolver.current.resolve(it) },
                 note = uiState.recipe.note,
                 components = uiState.recipe.components,
                 ingredientScalingFactor = uiState.ingredientScalingFactor,

@@ -41,7 +41,7 @@ import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.shared.ui.component.UiProfileAvatar
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -73,7 +73,7 @@ fun EditProfileScreen(
     val formState =
         when (val avatar = profile?.avatar) {
             is Profile.Avatar.Photo -> {
-                val uri = resolveBlob(avatar.digest)
+                val uri = LocalBlobResolver.current.resolve(avatar.digest)
                 rememberProfileFormState(
                     defaultName = profile?.name ?: "",
                     defaultAvatar = UiProfileAvatar.Uri(uri),

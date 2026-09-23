@@ -14,10 +14,10 @@ import com.maksimowiczm.foodyou.common.domain.ounces
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.shared.ui.form.validateDouble
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import foodyou.app.generated.resources.*
 import io.konform.validation.ifPresent
@@ -225,7 +225,7 @@ internal fun rememberProductFormState(
             ifPresent { constrain(notABarcode) { it.all(Char::isDigit) } }
         }
 
-    val imageUri = product?.image?.let { resolveBlob(it).value }
+    val imageUri = product?.image?.let { LocalBlobResolver.current.resolve(it).value }
     val imageUriState = rememberSaveable(imageUri) { mutableStateOf(imageUri) }
     val defaultValuesPer =
         if (product?.isLiquid == true) ValuesPer.Milliliters100 else ValuesPer.Grams100

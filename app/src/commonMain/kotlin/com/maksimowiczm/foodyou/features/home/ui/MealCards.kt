@@ -78,6 +78,7 @@ import com.maksimowiczm.foodyou.shared.ui.component.Image
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
 import com.maksimowiczm.foodyou.shared.ui.saveable.jsonSaver
 import com.maksimowiczm.foodyou.shared.ui.utility.EnergyFormatter.stringResource
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalEnergyUnit
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
@@ -85,7 +86,6 @@ import com.maksimowiczm.foodyou.shared.ui.utility.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalUIFeatureFlags
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.shared.ui.utility.WeightFormatter.stringResource
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
@@ -336,7 +336,8 @@ private fun MealCard(
                                         when (val image = food.snapshot.image) {
                                             is FoodSnapshotImage.Blob -> {
                                                 @Composable {
-                                                    resolveBlob(image.blob)
+                                                    LocalBlobResolver.current
+                                                        .resolve(image.blob)
                                                         .Image(
                                                             shimmer,
                                                             Modifier.size(56.dp),

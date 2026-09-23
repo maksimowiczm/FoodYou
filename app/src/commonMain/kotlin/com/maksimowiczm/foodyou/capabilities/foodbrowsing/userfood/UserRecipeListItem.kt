@@ -20,10 +20,10 @@ import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
 import com.maksimowiczm.foodyou.common.expect
 import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.shared.ui.component.Image
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.shared.ui.utility.headline
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -81,7 +81,9 @@ fun UserRecipeListItem(
         quantity = { Text(measurementString) },
         image =
             recipe.image?.let {
-                @Composable { resolveBlob(it).Image(shimmer, Modifier.size(56.dp)) }
+                @Composable {
+                    LocalBlobResolver.current.resolve(it).Image(shimmer, Modifier.size(56.dp))
+                }
             },
         onClick = { onClick(preferredQuantity) },
         interactionSource = interactionSource,

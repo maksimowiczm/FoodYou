@@ -48,9 +48,9 @@ import com.maksimowiczm.foodyou.mealplan.domain.Meal
 import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -105,7 +105,7 @@ fun UpdateAnonymousFoodDiaryEntryScreen(
                     uiState.snapshot.image?.let {
                         when (it) {
                             is FoodSnapshotImage.Uri -> it.uri
-                            is FoodSnapshotImage.Blob -> resolveBlob(it.blob)
+                            is FoodSnapshotImage.Blob -> LocalBlobResolver.current.resolve(it.blob)
                         }
                     },
                 suggestions = uiState.suggestions,

@@ -5,8 +5,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.shared.ui.form.validateDouble
+import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.formatCompact
-import com.maksimowiczm.foodyou.shared.ui.utility.resolveBlob
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import foodyou.app.generated.resources.*
 import io.konform.validation.ifPresent
@@ -54,7 +54,7 @@ fun rememberRecipeFormState(recipe: UserRecipe?): RecipeFormState {
 
     val note = rememberFormField(recipe?.note)
 
-    val imageUri = recipe?.image?.let { resolveBlob(it).value }
+    val imageUri = recipe?.image?.let { LocalBlobResolver.current.resolve(it).value }
     val imageUriState = rememberSaveable(imageUri) { mutableStateOf(imageUri) }
 
     return remember(name, servings, note, imageUriState, imageUri) {

@@ -12,7 +12,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
-import com.maksimowiczm.foodyou.common.domain.BlobResolver
+import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.preferences.domain.FoodDiaryEntryTimestampsPreference
 import com.maksimowiczm.foodyou.preferences.domain.HideScreenPreference
 import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
@@ -22,6 +22,7 @@ import com.maksimowiczm.foodyou.shared.ui.utility.DateFormatterImpl
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.UIFeatureFlags
 import com.maksimowiczm.foodyou.shared.ui.utility.UtilityProvider
+import com.maksimowiczm.foodyou.shared.ui.utility.asBlobResolver
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
 import kotlin.time.Duration.Companion.seconds
@@ -40,7 +41,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     private val languagePreferenceProvider: LanguagePreferenceProvider by inject()
     private val foodNameSelector: FoodNameSelector by inject()
     private val appConfig: FoodYouConfig by inject()
-    private val blobResolver: BlobResolver by inject()
+    private val blobStorage: BlobStorage by inject()
     private val accountService: AccountService by inject()
     private val featureFlags: StateFlow<UIFeatureFlags> by
         lazy(LazyThreadSafetyMode.NONE) {
@@ -64,6 +65,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
 
     fun setContent(content: @Composable () -> Unit) {
         val dateFormatter = DateFormatterImpl(this)
+        val blobResolver = blobStorage.asBlobResolver()
         with(this as AppCompatActivity) {
             setContent {
                 val uiFeatureFlags by featureFlags.collectAsStateWithLifecycle()
