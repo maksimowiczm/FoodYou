@@ -20,7 +20,7 @@ class FoodYouConfig(val versionName: String) : NetworkConfig {
     val emailContactUri =
         "mailto:maksimowicz.dev@gmail.com?subject=Food You Feedback&body=Food You Version: $versionName\n"
     val translateUri = "https://crowdin.com/project/food-you"
-    val changelogUri = "https://github.com/maksimowiczm/FoodYou/releases"
+    val changelogUri = "https://github.com/maksimowiczm/FoodYou/releases/tag/$versionName"
 
     override val userAgent = "Food You/$versionName ($sourceCodeUri)"
 }

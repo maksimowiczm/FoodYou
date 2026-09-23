@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -33,20 +32,19 @@ import com.maksimowiczm.foodyou.capabilities.brand.brand
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.extension.add
-import com.maksimowiczm.foodyou.shared.ui.saveable.jsonSaver
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-private val contributors =
+internal val contributors =
     listOf(
-        "GrizzleNL",
-        "mikropsoft",
-        "DarjanZlobec",
         "Bruno - Português for his wife",
-        "serrq",
+        "DarjanZlobec",
+        "GrizzleNL",
         "loomweaver",
         "marsianer",
         "Martin Best",
+        "mikropsoft",
+        "serrq",
     )
 
 @Composable
@@ -54,8 +52,6 @@ fun ContributorsScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shuffledContributors = rememberSaveable(saver = jsonSaver()) { contributors.shuffled() }
-
     val colorScheme = MaterialTheme.colorScheme
     val offset =
         rememberInfiniteTransition()
@@ -116,15 +112,14 @@ fun ContributorsScreen(
             }
             item { Spacer(Modifier.height(16.dp)) }
             itemsIndexed(
-                items = shuffledContributors,
+                items = contributors,
                 key = { _, it -> it },
             ) { i, it ->
                 Text(
                     text = it,
-                    modifier = Modifier.animateItem(),
                     style = MaterialTheme.typography.brand.titleLarge,
                 )
-                if (i < shuffledContributors.lastIndex) Spacer(Modifier.height(12.dp))
+                if (i < contributors.lastIndex) Spacer(Modifier.height(12.dp))
             }
         }
     }
