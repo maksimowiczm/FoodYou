@@ -4,6 +4,9 @@ import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.event.InMemoryEventNotifier
 import com.maksimowiczm.foodyou.common.event.LoggingEventNotifier
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.databasesDir
+import io.github.vinceglb.filekit.delete
 import kotlinx.coroutines.test.TestScope
 import org.koin.core.Koin
 import org.koin.core.KoinApplication
@@ -41,5 +44,6 @@ suspend inline fun TestScope.runKoin(vararg modules: Module, block: suspend Koin
         block(koin.koin)
     } finally {
         koin.close()
+        FileKit.databasesDir.delete(recursively = true)
     }
 }

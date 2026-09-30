@@ -14,7 +14,6 @@ import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -28,8 +27,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.core.Koin
 
-// TODO sometimes tests will suspend indefinitely
-@Ignore
 class HomeIntegrationTest {
     private val profileId = ProfileId()
     private val mealId = MealId()
