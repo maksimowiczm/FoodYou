@@ -53,23 +53,22 @@ Read the file. Make four changes:
 
 ## Step 3 — Infrastructure layer
 
-### [`FoodNameEntity.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/search/infrastructure/FoodNameEntity.kt)
-
-Read the file. Make three changes:
-
-1. **Column** — add `@ColumnInfo(name = "ISO") val ISO: String? = null`. Note: for region-specific
-   codes like `pt-BR`, use exactly that in `name`.
-2. **`fallback` getter** — append `ISO` to the list
-
-### [`SearchResultMapper.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/search/infrastructure/SearchResultMapper.kt)
+### [`FoodNameEntity.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/common/infrastructure/room/FoodNameEntity.kt)
 
 Read the file. Make two changes:
 
-1. In `toDomain(entity: SearchEntity)` — add `ISO = entity.ISO` to the `FoodName.requireAll(...)`
-   call
-2. In `toFoodNameEntity(name: FoodName)` — map `ISO = name.ISO`
+1. **Column** — add `@ColumnInfo(name = "ISO") val ISO: String? = null`. Note: for region-specific
+   codes like `pt-BR`, use exactly that in `name`.
+2. **`fallback` getter** — append `ISO` to the `listOfNotNull(...)` list in `val fallback: String`.
 
-### [`SearchDao.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/search/infrastructure/SearchDao.kt)
+### [`FoodNameMapper.kt`](../../../core/src/commonMain/kotlin/com/maksimowiczm/foodyou/common/infrastructure/room/FoodNameMapper.kt)
+
+Read the file. Make two changes:
+
+1. In `toFoodNameEntity(name: FoodName)` — map `ISO = name.ISO`
+2. In `toFoodName(name: FoodNameEntity)` — add `ISO = name.ISO` to the `FoodName.requireAll(...)` call
+
+### [`SearchDao.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/capabilities/foodbrowsing/userfood/SearchDao.kt)
 
 Read the `SIMPLE_NAME_SELECT` constant carefully. Make two changes:
 
@@ -137,7 +136,7 @@ Add to the `languages` list:
 Translation("DISPLAY_NAME", Language.NewLanguage),
 ```
 
-### [`RecipeFormTransformer.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/food/userrecipe/RecipeFormTransformer.kt) and [`ProductFormTransformer.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/userproduct/ProductFormTransformer.kt)
+### [`RecipeFormTransformer.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/userrecipe/RecipeFormTransformer.kt) and [`ProductFormTransformer.kt`](../../../app/src/commonMain/kotlin/com/maksimowiczm/foodyou/features/userproduct/ProductFormTransformer.kt)
 In both files, update the `FoodName.requireAll` call inside the `transform` function:
 
 ```kotlin
@@ -180,14 +179,13 @@ After all edits, verify:
 
 - [ ] `Language.kt` — new enum entry present with correct ISO, CC, and display name
 - [ ] `FoodName.kt` — property, `list`, `get()`, and `requireAll` all updated
-- [ ] `FoodNameEntity.kt` — column `@ColumnInfo` name matches expected mapping
-- [ ] `SearchResultMapper.kt` — both `toDomain` and `toFoodNameEntity` updated
-- [ ] `SearchDao.kt` — `CASE` tag is `'ISO-CC'` and `COALESCE` includes `name_ISO`; column name
-  matches entity mapping
-- [ ] Database version incremented and migration registered
+- [ ] `FoodNameEntity.kt` — column `@ColumnInfo` name matches expected mapping and fallback getter updated
+- [ ] `FoodNameMapper.kt` — both `toFoodNameEntity` and `toFoodName` updated
+- [ ] `SearchDao.kt` — `CASE` branch is `'ISO-CC'` and fallback list includes `s.name_ISO`
+- [ ] `OpenFoodFactsProductMapper.kt` — branch added to `FoodName.requireAll`
+- [ ] Database version incremented and migration registered in `ReadModelDatabase.kt`
 - [ ] `locales_config.xml` — locale tag added
 - [ ] `Translation.kt` — entry added
-- [ ] `OpenFoodFactsProductMapper.kt` — branch added
 - [ ] `RecipeFormTransformer.kt` — branch added
 - [ ] `ProductFormTransformer.kt` — branch added
 - [ ] `MealTemplates.kt` — new branch added matching the language defaults

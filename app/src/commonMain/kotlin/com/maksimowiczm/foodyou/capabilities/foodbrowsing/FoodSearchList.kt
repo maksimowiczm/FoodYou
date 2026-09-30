@@ -43,6 +43,7 @@ import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDa
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDataCentralListItem
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsErrorCard
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsListItem
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.SearchResult
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserProductListItem
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserRecipeListItem
 import com.maksimowiczm.foodyou.common.RemoteData
@@ -54,7 +55,6 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
-import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
 import com.maksimowiczm.foodyou.shared.ui.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.shared.ui.extension.add

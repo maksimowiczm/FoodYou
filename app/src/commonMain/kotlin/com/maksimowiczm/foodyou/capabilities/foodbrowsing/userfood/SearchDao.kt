@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.search.infrastructure
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood
 
 import androidx.paging.PagingSource
 import androidx.room3.*

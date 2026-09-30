@@ -1,6 +1,7 @@
-package com.maksimowiczm.foodyou.search.infrastructure
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood
 
 import androidx.room3.*
+import com.maksimowiczm.foodyou.common.infrastructure.room.FoodNameEntity
 
 @Entity("SearchFts")
 @Fts4(

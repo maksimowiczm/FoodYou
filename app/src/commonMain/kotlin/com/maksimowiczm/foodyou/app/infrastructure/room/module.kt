@@ -5,7 +5,6 @@ import com.maksimowiczm.foodyou.app.infrastructure.room.ReadModelDatabase.Compan
 import com.maksimowiczm.foodyou.common.event.EventStore
 import com.maksimowiczm.foodyou.common.extension.databaseBuilder
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryDatabase
-import com.maksimowiczm.foodyou.search.infrastructure.SearchDatabase
 import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeDatabase
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -25,7 +24,8 @@ internal fun Module.room() {
     single<ReadModelDatabase> {
             databaseBuilder<ReadModelDatabase>(READ_MODEL_DATABASE_NAME).buildDatabase()
         }
-        .binds(arrayOf(SearchDatabase::class, UserRecipeDatabase::class, FoodDiaryDatabase::class))
+        .binds(arrayOf(UserRecipeDatabase::class, FoodDiaryDatabase::class))
 
     single { get<ReadModelDatabase>().homeDao }
+    single { get<ReadModelDatabase>().searchDao }
 }

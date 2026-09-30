@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
 
-class NutrientsMapper {
+object NutrientsMapper {
     fun toNutritionFats(entity: NutrientsEntity): NutritionFacts =
         NutritionFacts.requireAll(
             proteins = entity.proteins?.grams.toNutrientValue(),

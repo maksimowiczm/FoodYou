@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.search.infrastructure
+package com.maksimowiczm.foodyou.common.infrastructure.room
 
 import androidx.room3.*
 

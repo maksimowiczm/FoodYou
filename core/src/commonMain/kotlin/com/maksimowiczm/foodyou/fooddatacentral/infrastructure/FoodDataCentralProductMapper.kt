@@ -16,8 +16,6 @@ import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.network.model.Nut
 import com.maksimowiczm.foodyou.fooddatacentral.infrastructure.room.FoodDataCentralProductEntity
 
 internal class FoodDataCentralProductMapper {
-    private val nutrientsMapper = NutrientsMapper()
-
     fun foodDataCentralProductEntity(network: Food): FoodDataCentralProductEntity =
         with(network) {
             val energy =
@@ -98,7 +96,7 @@ internal class FoodDataCentralProductMapper {
                 brand = brandOwner,
                 barcode = gtinUpc,
                 source = "https://fdc.nal.usda.gov/food-details/$fdcId/nutrients",
-                nutritionFacts = nutrientsMapper.toNutritionFats(entity.nutrients),
+                nutritionFacts = NutrientsMapper.toNutritionFats(entity.nutrients),
                 servingQuantity = servingQuantity,
                 packageQuantity = packageQuantity,
             )

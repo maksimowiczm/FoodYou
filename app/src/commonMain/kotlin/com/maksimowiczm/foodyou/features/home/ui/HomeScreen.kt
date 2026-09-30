@@ -74,6 +74,7 @@ import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDa
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilter
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilters
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.SearchResult
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.RemoteData
@@ -87,7 +88,6 @@ import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
-import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.shared.ui.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreenContent
 import com.maksimowiczm.foodyou.shared.ui.component.ScrimWithPredictiveBack

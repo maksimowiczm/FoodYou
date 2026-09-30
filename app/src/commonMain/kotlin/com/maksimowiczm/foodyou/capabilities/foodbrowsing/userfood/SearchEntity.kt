@@ -1,7 +1,9 @@
-package com.maksimowiczm.foodyou.search.infrastructure
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood
 
 import androidx.room3.*
+import com.maksimowiczm.foodyou.common.infrastructure.room.FoodNameEntity
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
+import com.maksimowiczm.foodyou.common.infrastructure.room.QuantityEntity
 import kotlin.uuid.Uuid
 
 @Entity(

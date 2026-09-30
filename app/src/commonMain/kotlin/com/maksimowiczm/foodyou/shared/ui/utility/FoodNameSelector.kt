@@ -7,7 +7,6 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.preferences.domain.LanguagePreference
 import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
 import com.maksimowiczm.foodyou.preferences.domain.observe
-import com.maksimowiczm.foodyou.search.domain.SearchResult
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import kotlinx.coroutines.flow.Flow
@@ -64,13 +63,6 @@ fun UserProduct.headline(nameSelector: FoodNameSelector) = buildString {
     append(nameSelector.select(name))
     if (brand != null) append(brand.let { " ($it)" })
 }
-
-fun SearchResult.UserProduct.headline(nameSelector: FoodNameSelector) = buildString {
-    append(nameSelector.select(name))
-    if (brand != null) append(brand.let { " ($it)" })
-}
-
-fun SearchResult.UserRecipe.headline(nameSelector: FoodNameSelector) = nameSelector.select(name)
 
 fun UserRecipe.headline(nameSelector: FoodNameSelector) = nameSelector.select(name)
 

@@ -1,14 +1,17 @@
-package com.maksimowiczm.foodyou.search.domain
+package com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood
 
+import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
 import kotlin.uuid.Uuid
 
 sealed interface SearchResult {
+    @Immutable
     data class UserProduct(
         val id: Uuid,
         val name: FoodName,
@@ -22,6 +25,7 @@ sealed interface SearchResult {
         val isLiquid: Boolean,
     ) : SearchResult
 
+    @Immutable
     data class UserRecipe(
         val id: Uuid,
         val name: FoodName,
@@ -32,3 +36,10 @@ sealed interface SearchResult {
         val totalWeight: Weight,
     ) : SearchResult
 }
+
+fun SearchResult.UserProduct.headline(nameSelector: FoodNameSelector) = buildString {
+    append(nameSelector.select(name))
+    if (brand != null) append(brand.let { " ($it)" })
+}
+
+fun SearchResult.UserRecipe.headline(nameSelector: FoodNameSelector) = nameSelector.select(name)
