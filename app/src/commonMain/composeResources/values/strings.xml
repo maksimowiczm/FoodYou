@@ -189,6 +189,7 @@
     <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="description_open_food_facts">A collaborative, free and open database of food products from around the world</string>
     <string name="openfoodfacts_version_legacy" description="Old OpenFoodFacts search API">Legacy</string>
+    <string name="openfoodfacts_version_search_a_licious" translatable="false">Search-a-licious</string>
     <string name="action_register">Register</string>
     <string name="description_open_food_facts_credentials_message">Login credentials are encrypted and stored only on your device. Sensitive data is not accessible to anyone else.</string>
     <string name="error_open_food_facts_failed_to_authenticate">Failed to authenticate with Open Food Facts</string>
@@ -310,6 +311,11 @@
     <string name="description_add_more_details_product_form">Filling in proteins, fats, carbohydrates, and energy values helps provide more accurate nutritional insights</string>
 
     <string name="headline_favorite">Favorite</string>
+    <string name="headline_food_you_3" translatable="false">Food You 3</string>
+    <string name="headline_swiss_food_composition" translatable="false">Swiss Food Composition</string>
+    <string name="headline_data_type">Data type</string>
+    <string name="headline_source">Source</string>
+    <string name="action_import_food_you_3">Import Food You 3</string>
 
     <string name="action_add_a_photo">Add a photo</string>
     <string name="action_remove_a_photo">Remove a photo</string>
