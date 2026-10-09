@@ -41,7 +41,6 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.amount
-import com.maksimowiczm.foodyou.common.domain.food.toAbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
 import com.maksimowiczm.foodyou.mealplan.domain.Meal
@@ -111,8 +110,8 @@ fun UpdateAnonymousFoodDiaryEntryScreen(
                 suggestions = uiState.suggestions,
                 scaledNutritionFacts = uiState.scaledNutritionFacts,
                 ingredientScalingFactor = uiState.ingredientScalingFactor,
-                packageQuantity = entry.snapshot.quantity.packageWeight?.toAbsoluteQuantity(),
-                servingQuantity = entry.snapshot.quantity.servingWeight?.toAbsoluteQuantity(),
+                packageQuantity = uiState.relinkedSnapshot.quantity.packageQuantity,
+                servingQuantity = uiState.relinkedSnapshot.quantity.servingQuantity,
                 components =
                     (uiState.snapshot as? CompositeFoodSnapshot)?.components ?: emptyList(),
                 types = uiState.quantityTypes,
@@ -288,7 +287,7 @@ private fun UpdateAnonymousFoodDiaryEntryScreenContent(
                 item {
                     FoodDetailsNutrientsCompact(
                         scaledNutritionFacts = scaledNutritionFacts,
-                        expanded = if (!expandingEnabled) false else expanded,
+                        expanded = expandingEnabled && expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),

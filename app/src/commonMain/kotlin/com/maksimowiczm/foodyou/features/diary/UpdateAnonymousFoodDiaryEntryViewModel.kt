@@ -4,15 +4,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsQuantityDelegate
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.forceWeight
-import com.maksimowiczm.foodyou.common.domain.food.toAbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.common.domain.food.totalWeight
 import com.maksimowiczm.foodyou.common.getOrNull
@@ -64,8 +65,8 @@ class UpdateAnonymousFoodDiaryEntryViewModel(
                                 quantity =
                                     FoodSnapshotQuantityUpdateService.map(
                                         quantity = initialQuantity,
-                                        servingWeight = product.servingQuantity?.forceWeight(),
-                                        packageWeight = product.packageQuantity?.forceWeight(),
+                                        servingQuantity = product.servingQuantity,
+                                        packageQuantity = product.packageQuantity,
                                     ),
                             )
                         }
@@ -79,8 +80,8 @@ class UpdateAnonymousFoodDiaryEntryViewModel(
                                 quantity =
                                     FoodSnapshotQuantityUpdateService.map(
                                         quantity = initialQuantity,
-                                        servingWeight = product.servingQuantity?.forceWeight(),
-                                        packageWeight = product.packageQuantity?.forceWeight(),
+                                        servingQuantity = product.servingQuantity,
+                                        packageQuantity = product.packageQuantity,
                                     ),
                             )
                         }
@@ -94,8 +95,8 @@ class UpdateAnonymousFoodDiaryEntryViewModel(
                                 quantity =
                                     FoodSnapshotQuantityUpdateService.map(
                                         quantity = initialQuantity,
-                                        servingWeight = it.servingQuantity?.forceWeight(),
-                                        packageWeight = it.packageQuantity?.forceWeight(),
+                                        servingQuantity = it.servingQuantity,
+                                        packageQuantity = it.packageQuantity,
                                     ),
                             )
                         }
@@ -109,8 +110,8 @@ class UpdateAnonymousFoodDiaryEntryViewModel(
                                 quantity =
                                     FoodSnapshotQuantityUpdateService.map(
                                         quantity = initialQuantity,
-                                        servingWeight = it.servingWeight,
-                                        packageWeight = it.totalWeight,
+                                        servingQuantity = AbsoluteQuantity.Weight(it.servingWeight),
+                                        packageQuantity = AbsoluteQuantity.Weight(it.totalWeight),
                                     ),
                             )
                         }
@@ -129,10 +130,13 @@ class UpdateAnonymousFoodDiaryEntryViewModel(
                     if (isTracked) trackedMeasuredSnapshot ?: measuredSnapshot else measuredSnapshot
                 val activeSnapshot = activeMeasuredSnapshot.snapshot
 
-                val servingQuantity =
-                    activeMeasuredSnapshot.quantity.servingWeight?.toAbsoluteQuantity()
-                val packageQuantity =
-                    activeMeasuredSnapshot.quantity.packageWeight?.toAbsoluteQuantity()
+                val servingQuantity = activeMeasuredSnapshot.quantity.servingQuantity
+                val packageQuantity = activeMeasuredSnapshot.quantity.packageQuantity
+
+                val isLiquid =
+                    activeMeasuredSnapshot.quantity is FoodSnapshotQuantity.Volume ||
+                        servingQuantity is AbsoluteQuantity.Volume ||
+                        packageQuantity is AbsoluteQuantity.Volume
 
                 val result =
                     quantityDelegate.calculate(
@@ -141,8 +145,7 @@ class UpdateAnonymousFoodDiaryEntryViewModel(
                                 servingQuantity = servingQuantity,
                                 packageQuantity = packageQuantity,
                                 nutritionFacts = activeSnapshot.nutritionFacts,
-                                isLiquid = false, // TODO We don't have this info for anonymous food
-                                // currently
+                                isLiquid = isLiquid,
                             ),
                         currentSelectedQuantity = selectedQuantity,
                         currentSelectedQuantityType = selectedQuantityType,
@@ -177,8 +180,10 @@ class UpdateAnonymousFoodDiaryEntryViewModel(
                             quantity =
                                 FoodSnapshotQuantityUpdateService.map(
                                     quantity = result.selectedQuantity,
-                                    servingWeight = activeMeasuredSnapshot.quantity.servingWeight,
-                                    packageWeight = activeMeasuredSnapshot.quantity.packageWeight,
+                                    servingQuantity =
+                                        activeMeasuredSnapshot.quantity.servingQuantity,
+                                    packageQuantity =
+                                        activeMeasuredSnapshot.quantity.packageQuantity,
                                 )
                         ),
                 )

@@ -12,68 +12,68 @@ class FoodSnapshotQuantityUpdateServiceTest {
     @Test
     fun map_should_map_weight_quantity() {
         val weight = 150.grams
-        val servingWeight = 30.grams
-        val packageWeight = 500.grams
+        val servingQuantity = 30.grams.toAbsoluteQuantity()
+        val packageQuantity = 500.grams.toAbsoluteQuantity()
 
         val result =
             FoodSnapshotQuantityUpdateService.map(
                 quantity = AbsoluteQuantity.Weight(weight),
-                servingWeight = servingWeight,
-                packageWeight = packageWeight,
+                servingQuantity = servingQuantity,
+                packageQuantity = packageQuantity,
             )
 
         assertIs<FoodSnapshotQuantity.Weight>(result)
         assertEquals(weight, result.absoluteWeight)
-        assertEquals(servingWeight, result.servingWeight)
-        assertEquals(packageWeight, result.packageWeight)
+        assertEquals(servingQuantity, result.servingQuantity)
+        assertEquals(packageQuantity, result.packageQuantity)
     }
 
     @Test
-    fun map_should_map_volume_quantity_to_weight() {
+    fun map_should_map_volume_quantity() {
         val volume = 200.milliliters
-        val servingWeight = 50.grams
-        val packageWeight = 1000.grams
+        val servingQuantity = 50.milliliters.toAbsoluteQuantity()
+        val packageQuantity = 1000.milliliters.toAbsoluteQuantity()
 
         val result =
             FoodSnapshotQuantityUpdateService.map(
                 quantity = AbsoluteQuantity.Volume(volume),
-                servingWeight = servingWeight,
-                packageWeight = packageWeight,
+                servingQuantity = servingQuantity,
+                packageQuantity = packageQuantity,
             )
 
-        assertIs<FoodSnapshotQuantity.Weight>(result)
-        assertEquals(200.grams, result.absoluteWeight)
-        assertEquals(servingWeight, result.servingWeight)
-        assertEquals(packageWeight, result.packageWeight)
+        assertIs<FoodSnapshotQuantity.Volume>(result)
+        assertEquals(volume, result.absoluteVolume)
+        assertEquals(servingQuantity, result.servingQuantity)
+        assertEquals(packageQuantity, result.packageQuantity)
     }
 
     @Test
     fun map_should_map_package_quantity() {
         val packages = 2.5
-        val servingWeight = 20.grams
-        val packageWeight = 400.grams
+        val servingQuantity = 20.grams.toAbsoluteQuantity()
+        val packageQuantity = 400.grams.toAbsoluteQuantity()
 
         val result =
             FoodSnapshotQuantityUpdateService.map(
                 quantity = PackageQuantity(packages),
-                servingWeight = servingWeight,
-                packageWeight = packageWeight,
+                servingQuantity = servingQuantity,
+                packageQuantity = packageQuantity,
             )
 
         assertIs<FoodSnapshotQuantity.Package>(result)
         assertEquals(packages, result.packages)
-        assertEquals(servingWeight, result.servingWeight)
-        assertEquals(packageWeight, result.packageWeight)
-        assertEquals(1000.grams, result.absoluteWeight)
+        assertEquals(servingQuantity, result.servingQuantity)
+        assertEquals(packageQuantity, result.packageQuantity)
+        assertEquals(AbsoluteQuantity.Weight(1000.grams), result.absoluteQuantity)
     }
 
     @Test
-    fun map_should_throw_if_package_weight_is_null_for_package_quantity() {
+    fun map_should_throw_if_package_quantity_is_null_for_package_quantity() {
         assertFailsWith<IllegalArgumentException> {
             FoodSnapshotQuantityUpdateService.map(
                 quantity = PackageQuantity(1.0),
-                servingWeight = null,
-                packageWeight = null,
+                servingQuantity = null,
+                packageQuantity = null,
             )
         }
     }
@@ -81,92 +81,92 @@ class FoodSnapshotQuantityUpdateServiceTest {
     @Test
     fun map_should_map_serving_quantity() {
         val servings = 3.0
-        val servingWeight = 45.grams
-        val packageWeight = 900.grams
+        val servingQuantity = 45.grams.toAbsoluteQuantity()
+        val packageQuantity = 900.grams.toAbsoluteQuantity()
 
         val result =
             FoodSnapshotQuantityUpdateService.map(
                 quantity = ServingQuantity(servings),
-                servingWeight = servingWeight,
-                packageWeight = packageWeight,
+                servingQuantity = servingQuantity,
+                packageQuantity = packageQuantity,
             )
 
         assertIs<FoodSnapshotQuantity.Serving>(result)
         assertEquals(servings, result.servings)
-        assertEquals(servingWeight, result.servingWeight)
-        assertEquals(packageWeight, result.packageWeight)
-        assertEquals(135.grams, result.absoluteWeight)
+        assertEquals(servingQuantity, result.servingQuantity)
+        assertEquals(packageQuantity, result.packageQuantity)
+        assertEquals(AbsoluteQuantity.Weight(135.grams), result.absoluteQuantity)
     }
 
     @Test
-    fun map_should_throw_if_serving_weight_is_null_for_serving_quantity() {
+    fun map_should_throw_if_serving_quantity_is_null_for_serving_quantity() {
         assertFailsWith<IllegalArgumentException> {
             FoodSnapshotQuantityUpdateService.map(
                 quantity = ServingQuantity(1.0),
-                servingWeight = null,
-                packageWeight = null,
+                servingQuantity = null,
+                packageQuantity = null,
             )
         }
     }
 
     @Test
-    fun update_should_update_serving_weight() {
+    fun update_should_update_serving_quantity() {
         val current =
             FoodSnapshotQuantity.Serving(
                 servings = 2.0,
-                servingWeight = 30.grams,
-                packageWeight = null,
+                servingQuantity = 30.grams.toAbsoluteQuantity(),
+                packageQuantity = null,
             )
-        val newServingWeight = 40.grams
+        val newServingQuantity = 40.grams.toAbsoluteQuantity()
 
         val result =
             FoodSnapshotQuantityUpdateService.update(
                 current = current,
-                servingWeight = newServingWeight,
-                packageWeight = null,
+                servingQuantity = newServingQuantity,
+                packageQuantity = null,
             )
 
         assertIs<FoodSnapshotQuantity.Serving>(result)
-        assertEquals(newServingWeight, result.servingWeight)
-        assertEquals(80.grams, result.absoluteWeight)
+        assertEquals(newServingQuantity, result.servingQuantity)
+        assertEquals(AbsoluteQuantity.Weight(80.grams), result.absoluteQuantity)
     }
 
     @Test
-    fun update_should_update_package_weight() {
+    fun update_should_update_package_quantity() {
         val current =
             FoodSnapshotQuantity.Package(
                 packages = 0.5,
-                packageWeight = 500.grams,
-                servingWeight = null,
+                packageQuantity = 500.grams.toAbsoluteQuantity(),
+                servingQuantity = null,
             )
-        val newPackageWeight = 600.grams
+        val newPackageQuantity = 600.grams.toAbsoluteQuantity()
 
         val result =
             FoodSnapshotQuantityUpdateService.update(
                 current = current,
-                servingWeight = null,
-                packageWeight = newPackageWeight,
+                servingQuantity = null,
+                packageQuantity = newPackageQuantity,
             )
 
         assertIs<FoodSnapshotQuantity.Package>(result)
-        assertEquals(newPackageWeight, result.packageWeight)
-        assertEquals(300.grams, result.absoluteWeight)
+        assertEquals(newPackageQuantity, result.packageQuantity)
+        assertEquals(AbsoluteQuantity.Weight(300.grams), result.absoluteQuantity)
     }
 
     @Test
-    fun update_should_convert_serving_to_weight_if_serving_weight_becomes_null() {
+    fun update_should_convert_serving_to_weight_if_serving_quantity_becomes_null() {
         val current =
             FoodSnapshotQuantity.Serving(
                 servings = 2.0,
-                servingWeight = 30.grams,
-                packageWeight = null,
+                servingQuantity = 30.grams.toAbsoluteQuantity(),
+                packageQuantity = null,
             )
 
         val result =
             FoodSnapshotQuantityUpdateService.update(
                 current = current,
-                servingWeight = null,
-                packageWeight = null,
+                servingQuantity = null,
+                packageQuantity = null,
             )
 
         assertIs<FoodSnapshotQuantity.Weight>(result)
@@ -174,19 +174,19 @@ class FoodSnapshotQuantityUpdateServiceTest {
     }
 
     @Test
-    fun update_should_convert_package_to_weight_if_package_weight_becomes_null() {
+    fun update_should_convert_package_to_weight_if_package_quantity_becomes_null() {
         val current =
             FoodSnapshotQuantity.Package(
                 packages = 0.5,
-                packageWeight = 500.grams,
-                servingWeight = null,
+                packageQuantity = 500.grams.toAbsoluteQuantity(),
+                servingQuantity = null,
             )
 
         val result =
             FoodSnapshotQuantityUpdateService.update(
                 current = current,
-                servingWeight = null,
-                packageWeight = null,
+                servingQuantity = null,
+                packageQuantity = null,
             )
 
         assertIs<FoodSnapshotQuantity.Weight>(result)
@@ -198,22 +198,22 @@ class FoodSnapshotQuantityUpdateServiceTest {
         val current =
             FoodSnapshotQuantity.Weight(
                 absoluteWeight = 100.grams,
-                servingWeight = 20.grams,
-                packageWeight = 200.grams,
+                servingQuantity = 20.grams.toAbsoluteQuantity(),
+                packageQuantity = 200.grams.toAbsoluteQuantity(),
             )
-        val newServingWeight = 25.grams
-        val newPackageWeight = 250.grams
+        val newServingQuantity = 25.grams.toAbsoluteQuantity()
+        val newPackageQuantity = 250.grams.toAbsoluteQuantity()
 
         val result =
             FoodSnapshotQuantityUpdateService.update(
                 current = current,
-                servingWeight = newServingWeight,
-                packageWeight = newPackageWeight,
+                servingQuantity = newServingQuantity,
+                packageQuantity = newPackageQuantity,
             )
 
         assertIs<FoodSnapshotQuantity.Weight>(result)
         assertEquals(100.grams, result.absoluteWeight)
-        assertEquals(newServingWeight, result.servingWeight)
-        assertEquals(newPackageWeight, result.packageWeight)
+        assertEquals(newServingQuantity, result.servingQuantity)
+        assertEquals(newPackageQuantity, result.packageQuantity)
     }
 }

@@ -23,7 +23,10 @@ data class MeasuredFoodSnapshot(
         get() = snapshot.nutritionFacts
 
     val measuredNutritionFacts: NutritionFacts =
-        nutritionFacts * quantity.absoluteWeight.grams / 100.0
+        when (val abs = quantity.absoluteQuantity) {
+            is AbsoluteQuantity.Weight -> nutritionFacts * abs.weight.grams / 100.0
+            is AbsoluteQuantity.Volume -> nutritionFacts * abs.volume.milliliters / 100.0
+        }
 
     val allIdentities: Set<FoodSnapshotId>
         get() = snapshot.allIdentities
@@ -39,7 +42,7 @@ data class MeasuredFoodSnapshot(
 
 /** Sum of the absolute weights of all components. */
 val Iterable<MeasuredFoodSnapshot>.totalWeight: Weight
-    get() = map { it.quantity.absoluteWeight }.sum()
+    get() = map { it.quantity.absoluteQuantity.forceWeight() }.sum()
 
 /** Set of all identities present in these components and their subcomponents. */
 val Iterable<MeasuredFoodSnapshot>.allComponentIdentities: Set<FoodSnapshotId>

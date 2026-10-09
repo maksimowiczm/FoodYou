@@ -27,6 +27,7 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantity
 import com.maksimowiczm.foodyou.common.domain.food.LeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
+import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.common.domain.food.totalWeight
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
@@ -121,7 +122,8 @@ private fun RecipeIngredientListItem(
                     val totalWeight = snapshot.components.totalWeight
                     if (totalWeight.grams > 0) {
                         scalingFactor *
-                            (component.quantity.absoluteWeight.grams / totalWeight.grams)
+                            (component.quantity.absoluteQuantity.forceWeight().grams /
+                                totalWeight.grams)
                     } else {
                         scalingFactor
                     }
@@ -160,6 +162,9 @@ private fun RecipeIngredientListItemContent(
             when (val q = component.quantity) {
                 is FoodSnapshotQuantity.Weight ->
                     q.copy(absoluteWeight = q.absoluteWeight * scalingFactor)
+
+                is FoodSnapshotQuantity.Volume ->
+                    q.copy(absoluteVolume = q.absoluteVolume * scalingFactor)
 
                 is FoodSnapshotQuantity.Package -> q.copy(packages = q.packages * scalingFactor)
 

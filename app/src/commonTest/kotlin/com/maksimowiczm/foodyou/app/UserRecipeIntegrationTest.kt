@@ -12,6 +12,7 @@ import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.TrackedCompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.expect
 import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
@@ -93,8 +94,8 @@ class UserRecipeIntegrationTest {
                         quantity =
                             FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
-                                servingWeight = null,
-                                packageWeight = null,
+                                servingQuantity = null,
+                                packageQuantity = null,
                             ),
                     )
                 )
@@ -186,8 +187,8 @@ class UserRecipeIntegrationTest {
                         quantity =
                             FoodSnapshotQuantity.Serving(
                                 servings = 2.0,
-                                servingWeight = 30.grams,
-                                packageWeight = null,
+                                servingQuantity = Weight(30.grams),
+                                packageQuantity = null,
                             ),
                     )
                 )
@@ -231,8 +232,8 @@ class UserRecipeIntegrationTest {
                 }
 
             val component = updatedRecipe.components.first()
-            assertEquals(40.grams, component.quantity.servingWeight)
-            assertEquals(80.grams, component.quantity.absoluteWeight)
+            assertEquals(40.grams, component.quantity.servingQuantity?.forceWeight())
+            assertEquals(80.grams, component.quantity.absoluteQuantity.forceWeight())
         }
     }
 
@@ -260,8 +261,8 @@ class UserRecipeIntegrationTest {
                             quantity =
                                 FoodSnapshotQuantity.Weight(
                                     absoluteWeight = 100.grams,
-                                    servingWeight = null,
-                                    packageWeight = null,
+                                    servingQuantity = null,
+                                    packageQuantity = null,
                                 ),
                         )
                     )
@@ -329,8 +330,8 @@ class UserRecipeIntegrationTest {
                             quantity =
                                 FoodSnapshotQuantity.Weight(
                                     absoluteWeight = 100.grams,
-                                    servingWeight = null,
-                                    packageWeight = null,
+                                    servingQuantity = null,
+                                    packageQuantity = null,
                                 ),
                         )
                     )
@@ -394,8 +395,8 @@ class UserRecipeIntegrationTest {
                         quantity =
                             FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
-                                servingWeight = null,
-                                packageWeight = null,
+                                servingQuantity = null,
+                                packageQuantity = null,
                             ),
                     )
                 )
@@ -464,8 +465,8 @@ class UserRecipeIntegrationTest {
                                 quantity =
                                     FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
-                                        servingWeight = null,
-                                        packageWeight = null,
+                                        servingQuantity = null,
+                                        packageQuantity = null,
                                     ),
                             )
                         ),
@@ -492,8 +493,8 @@ class UserRecipeIntegrationTest {
                                 quantity =
                                     FoodSnapshotQuantity.Serving(
                                         servings = 2.0,
-                                        servingWeight = 100.grams,
-                                        packageWeight = null,
+                                        servingQuantity = Weight(100.grams),
+                                        packageQuantity = null,
                                     ),
                             )
                         ),
@@ -527,8 +528,8 @@ class UserRecipeIntegrationTest {
                             quantity =
                                 FoodSnapshotQuantity.Weight(
                                     absoluteWeight = 100.grams,
-                                    servingWeight = null,
-                                    packageWeight = null,
+                                    servingQuantity = null,
+                                    packageQuantity = null,
                                 ),
                         )
                     ),
@@ -542,7 +543,7 @@ class UserRecipeIntegrationTest {
                 }
 
             val component = updatedParent.components.first()
-            assertEquals(50.grams, component.quantity.servingWeight)
+            assertEquals(50.grams, component.quantity.servingQuantity?.forceWeight())
         }
     }
 
@@ -592,8 +593,8 @@ class UserRecipeIntegrationTest {
                                 quantity =
                                     FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
-                                        servingWeight = null,
-                                        packageWeight = null,
+                                        servingQuantity = null,
+                                        packageQuantity = null,
                                     ),
                             ),
                             MeasuredFoodSnapshot(
@@ -608,8 +609,8 @@ class UserRecipeIntegrationTest {
                                 quantity =
                                     FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
-                                        servingWeight = null,
-                                        packageWeight = null,
+                                        servingQuantity = null,
+                                        packageQuantity = null,
                                     ),
                             ),
                         ),
@@ -680,8 +681,8 @@ class UserRecipeIntegrationTest {
                                 quantity =
                                     FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
-                                        servingWeight = null,
-                                        packageWeight = null,
+                                        servingQuantity = null,
+                                        packageQuantity = null,
                                     ),
                             )
                         ),
@@ -745,8 +746,8 @@ class UserRecipeIntegrationTest {
                                 quantity =
                                     FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
-                                        servingWeight = null,
-                                        packageWeight = null,
+                                        servingQuantity = null,
+                                        packageQuantity = null,
                                     ),
                             ),
                             MeasuredFoodSnapshot(
@@ -761,8 +762,8 @@ class UserRecipeIntegrationTest {
                                 quantity =
                                     FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
-                                        servingWeight = null,
-                                        packageWeight = null,
+                                        servingQuantity = null,
+                                        packageQuantity = null,
                                     ),
                             ),
                         ),
@@ -820,8 +821,8 @@ class UserRecipeIntegrationTest {
                                 quantity =
                                     FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
-                                        servingWeight = null,
-                                        packageWeight = null,
+                                        servingQuantity = null,
+                                        packageQuantity = null,
                                     ),
                             )
                         ),

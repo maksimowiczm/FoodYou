@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.userrecipe.application
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
-import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductCreatedEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductDeletedEvent
@@ -19,8 +18,8 @@ class UserProductSynchronizer(private val userRecipeService: UserRecipeService) 
             is UserProductUpdatedEvent ->
                 userRecipeService.updateRecipesUsing(
                     snapshot = event.product.toSnapshot(),
-                    servingWeight = event.product.servingQuantity?.forceWeight(),
-                    packageWeight = event.product.packageQuantity?.forceWeight(),
+                    servingQuantity = event.product.servingQuantity,
+                    packageQuantity = event.product.packageQuantity,
                 )
 
             is UserProductDeletedEvent -> {

@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.features.home.ui
 
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.AnonymousCompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.AnonymousLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
@@ -12,6 +13,7 @@ import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNut
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
+import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.time.Clock
@@ -70,11 +72,42 @@ internal class HomeUiStateProvider {
                                             quantity =
                                                 FoodSnapshotQuantity.Serving(
                                                     servings = 1.0,
-                                                    servingWeight = 250.grams,
-                                                    packageWeight = null,
+                                                    servingQuantity =
+                                                        AbsoluteQuantity.Weight(250.grams),
+                                                    packageQuantity = null,
                                                 ),
                                         ),
-                                )
+                                ),
+                                HomeFoodState(
+                                    id = FoodDiaryEntryId(Uuid.random()),
+                                    time = LocalTime(hour = 8, minute = 0),
+                                    snapshot =
+                                        MeasuredFoodSnapshot(
+                                            snapshot =
+                                                AnonymousLeafFoodSnapshot(
+                                                    id = FoodSnapshotId.Anonymous(Uuid.random()),
+                                                    name = FoodName(fallback = "Orange Juice"),
+                                                    brand = null,
+                                                    image = null,
+                                                    nutritionFacts =
+                                                        NutritionFacts(
+                                                            proteins = 0.7.grams.toNutrientValue(),
+                                                            carbohydrates =
+                                                                10.4.grams.toNutrientValue(),
+                                                            fats = 0.2.grams.toNutrientValue(),
+                                                            energy =
+                                                                45.kilocalories.toNutrientValue(),
+                                                        ),
+                                                ),
+                                            quantity =
+                                                FoodSnapshotQuantity.Volume(
+                                                    absoluteVolume = 250.milliliters,
+                                                    servingQuantity =
+                                                        AbsoluteQuantity.Volume(250.milliliters),
+                                                    packageQuantity = null,
+                                                ),
+                                        ),
+                                ),
                             ),
                     ),
                     HomeMealState.Linked(
@@ -108,9 +141,9 @@ internal class HomeUiStateProvider {
                                                 ),
                                             quantity =
                                                 FoodSnapshotQuantity.Weight(
-                                                    servingWeight = null,
-                                                    packageWeight = null,
                                                     absoluteWeight = 180.grams,
+                                                    servingQuantity = null,
+                                                    packageQuantity = null,
                                                 ),
                                         ),
                                 )
@@ -168,9 +201,9 @@ internal class HomeUiStateProvider {
                                                                     ),
                                                                 quantity =
                                                                     FoodSnapshotQuantity.Weight(
-                                                                        servingWeight = null,
-                                                                        packageWeight = null,
                                                                         absoluteWeight = 150.grams,
+                                                                        servingQuantity = null,
+                                                                        packageQuantity = null,
                                                                     ),
                                                             ),
                                                             MeasuredFoodSnapshot(
@@ -205,9 +238,9 @@ internal class HomeUiStateProvider {
                                                                     ),
                                                                 quantity =
                                                                     FoodSnapshotQuantity.Weight(
-                                                                        servingWeight = null,
-                                                                        packageWeight = null,
                                                                         absoluteWeight = 100.grams,
+                                                                        servingQuantity = null,
+                                                                        packageQuantity = null,
                                                                     ),
                                                             ),
                                                         ),
@@ -215,8 +248,9 @@ internal class HomeUiStateProvider {
                                             quantity =
                                                 FoodSnapshotQuantity.Serving(
                                                     servings = 1.0,
-                                                    servingWeight = 250.grams,
-                                                    packageWeight = null,
+                                                    servingQuantity =
+                                                        AbsoluteQuantity.Weight(250.grams),
+                                                    packageQuantity = null,
                                                 ),
                                         ),
                                 )
@@ -246,9 +280,9 @@ internal class HomeUiStateProvider {
                                             ),
                                         quantity =
                                             FoodSnapshotQuantity.Weight(
-                                                servingWeight = null,
-                                                packageWeight = null,
                                                 absoluteWeight = 180.grams,
+                                                servingQuantity = null,
+                                                packageQuantity = null,
                                             ),
                                     ),
                             )

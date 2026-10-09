@@ -41,8 +41,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -59,8 +59,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -79,8 +79,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 200.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -128,8 +128,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -146,8 +146,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -175,8 +175,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
         val components = listOf(component)
@@ -204,8 +204,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
         val subComponents = listOf(subComponent)
@@ -223,8 +223,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -254,8 +254,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -272,8 +272,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -290,8 +290,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -308,8 +308,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 200.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -347,8 +347,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -365,8 +365,8 @@ class FoodSnapshotUpdateServiceTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 

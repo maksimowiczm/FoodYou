@@ -88,8 +88,8 @@ class HomeIntegrationTest {
                 val updatedQuantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 200.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     )
                 foodDiaryService.handle(
                     id = entryId,
@@ -316,8 +316,8 @@ class HomeIntegrationTest {
             quantity =
                 FoodSnapshotQuantity.Weight(
                     absoluteWeight = 100.grams,
-                    servingWeight = null,
-                    packageWeight = null,
+                    servingQuantity = null,
+                    packageQuantity = null,
                 ),
         )
 

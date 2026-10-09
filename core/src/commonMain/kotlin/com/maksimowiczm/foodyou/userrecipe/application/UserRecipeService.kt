@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.userrecipe.application
 
 import com.maksimowiczm.foodyou.common.domain.BlobDigest
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
-import com.maksimowiczm.foodyou.common.domain.Weight
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
@@ -97,13 +97,13 @@ class UserRecipeService(
 
     /**
      * Updates all user recipes containing the food identified by [TrackedFoodSnapshot.id] with the
-     * new [snapshot]. The quantity is also updated to match new [servingWeight] and
-     * [packageWeight].
+     * new [snapshot]. The quantity is also updated to match new [servingQuantity] and
+     * [packageQuantity].
      */
     suspend fun updateRecipesUsing(
         snapshot: TrackedFoodSnapshot,
-        servingWeight: Weight? = null,
-        packageWeight: Weight? = null,
+        servingQuantity: AbsoluteQuantity? = null,
+        packageQuantity: AbsoluteQuantity? = null,
     ) = coroutineScope {
         compositionRepository
             .findRecipesUsing(snapshot.id)
@@ -121,8 +121,8 @@ class UserRecipeService(
                                             quantity =
                                                 FoodSnapshotQuantityUpdateService.update(
                                                     current = current.quantity,
-                                                    servingWeight = servingWeight,
-                                                    packageWeight = packageWeight,
+                                                    servingQuantity = servingQuantity,
+                                                    packageQuantity = packageQuantity,
                                                 ),
                                         )
                                     },

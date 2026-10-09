@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.common.domain.food
 
 import com.maksimowiczm.foodyou.common.domain.grams
+import com.maksimowiczm.foodyou.common.domain.milliliters
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.uuid.Uuid
@@ -25,8 +26,8 @@ class MeasuredFoodSnapshotTests {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
         val component2 =
@@ -42,8 +43,8 @@ class MeasuredFoodSnapshotTests {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 250.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -69,8 +70,8 @@ class MeasuredFoodSnapshotTests {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 50.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
         // Component B: 150g total, 20g protein per 100g -> 30g protein absolute
@@ -88,8 +89,8 @@ class MeasuredFoodSnapshotTests {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 150.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -100,6 +101,32 @@ class MeasuredFoodSnapshotTests {
         // Normalized protein per 100g = 35 / 200 * 100 = 17.5g
         assertEquals(200.grams, composition.totalWeight)
         assertEquals(NutrientValue.Complete(17.5.grams), composition.nutritionFacts.proteins)
+    }
+
+    @Test
+    fun volume_measured_snapshot_should_calculate_nutrition_correctly() {
+        val component =
+            MeasuredFoodSnapshot(
+                snapshot =
+                    TrackedLeafFoodSnapshot(
+                        id = dummyId,
+                        name = dummyName,
+                        brand = null,
+                        image = null,
+                        nutritionFacts =
+                            NutritionFacts(proteins = NutrientValue.Complete(10.grams)),
+                    ),
+                quantity =
+                    FoodSnapshotQuantity.Volume(
+                        absoluteVolume = 200.milliliters,
+                        servingQuantity = null,
+                        packageQuantity = null,
+                    ),
+            )
+
+        // 200ml, 10g protein per 100ml -> 20g protein absolute
+        assertEquals(NutrientValue.Complete(20.grams), component.measuredNutritionFacts.proteins)
+        assertEquals(200.grams, listOf(component).totalWeight)
     }
 
     @Test
@@ -119,8 +146,8 @@ class MeasuredFoodSnapshotTests {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
         val subComponents = listOf(subComponent)
@@ -139,8 +166,8 @@ class MeasuredFoodSnapshotTests {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 50.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
         val otherComponent =
@@ -157,8 +184,8 @@ class MeasuredFoodSnapshotTests {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 50.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -195,8 +222,8 @@ class MeasuredFoodSnapshotTests {
                     quantity =
                         FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+                            servingQuantity = null,
+                            packageQuantity = null,
                         ),
                 )
             )
@@ -214,8 +241,8 @@ class MeasuredFoodSnapshotTests {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -232,8 +259,8 @@ class MeasuredFoodSnapshotTests {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 
@@ -250,8 +277,8 @@ class MeasuredFoodSnapshotTests {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 100.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     ),
             )
 

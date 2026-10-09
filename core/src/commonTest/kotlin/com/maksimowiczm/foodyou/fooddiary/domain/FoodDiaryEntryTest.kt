@@ -31,8 +31,8 @@ class FoodDiaryEntryTest {
             quantity =
                 FoodSnapshotQuantity.Weight(
                     absoluteWeight = 100.grams,
-                    servingWeight = null,
-                    packageWeight = null,
+                    servingQuantity = null,
+                    packageQuantity = null,
                 ),
         )
     private val timestamp = Instant.fromEpochSeconds(1000)
@@ -100,8 +100,8 @@ class FoodDiaryEntryTest {
                 quantity =
                     FoodSnapshotQuantity.Weight(
                         absoluteWeight = 200.grams,
-                        servingWeight = null,
-                        packageWeight = null,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     )
             )
 
@@ -198,9 +198,9 @@ class FoodDiaryEntryTest {
             measuredSnapshot.copy(
                 quantity =
                     FoodSnapshotQuantity.Weight(
-                        servingWeight = null,
-                        packageWeight = null,
                         absoluteWeight = 200.grams,
+                        servingQuantity = null,
+                        packageQuantity = null,
                     )
             )
 

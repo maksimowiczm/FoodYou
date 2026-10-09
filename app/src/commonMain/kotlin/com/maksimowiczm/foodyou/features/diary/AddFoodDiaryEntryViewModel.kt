@@ -6,10 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
-import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.toSnapshot
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
@@ -167,8 +167,8 @@ class AddFoodDiaryEntryViewModel(
                 quantity =
                     FoodSnapshotQuantityUpdateService.map(
                         quantity = quantity,
-                        servingWeight = product.servingQuantity?.forceWeight(),
-                        packageWeight = product.packageQuantity?.forceWeight(),
+                        servingQuantity = product.servingQuantity,
+                        packageQuantity = product.packageQuantity,
                     ),
             )
         create(snapshot = if (isTracked) snapshot else snapshot.anonymize())
@@ -181,8 +181,8 @@ class AddFoodDiaryEntryViewModel(
                 quantity =
                     FoodSnapshotQuantityUpdateService.map(
                         quantity = quantity,
-                        servingWeight = product.servingQuantity?.forceWeight(),
-                        packageWeight = product.packageQuantity?.forceWeight(),
+                        servingQuantity = product.servingQuantity,
+                        packageQuantity = product.packageQuantity,
                     ),
             )
         create(snapshot = if (isTracked) snapshot else snapshot.anonymize())
@@ -195,8 +195,8 @@ class AddFoodDiaryEntryViewModel(
                 quantity =
                     FoodSnapshotQuantityUpdateService.map(
                         quantity = quantity,
-                        servingWeight = product.servingQuantity?.forceWeight(),
-                        packageWeight = product.packageQuantity?.forceWeight(),
+                        servingQuantity = product.servingQuantity,
+                        packageQuantity = product.packageQuantity,
                     ),
             )
         create(snapshot = if (isTracked) snapshot else snapshot.anonymize())
@@ -209,8 +209,8 @@ class AddFoodDiaryEntryViewModel(
                 quantity =
                     FoodSnapshotQuantityUpdateService.map(
                         quantity = quantity,
-                        servingWeight = recipe.servingWeight,
-                        packageWeight = recipe.totalWeight,
+                        servingQuantity = AbsoluteQuantity.Weight(recipe.servingWeight),
+                        packageQuantity = AbsoluteQuantity.Weight(recipe.totalWeight),
                     ),
             )
         create(snapshot = if (isTracked) snapshot else snapshot.anonymize())

@@ -13,6 +13,8 @@ import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.TrackedCompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.forceWeight
+import com.maksimowiczm.foodyou.common.domain.food.toAbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.expect
 import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
@@ -99,8 +101,8 @@ class FoodDiaryIntegrationTest {
                     quantity =
                         FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+                            servingQuantity = null,
+                            packageQuantity = null,
                         ),
                 )
             val entryId = FoodDiaryEntryId()
@@ -176,8 +178,8 @@ class FoodDiaryIntegrationTest {
                         quantity =
                             FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
-                                servingWeight = null,
-                                packageWeight = null,
+                                servingQuantity = null,
+                                packageQuantity = null,
                             ),
                     )
                 )
@@ -204,8 +206,8 @@ class FoodDiaryIntegrationTest {
                     quantity =
                         FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+                            servingQuantity = null,
+                            packageQuantity = null,
                         ),
                 )
             val entryId = FoodDiaryEntryId()
@@ -290,8 +292,8 @@ class FoodDiaryIntegrationTest {
                         quantity =
                             FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
-                                servingWeight = null,
-                                packageWeight = null,
+                                servingQuantity = null,
+                                packageQuantity = null,
                             ),
                     )
                 )
@@ -318,8 +320,8 @@ class FoodDiaryIntegrationTest {
                     quantity =
                         FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+                            servingQuantity = null,
+                            packageQuantity = null,
                         ),
                 )
             val entryId = FoodDiaryEntryId()
@@ -412,8 +414,8 @@ class FoodDiaryIntegrationTest {
                     quantity =
                         FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+                            servingQuantity = null,
+                            packageQuantity = null,
                         ),
                 )
             val entryId = FoodDiaryEntryId()
@@ -484,8 +486,8 @@ class FoodDiaryIntegrationTest {
                     quantity =
                         FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+                            servingQuantity = null,
+                            packageQuantity = null,
                         ),
                 )
             val entryId = FoodDiaryEntryId()
@@ -561,8 +563,8 @@ class FoodDiaryIntegrationTest {
                     quantity =
                         FoodSnapshotQuantity.Serving(
                             servings = 2.0,
-                            servingWeight = 30.grams,
-                            packageWeight = null,
+                            servingQuantity = Weight(30.grams),
+                            packageQuantity = null,
                         ),
                 )
             val entryId = FoodDiaryEntryId()
@@ -581,7 +583,7 @@ class FoodDiaryIntegrationTest {
             // 3. Wait until entry is created and indexed
             waitForComposition(entryId, FoodSnapshotId.UserProduct(productId.value))
             val entry = foodDiaryService.observe(entryId).filterNotNull().first()
-            assertEquals(60.grams, entry.snapshot.quantity.absoluteWeight)
+            assertEquals(60.grams.toAbsoluteQuantity(), entry.snapshot.quantity.absoluteQuantity)
 
             // 4. Update product serving weight to 40g
             userProductService.handle(
@@ -595,7 +597,7 @@ class FoodDiaryIntegrationTest {
                             note = null,
                             image = null,
                             nutritionFacts = NutritionFacts(),
-                            servingQuantity = Weight(40.grams),
+                            servingQuantity = 40.grams.toAbsoluteQuantity(),
                             packageQuantity = null,
                             isLiquid = false,
                         )
@@ -605,10 +607,13 @@ class FoodDiaryIntegrationTest {
             // 5. Verify the diary entry has been updated and absolute weight is now 80g (2 * 40g)
             val updatedEntry =
                 foodDiaryService.observe(entryId).filterNotNull().first {
-                    it.snapshot.quantity.absoluteWeight == 80.grams
+                    it.snapshot.quantity.absoluteQuantity.forceWeight() == 80.grams
                 }
 
-            assertEquals(40.grams, updatedEntry.snapshot.quantity.servingWeight)
+            assertEquals(
+                40.grams.toAbsoluteQuantity(),
+                updatedEntry.snapshot.quantity.servingQuantity,
+            )
         }
     }
 
@@ -634,8 +639,8 @@ class FoodDiaryIntegrationTest {
                         quantity =
                             FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
-                                servingWeight = null,
-                                packageWeight = null,
+                                servingQuantity = null,
+                                packageQuantity = null,
                             ),
                     )
                 val entryId = FoodDiaryEntryId()
@@ -690,8 +695,8 @@ class FoodDiaryIntegrationTest {
                         quantity =
                             FoodSnapshotQuantity.Weight(
                                 absoluteWeight = 100.grams,
-                                servingWeight = null,
-                                packageWeight = null,
+                                servingQuantity = null,
+                                packageQuantity = null,
                             ),
                     )
                 val entryId = FoodDiaryEntryId()
@@ -752,8 +757,8 @@ class FoodDiaryIntegrationTest {
                                 quantity =
                                     FoodSnapshotQuantity.Weight(
                                         absoluteWeight = 100.grams,
-                                        servingWeight = null,
-                                        packageWeight = null,
+                                        servingQuantity = null,
+                                        packageQuantity = null,
                                     ),
                             )
                         ),
@@ -773,8 +778,8 @@ class FoodDiaryIntegrationTest {
                     quantity =
                         FoodSnapshotQuantity.Serving(
                             servings = 2.0,
-                            servingWeight = 100.grams,
-                            packageWeight = null,
+                            servingQuantity = Weight(100.grams),
+                            packageQuantity = null,
                         ),
                 )
             val entryId = FoodDiaryEntryId()
@@ -793,7 +798,7 @@ class FoodDiaryIntegrationTest {
             // Wait until entry is created and indexed
             waitForComposition(entryId, FoodSnapshotId.UserRecipe(recipeId.value))
             val entry = foodDiaryService.observe(entryId).filterNotNull().first()
-            assertEquals(200.grams, entry.snapshot.quantity.absoluteWeight)
+            assertEquals(200.grams.toAbsoluteQuantity(), entry.snapshot.quantity.absoluteQuantity)
 
             // 3. Update Recipe to have 2 servings instead of 1.
             // New serving weight should be 100g / 2 = 50g.
@@ -818,8 +823,8 @@ class FoodDiaryIntegrationTest {
                             quantity =
                                 FoodSnapshotQuantity.Weight(
                                     absoluteWeight = 100.grams,
-                                    servingWeight = null,
-                                    packageWeight = null,
+                                    servingQuantity = null,
+                                    packageQuantity = null,
                                 ),
                         )
                     ),
@@ -829,11 +834,14 @@ class FoodDiaryIntegrationTest {
             // Entry used 2 servings. Now 2 * 50g = 100g.
             val updatedEntry =
                 foodDiaryService.observe(entryId).filterNotNull().first {
-                    it.snapshot.quantity.absoluteWeight == 100.grams
+                    it.snapshot.quantity.absoluteQuantity.forceWeight() == 100.grams
                 }
 
             assertIs<CompositeFoodSnapshot>(updatedEntry.snapshot.snapshot)
-            assertEquals(50.grams, updatedEntry.snapshot.quantity.servingWeight)
+            assertEquals(
+                50.grams.toAbsoluteQuantity(),
+                updatedEntry.snapshot.quantity.servingQuantity,
+            )
         }
     }
 
@@ -862,8 +870,8 @@ class FoodDiaryIntegrationTest {
                     quantity =
                         FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+                            servingQuantity = null,
+                            packageQuantity = null,
                         ),
                 )
             val entryId = FoodDiaryEntryId()
@@ -917,8 +925,8 @@ class FoodDiaryIntegrationTest {
                     quantity =
                         FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+                            servingQuantity = null,
+                            packageQuantity = null,
                         ),
                 )
             val entryId = FoodDiaryEntryId()

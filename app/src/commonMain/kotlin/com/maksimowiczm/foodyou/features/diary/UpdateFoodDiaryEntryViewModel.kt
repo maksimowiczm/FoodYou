@@ -122,8 +122,8 @@ class UpdateFoodDiaryEntryViewModel(
                 quantity =
                     FoodSnapshotQuantityUpdateService.map(
                         quantity = quantity,
-                        servingWeight = current.snapshot.quantity.servingWeight,
-                        packageWeight = current.snapshot.quantity.packageWeight,
+                        servingQuantity = current.snapshot.quantity.servingQuantity,
+                        packageQuantity = current.snapshot.quantity.packageQuantity,
                     )
             )
         if (isTracked) snapshot else snapshot.anonymize()

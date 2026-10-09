@@ -10,10 +10,8 @@ import com.maksimowiczm.foodyou.common.domain.food.PackageQuantity
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityCalculator
 import com.maksimowiczm.foodyou.common.domain.food.ServingQuantity
-import com.maksimowiczm.foodyou.common.domain.food.toAbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.common.expect
-import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
 import com.maksimowiczm.foodyou.shared.ui.utility.VolumeFormatter.stringResource
 import com.maksimowiczm.foodyou.shared.ui.utility.WeightFormatter.stringResource
 import foodyou.app.generated.resources.*
@@ -124,14 +122,15 @@ object QuantityFormatter {
     fun FoodSnapshotQuantity.stringResource(): String {
         return when (this) {
             is FoodSnapshotQuantity.Weight -> this.absoluteWeight.stringResource()
+            is FoodSnapshotQuantity.Volume -> this.absoluteVolume.stringResource()
 
             is FoodSnapshotQuantity.Package ->
                 remember(this) { toQuantity() }
-                    .stringResource(remember(packageWeight) { packageWeight.toAbsoluteQuantity() })
+                    .stringResource(remember(packageQuantity) { packageQuantity })
 
             is FoodSnapshotQuantity.Serving ->
                 remember(this) { toQuantity() }
-                    .stringResource(remember(servingWeight) { servingWeight.toAbsoluteQuantity() })
+                    .stringResource(remember(servingQuantity) { servingQuantity })
         }
     }
 }

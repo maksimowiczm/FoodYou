@@ -50,8 +50,8 @@ class MealPlanUnlinkingIntegrationTest {
                     quantity =
                         FoodSnapshotQuantity.Weight(
                             absoluteWeight = 100.grams,
-                            servingWeight = null,
-                            packageWeight = null,
+                            servingQuantity = null,
+                            packageQuantity = null,
                         ),
                 )
             val entryId = FoodDiaryEntryId()

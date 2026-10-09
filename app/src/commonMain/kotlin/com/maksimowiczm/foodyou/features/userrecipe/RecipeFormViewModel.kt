@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.common.RemoteData
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotImage
@@ -12,7 +13,6 @@ import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.TrackedCompositeFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
-import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.extension.combine
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
@@ -149,8 +149,10 @@ class RecipeFormViewModel(
                                     quantity =
                                         FoodSnapshotQuantityUpdateService.map(
                                             quantity = quantity,
-                                            servingWeight = recipe.servingWeight,
-                                            packageWeight = recipe.totalWeight,
+                                            servingQuantity =
+                                                AbsoluteQuantity.Weight(recipe.servingWeight),
+                                            packageQuantity =
+                                                AbsoluteQuantity.Weight(recipe.totalWeight),
                                         ),
                                 )
                         )
@@ -174,8 +176,8 @@ class RecipeFormViewModel(
                                     quantity =
                                         FoodSnapshotQuantityUpdateService.map(
                                             quantity = quantity,
-                                            servingWeight = product.servingQuantity?.forceWeight(),
-                                            packageWeight = product.packageQuantity?.forceWeight(),
+                                            servingQuantity = product.servingQuantity,
+                                            packageQuantity = product.packageQuantity,
                                         ),
                                 )
                         )
@@ -202,8 +204,8 @@ class RecipeFormViewModel(
                                     quantity =
                                         FoodSnapshotQuantityUpdateService.map(
                                             quantity = quantity,
-                                            servingWeight = product.servingQuantity?.forceWeight(),
-                                            packageWeight = product.packageQuantity?.forceWeight(),
+                                            servingQuantity = product.servingQuantity,
+                                            packageQuantity = product.packageQuantity,
                                         ),
                                 )
                         )
@@ -227,8 +229,8 @@ class RecipeFormViewModel(
                                     quantity =
                                         FoodSnapshotQuantityUpdateService.map(
                                             quantity = quantity,
-                                            servingWeight = product.servingQuantity?.forceWeight(),
-                                            packageWeight = product.packageQuantity?.forceWeight(),
+                                            servingQuantity = product.servingQuantity,
+                                            packageQuantity = product.packageQuantity,
                                         ),
                                 )
                         )

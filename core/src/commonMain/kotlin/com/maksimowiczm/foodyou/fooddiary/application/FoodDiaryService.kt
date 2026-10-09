@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.fooddiary.application
 
-import com.maksimowiczm.foodyou.common.domain.Weight
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotUpdateService
@@ -54,8 +54,8 @@ class FoodDiaryService(
      */
     suspend fun updateEntriesUsing(
         snapshot: TrackedFoodSnapshot,
-        servingWeight: Weight? = null,
-        packageWeight: Weight? = null,
+        servingQuantity: AbsoluteQuantity? = null,
+        packageQuantity: AbsoluteQuantity? = null,
     ) = coroutineScope {
         compositionRepository
             .findEntriesUsing(snapshot.id)
@@ -75,8 +75,8 @@ class FoodDiaryService(
                                                 quantity =
                                                     FoodSnapshotQuantityUpdateService.update(
                                                         current = current.quantity,
-                                                        servingWeight = servingWeight,
-                                                        packageWeight = packageWeight,
+                                                        servingQuantity = servingQuantity,
+                                                        packageQuantity = packageQuantity,
                                                     ),
                                             )
                                         },

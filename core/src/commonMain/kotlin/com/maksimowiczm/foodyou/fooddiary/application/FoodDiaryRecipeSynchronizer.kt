@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.fooddiary.application
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
+import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCreatedEvent
@@ -18,8 +19,8 @@ class FoodDiaryRecipeSynchronizer(private val foodDiaryService: FoodDiaryService
             is UserRecipeUpdatedEvent ->
                 foodDiaryService.updateEntriesUsing(
                     snapshot = event.recipe.toSnapshot(),
-                    servingWeight = event.recipe.servingWeight,
-                    packageWeight = event.recipe.totalWeight,
+                    servingQuantity = AbsoluteQuantity.Weight(event.recipe.servingWeight),
+                    packageQuantity = AbsoluteQuantity.Weight(event.recipe.totalWeight),
                 )
 
             is UserRecipeDeletedEvent -> {

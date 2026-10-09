@@ -23,6 +23,12 @@ sealed interface AbsoluteQuantity : Quantity {
             is Volume -> Volume(volume / divisor)
         }
 
+    operator fun times(multiplier: Double): AbsoluteQuantity =
+        when (this) {
+            is Weight -> Weight(weight * multiplier)
+            is Volume -> Volume(volume * multiplier)
+        }
+
     companion object {
         fun parseOrNull(value: String): AbsoluteQuantity? {
             return com.maksimowiczm.foodyou.common.domain.Weight.parseOrNull(value)
