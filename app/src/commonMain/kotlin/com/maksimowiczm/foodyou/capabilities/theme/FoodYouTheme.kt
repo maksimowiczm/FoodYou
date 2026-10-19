@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.capabilities.theme
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -18,8 +20,8 @@ fun FoodYouTheme(content: @Composable () -> Unit) {
 }
 
 @Composable
-fun PreviewFoodYouTheme(content: @Composable () -> Unit) {
-    FoodYouTheme(themeSettings = null, content = content)
+fun PreviewFoodYouTheme(content: @Composable AnimatedContentScope.() -> Unit) {
+    AnimatedContent(Unit) { FoodYouTheme(themeSettings = null) { content() } }
 }
 
 @Composable

@@ -16,6 +16,19 @@ internal fun Module.diary() {
             get(),
         )
     }
+    viewModel { params ->
+        AddQuickFoodDiaryEntryViewModel(
+            initialMealId = params.get(),
+            initialDate = params.getOrNull(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+        )
+    }
     viewModelOf(::UpdateFoodDiaryEntryViewModel)
     viewModelOf(::UpdateAnonymousFoodDiaryEntryViewModel)
+    viewModelOf(::UpdateQuickFoodDiaryEntryViewModel)
 }

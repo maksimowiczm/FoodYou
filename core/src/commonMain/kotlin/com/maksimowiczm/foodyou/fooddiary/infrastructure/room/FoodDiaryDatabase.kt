@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.fooddiary.infrastructure.room
 
 interface FoodDiaryDatabase {
-    val foodDiaryCompositionDao: FoodDiaryCompositionDao
-    val foodDiaryMealDao: FoodDiaryMealDao
+    val foodDiaryEntryCompositionDao: FoodDiaryEntryCompositionDao
+    val foodDiaryEntryMealDao: FoodDiaryEntryMealDao
+    val quickFoodDiaryEntryMealDao: QuickFoodDiaryEntryMealDao
 }

@@ -5,10 +5,13 @@ import com.maksimowiczm.foodyou.account.domain.HomeCard
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import kotlinx.serialization.Serializable
 
 @Immutable
 data class HomeUiState(
@@ -37,9 +40,32 @@ sealed interface HomeMealState {
     ) : HomeMealState
 }
 
-@Immutable
-data class HomeFoodState(
-    val id: FoodDiaryEntryId,
-    val time: LocalTime,
-    val snapshot: MeasuredFoodSnapshot,
-)
+sealed interface HomeFoodState {
+    val id: Id
+    val time: LocalTime
+    val measuredNutritionFacts: NutritionFacts
+
+    @Serializable
+    sealed interface Id {
+        @Serializable data class FoodDiary(val value: FoodDiaryEntryId) : Id
+
+        @Serializable data class QuickAdd(val value: QuickFoodDiaryEntryId) : Id
+    }
+
+    @Immutable
+    data class FoodDiaryEntry(
+        override val id: Id.FoodDiary,
+        override val time: LocalTime,
+        val snapshot: MeasuredFoodSnapshot,
+    ) : HomeFoodState {
+        override val measuredNutritionFacts = snapshot.measuredNutritionFacts
+    }
+
+    @Immutable
+    data class QuickAdd(
+        override val id: Id.QuickAdd,
+        override val time: LocalTime,
+        val name: String,
+        override val measuredNutritionFacts: NutritionFacts,
+    ) : HomeFoodState
+}

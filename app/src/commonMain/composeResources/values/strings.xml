@@ -358,4 +358,7 @@
     <string name="headline_diary_timestamps">Diary timestamps</string>
     <string name="description_diary_timestamps">See the exact time you ate something</string>
 
+    <string name="headline_quick_add">Quick add</string>
+    <string name="description_quick_add">Log entry without searching</string>
+
 </resources>

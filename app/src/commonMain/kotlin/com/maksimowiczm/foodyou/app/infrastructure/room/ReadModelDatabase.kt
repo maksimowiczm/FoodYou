@@ -11,9 +11,11 @@ import com.maksimowiczm.foodyou.common.infrastructure.room.QuantityTypeConverter
 import com.maksimowiczm.foodyou.common.infrastructure.room.UuidConverter
 import com.maksimowiczm.foodyou.features.home.integration.HomeDao
 import com.maksimowiczm.foodyou.features.home.integration.HomeEntryEntity
+import com.maksimowiczm.foodyou.features.home.integration.HomeEntryPayloadConverter
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryEntryMealEntity
 import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.FoodDiaryEntryReferenceEntity
+import com.maksimowiczm.foodyou.fooddiary.infrastructure.room.QuickFoodDiaryEntryMealEntity
 import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeCompositionReferenceEntity
 import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeDatabase
 import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlattenedCompositionView
@@ -26,6 +28,7 @@ import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlatten
             UserRecipeCompositionReferenceEntity::class,
             FoodDiaryEntryReferenceEntity::class,
             FoodDiaryEntryMealEntity::class,
+            QuickFoodDiaryEntryMealEntity::class,
             HomeEntryEntity::class,
         ],
     views = [UserRecipeFlattenedCompositionView::class],
@@ -38,6 +41,7 @@ import com.maksimowiczm.foodyou.userrecipe.infrastructure.room.UserRecipeFlatten
     FoodSnapshotIdConverter::class,
     DateConverters::class,
     FoodSnapshotConverter::class,
+    HomeEntryPayloadConverter::class,
 )
 @ConstructedBy(ReadModelDatabaseConstructor::class)
 internal abstract class ReadModelDatabase : RoomDatabase(), UserRecipeDatabase, FoodDiaryDatabase {

@@ -24,7 +24,12 @@ internal fun Module.room() {
     single<ReadModelDatabase> {
             databaseBuilder<ReadModelDatabase>(READ_MODEL_DATABASE_NAME).buildDatabase()
         }
-        .binds(arrayOf(UserRecipeDatabase::class, FoodDiaryDatabase::class))
+        .binds(
+            arrayOf(
+                UserRecipeDatabase::class,
+                FoodDiaryDatabase::class,
+            )
+        )
 
     single { get<ReadModelDatabase>().homeDao }
     single { get<ReadModelDatabase>().searchDao }

@@ -8,9 +8,13 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.extension.observe
 import com.maksimowiczm.foodyou.features.home.integration.HomeDao
 import com.maksimowiczm.foodyou.features.home.integration.HomeEntryEntity
+import com.maksimowiczm.foodyou.features.home.integration.HomeEntryPayload
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
+import com.maksimowiczm.foodyou.fooddiary.application.QuickFoodDiaryService
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryCommand
+import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.mealplan.domain.activeMeal
@@ -37,6 +41,7 @@ class HomeViewModel(
     private val homeDao: HomeDao,
     accountService: AccountService,
     private val foodDiaryService: FoodDiaryService,
+    private val quickFoodDiaryService: QuickFoodDiaryService,
 ) : ViewModel() {
     private val profiles =
         accountService.observe().filterNotNull().map { account -> account.profiles }
@@ -145,19 +150,39 @@ class HomeViewModel(
             )
 
     private fun List<HomeEntryEntity>.toFoodStates() = map { entry ->
-        HomeFoodState(
-            id = FoodDiaryEntryId(entry.entryId),
-            time = entry.time,
-            snapshot = entry.snapshot,
-        )
+        when (val payload = entry.payload) {
+            is HomeEntryPayload.FoodDiaryEntry ->
+                HomeFoodState.FoodDiaryEntry(
+                    id = HomeFoodState.Id.FoodDiary(FoodDiaryEntryId(entry.entryId)),
+                    time = entry.time,
+                    snapshot = payload.snapshot,
+                )
+
+            is HomeEntryPayload.QuickAdd ->
+                HomeFoodState.QuickAdd(
+                    id = HomeFoodState.Id.QuickAdd(QuickFoodDiaryEntryId(entry.entryId)),
+                    time = entry.time,
+                    name = payload.name,
+                    measuredNutritionFacts = payload.nutritionFacts,
+                )
+        }
     }
 
-    fun deleteDiaryEntry(id: FoodDiaryEntryId) {
+    fun deleteFood(id: HomeFoodState.Id) {
         viewModelScope.launch {
-            foodDiaryService.handle(
-                id,
-                FoodDiaryCommand.Delete,
-            )
+            when (id) {
+                is HomeFoodState.Id.FoodDiary ->
+                    foodDiaryService.handle(
+                        id.value,
+                        FoodDiaryEntryCommand.Delete,
+                    )
+
+                is HomeFoodState.Id.QuickAdd ->
+                    quickFoodDiaryService.handle(
+                        id.value,
+                        QuickFoodDiaryEntryCommand.Delete,
+                    )
+            }
         }
     }
 }

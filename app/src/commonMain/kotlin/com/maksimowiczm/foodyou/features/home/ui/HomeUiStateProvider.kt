@@ -15,6 +15,7 @@ import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.time.Clock
 import kotlin.uuid.Uuid
@@ -45,8 +46,24 @@ internal class HomeUiStateProvider {
                         name = "Breakfast",
                         foods =
                             listOf(
-                                HomeFoodState(
-                                    id = FoodDiaryEntryId(Uuid.random()),
+                                HomeFoodState.QuickAdd(
+                                    id =
+                                        HomeFoodState.Id.QuickAdd(
+                                            QuickFoodDiaryEntryId(Uuid.random())
+                                        ),
+                                    time = LocalTime(hour = 7, minute = 30),
+                                    name = "Quick Coffee",
+                                    measuredNutritionFacts =
+                                        NutritionFacts(
+                                            proteins = 0.5.grams.toNutrientValue(),
+                                            carbohydrates = 2.0.grams.toNutrientValue(),
+                                            fats = 0.5.grams.toNutrientValue(),
+                                            energy = 15.kilocalories.toNutrientValue(),
+                                        ),
+                                ),
+                                HomeFoodState.FoodDiaryEntry(
+                                    id =
+                                        HomeFoodState.Id.FoodDiary(FoodDiaryEntryId(Uuid.random())),
                                     time = LocalTime(hour = 7, minute = 45),
                                     snapshot =
                                         MeasuredFoodSnapshot(
@@ -78,8 +95,9 @@ internal class HomeUiStateProvider {
                                                 ),
                                         ),
                                 ),
-                                HomeFoodState(
-                                    id = FoodDiaryEntryId(Uuid.random()),
+                                HomeFoodState.FoodDiaryEntry(
+                                    id =
+                                        HomeFoodState.Id.FoodDiary(FoodDiaryEntryId(Uuid.random())),
                                     time = LocalTime(hour = 8, minute = 0),
                                     snapshot =
                                         MeasuredFoodSnapshot(
@@ -115,8 +133,9 @@ internal class HomeUiStateProvider {
                         name = "Lunch",
                         foods =
                             listOf(
-                                HomeFoodState(
-                                    id = FoodDiaryEntryId(Uuid.random()),
+                                HomeFoodState.FoodDiaryEntry(
+                                    id =
+                                        HomeFoodState.Id.FoodDiary(FoodDiaryEntryId(Uuid.random())),
                                     time = LocalTime(hour = 12, minute = 30),
                                     snapshot =
                                         MeasuredFoodSnapshot(
@@ -154,8 +173,9 @@ internal class HomeUiStateProvider {
                         name = "Dinner",
                         foods =
                             listOf(
-                                HomeFoodState(
-                                    id = FoodDiaryEntryId(Uuid.random()),
+                                HomeFoodState.FoodDiaryEntry(
+                                    id =
+                                        HomeFoodState.Id.FoodDiary(FoodDiaryEntryId(Uuid.random())),
                                     time = LocalTime(hour = 19, minute = 0),
                                     snapshot =
                                         MeasuredFoodSnapshot(
@@ -258,8 +278,8 @@ internal class HomeUiStateProvider {
                     ),
                     HomeMealState.Unlinked(
                         listOf(
-                            HomeFoodState(
-                                id = FoodDiaryEntryId(Uuid.random()),
+                            HomeFoodState.FoodDiaryEntry(
+                                id = HomeFoodState.Id.FoodDiary(FoodDiaryEntryId(Uuid.random())),
                                 time = LocalTime(hour = 12, minute = 30),
                                 snapshot =
                                     MeasuredFoodSnapshot(

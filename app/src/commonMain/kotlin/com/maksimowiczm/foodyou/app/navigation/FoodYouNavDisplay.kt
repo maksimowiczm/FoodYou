@@ -49,9 +49,11 @@ import com.maksimowiczm.foodyou.features.about.AboutScreen
 import com.maksimowiczm.foodyou.features.about.ContributorsScreen
 import com.maksimowiczm.foodyou.features.diary.AddFoodDataCentralDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddOpenFoodFactsDiaryEntryScreen
+import com.maksimowiczm.foodyou.features.diary.AddQuickFoodDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddUserProductDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddUserRecipeDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.UpdateFoodDiaryEntryScreenDispatcher
+import com.maksimowiczm.foodyou.features.diary.UpdateQuickFoodDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.fooddatacentral.UpdateFoodDataCentralApiKeyDialog
 import com.maksimowiczm.foodyou.features.fooddetails.FoodDataCentralDetailsScreen
 import com.maksimowiczm.foodyou.features.fooddetails.OpenFoodFactsDetailsScreen
@@ -74,6 +76,7 @@ import com.maksimowiczm.foodyou.features.userrecipe.create.CreateRecipeScreen
 import com.maksimowiczm.foodyou.features.userrecipe.edit.EditRecipeScreen
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
@@ -263,7 +266,13 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onCreateRecipe = { mealId, date ->
                             backStack.add(CreateRecipe(mealId, date))
                         },
+                        onQuickAdd = { mealId, date ->
+                            backStack.add(FoodYouNavHostRoute.QuickAddDiaryEntry(mealId, date))
+                        },
                         onEntry = { backStack.add(UpdateDiaryEntry(it)) },
+                        onQuickEntry = {
+                            backStack.add(FoodYouNavHostRoute.UpdateQuickDiaryEntry(it))
+                        },
                         initialQuery = it.initialQuery,
                     )
                 }
@@ -454,6 +463,33 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         )
                     }
                 }
+                entry<FoodYouNavHostRoute.QuickAddDiaryEntry> { route ->
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddQuickFoodDiaryEntryScreen(
+                            onBack = {
+                                backStack.removeLastIf<FoodYouNavHostRoute.QuickAddDiaryEntry>()
+                            },
+                            onAdd = {
+                                backStack.removeLastIf<FoodYouNavHostRoute.QuickAddDiaryEntry>()
+                            },
+                            mealId = route.mealId,
+                            date = route.date,
+                        )
+                    }
+                }
+                entry<FoodYouNavHostRoute.UpdateQuickDiaryEntry> { route ->
+                    context(LocalNavAnimatedContentScope.current) {
+                        UpdateQuickFoodDiaryEntryScreen(
+                            onBack = {
+                                backStack.removeLastIf<FoodYouNavHostRoute.UpdateQuickDiaryEntry>()
+                            },
+                            onUpdate = {
+                                backStack.removeLastIf<FoodYouNavHostRoute.UpdateQuickDiaryEntry>()
+                            },
+                            entryId = route.id,
+                        )
+                    }
+                }
                 entry<UpdateDiaryEntry> {
                     context(LocalNavAnimatedContentScope.current) {
                         UpdateFoodDiaryEntryScreenDispatcher(
@@ -613,7 +649,16 @@ sealed interface FoodYouNavHostRoute : NavKey {
         val popToHome: Boolean = false,
     ) : FoodYouNavHostRoute
 
+    @Serializable
+    data class QuickAddDiaryEntry(
+        val mealId: MealId?,
+        val date: LocalDate?,
+    ) : FoodYouNavHostRoute
+
     @Serializable data class UpdateDiaryEntry(val id: FoodDiaryEntryId) : FoodYouNavHostRoute
+
+    @Serializable
+    data class UpdateQuickDiaryEntry(val id: QuickFoodDiaryEntryId) : FoodYouNavHostRoute
 
     @Serializable data object Contributors : FoodYouNavHostRoute
 }

@@ -362,7 +362,7 @@ fun HomeScreenTopBar(
                     val nutrientsPalette = LocalNutrientsPalette.current
                     val nutrition =
                         remember(activeMeal.foods) {
-                            activeMeal.foods.map { it.snapshot.measuredNutritionFacts }.sum()
+                            activeMeal.foods.map { it.measuredNutritionFacts }.sum()
                         }
                     Row(
                         modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),

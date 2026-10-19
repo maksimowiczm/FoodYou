@@ -85,6 +85,7 @@ import com.maksimowiczm.foodyou.features.home.ui.calendar.CalendarCard
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
+import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
@@ -118,7 +119,9 @@ fun HomeScreen(
     onUserRecipe: (UserRecipeId, Quantity, MealId?, LocalDate?) -> Unit,
     onCreateProduct: (MealId?, LocalDate?) -> Unit,
     onCreateRecipe: (MealId?, LocalDate?) -> Unit,
+    onQuickAdd: (MealId?, LocalDate?) -> Unit,
     onEntry: (FoodDiaryEntryId) -> Unit,
+    onQuickEntry: (QuickFoodDiaryEntryId) -> Unit,
     initialQuery: String?,
     modifier: Modifier = Modifier,
 ) {
@@ -172,6 +175,7 @@ fun HomeScreen(
         },
         onCreateProduct = { onCreateProduct(uiState.activeMeal?.id, uiState.date) },
         onCreateRecipe = { onCreateRecipe(uiState.activeMeal?.id, uiState.date) },
+        onQuickAdd = { onQuickAdd(uiState.activeMeal?.id, uiState.date) },
         onCollectionSelected = { collection ->
             when (collection) {
                 is SearchCollection.FoodDataCentral ->
@@ -183,8 +187,13 @@ fun HomeScreen(
                 else -> Unit
             }
         },
-        onEntry = onEntry,
-        onDeleteEntry = viewModel::deleteDiaryEntry,
+        onEntry = {
+            when (it) {
+                is HomeFoodState.Id.FoodDiary -> onEntry(it.value)
+                is HomeFoodState.Id.QuickAdd -> onQuickEntry(it.value)
+            }
+        },
+        onDeleteFood = viewModel::deleteFood,
         modifier = modifier,
     )
 }
@@ -212,9 +221,10 @@ fun HomeScreenContent(
     onUserRecipe: (UserRecipeId, Quantity) -> Unit,
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
+    onQuickAdd: () -> Unit,
     onCollectionSelected: (SearchCollection) -> Unit,
-    onEntry: (FoodDiaryEntryId) -> Unit,
-    onDeleteEntry: (FoodDiaryEntryId) -> Unit,
+    onEntry: (HomeFoodState.Id) -> Unit,
+    onDeleteFood: (HomeFoodState.Id) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -484,8 +494,9 @@ fun HomeScreenContent(
                                                     onSelectMeal(id)
                                                     openSearch()
                                                 },
+                                                onQuickAdd = onQuickAdd,
                                                 onEntry = onEntry,
-                                                onDeleteEntry = onDeleteEntry,
+                                                onDeleteFood = onDeleteFood,
                                             )
                                         }
                                 }
@@ -615,9 +626,10 @@ private fun HomeScreenPreview() {
             onUserRecipe = { _, _ -> },
             onCreateProduct = {},
             onCreateRecipe = {},
+            onQuickAdd = {},
             onCollectionSelected = {},
             onEntry = {},
-            onDeleteEntry = {},
+            onDeleteFood = {},
         )
     }
 }

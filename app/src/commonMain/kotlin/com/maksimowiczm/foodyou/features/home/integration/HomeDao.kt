@@ -17,12 +17,6 @@ abstract class HomeDao {
     @Query("DELETE FROM HomeEntry WHERE entryId = :entryId")
     abstract suspend fun delete(entryId: Uuid)
 
-    @Query("UPDATE HomeEntry SET snapshot = :snapshot WHERE entryId = :entryId")
-    abstract suspend fun updateSnapshot(
-        entryId: Uuid,
-        snapshot: com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot,
-    )
-
     @Query("UPDATE HomeEntry SET date = :date, time = :time WHERE entryId = :entryId")
     abstract suspend fun updateTimestamp(
         entryId: Uuid,
