@@ -11,12 +11,12 @@ import com.maksimowiczm.foodyou.common.event.asEventSink
 import com.maksimowiczm.foodyou.common.event.asHandler
 import com.maksimowiczm.foodyou.common.observe
 import com.maksimowiczm.foodyou.common.plus
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCommand
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCompositionRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryMealRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.foodDiaryDecider
 import com.maksimowiczm.foodyou.fooddiary.domain.toFoodDiaryEntry
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
@@ -29,8 +29,8 @@ import kotlinx.coroutines.flow.map
 class FoodDiaryService(
     private val eventStore: EventStore,
     eventNotifier: EventNotifier,
-    private val compositionRepository: FoodDiaryCompositionRepository,
-    private val mealRepository: FoodDiaryMealRepository,
+    private val compositionRepository: FoodDiaryEntryCompositionRepository,
+    private val mealRepository: FoodDiaryEntryMealRepository,
 ) {
     private val commandHandler =
         foodDiaryDecider.asHandler(
@@ -40,12 +40,12 @@ class FoodDiaryService(
 
     private fun stream(id: FoodDiaryEntryId) = "FoodDiaryEntry-${id.id}"
 
-    suspend fun handle(id: FoodDiaryEntryId, command: FoodDiaryCommand) {
+    suspend fun handle(id: FoodDiaryEntryId, command: FoodDiaryEntryCommand) {
         val _ = commandHandler(stream(id), command)
     }
 
     fun observe(id: FoodDiaryEntryId): Flow<FoodDiaryEntry?> =
-        eventStore.observe<FoodDiaryEvent>(stream(id)).map { it.toFoodDiaryEntry() }
+        eventStore.observe<FoodDiaryEntryEvent>(stream(id)).map { it.toFoodDiaryEntry() }
 
     /**
      * Updates all food diary entries containing the food identified by [TrackedFoodSnapshot.id]
@@ -64,7 +64,7 @@ class FoodDiaryService(
                     handle(
                         id = entryId,
                         command =
-                            FoodDiaryCommand.Update { entry ->
+                            FoodDiaryEntryCommand.Update { entry ->
                                 val updated =
                                     FoodSnapshotUpdateService.update(
                                         components = listOf(entry.snapshot),
@@ -97,7 +97,7 @@ class FoodDiaryService(
                     handle(
                         id = entryId,
                         command =
-                            FoodDiaryCommand.Update { entry ->
+                            FoodDiaryEntryCommand.Update { entry ->
                                 val wrapped = listOf(entry.snapshot)
                                 val updatedSnapshot = FoodSnapshotUpdateService.remove(wrapped, id)
 
@@ -118,7 +118,7 @@ class FoodDiaryService(
                     handle(
                         id = entryId,
                         command =
-                            FoodDiaryCommand.Update { entry ->
+                            FoodDiaryEntryCommand.Update { entry ->
                                 val wrapped = listOf(entry.snapshot)
                                 val updatedSnapshot = FoodSnapshotUpdateService.unlink(wrapped, id)
                                 entry.copy(snapshot = updatedSnapshot.first())
@@ -136,7 +136,7 @@ class FoodDiaryService(
                 async {
                     handle(
                         id = entryId,
-                        command = FoodDiaryCommand.UnlinkFromMeal,
+                        command = FoodDiaryEntryCommand.UnlinkFromMeal,
                     )
                 }
             }

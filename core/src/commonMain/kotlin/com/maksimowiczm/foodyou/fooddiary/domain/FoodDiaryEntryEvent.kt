@@ -8,46 +8,48 @@ import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.InstantComponentSerializer
 
-@Serializable sealed interface FoodDiaryEvent : DomainEvent
+@Serializable sealed interface FoodDiaryEntryEvent : DomainEvent
 
 @Serializable
-data class FoodDiaryEntryCreatedEvent(
+data class FoodDiaryEntryCreatedEntryEvent(
     val diaryEntryId: FoodDiaryEntryId,
     val profileIds: Set<ProfileId>,
     val snapshot: MeasuredFoodSnapshot,
     val mealId: MealId,
     @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,
-) : FoodDiaryEvent
+) : FoodDiaryEntryEvent
 
 @Serializable
-data class FoodDiaryEntryProfileIdsChangedEvent(
+data class FoodDiaryEntryProfileIdsChangedEntryEvent(
     val diaryEntryId: FoodDiaryEntryId,
     val profileIds: Set<ProfileId>,
-) : FoodDiaryEvent
+) : FoodDiaryEntryEvent
 
 @Serializable
-data class FoodDiaryEntrySnapshotChangedEvent(
+data class FoodDiaryEntrySnapshotChangedEntryEvent(
     val diaryEntryId: FoodDiaryEntryId,
     val snapshot: MeasuredFoodSnapshot,
-) : FoodDiaryEvent
+) : FoodDiaryEntryEvent
 
 @Serializable
-data class FoodDiaryEntryTimestampChangedEvent(
+data class FoodDiaryEntryTimestampChangedEntryEvent(
     val diaryEntryId: FoodDiaryEntryId,
     @Serializable(with = InstantComponentSerializer::class) val entryTimestamp: Instant,
-) : FoodDiaryEvent
+) : FoodDiaryEntryEvent
 
 @Serializable
-data class FoodDiaryEntryMealLinkedEvent(
+data class FoodDiaryEntryMealLinkedEntryEvent(
     val diaryEntryId: FoodDiaryEntryId,
     val mealId: MealId,
-) : FoodDiaryEvent
+) : FoodDiaryEntryEvent
 
 @Serializable
-data class FoodDiaryEntryMealUnlinkedEvent(val diaryEntryId: FoodDiaryEntryId) : FoodDiaryEvent
+data class FoodDiaryEntryMealUnlinkedEntryEvent(val diaryEntryId: FoodDiaryEntryId) :
+    FoodDiaryEntryEvent
 
 @Serializable
-data class FoodDiaryEntryAnonymizedEvent(val diaryEntryId: FoodDiaryEntryId) : FoodDiaryEvent
+data class FoodDiaryEntryAnonymizedEntryEvent(val diaryEntryId: FoodDiaryEntryId) :
+    FoodDiaryEntryEvent
 
 @Serializable
-data class FoodDiaryEntryDeletedEvent(val diaryEntryId: FoodDiaryEntryId) : FoodDiaryEvent
+data class FoodDiaryEntryDeletedEntryEvent(val diaryEntryId: FoodDiaryEntryId) : FoodDiaryEntryEvent

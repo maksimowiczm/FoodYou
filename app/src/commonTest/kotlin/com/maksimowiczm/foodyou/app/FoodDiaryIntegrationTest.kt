@@ -24,8 +24,8 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettings
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCommand
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCompositionRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
@@ -109,7 +109,7 @@ class FoodDiaryIntegrationTest {
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Create(
+                    FoodDiaryEntryCommand.Create(
                         id = entryId,
                         profileIds = setOf(profileId),
                         snapshot = snapshot,
@@ -214,7 +214,7 @@ class FoodDiaryIntegrationTest {
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Create(
+                    FoodDiaryEntryCommand.Create(
                         id = entryId,
                         profileIds = setOf(profileId),
                         snapshot = entrySnapshot,
@@ -328,7 +328,7 @@ class FoodDiaryIntegrationTest {
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Create(
+                    FoodDiaryEntryCommand.Create(
                         id = entryId,
                         profileIds = setOf(profileId),
                         snapshot = entrySnapshot,
@@ -422,7 +422,7 @@ class FoodDiaryIntegrationTest {
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Create(
+                    FoodDiaryEntryCommand.Create(
                         id = entryId,
                         profileIds = setOf(profileId),
                         snapshot = snapshot,
@@ -494,7 +494,7 @@ class FoodDiaryIntegrationTest {
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Create(
+                    FoodDiaryEntryCommand.Create(
                         id = entryId,
                         profileIds = setOf(profileId),
                         snapshot = snapshot,
@@ -571,7 +571,7 @@ class FoodDiaryIntegrationTest {
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Create(
+                    FoodDiaryEntryCommand.Create(
                         id = entryId,
                         profileIds = setOf(profileId),
                         snapshot = snapshot,
@@ -647,7 +647,7 @@ class FoodDiaryIntegrationTest {
                 foodDiaryService.handle(
                     id = entryId,
                     command =
-                        FoodDiaryCommand.Create(
+                        FoodDiaryEntryCommand.Create(
                             id = entryId,
                             profileIds = setOf(profileId),
                             snapshot = snapshot,
@@ -703,7 +703,7 @@ class FoodDiaryIntegrationTest {
                 foodDiaryService.handle(
                     id = entryId,
                     command =
-                        FoodDiaryCommand.Create(
+                        FoodDiaryEntryCommand.Create(
                             id = entryId,
                             profileIds = setOf(profileId),
                             snapshot = snapshot,
@@ -786,7 +786,7 @@ class FoodDiaryIntegrationTest {
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Create(
+                    FoodDiaryEntryCommand.Create(
                         id = entryId,
                         profileIds = setOf(profileId),
                         snapshot = snapshot,
@@ -878,7 +878,7 @@ class FoodDiaryIntegrationTest {
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Create(
+                    FoodDiaryEntryCommand.Create(
                         id = entryId,
                         profileIds = setOf(profileId),
                         snapshot = snapshot,
@@ -933,7 +933,7 @@ class FoodDiaryIntegrationTest {
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Create(
+                    FoodDiaryEntryCommand.Create(
                         id = entryId,
                         profileIds = setOf(profileId),
                         snapshot = snapshot,
@@ -964,7 +964,7 @@ class FoodDiaryIntegrationTest {
         entryId: FoodDiaryEntryId,
         componentId: FoodSnapshotId.Tracked,
     ) {
-        val repository = get<FoodDiaryCompositionRepository>()
+        val repository = get<FoodDiaryEntryCompositionRepository>()
         withContext(Dispatchers.Default) {
             while (!repository.findEntriesUsing(componentId).contains(entryId)) {
                 delay(10.milliseconds)

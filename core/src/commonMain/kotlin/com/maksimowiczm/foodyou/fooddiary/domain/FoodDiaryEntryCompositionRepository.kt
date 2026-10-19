@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.fooddiary.domain
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 
 /** Repository for tracking which identified components are used in food diary entries. */
-interface FoodDiaryCompositionRepository {
+interface FoodDiaryEntryCompositionRepository {
     /**
      * Finds all food diary entries that contain the given snapshot id.
      *

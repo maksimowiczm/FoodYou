@@ -4,7 +4,7 @@ import androidx.room3.*
 import kotlin.uuid.Uuid
 
 @Dao
-interface FoodDiaryMealDao {
+interface FoodDiaryEntryMealDao {
     @Query("SELECT entryId FROM FoodDiaryEntryMeal WHERE mealId = :mealId")
     suspend fun findEntriesByMeal(mealId: Uuid): List<Uuid>
 

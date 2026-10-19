@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import kotlin.uuid.Uuid
 
 @Dao
-interface FoodDiaryCompositionDao {
+interface FoodDiaryEntryCompositionDao {
     @Query(
         """
             SELECT entryId

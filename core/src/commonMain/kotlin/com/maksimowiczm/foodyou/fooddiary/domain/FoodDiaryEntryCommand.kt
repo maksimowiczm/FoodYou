@@ -5,20 +5,20 @@ import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.time.Instant
 
-sealed interface FoodDiaryCommand {
+sealed interface FoodDiaryEntryCommand {
     data class Create(
         val id: FoodDiaryEntryId,
         val profileIds: Set<ProfileId>,
         val snapshot: MeasuredFoodSnapshot,
         val mealId: MealId,
         val entryTimestamp: Instant,
-    ) : FoodDiaryCommand
+    ) : FoodDiaryEntryCommand
 
-    data class Update(val transform: (FoodDiaryEntry) -> FoodDiaryEntry?) : FoodDiaryCommand
+    data class Update(val transform: (FoodDiaryEntry) -> FoodDiaryEntry?) : FoodDiaryEntryCommand
 
-    data object Delete : FoodDiaryCommand
+    data object Delete : FoodDiaryEntryCommand
 
-    data object Anonymize : FoodDiaryCommand
+    data object Anonymize : FoodDiaryEntryCommand
 
-    data object UnlinkFromMeal : FoodDiaryCommand
+    data object UnlinkFromMeal : FoodDiaryEntryCommand
 }

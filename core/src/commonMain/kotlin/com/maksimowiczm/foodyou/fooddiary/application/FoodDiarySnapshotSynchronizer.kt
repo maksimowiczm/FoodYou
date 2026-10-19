@@ -2,32 +2,32 @@ package com.maksimowiczm.foodyou.fooddiary.application
 
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.event.EventHandler
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryAnonymizedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntrySnapshotChangedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryAnonymizedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCompositionRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntrySnapshotChangedEntryEvent
 
-class FoodDiarySnapshotSynchronizer(private val repository: FoodDiaryCompositionRepository) :
-    EventHandler<FoodDiaryEvent> {
-    override suspend fun handle(event: FoodDiaryEvent) {
+class FoodDiarySnapshotSynchronizer(private val repository: FoodDiaryEntryCompositionRepository) :
+    EventHandler<FoodDiaryEntryEvent> {
+    override suspend fun handle(event: FoodDiaryEntryEvent) {
         when (event) {
-            is FoodDiaryEntryCreatedEvent ->
+            is FoodDiaryEntryCreatedEntryEvent ->
                 repository.saveReferences(
                     event.diaryEntryId,
                     event.snapshot.allIdentities.filterIsInstance<FoodSnapshotId.Tracked>().toSet(),
                 )
 
-            is FoodDiaryEntrySnapshotChangedEvent ->
+            is FoodDiaryEntrySnapshotChangedEntryEvent ->
                 repository.saveReferences(
                     event.diaryEntryId,
                     event.snapshot.allIdentities.filterIsInstance<FoodSnapshotId.Tracked>().toSet(),
                 )
 
-            is FoodDiaryEntryAnonymizedEvent -> repository.removeReferences(event.diaryEntryId)
+            is FoodDiaryEntryAnonymizedEntryEvent -> repository.removeReferences(event.diaryEntryId)
 
-            is FoodDiaryEntryDeletedEvent -> repository.removeReferences(event.diaryEntryId)
+            is FoodDiaryEntryDeletedEntryEvent -> repository.removeReferences(event.diaryEntryId)
 
             else -> Unit
         }

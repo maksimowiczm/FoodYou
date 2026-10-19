@@ -9,8 +9,8 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateSer
 import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntry
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
@@ -137,7 +137,7 @@ class UpdateFoodDiaryEntryViewModel(
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Update { current ->
+                    FoodDiaryEntryCommand.Update { current ->
                         current.copy(
                             profileIds = state.selectedProfileIds.toSet(),
                             snapshot = newSnapshot(current),

@@ -1,22 +1,22 @@
 package com.maksimowiczm.foodyou.features.home.integration
 
 import com.maksimowiczm.foodyou.common.event.EventHandler
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryAnonymizedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealLinkedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealUnlinkedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryProfileIdsChangedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntrySnapshotChangedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryTimestampChangedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryAnonymizedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealLinkedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealUnlinkedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryProfileIdsChangedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntrySnapshotChangedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryTimestampChangedEntryEvent
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEvent> {
-    override suspend fun handle(event: FoodDiaryEvent) {
+class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEntryEvent> {
+    override suspend fun handle(event: FoodDiaryEntryEvent) {
         when (event) {
-            is FoodDiaryEntryCreatedEvent -> {
+            is FoodDiaryEntryCreatedEntryEvent -> {
                 val dt = event.entryTimestamp.toLocalDateTime(TimeZone.currentSystemDefault())
                 homeDao.replaceEntries(
                     entryId = event.diaryEntryId.id,
@@ -28,25 +28,27 @@ class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEvent
                                 mealId = event.mealId.value,
                                 date = dt.date,
                                 time = dt.time,
-                                snapshot = event.snapshot,
+                                payload = HomeEntryPayload.FoodDiaryEntry(event.snapshot),
                             )
                         },
                 )
             }
 
-            is FoodDiaryEntryProfileIdsChangedEvent ->
+            is FoodDiaryEntryProfileIdsChangedEntryEvent ->
                 homeDao.replaceProfiles(
                     entryId = event.diaryEntryId.id,
                     profileIds = event.profileIds.map { it.value }.toSet(),
                 )
 
-            is FoodDiaryEntrySnapshotChangedEvent ->
-                homeDao.updateSnapshot(
-                    entryId = event.diaryEntryId.id,
-                    snapshot = event.snapshot,
-                )
+            is FoodDiaryEntrySnapshotChangedEntryEvent ->
+                homeDao.updateEach(event.diaryEntryId.id) { entity ->
+                    val payload =
+                        entity.payload as? HomeEntryPayload.FoodDiaryEntry
+                            ?: return@updateEach entity
+                    entity.copy(payload = payload.copy(snapshot = event.snapshot))
+                }
 
-            is FoodDiaryEntryTimestampChangedEvent -> {
+            is FoodDiaryEntryTimestampChangedEntryEvent -> {
                 val dt = event.entryTimestamp.toLocalDateTime(TimeZone.currentSystemDefault())
                 homeDao.updateTimestamp(
                     entryId = event.diaryEntryId.id,
@@ -55,20 +57,23 @@ class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEvent
                 )
             }
 
-            is FoodDiaryEntryMealLinkedEvent ->
+            is FoodDiaryEntryMealLinkedEntryEvent ->
                 homeDao.updateMealId(
                     entryId = event.diaryEntryId.id,
                     mealId = event.mealId.value,
                 )
 
-            is FoodDiaryEntryMealUnlinkedEvent -> homeDao.clearMealId(event.diaryEntryId.id)
+            is FoodDiaryEntryMealUnlinkedEntryEvent -> homeDao.clearMealId(event.diaryEntryId.id)
 
-            is FoodDiaryEntryAnonymizedEvent ->
-                homeDao.updateEach(event.diaryEntryId.id) {
-                    it.copy(snapshot = it.snapshot.anonymize())
+            is FoodDiaryEntryAnonymizedEntryEvent ->
+                homeDao.updateEach(event.diaryEntryId.id) { entity ->
+                    val payload =
+                        entity.payload as? HomeEntryPayload.FoodDiaryEntry
+                            ?: return@updateEach entity
+                    entity.copy(payload = payload.copy(snapshot = payload.snapshot.anonymize()))
                 }
 
-            is FoodDiaryEntryDeletedEvent -> homeDao.delete(event.diaryEntryId.id)
+            is FoodDiaryEntryDeletedEntryEvent -> homeDao.delete(event.diaryEntryId.id)
         }
     }
 }

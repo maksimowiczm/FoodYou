@@ -1,29 +1,30 @@
 package com.maksimowiczm.foodyou.fooddiary.application
 
 import com.maksimowiczm.foodyou.common.event.EventHandler
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryAnonymizedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealLinkedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealUnlinkedEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEvent
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryMealRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryAnonymizedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealLinkedEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealUnlinkedEntryEvent
 
-class FoodDiaryMealSynchronizer(private val repository: FoodDiaryMealRepository) :
-    EventHandler<FoodDiaryEvent> {
-    override suspend fun handle(event: FoodDiaryEvent) {
+class FoodDiaryMealSynchronizer(private val repository: FoodDiaryEntryMealRepository) :
+    EventHandler<FoodDiaryEntryEvent> {
+    override suspend fun handle(event: FoodDiaryEntryEvent) {
         when (event) {
-            is FoodDiaryEntryCreatedEvent ->
+            is FoodDiaryEntryCreatedEntryEvent ->
                 repository.saveReference(event.diaryEntryId, event.mealId)
 
-            is FoodDiaryEntryMealLinkedEvent ->
+            is FoodDiaryEntryMealLinkedEntryEvent ->
                 repository.saveReference(event.diaryEntryId, event.mealId)
 
-            is FoodDiaryEntryMealUnlinkedEvent -> repository.removeReference(event.diaryEntryId)
+            is FoodDiaryEntryMealUnlinkedEntryEvent ->
+                repository.removeReference(event.diaryEntryId)
 
-            is FoodDiaryEntryAnonymizedEvent -> repository.removeReference(event.diaryEntryId)
+            is FoodDiaryEntryAnonymizedEntryEvent -> repository.removeReference(event.diaryEntryId)
 
-            is FoodDiaryEntryDeletedEvent -> repository.removeReference(event.diaryEntryId)
+            is FoodDiaryEntryDeletedEntryEvent -> repository.removeReference(event.diaryEntryId)
 
             else -> Unit
         }

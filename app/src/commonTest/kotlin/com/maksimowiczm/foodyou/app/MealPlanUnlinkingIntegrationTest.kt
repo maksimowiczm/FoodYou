@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.fooddiary.application.FoodDiaryService
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCommand
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCommand
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.Meal
@@ -58,7 +58,7 @@ class MealPlanUnlinkingIntegrationTest {
             foodDiaryService.handle(
                 id = entryId,
                 command =
-                    FoodDiaryCommand.Create(
+                    FoodDiaryEntryCommand.Create(
                         id = entryId,
                         profileIds = setOf(profileId),
                         snapshot = composition,

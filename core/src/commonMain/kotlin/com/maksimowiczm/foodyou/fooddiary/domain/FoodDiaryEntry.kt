@@ -22,12 +22,12 @@ data class FoodDiaryEntry(
     val mealId: MealId?,
 )
 
-fun FoodDiaryEntry?.decide(command: FoodDiaryCommand): List<FoodDiaryEvent> =
+fun FoodDiaryEntry?.decide(command: FoodDiaryEntryCommand): List<FoodDiaryEntryEvent> =
     when (command) {
-        is FoodDiaryCommand.Create ->
+        is FoodDiaryEntryCommand.Create ->
             if (this == null) {
                 listOf(
-                    FoodDiaryEntryCreatedEvent(
+                    FoodDiaryEntryCreatedEntryEvent(
                         diaryEntryId = command.id,
                         profileIds = command.profileIds,
                         snapshot = command.snapshot,
@@ -39,16 +39,16 @@ fun FoodDiaryEntry?.decide(command: FoodDiaryCommand): List<FoodDiaryEvent> =
                 emptyList()
             }
 
-        is FoodDiaryCommand.Update ->
+        is FoodDiaryEntryCommand.Update ->
             this?.let { entry ->
                 val updated = command.transform(entry)
                 if (updated == null) {
-                    listOf(FoodDiaryEntryDeletedEvent(diaryEntryId = entry.id))
+                    listOf(FoodDiaryEntryDeletedEntryEvent(diaryEntryId = entry.id))
                 } else {
                     buildList {
                         if (updated.profileIds != entry.profileIds) {
                             add(
-                                FoodDiaryEntryProfileIdsChangedEvent(
+                                FoodDiaryEntryProfileIdsChangedEntryEvent(
                                     diaryEntryId = entry.id,
                                     profileIds = updated.profileIds,
                                 )
@@ -56,7 +56,7 @@ fun FoodDiaryEntry?.decide(command: FoodDiaryCommand): List<FoodDiaryEvent> =
                         }
                         if (updated.snapshot != entry.snapshot) {
                             add(
-                                FoodDiaryEntrySnapshotChangedEvent(
+                                FoodDiaryEntrySnapshotChangedEntryEvent(
                                     diaryEntryId = entry.id,
                                     snapshot = updated.snapshot,
                                 )
@@ -64,7 +64,7 @@ fun FoodDiaryEntry?.decide(command: FoodDiaryCommand): List<FoodDiaryEvent> =
                         }
                         if (updated.timestamp != entry.timestamp) {
                             add(
-                                FoodDiaryEntryTimestampChangedEvent(
+                                FoodDiaryEntryTimestampChangedEntryEvent(
                                     diaryEntryId = entry.id,
                                     entryTimestamp = updated.timestamp,
                                 )
@@ -73,38 +73,38 @@ fun FoodDiaryEntry?.decide(command: FoodDiaryCommand): List<FoodDiaryEvent> =
                         if (updated.mealId != entry.mealId) {
                             if (updated.mealId != null) {
                                 add(
-                                    FoodDiaryEntryMealLinkedEvent(
+                                    FoodDiaryEntryMealLinkedEntryEvent(
                                         diaryEntryId = entry.id,
                                         mealId = updated.mealId,
                                     )
                                 )
                             } else {
-                                add(FoodDiaryEntryMealUnlinkedEvent(diaryEntryId = entry.id))
+                                add(FoodDiaryEntryMealUnlinkedEntryEvent(diaryEntryId = entry.id))
                             }
                         }
                     }
                 }
             } ?: emptyList()
 
-        is FoodDiaryCommand.Delete ->
+        is FoodDiaryEntryCommand.Delete ->
             this?.let { entry ->
-                listOf(FoodDiaryEntryDeletedEvent(diaryEntryId = entry.id))
+                listOf(FoodDiaryEntryDeletedEntryEvent(diaryEntryId = entry.id))
             } ?: emptyList()
 
-        is FoodDiaryCommand.Anonymize ->
+        is FoodDiaryEntryCommand.Anonymize ->
             this?.let { entry ->
-                listOf(FoodDiaryEntryAnonymizedEvent(diaryEntryId = entry.id))
+                listOf(FoodDiaryEntryAnonymizedEntryEvent(diaryEntryId = entry.id))
             } ?: emptyList()
 
-        is FoodDiaryCommand.UnlinkFromMeal ->
+        is FoodDiaryEntryCommand.UnlinkFromMeal ->
             this?.let { entry ->
-                listOf(FoodDiaryEntryMealUnlinkedEvent(diaryEntryId = entry.id))
+                listOf(FoodDiaryEntryMealUnlinkedEntryEvent(diaryEntryId = entry.id))
             } ?: emptyList()
     }
 
-fun FoodDiaryEntry?.apply(event: FoodDiaryEvent): FoodDiaryEntry? =
+fun FoodDiaryEntry?.apply(event: FoodDiaryEntryEvent): FoodDiaryEntry? =
     when (event) {
-        is FoodDiaryEntryCreatedEvent ->
+        is FoodDiaryEntryCreatedEntryEvent ->
             FoodDiaryEntry(
                 id = event.diaryEntryId,
                 profileIds = event.profileIds,
@@ -113,26 +113,26 @@ fun FoodDiaryEntry?.apply(event: FoodDiaryEvent): FoodDiaryEntry? =
                 mealId = event.mealId,
             )
 
-        is FoodDiaryEntryProfileIdsChangedEvent -> this?.copy(profileIds = event.profileIds)
+        is FoodDiaryEntryProfileIdsChangedEntryEvent -> this?.copy(profileIds = event.profileIds)
 
-        is FoodDiaryEntrySnapshotChangedEvent -> this?.copy(snapshot = event.snapshot)
+        is FoodDiaryEntrySnapshotChangedEntryEvent -> this?.copy(snapshot = event.snapshot)
 
-        is FoodDiaryEntryTimestampChangedEvent -> this?.copy(timestamp = event.entryTimestamp)
+        is FoodDiaryEntryTimestampChangedEntryEvent -> this?.copy(timestamp = event.entryTimestamp)
 
-        is FoodDiaryEntryMealLinkedEvent -> this?.copy(mealId = event.mealId)
+        is FoodDiaryEntryMealLinkedEntryEvent -> this?.copy(mealId = event.mealId)
 
-        is FoodDiaryEntryMealUnlinkedEvent -> this?.copy(mealId = null)
+        is FoodDiaryEntryMealUnlinkedEntryEvent -> this?.copy(mealId = null)
 
-        is FoodDiaryEntryAnonymizedEvent -> null
+        is FoodDiaryEntryAnonymizedEntryEvent -> null
 
-        is FoodDiaryEntryDeletedEvent -> null
+        is FoodDiaryEntryDeletedEntryEvent -> null
     }
 
-fun Iterable<FoodDiaryEvent>.toFoodDiaryEntry(): FoodDiaryEntry? =
+fun Iterable<FoodDiaryEntryEvent>.toFoodDiaryEntry(): FoodDiaryEntry? =
     fold(null) { state, event -> state.apply(event) }
 
 val foodDiaryDecider =
-    Decider<FoodDiaryCommand, FoodDiaryEvent, FoodDiaryEntry?>(
+    Decider<FoodDiaryEntryCommand, FoodDiaryEntryEvent, FoodDiaryEntry?>(
         decide = { command, state -> state.decide(command) },
         evolve = { state, event -> state.apply(event) },
         initialState = null,

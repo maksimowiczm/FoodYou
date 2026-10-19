@@ -1,11 +1,12 @@
 package com.maksimowiczm.foodyou.fooddiary.infrastructure.room
 
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryCompositionRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCompositionRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 
-internal class RoomFoodDiaryCompositionRepository(private val dao: FoodDiaryCompositionDao) :
-    FoodDiaryCompositionRepository {
+internal class RoomFoodDiaryEntryCompositionRepository(
+    private val dao: FoodDiaryEntryCompositionDao
+) : FoodDiaryEntryCompositionRepository {
     override suspend fun findEntriesUsing(id: FoodSnapshotId.Tracked): List<FoodDiaryEntryId> {
         return dao.findEntriesBySnapshotId(id).map(::FoodDiaryEntryId)
     }

@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.fooddiary.infrastructure.room
 
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
-import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryMealRepository
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealRepository
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 
-internal class RoomFoodDiaryMealRepository(private val dao: FoodDiaryMealDao) :
-    FoodDiaryMealRepository {
+internal class RoomFoodDiaryEntryMealRepository(private val dao: FoodDiaryEntryMealDao) :
+    FoodDiaryEntryMealRepository {
     override suspend fun findEntriesUsing(mealId: MealId): List<FoodDiaryEntryId> {
         return dao.findEntriesByMeal(mealId.value).map(::FoodDiaryEntryId)
     }
