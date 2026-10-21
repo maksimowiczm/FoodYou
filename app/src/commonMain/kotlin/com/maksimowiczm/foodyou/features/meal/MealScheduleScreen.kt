@@ -94,6 +94,7 @@ import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.shared.ui.InteractionShapes
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.DiscardChangesDialog
+import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.now
@@ -127,26 +128,26 @@ fun MealScheduleScreen(
         }
     }
 
-    if (meals == null) return
-
-    MealScheduleScreen(
-        onBack = onBack,
-        onSave = { updatedStates ->
-            val newMeals =
-                updatedStates
-                    .filterNot { it.isDeleted }
-                    .map { state ->
-                        Meal(
-                            id = state.id,
-                            name = state.formField.textFieldState.text.toString(),
-                            timeWindow = state.timeState.toTimeWindow(),
-                        )
-                    }
-            viewModel.update(newMeals)
-        },
-        initialMeals = meals,
-        modifier = modifier,
-    )
+    if (meals == null) LoadingScreen(onBack)
+    else
+        MealScheduleScreen(
+            onBack = onBack,
+            onSave = { updatedStates ->
+                val newMeals =
+                    updatedStates
+                        .filterNot { it.isDeleted }
+                        .map { state ->
+                            Meal(
+                                id = state.id,
+                                name = state.formField.textFieldState.text.toString(),
+                                timeWindow = state.timeState.toTimeWindow(),
+                            )
+                        }
+                viewModel.update(newMeals)
+            },
+            initialMeals = meals,
+            modifier = modifier,
+        )
 }
 
 @Composable
