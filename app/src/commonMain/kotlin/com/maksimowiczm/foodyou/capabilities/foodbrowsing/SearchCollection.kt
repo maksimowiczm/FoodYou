@@ -200,7 +200,7 @@ sealed interface SearchCollection {
                         onClick = { expanded = true },
                         label = {
                             if (dataTypes.isEmpty()) {
-                                Text("Data type")
+                                Text(stringResource(Res.string.headline_data_type))
                             } else {
                                 val text =
                                     remember(dataTypes) {
@@ -231,5 +231,6 @@ private fun OpenFoodFactsSearchParameters.OpenFoodFactsVersion.stringResource() 
     when (this) {
         OpenFoodFactsSearchParameters.OpenFoodFactsVersion.ApiV1 ->
             stringResource(Res.string.openfoodfacts_version_legacy)
-        OpenFoodFactsSearchParameters.OpenFoodFactsVersion.SearchALicious -> "Search-a-licious"
+        OpenFoodFactsSearchParameters.OpenFoodFactsVersion.SearchALicious ->
+            stringResource(Res.string.openfoodfacts_version_search_a_licious)
     }
