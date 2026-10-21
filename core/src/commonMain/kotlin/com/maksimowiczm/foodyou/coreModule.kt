@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.common.common
 import com.maksimowiczm.foodyou.common.event.inMemoryEventBus
 import com.maksimowiczm.foodyou.fooddatacentral.foodDataCentral
 import com.maksimowiczm.foodyou.fooddiary.foodDiary
-import com.maksimowiczm.foodyou.foodyou3.foodYou3
 import com.maksimowiczm.foodyou.mealplan.mealPlan
 import com.maksimowiczm.foodyou.openfoodfacts.openFoodFacts
 import com.maksimowiczm.foodyou.preferences.preferences
@@ -22,7 +21,6 @@ val coreModule = module {
     inMemoryEventBus()
     foodDataCentral()
     foodDiary()
-    foodYou3()
     mealPlan()
     openFoodFacts()
     preferences()
