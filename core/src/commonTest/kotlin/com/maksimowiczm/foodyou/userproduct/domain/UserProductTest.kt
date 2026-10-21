@@ -71,6 +71,15 @@ class UserProductTest {
     }
 
     @Test
+    fun importFoodYou3_returns_imported_event() {
+        val events = (null as UserProduct?).decide(UserProductCommand.ImportFoodYou3(userProduct))
+
+        assertEquals(1, events.size)
+        val event = assertIs<UserProductImportedFoodYou3Event>(events[0])
+        assertEquals(userProduct, event.product)
+    }
+
+    @Test
     fun update_returns_updated_event_when_changed() {
         val updatedName = FoodName(fallback = "Banana")
 
@@ -100,6 +109,13 @@ class UserProductTest {
     @Test
     fun apply_created_event() {
         val event = UserProductCreatedEvent(userProduct)
+        val result = null.apply(event)
+        assertEquals(userProduct, result)
+    }
+
+    @Test
+    fun apply_imported_event() {
+        val event = UserProductImportedFoodYou3Event(userProduct)
         val result = null.apply(event)
         assertEquals(userProduct, result)
     }

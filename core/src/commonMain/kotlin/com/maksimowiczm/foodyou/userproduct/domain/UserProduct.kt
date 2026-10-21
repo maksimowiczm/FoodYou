@@ -60,6 +60,10 @@ fun UserProduct?.decide(command: UserProductCommand): List<UserProductEvent> =
                 emptyList()
             }
 
+        is UserProductCommand.ImportFoodYou3 ->
+            if (this == null) listOf(UserProductImportedFoodYou3Event(product = command.product))
+            else emptyList()
+
         is UserProductCommand.Update ->
             if (this != null) {
                 val updated = command.transform(this)
@@ -88,6 +92,7 @@ fun UserProduct?.decide(command: UserProductCommand): List<UserProductEvent> =
 fun UserProduct?.apply(event: UserProductEvent): UserProduct? =
     when (event) {
         is UserProductCreatedEvent -> event.product
+        is UserProductImportedFoodYou3Event -> event.product
         is UserProductUpdatedEvent -> event.product
         is UserProductDeletedEvent -> null
     }

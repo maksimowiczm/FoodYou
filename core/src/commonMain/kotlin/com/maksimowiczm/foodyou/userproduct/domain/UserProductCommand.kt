@@ -5,6 +5,8 @@ import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 sealed interface UserProductCommand {
     data class Create(val product: UserProduct) : UserProductCommand
 
+    data class ImportFoodYou3(val product: UserProduct) : UserProductCommand
+
     data class Update(val transform: (UserProduct) -> UserProduct) : UserProductCommand
 
     data class Remove(val strategy: DeleteStrategy) : UserProductCommand

@@ -38,6 +38,9 @@ import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductCommand
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCommand
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -977,6 +980,62 @@ class FoodDiaryIntegrationTest {
 
     private val Koin.userRecipeService: UserRecipeService
         get() = get()
+
+    private suspend fun UserRecipeService.create(
+        name: FoodName,
+        note: String?,
+        image: com.maksimowiczm.foodyou.common.domain.BlobDigest?,
+        servings: Double,
+        components: List<MeasuredFoodSnapshot>,
+    ): UserRecipeId {
+        val id = UserRecipeId()
+        handle(
+            id,
+            UserRecipeCommand.Create(
+                UserRecipe(
+                    id = id,
+                    name = name,
+                    note = note,
+                    image = image,
+                    servings = servings,
+                    components = components,
+                )
+            ),
+        )
+        return id
+    }
+
+    private suspend fun UserRecipeService.edit(
+        id: UserRecipeId,
+        name: FoodName,
+        note: String?,
+        image: com.maksimowiczm.foodyou.common.domain.BlobDigest?,
+        servings: Double,
+        components: List<MeasuredFoodSnapshot>,
+    ) {
+        handle(
+            id,
+            UserRecipeCommand.Update {
+                it.copy(
+                    name = name,
+                    note = note,
+                    image = image,
+                    servings = servings,
+                    components = components,
+                )
+            },
+        )
+    }
+
+    private suspend fun UserRecipeService.delete(
+        id: UserRecipeId,
+        strategy: DeleteStrategy,
+    ) {
+        handle(
+            id,
+            UserRecipeCommand.Remove(strategy),
+        )
+    }
 
     private val Koin.userProductService: UserProductService
         get() = get()

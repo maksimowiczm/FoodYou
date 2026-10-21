@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductCreatedEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductDeletedEvent
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductEvent
+import com.maksimowiczm.foodyou.userproduct.domain.UserProductImportedFoodYou3Event
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductUpdatedEvent
 import com.maksimowiczm.foodyou.userproduct.domain.toSnapshot
 
@@ -14,6 +15,8 @@ class UserProductSynchronizer(private val userRecipeService: UserRecipeService) 
     override suspend fun handle(event: UserProductEvent) {
         when (event) {
             is UserProductCreatedEvent -> Unit
+
+            is UserProductImportedFoodYou3Event -> Unit
 
             is UserProductUpdatedEvent ->
                 userRecipeService.updateRecipesUsing(

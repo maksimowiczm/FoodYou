@@ -5,11 +5,13 @@ import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryAnonymizedEntryEv
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryImportedFoodYou3Event
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealLinkedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealUnlinkedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryProfileIdsChangedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntrySnapshotChangedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryTimestampChangedEntryEvent
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -28,6 +30,23 @@ class HomeProjection(private val homeDao: HomeDao) : EventHandler<FoodDiaryEntry
                                 mealId = event.mealId.value,
                                 date = dt.date,
                                 time = dt.time,
+                                payload = HomeEntryPayload.FoodDiaryEntry(event.snapshot),
+                            )
+                        },
+                )
+            }
+
+            is FoodDiaryEntryImportedFoodYou3Event -> {
+                homeDao.replaceEntries(
+                    entryId = event.diaryEntryId.id,
+                    entities =
+                        event.profileIds.map {
+                            HomeEntryEntity(
+                                entryId = event.diaryEntryId.id,
+                                profileId = it.value,
+                                mealId = event.mealId?.value,
+                                date = event.entryDate,
+                                time = LocalTime(0, 0),
                                 payload = HomeEntryPayload.FoodDiaryEntry(event.snapshot),
                             )
                         },

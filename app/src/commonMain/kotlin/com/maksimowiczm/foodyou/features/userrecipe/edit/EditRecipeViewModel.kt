@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormState
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormTransformer
 import com.maksimowiczm.foodyou.features.userrecipe.RecipeFormUiState
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCommand
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,13 +45,18 @@ class EditRecipeViewModel(
             val (name, note, imageBytes, servings, components) =
                 recipeFormTransformer.transform(form, state)
 
-            recipeService.edit(
-                id = id,
-                name = name,
-                note = note,
-                image = imageBytes?.let { blobStorage.store(it) },
-                servings = servings,
-                components = components,
+            val image = imageBytes?.let { blobStorage.store(it) }
+            recipeService.handle(
+                id,
+                UserRecipeCommand.Update {
+                    it.copy(
+                        name = name,
+                        note = note,
+                        image = image,
+                        servings = servings,
+                        components = components,
+                    )
+                },
             )
 
             eventBus.send(EditRecipeEvent.Updated)

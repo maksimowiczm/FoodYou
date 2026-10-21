@@ -4,12 +4,14 @@ import com.maksimowiczm.foodyou.common.event.EventHandler
 import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryCreatedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryDeletedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryImportedFoodYou3Event
 import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryMealLinkedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryMealUnlinkedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryNameChangedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryNutritionFactsChangedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryProfileIdsChangedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryTimestampChangedEntryEvent
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -35,6 +37,27 @@ class QuickHomeProjection(private val homeDao: HomeDao) : EventHandler<QuickFood
                                     ),
                             )
                         },
+                )
+            }
+
+            is QuickFoodDiaryEntryImportedFoodYou3Event -> {
+                homeDao.replaceEntries(
+                    entryId = event.diaryEntryId.id,
+                    entities =
+                        listOf(
+                            HomeEntryEntity(
+                                entryId = event.diaryEntryId.id,
+                                profileId = event.profileId.value,
+                                mealId = event.mealId?.value,
+                                date = event.entryDate,
+                                time = LocalTime(0, 0),
+                                payload =
+                                    HomeEntryPayload.QuickAdd(
+                                        name = event.name,
+                                        nutritionFacts = event.nutritionFacts,
+                                    ),
+                            )
+                        ),
                 )
             }
 

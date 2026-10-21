@@ -8,6 +8,8 @@ import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.InstantComponentSerializer
 
@@ -49,12 +51,31 @@ fun QuickFoodDiaryEntry?.decide(
                 emptyList()
             }
 
+        is QuickFoodDiaryEntryCommand.ImportFoodYou3 ->
+            if (this == null) {
+                listOf(
+                    QuickFoodDiaryEntryImportedFoodYou3Event(
+                        diaryEntryId = command.id,
+                        profileId = command.profileId,
+                        name = command.name,
+                        nutritionFacts = command.nutritionFacts,
+                        mealId = command.mealId,
+                        entryDate = command.entryDate,
+                    )
+                )
+            } else {
+                emptyList()
+            }
+
         is QuickFoodDiaryEntryCommand.Update ->
             this?.let { entry ->
                 val updated = command.transform(entry)
                 if (updated == null)
                     listOf(QuickFoodDiaryEntryDeletedEntryEvent(diaryEntryId = entry.id))
-                else
+                else {
+                    require(updated.profileIds.isNotEmpty()) {
+                        "Quick food diary entry must have at least one profile"
+                    }
                     buildList {
                         if (updated.profileIds != entry.profileIds) {
                             add(
@@ -105,6 +126,7 @@ fun QuickFoodDiaryEntry?.decide(
                             }
                         }
                     }
+                }
             } ?: emptyList()
 
         is QuickFoodDiaryEntryCommand.LinkToMeal ->
@@ -121,11 +143,6 @@ fun QuickFoodDiaryEntry?.decide(
             this?.let { entry ->
                 listOf(QuickFoodDiaryEntryMealUnlinkedEntryEvent(diaryEntryId = entry.id))
             } ?: emptyList()
-
-        is QuickFoodDiaryEntryCommand.Delete ->
-            this?.let { entry ->
-                listOf(QuickFoodDiaryEntryDeletedEntryEvent(diaryEntryId = entry.id))
-            } ?: emptyList()
     }
 
 fun QuickFoodDiaryEntry?.apply(event: QuickFoodDiaryEntryEvent): QuickFoodDiaryEntry? =
@@ -137,6 +154,16 @@ fun QuickFoodDiaryEntry?.apply(event: QuickFoodDiaryEntryEvent): QuickFoodDiaryE
                 name = event.name,
                 nutritionFacts = event.nutritionFacts,
                 timestamp = event.entryTimestamp,
+                mealId = event.mealId,
+            )
+
+        is QuickFoodDiaryEntryImportedFoodYou3Event ->
+            QuickFoodDiaryEntry(
+                id = event.diaryEntryId,
+                profileIds = setOf(event.profileId),
+                name = event.name,
+                nutritionFacts = event.nutritionFacts,
+                timestamp = event.entryDate.atStartOfDayIn(TimeZone.currentSystemDefault()),
                 mealId = event.mealId,
             )
 

@@ -174,13 +174,13 @@ class HomeViewModel(
                 is HomeFoodState.Id.FoodDiary ->
                     foodDiaryService.handle(
                         id.value,
-                        FoodDiaryEntryCommand.Delete,
+                        FoodDiaryEntryCommand.Update { null },
                     )
 
                 is HomeFoodState.Id.QuickAdd ->
                     quickFoodDiaryService.handle(
                         id.value,
-                        QuickFoodDiaryEntryCommand.Delete,
+                        QuickFoodDiaryEntryCommand.Update { null },
                     )
             }
         }

@@ -8,6 +8,8 @@ import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.InstantComponentSerializer
 
@@ -26,6 +28,7 @@ fun FoodDiaryEntry?.decide(command: FoodDiaryEntryCommand): List<FoodDiaryEntryE
     when (command) {
         is FoodDiaryEntryCommand.Create ->
             if (this == null) {
+                require(command.profileIds.isNotEmpty()) { "Profile ids cannot be empty" }
                 listOf(
                     FoodDiaryEntryCreatedEntryEvent(
                         diaryEntryId = command.id,
@@ -39,12 +42,28 @@ fun FoodDiaryEntry?.decide(command: FoodDiaryEntryCommand): List<FoodDiaryEntryE
                 emptyList()
             }
 
+        is FoodDiaryEntryCommand.ImportFoodYou3 ->
+            if (this == null) {
+                listOf(
+                    FoodDiaryEntryImportedFoodYou3Event(
+                        diaryEntryId = command.id,
+                        profileIds = setOf(command.profileId),
+                        snapshot = command.snapshot,
+                        mealId = command.mealId,
+                        entryDate = command.entryDate,
+                    )
+                )
+            } else {
+                emptyList()
+            }
+
         is FoodDiaryEntryCommand.Update ->
             this?.let { entry ->
                 val updated = command.transform(entry)
                 if (updated == null) {
                     listOf(FoodDiaryEntryDeletedEntryEvent(diaryEntryId = entry.id))
                 } else {
+                    require(updated.profileIds.isNotEmpty()) { "Profile ids cannot be empty" }
                     buildList {
                         if (updated.profileIds != entry.profileIds) {
                             add(
@@ -86,11 +105,6 @@ fun FoodDiaryEntry?.decide(command: FoodDiaryEntryCommand): List<FoodDiaryEntryE
                 }
             } ?: emptyList()
 
-        is FoodDiaryEntryCommand.Delete ->
-            this?.let { entry ->
-                listOf(FoodDiaryEntryDeletedEntryEvent(diaryEntryId = entry.id))
-            } ?: emptyList()
-
         is FoodDiaryEntryCommand.Anonymize ->
             this?.let { entry ->
                 listOf(FoodDiaryEntryAnonymizedEntryEvent(diaryEntryId = entry.id))
@@ -110,6 +124,15 @@ fun FoodDiaryEntry?.apply(event: FoodDiaryEntryEvent): FoodDiaryEntry? =
                 profileIds = event.profileIds,
                 snapshot = event.snapshot,
                 timestamp = event.entryTimestamp,
+                mealId = event.mealId,
+            )
+
+        is FoodDiaryEntryImportedFoodYou3Event ->
+            FoodDiaryEntry(
+                id = event.diaryEntryId,
+                profileIds = event.profileIds,
+                snapshot = event.snapshot,
+                timestamp = event.entryDate.atStartOfDayIn(TimeZone.currentSystemDefault()),
                 mealId = event.mealId,
             )
 

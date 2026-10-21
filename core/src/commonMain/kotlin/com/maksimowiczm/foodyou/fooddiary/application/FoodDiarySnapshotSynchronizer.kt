@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCompositionReposi
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryImportedFoodYou3Event
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntrySnapshotChangedEntryEvent
 
 class FoodDiarySnapshotSynchronizer(private val repository: FoodDiaryEntryCompositionRepository) :
@@ -14,6 +15,12 @@ class FoodDiarySnapshotSynchronizer(private val repository: FoodDiaryEntryCompos
     override suspend fun handle(event: FoodDiaryEntryEvent) {
         when (event) {
             is FoodDiaryEntryCreatedEntryEvent ->
+                repository.saveReferences(
+                    event.diaryEntryId,
+                    event.snapshot.allIdentities.filterIsInstance<FoodSnapshotId.Tracked>().toSet(),
+                )
+
+            is FoodDiaryEntryImportedFoodYou3Event ->
                 repository.saveReferences(
                     event.diaryEntryId,
                     event.snapshot.allIdentities.filterIsInstance<FoodSnapshotId.Tracked>().toSet(),

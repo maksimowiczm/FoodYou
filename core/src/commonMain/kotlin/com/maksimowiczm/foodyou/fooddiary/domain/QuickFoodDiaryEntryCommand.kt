@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.common.domain.ProfileId
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import kotlin.time.Instant
+import kotlinx.datetime.LocalDate
 
 sealed interface QuickFoodDiaryEntryCommand {
     data class Create(
@@ -15,12 +16,19 @@ sealed interface QuickFoodDiaryEntryCommand {
         val entryTimestamp: Instant,
     ) : QuickFoodDiaryEntryCommand
 
+    data class ImportFoodYou3(
+        val id: QuickFoodDiaryEntryId,
+        val profileId: ProfileId,
+        val name: String,
+        val nutritionFacts: NutritionFacts,
+        val mealId: MealId?,
+        val entryDate: LocalDate,
+    ) : QuickFoodDiaryEntryCommand
+
     data class Update(val transform: (QuickFoodDiaryEntry) -> QuickFoodDiaryEntry?) :
         QuickFoodDiaryEntryCommand
 
     data class LinkToMeal(val mealId: MealId) : QuickFoodDiaryEntryCommand
 
     data object UnlinkFromMeal : QuickFoodDiaryEntryCommand
-
-    data object Delete : QuickFoodDiaryEntryCommand
 }

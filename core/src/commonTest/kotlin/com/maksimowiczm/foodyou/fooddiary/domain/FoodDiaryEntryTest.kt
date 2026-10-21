@@ -15,6 +15,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
+import kotlinx.datetime.LocalDate
 
 class FoodDiaryEntryTest {
     private val diaryEntryId = FoodDiaryEntryId()
@@ -69,6 +70,29 @@ class FoodDiaryEntryTest {
         assertEquals(measuredSnapshot, event.snapshot)
         assertEquals(mealId, event.mealId)
         assertEquals(timestamp, event.entryTimestamp)
+    }
+
+    @Test
+    fun importFoodYou3_returns_imported_event() {
+        val entryEpochDay = LocalDate(2026, 9, 21)
+        val events =
+            (null as FoodDiaryEntry?).decide(
+                FoodDiaryEntryCommand.ImportFoodYou3(
+                    id = diaryEntryId,
+                    profileId = profileId,
+                    snapshot = measuredSnapshot,
+                    mealId = mealId,
+                    entryDate = entryEpochDay,
+                )
+            )
+
+        assertEquals(1, events.size)
+        val event = assertIs<FoodDiaryEntryImportedFoodYou3Event>(events[0])
+        assertEquals(diaryEntryId, event.diaryEntryId)
+        assertEquals(setOf(profileId), event.profileIds)
+        assertEquals(measuredSnapshot, event.snapshot)
+        assertEquals(mealId, event.mealId)
+        assertEquals(entryEpochDay, event.entryDate)
     }
 
     @Test
@@ -147,20 +171,7 @@ class FoodDiaryEntryTest {
     }
 
     @Test
-    fun delete_returns_deleted_event() {
-        val now = Instant.fromEpochSeconds(5000)
-
-        val events = entry.decide(FoodDiaryEntryCommand.Delete)
-
-        assertEquals(1, events.size)
-        val event = assertIs<FoodDiaryEntryDeletedEntryEvent>(events[0])
-        assertEquals(diaryEntryId, event.diaryEntryId)
-    }
-
-    @Test
     fun anonymize_returns_anonymized_event() {
-        val now = Instant.fromEpochSeconds(5100)
-
         val events = entry.decide(FoodDiaryEntryCommand.Anonymize)
 
         assertEquals(1, events.size)
@@ -170,8 +181,6 @@ class FoodDiaryEntryTest {
 
     @Test
     fun unlinkFromMeal_returns_unlinked_event() {
-        val now = Instant.fromEpochSeconds(5500)
-
         val events = entryWithMeal.decide(FoodDiaryEntryCommand.UnlinkFromMeal)
 
         assertEquals(1, events.size)

@@ -15,6 +15,7 @@ import com.maksimowiczm.foodyou.common.domain.food.QuantityType
 import com.maksimowiczm.foodyou.common.domain.food.toQuantity
 import com.maksimowiczm.foodyou.common.getOrNull
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
+import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeCommand
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -121,7 +122,7 @@ class UserRecipeDetailsViewModel(
 
     fun delete() {
         viewModelScope.launch {
-            userRecipeService.delete(id, DeleteStrategy.Delete)
+            userRecipeService.handle(id, UserRecipeCommand.Remove(DeleteStrategy.Delete))
             eventChannel.send(UserRecipeDetailsUiEvent.Deleted)
         }
     }

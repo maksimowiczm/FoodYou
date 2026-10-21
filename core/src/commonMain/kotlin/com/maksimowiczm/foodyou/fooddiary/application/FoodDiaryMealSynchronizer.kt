@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryAnonymizedEntryEv
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryCreatedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryDeletedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryEvent
+import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryImportedFoodYou3Event
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealLinkedEntryEvent
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealRepository
 import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryMealUnlinkedEntryEvent
@@ -18,6 +19,11 @@ class FoodDiaryMealSynchronizer(private val repository: FoodDiaryEntryMealReposi
 
             is FoodDiaryEntryMealLinkedEntryEvent ->
                 repository.saveReference(event.diaryEntryId, event.mealId)
+
+            is FoodDiaryEntryImportedFoodYou3Event ->
+                if (event.mealId != null) {
+                    repository.saveReference(event.diaryEntryId, event.mealId)
+                }
 
             is FoodDiaryEntryMealUnlinkedEntryEvent ->
                 repository.removeReference(event.diaryEntryId)

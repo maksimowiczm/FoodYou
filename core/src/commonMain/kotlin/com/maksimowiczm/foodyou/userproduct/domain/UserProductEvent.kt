@@ -8,6 +8,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable data class UserProductCreatedEvent(val product: UserProduct) : UserProductEvent
 
+@Serializable
+data class UserProductImportedFoodYou3Event(val product: UserProduct) : UserProductEvent
+
 @Serializable data class UserProductUpdatedEvent(val product: UserProduct) : UserProductEvent
 
 @Serializable

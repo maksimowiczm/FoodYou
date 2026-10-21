@@ -1,13 +1,9 @@
 package com.maksimowiczm.foodyou.userrecipe.application
 
-import com.maksimowiczm.foodyou.common.domain.BlobDigest
-import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
-import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotQuantityUpdateService
 import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotUpdateService
-import com.maksimowiczm.foodyou.common.domain.food.MeasuredFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.TrackedFoodSnapshot
 import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.event.EventStore
@@ -39,60 +35,16 @@ class UserRecipeService(
             eventStore + eventNotifier.asEventSink(),
         )
 
-    private fun streamId(id: UserRecipeId) = "UserRecipe-${id.value}"
+    private fun stream(id: UserRecipeId) = "UserRecipe-${id.value}"
 
     fun observe(id: UserRecipeId): Flow<UserRecipe?> =
-        eventStore.observe<UserRecipeEvent>(streamId(id)).map { it.toUserRecipe() }
+        eventStore.observe<UserRecipeEvent>(stream(id)).map { it.toUserRecipe() }
 
     fun observeAncestors(id: UserRecipeId): Flow<Set<UserRecipeId>> =
         compositionRepository.observeAncestors(id)
 
-    suspend fun create(
-        name: FoodName,
-        note: String?,
-        image: BlobDigest?,
-        servings: Double,
-        components: List<MeasuredFoodSnapshot>,
-    ): UserRecipeId {
-        val id = UserRecipeId()
-        val recipe =
-            UserRecipe(
-                id = id,
-                name = name,
-                note = note,
-                image = image,
-                servings = servings,
-                components = components,
-            )
-        val command = UserRecipeCommand.Create(recipe = recipe)
-        val _ = commandHandler(streamId(id), command)
-
-        return id
-    }
-
-    suspend fun edit(
-        id: UserRecipeId,
-        name: FoodName,
-        note: String?,
-        image: BlobDigest?,
-        servings: Double,
-        components: List<MeasuredFoodSnapshot>,
-    ) {
-        val command = UserRecipeCommand.Update { recipe ->
-            recipe.copy(
-                name = name,
-                note = note,
-                image = image,
-                servings = servings,
-                components = components,
-            )
-        }
-        val _ = commandHandler(streamId(id), command)
-    }
-
-    suspend fun delete(id: UserRecipeId, strategy: DeleteStrategy) {
-        val command = UserRecipeCommand.Remove(strategy = strategy)
-        val _ = commandHandler(streamId(id), command)
+    suspend fun handle(id: UserRecipeId, command: UserRecipeCommand) {
+        val _ = commandHandler(stream(id), command)
     }
 
     /**
@@ -129,7 +81,7 @@ class UserRecipeService(
                                 )
                         )
                     }
-                    val _ = commandHandler(streamId(id), command)
+                    handle(id, command)
                 }
             }
             .awaitAll()
@@ -145,7 +97,7 @@ class UserRecipeService(
                             FoodSnapshotUpdateService.remove(recipe.components, id)
                         recipe.copy(components = updatedComposition)
                     }
-                    val _ = commandHandler(streamId(recipeId), command)
+                    handle(recipeId, command)
                 }
             }
             .awaitAll()
@@ -161,7 +113,7 @@ class UserRecipeService(
                             FoodSnapshotUpdateService.unlink(recipe.components, snapshotId)
                         recipe.copy(components = updatedComposition)
                     }
-                    val _ = commandHandler(streamId(id), command)
+                    handle(id, command)
                 }
             }
             .awaitAll()
