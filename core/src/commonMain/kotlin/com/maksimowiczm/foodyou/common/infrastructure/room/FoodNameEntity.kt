@@ -23,29 +23,5 @@ data class FoodNameEntity(
     @ColumnInfo(name = "uk") val ukrainian: String? = null,
     @ColumnInfo(name = "ar") val arabic: String? = null,
     @ColumnInfo(name = "zh-CN") val chineseSimplified: String? = null,
-) {
-    val fallback: String
-        get() =
-            listOfNotNull(
-                    english,
-                    czech,
-                    catalan,
-                    danish,
-                    german,
-                    spanish,
-                    french,
-                    indonesian,
-                    italian,
-                    hungarian,
-                    dutch,
-                    polish,
-                    portugueseBrazil,
-                    slovenian,
-                    turkish,
-                    russian,
-                    ukrainian,
-                    arabic,
-                    chineseSimplified,
-                )
-                .first()
-}
+    @ColumnInfo(name = "fallback") val fallback: String,
+)

@@ -24,6 +24,7 @@ object FoodNameMapper {
             ukrainian = name.ukrainian,
             arabic = name.arabic,
             chineseSimplified = name.chineseSimplified,
+            fallback = name.fallback,
         )
 
     fun toFoodName(name: FoodNameEntity) =

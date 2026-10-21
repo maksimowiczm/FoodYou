@@ -144,8 +144,9 @@ COALESCE(
         WHEN 'uk-UA' THEN s.name_uk
         WHEN 'ar-SA' THEN s.name_ar
         WHEN 'zh-CN' THEN s.`name_zh-CN`
-        ELSE s.name_en
+        ELSE s.name_fallback
     END,
+    s.name_fallback,
     s.name_en,
     s.name_ca,
     s.name_cs,
