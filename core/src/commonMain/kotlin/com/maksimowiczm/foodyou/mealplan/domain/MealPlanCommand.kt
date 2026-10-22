@@ -8,5 +8,7 @@ sealed interface MealPlanCommand {
         val meals: List<Meal>,
     ) : MealPlanCommand
 
+    data class ImportFoodYou3(val meals: List<Meal>) : MealPlanCommand
+
     data class UpdateMeals(val meals: List<Meal>) : MealPlanCommand
 }

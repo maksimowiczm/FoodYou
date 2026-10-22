@@ -74,6 +74,7 @@ kotlin {
             implementation(libs.androidx.paging.compose)
             implementation(libs.androidx.room.paging)
             implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
             implementation(libs.calvin.reorderable)
             implementation(libs.coil.compose)
             implementation(libs.coil.networkKtor3)

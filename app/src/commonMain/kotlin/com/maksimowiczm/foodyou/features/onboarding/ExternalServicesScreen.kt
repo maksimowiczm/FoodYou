@@ -10,7 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.LargeFlexibleTopAppBar
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -29,7 +28,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun FoodDatabaseScreen(
+internal fun ExternalServicesScreen(
     state: OnboardingState,
     onBack: () -> Unit,
     onContinue: () -> Unit,
@@ -46,7 +45,10 @@ internal fun FoodDatabaseScreen(
         modifier = modifier,
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(stringResource(Res.string.headline_food_database)) },
+                title = { Text(stringResource(Res.string.headline_external_services)) },
+                subtitle = {
+                    Text(stringResource(Res.string.description_external_services))
+                },
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 scrollBehavior = scrollBehavior,
             )
@@ -60,7 +62,10 @@ internal fun FoodDatabaseScreen(
                 contentPadding = ButtonDefaults.contentPaddingFor(fabHeight),
             ) {
                 Text(
-                    text = stringResource(Res.string.action_agree_and_continue),
+                    text =
+                        if (state.allowOpenFoodFacts || state.allowFoodDataCentral)
+                            stringResource(Res.string.action_agree_and_continue)
+                        else stringResource(Res.string.action_continue),
                     style = ButtonDefaults.textStyleFor(fabHeight),
                 )
             }
@@ -73,12 +78,6 @@ internal fun FoodDatabaseScreen(
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues.add(vertical = 8.dp).add(bottom = fabHeight + 16.dp),
         ) {
-            item {
-                Text(
-                    text = stringResource(Res.string.description_food_database),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 OpenFoodFactsPrivacyCard(
@@ -105,9 +104,9 @@ internal fun FoodDatabaseScreen(
 
 @Preview
 @Composable
-private fun FoodDatabaseScreenPreview() {
+private fun ExternalServicesScreenPreview() {
     PreviewFoodYouTheme {
-        FoodDatabaseScreen(
+        ExternalServicesScreen(
             state = rememberOnboardingState(),
             onBack = {},
             onContinue = {},

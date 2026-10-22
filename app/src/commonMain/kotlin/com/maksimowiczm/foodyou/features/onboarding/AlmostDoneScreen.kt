@@ -28,7 +28,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun AlmostDoneScreen(modifier: Modifier = Modifier) {
+internal fun AlmostDoneScreen(progress: () -> Float, modifier: Modifier = Modifier) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
@@ -65,13 +65,9 @@ internal fun AlmostDoneScreen(modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
             )
-            LinearWavyProgressIndicator(Modifier.fillMaxWidth())
-            Text(
-                text = stringResource(Res.string.headline_please_wait),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
+            LinearWavyProgressIndicator(
+                progress = progress,
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
@@ -80,5 +76,5 @@ internal fun AlmostDoneScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun AlmostDoneScreenPreview() {
-    PreviewFoodYouTheme { AlmostDoneScreen() }
+    PreviewFoodYouTheme { AlmostDoneScreen(progress = { 0.5f }) }
 }

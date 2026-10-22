@@ -8,6 +8,8 @@ import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.Language
+import com.maksimowiczm.foodyou.features.onboarding.dataimport.foodyou3.FoodYou3ImportState
+import com.maksimowiczm.foodyou.features.onboarding.dataimport.foodyou3.ImportFoodYou3DatabaseUseCase
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.MealPlanCommand
@@ -23,7 +25,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -38,9 +40,13 @@ internal class OnboardingViewModel(
     private val foodDataCentral: FoodDataCentralSettingsRepository,
     private val blobStorage: BlobStorage,
     private val mealPlanService: MealPlanService,
+    private val importFoodYou3: ImportFoodYou3DatabaseUseCase,
 ) : ViewModel() {
-    private val _finishingOnboarding = MutableStateFlow(false)
-    val finishingOnboarding = _finishingOnboarding.asStateFlow()
+    val finishingOnboarding: StateFlow<Boolean>
+        field = MutableStateFlow(false)
+
+    val progress: StateFlow<Float>
+        field = MutableStateFlow(0f)
 
     val isOpenFoodFactsSignedIn =
         openFoodFacts
@@ -65,46 +71,64 @@ internal class OnboardingViewModel(
         allowOpenFoodFacts: Boolean,
         allowFoodDataCentral: Boolean,
         language: Language,
+        importState: ImportState,
     ) {
         viewModelScope.launch {
-            _finishingOnboarding.value = true
+            finishingOnboarding.value = true
+            progress.value = 0f
 
-            val realTask = async {
-                val profileAvatar =
-                    when (avatar) {
-                        is UiProfileAvatar.Predefined -> Profile.Avatar.Predefined(avatar.variant)
-                        is UiProfileAvatar.Uri -> {
-                            val file = PlatformFile(avatar.uri.value)
-                            val digest = blobStorage.store(file.readBytes())
-                            Profile.Avatar.Photo(digest)
-                        }
+            val profileAvatar =
+                when (avatar) {
+                    is UiProfileAvatar.Predefined -> Profile.Avatar.Predefined(avatar.variant)
+                    is UiProfileAvatar.Uri -> {
+                        val file = PlatformFile(avatar.uri.value)
+                        val digest = blobStorage.store(file.readBytes())
+                        Profile.Avatar.Photo(digest)
                     }
+                }
 
-                val profile = Profile(name = name.trim(), avatar = profileAvatar)
+            val profile = Profile(name = name.trim(), avatar = profileAvatar)
+            progress.value = 0.1f
 
-                awaitAll(
-                    async {
-                        accountService.handle(AccountCommand.AddProfile(profile))
-                        accountManager.setAppProfileId(profile.id)
-                    },
-                    async { openFoodFacts.update { it.copy(remoteEnabled = allowOpenFoodFacts) } },
-                    async {
-                        foodDataCentral.update { it.copy(remoteEnabled = allowFoodDataCentral) }
-                    },
-                    async {
+            when (importState) {
+                ImportState.Skip -> {
+                    mealPlanService.handle(
+                        MealPlanCommand.Initialize(
+                            language = language,
+                            meals = MealTemplates.forLanguage(language),
+                        )
+                    )
+                    progress.value = 0.5f
+                }
+                is FoodYou3ImportState -> {
+                    importFoodYou3.import(importState, profile.id).collect { p ->
+                        progress.value = p * 0.8f
+                    }
+                    if (!importState.mealPlan)
                         mealPlanService.handle(
                             MealPlanCommand.Initialize(
                                 language = language,
                                 meals = MealTemplates.forLanguage(language),
                             )
                         )
-                    },
-                )
+                }
             }
-            val minDelayTask = async { delay(2_000.milliseconds) }
 
-            realTask.await()
-            minDelayTask.await()
+            progress.value = 0.85f
+
+            awaitAll(
+                async {
+                    accountService.handle(AccountCommand.AddProfile(profile))
+                    accountManager.setAppProfileId(profile.id)
+                },
+                async { openFoodFacts.update { it.copy(remoteEnabled = allowOpenFoodFacts) } },
+                async {
+                    foodDataCentral.update { it.copy(remoteEnabled = allowFoodDataCentral) }
+                },
+            )
+
+            progress.value = 1f
+            delay(500.milliseconds)
 
             eventBus.send(OnboardingEvent.Finished)
         }

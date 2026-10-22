@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.features.onboarding
 
 import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,6 +20,8 @@ import com.maksimowiczm.foodyou.app.navigation.ForwardBackwardTransition
 import com.maksimowiczm.foodyou.app.navigation.rememberPredictiveBackRoundedCornersDecorator
 import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.features.fooddatacentral.UpdateFoodDataCentralApiKeyDialog
+import com.maksimowiczm.foodyou.features.onboarding.dataimport.foodyou3.FoodYou3ImportState
+import com.maksimowiczm.foodyou.features.onboarding.dataimport.foodyou3.ImportFoodYou3Screen
 import com.maksimowiczm.foodyou.features.openfoodfacts.OpenFoodFactsLoginDialog
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
@@ -95,6 +98,7 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
                                 allowOpenFoodFacts = state.allowOpenFoodFacts,
                                 allowFoodDataCentral = state.allowFoodDataCentral,
                                 language = runBlocking { nameSelector.observeLanguage().first() },
+                                importState = state.importState,
                             )
                         },
                     )
@@ -104,15 +108,17 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
                         state = rememberNavigationEventState(NavigationEventInfo.None),
                         onBackCompleted = {},
                     )
-                    AlmostDoneScreen()
+                    val progress = viewModel.progress.collectAsStateWithLifecycle().value
+                    val animatedProgress = animateFloatAsState(progress)
+                    AlmostDoneScreen(progress = { animatedProgress.value })
                 }
                 entry<BeforeYouStart> {
-                    BeforeYouStartScreen(onContinue = { backstack.add(FoodDatabase) })
+                    BeforeYouStartScreen(onContinue = { backstack.add(RestoreBackup) })
                 }
-                entry<FoodDatabase> {
-                    FoodDatabaseScreen(
+                entry<ExternalServices> {
+                    ExternalServicesScreen(
                         state = state,
-                        onBack = { backstack.removeLastIf<FoodDatabase>() },
+                        onBack = { backstack.removeLastIf<ExternalServices>() },
                         onContinue = { backstack.add(AddProfile) },
                         onFoodDataCentralApiKey = { backstack.add(FoodDataCentralApiKey) },
                         isOpenFoodFactsSignedIn =
@@ -133,6 +139,29 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
                         onSave = { backstack.removeLastIf<OpenFoodFactsLogin>() },
                     )
                 }
+                entry<RestoreBackup> {
+                    RestoreBackupScreen(
+                        onBack = { backstack.removeLastIf<RestoreBackup>() },
+                        onSkip = {
+                            state.importState = ImportState.Skip
+                            backstack.add(ExternalServices)
+                        },
+                        onRestoreFoodYou3 = { path ->
+                            state.importState = FoodYou3ImportState(path = path)
+                            backstack.add(ImportFoodYou3)
+                        },
+                    )
+                }
+                entry<ImportFoodYou3> {
+                    ImportFoodYou3Screen(
+                        initialState = state.importState as? FoodYou3ImportState,
+                        onBack = { backstack.removeLastIf<ImportFoodYou3>() },
+                        onImport = { importState ->
+                            state.importState = importState
+                            backstack.add(ExternalServices)
+                        },
+                    )
+                }
             },
     )
 }
@@ -146,14 +175,18 @@ private val config = SavedStateConfiguration {
 
 @Serializable private sealed interface OnboardingNavKey : NavKey
 
-@Serializable private object AddProfile : OnboardingNavKey
+@Serializable private data object AddProfile : OnboardingNavKey
 
-@Serializable private object AlmostDone : OnboardingNavKey
+@Serializable private data object AlmostDone : OnboardingNavKey
 
-@Serializable private object BeforeYouStart : OnboardingNavKey
+@Serializable private data object BeforeYouStart : OnboardingNavKey
 
-@Serializable private object FoodDatabase : OnboardingNavKey
+@Serializable private data object ExternalServices : OnboardingNavKey
 
-@Serializable private object FoodDataCentralApiKey : OnboardingNavKey
+@Serializable private data object FoodDataCentralApiKey : OnboardingNavKey
 
-@Serializable private object OpenFoodFactsLogin : OnboardingNavKey
+@Serializable private data object ImportFoodYou3 : OnboardingNavKey
+
+@Serializable private data object OpenFoodFactsLogin : OnboardingNavKey
+
+@Serializable private data object RestoreBackup : OnboardingNavKey

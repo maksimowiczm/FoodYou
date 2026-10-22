@@ -21,6 +21,15 @@ fun MealPlan.decide(command: MealPlanCommand): List<MealPlanEvent> =
             )
         }
 
+        is MealPlanCommand.ImportFoodYou3 -> {
+            require(command.meals.map { it.id }.distinct().size == command.meals.size) {
+                "Meal identities must be unique"
+            }
+            require(command.meals.isNotEmpty()) { "Cannot import meal plan: No meals provided" }
+            check(this.meals.isEmpty()) { "Meal plan already initialized" }
+            listOf(MealPlanImportedFoodYou3Event(meals = command.meals))
+        }
+
         is MealPlanCommand.UpdateMeals -> {
             val updatedMeals = command.meals
             require(updatedMeals.map { it.id }.distinct().size == updatedMeals.size) {
@@ -58,6 +67,7 @@ fun MealPlan.decide(command: MealPlanCommand): List<MealPlanEvent> =
 fun MealPlan.apply(event: MealPlanEvent): MealPlan =
     when (event) {
         is MealPlanInitializedEvent -> copy(meals = event.meals)
+        is MealPlanImportedFoodYou3Event -> copy(meals = event.meals)
         is MealAddedEvent -> copy(meals = meals + event.meal)
         is MealUpdatedEvent ->
             copy(meals = meals.map { if (it.id == event.meal.id) event.meal else it })

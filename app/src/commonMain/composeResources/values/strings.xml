@@ -15,7 +15,6 @@
     <string name="headline_system">System</string>
     <string name="headline_secure_screen">Secure screen</string>
     <string name="headline_about">About</string>
-    <string name="headline_contributors">Contributors</string>
     <string name="headline_version">Version</string>
     <string name="headline_special_thanks_to">Special thanks to</string>
     <string name="headline_all_day" description="All-day (meal)">All-day</string>
@@ -159,7 +158,6 @@
     <string name="neutral_set_your_meal_schedule">Set your meal schedule</string>
     <string name="neutral_required">Required</string>
     <string name="neutral_help_translating_the_app">Help translate the app</string>
-    <string name="neutral_copied">Info copied to clipboard</string>
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>
@@ -171,6 +169,8 @@
     <string name="error_unknown_error">Unknown error</string>
     <string name="error_api_key_is_invalid">API key is invalid</string>
     <string name="error_not_a_barcode">Not a barcode</string>
+    <string name="error_failed_to_read_file">Failed to read file</string>
+    <string name="error_invalid_food_you_3_database">Invalid Food You 3 database file</string>
 
     <string name="positive_ok">OK</string>
 
@@ -186,6 +186,8 @@
     <string name="description_delete_food">Food will be deleted permanently</string>
 
     <string name="description_incomplete_nutrition_data">Some of the used products lack this value; therefore, the displayed value might not be accurate</string>
+    <string name="headline_external_services">External services</string>
+    <string name="description_external_services">Expand your food database with external services</string>
     <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="description_open_food_facts">A collaborative, free and open database of food products from around the world</string>
     <string name="openfoodfacts_version_legacy" description="Old OpenFoodFacts search API">Legacy</string>
@@ -223,9 +225,6 @@
 
     <string name="headline_before_you_start">Before you start</string>
     <string name="action_agree_and_continue">Agree &amp; Continue</string>
-
-    <string name="headline_food_database">Food database</string>
-    <string name="description_food_database">You can choose whether to use these optional external services, which might have their own terms and privacy policies</string>
 
     <string name="headline_almost_done">Almost done</string>
     <string name="headline_preparing_your_food_diary">Preparing your food diary</string>
@@ -273,7 +272,7 @@
     <string name="description_random_theme">A random theme will be applied each time the app is started</string>
 
     <string name="headline_terms_of_use">Terms of use</string>
-    <string name="onboarding_privacy_tip">This app is open-source and built for you. It respects your privacy, your information stays private.</string>
+    <string name="onboarding_privacy_tip">This app is open-source and respects your privacy. All personal data stays on your device.</string>
 
     <string name="headline_add_profile">Add profile</string>
     <string name="headline_how_do_you_want_to_be_called">How do you want to be called?</string>
@@ -294,8 +293,6 @@
 
     <string name="action_refresh">Refresh</string>
 
-    <string name="description_not_sure_yet">Not sure yet? You can change it anytime</string>
-
     <string name="question_discard_profile">Discard profile?</string>
 
     <string name="headline_edit_profile">Edit profile</string>
@@ -312,10 +309,7 @@
 
     <string name="headline_favorite">Favorite</string>
     <string name="headline_food_you_3" translatable="false">Food You 3</string>
-    <string name="headline_swiss_food_composition" translatable="false">Swiss Food Composition</string>
     <string name="headline_data_type">Data type</string>
-    <string name="headline_source">Source</string>
-    <string name="action_import_food_you_3">Import Food You 3</string>
 
     <string name="action_add_a_photo">Add a photo</string>
     <string name="action_remove_a_photo">Remove a photo</string>
@@ -357,6 +351,31 @@
 
     <string name="headline_diary_timestamps">Diary timestamps</string>
     <string name="description_diary_timestamps">See the exact time you ate something</string>
+
+    <string name="headline_restore_backup">Restore backup</string>
+    <string name="description_restore_backup">Restore your data from a file</string>
+    <string name="action_skip">Skip</string>
+    <string name="headline_import_available_only_once">Import available only once</string>
+    <string name="description_restore_backup_onboarding">Backups can only be restored during onboarding</string>
+    <string name="headline_different_application">Different application</string>
+    <string name="description_request_different_application">Request a new import option</string>
+    <string name="action_contact_via_email">Contact via Email</string>
+    <string name="action_open_issue_on_github">Open issue on GitHub</string>
+
+    <string name="headline_import_your_data">Import your data</string>
+    <string name="description_restore_your_data_from_food_you_3">Restore your data from Food You 3</string>
+    <string name="headline_food_diary">Food diary</string>
+    <string name="description_your_saved_meals">Your meal schedule</string>
+    <string name="headline_diary_entries">Diary entries</string>
+    <string name="description_your_food_diary_history">Your food diary history</string>
+    <string name="headline_your_products">Your products</string>
+    <string name="description_food_products_created_by_you">Food products created by you</string>
+    <string name="headline_your_recipes">Your recipes</string>
+    <string name="description_recipes_created_by_you">Recipes created by you</string>
+    <string name="headline_external_databases">External databases</string>
+    <string name="headline_optimize_import">Optimize import</string>
+    <string name="description_skip_unused_remote_items">Skip external database items that aren't in use</string>
+    <string name="action_import">Import</string>
 
     <string name="headline_quick_add">Quick add</string>
     <string name="description_quick_add">Log entry without searching</string>

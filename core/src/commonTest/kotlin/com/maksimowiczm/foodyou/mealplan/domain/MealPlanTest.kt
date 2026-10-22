@@ -38,6 +38,32 @@ class MealPlanTest {
     }
 
     @Test
+    fun `importFoodYou3 empty plan produces MealPlanImportedFoodYou3Event`() {
+        val templateMeals = listOf(breakfast)
+        val events = MealPlan().decide(MealPlanCommand.ImportFoodYou3(templateMeals))
+
+        assertEquals(1, events.size)
+        val event = assertIs<MealPlanImportedFoodYou3Event>(events.single())
+        assertEquals(templateMeals, event.meals)
+    }
+
+    @Test
+    fun `importFoodYou3 non-empty plan fails`() {
+        val mealPlan = MealPlan(meals = listOf(breakfast))
+        assertFailsWith<IllegalStateException> {
+            mealPlan.decide(MealPlanCommand.ImportFoodYou3(listOf(breakfast)))
+        }
+    }
+
+    @Test
+    fun `importFoodYou3 with duplicate meal identities fails`() {
+        val duplicateMeal = breakfast.copy(name = "Duplicate Breakfast")
+        assertFailsWith<IllegalArgumentException> {
+            MealPlan().decide(MealPlanCommand.ImportFoodYou3(listOf(breakfast, duplicateMeal)))
+        }
+    }
+
+    @Test
     fun `adding meal produces MealAddedEvent`() {
         val mealPlan = MealPlan(meals = listOf(breakfast))
         val newMeal = Meal(MealId(Uuid.random()), "Lunch", Meal.TimeWindow.AllDay)
@@ -244,6 +270,17 @@ class MealPlanTest {
         val mealPlan = MealPlan()
         val defaultMeals = MealTemplates.forLanguage(Language.English)
         val event = MealPlanInitializedEvent(Language.English, defaultMeals)
+
+        val updatedPlan = mealPlan.apply(event)
+
+        assertEquals(defaultMeals, updatedPlan.meals)
+    }
+
+    @Test
+    fun `applying MealPlanImportedFoodYou3Event sets meals`() {
+        val mealPlan = MealPlan()
+        val defaultMeals = listOf(breakfast)
+        val event = MealPlanImportedFoodYou3Event(defaultMeals)
 
         val updatedPlan = mealPlan.apply(event)
 

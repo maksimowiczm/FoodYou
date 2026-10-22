@@ -12,6 +12,8 @@ data class MealPlanInitializedEvent(
     val meals: List<Meal>,
 ) : MealPlanEvent
 
+@Serializable data class MealPlanImportedFoodYou3Event(val meals: List<Meal>) : MealPlanEvent
+
 @Serializable data class MealAddedEvent(val meal: Meal) : MealPlanEvent
 
 @Serializable data class MealUpdatedEvent(val meal: Meal) : MealPlanEvent
