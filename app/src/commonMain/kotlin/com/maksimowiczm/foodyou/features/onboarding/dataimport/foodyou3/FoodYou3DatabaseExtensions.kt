@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.features.onboarding.dataimport.foodyou3
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteStatement
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import androidx.sqlite.driver.bundled.SQLITE_OPEN_READONLY
 import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
@@ -15,25 +16,27 @@ import com.maksimowiczm.foodyou.common.domain.milligrams
 import com.maksimowiczm.foodyou.common.map
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.absolutePath
+import io.github.vinceglb.filekit.cacheDir
+import io.github.vinceglb.filekit.copyTo
 import io.github.vinceglb.filekit.delete
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.filesDir
-import io.github.vinceglb.filekit.readBytes
-import io.github.vinceglb.filekit.write
+import io.github.vinceglb.filekit.path
 import kotlin.time.Clock
 
 internal sealed interface OpenFoodYou3DatabaseFilePickerError {
-    data class ReadFileFailed(val cause: Throwable? = null) : OpenFoodYou3DatabaseFilePickerError
+    val cause: Throwable?
 
-    data class InvalidSqliteDatabase(val cause: Throwable? = null) :
+    data class ReadFileFailed(override val cause: Throwable? = null) :
+        OpenFoodYou3DatabaseFilePickerError
+
+    data class InvalidSqliteDatabase(override val cause: Throwable? = null) :
         OpenFoodYou3DatabaseFilePickerError
 
     data class InvalidFoodYou3Database(
         val actualHash: String? = null,
-        val cause: Throwable? = null,
+        override val cause: Throwable? = null,
     ) : OpenFoodYou3DatabaseFilePickerError
 }
 
@@ -47,10 +50,10 @@ internal suspend fun FileKit.openFoodYou3DatabaseFilePicker():
         }
 
     val tempFileName = "foodyou3_viewer_${Clock.System.now().toEpochMilliseconds()}.db"
-    val tempFile = FileKit.filesDir / tempFileName
+    val tempFile = FileKit.cacheDir / tempFileName
 
     try {
-        tempFile.write(file.readBytes())
+        file.copyTo(tempFile)
     } catch (e: Throwable) {
         return Err(OpenFoodYou3DatabaseFilePickerError.ReadFileFailed(cause = e))
     }
@@ -68,7 +71,7 @@ internal fun PlatformFile.verifyFoodYou3IdentityHash():
     Result<Unit, OpenFoodYou3DatabaseFilePickerError> {
     val connection =
         try {
-            BundledSQLiteDriver().open(absolutePath())
+            BundledSQLiteDriver().open(path, SQLITE_OPEN_READONLY)
         } catch (e: Throwable) {
             return Err(OpenFoodYou3DatabaseFilePickerError.InvalidSqliteDatabase(cause = e))
         }

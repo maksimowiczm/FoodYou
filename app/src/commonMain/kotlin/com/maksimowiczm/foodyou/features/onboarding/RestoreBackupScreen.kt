@@ -48,6 +48,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
 import com.maksimowiczm.foodyou.common.onError
 import com.maksimowiczm.foodyou.common.onSuccess
@@ -104,6 +105,9 @@ internal fun RestoreBackupScreen(
                                 else openingFile = false
                             }
                             .onError { error ->
+                                Logger.withTag("RestoreBackupScreen").e(error.cause) {
+                                    "Failed to Food You 3 database"
+                                }
                                 openingFile = false
                                 val message =
                                     when (error) {

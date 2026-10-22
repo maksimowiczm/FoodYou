@@ -43,11 +43,11 @@ import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import com.maksimowiczm.foodyou.userrecipe.domain.toSnapshot
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.absolutePath
+import io.github.vinceglb.filekit.cacheDir
 import io.github.vinceglb.filekit.copyTo
 import io.github.vinceglb.filekit.delete
 import io.github.vinceglb.filekit.div
-import io.github.vinceglb.filekit.filesDir
+import io.github.vinceglb.filekit.path
 import kotlin.time.Clock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -72,7 +72,7 @@ class ImportFoodYou3DatabaseUseCase(
         val path = requireNotNull(state.path) { "Database path is required" }
 
         val tempFile =
-            FileKit.filesDir / "foodyou3_import_${Clock.System.now().toEpochMilliseconds()}.db"
+            FileKit.cacheDir / "foodyou3_import_${Clock.System.now().toEpochMilliseconds()}.db"
 
         try {
             PlatformFile(path).copyTo(tempFile)
@@ -81,7 +81,7 @@ class ImportFoodYou3DatabaseUseCase(
             tempFile.verifyFoodYou3IdentityHash().expect("Given file is a Food You 3.4.9 database")
             emit(0.1f)
 
-            BundledSQLiteDriver().open(tempFile.absolutePath(), SQLITE_OPEN_READONLY).use {
+            BundledSQLiteDriver().open(tempFile.path, SQLITE_OPEN_READONLY).use {
                 val f3Meals = if (state.mealPlan) importMealPlan(it) else emptyList()
                 val products = mutableMapOf<Long, UserProduct>()
                 emitAll(importProducts(it, state, products).scaled(0f..0.5f))
