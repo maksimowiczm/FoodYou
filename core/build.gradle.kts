@@ -27,7 +27,7 @@ kotlin {
 
         compilerOptions { jvmTarget.set(JvmTarget.JVM_21) }
 
-        withHostTestBuilder {}.configure {}
+        withHostTest {}
     }
 
     listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
