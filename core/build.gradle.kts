@@ -30,13 +30,6 @@ kotlin {
         withHostTest {}
     }
 
-    listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "Core"
-            isStatic = true
-        }
-    }
-
     sourceSets {
         commonMain.dependencies {
             implementation(libs.androidx.datastore.preferencesCore)
@@ -62,15 +55,11 @@ kotlin {
             implementation(libs.insert.koin.android)
             implementation(libs.ktor.clientOkhttp)
         }
-
-        iosMain.dependencies {
-            implementation(libs.ktor.clientDarwin)
-        }
     }
 }
 
 dependencies {
-    listOf("kspCommonMainMetadata", "kspAndroid", "kspIosArm64", "kspIosSimulatorArm64").forEach {
+    listOf("kspCommonMainMetadata", "kspAndroid").forEach {
         add(it, libs.androidx.room.compiler)
     }
 }

@@ -53,13 +53,6 @@ kotlin {
             }
     }
 
-    listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "App"
-            isStatic = true
-        }
-    }
-
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.camera.camera2)
@@ -119,7 +112,7 @@ kotlin {
 dependencies {
     androidRuntimeClasspath(libs.compose.ui.tooling)
 
-    listOf("kspCommonMainMetadata", "kspAndroid", "kspIosArm64", "kspIosSimulatorArm64").forEach {
+    listOf("kspCommonMainMetadata", "kspAndroid").forEach {
         add(it, libs.androidx.room.compiler)
     }
 }
