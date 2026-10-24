@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.app
 
 import com.maksimowiczm.foodyou.common.domain.DeleteStrategy
 import com.maksimowiczm.foodyou.common.domain.ProfileId
+import com.maksimowiczm.foodyou.common.domain.crypto.SoftwareEncrypted
+import com.maksimowiczm.foodyou.common.domain.crypto.encryptString
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity.Weight
 import com.maksimowiczm.foodyou.common.domain.food.AnonymousLeafFoodSnapshot
 import com.maksimowiczm.foodyou.common.domain.food.CompositeFoodSnapshot
@@ -17,8 +19,6 @@ import com.maksimowiczm.foodyou.common.domain.food.forceWeight
 import com.maksimowiczm.foodyou.common.domain.food.toAbsoluteQuantity
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.expect
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.encryptString
 import com.maksimowiczm.foodyou.fooddatacentral.application.FoodDataCentralService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettings
@@ -1045,10 +1045,11 @@ class FoodDiaryIntegrationTest {
             .bind<OpenFoodFactsSettingsRepository>()
         single {
             val apiKey = TestSecrets.usdaApiKey
+            val crypto = get<com.maksimowiczm.foodyou.common.domain.crypto.SoftwareCrypto>()
             TestFoodDataCentralSettingsRepository(
                 FoodDataCentralSettings(
                     remoteEnabled = true,
-                    apiKey = apiKey?.let { SoftwareEncrypted.encryptString(it) },
+                    apiKey = apiKey?.let { SoftwareEncrypted.encryptString(it, crypto) },
                 )
             )
         }

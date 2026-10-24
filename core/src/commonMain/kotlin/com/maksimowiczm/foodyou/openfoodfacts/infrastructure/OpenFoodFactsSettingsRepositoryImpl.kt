@@ -5,8 +5,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.byteArrayPreferencesKey
 import androidx.datastore.preferences.core.edit
+import com.maksimowiczm.foodyou.common.domain.crypto.SoftwareEncrypted
 import com.maksimowiczm.foodyou.common.extension.set
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettings
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository

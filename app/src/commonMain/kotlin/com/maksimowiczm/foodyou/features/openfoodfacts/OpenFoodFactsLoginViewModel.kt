@@ -2,8 +2,9 @@ package com.maksimowiczm.foodyou.features.openfoodfacts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.encryptString
+import com.maksimowiczm.foodyou.common.domain.crypto.SoftwareCrypto
+import com.maksimowiczm.foodyou.common.domain.crypto.SoftwareEncrypted
+import com.maksimowiczm.foodyou.common.domain.crypto.encryptString
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsCredentials
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsLoginService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsSettingsRepository
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 class OpenFoodFactsLoginViewModel(
     private val service: OpenFoodFactsLoginService,
     private val repository: OpenFoodFactsSettingsRepository,
+    private val crypto: SoftwareCrypto,
 ) : ViewModel() {
     private val signInUiEventBus = Channel<OpenFoodFactsLoginSignedInUiEvent>()
     val signInUiEvent = signInUiEventBus.receiveAsFlow()
@@ -35,8 +37,8 @@ class OpenFoodFactsLoginViewModel(
                         it.copy(
                             credentials =
                                 OpenFoodFactsCredentials(
-                                    login = SoftwareEncrypted.encryptString(login),
-                                    password = SoftwareEncrypted.encryptString(password),
+                                    login = SoftwareEncrypted.encryptString(login, crypto),
+                                    password = SoftwareEncrypted.encryptString(password, crypto),
                                 )
                         )
                     }

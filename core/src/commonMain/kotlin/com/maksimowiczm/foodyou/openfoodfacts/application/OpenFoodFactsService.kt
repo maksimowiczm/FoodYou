@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.openfoodfacts.application
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.common.domain.crypto.SoftwareCrypto
 import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.onSuccess
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsApiError
@@ -21,6 +22,7 @@ class OpenFoodFactsService(
     private val repository: OpenFoodFactsRepository,
     private val settingsRepository: OpenFoodFactsSettingsRepository,
     private val eventNotifier: EventNotifier,
+    private val crypto: SoftwareCrypto,
 ) {
     fun search(
         parameters: OpenFoodFactsSearchParameters,
@@ -31,7 +33,7 @@ class OpenFoodFactsService(
                 parameters = parameters,
                 pageSize = pageSize,
                 remoteEnabled = settings.remoteEnabled,
-                credentials = settings.credentials?.decrypt(),
+                credentials = settings.credentials?.decrypt(crypto),
                 onNewProduct = { products ->
                     if (products.isNotEmpty()) {
                         eventNotifier.notify(

@@ -1,9 +1,11 @@
-package com.maksimowiczm.foodyou.common.infrastructure.crypto
+package com.maksimowiczm.foodyou.app.infrastructure.crypto
 
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+
+expect fun softwareCryptoImpl(): SoftwareCryptoImpl
 
 class SoftwareCryptoTest {
 
@@ -11,14 +13,14 @@ class SoftwareCryptoTest {
     fun testEncryptionDecryption() {
         val originalData = "Hello, FoodYou!".encodeToByteArray()
 
-        val encryptedData = SoftwareCrypto.encrypt(originalData)
+        val encryptedData = softwareCryptoImpl().encrypt(originalData)
         assertNotNull(encryptedData)
         assertFalse(
             originalData.contentEquals(encryptedData),
             "Encrypted data should be different from original",
         )
 
-        val decryptedData = SoftwareCrypto.decrypt(encryptedData)
+        val decryptedData = softwareCryptoImpl().decrypt(encryptedData)
         assertContentEquals(originalData, decryptedData, "Decrypted data should match original")
     }
 
@@ -26,8 +28,8 @@ class SoftwareCryptoTest {
     fun testEncryptionUniqueness() {
         val originalData = "Same Data".encodeToByteArray()
 
-        val encrypted1 = SoftwareCrypto.encrypt(originalData)
-        val encrypted2 = SoftwareCrypto.encrypt(originalData)
+        val encrypted1 = softwareCryptoImpl().encrypt(originalData)
+        val encrypted2 = softwareCryptoImpl().encrypt(originalData)
 
         assertFalse(
             encrypted1.contentEquals(encrypted2),

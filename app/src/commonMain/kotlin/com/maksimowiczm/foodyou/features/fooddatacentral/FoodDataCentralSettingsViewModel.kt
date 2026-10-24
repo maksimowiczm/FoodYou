@@ -2,8 +2,9 @@ package com.maksimowiczm.foodyou.features.fooddatacentral
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.SoftwareEncrypted
-import com.maksimowiczm.foodyou.common.infrastructure.crypto.encryptString
+import com.maksimowiczm.foodyou.common.domain.crypto.SoftwareCrypto
+import com.maksimowiczm.foodyou.common.domain.crypto.SoftwareEncrypted
+import com.maksimowiczm.foodyou.common.domain.crypto.encryptString
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiKeyVerificationService
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralSettingsRepository
 import kotlinx.coroutines.channels.Channel
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 class FoodDataCentralSettingsViewModel(
     private val service: FoodDataCentralApiKeyVerificationService,
     private val settingsRepository: FoodDataCentralSettingsRepository,
+    private val crypto: SoftwareCrypto,
 ) : ViewModel() {
     private val uiEventBus = Channel<FoodDataCentralSettingsUiEvent>()
     val uiEvent = uiEventBus.receiveAsFlow()
@@ -31,7 +33,7 @@ class FoodDataCentralSettingsViewModel(
             }
                 .onSuccess {
                     settingsRepository.update {
-                        it.copy(apiKey = SoftwareEncrypted.encryptString(apiKey))
+                        it.copy(apiKey = SoftwareEncrypted.encryptString(apiKey, crypto))
                     }
                     uiEventBus.send(FoodDataCentralSettingsUiEvent.Saved)
                 }

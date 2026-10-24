@@ -1,12 +1,15 @@
-package com.maksimowiczm.foodyou.common.infrastructure.crypto
+package com.maksimowiczm.foodyou.app.infrastructure.crypto
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import com.maksimowiczm.foodyou.common.domain.crypto.SoftwareCrypto
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
+import org.koin.core.definition.KoinDefinition
+import org.koin.core.module.Module
 
 /**
  * Android implementation of [SoftwareCrypto].
@@ -16,7 +19,7 @@ import javax.crypto.spec.GCMParameterSpec
  *
  * The IV is prepended to the ciphertext and extracted automatically on decryption.
  */
-actual object SoftwareCrypto {
+actual object SoftwareCryptoImpl : SoftwareCrypto {
     private const val KEY_ALIAS = "FoodYouSoftwareCryptoKey"
     private const val ANDROID_KEYSTORE = "AndroidKeyStore"
     private const val TRANSFORMATION = "AES/GCM/NoPadding"
@@ -50,7 +53,7 @@ actual object SoftwareCrypto {
             .generateKey()
     }
 
-    actual fun encrypt(data: ByteArray): ByteArray {
+    actual override fun encrypt(data: ByteArray): ByteArray {
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, keyStore.getOrCreateKey())
         val iv = cipher.iv
@@ -58,7 +61,7 @@ actual object SoftwareCrypto {
         return iv + ciphertext
     }
 
-    actual fun decrypt(data: ByteArray): ByteArray {
+    actual override fun decrypt(data: ByteArray): ByteArray {
         require(data.size >= MIN_CIPHERTEXT_SIZE) {
             "Invalid data: too short to contain IV and GCM tag"
         }
@@ -75,4 +78,8 @@ actual object SoftwareCrypto {
 
         return cipher.doFinal(ciphertext)
     }
+}
+
+actual fun Module.softwareCryptoImpl(): KoinDefinition<out SoftwareCryptoImpl> = single {
+    SoftwareCryptoImpl
 }

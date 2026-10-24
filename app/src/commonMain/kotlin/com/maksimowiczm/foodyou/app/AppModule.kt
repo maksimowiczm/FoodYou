@@ -6,10 +6,12 @@ import com.maksimowiczm.foodyou.app.application.ObserveEnergyUnitUseCaseImpl
 import com.maksimowiczm.foodyou.app.application.ObserveIsFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.application.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
+import com.maksimowiczm.foodyou.app.infrastructure.crypto.softwareCryptoImpl
 import com.maksimowiczm.foodyou.app.infrastructure.dataStore
 import com.maksimowiczm.foodyou.app.infrastructure.room.room
 import com.maksimowiczm.foodyou.app.ui.AppViewModel
 import com.maksimowiczm.foodyou.common.di.applicationCoroutineScope
+import com.maksimowiczm.foodyou.common.domain.crypto.SoftwareCrypto
 import com.maksimowiczm.foodyou.common.infrastructure.network.NetworkConfig
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelectorImpl
@@ -43,5 +45,6 @@ class AppModule(
 
         viewModelOf(::AppViewModel)
         factoryOf(::FoodNameSelectorImpl).bind<FoodNameSelector>()
+        softwareCryptoImpl().bind<SoftwareCrypto>()
     }
 }

@@ -3,6 +3,8 @@ package com.maksimowiczm.foodyou.fooddatacentral.application
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.Result
+import com.maksimowiczm.foodyou.common.domain.crypto.SoftwareCrypto
+import com.maksimowiczm.foodyou.common.domain.crypto.decryptString
 import com.maksimowiczm.foodyou.common.event.EventNotifier
 import com.maksimowiczm.foodyou.common.onSuccess
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralApiError
@@ -22,6 +24,7 @@ class FoodDataCentralService(
     private val repository: FoodDataCentralRepository,
     private val settingsRepository: FoodDataCentralSettingsRepository,
     private val eventNotifier: EventNotifier,
+    private val crypto: SoftwareCrypto,
 ) {
     fun search(
         parameters: FoodDataCentralSearchParameters,
@@ -32,7 +35,7 @@ class FoodDataCentralService(
                 parameters = parameters,
                 pageSize = pageSize,
                 remoteEnabled = settings.remoteEnabled,
-                apiKey = settings.apiKey?.decrypt()?.decodeToString(),
+                apiKey = settings.apiKey?.decryptString(crypto),
                 onNewProduct = { products ->
                     if (products.isNotEmpty()) {
                         eventNotifier.notify(
@@ -55,7 +58,7 @@ class FoodDataCentralService(
             repository.observe(
                 id = id,
                 remoteEnabled = settings.remoteEnabled,
-                apiKey = settings.apiKey?.decrypt()?.decodeToString(),
+                apiKey = settings.apiKey?.decryptString(crypto),
             )
         }
     }
@@ -63,8 +66,7 @@ class FoodDataCentralService(
     suspend fun refresh(
         id: FoodDataCentralProductId
     ): Result<FoodDataCentralProduct, FoodDataCentralApiError> {
-        val apiKey =
-            settingsRepository.observe().map { it.apiKey }.first()?.decrypt()?.decodeToString()
+        val apiKey = settingsRepository.observe().map { it.apiKey }.first()?.decryptString(crypto)
         return repository.refresh(id, apiKey).onSuccess {
             eventNotifier.notify(FoodDataCentralProductUpdatedEvent(product = it))
         }
