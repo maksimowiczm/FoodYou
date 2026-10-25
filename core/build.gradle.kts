@@ -30,6 +30,10 @@ kotlin {
         withHostTest {}
     }
 
+    jvm {
+        compilerOptions { jvmTarget.set(JvmTarget.JVM_21) }
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.androidx.datastore.preferencesCore)
@@ -56,11 +60,16 @@ kotlin {
             implementation(libs.insert.koin.android)
             implementation(libs.ktor.clientOkhttp)
         }
+
+        jvmMain.dependencies {
+            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.ktor.clientOkhttp)
+        }
     }
 }
 
 dependencies {
-    listOf("kspCommonMainMetadata", "kspAndroid").forEach {
+    listOf("kspCommonMainMetadata", "kspAndroid", "kspJvm").forEach {
         add(it, libs.androidx.room.compiler)
     }
 }
