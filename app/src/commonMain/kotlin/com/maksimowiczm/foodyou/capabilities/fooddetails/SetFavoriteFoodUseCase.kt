@@ -1,8 +1,9 @@
-package com.maksimowiczm.foodyou.app.application
+package com.maksimowiczm.foodyou.capabilities.fooddetails
 
 import com.maksimowiczm.foodyou.account.application.AccountService
 import com.maksimowiczm.foodyou.account.domain.AccountCommand
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodId
+import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 

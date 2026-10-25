@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodId
-import com.maksimowiczm.foodyou.app.application.ObserveIsFavoriteFoodUseCase
-import com.maksimowiczm.foodyou.app.application.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.capabilities.fooddetails.FoodDetailsQuantityDelegate
+import com.maksimowiczm.foodyou.capabilities.fooddetails.ObserveIsFavoriteFoodUseCase
+import com.maksimowiczm.foodyou.capabilities.fooddetails.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.common.RemoteData
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.food.QuantityType

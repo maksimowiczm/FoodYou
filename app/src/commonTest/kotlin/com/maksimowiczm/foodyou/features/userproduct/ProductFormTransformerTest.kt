@@ -10,6 +10,9 @@ import com.maksimowiczm.foodyou.common.domain.food.FoodName
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
 import com.maksimowiczm.foodyou.common.domain.milliliters
+import com.maksimowiczm.foodyou.preferences.domain.EnergyUnitPreference
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferences
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import io.konform.validation.Validation
@@ -35,7 +38,18 @@ class ProductFormTransformerTest {
         selector: FoodNameSelector = createDefaultSelector(),
     ): ProductFormTransformer =
         ProductFormTransformer(
-            getAppAccountEnergyUnitUseCase = { flowOf(energyUnit) },
+            userPreferencesRepository =
+                object : UserPreferencesRepository {
+                    override fun observe(key: String): Flow<UserPreferences> =
+                        flowOf(EnergyUnitPreference(energyUnit))
+
+                    override suspend fun update(
+                        key: String,
+                        transform: (UserPreferences) -> UserPreferences,
+                    ) {
+                        error("Not implemented")
+                    }
+                },
             foodNameSelector = selector,
         )
 

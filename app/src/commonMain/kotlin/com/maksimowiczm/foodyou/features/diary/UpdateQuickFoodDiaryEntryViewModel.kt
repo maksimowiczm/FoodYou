@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.account.application.AccountService
-import com.maksimowiczm.foodyou.app.application.ObserveEnergyUnitUseCase
 import com.maksimowiczm.foodyou.common.domain.Energy
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.ProfileId
@@ -19,6 +18,9 @@ import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.application.MealPlanService
 import com.maksimowiczm.foodyou.mealplan.domain.Meal
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
+import com.maksimowiczm.foodyou.preferences.domain.EnergyUnitPreference
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
+import com.maksimowiczm.foodyou.preferences.domain.observe
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.channels.Channel
@@ -61,7 +63,7 @@ class UpdateQuickFoodDiaryEntryViewModel(
     private val quickFoodDiaryService: QuickFoodDiaryService,
     mealPlanService: MealPlanService,
     accountService: AccountService,
-    observeEnergyUnitUseCase: ObserveEnergyUnitUseCase,
+    userPreferencesRepository: UserPreferencesRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -85,8 +87,9 @@ class UpdateQuickFoodDiaryEntryViewModel(
     }
 
     private val energyUnit =
-        observeEnergyUnitUseCase
-            .observe()
+        userPreferencesRepository
+            .observe<EnergyUnitPreference>()
+            .map { it.energyUnit }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5.seconds),

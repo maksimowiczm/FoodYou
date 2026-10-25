@@ -1,6 +1,7 @@
-package com.maksimowiczm.foodyou.app.application
+package com.maksimowiczm.foodyou.capabilities.fooddetails
 
 import com.maksimowiczm.foodyou.account.domain.FavoriteFoodId
+import com.maksimowiczm.foodyou.app.application.AppProfileManager
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId

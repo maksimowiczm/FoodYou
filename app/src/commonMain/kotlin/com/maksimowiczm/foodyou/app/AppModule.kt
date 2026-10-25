@@ -1,10 +1,6 @@
 package com.maksimowiczm.foodyou.app
 
 import com.maksimowiczm.foodyou.app.application.AppProfileManager
-import com.maksimowiczm.foodyou.app.application.ObserveEnergyUnitUseCase
-import com.maksimowiczm.foodyou.app.application.ObserveEnergyUnitUseCaseImpl
-import com.maksimowiczm.foodyou.app.application.ObserveIsFavoriteFoodUseCase
-import com.maksimowiczm.foodyou.app.application.SetFavoriteFoodUseCase
 import com.maksimowiczm.foodyou.app.infrastructure.FoodYouConfig
 import com.maksimowiczm.foodyou.app.infrastructure.crypto.softwareCryptoImpl
 import com.maksimowiczm.foodyou.app.infrastructure.dataStore
@@ -35,10 +31,6 @@ class AppModule(
         applicationCoroutineScope(coroutineScope)
 
         factoryOf(::AppProfileManager)
-
-        factoryOf(::ObserveIsFavoriteFoodUseCase)
-        factoryOf(::SetFavoriteFoodUseCase)
-        factoryOf(::ObserveEnergyUnitUseCaseImpl).bind<ObserveEnergyUnitUseCase>()
 
         dataStore()
         room()

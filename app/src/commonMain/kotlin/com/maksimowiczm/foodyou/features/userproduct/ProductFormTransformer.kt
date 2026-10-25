@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.features.userproduct
 
-import com.maksimowiczm.foodyou.app.application.ObserveEnergyUnitUseCase
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.common.domain.Language
 import com.maksimowiczm.foodyou.common.domain.fluidOunces
@@ -15,6 +14,9 @@ import com.maksimowiczm.foodyou.common.domain.micrograms
 import com.maksimowiczm.foodyou.common.domain.milligrams
 import com.maksimowiczm.foodyou.common.domain.milliliters
 import com.maksimowiczm.foodyou.common.domain.ounces
+import com.maksimowiczm.foodyou.preferences.domain.EnergyUnitPreference
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
+import com.maksimowiczm.foodyou.preferences.domain.observe
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductBarcode
@@ -23,7 +25,7 @@ import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.flow.first
 
 internal class ProductFormTransformer(
-    private val getAppAccountEnergyUnitUseCase: ObserveEnergyUnitUseCase,
+    private val userPreferencesRepository: UserPreferencesRepository,
     private val foodNameSelector: FoodNameSelector,
 ) {
     data class Result(
@@ -41,7 +43,8 @@ internal class ProductFormTransformer(
     suspend fun transform(form: ProductFormState): Result {
         require(form.isValid) { "Form is not valid" }
 
-        val energyFormat = getAppAccountEnergyUnitUseCase.observe().first()
+        val energyFormat =
+            userPreferencesRepository.observe<EnergyUnitPreference>().first().energyUnit
         val language = foodNameSelector.observeLanguage().first()
 
         val nameStr = form.name.textFieldState.text.toString()

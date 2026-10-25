@@ -2,11 +2,13 @@ package com.maksimowiczm.foodyou.features.userproduct.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.app.application.ObserveEnergyUnitUseCase
 import com.maksimowiczm.foodyou.common.domain.BlobStorage
 import com.maksimowiczm.foodyou.common.domain.EnergyUnit
 import com.maksimowiczm.foodyou.features.userproduct.ProductFormState
 import com.maksimowiczm.foodyou.features.userproduct.ProductFormTransformer
+import com.maksimowiczm.foodyou.preferences.domain.EnergyUnitPreference
+import com.maksimowiczm.foodyou.preferences.domain.UserPreferencesRepository
+import com.maksimowiczm.foodyou.preferences.domain.observe
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductCommand
@@ -15,6 +17,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -23,12 +26,13 @@ internal class CreateProductViewModel(
     private val userProductService: UserProductService,
     private val blobStorage: BlobStorage,
     private val productFormTransformer: ProductFormTransformer,
-    observeEnergyUnitUseCase: ObserveEnergyUnitUseCase,
+    userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
 
     val energyFormat =
-        observeEnergyUnitUseCase
-            .observe()
+        userPreferencesRepository
+            .observe<EnergyUnitPreference>()
+            .map { it.energyUnit }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
