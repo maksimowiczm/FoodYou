@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.openfoodfacts
 
-import com.maksimowiczm.foodyou.common.extension.databaseBuilder
+import androidx.room3.Room
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.maksimowiczm.foodyou.common.infrastructure.network.RateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.SuspendingRateLimiter
 import com.maksimowiczm.foodyou.common.infrastructure.network.WindowedRequestLog
@@ -16,6 +17,10 @@ import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFac
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.network.OpenFoodFactsSearchALiciousDataSource
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase
 import com.maksimowiczm.foodyou.openfoodfacts.infrastructure.room.OpenFoodFactsDatabase.Companion.buildDatabase
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.databasesDir
+import io.github.vinceglb.filekit.div
+import io.github.vinceglb.filekit.path
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -38,7 +43,12 @@ private val openFoodFactsSearchRateLimiter = named("OpenFoodFactsSearchRateLimit
 private val openFoodFactsProductRateLimiter = named("OpenFoodFactsProductRateLimiter")
 
 internal fun Module.openFoodFacts() {
-    single { databaseBuilder<OpenFoodFactsDatabase>(OPEN_FOOD_FACTS_DATABASE_NAME).buildDatabase() }
+    single {
+        val dbFile = FileKit.databasesDir / OPEN_FOOD_FACTS_DATABASE_NAME
+        Room.databaseBuilder<OpenFoodFactsDatabase>(dbFile.path)
+            .setDriver(BundledSQLiteDriver())
+            .buildDatabase()
+    }
     factory { get<OpenFoodFactsDatabase>().productDao }
     single(httpClientQualifier) {
             HttpClient {
