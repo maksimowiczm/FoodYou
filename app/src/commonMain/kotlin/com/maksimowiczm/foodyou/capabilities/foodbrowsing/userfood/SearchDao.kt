@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood
 import androidx.paging.PagingSource
 import androidx.room3.*
 import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
+import com.maksimowiczm.foodyou.common.infrastructure.room.SIMPLE_NAME_SELECT
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 
@@ -12,7 +13,7 @@ abstract class SearchDao {
     @RewriteQueriesToDropUnusedColumns
     @Query(
         """
-        SELECT s.*, $SIMPLE_NAME_SELECT
+        SELECT s.*, $SIMPLE_NAME_SELECT || COALESCE(' (' || s.brand || ')', '') as simpleName
         FROM Search s
         WHERE
             recipeId IS NULL OR recipeId NOT IN (:excludeRecipeIds)
@@ -38,7 +39,7 @@ abstract class SearchDao {
     @RewriteQueriesToDropUnusedColumns
     @Query(
         """
-        SELECT s.*, $SIMPLE_NAME_SELECT
+        SELECT s.*, $SIMPLE_NAME_SELECT || COALESCE(' (' || s.brand || ')', '') as simpleName
         FROM Search s
         JOIN SearchFts fts ON s.sqliteId = fts.rowid
         WHERE
@@ -68,7 +69,7 @@ abstract class SearchDao {
     @RewriteQueriesToDropUnusedColumns
     @Query(
         """
-        SELECT s.*, $SIMPLE_NAME_SELECT
+        SELECT s.*, $SIMPLE_NAME_SELECT || COALESCE(' (' || s.brand || ')', '') as simpleName
         FROM Search s
         WHERE
             barcode LIKE '%' || :barcode || '%' AND
@@ -119,53 +120,3 @@ abstract class SearchDao {
         upsertInternal(searchEntity.copy(sqliteId = id))
     }
 }
-
-private const val SIMPLE_NAME_SELECT =
-    """
-COALESCE(
-    CASE :languageCode
-        WHEN 'en-US' THEN s.name_en
-        WHEN 'ca-ES' THEN s.name_ca
-        WHEN 'cs-CZ' THEN s.name_cs
-        WHEN 'da-DK' THEN s.name_da
-        WHEN 'de-DE' THEN s.name_de
-        WHEN 'es-ES' THEN s.name_es
-        WHEN 'fr-FR' THEN s.name_fr
-        WHEN 'it-IT' THEN s.name_it
-        WHEN 'id-ID' THEN s.name_id
-        WHEN 'hu-HU' THEN s.name_hu
-        WHEN 'nl-NL' THEN s.name_nl
-        WHEN 'pl-PL' THEN s.name_pl
-        WHEN 'sl-SI' THEN s.name_sl
-        WHEN 'pt-BR' THEN s.`name_pt-BR`
-        WHEN 'pt-PT' THEN s.`name_pt-PT`
-        WHEN 'tr-TR' THEN s.name_tr
-        WHEN 'ru-RU' THEN s.name_ru
-        WHEN 'uk-UA' THEN s.name_uk
-        WHEN 'ar-SA' THEN s.name_ar
-        WHEN 'zh-CN' THEN s.`name_zh-CN`
-        ELSE s.name_fallback
-    END,
-    s.name_fallback,
-    s.name_en,
-    s.name_ca,
-    s.name_cs,
-    s.name_da,
-    s.name_de,
-    s.name_es,
-    s.name_fr,
-    s.name_it,
-    s.name_id,
-    s.name_hu,
-    s.name_nl,
-    s.name_pl,
-    s.name_sl,
-    s.`name_pt-BR`,
-    s.`name_pt-PT`,
-    s.name_tr,
-    s.name_ru,
-    s.name_uk,
-    s.name_ar,
-    s.`name_zh-CN`
-) || COALESCE(' (' || s.brand || ')', '') as simpleName
-"""
