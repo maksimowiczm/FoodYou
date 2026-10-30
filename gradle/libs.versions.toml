@@ -37,6 +37,7 @@ ktor = "3.5.2"
 materialkolor = "5.0.1"
 skydoves-colorpicker-compose = "1.2.0"
 sqliteBundled = "2.6.2"
+squareup-okio = "3.18.2"
 touchlab-kermit = "2.2.0"
 valentinilk-shimmer = "1.5.0"
 vinceglb-filekit = "0.16.0"
@@ -92,6 +93,7 @@ ktor-clientOkhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor
 ktor-serializationKotlinxJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialkolor" }
 skydoves-colorpickerCompose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "skydoves-colorpicker-compose" }
+squareup-okio = { module = "com.squareup.okio:okio", version.ref = "squareup-okio" }
 touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "touchlab-kermit" }
 valentinilk-shimmer-composeShimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "valentinilk-shimmer" }
 vinceglb-filekitCoil = { module = "io.github.vinceglb:filekit-coil", version.ref = "vinceglb-filekit" }

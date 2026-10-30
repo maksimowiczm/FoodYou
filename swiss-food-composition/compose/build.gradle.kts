@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.compose.components.resources)
             implementation(libs.compose.runtime)
             implementation(libs.insert.koin.core)
+            implementation(libs.squareup.okio)
             implementation(libs.vinceglb.filekitCore)
         }
     }
