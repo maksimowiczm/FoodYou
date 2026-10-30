@@ -1,4 +1,5 @@
 package com.maksimowiczm.foodyou.swissfoodcomposition.infrastructure.room
 
-@JvmInline
-value class SwissFoodNutrientComponentEntity(val value: Double?)
+import kotlin.jvm.JvmInline
+
+@JvmInline value class SwissFoodNutrientComponentEntity(val value: Double?)

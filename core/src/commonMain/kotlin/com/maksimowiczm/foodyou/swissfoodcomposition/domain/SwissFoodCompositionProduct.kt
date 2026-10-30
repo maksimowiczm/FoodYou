@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.swissfoodcomposition.domain
 import com.maksimowiczm.foodyou.common.domain.Energy
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
+import kotlin.jvm.JvmInline
 
 @JvmInline value class SwissFoodCompositionProductId(val value: Long)
 

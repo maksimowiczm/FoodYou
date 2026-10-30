@@ -93,6 +93,7 @@ kotlin {
             implementation(libs.vinceglb.filekitCoil)
             implementation(libs.vinceglb.filekitDialogsCompose)
             api(projects.core)
+            implementation(projects.swissFoodComposition.compose)
         }
 
         commonTest.dependencies {

@@ -20,7 +20,7 @@ import com.maksimowiczm.foodyou.swissfoodcomposition.infrastructure.room.SwissFo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-internal class SwissFoodCompositionRepositoryImpl(private val dao: SwissFoodCompositionDao) :
+class SwissFoodCompositionRepositoryImpl(private val dao: SwissFoodCompositionDao) :
     SwissFoodCompositionRepository {
     override fun search(
         query: String,
