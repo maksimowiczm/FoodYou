@@ -161,7 +161,7 @@ private fun AddQuickFoodDiaryEntryScreenContent(
     onSelectTime: (LocalTime) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val requiredStr = stringResource(Res.string.neutral_required)
 
     val nameFormField = rememberFormField {
