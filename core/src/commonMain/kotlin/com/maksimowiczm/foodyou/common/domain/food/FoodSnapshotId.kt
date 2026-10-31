@@ -24,4 +24,6 @@ sealed interface FoodSnapshotId {
     @Serializable data class FoodDataCentral(val fdcId: Int) : Tracked
 
     @Serializable data class UserRecipe(val id: Uuid) : Tracked
+
+    @Serializable data class SwissFoodComposition(val id: Long) : Tracked
 }

@@ -6,6 +6,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.favoritefood.FavoriteFoodSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDataCentralSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsSearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.swissfoodcomposition.SwissFoodCompositionSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -17,6 +18,15 @@ fun rememberCollectionFilters(): List<CollectionFilter> {
         val source = viewModel.extension<FavoriteFoodSearchExtension>()
         rememberCollectionFilter(
             collection = SearchCollection.Favorite(),
+            count = source.count.collectAsStateWithLifecycle().value,
+            pages = source.pages.collectAsLazyPagingItems(),
+        )
+    }
+
+    val general = run {
+        val source = viewModel.extension<SwissFoodCompositionSearchExtension>()
+        rememberCollectionFilter(
+            collection = SearchCollection.General,
             count = source.count.collectAsStateWithLifecycle().value,
             pages = source.pages.collectAsLazyPagingItems(),
         )
@@ -51,7 +61,7 @@ fun rememberCollectionFilters(): List<CollectionFilter> {
         )
     }
 
-    return remember(favorite, userFood, openFoodFacts, foodDataCentral) {
-        listOfNotNull(favorite, userFood, openFoodFacts, foodDataCentral)
+    return remember(favorite, general, userFood, openFoodFacts, foodDataCentral) {
+        listOfNotNull(favorite, general, userFood, openFoodFacts, foodDataCentral)
     }
 }

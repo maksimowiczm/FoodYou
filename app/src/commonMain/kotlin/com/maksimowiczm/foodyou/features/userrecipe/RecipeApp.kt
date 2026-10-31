@@ -36,12 +36,14 @@ import com.maksimowiczm.foodyou.common.extension.removeLastIf
 import com.maksimowiczm.foodyou.common.extension.removeWhile
 import com.maksimowiczm.foodyou.features.userrecipe.ingredient.AddFoodDataCentralIngredientScreen
 import com.maksimowiczm.foodyou.features.userrecipe.ingredient.AddOpenFoodFactsIngredientScreen
+import com.maksimowiczm.foodyou.features.userrecipe.ingredient.AddSwissFoodCompositionIngredientScreen
 import com.maksimowiczm.foodyou.features.userrecipe.ingredient.AddUserProductIngredientScreen
 import com.maksimowiczm.foodyou.features.userrecipe.ingredient.AddUserRecipeIngredientScreen
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.extension.add
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProductId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import foodyou.app.generated.resources.*
@@ -133,6 +135,13 @@ internal fun RecipeApp(
                                             UserRecipeId(id.id),
                                             entry.quantity,
                                         )
+
+                                    is FoodSnapshotId.SwissFoodComposition ->
+                                        EditSwissFoodComposition(
+                                            index,
+                                            SwissFoodCompositionProductId(id.id),
+                                            entry.quantity,
+                                        )
                                 }
 
                             backStack.add(backStackEntry)
@@ -157,7 +166,26 @@ internal fun RecipeApp(
                             backStack.add(UserProduct(id, quantity))
                         },
                         onUserRecipe = { id, quantity -> backStack.add(UserRecipe(id, quantity)) },
+                        onSwissFoodCompositionProduct = { id, quantity ->
+                            backStack.add(SwissFoodComposition(id, quantity))
+                        },
                     )
+                }
+                entry<SwissFoodComposition> {
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddSwissFoodCompositionIngredientScreen(
+                            onBack = { backStack.removeLastIf<SwissFoodComposition>() },
+                            onAdd = { quantity ->
+                                recipeFormViewModel.addIngredient(
+                                    FoodSnapshotId.SwissFoodComposition(it.id.value),
+                                    quantity,
+                                )
+                                backStack.removeWhile { route -> route !is RecipeForm }
+                            },
+                            id = it.id,
+                            initialQuantity = it.quantity,
+                        )
+                    }
                 }
                 entry<OpenFoodFacts> {
                     context(LocalNavAnimatedContentScope.current) {
@@ -245,10 +273,29 @@ internal fun RecipeApp(
                                         is FoodSnapshotId.UserRecipe ->
                                             UserRecipe(UserRecipeId(id.id), quantity)
 
+                                        is FoodSnapshotId.SwissFoodComposition ->
+                                            SwissFoodComposition(
+                                                SwissFoodCompositionProductId(id.id),
+                                                quantity,
+                                            )
+
                                         is FoodSnapshotId.Anonymous -> TODO()
                                     }
                                 backStack.add(route)
                             },
+                        )
+                    }
+                }
+                entry<EditSwissFoodComposition> {
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddSwissFoodCompositionIngredientScreen(
+                            onBack = { backStack.removeLastIf<EditSwissFoodComposition>() },
+                            onAdd = { quantity ->
+                                recipeFormViewModel.updateIngredient(it.index, quantity)
+                                backStack.removeWhile { route -> route !is RecipeForm }
+                            },
+                            id = it.id,
+                            initialQuantity = it.quantity,
                         )
                     }
                 }
@@ -331,6 +378,12 @@ internal fun RecipeApp(
 
                                         is FoodSnapshotId.UserRecipe ->
                                             UserRecipe(UserRecipeId(id.id), quantity)
+
+                                        is FoodSnapshotId.SwissFoodComposition ->
+                                            SwissFoodComposition(
+                                                SwissFoodCompositionProductId(id.id),
+                                                quantity,
+                                            )
 
                                         is FoodSnapshotId.Anonymous -> TODO()
                                     }
@@ -429,6 +482,12 @@ private val config = SavedStateConfiguration {
 @Serializable private data object Search : RecipeNavKey
 
 @Serializable
+private data class SwissFoodComposition(
+    val id: SwissFoodCompositionProductId,
+    val quantity: Quantity,
+) : RecipeNavKey
+
+@Serializable
 private data class OpenFoodFacts(
     val id: OpenFoodFactsProductId,
     val quantity: Quantity,
@@ -445,6 +504,13 @@ private data class UserProduct(val id: UserProductId, val quantity: Quantity) : 
 
 @Serializable
 private data class UserRecipe(val id: UserRecipeId, val quantity: Quantity) : RecipeNavKey
+
+@Serializable
+private data class EditSwissFoodComposition(
+    val index: Int,
+    val id: SwissFoodCompositionProductId,
+    val quantity: Quantity,
+) : RecipeNavKey
 
 @Serializable
 private data class EditOpenFoodFacts(

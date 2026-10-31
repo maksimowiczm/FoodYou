@@ -12,6 +12,7 @@ import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.toOpenFoodFactsProductId
 import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.toSwissFoodCompositionProductId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userproduct.domain.toUserProductId
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
@@ -141,6 +142,26 @@ fun UpdateFoodDiaryEntryScreenDispatcher(
                         onEdit = { onEditUserProduct(id.toUserProductId()) },
                         onDelete = onDeleteUserProduct,
                         foodId = id.toUserProductId(),
+                        entry = uiState.entry,
+                        profiles = uiState.profiles,
+                        meals = uiState.meals,
+                        selectedMeal = uiState.selectedMeal,
+                        selectedDateTime = uiState.selectedDateTime,
+                        selectedProfileIds = uiState.selectedProfileIds,
+                        onSelectMeal = { viewModel.selectMeal(it.id) },
+                        onSelectDate = viewModel::selectDate,
+                        onSelectTime = viewModel::selectTime,
+                        onSelectProfiles = {
+                            viewModel.selectProfiles(it.map { profile -> profile.id })
+                        },
+                        modifier = modifier,
+                    )
+
+                is FoodSnapshotId.SwissFoodComposition ->
+                    UpdateSwissFoodCompositionDiaryEntryScreen(
+                        onBack = onBack,
+                        onSave = viewModel::update,
+                        foodId = id.toSwissFoodCompositionProductId(),
                         entry = uiState.entry,
                         profiles = uiState.profiles,
                         meals = uiState.meals,

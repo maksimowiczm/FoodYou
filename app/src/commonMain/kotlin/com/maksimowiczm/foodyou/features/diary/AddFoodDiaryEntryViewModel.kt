@@ -20,6 +20,8 @@ import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.toSnapshot
 import com.maksimowiczm.foodyou.shared.ui.extension.now
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProduct
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.toSnapshot
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.toSnapshot
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
@@ -200,6 +202,20 @@ class AddFoodDiaryEntryViewModel(
                     ),
             )
         create(snapshot = if (isTracked) snapshot else snapshot.anonymize())
+    }
+
+    fun create(product: SwissFoodCompositionProduct, quantity: Quantity) {
+        val snapshot =
+            MeasuredFoodSnapshot(
+                snapshot = product.toSnapshot(),
+                quantity =
+                    FoodSnapshotQuantityUpdateService.map(
+                        quantity = quantity,
+                        servingQuantity = null,
+                        packageQuantity = null,
+                    ),
+            )
+        create(snapshot = snapshot)
     }
 
     fun create(recipe: UserRecipe, quantity: Quantity, isTracked: Boolean) {

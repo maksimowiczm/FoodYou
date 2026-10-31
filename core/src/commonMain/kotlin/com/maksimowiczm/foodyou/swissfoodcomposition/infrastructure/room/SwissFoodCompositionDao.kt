@@ -29,6 +29,9 @@ abstract class SwissFoodCompositionDao {
 
     @Query("SELECT COUNT(*) FROM SwissFoodComposition") abstract fun observeCount(): Flow<Int>
 
+    @Query("SELECT s.* FROM SwissFoodComposition s WHERE id = :id")
+    abstract fun observe(id: Long): Flow<SwissFoodCompositionEntity?>
+
     @RewriteQueriesToDropUnusedColumns
     @Query(
         """

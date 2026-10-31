@@ -23,6 +23,9 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.toSnapshot
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.toSnapshot
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProductId
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionRepository
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.toSnapshot
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userproduct.domain.toSnapshot
@@ -44,6 +47,7 @@ class UpdateAnonymousFoodDiaryEntryViewModel(
     off: OpenFoodFactsService,
     up: UserProductService,
     recipeService: UserRecipeService,
+    swissFoodCompositionRepository: SwissFoodCompositionRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val snapshot = measuredSnapshot.snapshot
@@ -116,6 +120,23 @@ class UpdateAnonymousFoodDiaryEntryViewModel(
                             )
                         }
                     }
+                is FoodSnapshotId.SwissFoodComposition ->
+                    swissFoodCompositionRepository
+                        .observe(SwissFoodCompositionProductId(id.id))
+                        .map { product ->
+                            product?.let {
+                                val snapshot = it.toSnapshot()
+                                MeasuredFoodSnapshot(
+                                    snapshot = snapshot,
+                                    quantity =
+                                        FoodSnapshotQuantityUpdateService.map(
+                                            quantity = initialQuantity,
+                                            servingQuantity = null,
+                                            packageQuantity = null,
+                                        ),
+                                )
+                            }
+                        }
             }
         } ?: flowOf(null)
 

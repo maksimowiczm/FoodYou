@@ -153,6 +153,14 @@ class AccountTest {
     }
 
     @Test
+    fun addFavoriteSwissFoodComposition_returnsFavoriteFoodAddedEvent() {
+        val account = Account(profiles = listOf(profile1))
+        val food = FavoriteFoodId.SwissFoodComposition(456L)
+        val events = account.decide(AccountCommand.AddFavoriteFood(profile1.id, food))
+        assertEquals(listOf(FavoriteFoodAddedEvent(profile1.id, food)), events)
+    }
+
+    @Test
     fun addFavoriteFood_isIdempotent() {
         val food = FavoriteFoodId.FoodDataCentral(123)
         val account = Account(profiles = listOf(profile1.copy(favoriteFoods = setOf(food))))

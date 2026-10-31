@@ -22,6 +22,9 @@ import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsUrlSearchQuery
 import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProduct
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProductId
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionRepository
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
@@ -43,6 +46,7 @@ class FavoriteFoodSearchExtension(
     private val openFoodFactsService: OpenFoodFactsService,
     private val userProductService: UserProductService,
     private val userRecipeService: UserRecipeService,
+    private val swissFoodCompositionRepository: SwissFoodCompositionRepository,
     private val nameSelector: FoodNameSelector,
 ) : SearchExtension(viewModel) {
     private val favoriteFoodIdentities =
@@ -85,6 +89,13 @@ class FavoriteFoodSearchExtension(
                                 userRecipeService.observe(UserRecipeId(id.id)).map {
                                     RemoteData.fromNullable(it)
                                 }
+
+                            is FavoriteFoodId.SwissFoodComposition ->
+                                swissFoodCompositionRepository
+                                    .observe(SwissFoodCompositionProductId(id.id))
+                                    .map {
+                                        RemoteData.fromNullable(it)
+                                    }
                         }
                     }
                     .combine()
@@ -168,6 +179,7 @@ private fun Any.barcode(): String? =
         is UserRecipe -> null
         is OpenFoodFactsProduct -> id.barcode
         is FoodDataCentralProduct -> barcode
+        is SwissFoodCompositionProduct -> null
         else -> error("Unknown type ${this::class}")
     }
 
@@ -185,6 +197,7 @@ private fun Any.name(): FoodName =
         is UserRecipe -> name
         is OpenFoodFactsProduct -> name
         is FoodDataCentralProduct -> FoodName(english = name, fallback = name)
+        is SwissFoodCompositionProduct -> name
         else -> error("Unknown type ${this::class}")
     }
 
@@ -202,6 +215,7 @@ private fun Any.brand(): String? =
         is UserRecipe -> null
         is OpenFoodFactsProduct -> brand
         is FoodDataCentralProduct -> brand
+        is SwissFoodCompositionProduct -> null
         else -> error("Unknown type ${this::class}")
     }
 

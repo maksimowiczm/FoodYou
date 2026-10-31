@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.capabilities.foodbrowsing
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.favoritefood.FavoriteFoodSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDataCentralSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsSearchExtension
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.swissfoodcomposition.SwissFoodCompositionSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserProductSearchSynchronizer
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserRecipeSearchSynchronizer
@@ -26,6 +27,7 @@ fun Module.foodBrowsing() {
     scope<SearchViewModel> {
         scopedOf(::OpenFoodFactsSearchExtension)
         scopedOf(::FoodDataCentralSearchExtension)
+        scopedOf(::SwissFoodCompositionSearchExtension)
         scopedOf(::UserFoodSearchExtension)
         scopedOf(::FavoriteFoodSearchExtension)
     }

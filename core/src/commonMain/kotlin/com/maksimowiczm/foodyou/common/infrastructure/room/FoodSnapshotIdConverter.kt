@@ -12,6 +12,7 @@ class FoodSnapshotIdConverter {
             is FoodSnapshotId.OpenFoodFacts -> "$OPEN_FOOD_FACTS$SEPARATOR${id.barcode}"
             is FoodSnapshotId.FoodDataCentral -> "$FOOD_DATA_CENTRAL$SEPARATOR${id.fdcId}"
             is FoodSnapshotId.UserRecipe -> "$RECIPE$SEPARATOR${id.id}"
+            is FoodSnapshotId.SwissFoodComposition -> "$SWISS_FOOD_COMPOSITION$SEPARATOR${id.id}"
         }
 
     @ColumnTypeConverter
@@ -22,6 +23,7 @@ class FoodSnapshotIdConverter {
             OPEN_FOOD_FACTS -> FoodSnapshotId.OpenFoodFacts(idValue)
             FOOD_DATA_CENTRAL -> FoodSnapshotId.FoodDataCentral(idValue.toInt())
             RECIPE -> FoodSnapshotId.UserRecipe(Uuid.parse(idValue))
+            SWISS_FOOD_COMPOSITION -> FoodSnapshotId.SwissFoodComposition(idValue.toLong())
             else -> error("Unknown FoodCompositionComponentId type: $type")
         }
     }
@@ -32,5 +34,6 @@ class FoodSnapshotIdConverter {
         const val OPEN_FOOD_FACTS = "OPEN_FOOD_FACTS"
         const val FOOD_DATA_CENTRAL = "FOOD_DATA_CENTRAL"
         const val RECIPE = "RECIPE"
+        const val SWISS_FOOD_COMPOSITION = "SWISS_FOOD_COMPOSITION"
     }
 }

@@ -34,6 +34,8 @@ import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.OpenFoodFacts
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.OpenFoodFactsProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Personalization
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.Privacy
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.SwissFoodCompositionAddDiaryEntry
+import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.SwissFoodCompositionProductDetails
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.SwitchProfile
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UpdateDiaryEntry
 import com.maksimowiczm.foodyou.app.navigation.FoodYouNavHostRoute.UserProductAddDiaryEntry
@@ -50,6 +52,7 @@ import com.maksimowiczm.foodyou.features.about.ContributorsScreen
 import com.maksimowiczm.foodyou.features.diary.AddFoodDataCentralDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddOpenFoodFactsDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddQuickFoodDiaryEntryScreen
+import com.maksimowiczm.foodyou.features.diary.AddSwissFoodCompositionDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddUserProductDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.AddUserRecipeDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.diary.UpdateFoodDiaryEntryScreenDispatcher
@@ -57,6 +60,7 @@ import com.maksimowiczm.foodyou.features.diary.UpdateQuickFoodDiaryEntryScreen
 import com.maksimowiczm.foodyou.features.fooddatacentral.UpdateFoodDataCentralApiKeyDialog
 import com.maksimowiczm.foodyou.features.fooddetails.FoodDataCentralDetailsScreen
 import com.maksimowiczm.foodyou.features.fooddetails.OpenFoodFactsDetailsScreen
+import com.maksimowiczm.foodyou.features.fooddetails.SwissFoodCompositionDetailsScreen
 import com.maksimowiczm.foodyou.features.fooddetails.UserProductDetailsScreen
 import com.maksimowiczm.foodyou.features.fooddetails.UserRecipeDetailsScreen
 import com.maksimowiczm.foodyou.features.home.ui.HomeScreen
@@ -79,6 +83,7 @@ import com.maksimowiczm.foodyou.fooddiary.domain.FoodDiaryEntryId
 import com.maksimowiczm.foodyou.fooddiary.domain.QuickFoodDiaryEntryId
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProductId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import kotlinx.datetime.LocalDate
@@ -213,6 +218,12 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                                     is FoodSnapshotId.UserRecipe ->
                                         UserRecipeDetails(UserRecipeId(id.id), quantity)
 
+                                    is FoodSnapshotId.SwissFoodComposition ->
+                                        SwissFoodCompositionProductDetails(
+                                            SwissFoodCompositionProductId(id.id),
+                                            quantity,
+                                        )
+
                                     is FoodSnapshotId.Anonymous -> TODO()
                                 }
                             backStack.add(route)
@@ -233,6 +244,13 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         onBack = { backStack.removeLastIf<FoodDataCentralProductDetails>() },
                     )
                 }
+                entry<SwissFoodCompositionProductDetails> {
+                    SwissFoodCompositionDetailsScreen(
+                        id = it.id,
+                        initialQuantity = it.quantity,
+                        onBack = { backStack.removeLastIf<SwissFoodCompositionProductDetails>() },
+                    )
+                }
                 entry<Home> {
                     HomeScreen(
                         onAvatar = { backStack.add(SwitchProfile) },
@@ -242,6 +260,14 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                             else
                                 backStack.add(
                                     FoodDataCentralAddDiaryEntry(id, quantity, mealId, date)
+                                )
+                        },
+                        onSwissFoodCompositionProduct = { id, quantity, mealId, date ->
+                            if (mealId == null)
+                                backStack.add(SwissFoodCompositionProductDetails(id, quantity))
+                            else
+                                backStack.add(
+                                    SwissFoodCompositionAddDiaryEntry(id, quantity, mealId, date)
                                 )
                         },
                         onOpenFoodFactsProduct = { id, quantity, mealId, date ->
@@ -371,6 +397,23 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                         )
                     }
                 }
+                entry<SwissFoodCompositionAddDiaryEntry> { route ->
+                    context(LocalNavAnimatedContentScope.current) {
+                        AddSwissFoodCompositionDiaryEntryScreen(
+                            onBack = {
+                                backStack.removeLastIf<SwissFoodCompositionAddDiaryEntry>()
+                            },
+                            onAdd = {
+                                if (route.popToHome) backStack.removeWhile { it !is Home }
+                                else backStack.removeLastIf<SwissFoodCompositionAddDiaryEntry>()
+                            },
+                            mealId = route.mealId,
+                            id = route.id,
+                            initialQuantity = route.quantity,
+                            date = route.date,
+                        )
+                    }
+                }
                 entry<OpenFoodFactsAddDiaryEntry> {
                     context(LocalNavAnimatedContentScope.current) {
                         AddOpenFoodFactsDiaryEntryScreen(
@@ -452,6 +495,15 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                                                 date = it.date,
                                             )
 
+                                        is FoodSnapshotId.SwissFoodComposition ->
+                                            SwissFoodCompositionAddDiaryEntry(
+                                                SwissFoodCompositionProductId(id.id),
+                                                quantity,
+                                                it.mealId,
+                                                popToHome = true,
+                                                date = it.date,
+                                            )
+
                                         is FoodSnapshotId.Anonymous -> TODO()
                                     }
                                 backStack.add(ingredientRoute)
@@ -526,6 +578,12 @@ fun FoodYouNavDisplay(backStack: NavBackStack<NavKey>, modifier: Modifier = Modi
                                                 quantity,
                                             )
 
+                                        is FoodSnapshotId.SwissFoodComposition ->
+                                            SwissFoodCompositionProductDetails(
+                                                SwissFoodCompositionProductId(id.id),
+                                                quantity,
+                                            )
+
                                         is FoodSnapshotId.Anonymous -> TODO()
                                     }
                                 backStack.add(ingredientRoute)
@@ -589,6 +647,12 @@ sealed interface FoodYouNavHostRoute : NavKey {
         val quantity: Quantity?,
     ) : FoodYouNavHostRoute
 
+    @Serializable
+    data class SwissFoodCompositionProductDetails(
+        val id: SwissFoodCompositionProductId,
+        val quantity: Quantity?,
+    ) : FoodYouNavHostRoute
+
     @Serializable data class Home(val initialQuery: String?) : FoodYouNavHostRoute
 
     @Serializable data object SwitchProfile : FoodYouNavHostRoute
@@ -616,6 +680,15 @@ sealed interface FoodYouNavHostRoute : NavKey {
     @Serializable
     data class FoodDataCentralAddDiaryEntry(
         val id: FoodDataCentralProductId,
+        val quantity: Quantity?,
+        val mealId: MealId,
+        val date: LocalDate?,
+        val popToHome: Boolean = false,
+    ) : FoodYouNavHostRoute
+
+    @Serializable
+    data class SwissFoodCompositionAddDiaryEntry(
+        val id: SwissFoodCompositionProductId,
         val quantity: Quantity?,
         val mealId: MealId,
         val date: LocalDate?,

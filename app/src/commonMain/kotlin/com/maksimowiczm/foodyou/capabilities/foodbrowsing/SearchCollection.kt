@@ -57,6 +57,24 @@ sealed interface SearchCollection {
 
     @Immutable
     @Serializable
+    data object General : SearchCollection {
+        @Composable
+        override fun Icon(selected: Boolean, modifier: Modifier) {
+            androidx.compose.material3.Icon(
+                if (selected) painterResource(Res.drawable.ic_grocery_filled)
+                else painterResource(Res.drawable.ic_grocery),
+                contentDescription = null,
+                modifier = modifier,
+            )
+        }
+
+        @Composable
+        override fun stringResource(): String =
+            org.jetbrains.compose.resources.stringResource(Res.string.headline_general_food)
+    }
+
+    @Immutable
+    @Serializable
     class UserFood : SearchCollection {
         @Composable
         override fun Icon(selected: Boolean, modifier: Modifier) {

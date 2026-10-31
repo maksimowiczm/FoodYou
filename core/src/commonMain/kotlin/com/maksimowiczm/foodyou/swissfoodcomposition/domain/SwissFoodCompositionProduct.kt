@@ -3,9 +3,13 @@ package com.maksimowiczm.foodyou.swissfoodcomposition.domain
 import com.maksimowiczm.foodyou.common.domain.Energy
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.food.FoodName
-import kotlin.jvm.JvmInline
+import com.maksimowiczm.foodyou.common.domain.food.FoodSnapshotId
+import com.maksimowiczm.foodyou.common.domain.food.NutrientValue
+import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
+import com.maksimowiczm.foodyou.common.domain.food.TrackedLeafFoodSnapshot
+import kotlinx.serialization.Serializable
 
-@JvmInline value class SwissFoodCompositionProductId(val value: Long)
+@Serializable @JvmInline value class SwissFoodCompositionProductId(val value: Long)
 
 data class SwissFoodCompositionProduct(
     val id: SwissFoodCompositionProductId,
@@ -57,3 +61,53 @@ data class SwissFoodCompositionProduct(
     val zinc: SwissFoodNutrientComponent<Weight>?,
     val selenium: SwissFoodNutrientComponent<Weight>?,
 )
+
+val SwissFoodCompositionProduct.nutritionFacts: NutritionFacts
+    get() =
+        NutritionFacts(
+            proteins = protein?.value ?: NutrientValue.Incomplete(null),
+            carbohydrates = carbohydratesAvailable?.value ?: NutrientValue.Incomplete(null),
+            energy = energyKcal?.value ?: NutrientValue.Incomplete(null),
+            fats = fatTotal?.value ?: NutrientValue.Incomplete(null),
+            saturatedFats = fattyAcidsSaturated?.value ?: NutrientValue.Incomplete(null),
+            monounsaturatedFats =
+                fattyAcidsMonounsaturated?.value ?: NutrientValue.Incomplete(null),
+            polyunsaturatedFats =
+                fattyAcidsPolyunsaturated?.value ?: NutrientValue.Incomplete(null),
+            sugars = sugars?.value ?: NutrientValue.Incomplete(null),
+            dietaryFiber = dietaryFibres?.value ?: NutrientValue.Incomplete(null),
+            salt = saltNacl?.value ?: NutrientValue.Incomplete(null),
+            cholesterol = cholesterol?.value ?: NutrientValue.Incomplete(null),
+            vitaminA = vitaminARae?.value ?: vitaminARe?.value ?: NutrientValue.Incomplete(null),
+            vitaminB1 = vitaminB1Thiamine?.value ?: NutrientValue.Incomplete(null),
+            vitaminB2 = vitaminB2Riboflavin?.value ?: NutrientValue.Incomplete(null),
+            vitaminB3 = niacinEquivalent?.value ?: niacin?.value ?: NutrientValue.Incomplete(null),
+            vitaminB5 = pantothenicAcid?.value ?: NutrientValue.Incomplete(null),
+            vitaminB6 = vitaminB6Pyridoxine?.value ?: NutrientValue.Incomplete(null),
+            vitaminB9 = folate?.value ?: NutrientValue.Incomplete(null),
+            vitaminB12 = vitaminB12Cobalamin?.value ?: NutrientValue.Incomplete(null),
+            vitaminC = vitaminCAscorbicAcid?.value ?: NutrientValue.Incomplete(null),
+            vitaminD = vitaminDCalciferol?.value ?: NutrientValue.Incomplete(null),
+            vitaminE = vitaminETocopherol?.value ?: NutrientValue.Incomplete(null),
+            potassium = potassium?.value ?: NutrientValue.Incomplete(null),
+            sodium = sodium?.value ?: NutrientValue.Incomplete(null),
+            calcium = calcium?.value ?: NutrientValue.Incomplete(null),
+            magnesium = magnesium?.value ?: NutrientValue.Incomplete(null),
+            phosphorus = phosphorus?.value ?: NutrientValue.Incomplete(null),
+            iron = iron?.value ?: NutrientValue.Incomplete(null),
+            iodine = iodide?.value ?: NutrientValue.Incomplete(null),
+            zinc = zinc?.value ?: NutrientValue.Incomplete(null),
+            selenium = selenium?.value ?: NutrientValue.Incomplete(null),
+        )
+
+fun SwissFoodCompositionProduct.toSnapshot() =
+    TrackedLeafFoodSnapshot(
+        id = FoodSnapshotId.SwissFoodComposition(id.value),
+        name = name,
+        brand = null,
+        image = null,
+        nutritionFacts = nutritionFacts,
+    )
+
+fun FoodSnapshotId.SwissFoodComposition.toSwissFoodCompositionProductId() =
+    SwissFoodCompositionProductId(id)

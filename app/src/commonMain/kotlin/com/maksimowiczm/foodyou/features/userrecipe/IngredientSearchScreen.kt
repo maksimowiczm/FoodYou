@@ -58,6 +58,7 @@ import com.maksimowiczm.foodyou.capabilities.foodbrowsing.favoritefood.FavoriteF
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDataCentralSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilters
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.swissfoodcomposition.SwissFoodCompositionSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.common.domain.food.Quantity
 import com.maksimowiczm.foodyou.common.domain.search.SearchQuery
@@ -70,6 +71,7 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.horizontal
 import com.maksimowiczm.foodyou.shared.ui.extension.plus
 import com.maksimowiczm.foodyou.shared.ui.saveable.jsonSaver
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProductId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import com.valentinilk.shimmer.ShimmerBounds
@@ -90,6 +92,7 @@ fun IngredientSearchScreen(
     onOpenFoodFactsProduct: (OpenFoodFactsProductId, Quantity) -> Unit,
     onUserProduct: (UserProductId, Quantity) -> Unit,
     onUserRecipe: (UserRecipeId, Quantity) -> Unit,
+    onSwissFoodCompositionProduct: (SwissFoodCompositionProductId, Quantity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val searchViewModel: SearchViewModel = koinViewModel { parametersOf(recipeId) }
@@ -125,6 +128,8 @@ fun IngredientSearchScreen(
     val foodDataCentralExtension = searchViewModel.extension<FoodDataCentralSearchExtension>()
     val userFoodExtension = searchViewModel.extension<UserFoodSearchExtension>()
     val favoriteFoodExtension = searchViewModel.extension<FavoriteFoodSearchExtension>()
+    val swissFoodCompositionExtension =
+        searchViewModel.extension<SwissFoodCompositionSearchExtension>()
 
     LaunchedEffect(selectedCollection) {
         when (val collection = selectedCollection) {
@@ -183,6 +188,7 @@ fun IngredientSearchScreen(
             openFoodFacts = openFoodFactsExtension.pages.collectAsLazyPagingItems(),
             foodDataCentral = foodDataCentralExtension.pages.collectAsLazyPagingItems(),
             favoriteFood = favoriteFoodExtension.pages.collectAsLazyPagingItems(),
+            swissFoodComposition = swissFoodCompositionExtension.pages.collectAsLazyPagingItems(),
             searchQuery = searchQuery,
             contentPadding =
                 contentPadding.add(top = density.run { filterChipsHeight.floatValue.toDp() }),
@@ -191,6 +197,7 @@ fun IngredientSearchScreen(
             onOpenFoodFactsProduct = onOpenFoodFactsProduct,
             onUserProduct = onUserProduct,
             onUserRecipe = onUserRecipe,
+            onSwissFoodCompositionProduct = onSwissFoodCompositionProduct,
             shimmer = shimmer,
             history = searchViewModel.searchHistory.collectAsStateWithLifecycle().value,
             showQuickResults = showQuickResults.value,
@@ -220,7 +227,7 @@ fun IngredientSearchScreen(
             )
         }
 
-        StatusBarProtection { (offset.value / topBarHeight).coerceIn(0f, 1f) }
+        StatusBarProtection { (offset.floatValue / topBarHeight).coerceIn(0f, 1f) }
     }
 }
 

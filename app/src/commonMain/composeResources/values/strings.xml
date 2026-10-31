@@ -380,4 +380,7 @@
     <string name="headline_quick_add">Quick add</string>
     <string name="description_quick_add">Log entry without searching</string>
 
+    <string name="headline_general_food">General</string>
+    <string name="headline_swiss_food_composition" translatable="false">Swiss Food Composition Database</string>
+
 </resources>

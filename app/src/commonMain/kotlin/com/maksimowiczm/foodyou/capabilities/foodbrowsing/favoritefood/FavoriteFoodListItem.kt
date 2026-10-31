@@ -30,6 +30,8 @@ import com.maksimowiczm.foodyou.shared.ui.utility.FoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalBlobResolver
 import com.maksimowiczm.foodyou.shared.ui.utility.LocalFoodNameSelector
 import com.maksimowiczm.foodyou.shared.ui.utility.QuantityFormatter.stringResource
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProduct
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.nutritionFacts
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
 import com.valentinilk.shimmer.Shimmer
@@ -124,6 +126,7 @@ private fun Any.name(): FoodName =
         is UserRecipe -> name
         is OpenFoodFactsProduct -> name
         is FoodDataCentralProduct -> FoodName(english = name, fallback = name)
+        is SwissFoodCompositionProduct -> name
         else -> error("Unknown type ${this::class}")
     }
 
@@ -133,6 +136,7 @@ private fun Any.brand(): String? =
         is UserRecipe -> null
         is OpenFoodFactsProduct -> brand
         is FoodDataCentralProduct -> brand
+        is SwissFoodCompositionProduct -> null
         else -> error("Unknown type ${this::class}")
     }
 
@@ -166,6 +170,7 @@ private fun Any.packageQuantity(): AbsoluteQuantity? =
         is UserRecipe -> AbsoluteQuantity.Weight(totalWeight)
         is OpenFoodFactsProduct -> packageQuantity
         is FoodDataCentralProduct -> packageQuantity
+        is SwissFoodCompositionProduct -> null
         else -> error("Unknown type ${this::class}")
     }
 
@@ -183,6 +188,7 @@ private fun Any.servingQuantity(): AbsoluteQuantity? =
         is UserRecipe -> AbsoluteQuantity.Weight(servingWeight)
         is OpenFoodFactsProduct -> servingQuantity
         is FoodDataCentralProduct -> servingQuantity
+        is SwissFoodCompositionProduct -> null
         else -> error("Unknown type ${this::class}")
     }
 
@@ -200,6 +206,7 @@ private fun Any.nutritionFacts(): NutritionFacts =
         is UserRecipe -> nutritionFacts
         is OpenFoodFactsProduct -> nutritionFacts
         is FoodDataCentralProduct -> nutritionFacts
+        is SwissFoodCompositionProduct -> nutritionFacts
         else -> error("Unknown type ${this::class}")
     }
 
@@ -218,6 +225,7 @@ private fun Any.image(): FileUri? =
         is UserRecipe -> image?.let { LocalBlobResolver.current.resolve(it) }
         is OpenFoodFactsProduct -> image
         is FoodDataCentralProduct -> null
+        is SwissFoodCompositionProduct -> null
         else -> error("Unknown type ${this::class}")
     }
 

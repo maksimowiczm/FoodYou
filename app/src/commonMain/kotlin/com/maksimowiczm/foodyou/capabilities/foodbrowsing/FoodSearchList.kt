@@ -43,6 +43,7 @@ import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDa
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDataCentralListItem
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsErrorCard
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsListItem
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.swissfoodcomposition.SwissFoodCompositionListItem
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.SearchResult
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserProductListItem
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserRecipeListItem
@@ -61,6 +62,8 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.error
 import com.maksimowiczm.foodyou.shared.ui.extension.rememberDebounceIsIdle
 import com.maksimowiczm.foodyou.shared.ui.rememberInteractionAnimatedShape
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProduct
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProductId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProduct
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipe
@@ -73,6 +76,7 @@ import org.jetbrains.compose.resources.stringResource
 fun FoodSearchList(
     selectedCollection: SearchCollection?,
     userFood: LazyPagingItems<SearchResult>,
+    swissFoodComposition: LazyPagingItems<SwissFoodCompositionProduct>,
     openFoodFacts: LazyPagingItems<OpenFoodFactsProduct>,
     foodDataCentral: LazyPagingItems<FoodDataCentralProduct>,
     favoriteFood: LazyPagingItems<RemoteData<Any>>,
@@ -80,6 +84,7 @@ fun FoodSearchList(
     contentPadding: PaddingValues,
     lazyListState: LazyListState,
     onFoodDataCentralProduct: (FoodDataCentralProductId, Quantity) -> Unit,
+    onSwissFoodCompositionProduct: (SwissFoodCompositionProductId, Quantity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductId, Quantity) -> Unit,
     onUserProduct: (UserProductId, Quantity) -> Unit,
     onUserRecipe: (UserRecipeId, Quantity) -> Unit,
@@ -97,12 +102,14 @@ fun FoodSearchList(
         when (selectedCollection) {
             null ->
                 userFood.rememberDebounceIsIdle() &&
+                    swissFoodComposition.rememberDebounceIsIdle() &&
                     openFoodFacts.rememberDebounceIsIdle() &&
                     foodDataCentral.rememberDebounceIsIdle()
 
             is SearchCollection.Favorite -> favoriteFood.rememberDebounceIsIdle()
             is SearchCollection.FoodDataCentral -> foodDataCentral.rememberDebounceIsIdle()
             is SearchCollection.OpenFoodFacts -> openFoodFacts.rememberDebounceIsIdle()
+            is SearchCollection.General -> swissFoodComposition.rememberDebounceIsIdle()
             is SearchCollection.UserFood -> userFood.rememberDebounceIsIdle()
         }
 
@@ -117,12 +124,16 @@ fun FoodSearchList(
                 null -> {
                     if (showQuickResults) {
                         val userFoodCount = userFood.itemCount.coerceAtMost(5)
+                        val swissFoodCount = swissFoodComposition.itemCount.coerceAtMost(5)
                         val offCount = openFoodFacts.itemCount.coerceAtMost(5)
                         val fdcCount = foodDataCentral.itemCount.coerceAtMost(5)
 
                         val userFoodLoading =
                             userFood.loadState.refresh is LoadState.Loading ||
                                 userFood.loadState.append is LoadState.Loading
+                        val swissFoodLoading =
+                            swissFoodComposition.loadState.refresh is LoadState.Loading ||
+                                swissFoodComposition.loadState.append is LoadState.Loading
                         val offLoading =
                             openFoodFacts.loadState.refresh is LoadState.Loading ||
                                 openFoodFacts.loadState.append is LoadState.Loading
@@ -147,6 +158,8 @@ fun FoodSearchList(
                                     isLast =
                                         i == userFoodCount - 1 &&
                                             !userFoodLoading &&
+                                            swissFoodCount == 0 &&
+                                            !swissFoodLoading &&
                                             offCount == 0 &&
                                             !offLoading &&
                                             fdcCount == 0 &&
@@ -192,25 +205,45 @@ fun FoodSearchList(
                             }
                         }
 
-                        if (userFoodLoading && userFoodCount < 5) {
-                            items(3) { i ->
-                                val shape =
-                                    rememberItemShape(
-                                        isFirst = i == 0 && userFoodCount == 0,
-                                        isLast =
-                                            i == 2 &&
-                                                offCount == 0 &&
-                                                !offLoading &&
-                                                fdcCount == 0 &&
-                                                !fdcLoading,
-                                        interactionSource = remember { MutableInteractionSource() },
-                                    )
-                                FoodListItemSkeleton(
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                    shape = shape,
+                        items(
+                            count = swissFoodCount,
+                            key = swissFoodComposition.itemKey { it.id.value },
+                        ) { i ->
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val shape =
+                                rememberItemShape(
+                                    isFirst = i == 0 && userFoodCount == 0 && !userFoodLoading,
+                                    isLast =
+                                        i == swissFoodCount - 1 &&
+                                            !swissFoodLoading &&
+                                            offCount == 0 &&
+                                            !offLoading &&
+                                            fdcCount == 0 &&
+                                            !fdcLoading,
+                                    interactionSource = interactionSource,
                                 )
+
+                            when (val product = swissFoodComposition[i]) {
+                                null ->
+                                    FoodListItemSkeleton(
+                                        shimmer = shimmer,
+                                        modifier =
+                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                        shape = shape,
+                                    )
+
+                                else ->
+                                    SwissFoodCompositionListItem(
+                                        food = product,
+                                        onClick = {
+                                            onSwissFoodCompositionProduct(product.id, it)
+                                        },
+                                        interactionSource = interactionSource,
+                                        shape = shape,
+                                        modifier =
+                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                    )
                             }
                         }
 
@@ -221,7 +254,12 @@ fun FoodSearchList(
                             val interactionSource = remember { MutableInteractionSource() }
                             val shape =
                                 rememberItemShape(
-                                    isFirst = i == 0 && userFoodCount == 0 && !userFoodLoading,
+                                    isFirst =
+                                        i == 0 &&
+                                            userFoodCount == 0 &&
+                                            !userFoodLoading &&
+                                            swissFoodCount == 0 &&
+                                            !swissFoodLoading,
                                     isLast =
                                         i == offCount - 1 &&
                                             !offLoading &&
@@ -253,27 +291,6 @@ fun FoodSearchList(
                             }
                         }
 
-                        if (offLoading && offCount < 5) {
-                            items(3) { i ->
-                                val shape =
-                                    rememberItemShape(
-                                        isFirst =
-                                            i == 0 &&
-                                                userFoodCount == 0 &&
-                                                !userFoodLoading &&
-                                                offCount == 0,
-                                        isLast = i == 2 && fdcCount == 0 && !fdcLoading,
-                                        interactionSource = remember { MutableInteractionSource() },
-                                    )
-                                FoodListItemSkeleton(
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                    shape = shape,
-                                )
-                            }
-                        }
-
                         items(
                             count = fdcCount,
                             key = foodDataCentral.itemKey { it.id.fdcId },
@@ -285,6 +302,8 @@ fun FoodSearchList(
                                         i == 0 &&
                                             userFoodCount == 0 &&
                                             !userFoodLoading &&
+                                            swissFoodCount == 0 &&
+                                            !swissFoodLoading &&
                                             offCount == 0 &&
                                             !offLoading,
                                     isLast = i == fdcCount - 1 && !fdcLoading,
@@ -312,29 +331,6 @@ fun FoodSearchList(
                                         modifier =
                                             Modifier.animateItem().padding(horizontal = 8.dp),
                                     )
-                            }
-                        }
-
-                        if (fdcLoading && fdcCount < 5) {
-                            items(3) { i ->
-                                val shape =
-                                    rememberItemShape(
-                                        isFirst =
-                                            i == 0 &&
-                                                userFoodCount == 0 &&
-                                                !userFoodLoading &&
-                                                offCount == 0 &&
-                                                !offLoading &&
-                                                fdcCount == 0,
-                                        isLast = i == 2,
-                                        interactionSource = remember { MutableInteractionSource() },
-                                    )
-                                FoodListItemSkeleton(
-                                    shimmer = shimmer,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                    shape = shape,
-                                )
                             }
                         }
                     } else if (history != null) {
@@ -394,6 +390,42 @@ fun FoodSearchList(
                                     recipe = food,
                                     onClick = { onUserRecipe(UserRecipeId(food.id), it) },
                                     shimmer = shimmer,
+                                    interactionSource = interactionSource,
+                                    shape = shape,
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                )
+                        }
+                    }
+
+                is SearchCollection.General ->
+                    items(
+                        count = swissFoodComposition.itemCount,
+                        key = swissFoodComposition.itemKey { it.id.value },
+                    ) { i ->
+                        val interactionSource = remember { MutableInteractionSource() }
+                        val isLoading =
+                            swissFoodComposition.loadState.refresh is LoadState.Loading ||
+                                swissFoodComposition.loadState.append is LoadState.Loading
+                        val shape =
+                            rememberItemShape(
+                                isFirst = i == 0,
+                                isLast = i == swissFoodComposition.itemCount - 1 && !isLoading,
+                                interactionSource = interactionSource,
+                            )
+
+                        when (val food = swissFoodComposition[i]) {
+                            null ->
+                                FoodListItemSkeleton(
+                                    shimmer = shimmer,
+                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    shape = shape,
+                                )
+
+                            else ->
+                                SwissFoodCompositionListItem(
+                                    food = food,
+                                    onClick = { onSwissFoodCompositionProduct(food.id, it) },
                                     interactionSource = interactionSource,
                                     shape = shape,
                                     modifier = Modifier.animateItem().padding(horizontal = 8.dp),
@@ -515,6 +547,9 @@ fun FoodSearchList(
 
                                                     is FoodDataCentralProduct ->
                                                         onFoodDataCentralProduct(value.id, it)
+
+                                                    is SwissFoodCompositionProduct ->
+                                                        onSwissFoodCompositionProduct(value.id, it)
                                                 }
                                             }
 
@@ -534,6 +569,12 @@ fun FoodSearchList(
 
                                                         is FoodDataCentralProduct ->
                                                             onFoodDataCentralProduct(
+                                                                value.id,
+                                                                it,
+                                                            )
+
+                                                        is SwissFoodCompositionProduct ->
+                                                            onSwissFoodCompositionProduct(
                                                                 value.id,
                                                                 it,
                                                             )
@@ -557,6 +598,12 @@ fun FoodSearchList(
 
                                                         is FoodDataCentralProduct ->
                                                             onFoodDataCentralProduct(
+                                                                value.id,
+                                                                it,
+                                                            )
+
+                                                        is SwissFoodCompositionProduct ->
+                                                            onSwissFoodCompositionProduct(
                                                                 value.id,
                                                                 it,
                                                             )
@@ -591,6 +638,8 @@ fun FoodSearchList(
                             if (
                                 userFood.loadState.append is LoadState.Loading ||
                                     userFood.loadState.refresh is LoadState.Loading ||
+                                    swissFoodComposition.loadState.append is LoadState.Loading ||
+                                    swissFoodComposition.loadState.refresh is LoadState.Loading ||
                                     openFoodFacts.loadState.append is LoadState.Loading ||
                                     openFoodFacts.loadState.refresh is LoadState.Loading ||
                                     foodDataCentral.loadState.append is LoadState.Loading ||
@@ -603,6 +652,7 @@ fun FoodSearchList(
                     is SearchCollection.Favorite -> favoriteFood.loadState.append
                     is SearchCollection.FoodDataCentral -> foodDataCentral.loadState.append
                     is SearchCollection.OpenFoodFacts -> openFoodFacts.loadState.append
+                    is SearchCollection.General -> swissFoodComposition.loadState.append
                     is SearchCollection.UserFood -> userFood.loadState.append
                 }
 
@@ -613,6 +663,7 @@ fun FoodSearchList(
                         is SearchCollection.Favorite -> favoriteFood.itemCount
                         is SearchCollection.FoodDataCentral -> foodDataCentral.itemCount
                         is SearchCollection.OpenFoodFacts -> openFoodFacts.itemCount
+                        is SearchCollection.General -> swissFoodComposition.itemCount
                         is SearchCollection.UserFood -> userFood.itemCount
                     }
 
@@ -704,6 +755,7 @@ fun FoodSearchList(
                     null ->
                         if (isSearchActive)
                             userFood.itemCount == 0 &&
+                                swissFoodComposition.itemCount == 0 &&
                                 openFoodFacts.itemCount == 0 &&
                                 foodDataCentral.itemCount == 0
                         else history.isNullOrEmpty()
@@ -711,6 +763,7 @@ fun FoodSearchList(
                     is SearchCollection.Favorite -> favoriteFood.itemCount == 0
                     is SearchCollection.FoodDataCentral -> foodDataCentral.itemCount == 0
                     is SearchCollection.OpenFoodFacts -> openFoodFacts.itemCount == 0
+                    is SearchCollection.General -> swissFoodComposition.itemCount == 0
                     is SearchCollection.UserFood -> userFood.itemCount == 0
                 }
 

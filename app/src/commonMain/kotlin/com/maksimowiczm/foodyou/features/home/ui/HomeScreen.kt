@@ -74,6 +74,7 @@ import com.maksimowiczm.foodyou.capabilities.foodbrowsing.fooddatacentral.FoodDa
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.openfoodfacts.OpenFoodFactsSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilter
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.rememberCollectionFilters
+import com.maksimowiczm.foodyou.capabilities.foodbrowsing.swissfoodcomposition.SwissFoodCompositionSearchExtension
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.SearchResult
 import com.maksimowiczm.foodyou.capabilities.foodbrowsing.userfood.UserFoodSearchExtension
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
@@ -96,6 +97,8 @@ import com.maksimowiczm.foodyou.shared.ui.extension.add
 import com.maksimowiczm.foodyou.shared.ui.extension.horizontal
 import com.maksimowiczm.foodyou.shared.ui.extension.plus
 import com.maksimowiczm.foodyou.shared.ui.saveable.jsonSaver
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProduct
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProductId
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.domain.UserRecipeId
 import com.valentinilk.shimmer.ShimmerBounds
@@ -114,6 +117,8 @@ import org.koin.core.parameter.parametersOf
 fun HomeScreen(
     onAvatar: () -> Unit,
     onFoodDataCentralProduct: (FoodDataCentralProductId, Quantity, MealId?, LocalDate?) -> Unit,
+    onSwissFoodCompositionProduct:
+        (SwissFoodCompositionProductId, Quantity, MealId?, LocalDate?) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductId, Quantity, MealId?, LocalDate?) -> Unit,
     onUserProduct: (UserProductId, Quantity, MealId?, LocalDate?) -> Unit,
     onUserRecipe: (UserRecipeId, Quantity, MealId?, LocalDate?) -> Unit,
@@ -134,6 +139,11 @@ fun HomeScreen(
 
     val userFood =
         searchViewModel.extension<UserFoodSearchExtension>().pages.collectAsLazyPagingItems()
+    val swissFoodComposition =
+        searchViewModel
+            .extension<SwissFoodCompositionSearchExtension>()
+            .pages
+            .collectAsLazyPagingItems()
     val openFoodFacts =
         searchViewModel.extension<OpenFoodFactsSearchExtension>().pages.collectAsLazyPagingItems()
     val foodDataCentral =
@@ -153,6 +163,7 @@ fun HomeScreen(
         searchHistory = searchHistory,
         collections = collections,
         userFood = userFood,
+        swissFoodComposition = swissFoodComposition,
         openFoodFacts = openFoodFacts,
         foodDataCentral = foodDataCentral,
         favoriteFood = favoriteFood,
@@ -163,6 +174,9 @@ fun HomeScreen(
         onSelectMeal = viewModel::selectMeal,
         onFoodDataCentralProduct = { product, quantity ->
             onFoodDataCentralProduct(product, quantity, uiState.activeMeal?.id, uiState.date)
+        },
+        onSwissFoodCompositionProduct = { product, quantity ->
+            onSwissFoodCompositionProduct(product, quantity, uiState.activeMeal?.id, uiState.date)
         },
         onOpenFoodFactsProduct = { product, quantity ->
             onOpenFoodFactsProduct(product, quantity, uiState.activeMeal?.id, uiState.date)
@@ -207,6 +221,7 @@ fun HomeScreenContent(
     searchHistory: List<String>?,
     collections: List<CollectionFilter>,
     userFood: LazyPagingItems<SearchResult>,
+    swissFoodComposition: LazyPagingItems<SwissFoodCompositionProduct>,
     openFoodFacts: LazyPagingItems<OpenFoodFactsProduct>,
     foodDataCentral: LazyPagingItems<FoodDataCentralProduct>,
     favoriteFood: LazyPagingItems<RemoteData<Any>>,
@@ -216,6 +231,7 @@ fun HomeScreenContent(
     onSelectDate: (LocalDate) -> Unit,
     onSelectMeal: (MealId?) -> Unit,
     onFoodDataCentralProduct: (FoodDataCentralProductId, Quantity) -> Unit,
+    onSwissFoodCompositionProduct: (SwissFoodCompositionProductId, Quantity) -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProductId, Quantity) -> Unit,
     onUserProduct: (UserProductId, Quantity) -> Unit,
     onUserRecipe: (UserRecipeId, Quantity) -> Unit,
@@ -413,6 +429,7 @@ fun HomeScreenContent(
                 FoodSearchList(
                     selectedCollection = selectedCollection.value,
                     userFood = userFood,
+                    swissFoodComposition = swissFoodComposition,
                     openFoodFacts = openFoodFacts,
                     foodDataCentral = foodDataCentral,
                     favoriteFood = favoriteFood,
@@ -426,10 +443,16 @@ fun HomeScreenContent(
                         ),
                     lazyListState = lazyListState,
                     onFoodDataCentralProduct = onFoodDataCentralProduct,
+                    onSwissFoodCompositionProduct = onSwissFoodCompositionProduct,
                     onOpenFoodFactsProduct = onOpenFoodFactsProduct,
                     onUserProduct = onUserProduct,
                     onUserRecipe = onUserRecipe,
                     shimmer = shimmer,
+                    onFill = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
+                    onSearch = {
+                        onSearch(it)
+                        textFieldState.setTextAndPlaceCursorAtEnd(it)
+                    },
                     modifier =
                         Modifier.zIndex(50f).fillMaxSize().graphicsLayer {
                             alpha =
@@ -444,11 +467,6 @@ fun HomeScreenContent(
                         },
                     history = searchHistory,
                     showQuickResults = showQuickResults.value,
-                    onSearch = {
-                        onSearch(it)
-                        textFieldState.setTextAndPlaceCursorAtEnd(it)
-                    },
-                    onFill = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
                 )
             }
             if (homeProgressAnimatable.value != 0f || latestEvent != null)
@@ -579,6 +597,10 @@ private fun HomeScreenPreview() {
         flowOf(PagingData.from(emptyList<RemoteData<Any>>()))
     }
         .collectAsLazyPagingItems()
+    val swissFoodComposition = remember {
+        flowOf(PagingData.from(emptyList<SwissFoodCompositionProduct>()))
+    }
+        .collectAsLazyPagingItems()
     val searchHistory = remember { listOf("Apple", "Pen") }
     val collections =
         listOf(
@@ -615,6 +637,7 @@ private fun HomeScreenPreview() {
             openFoodFacts = openFoodFacts,
             foodDataCentral = foodDataCentral,
             favoriteFood = favoriteFood,
+            swissFoodComposition = swissFoodComposition,
             onAvatar = {},
             onSearch = {},
             onSelectProfile = {},
@@ -624,6 +647,7 @@ private fun HomeScreenPreview() {
             onOpenFoodFactsProduct = { _, _ -> },
             onUserProduct = { _, _ -> },
             onUserRecipe = { _, _ -> },
+            onSwissFoodCompositionProduct = { _, _ -> },
             onCreateProduct = {},
             onCreateRecipe = {},
             onQuickAdd = {},

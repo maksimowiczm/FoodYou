@@ -23,13 +23,13 @@ import kotlinx.coroutines.flow.map
 class SwissFoodCompositionRepositoryImpl(private val dao: SwissFoodCompositionDao) :
     SwissFoodCompositionRepository {
     override fun search(
-        query: String,
+        query: String?,
         pageSize: Int,
         languageCode: String,
     ): Flow<PagingData<SwissFoodCompositionProduct>> {
         val config = PagingConfig(pageSize = pageSize)
         val factory = {
-            if (query.isBlank()) {
+            if (query.isNullOrBlank()) {
                 dao.getPagingSource(languageCode)
             } else {
                 dao.getPagingSourceByQuery(query, languageCode)
@@ -40,13 +40,14 @@ class SwissFoodCompositionRepositoryImpl(private val dao: SwissFoodCompositionDa
         }
     }
 
-    override fun count(query: String): Flow<Int> {
-        return if (query.isBlank()) {
-            dao.observeCount()
-        } else {
-            dao.observeCountByQuery(query)
-        }
-    }
+    override fun count(query: String?): Flow<Int> = if (query.isNullOrBlank())
+        dao.observeCount()
+     else
+        dao.observeCountByQuery(query)
+
+
+    override fun observe(id: SwissFoodCompositionProductId): Flow<SwissFoodCompositionProduct?> =
+        dao.observe(id.value).map { it?.toDomain() }
 }
 
 internal fun SwissFoodNutrientComponentEntity?.toEnergyComponent(

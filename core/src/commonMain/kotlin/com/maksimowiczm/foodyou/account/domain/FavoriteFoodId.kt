@@ -12,4 +12,6 @@ sealed interface FavoriteFoodId {
     @Serializable data class UserProduct(val id: Uuid) : FavoriteFoodId
 
     @Serializable data class Recipe(val id: Uuid) : FavoriteFoodId
+
+    @Serializable data class SwissFoodComposition(val id: Long) : FavoriteFoodId
 }

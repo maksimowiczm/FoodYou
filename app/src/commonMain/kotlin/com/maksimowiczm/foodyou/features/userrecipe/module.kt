@@ -17,6 +17,7 @@ internal fun Module.userRecipe() {
             off = get(),
             up = get(),
             recipeService = get(),
+            swissFoodCompositionRepository = get(),
             savedStateHandle = get(),
         )
     }

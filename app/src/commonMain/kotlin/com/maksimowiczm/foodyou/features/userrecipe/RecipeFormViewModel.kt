@@ -20,6 +20,9 @@ import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProductId
 import com.maksimowiczm.foodyou.openfoodfacts.application.OpenFoodFactsService
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.openfoodfacts.domain.OpenFoodFactsProductId
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionProductId
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.SwissFoodCompositionRepository
+import com.maksimowiczm.foodyou.swissfoodcomposition.domain.toSnapshot
 import com.maksimowiczm.foodyou.userproduct.application.UserProductService
 import com.maksimowiczm.foodyou.userproduct.domain.UserProductId
 import com.maksimowiczm.foodyou.userrecipe.application.UserRecipeService
@@ -45,6 +48,7 @@ class RecipeFormViewModel(
     private val off: OpenFoodFactsService,
     private val up: UserProductService,
     private val recipeService: UserRecipeService,
+    private val swissFoodCompositionRepository: SwissFoodCompositionRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val ingredients =
@@ -231,6 +235,25 @@ class RecipeFormViewModel(
                                             quantity = quantity,
                                             servingQuantity = product.servingQuantity,
                                             packageQuantity = product.packageQuantity,
+                                        ),
+                                )
+                        )
+                    }
+                }
+
+            is FoodSnapshotId.SwissFoodComposition ->
+                swissFoodCompositionRepository.observe(SwissFoodCompositionProductId(id.id)).map {
+                    product ->
+                    product?.let {
+                        ResolvedIngredient(
+                            snapshot =
+                                MeasuredFoodSnapshot(
+                                    snapshot = product.toSnapshot(),
+                                    quantity =
+                                        FoodSnapshotQuantityUpdateService.map(
+                                            quantity = quantity,
+                                            servingQuantity = null,
+                                            packageQuantity = null,
                                         ),
                                 )
                         )

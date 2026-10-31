@@ -5,10 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface SwissFoodCompositionRepository {
     fun search(
-        query: String,
+        query: String?,
         pageSize: Int,
         languageCode: String,
     ): Flow<PagingData<SwissFoodCompositionProduct>>
 
-    fun count(query: String): Flow<Int>
+    fun count(query: String?): Flow<Int>
+
+    fun observe(id: SwissFoodCompositionProductId): Flow<SwissFoodCompositionProduct?>
 }
