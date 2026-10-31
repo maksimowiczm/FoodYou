@@ -125,6 +125,7 @@
     <string name="action_show_details">Prikaži podrobnosti</string>
     <string name="action_set_key">Nastavite tipko</string>
     <string name="action_obtain_key">Pridobitev ključa</string>
+    <string name="action_copy">Kopiraj</string>
     <string name="neutral_barcode_scanner_camera_request">Omogočite dostop do kamere za skeniranje črtnih kod</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Za optično branje črtnih kod morate dovoliti dostop.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Za skeniranje črtnih kod je potrebno dovoljenje uporabe fotoaparata. Dovolite ga v nastavitvah aplikacije.</string>
@@ -170,9 +171,8 @@
     <string name="description_delete_food">Hrana bo trajno izbrisana</string>
     <string name="description_incomplete_nutrition_data">Nekateri uporabljeni izdelki nimajo te vrednosti, zato prikazana vrednost morda ne bo točna.</string>
     <string name="description_open_food_facts">Skupna, brezplačna in odprta zbirka podatkov o živilskih izdelkih z vsega sveta</string>
-    <string name="error_open_food_facts_service_unavailable">Storitev Open Food Facts začasno ni na voljo. Za registrirane uporabnike ne veljajo omejitve zahtev in imajo prednostni dostop v času konic.</string>
     <string name="action_register">Registracija</string>
-    <string name="error_usda_rate_limit">Omejitev uporabe API za FoodData Central (USDA) je presežena</string>
+    <string name="error_open_food_facts_service_unavailable">Storitev Open Food Facts začasno ni na voljo. Za registrirane uporabnike ne veljajo omejitve zahtev in imajo prednostni dostop v času konic.</string>
     <string name="headline_source_code">Izvorna koda</string>
     <string name="action_write_an_email">Napišite e-poštno sporočilo</string>
     <string name="headline_personalization">Prilagoditve po meri</string>
@@ -227,7 +227,6 @@
     <string name="headline_random_theme">Naključna tema</string>
     <string name="description_random_theme">Ob vsakem zagonu aplikacije se uporabi naključna tema</string>
     <string name="headline_terms_of_use">Pogoji uporabe</string>
-    <string name="onboarding_privacy_tip">Ta aplikacija je odprtokodna in ustvarjena za vas. Spoštujemo vašo zasebnost, vaši podatki ostanejo zasebni</string>
     <string name="headline_add_profile">Dodajanje profila</string>
     <string name="headline_how_do_you_want_to_be_called">Kako želite, da vas kličejo?</string>
     <string name="headline_profile_name">Ime profila</string>
@@ -235,6 +234,7 @@
     <string name="action_continue">Nadaljuj</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Pozdravljeni, %1$s!</string>
     <string name="headline_privacy">Zasebnost</string>
+    <string name="headline_sponsor">Postani sponzor</string>
     <string name="action_switch_profile">Zamenjaj profil</string>
     <string name="action_add_profile">Dodaj profil</string>
     <string name="action_refresh">Osveži</string>

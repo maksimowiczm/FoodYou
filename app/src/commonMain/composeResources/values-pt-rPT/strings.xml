@@ -121,6 +121,7 @@
     <string name="action_show_details">Mostrar detalhes</string>
     <string name="action_set_key">Definir chave</string>
     <string name="action_obtain_key">Obter chave</string>
+    <string name="action_copy">Copiar</string>
     <string name="neutral_barcode_scanner_camera_request">Permita acesso à sua câmara para digitalizar códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Tem de permitir o acesso para ler códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">É necessária permissão da câmara para ler códigos de barras. Por favor, conceda-a nas configurações da aplicação.</string>
@@ -158,13 +159,10 @@
     <string name="description_delete_food">A comida será removida permanentemente</string>
     <string name="description_incomplete_nutrition_data">Alguns dos produtos usados não têm esse valor; portanto, o valor apresentado pode não ser preciso</string>
     <string name="description_open_food_facts">Uma base de dados colaborativa, livre e aberta sobre produtos alimentares de todo o mundo</string>
-    <string name="error_open_food_facts_service_unavailable">O serviço Open Food Facts está temporariamente indisponível. Os utilizadores registados não estão sujeitos a limites de pedidos da API e têm acesso prioritário durante picos de acesso.</string>
     <string name="action_register">Registe-se</string>
     <string name="description_open_food_facts_credentials_message">As credenciais de autenticação são encriptadas e guardadas apenas no seu dispositivo. Quaisquer dados que considere sensíveis estão acessíveis apenas a si e a mais ninguém.</string>
     <string name="error_open_food_facts_failed_to_authenticate">Falha ao autenticar com o Open Food Facts</string>
-    <string name="headline_username">Nome de utilizador</string>
-    <string name="headline_password">Palavra-passe</string>
-    <string name="error_usda_rate_limit">Taxa de utilização da API da FoodData Central (USDA) excedida</string>
+    <string name="error_open_food_facts_service_unavailable">O serviço Open Food Facts está temporariamente indisponível. Os utilizadores registados não estão sujeitos a limites de pedidos da API e têm acesso prioritário durante picos de acesso.</string>
     <string name="headline_source_code">Código-fonte</string>
     <string name="action_write_an_email">Escreva um e-mail</string>
     <string name="headline_personalization">Personalização</string>
@@ -216,7 +214,6 @@
     <string name="headline_random_theme">Tema aleatório</string>
     <string name="description_random_theme">Um tema aleatório será aplicado sempre que a aplicação é iniciada</string>
     <string name="headline_terms_of_use">Temos de utilização</string>
-    <string name="onboarding_privacy_tip">Esta aplicação é de código aberto e desenvolvida para si. Respeitamos a sua privacidade, a sua informação é mantida privada.</string>
     <string name="headline_add_profile">Adicionar perfil</string>
     <string name="headline_how_do_you_want_to_be_called">Como quer ser chamado(a)?</string>
     <string name="headline_profile_name">Nome do perfil</string>
@@ -224,6 +221,7 @@
     <string name="action_continue">Continuar</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Olá, %1$s!</string>
     <string name="headline_privacy">Privacidade</string>
+    <string name="headline_sponsor">Patrocinador</string>
     <string name="action_switch_profile">Alternar perfil</string>
     <string name="action_add_profile">Adicionar perfil</string>
     <string name="action_refresh">Atualizar</string>
@@ -243,4 +241,6 @@
     <string name="description_values_per">Selecione a quantidade em que os seus valores nutricionais são baseados</string>
     <string name="description_privacy">Controle a sua informação pessoal</string>
     <string name="error_open_food_facts_timeout">O Open Food Facts está a demorar muito tempo a responder. O serviço pode estar com o acesso temporariamente lento ou indisponível. Em alternativa, tente digitalizar o código de barras.</string>
+    <string name="headline_username">Nome de utilizador</string>
+    <string name="headline_password">Palavra-passe</string>
 </resources>

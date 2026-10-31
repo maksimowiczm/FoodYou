@@ -4,13 +4,16 @@
     <string name="headline_create_product">Créer un aliment</string>
     <string name="headline_macronutrients">Macronutriments</string>
     <string name="headline_meals">Repas</string>
+    <string name="question_delete_food">Supprimer l'aliment ?</string>
     <string name="headline_edit_product">Modifier le produit</string>
     <string name="headline_permission_required">Autorisation nécessaire</string>
     <string name="headline_language">Langues</string>
     <string name="headline_system">Système</string>
     <string name="headline_secure_screen">Écran sécurisé</string>
     <string name="headline_about">À propos</string>
+    <string name="headline_contributors">Contributeurs</string>
     <string name="headline_version">Version</string>
+    <string name="headline_special_thanks_to">Un grand merci à</string>
     <string name="headline_all_day" description="All-day (meal)">Toute la journée</string>
     <string name="headline_product">Produit</string>
     <string name="headline_recipe">Recette</string>
@@ -121,6 +124,8 @@
     <string name="action_show_details">Montrer les détails</string>
     <string name="action_set_key">Définir la clé</string>
     <string name="action_obtain_key">Obtenir une clé</string>
+    <string name="action_open">Ouvrir</string>
+    <string name="action_copy">Copier</string>
     <string name="neutral_barcode_scanner_camera_request">Autoriser l'accès à l'appareil photo pour scanner les codes-barres</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Vous devez autoriser l'accès pour pouvoir scanner les codes-barres</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L'accès à la caméra est nécessaire pour scanner les codes-barres. Autorisez-le dans les paramètres.</string>
@@ -158,13 +163,13 @@
     <string name="description_delete_food">L'aliment sera supprimé définitivement</string>
     <string name="description_incomplete_nutrition_data">Certains produits utilisés n'ont pas cette valeur ; la valeur affichée pourrait donc être inexacte</string>
     <string name="description_open_food_facts">Une base de données collaborative, gratuite et ouverte sur les produits alimentaires du monde entier.</string>
-    <string name="error_open_food_facts_service_unavailable">Le service Open Food Facts est temporairement indisponible. Les utilisateurs enregistrés ne sont pas soumis à des limites de demande et bénéficient d'un accès prioritaire pendant les heures de pointe.</string>
+    <string name="openfoodfacts_version_legacy" description="Old OpenFoodFacts search API">Classique</string>
     <string name="action_register">S'inscrire</string>
     <string name="description_open_food_facts_credentials_message">Les identifiants de connexion sont chiffrés et stockés uniquement sur votre appareil. Personne d'autre ne peut accéder aux données sensibles.</string>
     <string name="error_open_food_facts_failed_to_authenticate">Échec de l'authentification avec Open Food Facts</string>
-    <string name="headline_username">Nom d'utilisateur</string>
-    <string name="headline_password">Mot de passe</string>
-    <string name="error_usda_rate_limit">Limite d'utilisation de l'API FoodData Central (USDA) dépassée</string>
+    <string name="error_open_food_facts_service_unavailable">Le service Open Food Facts est temporairement indisponible. Les utilisateurs enregistrés ne sont pas soumis à des limites de demande et bénéficient d'un accès prioritaire pendant les heures de pointe.</string>
+    <string name="description_fooddata_central">FoodData Central est une source complète de données sur la composition des aliments de l'USDA, qui regroupe plusieurs types de données distincts</string>
+    <string name="error_usda_rate_limit">Limite d'utilisation de l'API FoodData Central dépassée</string>
     <string name="headline_source_code">Code source</string>
     <string name="action_write_an_email">Écrire un e-mail</string>
     <string name="headline_personalization">Personnalisation</string>
@@ -203,6 +208,9 @@
     <string name="description_custom_palette">Configurez votre propre palette</string>
     <string name="headline_dynamic_colors">Couleurs dynamiques</string>
     <string name="description_dynamic_colors">Appliquer les couleurs du système</string>
+    <string name="headline_single_profile_mode">Mode de profil unique</string>
+    <string name="description_single_profile_mode">Masquer les fonctionnalités de gestion du profil</string>
+    <string name="error_single_profile_mode">Supprimer d'abord les profils supplémentaires</string>
     <string name="headline_palette_style">Style de palette</string>
     <string name="headline_contrast">Contraste</string>
     <string name="headline_amoled">AMOLED</string>
@@ -216,7 +224,7 @@
     <string name="headline_random_theme">Thème aléatoire</string>
     <string name="description_random_theme">Un thème aléatoire sera appliqué à chaque démarrage de l'application</string>
     <string name="headline_terms_of_use">Conditions d'utilisation</string>
-    <string name="onboarding_privacy_tip">Cette application est open source et conçue pour vous. Nous respectons votre vie privée, vos informations restent confidentielles.</string>
+    <string name="onboarding_privacy_tip">Cette application est open-source et construite pour vous. Elle respecte votre vie privée, vos informations restent privées.</string>
     <string name="headline_add_profile">Ajouter un profil</string>
     <string name="headline_how_do_you_want_to_be_called">Comment souhaitez-vous être appelé ?</string>
     <string name="headline_profile_name">Nom du profil</string>
@@ -224,6 +232,8 @@
     <string name="action_continue">Continuer</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Salut, %1$s !</string>
     <string name="headline_privacy">Confidentialité</string>
+    <string name="headline_sponsor">Soutenir le projet</string>
+    <string name="description_sponsor">Soutenez le développement de l'application</string>
     <string name="action_switch_profile">Changer de profil</string>
     <string name="action_add_profile">Ajouter un profil</string>
     <string name="action_refresh">Actualiser</string>
@@ -243,4 +253,25 @@
     <string name="description_values_per">Sélectionnez la quantité sur laquelle vos valeurs nutritionnelles sont basées</string>
     <string name="description_privacy">Contrôlez vos informations personnelles</string>
     <string name="error_open_food_facts_timeout">Open Food Facts prend trop de temps à répondre. Le service peut être temporairement lent ou indisponible. Essayez plutôt de scanner le code-barres du produit.</string>
+    <string name="headline_collections" description="Collections of food products, e.g. favorite foods, Open Food Facts, recipes">Collections</string>
+    <string name="action_search_foods">Rechercher des aliments</string>
+    <string name="headline_no_recent_searches">Aucune recherche récente</string>
+    <string name="headline_search_ingredients">Rechercher des ingrédients</string>
+    <string name="headline_username">Nom d'utilisateur</string>
+    <string name="headline_password">Mot de passe</string>
+    <string name="action_show" description="Show password, show credentials, text field">Afficher</string>
+    <string name="action_hide" description="Hide password, hide credentials, text field">Masquer</string>
+    <string name="action_undo">Annuler</string>
+    <string name="headline_meal_name">Nom du repas</string>
+    <string name="headline_start_time">Heure de début</string>
+    <string name="headline_end_time">Heure de fin</string>
+    <string name="action_expand">Révéler</string>
+    <string name="action_collapse" description="Opposite of expand">Réduire</string>
+    <string name="headline_meal_unlinked">Non lié</string>
+    <string name="question_delete_diary_entry">Supprimer l'entrée du journal ?</string>
+    <string name="description_delete_diary_entry">L'entrée du journal sera définitivement supprimée</string>
+    <string name="headline_diary_sync">Synchroniser le journal avec les changements de nourriture</string>
+    <string name="description_diary_sync">Lorsque cette option est activée, la mise à jour d'un aliment met également à jour ses entrées correspondantes dans le journal</string>
+    <string name="headline_diary_timestamps">Horodatages du journal</string>
+    <string name="description_diary_timestamps">Voir l'heure exacte où vous avez mangé quelque chose</string>
 </resources>

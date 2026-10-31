@@ -121,6 +121,7 @@
     <string name="action_show_details">Mostrar detalles</string>
     <string name="action_set_key">Establecer clave</string>
     <string name="action_obtain_key">Obtener clave</string>
+    <string name="action_copy">Copiar</string>
     <string name="neutral_barcode_scanner_camera_request">Permitir el acceso a su cámara para escanear códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Necesitas tener permiso a la cámara para poder escanear el código de barras</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Se requiere acceso a la cámara para escanear códigos de barras. Permítelo en los ajustes de la aplicación.</string>
@@ -158,7 +159,6 @@
     <string name="description_delete_food">El alimento será eliminado permanentemente</string>
     <string name="description_incomplete_nutrition_data">Algunos de los productos utilizados carecen de este valor, por lo que es posible que el valor mostrado no sea exacto</string>
     <string name="description_open_food_facts">Una base de datos colaborativa, gratuita y abierta de productos alimentarios de todo el mundo</string>
-    <string name="error_usda_rate_limit">Se ha superado el límite de la API de FoodData Central (USDA)</string>
     <string name="headline_source_code">Código fuente</string>
     <string name="action_write_an_email">Escribir un email</string>
     <string name="headline_personalization">Personalización</string>
@@ -209,7 +209,6 @@
     <string name="headline_random_theme">Tema aleatorio</string>
     <string name="description_random_theme">Se aplicará un tema aleatorio cada vez que se inicie la aplicación</string>
     <string name="headline_terms_of_use">Condiciones de uso</string>
-    <string name="onboarding_privacy_tip">Esta aplicación es de código abierto y hecha para ti. Por ello respetamos tu privacidad, y toda tu información se mantiene privada.</string>
     <string name="headline_add_profile">Añadir perfil</string>
     <string name="headline_how_do_you_want_to_be_called">¿Cómo quieres que te llamen?</string>
     <string name="headline_profile_name">Nombre de perfil</string>
@@ -217,6 +216,7 @@
     <string name="action_continue">Continuar</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Hi, %1$s!</string>
     <string name="headline_privacy">Privacidad</string>
+    <string name="headline_sponsor">Patrocinador</string>
     <string name="action_switch_profile">Cambiar de perfil</string>
     <string name="action_add_profile">Añadir perfil</string>
     <string name="action_refresh">Actualizar</string>
@@ -235,4 +235,4 @@
     <string name="action_remove_a_photo">Eliminar una foto</string>
     <string name="description_values_per">Selecciona la cantidad en la que se basan los valores nutricionales</string>
     <string name="description_privacy">Controla tu información personal</string>
-    </resources>
+</resources>

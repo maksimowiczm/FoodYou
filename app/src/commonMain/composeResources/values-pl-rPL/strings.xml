@@ -125,6 +125,7 @@
     <string name="action_show_details">Pokaż szczegóły</string>
     <string name="action_set_key">Ustaw klucz</string>
     <string name="action_obtain_key">Uzyskaj klucz</string>
+    <string name="action_copy">Kopiuj</string>
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
@@ -170,13 +171,10 @@
     <string name="description_delete_food">Żywność zostanie trwale usunięta</string>
     <string name="description_incomplete_nutrition_data">Niektóre z używanych produktów nie mają tej wartości, dlatego wyświetlana wartość może być niedokładna</string>
     <string name="description_open_food_facts">Wspólna, wolna i otwarta baza produktów spożywczych z całego świata</string>
-    <string name="error_open_food_facts_service_unavailable">Usługa Open Food Facts jest chwilowo niedostępna. Zarejestrowani użytkownicy nie mają limitów zapytań i mają priorytetowy dostęp w godzinach szczytu.</string>
     <string name="action_register">Zarejestruj się</string>
     <string name="description_open_food_facts_credentials_message">Twoje dane logowania są bezpiecznie przechowywane i szyfrowane tylko na Twoim urządzeniu. Nikt inny nie ma do nich dostępu.</string>
     <string name="error_open_food_facts_failed_to_authenticate">Nie udało się uwierzytelnić z Open Food Facts</string>
-    <string name="headline_username">Nazwa użytkownika</string>
-    <string name="headline_password">Hasło</string>
-    <string name="error_usda_rate_limit">Przekroczono limit Food Data Central (USDA) API</string>
+    <string name="error_open_food_facts_service_unavailable">Usługa Open Food Facts jest chwilowo niedostępna. Zarejestrowani użytkownicy nie mają limitów zapytań i mają priorytetowy dostęp w godzinach szczytu.</string>
     <string name="headline_source_code">Kod źródłowy</string>
     <string name="action_write_an_email">Napisz e-mail</string>
     <string name="headline_personalization">Personalizacja</string>
@@ -232,7 +230,6 @@
     <string name="headline_random_theme">Losowy motyw</string>
     <string name="description_random_theme">Przy każdym uruchomieniu aplikacji zostanie zastosowany losowy motyw</string>
     <string name="headline_terms_of_use">Warunki użytkowania</string>
-    <string name="onboarding_privacy_tip">Ta aplikacja jest otwartoźródłowa i stworzona z myślą o Tobie. Szanujemy Twoją prywatność, Twoje dane pozostają prywatne.</string>
     <string name="headline_add_profile">Dodaj profil</string>
     <string name="headline_how_do_you_want_to_be_called">Jak chcesz być nazywany?</string>
     <string name="headline_profile_name">Nazwa profilu</string>
@@ -240,6 +237,7 @@
     <string name="action_continue">Kontynuuj</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Cześć, %1$s!</string>
     <string name="headline_privacy">Prywatność</string>
+    <string name="headline_sponsor">Sponsoruj</string>
     <string name="action_switch_profile">Zmień profil</string>
     <string name="action_add_profile">Dodaj profil</string>
     <string name="action_refresh">Odśwież</string>
@@ -259,4 +257,6 @@
     <string name="description_values_per">Wybierz ilość, na której bazują Twoje wartości odżywcze</string>
     <string name="description_privacy">Kontroluj swoje dane osobowe</string>
     <string name="error_open_food_facts_timeout">Open Food Facts odpowiada zbyt długo. Usługa może być tymczasowo niedostępna. Zamiast tego spróbuj zeskanować kod kreskowy produktu.</string>
+    <string name="headline_username">Nazwa użytkownika</string>
+    <string name="headline_password">Hasło</string>
 </resources>

@@ -144,4 +144,4 @@
         <item quantity="other">تجاوز %1$d سعرة</item>
     </plurals>
     <string name="description_incomplete_nutrition_data">بعض المنتجات المستعملة تنقصها هذه القيمة؛ لذا، قد لا تكون القيمة المعروضة دقيقة</string>
-    </resources>
+</resources>

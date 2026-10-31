@@ -11,3 +11,5 @@
 </ul>
 
 Comença a enregistrar la teva nutrició amb Food You. Sense distraccions, complet i únicament teu.
+
+Icona feta amb <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer"> Icons8</a>

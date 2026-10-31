@@ -25,6 +25,7 @@
     <string name="weight">Pes</string>
     <string name="unit_energy" description="Energy as calories">Energia</string>
     <string name="unit_kcal">kcal</string>
+    <string name="unit_kilojoules">kJ</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
         <item quantity="other">grams</item>
@@ -33,6 +34,8 @@
         <item quantity="one">mil·lilitre</item>
         <item quantity="other">mil·lilitres</item>
     </plurals>
+    <string name="unit_ounce_short">oz</string>
+    <string name="unit_fluid_ounce_short">dl oz</string>
     <string name="product_package">Paquet</string>
     <string name="product_serving">Porció</string>
     <string name="product_name">Nom</string>
@@ -53,8 +56,13 @@
     <string name="nutriment_omega_3">Àcids grassos Omega-3</string>
     <string name="nutriment_omega_6">Àcids grassos Omega-6</string>
     <string name="nutriment_salt">Sal</string>
+    <string name="nutriment_fiber">Fibra alimentària</string>
     <string name="nutriment_cholesterol">Colesterol</string>
     <string name="nutriment_caffeine">Cafeïna</string>
+    <string name="nutriment_trans_fats">Greixos trans</string>
+    <string name="nutriment_added_sugars">Sucres afegits</string>
+    <string name="nutriment_soluble_fiber">Fibra soluble</string>
+    <string name="nutriment_insoluble_fiber">Fibra insoluble</string>
     <string name="vitamin_e">Vitamina E</string>
     <string name="vitamin_k">Vitamina K</string>
     <string name="mineral_manganese">Manganès</string>
@@ -97,9 +105,11 @@
     <string name="action_delete_ingredient">Eliminar ingredient</string>
     <string name="action_choose_other_date">Escull una altra data</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mostrar més</string>
+    <string name="action_copy_and_report" description="Copy bug report and report a bug">Copia i informa</string>
     <string name="action_show_details">Mostrar detalls</string>
     <string name="action_set_key">Establir clau</string>
     <string name="action_obtain_key">Obtenir clau</string>
+    <string name="action_copy">Copiar</string>
     <string name="neutral_barcode_scanner_camera_request">Permetre accés a la càmera per escanejar el codi de barres</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Necessites tenir accés a la cámara per poder escanejar el codi de barres</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Es requereix accés a la càmera per escanejar codis de barres. Permet-ho a la configuració de l'aplicació.</string>
@@ -120,6 +130,7 @@
     <string name="error_value_must_be_positive">El valor ha de ser positiu</string>
     <string name="error_unknown_error">Error desconegut</string>
     <string name="error_api_key_is_invalid">Clau API invàlida</string>
+    <string name="error_not_a_barcode">No és un codi de barres</string>
     <string name="positive_ok">D'acord</string>
     <plurals name="negative_exceeded_by_calories">
         <item quantity="one">Excedit per %1$d caloria</item>
@@ -127,11 +138,11 @@
     </plurals>
     <string name="description_incomplete_nutrition_data">Alguns dels productes utilitzats no tenen aquest valor; per tant, el valor mostrat pot no ser precís</string>
     <string name="description_open_food_facts">Una base de dades col·laborativa, lliure i oberta de productes alimentaris d'arreu del món</string>
-    
     <string name="action_write_an_email">Escriure un correu electrònic</string>
     <string name="headline_personalization">Personalització</string>
     <string name="description_personalization">Personalitza la teva experiència</string>
     <string name="headline_nutrition_facts">Informació nutricional</string>
     <string name="headline_reset_to_default">Restableix als valors predeterminats</string>
     <string name="action_reset" description="Confirm resetting">Reiniciar</string>
-    </resources>
+    <string name="headline_sponsor">Patrocinador</string>
+</resources>

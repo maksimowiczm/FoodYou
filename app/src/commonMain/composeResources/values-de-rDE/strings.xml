@@ -4,13 +4,16 @@
     <string name="headline_create_product">Produkt erstellen</string>
     <string name="headline_macronutrients">Makronährstoffe</string>
     <string name="headline_meals">Mahlzeiten</string>
+    <string name="question_delete_food">Lebensmittel entfernen?</string>
     <string name="headline_edit_product">Produkt bearbeiten</string>
     <string name="headline_permission_required">Berechtigung erforderlich</string>
     <string name="headline_language">Sprache</string>
     <string name="headline_system">System</string>
     <string name="headline_secure_screen">Sicherer Bildschirm</string>
     <string name="headline_about">Über</string>
+    <string name="headline_contributors">Mitwirkende</string>
     <string name="headline_version">Version</string>
+    <string name="headline_special_thanks_to">Besonderen Dank an</string>
     <string name="headline_all_day" description="All-day (meal)">Ganztägig</string>
     <string name="headline_product">Produkt</string>
     <string name="headline_recipe">Rezept</string>
@@ -121,6 +124,7 @@
     <string name="action_show_details">Details anzeigen</string>
     <string name="action_set_key">Schlüssel setzen</string>
     <string name="action_obtain_key">Schlüssel erhalten</string>
+    <string name="action_copy">Kopieren</string>
     <string name="neutral_barcode_scanner_camera_request">Erlaube den Zugriff auf deine Kamera zum Scannen von Barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Um die Barcodes zu scannen, musst du den Zugriff erlauben</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Zum Scannen von Barcodes ist eine Kameraerlaubnis erforderlich. Bitte erlaube es in den App-Einstellungen.</string>
@@ -158,13 +162,10 @@
     <string name="description_delete_food">Lebensmittel werden unwiderruflich gelöscht</string>
     <string name="description_incomplete_nutrition_data">Einige der verwendeten Produkte haben diesen Wert nicht, daher könnte der angezeigte Wert ungenau sein</string>
     <string name="description_open_food_facts">Eine kollaborative, kostenlose und offene Datenbank mit Lebensmitteln aus aller Welt</string>
-    <string name="error_open_food_facts_service_unavailable">Open Food Facts ist vorübergehend nicht verfügbar. Registrierte Benutzer unterliegen keinen Rate-Limits und erhalten bevorzugten Zugriff während den Hauptzeiten.</string>
     <string name="action_register">Registrieren</string>
     <string name="description_open_food_facts_credentials_message">Anmeldedaten werden verschlüsselt und nur auf deinem Gerät gespeichert. Sensible Daten sind für niemanden zugänglich.</string>
     <string name="error_open_food_facts_failed_to_authenticate">Die Authentifizierung mit Open Food Facts ist fehlgeschlagen</string>
-    <string name="headline_username">Benutzername</string>
-    <string name="headline_password">Passwort</string>
-    <string name="error_usda_rate_limit">FoodData Central (USDA) API-Rate-Limit überschritten</string>
+    <string name="error_open_food_facts_service_unavailable">Open Food Facts ist vorübergehend nicht verfügbar. Registrierte Benutzer unterliegen keinen Rate-Limits und erhalten bevorzugten Zugriff während den Hauptzeiten.</string>
     <string name="headline_source_code">Quellcode</string>
     <string name="action_write_an_email">Schreibe eine E-Mail</string>
     <string name="headline_personalization">Personalisierung</string>
@@ -216,7 +217,7 @@
     <string name="headline_random_theme">Zufälliges Thema</string>
     <string name="description_random_theme">Bei jedem Start der App wird ein zufälliges Thema angewandt</string>
     <string name="headline_terms_of_use">Nutzungsbedingungen</string>
-    <string name="onboarding_privacy_tip">Diese App ist quelloffen und für dich gebaut. Wir respektieren deine Privatsphäre, deine Informationen bleiben privat.</string>
+    <string name="onboarding_privacy_tip">Diese App ist quelloffen und für dich gemacht. Sie respektiert deine Privatsphäre, deine Informationen bleiben privat.</string>
     <string name="headline_add_profile">Profil hinzufügen</string>
     <string name="headline_how_do_you_want_to_be_called">Wie möchtest du genannt werden?</string>
     <string name="headline_profile_name">Profilname</string>
@@ -224,6 +225,8 @@
     <string name="action_continue">Fortsetzen</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Hi, %1$s!</string>
     <string name="headline_privacy">Datenschutz</string>
+    <string name="headline_sponsor">Spenden</string>
+    <string name="description_sponsor">Unterstütze die Entwicklung der App</string>
     <string name="action_switch_profile">Profil wechseln</string>
     <string name="action_add_profile">Profil hinzufügen</string>
     <string name="action_refresh">Aktualisieren</string>
@@ -243,4 +246,22 @@
     <string name="description_values_per">Wähle die Menge, auf der deine Nährwerte basieren</string>
     <string name="description_privacy">Deine persönlichen Daten verwalten</string>
     <string name="error_open_food_facts_timeout">Open Food Facts braucht zu lange, um zu reagieren. Der Dienst ist eventuell vorübergehend langsam oder nicht verfügbar. Versuche stattdessen den Barcode des Produkts zu scannen.</string>
+    <string name="headline_collections" description="Collections of food products, e.g. favorite foods, Open Food Facts, recipes">Sammlungen</string>
+    <string name="action_search_foods">Lebensmittel suchen</string>
+    <string name="headline_no_recent_searches">Keine kürzlichen Suchanfragen</string>
+    <string name="headline_search_ingredients">Zutaten suchen</string>
+    <string name="headline_username">Benutzername</string>
+    <string name="headline_password">Passwort</string>
+    <string name="action_show" description="Show password, show credentials, text field">Anzeigen</string>
+    <string name="action_hide" description="Hide password, hide credentials, text field">Ausblenden</string>
+    <string name="action_undo">Rückgängig</string>
+    <string name="headline_meal_name">Name der Mahlzeit</string>
+    <string name="headline_start_time">Startzeit</string>
+    <string name="headline_end_time">Endzeit</string>
+    <string name="action_expand">Aufklappen</string>
+    <string name="action_collapse" description="Opposite of expand">Schließen</string>
+    <string name="question_delete_diary_entry">Tagebucheintrag löschen?</string>
+    <string name="description_delete_diary_entry">Der Tagebucheintrag wird dauerhaft gelöscht</string>
+    <string name="headline_diary_timestamps">Tagebuch-Zeitstempel</string>
+    <string name="description_diary_timestamps">Schau dir die genaue Zeit an, in der du etwas gegessen hast</string>
 </resources>

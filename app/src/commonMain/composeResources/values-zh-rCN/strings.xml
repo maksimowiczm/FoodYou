@@ -118,6 +118,7 @@
     <string name="action_show_details">显示详情</string>
     <string name="action_set_key">设置密钥</string>
     <string name="action_obtain_key">获取密钥</string>
+    <string name="action_copy">复制</string>
     <string name="neutral_barcode_scanner_camera_request">授予相机使用权限，即可扫描条形码</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">您必须允许相机访问才能扫描条形码</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">扫描条形码需要相机权限。请在应用程序设置中允许它。</string>
@@ -151,7 +152,6 @@
     <string name="description_delete_food">食品将被永久删除</string>
     <string name="description_incomplete_nutrition_data">一些二手产品缺乏这种价值，因此，显示的值可能不准确</string>
     <string name="description_open_food_facts">一个协作、免费和开放的食品数据库，包含来自世界各地的食品</string>
-    <string name="error_usda_rate_limit">FoodData Central (USDA) API 速率限制已超额</string>
     <string name="headline_source_code">源代码</string>
     <string name="action_write_an_email">写邮件联系</string>
     <string name="headline_personalization">个性化</string>
@@ -200,7 +200,6 @@
     <string name="headline_random_theme">随机主题</string>
     <string name="description_random_theme">每次启动应用将使用一个随机主题</string>
     <string name="headline_terms_of_use">使用条款</string>
-    <string name="onboarding_privacy_tip">专为您打造的开源应用。我们尊重您的隐私，您的信息将保密。</string>
     <string name="headline_add_profile">添加个人资料</string>
     <string name="headline_how_do_you_want_to_be_called">您希望怎么称呼？</string>
     <string name="headline_profile_name">个人资料名称</string>
@@ -208,6 +207,7 @@
     <string name="action_continue">继续</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">%1$s，您好！</string>
     <string name="headline_privacy">隐私</string>
+    <string name="headline_sponsor">支持</string>
     <string name="action_switch_profile">切换个人资料</string>
     <string name="action_add_profile">添加个人资料</string>
     <string name="action_refresh">刷新</string>
@@ -226,4 +226,4 @@
     <string name="action_remove_a_photo">移除图片</string>
     <string name="description_values_per">选择您的营养数值所基于的份量</string>
     <string name="description_privacy">管控您的个人信息</string>
-    </resources>
+</resources>

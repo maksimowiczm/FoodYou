@@ -121,6 +121,7 @@
     <string name="action_show_details">Laat details zien</string>
     <string name="action_set_key">Stel sleutel in</string>
     <string name="action_obtain_key">Sleutel ophalen</string>
+    <string name="action_copy">Kopiëren</string>
     <string name="neutral_barcode_scanner_camera_request">Keur toegang tot camera goed om barcodes te scannen</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Je moet toestemming verlenen om barcodes te scannen</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera toegang is nodig om barcodes te scannen. Sta dit toe bij systeeminstellingen.</string>
@@ -158,7 +159,6 @@
     <string name="description_delete_food">Voeding zal permanent worden verwijderd</string>
     <string name="description_incomplete_nutrition_data">Sommige van de producten, die gebruikt worden, hebben deze waarde niet, het totaal kan dus afwijken van de werkelijkheid</string>
     <string name="description_open_food_facts">Een samenwerkend, gratis en open database van voedselproducten van over de hele wereld</string>
-    <string name="error_usda_rate_limit">API limiet van FoodData Central (USDA) overschreden</string>
     <string name="headline_source_code">Bron code</string>
     <string name="action_write_an_email">Schrijf een e-mail</string>
     <string name="headline_personalization">Aanpassen naar persoonlijke voorkeur</string>
@@ -209,7 +209,6 @@
     <string name="headline_random_theme">Willekeurige thema</string>
     <string name="description_random_theme">Iedere keer dat je de app start zal er een willekeurig thema worden toegepast</string>
     <string name="headline_terms_of_use">Algemene voorwaarden</string>
-    <string name="onboarding_privacy_tip">Deze app is open-source en gemaakt voor jou. We respecteren jouw privacy, jouw informatie blijft privé</string>
     <string name="headline_add_profile">Profiel toevoegen</string>
     <string name="headline_how_do_you_want_to_be_called">Hoe wil je genoemd worden?</string>
     <string name="headline_profile_name">Profiel naam</string>
@@ -217,6 +216,7 @@
     <string name="action_continue">Doorgaan</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Hoi, %1$s!</string>
     <string name="headline_privacy">Privacy</string>
+    <string name="headline_sponsor">Sponsor</string>
     <string name="action_switch_profile">Profiel wisselen</string>
     <string name="action_add_profile">Profiel toevoegen</string>
     <string name="action_refresh">Verversen</string>
@@ -235,4 +235,4 @@
     <string name="action_remove_a_photo">Een foto verwijderen</string>
     <string name="description_values_per">Selecteer de hoeveelheid waarop uw voedingswaarden gebaseerd zijn</string>
     <string name="description_privacy">Beheer uw persoonlijke gegevens</string>
-    </resources>
+</resources>

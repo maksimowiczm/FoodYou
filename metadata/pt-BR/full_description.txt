@@ -1,13 +1,15 @@
-<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
+<b>Food You</b> é um contador de calorias de código aberto com um 'design' moderno utilizando Material You. O aplicativo te ajuda a rastrear não apenas calorias, mas todos os nutrientes — com fontes confiáveis de dados e uma interface flexível.
 
 <b>Características:</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
-    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
-    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
+    <li><b>Design Material You:</b> Temas dinâmicos que se adaptam ao seu dispositivo para uma experiência amigável.</li>
+    <li><b>Bases de dados confiáveis:</b> Acesse informações nutricionais através de Open Food Facts, USDA FoodCentral e Swiss Food Composition Database.</li>
+    <li><b>Controle nutricional completo:</b> Monitore calorias, macros, vitaminas, minerais e mais.</li>
     <li><b>Crie receitas:</b> Combine alimentos para formar receitas personalizadas com cálculo automático de nutrição.</li>
     <li><b>Objetivos diários:</b> Estabeleça e siga metas nutricionais personalizadas.</li>
-    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
+    <li><b>Página inicial customizável:</b> Personalize sua página inicial com cartões adaptados às suas necessidades.</li>
 </ul>
 
-Start tracking your nutrition today with Food You — clean, complete, and fully yours.
+Comece a controlar sua alimentação hoje com Food You — completo, elegante e todo seu.
+
+Ícone feito por <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

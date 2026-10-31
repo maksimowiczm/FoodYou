@@ -121,6 +121,7 @@
     <string name="action_show_details">Näytä lisätiedot</string>
     <string name="action_set_key">Aseta avain</string>
     <string name="action_obtain_key">Hanki avain</string>
+    <string name="action_copy">Kopioi</string>
     <string name="neutral_barcode_scanner_camera_request">Salli kameran käyttö skannataksesi viivakoodeja</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Sinun täytyy sallia pääsy skannataksesi viivakoodeja</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Kameran käyttöoikeus tarvitaan viivakoodien skannaamiseen. Salli se sovelluksen asetuksissa.</string>
@@ -158,7 +159,6 @@
     <string name="description_delete_food">Ruoka poistetaan pysyvästi</string>
     <string name="description_incomplete_nutrition_data">Joillakin käytetyillä tuotteilla ei ole tätä arvoa, joten näytettävä arvo ei ehkä ole tarkka</string>
     <string name="description_open_food_facts">Yhteistyöhön perustuva, vapaa ja avoin tietokanta elintarvikkeista ympäri maailmaa</string>
-    <string name="error_usda_rate_limit">FoodData Central (USDA) API-raja ylittynyt</string>
     <string name="headline_source_code">Lähdekoodi</string>
     <string name="action_write_an_email">Kirjoita sähköpostia</string>
     <string name="headline_personalization">Mukauttaminen</string>
@@ -209,7 +209,6 @@
     <string name="headline_random_theme">Satunnainen teema</string>
     <string name="description_random_theme">Satunnainen teema otetaan käyttöön aina kun sovellus käynnistetään</string>
     <string name="headline_terms_of_use">Käyttöehdot</string>
-    <string name="onboarding_privacy_tip">Tämä sovellus on avointa lähdekoodia ja tehty sinua varten. Kunnioitamme yksityisyyttäsi, tietosi pysyvät yksityisinä.</string>
     <string name="headline_add_profile">Lisää profiili</string>
     <string name="headline_how_do_you_want_to_be_called">Miten haluat itseäsi kutsuttavan?</string>
     <string name="headline_profile_name">Profiilin nimi</string>
@@ -217,6 +216,7 @@
     <string name="action_continue">Jatka</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Moi, %1$s!</string>
     <string name="headline_privacy">Yksityisyys</string>
+    <string name="headline_sponsor">Tue</string>
     <string name="action_switch_profile">Vaihda profiilia</string>
     <string name="action_add_profile">Lisää profiili</string>
     <string name="action_refresh">Virkistä</string>
@@ -235,4 +235,4 @@
     <string name="action_remove_a_photo">Poista valokuva</string>
     <string name="description_values_per">Valitse määrä, johon ravintoarvot perustuvat</string>
     <string name="description_privacy">Hallinnoi henkilökohtaisia tietojasi</string>
-    </resources>
+</resources>

@@ -52,6 +52,8 @@
     <string name="nutriment_saturated_fats">Gorduras saturadas</string>
     <string name="nutriment_polyunsaturated_fats">Gordura polinsaturada</string>
     <string name="nutriment_monounsaturated_fats">Gordura monoinsaturada</string>
+    <string name="nutriment_omega_3">Ômega-3</string>
+    <string name="nutriment_omega_6">Ômega-6</string>
     <string name="nutriment_salt">Sal</string>
     <string name="nutriment_fiber">Fibra alimentar</string>
     <string name="nutriment_cholesterol">Colesterol</string>
@@ -61,6 +63,16 @@
     <string name="nutriment_soluble_fiber">Fibras solúveis</string>
     <string name="nutriment_insoluble_fiber">Fibras insolúveis</string>
     <string name="vitamin_a">Vitamina A (Retinol)</string>
+    <string name="vitamin_b1">Vitamina B1 (Tiamina)</string>
+    <string name="vitamin_b2">Vitamina B2 (Riboflavina)</string>
+    <string name="vitamin_b3">Vitamina B3 (Niacina)</string>
+    <string name="vitamin_b5">Vitamina B5 (Ácido pantotênico)</string>
+    <string name="vitamin_b6">Vitamina B6 (Piridoxina)</string>
+    <string name="vitamin_b7">Vitamina B7 (Biotina)</string>
+    <string name="vitamin_b9">Vitamina B9 (Ácido fólico)</string>
+    <string name="vitamin_b12">Vitamina B12 (Cobalamina)</string>
+    <string name="vitamin_c">Vitamina C (Ácido ascórbico)</string>
+    <string name="vitamin_d">Vitamina D (Calciferóis)</string>
     <string name="vitamin_e">Vitamina E</string>
     <string name="vitamin_k">Vitamina K</string>
     <string name="mineral_manganese">Manganês</string>
@@ -105,6 +117,7 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mostrar mais</string>
     <string name="action_show_details">Mostrar detalhes</string>
     <string name="action_obtain_key">Obter chave</string>
+    <string name="action_copy">Copiar</string>
     <string name="neutral_barcode_scanner_camera_request">Permitir acesso à sua câmera para escanear códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Você deve permitir o acesso para digitalizar códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">A permissão da câmera é obrigatória para ler códigos de barras. Por favor, habilite essa função nas configurações do aplicativo.</string>
@@ -124,6 +137,7 @@
     <string name="error_value_cannot_be_negative">O valor não pode ser negativo</string>
     <string name="error_value_must_be_positive">Valor deve ser positivo</string>
     <string name="error_unknown_error">Erro desconhecido</string>
+    <string name="error_api_key_is_invalid">Chave de API inválida</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
         <item quantity="one">Excedido em %1$d caloria</item>
@@ -131,5 +145,37 @@
     </plurals>
     <string name="description_delete_food">Alimento será excluído permanentemente</string>
     <string name="description_incomplete_nutrition_data">Alguns dos produtos usados não têm esse valor; portanto, o valor exibido pode não ser exato</string>
+    <string name="action_register">Registrar-se</string>
+    <string name="headline_personalization">Personalização</string>
+    <string name="description_personalization">Personalize sua experiência</string>
+    <string name="headline_nutrition_facts">Informações nutricionais</string>
+    <string name="description_personalize_nutrition_facts_short">Reorganize as informações nutricionais</string>
+    <string name="headline_note">Nota</string>
+    <string name="neutral_an_error_occurred">Um erro ocorreu</string>
+    <string name="headline_edit_recipe">Editar receita</string>
+    <string name="headline_before_you_start">Antes de começar</string>
+    <string name="headline_food_database">Base de dados de alimentos</string>
+    <string name="headline_almost_done">Quase pronto</string>
+    <string name="headline_please_wait">Aguarde</string>
+    <string name="headline_colors">Cores</string>
+    <string name="description_colors">Personalizar cores do app</string>
+    <string name="headline_custom_palette">Paleta personalizada</string>
+    <string name="description_custom_palette">Configure sua própria paleta</string>
+    <string name="headline_dynamic_colors">Cores dinâmicas</string>
+    <string name="action_sign_in">Entrar</string>
+    <string name="action_sign_out">Sair</string>
+    <string name="headline_privacy_policy">Políticas de privacidade</string>
+    <string name="headline_terms_of_use">Termos de uso</string>
+    <string name="headline_welcome_user_message" description="Must be short welcome message">Olá, %1$s!</string>
+    <string name="headline_privacy">Privacidade</string>
+    <string name="action_switch_profile">Mudar de perfil</string>
+    <string name="action_add_profile">Adicionar perfil</string>
+    <string name="action_refresh">Atualizar</string>
+    <string name="question_discard_profile">Descartar perfil?</string>
+    <string name="description_delete_profile">Esse perfil será permanentemente excluído. Todos os dados associados serão perdidos para sempre.</string>
+    <string name="headline_add_more_details">Adicionar mais detalhes</string>
+    <string name="action_add_a_photo">Adicionar foto</string>
+    <string name="action_remove_a_photo">Remover foto</string>
     <string name="headline_username">Usuário</string>
-    </resources>
+    <string name="headline_password">Senha</string>
+</resources>

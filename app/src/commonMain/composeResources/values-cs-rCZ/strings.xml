@@ -125,6 +125,7 @@
     <string name="action_show_details">Zobrazit detaily</string>
     <string name="action_set_key">Nastavit klíč</string>
     <string name="action_obtain_key">Získat klíč</string>
+    <string name="action_copy">Kopírovat</string>
     <string name="neutral_barcode_scanner_camera_request">Povolte přístup k fotoaparátu pro skenování čárových kódů</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Pro skenování čárových kódů musíte povolit přístup.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Oprávnění kamery je vyžadováno pro skenování čárových kódů. Povolte jej prosím v nastavení aplikace.</string>
@@ -170,7 +171,6 @@
     <string name="description_delete_food">Jídlo bude trvale odstraněno</string>
     <string name="description_incomplete_nutrition_data">Některým z produktům tato hodnota chybí, proto mohou být zobrazené hodnoty méně přesné</string>
     <string name="description_open_food_facts">Kolaborativní, svobodná a otevřená databáze potravit z celého světa</string>
-    <string name="error_usda_rate_limit">Byl překročen API limit FoodData Central (USDA)</string>
     <string name="headline_source_code">Zdrojový kód</string>
     <string name="action_write_an_email">Napsat e-mail</string>
     <string name="headline_personalization">Přizpůsobení</string>
@@ -225,7 +225,6 @@
     <string name="headline_random_theme">Náhodný motiv</string>
     <string name="description_random_theme">Při každém spuštění aplikace bude použit náhodný motiv</string>
     <string name="headline_terms_of_use">Podmínky používání</string>
-    <string name="onboarding_privacy_tip">Tato aplikace je open-source a je vytvořena pro vás. Respektujeme vaše soukromí, vaše informace zůstávají soukromé.</string>
     <string name="headline_add_profile">Přidat profil</string>
     <string name="headline_how_do_you_want_to_be_called">Jak vám máme říkat?</string>
     <string name="headline_profile_name">Název profilu</string>
@@ -233,6 +232,7 @@
     <string name="action_continue">Pokračovat</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Dobrý den, %1$s!</string>
     <string name="headline_privacy">Soukromí</string>
+    <string name="headline_sponsor">Sponzorovat</string>
     <string name="action_switch_profile">Změnit profil</string>
     <string name="action_add_profile">Přidat profil</string>
     <string name="action_refresh">Obnovit</string>
@@ -251,4 +251,4 @@
     <string name="action_remove_a_photo">Odebrat fotografii</string>
     <string name="description_values_per">Vyberte jednotku na které jsou výživové hodnoty založeny</string>
     <string name="description_privacy">Kontrola osobních údajů</string>
-    </resources>
+</resources>

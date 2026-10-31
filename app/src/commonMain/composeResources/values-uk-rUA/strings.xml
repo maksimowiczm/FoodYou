@@ -123,6 +123,7 @@
     <string name="action_show_details">Показати деталі</string>
     <string name="action_set_key">Встановити ключ</string>
     <string name="action_obtain_key">Отримати ключ</string>
+    <string name="action_copy">Скопіювати</string>
     <string name="neutral_barcode_scanner_camera_request">Надати доступ до вашої камери для сканування штрихкодів</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Ви маєте надати доступ, щоб мати змогу сканувати штрихкоди</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Доступ до камери необхідний для сканування штрихкодів. Надайте його в налаштуваннях додатку.</string>
@@ -160,8 +161,6 @@
     </plurals>
     <string name="description_incomplete_nutrition_data">У деяких з використаних продуктів відсутнє це значення; через це, показане значення може бути неточним</string>
     <string name="description_open_food_facts">Спільна, безкоштовна та відкрита база даних продуктів харчування з усього світу</string>
-    
-    <string name="error_usda_rate_limit">Перевищено ліміт API FoodData Central (USDA)</string>
     <string name="action_write_an_email">Написати листа</string>
     <string name="headline_personalization">Персоналізація</string>
     <string name="description_personalization">Налаштуйте додаток під себе</string>
@@ -184,4 +183,5 @@
         <item quantity="other">Імпортовано %1$d продуктів</item>
     </plurals>
     <string name="headline_energy_unit">Одиниці енергії</string>
-    </resources>
+    <string name="headline_sponsor">Підтримати проєкт</string>
+</resources>

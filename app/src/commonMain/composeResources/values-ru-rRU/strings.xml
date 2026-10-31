@@ -4,13 +4,16 @@
     <string name="headline_create_product">Создать продукт</string>
     <string name="headline_macronutrients">Макронутриенты</string>
     <string name="headline_meals">Приемы пищи</string>
+    <string name="question_delete_food">Удалить еду?</string>
     <string name="headline_edit_product">Изменить продукт</string>
     <string name="headline_permission_required">Требуется разрешение</string>
     <string name="headline_language">Язык</string>
     <string name="headline_system">Система</string>
     <string name="headline_secure_screen">Защита экрана</string>
     <string name="headline_about">О приложении</string>
+    <string name="headline_contributors">Участники</string>
     <string name="headline_version">Версия</string>
+    <string name="headline_special_thanks_to">Особая благодарность</string>
     <string name="headline_all_day" description="All-day (meal)">Весь день</string>
     <string name="headline_product">Продукт</string>
     <string name="headline_recipe">Рецепт</string>
@@ -125,6 +128,8 @@
     <string name="action_show_details">Показать подробности</string>
     <string name="action_set_key">Задать ключ</string>
     <string name="action_obtain_key">Получить ключ</string>
+    <string name="action_open">Открыть</string>
+    <string name="action_copy">Скопировать</string>
     <string name="neutral_barcode_scanner_camera_request">Разрешите доступ к камере для сканирования штрихкодов</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Вы должны разрешить доступ для сканирования штрихкодов</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Для сканирования штрихкодов требуется доступ к камере. Пожалуйста, разрешите его в настройках приложения.</string>
@@ -170,13 +175,13 @@
     <string name="description_delete_food">Продукт будет удален безвозвратно</string>
     <string name="description_incomplete_nutrition_data">Некоторые из использованных продуктов не имеют этого значения; поэтому отображаемое значение может быть неточным</string>
     <string name="description_open_food_facts">Совместная, бесплатная и открытая база данных продуктов питания со всего мира</string>
-    <string name="error_open_food_facts_service_unavailable">Open Food Facts временно недоступен. Зарегистрированные пользователи не ограничиваются по количеству запросов и являются приоритетными в моменты нагрузки.</string>
+    <string name="openfoodfacts_version_legacy" description="Old OpenFoodFacts search API">Устаревший</string>
     <string name="action_register">Регистрация</string>
     <string name="description_open_food_facts_credentials_message">Учётные данные зашифрованы и хранятся только на вашем устройстве. Чувствительные данные недоступны кому-либо ещё.</string>
     <string name="error_open_food_facts_failed_to_authenticate">Аутентификация в Open Food Facts не удалась</string>
-    <string name="headline_username">Логин</string>
-    <string name="headline_password">Пароль</string>
-    <string name="error_usda_rate_limit">Превышен лимит запросов к FoodData Central (USDA) API</string>
+    <string name="error_open_food_facts_service_unavailable">Open Food Facts временно недоступен. Зарегистрированные пользователи не ограничиваются по количеству запросов и являются приоритетными в моменты нагрузки.</string>
+    <string name="description_fooddata_central">FoodData Central — это всеобъемлющий источник данных о составе продуктов питания Министерства сельского хозяйства США, содержащий несколько различных типов данных</string>
+    <string name="error_usda_rate_limit">Превышен лимит запросов к FoodData Central API</string>
     <string name="headline_source_code">Исходный код</string>
     <string name="action_write_an_email">Написать email</string>
     <string name="headline_personalization">Персонализация</string>
@@ -219,6 +224,9 @@
     <string name="description_custom_palette">Задайте свою собственную палитру</string>
     <string name="headline_dynamic_colors">Динамические цвета</string>
     <string name="description_dynamic_colors">Применить цвета из системы</string>
+    <string name="headline_single_profile_mode">Режим единого профиля</string>
+    <string name="description_single_profile_mode">Скрыть функции управления профилем</string>
+    <string name="error_single_profile_mode">Сначала удалите дополнительные профили</string>
     <string name="headline_palette_style">Стиль палитры</string>
     <string name="headline_contrast">Контраст</string>
     <string name="headline_amoled">AMOLED</string>
@@ -240,6 +248,8 @@
     <string name="action_continue">Продолжить</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Привет, %1$s!</string>
     <string name="headline_privacy">Конфиденциальность</string>
+    <string name="headline_sponsor">Спонсор</string>
+    <string name="description_sponsor">Поддержите приложение в развитии</string>
     <string name="action_switch_profile">Сменить профиль</string>
     <string name="action_add_profile">Добавить профиль</string>
     <string name="action_refresh">Обновить</string>
@@ -259,4 +269,25 @@
     <string name="description_values_per">Выберите количество питательных веществ на основе</string>
     <string name="description_privacy">Управляйте вашей личной информацией</string>
     <string name="error_open_food_facts_timeout">Open Food Facts отвечает слишком долго. Возможно, сервис временно недоступен или под высокой нагрузкой. Попробуйте просканировать штих-код.</string>
+    <string name="headline_collections" description="Collections of food products, e.g. favorite foods, Open Food Facts, recipes">Коллекции</string>
+    <string name="action_search_foods">Поиск продуктов</string>
+    <string name="headline_no_recent_searches">Еще нет недавних запросов</string>
+    <string name="headline_search_ingredients">Поиск ингредиентов</string>
+    <string name="headline_username">Логин</string>
+    <string name="headline_password">Пароль</string>
+    <string name="action_show" description="Show password, show credentials, text field">Показать</string>
+    <string name="action_hide" description="Hide password, hide credentials, text field">Скрыть</string>
+    <string name="action_undo">Отменить</string>
+    <string name="headline_meal_name">Название блюда</string>
+    <string name="headline_start_time">Время старта</string>
+    <string name="headline_end_time">Время завершения</string>
+    <string name="action_expand">Раскрыть</string>
+    <string name="action_collapse" description="Opposite of expand">Свернуть</string>
+    <string name="headline_meal_unlinked">Отвязано</string>
+    <string name="question_delete_diary_entry">Удалить запись из дневника?</string>
+    <string name="description_delete_diary_entry">Запись дневника будет удалена навсегда</string>
+    <string name="headline_diary_sync">Синхронизировать дневник с изменениями продуктов питания</string>
+    <string name="description_diary_sync">Когда включено, обновление элемента питания также обновляет его дневниковые записи</string>
+    <string name="headline_diary_timestamps">Метки времени в дневнике</string>
+    <string name="description_diary_timestamps">Посмотрите точное время съели что-нибудь</string>
 </resources>

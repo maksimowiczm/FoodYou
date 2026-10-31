@@ -121,6 +121,7 @@
     <string name="action_show_details">Részletek megjelenítése</string>
     <string name="action_set_key">Kulcs beállítása</string>
     <string name="action_obtain_key">Kulcs beszerzése</string>
+    <string name="action_copy">Másolás</string>
     <string name="neutral_barcode_scanner_camera_request">Kamera hozzáférés engedélyezése a kód beolvasásához</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Engedély szükséges a vonalkód beolvasáshoz</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">A vonalkódok beolvasásához kamera engedély szükséges. Kérem engedélyezze azt az app beállításoknál.</string>
@@ -158,13 +159,10 @@
     <string name="description_delete_food">Az étel véglegesen törlődik</string>
     <string name="description_incomplete_nutrition_data">Néhány termék nem rendelkezik ezzel, ezért a megjelenített érték nem biztos, hogy pontos</string>
     <string name="description_open_food_facts">Egy kollaboráció, mely ingyenes, nyílt és az világot lefedő ételadatbázist használ</string>
-    <string name="error_open_food_facts_service_unavailable">Az Open Food Facts szolgáltatása ideiglenesen jelenleg nem elérhető. A regisztrált felhasználók számára nincs elérési korlát, és elsődleges hozzáférést kapnak csúcsidőben is.</string>
     <string name="action_register">Regisztráció</string>
     <string name="description_open_food_facts_credentials_message">A belépési adatok titkosítottak, és csak az Ön készülékén tárolódnak. Az érzékeny adatok nem elérhetőek más számára.</string>
     <string name="error_open_food_facts_failed_to_authenticate">Sikertelen hitelesítés az Open Food Facts-el</string>
-    <string name="headline_username">Felhasználónév</string>
-    <string name="headline_password">Jelszó</string>
-    <string name="error_usda_rate_limit">A FoodData Central (USDA) API használati limit túllépve</string>
+    <string name="error_open_food_facts_service_unavailable">Az Open Food Facts szolgáltatása ideiglenesen jelenleg nem elérhető. A regisztrált felhasználók számára nincs elérési korlát, és elsődleges hozzáférést kapnak csúcsidőben is.</string>
     <string name="headline_source_code">Forráskód</string>
     <string name="action_write_an_email">Írjon nekünk</string>
     <string name="headline_personalization">Testreszabás</string>
@@ -216,7 +214,6 @@
     <string name="headline_random_theme">Véletlenszerű téma</string>
     <string name="description_random_theme">Egy véletlenszerű téma lesz beállítva minden alakalommal amikor az app újraindul</string>
     <string name="headline_terms_of_use">Felhasználási feltételek</string>
-    <string name="onboarding_privacy_tip">Ez az app nyílt forráskódú és az Ön számára készült. Tiszteletben tartjuk privátszféráját, és információt biztonságban tartjuk.</string>
     <string name="headline_add_profile">Profil hozzáadása</string>
     <string name="headline_how_do_you_want_to_be_called">Hogyan nevezhetjük?</string>
     <string name="headline_profile_name">Profilnév</string>
@@ -224,6 +221,7 @@
     <string name="action_continue">Folytatás</string>
     <string name="headline_welcome_user_message" description="Must be short welcome message">Szervusz %1$s!</string>
     <string name="headline_privacy">Adatvédelem</string>
+    <string name="headline_sponsor">Támogatás</string>
     <string name="action_switch_profile">Profilváltás</string>
     <string name="action_add_profile">Profil hozzáadása</string>
     <string name="action_refresh">Frissítés</string>
@@ -243,4 +241,6 @@
     <string name="description_values_per">Válassza ki, hogy a tápanyagok mely mennyiségre vonatkoznak</string>
     <string name="description_privacy">A személyes információk szabályozása</string>
     <string name="error_open_food_facts_timeout">Az Open Food Facts túl sokáig nem válaszol. A szolgáltatás lehet hogy lassú vagy nem elérhető. Próbálja meg inkább beszkennelni a vonalkódot.</string>
+    <string name="headline_username">Felhasználónév</string>
+    <string name="headline_password">Jelszó</string>
 </resources>
