@@ -111,7 +111,10 @@ internal fun PlatformFile.verifyFoodYou3IdentityHash():
     }
 }
 
-internal class F3DatabaseRow(private val stmt: SQLiteStatement) {
+internal class F3DatabaseRow(
+    private val stmt: SQLiteStatement,
+    private val rowNumber: Int,
+) {
     private val columns: Map<String, Int> =
         (0 until stmt.getColumnCount()).associateBy { stmt.getColumnName(it) }
 
@@ -137,6 +140,33 @@ internal class F3DatabaseRow(private val stmt: SQLiteStatement) {
     fun textOrNull(name: String): String? = nullable(name) { stmt.getText(it) }
 
     fun nonBlankText(name: String): String? = textOrNull(name)?.takeIf { it.isNotBlank() }
+
+    fun rowIdentifier(): String {
+        val identifiers =
+            listOf(
+                    "id",
+                    "recipeId",
+                    "productId",
+                    "ingredientProductId",
+                    "ingredientRecipeId",
+                    "mealId",
+                    "epochDay",
+                    "dateEpochDay",
+                )
+                .mapNotNull { name ->
+                    columns[name]?.takeUnless(stmt::isNull)?.let { "$name=${stmt.getText(it)}" }
+                }
+
+        return buildString {
+            append("row ")
+            append(rowNumber)
+            if (identifiers.isNotEmpty()) {
+                append(" (")
+                append(identifiers.joinToString())
+                append(')')
+            }
+        }
+    }
 
     private fun gramsOf(name: String) = doubleOrNull(name).toNormalizedNutrientValue { it.grams }
 
@@ -197,14 +227,55 @@ internal class F3DatabaseRow(private val stmt: SQLiteStatement) {
         )
 }
 
-/** Lazily runs [sql] and maps every row. The statement is closed when the sequence completes. */
-internal fun <T> SQLiteConnection.query(sql: String, map: F3DatabaseRow.() -> T): Sequence<T> =
-    sequence {
-        prepare(sql).use { stmt ->
-            val row = F3DatabaseRow(stmt)
-            while (stmt.step()) yield(row.map())
+internal fun <T> SQLiteConnection.query(
+    tableName: String,
+    sql: String,
+    map: F3DatabaseRow.() -> T,
+): Sequence<T> = sequence {
+    val stmt =
+        try {
+            prepare(sql)
+        } catch (e: Exception) {
+            throw IllegalStateException(
+                "Failed to query table $tableName: ${e.message ?: e}",
+                e,
+            )
+        }
+
+    stmt.use {
+        var rowNumber = 0
+        while (true) {
+            val hasRow =
+                try {
+                    stmt.step()
+                } catch (e: Exception) {
+                    throw IllegalStateException(
+                        "Failed to read table $tableName row ${rowNumber + 1}: ${e.message ?: e}",
+                        e,
+                    )
+                }
+            if (!hasRow) break
+
+            rowNumber++
+            val row = F3DatabaseRow(stmt, rowNumber)
+            try {
+                yield(row.map())
+            } catch (e: Exception) {
+                throw IllegalStateException(
+                    "Failed to read table $tableName ${row.rowIdentifier()}: ${e.message ?: e}",
+                    e,
+                )
+            }
         }
     }
+}
 
-internal fun SQLiteConnection.count(sql: String): Int =
-    prepare(sql).use { if (it.step()) it.getLong(0).toInt() else 0 }
+internal fun SQLiteConnection.count(tableName: String, sql: String): Int =
+    try {
+        prepare(sql).use { if (it.step()) it.getLong(0).toInt() else 0 }
+    } catch (e: Exception) {
+        throw IllegalStateException(
+            "Failed to count rows in table $tableName: ${e.message ?: e}",
+            e,
+        )
+    }

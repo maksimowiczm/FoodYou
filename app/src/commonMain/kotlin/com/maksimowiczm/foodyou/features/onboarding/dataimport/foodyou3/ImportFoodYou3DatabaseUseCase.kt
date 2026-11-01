@@ -49,6 +49,7 @@ import io.github.vinceglb.filekit.delete
 import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.path
 import kotlin.time.Clock
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
@@ -97,7 +98,9 @@ class ImportFoodYou3DatabaseUseCase(
     private suspend fun importMealPlan(conn: SQLiteConnection): List<Pair<Long, Meal>> {
         val f3Meals = conn.readMeals().toList()
         val meals = f3Meals.map { it.second }
-        mealPlanService.handle(MealPlanCommand.ImportFoodYou3(meals = meals))
+        withImportContext("Meal", "ids=${f3Meals.joinToString { it.first.toString() }}") {
+            mealPlanService.handle(MealPlanCommand.ImportFoodYou3(meals = meals))
+        }
         return f3Meals
     }
 
@@ -107,13 +110,21 @@ class ImportFoodYou3DatabaseUseCase(
         imported: MutableMap<Long, UserProduct>,
     ): Flow<Float> = flow {
         val filter = state.toProductFilter()
-        val progress = Progress(conn.count("SELECT COUNT(*) FROM Product ${filter.whereClause}"))
+        val progress =
+            Progress(
+                conn.count(
+                    "Product",
+                    "SELECT COUNT(*) FROM Product ${filter.whereClause}",
+                )
+            )
 
         for ((f3Id, product) in conn.readProducts(filter)) {
-            userProductService.handle(
-                id = product.id,
-                command = UserProductCommand.ImportFoodYou3(product = product),
-            )
+            withImportContext("Product", "id=$f3Id") {
+                userProductService.handle(
+                    id = product.id,
+                    command = UserProductCommand.ImportFoodYou3(product = product),
+                )
+            }
             imported[f3Id] = product
             emit(progress.advance())
         }
@@ -128,10 +139,12 @@ class ImportFoodYou3DatabaseUseCase(
         if (!state.yourRecipes) return flowOf(1f)
 
         return flow {
-            val progress = Progress(conn.count("SELECT COUNT(*) FROM Recipe"))
+            val progress = Progress(conn.count("Recipe", "SELECT COUNT(*) FROM Recipe"))
 
-            for (recipe in conn.readRecipes(products)) {
-                userRecipeService.handle(recipe.recipe.id, recipe)
+            for ((f3Id, recipe) in conn.readRecipes(products)) {
+                withImportContext("Recipe", "id=$f3Id") {
+                    userRecipeService.handle(recipe.recipe.id, recipe)
+                }
                 emit(progress.advance())
             }
             emit(1f)
@@ -150,22 +163,45 @@ class ImportFoodYou3DatabaseUseCase(
             val mealIds = f3Meals.associate { (f3Id, meal) -> f3Id to meal.id }
             val progress =
                 Progress(
-                    conn.count("SELECT COUNT(*) FROM Measurement") +
-                        conn.count("SELECT COUNT(*) FROM ManualDiaryEntry")
+                    conn.count("Measurement", "SELECT COUNT(*) FROM Measurement") +
+                        conn.count(
+                            "ManualDiaryEntry",
+                            "SELECT COUNT(*) FROM ManualDiaryEntry",
+                        )
                 )
 
-            for (entry in conn.readMeasurements(mealIds, profileId)) {
-                foodDiaryService.handle(entry.id, entry)
+            for ((f3Id, entry) in conn.readMeasurements(mealIds, profileId)) {
+                withImportContext("Measurement", "id=$f3Id") {
+                    foodDiaryService.handle(entry.id, entry)
+                }
                 emit(progress.advance())
             }
-            for (entry in conn.readManualDiaryEntries(mealIds, profileId)) {
-                quickFoodDiaryService.handle(entry.id, entry)
+            for ((rowIdentifier, entry) in conn.readManualDiaryEntries(mealIds, profileId)) {
+                withImportContext("ManualDiaryEntry", rowIdentifier) {
+                    quickFoodDiaryService.handle(entry.id, entry)
+                }
                 emit(progress.advance())
             }
             emit(1f)
         }
     }
 }
+
+private suspend fun <T> withImportContext(
+    tableName: String,
+    rowIdentifier: String,
+    block: suspend () -> T,
+): T =
+    try {
+        block()
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        throw IllegalStateException(
+            "Failed to import table $tableName row ($rowIdentifier): ${e.message ?: e}",
+            e,
+        )
+    }
 
 private fun Flow<Float>.scaled(range: ClosedFloatingPointRange<Float>): Flow<Float> = map {
     range.start + (range.endInclusive - range.start) * it
@@ -230,10 +266,13 @@ private const val NUTRIENT_COLUMNS =
         "iodineMicro, chromiumMicro"
 
 private fun SQLiteConnection.readMeals(): Sequence<Pair<Long, Meal>> =
-    query("SELECT id, name, fromHour, fromMinute, toHour, toMinute FROM Meal ORDER BY rank ASC") {
+    query(
+        tableName = "Meal",
+        sql = "SELECT id, name, fromHour, fromMinute, toHour, toMinute FROM Meal ORDER BY rank ASC",
+    ) {
         val id = long("id")
         val name = text("name")
-        check(name.isNotBlank()) { "Meal name cannot be blank, id: $id" }
+        check(name.isNotBlank()) { "Meal name cannot be blank" }
 
         val from = LocalTime(int("fromHour"), int("fromMinute"))
         val to = LocalTime(int("toHour"), int("toMinute"))
@@ -248,13 +287,15 @@ private fun SQLiteConnection.readProducts(
     if (filter.isEmpty) return emptySequence()
 
     return query(
-        """
+        tableName = "Product",
+        sql =
+            """
         SELECT id, name, brand, barcode, packageWeight, servingWeight, note, sourceType, sourceUrl,
                isLiquid, $NUTRIENT_COLUMNS
         FROM Product
         ${filter.whereClause}
         """
-            .trimIndent()
+                .trimIndent(),
     ) {
         val isLiquid = boolean("isLiquid")
         long("id") to
@@ -289,11 +330,13 @@ private data class F3DiaryRecipeInfo(
 
 private fun SQLiteConnection.readDiaryProducts(): Map<Long, F3DiaryProductInfo> =
     query(
-            """
+            tableName = "DiaryProduct",
+            sql =
+                """
             SELECT id, name, packageWeight, servingWeight, isLiquid, $NUTRIENT_COLUMNS
             FROM DiaryProduct
             """
-                .trimIndent()
+                    .trimIndent(),
         ) {
             val isLiquid = boolean("isLiquid")
             long("id") to
@@ -318,6 +361,8 @@ private fun SQLiteConnection.readDiaryRecipes(
     RecipeGraph(
             recipes = readRawRecipes("DiaryRecipe").toList(),
             ingredients = readRawRecipeIngredients("DiaryRecipeIngredient").toList(),
+            recipeTableName = "DiaryRecipe",
+            ingredientTableName = "DiaryRecipeIngredient",
         )
         .resolve(
             productComponent = { ingredient, productId ->
@@ -348,12 +393,14 @@ private fun SQLiteConnection.readDiaryRecipes(
 private fun SQLiteConnection.readMeasurements(
     mealIds: Map<Long, MealId>,
     profileId: ProfileId,
-): Sequence<FoodDiaryEntryCommand.ImportFoodYou3> {
+): Sequence<Pair<Long, FoodDiaryEntryCommand.ImportFoodYou3>> {
     val products = readDiaryProducts()
     val recipes = readDiaryRecipes(products)
 
     return query(
-        "SELECT id, mealId, epochDay, productId, recipeId, measurement, quantity FROM Measurement"
+        tableName = "Measurement",
+        sql =
+            "SELECT id, mealId, epochDay, productId, recipeId, measurement, quantity FROM Measurement",
     ) {
         val id = long("id")
         val type = int("measurement")
@@ -390,32 +437,40 @@ private fun SQLiteConnection.readMeasurements(
                         )
                     }
 
-                else -> error("Measurement without product or recipe: $id")
+                else -> null
             }
 
-        FoodDiaryEntryCommand.ImportFoodYou3(
-            id = FoodDiaryEntryId(),
-            profileId = profileId,
-            snapshot = checkNotNull(measured) { "Measurement without product or recipe: $id" },
-            mealId = mealIds[long("mealId")],
-            entryDate = LocalDate.fromEpochDays(long("epochDay")),
-        )
+        id to
+            FoodDiaryEntryCommand.ImportFoodYou3(
+                id = FoodDiaryEntryId(),
+                profileId = profileId,
+                snapshot =
+                    checkNotNull(measured) {
+                        "No resolvable product or recipe reference (productId=$productId, recipeId=$recipeId)"
+                    },
+                mealId = mealIds[long("mealId")],
+                entryDate = LocalDate.fromEpochDays(long("epochDay")),
+            )
     }
 }
 
 private fun SQLiteConnection.readManualDiaryEntries(
     mealIds: Map<Long, MealId>,
     profileId: ProfileId,
-): Sequence<QuickFoodDiaryEntryCommand.ImportFoodYou3> =
-    query("SELECT mealId, dateEpochDay, name, $NUTRIENT_COLUMNS FROM ManualDiaryEntry") {
-        QuickFoodDiaryEntryCommand.ImportFoodYou3(
-            id = QuickFoodDiaryEntryId(),
-            profileId = profileId,
-            name = text("name"),
-            nutritionFacts = nutritionFacts(),
-            mealId = mealIds[long("mealId")],
-            entryDate = LocalDate.fromEpochDays(long("dateEpochDay")),
-        )
+): Sequence<Pair<String, QuickFoodDiaryEntryCommand.ImportFoodYou3>> =
+    query(
+        tableName = "ManualDiaryEntry",
+        sql = "SELECT mealId, dateEpochDay, name, $NUTRIENT_COLUMNS FROM ManualDiaryEntry",
+    ) {
+        rowIdentifier() to
+            QuickFoodDiaryEntryCommand.ImportFoodYou3(
+                id = QuickFoodDiaryEntryId(),
+                profileId = profileId,
+                name = text("name"),
+                nutritionFacts = nutritionFacts(),
+                mealId = mealIds[long("mealId")],
+                entryDate = LocalDate.fromEpochDays(long("dateEpochDay")),
+            )
     }
 
 private data class F3RawRecipe(
@@ -446,7 +501,10 @@ private fun F3RawRecipeIngredient.measure(
     )
 
 private fun SQLiteConnection.readRawRecipes(tableName: String = "Recipe"): Sequence<F3RawRecipe> =
-    query("SELECT id, name, servings, note, isLiquid FROM $tableName") {
+    query(
+        tableName = tableName,
+        sql = "SELECT id, name, servings, note, isLiquid FROM $tableName",
+    ) {
         F3RawRecipe(
             id = long("id"),
             name = text("name"),
@@ -460,7 +518,9 @@ private fun SQLiteConnection.readRawRecipeIngredients(
     tableName: String = "RecipeIngredient"
 ): Sequence<F3RawRecipeIngredient> =
     query(
-        "SELECT recipeId, ingredientProductId, ingredientRecipeId, measurement, quantity FROM $tableName"
+        tableName = tableName,
+        sql =
+            "SELECT recipeId, ingredientProductId, ingredientRecipeId, measurement, quantity FROM $tableName",
     ) {
         F3RawRecipeIngredient(
             recipeId = long("recipeId"),
@@ -473,10 +533,12 @@ private fun SQLiteConnection.readRawRecipeIngredients(
 
 private fun SQLiteConnection.readRecipes(
     importedProducts: Map<Long, UserProduct>
-): Sequence<UserRecipeCommand.Create> =
+): Sequence<Pair<Long, UserRecipeCommand.Create>> =
     RecipeGraph(
             recipes = readRawRecipes().toList(),
             ingredients = readRawRecipeIngredients().toList(),
+            recipeTableName = "Recipe",
+            ingredientTableName = "RecipeIngredient",
         )
         .resolve(
             productComponent = { ingredient, productId ->
@@ -502,15 +564,20 @@ private fun SQLiteConnection.readRecipes(
                 )
             },
         )
-        .values
         .asSequence()
-        .map { UserRecipeCommand.Create(it) }
+        .map { (id, recipe) -> id to UserRecipeCommand.Create(recipe) }
 
 /**
  * Resolves nested recipes (recipes that use other recipes as ingredients) exactly once each,
- * dependencies first, skipping cycles, missing ingredients and recipes without any component.
+ * dependencies first, skipping missing ingredients and recipes without any component. Cycles and
+ * references to missing recipes fail with the originating ingredient row context.
  */
-private class RecipeGraph(recipes: List<F3RawRecipe>, ingredients: List<F3RawRecipeIngredient>) {
+private class RecipeGraph(
+    recipes: List<F3RawRecipe>,
+    ingredients: List<F3RawRecipeIngredient>,
+    private val recipeTableName: String,
+    private val ingredientTableName: String,
+) {
     private val recipesById = recipes.associateBy { it.id }
     private val ingredientsByRecipe = ingredients.groupBy { it.recipeId }
 
@@ -526,31 +593,58 @@ private class RecipeGraph(recipes: List<F3RawRecipe>, ingredients: List<F3RawRec
             resolved[id]?.let {
                 return it
             }
-            val raw = checkNotNull(recipesById[id]) { "Recipe $id not found" }
-            check(visiting.add(id)) { "Cycle in recipe $id" }
+            val raw =
+                checkNotNull(recipesById[id]) {
+                    "Referenced row id=$id does not exist in table $recipeTableName"
+                }
+            check(visiting.add(id)) {
+                "Cycle detected while resolving row id=$id in table $recipeTableName"
+            }
 
             val components =
                 ingredientsByRecipe[id].orEmpty().mapNotNull { ingredient ->
-                    when {
-                        ingredient.ingredientProductId != null ->
-                            productComponent(ingredient, ingredient.ingredientProductId)
-                        ingredient.ingredientRecipeId != null ->
-                            resolveRecipe(ingredient.ingredientRecipeId)?.let {
-                                recipeComponent(ingredient, it)
-                            }
-                        else -> null
+                    try {
+                        when {
+                            ingredient.ingredientProductId != null ->
+                                productComponent(ingredient, ingredient.ingredientProductId)
+                            ingredient.ingredientRecipeId != null ->
+                                resolveRecipe(ingredient.ingredientRecipeId)?.let {
+                                    recipeComponent(ingredient, it)
+                                }
+                            else -> null
+                        }
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        throw IllegalStateException(
+                            "Failed to process table $ingredientTableName row (${ingredient.rowIdentifier()}): ${e.message ?: e}",
+                            e,
+                        )
                     }
                 }
             visiting.remove(id)
 
             if (components.isEmpty()) return null
-            return build(raw, components).also { resolved[id] = it }
+            return try {
+                build(raw, components).also { resolved[id] = it }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                throw IllegalStateException(
+                    "Failed to build table $recipeTableName row (id=$id): ${e.message ?: e}",
+                    e,
+                )
+            }
         }
 
         for (id in recipesById.keys) resolveRecipe(id)
         return resolved
     }
 }
+
+private fun F3RawRecipeIngredient.rowIdentifier(): String =
+    "recipeId=$recipeId, ingredientProductId=$ingredientProductId, " +
+        "ingredientRecipeId=$ingredientRecipeId"
 
 private fun weightOrVolume(value: Double, isLiquid: Boolean): AbsoluteQuantity =
     if (isLiquid) value.milliliters.toAbsoluteQuantity() else value.grams.toAbsoluteQuantity()
