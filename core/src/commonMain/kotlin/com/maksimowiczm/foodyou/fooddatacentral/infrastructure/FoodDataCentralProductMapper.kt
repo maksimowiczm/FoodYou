@@ -1,10 +1,12 @@
 package com.maksimowiczm.foodyou.fooddatacentral.infrastructure
 
+import com.maksimowiczm.foodyou.common.domain.Energy
 import com.maksimowiczm.foodyou.common.domain.Volume
 import com.maksimowiczm.foodyou.common.domain.VolumeUnit
 import com.maksimowiczm.foodyou.common.domain.Weight
 import com.maksimowiczm.foodyou.common.domain.WeightUnit
 import com.maksimowiczm.foodyou.common.domain.food.AbsoluteQuantity
+import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNormalizedNutrientValue
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsEntity
 import com.maksimowiczm.foodyou.common.infrastructure.room.NutrientsMapper
 import com.maksimowiczm.foodyou.fooddatacentral.domain.FoodDataCentralProduct
@@ -19,7 +21,11 @@ internal class FoodDataCentralProductMapper {
     fun foodDataCentralProductEntity(network: Food): FoodDataCentralProductEntity =
         with(network) {
             val energy =
-                (getNutrient(Nutrient.ENERGY) ?: getNutrient(Nutrient.ENERGY_ALTERNATIVE))?.amount
+                (getNutrient(Nutrient.ENERGY) ?: getNutrient(Nutrient.ENERGY_ALTERNATIVE))
+                    ?.amount
+                    .toNormalizedNutrientValue(Energy::kilocalories)
+                    .value
+                    ?.kilocalories
 
             val nutrients =
                 NutrientsEntity(
@@ -161,7 +167,10 @@ private fun findQuantity(value: String?): AbsoluteQuantity? {
 private fun FoodNutrient.normalize(): Double? {
     val amount = amount ?: return null
     val from = UnitType.fromString(unit) ?: return null
-    return (amount * multiplier(UnitType.GRAMS, from)).takeIf { it >= 0 }
+    return amount
+        .toNormalizedNutrientValue { Weight.grams(it * multiplier(UnitType.GRAMS, from)) }
+        .value
+        ?.grams
 }
 
 /**

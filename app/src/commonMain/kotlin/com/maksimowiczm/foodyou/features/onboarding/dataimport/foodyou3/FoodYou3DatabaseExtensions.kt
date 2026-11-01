@@ -7,7 +7,7 @@ import androidx.sqlite.driver.bundled.SQLITE_OPEN_READONLY
 import com.maksimowiczm.foodyou.common.Err
 import com.maksimowiczm.foodyou.common.Ok
 import com.maksimowiczm.foodyou.common.Result
-import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.common.domain.food.NutrientValue.Companion.toNormalizedNutrientValue
 import com.maksimowiczm.foodyou.common.domain.food.NutritionFacts
 import com.maksimowiczm.foodyou.common.domain.grams
 import com.maksimowiczm.foodyou.common.domain.kilocalories
@@ -138,13 +138,16 @@ internal class F3DatabaseRow(private val stmt: SQLiteStatement) {
 
     fun nonBlankText(name: String): String? = textOrNull(name)?.takeIf { it.isNotBlank() }
 
-    private fun gramsOf(name: String) = doubleOrNull(name)?.grams.toNutrientValue()
+    private fun gramsOf(name: String) = doubleOrNull(name).toNormalizedNutrientValue { it.grams }
 
-    private fun milligramsOf(name: String) = doubleOrNull(name)?.milligrams.toNutrientValue()
+    private fun milligramsOf(name: String) =
+        doubleOrNull(name).toNormalizedNutrientValue { it.milligrams }
 
-    private fun microgramsOf(name: String) = doubleOrNull(name)?.micrograms.toNutrientValue()
+    private fun microgramsOf(name: String) =
+        doubleOrNull(name).toNormalizedNutrientValue { it.micrograms }
 
-    private fun kcalOf(name: String) = doubleOrNull(name)?.kilocalories.toNutrientValue()
+    private fun kcalOf(name: String) =
+        doubleOrNull(name).toNormalizedNutrientValue { it.kilocalories }
 
     fun nutritionFacts(): NutritionFacts =
         NutritionFacts.requireAll(

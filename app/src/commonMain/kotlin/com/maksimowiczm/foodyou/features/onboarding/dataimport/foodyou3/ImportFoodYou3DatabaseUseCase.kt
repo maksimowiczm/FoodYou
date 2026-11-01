@@ -50,7 +50,6 @@ import io.github.vinceglb.filekit.div
 import io.github.vinceglb.filekit.path
 import kotlin.time.Clock
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -60,6 +59,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
+// This use case leaks infrastructure into the application/UI layer. Consider splitting
 class ImportFoodYou3DatabaseUseCase(
     private val mealPlanService: MealPlanService,
     private val foodDiaryService: FoodDiaryService,

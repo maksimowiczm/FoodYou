@@ -92,6 +92,23 @@ sealed interface NutrientValue<T> where T : Plus<T>, T : Times<T>, T : Div<T> {
 
         fun <T> from(value: T?): NutrientValue<T> where T : Plus<T>, T : Times<T>, T : Div<T> =
             value.toNutrientValue()
+
+        private const val NUTRIENT_FLOATING_POINT_TOLERANCE = 1e-9
+
+        /**
+         * Converts a nullable raw nutrient amount to a [NutrientValue], applying [transform] to
+         * accepted amounts.
+         *
+         * Non-negative amounts are transformed normally. Tiny negative values within floating-point
+         * tolerance are normalized to zero before transformation, while values below that tolerance
+         * are treated as missing and produce [Incomplete].
+         */
+        fun <T> Double?.toNormalizedNutrientValue(transform: (Double) -> T): NutrientValue<T>
+            where T : Plus<T>, T : Times<T>, T : Div<T> =
+            this?.takeIf { it >= -NUTRIENT_FLOATING_POINT_TOLERANCE }
+                ?.coerceAtLeast(0.0)
+                ?.let(transform)
+                .toNutrientValue()
     }
 }
 
