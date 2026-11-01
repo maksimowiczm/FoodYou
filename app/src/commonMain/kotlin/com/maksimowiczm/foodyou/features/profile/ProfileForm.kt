@@ -34,6 +34,7 @@ import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.path
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -51,18 +52,12 @@ internal fun ProfileForm(
 
     LaunchedEffect(Unit) {
         if (autoFocusName) {
-            delay(300)
+            delay(300.milliseconds)
             focusRequester.requestFocus()
         }
     }
 
     Column(modifier) {
-        Text(
-            text = stringResource(Res.string.onboarding_privacy_tip),
-            modifier = Modifier.padding(horizontal = 16.dp),
-            style = MaterialTheme.typography.bodyMedium,
-        )
-        Spacer(Modifier.height(32.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
                 text = stringResource(Res.string.headline_profile_picture),
