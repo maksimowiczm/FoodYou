@@ -59,6 +59,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.maksimowiczm.foodyou.account.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.account.domain.Profile
 import com.maksimowiczm.foodyou.capabilities.theme.PreviewFoodYouTheme
@@ -67,6 +70,7 @@ import com.maksimowiczm.foodyou.mealplan.domain.Meal
 import com.maksimowiczm.foodyou.mealplan.domain.MealId
 import com.maksimowiczm.foodyou.shared.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.component.Avatar
+import com.maksimowiczm.foodyou.shared.ui.component.DiscardChangesDialog
 import com.maksimowiczm.foodyou.shared.ui.component.LoadingScreen
 import com.maksimowiczm.foodyou.shared.ui.extension.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.extension.add
@@ -172,13 +176,24 @@ private fun AddQuickFoodDiaryEntryScreenContent(
     val fatsFormField = rememberDoubleFormField()
     val energyFormField = rememberDoubleFormField()
 
-    val isValid by derivedStateOf {
-        nameFormField.textFieldState.text.isNotBlank() &&
-            nameFormField.isValid &&
-            proteinsFormField.isValid &&
-            carbohydratesFormField.isValid &&
-            fatsFormField.isValid &&
-            energyFormField.isValid
+    val isModified by remember {
+        derivedStateOf {
+            nameFormField.isModified ||
+                proteinsFormField.isModified ||
+                carbohydratesFormField.isModified ||
+                fatsFormField.isModified ||
+                energyFormField.isModified
+        }
+    }
+    val isValid by remember {
+        derivedStateOf {
+            nameFormField.textFieldState.text.isNotBlank() &&
+                nameFormField.isValid &&
+                proteinsFormField.isValid &&
+                carbohydratesFormField.isValid &&
+                fatsFormField.isValid &&
+                energyFormField.isValid
+        }
     }
 
     val nutrientsOrder = LocalNutrientsOrder.current
@@ -186,6 +201,20 @@ private fun AddQuickFoodDiaryEntryScreenContent(
     val motionScheme = MaterialTheme.motionScheme
     val featureFlags = LocalUIFeatureFlags.current
     val showProfiles = !featureFlags.singleProfileMode && profiles.size > 1
+
+    var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
+    if (showDiscardDialog) {
+        DiscardChangesDialog(
+            onDismissRequest = { showDiscardDialog = false },
+            onDiscard = onBack,
+        )
+    }
+
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = isModified,
+        onBackCompleted = { showDiscardDialog = true },
+    )
 
     val nameFocusRequester = remember { FocusRequester() }
     var profilesExpanded by rememberSaveable { mutableStateOf(false) }
@@ -206,7 +235,13 @@ private fun AddQuickFoodDiaryEntryScreenContent(
                     )
                 },
                 subtitle = { Text(stringResource(Res.string.description_quick_add)) },
-                navigationIcon = { ArrowBackIconButton(onClick = onBack) },
+                navigationIcon = {
+                    ArrowBackIconButton(
+                        onClick = {
+                            if (isModified) showDiscardDialog = true else onBack()
+                        }
+                    )
+                },
                 scrollBehavior = scrollBehavior,
                 colors =
                     TopAppBarDefaults.topAppBarColors(
