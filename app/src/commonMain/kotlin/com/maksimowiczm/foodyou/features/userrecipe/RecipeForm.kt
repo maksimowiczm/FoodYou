@@ -195,7 +195,7 @@ fun RecipeForm(
                 expanded = expanded,
                 modifier =
                     Modifier.fillMaxWidth()
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 16.dp)
                         .clickable(
                             interactionSource = null,
                             indication = null,

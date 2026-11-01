@@ -498,7 +498,7 @@ fun HomeScreenContent(
                                             CalendarCard(
                                                 date = uiState.date,
                                                 onSelectDate = onSelectDate,
-                                                contentPadding = PaddingValues(horizontal = 8.dp),
+                                                contentPadding = PaddingValues(horizontal = 16.dp),
                                             )
                                         }
 
@@ -507,7 +507,7 @@ fun HomeScreenContent(
                                             MealCards(
                                                 meals = uiState.meals,
                                                 shimmer = shimmer,
-                                                contentPadding = PaddingValues(horizontal = 8.dp),
+                                                contentPadding = PaddingValues(horizontal = 16.dp),
                                                 onAdd = { id ->
                                                     onSelectMeal(id)
                                                     openSearch()

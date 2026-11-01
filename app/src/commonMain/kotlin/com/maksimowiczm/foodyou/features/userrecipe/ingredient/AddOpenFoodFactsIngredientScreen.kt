@@ -208,11 +208,11 @@ private fun AddOpenFoodFactsIngredientScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 16.dp))
             }
             if (image != null)
                 item {
-                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 16.dp))
                 }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -234,7 +234,7 @@ private fun AddOpenFoodFactsIngredientScreenContent(
                         onSelectType = onSelectQuantityType,
                         onKeyboardAction = onAdd,
                         modifier =
-                            Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
+                            Modifier.padding(horizontal = 16.dp).focusRequester(focusRequester),
                     )
                 }
             }
@@ -245,7 +245,7 @@ private fun AddOpenFoodFactsIngredientScreenContent(
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
                 }
             item {
@@ -263,7 +263,7 @@ private fun AddOpenFoodFactsIngredientScreenContent(
                         )
                     },
                     headline = stringResource(Res.string.headline_open_food_facts),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 )
             }
         }

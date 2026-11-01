@@ -128,11 +128,11 @@ private fun OpenFoodFactsDetailsScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 16.dp))
             }
             if (image != null)
                 item {
-                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 16.dp))
                 }
             if (scaledNutritionFacts != null)
                 item {
@@ -146,7 +146,7 @@ private fun OpenFoodFactsDetailsScreenContent(
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
-                        contentPadding = PaddingValues(horizontal = 8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp),
                     )
                 }
             item {
@@ -164,7 +164,7 @@ private fun OpenFoodFactsDetailsScreenContent(
                         )
                     },
                     headline = stringResource(Res.string.headline_open_food_facts),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 )
             }
         }

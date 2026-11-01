@@ -245,7 +245,7 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 16.dp))
             }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -256,7 +256,7 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
                         onMealChange = onSelectMeal,
                         onDateChange = onSelectDate,
                         onTimeChange = onSelectTime,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
                     if (suggestions.isNotEmpty()) {
                         QuantitySuggestions(
@@ -286,7 +286,7 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
                         modifier =
                             Modifier.focusRequester(focusRequester)
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
+                                .padding(horizontal = 16.dp),
                     )
                 }
             }
@@ -297,7 +297,7 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
                         expanded = expandingEnabled && expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
                 }
             }
@@ -316,7 +316,7 @@ private fun AddFoodDataCentralDiaryEntryScreenContent(
                         )
                     },
                     headline = stringResource(Res.string.headline_fooddata_central),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 )
             }
         }

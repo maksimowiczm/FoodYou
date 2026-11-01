@@ -108,7 +108,7 @@ private fun SwissFoodCompositionDetailsScreenContent(
             contentPadding = contentPadding.add(top = 26.dp, bottom = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            item { FoodHeadline(headline, Modifier.padding(horizontal = 8.dp)) }
+            item { FoodHeadline(headline, Modifier.padding(horizontal = 16.dp)) }
             if (scaledNutritionFacts != null)
                 item {
                     FoodDetailsNutrientsWithSuggestions(
@@ -121,7 +121,7 @@ private fun SwissFoodCompositionDetailsScreenContent(
                         expanded = expandingEnabled && expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
-                        contentPadding = PaddingValues(horizontal = 8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp),
                     )
                 }
             item {
@@ -129,7 +129,7 @@ private fun SwissFoodCompositionDetailsScreenContent(
                     sourceUrl = swissFoodCompositionDatabaseUrl,
                     headline = stringResource(Res.string.headline_swiss_food_composition),
                     logo = {},
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 )
             }
         }

@@ -251,11 +251,11 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 16.dp))
             }
             if (image != null) {
                 item {
-                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 16.dp))
                 }
             }
             item {
@@ -267,7 +267,7 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
                         onMealChange = onSelectMeal,
                         onDateChange = onSelectDate,
                         onTimeChange = onSelectTime,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
                     if (suggestions.isNotEmpty()) {
                         QuantitySuggestions(
@@ -297,7 +297,7 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
                         modifier =
                             Modifier.focusRequester(focusRequester)
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
+                                .padding(horizontal = 16.dp),
                     )
                 }
             }
@@ -308,7 +308,7 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
                         expanded = expandingEnabled && expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
                 }
             }
@@ -327,7 +327,7 @@ private fun AddOpenFoodFactsDiaryEntryScreenContent(
                         )
                     },
                     headline = stringResource(Res.string.headline_open_food_facts),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 )
             }
         }

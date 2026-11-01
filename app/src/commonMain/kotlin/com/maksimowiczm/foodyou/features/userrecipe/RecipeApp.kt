@@ -458,7 +458,7 @@ private fun RecipeFormScreen(
                 RecipeForm(
                     state = recipeForm,
                     isLocked = isLocked,
-                    contentPadding = PaddingValues(horizontal = 8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
                     onAddIngredient = onAddIngredient,
                     onIngredientClick = onIngredientClick,
                     viewModel = recipeFormViewModel,

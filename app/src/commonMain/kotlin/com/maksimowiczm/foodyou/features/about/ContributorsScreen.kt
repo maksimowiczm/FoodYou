@@ -100,7 +100,7 @@ fun ContributorsScreen(
         LazyColumn(
             modifier =
                 Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .padding(horizontal = 8.dp),
+                    .padding(horizontal = 16.dp),
             contentPadding = contentPadding.add(vertical = 8.dp),
         ) {
             item {

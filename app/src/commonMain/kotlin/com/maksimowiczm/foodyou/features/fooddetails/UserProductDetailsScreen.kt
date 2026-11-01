@@ -133,11 +133,11 @@ private fun UserProductDetailsScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 16.dp))
             }
             if (image != null)
                 item {
-                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 16.dp))
                 }
             if (scaledNutritionFacts != null)
                 item {
@@ -151,12 +151,12 @@ private fun UserProductDetailsScreenContent(
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
-                        contentPadding = PaddingValues(horizontal = 8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp),
                     )
                 }
             if (note != null)
                 item {
-                    FoodNote(note, Modifier.padding(horizontal = 8.dp))
+                    FoodNote(note, Modifier.padding(horizontal = 16.dp))
                 }
         }
     }

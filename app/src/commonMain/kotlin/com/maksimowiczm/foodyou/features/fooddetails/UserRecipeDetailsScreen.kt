@@ -153,11 +153,11 @@ private fun UserRecipeDetailsScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 16.dp))
             }
             if (image != null)
                 item {
-                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 8.dp))
+                    FoodImage(image, Modifier.fillMaxWidth().padding(horizontal = 16.dp))
                 }
             if (components.isNotEmpty())
                 item {
@@ -165,7 +165,7 @@ private fun UserRecipeDetailsScreenContent(
                         components = components,
                         ingredientScalingFactor = ingredientScalingFactor,
                         onNavigateToIngredient = onNavigateToIngredient,
-                        modifier = Modifier.padding(horizontal = 8.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp),
                     )
                 }
             if (scaledNutritionFacts != null)
@@ -181,7 +181,7 @@ private fun UserRecipeDetailsScreenContent(
                             expanded = if (!expandingEnabled) false else expanded,
                             onExpandedChange = { expanded = it },
                             expandingEnabled = expandingEnabled,
-                            contentPadding = PaddingValues(horizontal = 8.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp),
                         )
                         if (anyNutrientIsMissing) {
                             Spacer(Modifier.height(8.dp))
@@ -191,7 +191,7 @@ private fun UserRecipeDetailsScreenContent(
                                         stringResource(
                                             Res.string.description_incomplete_nutrition_data
                                         ),
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.bodySmall,
                             )
@@ -200,7 +200,7 @@ private fun UserRecipeDetailsScreenContent(
                 }
             if (note != null)
                 item {
-                    FoodNote(note, Modifier.padding(horizontal = 8.dp))
+                    FoodNote(note, Modifier.padding(horizontal = 16.dp))
                 }
         }
     }

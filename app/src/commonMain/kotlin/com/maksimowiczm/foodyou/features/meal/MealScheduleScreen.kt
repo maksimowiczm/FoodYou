@@ -275,7 +275,7 @@ private fun MealScheduleScreen(
                     .imePadding()
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
             state = lazyListState,
-            contentPadding = contentPadding.add(8.dp),
+            contentPadding = contentPadding.add(horizontal = 16.dp, vertical = 8.dp),
         ) {
             itemsIndexed(
                 items = cardStates,

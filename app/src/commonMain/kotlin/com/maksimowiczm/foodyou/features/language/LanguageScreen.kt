@@ -72,12 +72,11 @@ private fun LanguageScreen(
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues.add(8.dp),
+            contentPadding = paddingValues.add(horizontal = 16.dp, vertical = 8.dp),
         ) {
             item {
                 TranslateButton(
                     onClick = onTranslate,
-                    modifier = Modifier.padding(horizontal = 8.dp),
                 )
             }
             item { Spacer(Modifier.height(8.dp)) }
@@ -100,6 +99,7 @@ private fun LanguageScreen(
                         ),
                     content = { Text(stringResource(Res.string.headline_system)) },
                 )
+                Spacer(Modifier.height(2.dp))
             }
             itemsIndexed(languages) { index, translation ->
                 SegmentedListItem(
@@ -123,6 +123,9 @@ private fun LanguageScreen(
                         ),
                     content = { Text(translation.languageName) },
                 )
+                if(index != languages.lastIndex) {
+                    Spacer(Modifier.height(2.dp))
+                }
             }
         }
     }

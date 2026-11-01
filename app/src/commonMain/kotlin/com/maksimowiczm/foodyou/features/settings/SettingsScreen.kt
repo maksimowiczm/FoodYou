@@ -166,7 +166,7 @@ private fun SettingsScreen(
     ) { contentPadding ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = contentPadding.add(8.dp),
+            contentPadding = contentPadding.add(horizontal = 16.dp, vertical = 8.dp),
         ) {
             item {
                 Column(

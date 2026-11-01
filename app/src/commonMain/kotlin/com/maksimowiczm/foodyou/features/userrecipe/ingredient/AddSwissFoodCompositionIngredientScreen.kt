@@ -179,7 +179,7 @@ private fun AddSwissFoodCompositionIngredientScreenContent(
             contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            item { FoodHeadline(headline, Modifier.padding(horizontal = 8.dp)) }
+            item { FoodHeadline(headline, Modifier.padding(horizontal = 16.dp)) }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (suggestions.isNotEmpty()) {
@@ -200,7 +200,7 @@ private fun AddSwissFoodCompositionIngredientScreenContent(
                         onSelectType = onSelectQuantityType,
                         onKeyboardAction = onAdd,
                         modifier =
-                            Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
+                            Modifier.padding(horizontal = 16.dp).focusRequester(focusRequester),
                     )
                 }
             }
@@ -211,7 +211,7 @@ private fun AddSwissFoodCompositionIngredientScreenContent(
                         expanded = expandingEnabled && expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
                 }
             }
@@ -220,7 +220,7 @@ private fun AddSwissFoodCompositionIngredientScreenContent(
                     sourceUrl = swissFoodCompositionDatabaseUrl,
                     headline = stringResource(Res.string.headline_swiss_food_composition),
                     logo = {},
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 )
             }
         }

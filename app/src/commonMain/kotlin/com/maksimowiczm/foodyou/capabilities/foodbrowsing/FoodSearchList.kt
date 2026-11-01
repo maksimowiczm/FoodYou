@@ -172,7 +172,7 @@ fun FoodSearchList(
                                     FoodListItemSkeleton(
                                         shimmer = shimmer,
                                         modifier =
-                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                            Modifier.animateItem().padding(horizontal = 16.dp),
                                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                         shape = shape,
                                     )
@@ -185,7 +185,7 @@ fun FoodSearchList(
                                         },
                                         shimmer = shimmer,
                                         modifier =
-                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                            Modifier.animateItem().padding(horizontal = 16.dp),
                                         shape = shape,
                                         interactionSource = interactionSource,
                                     )
@@ -200,7 +200,7 @@ fun FoodSearchList(
                                         interactionSource = interactionSource,
                                         shape = shape,
                                         modifier =
-                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                            Modifier.animateItem().padding(horizontal = 16.dp),
                                     )
                             }
                         }
@@ -228,7 +228,7 @@ fun FoodSearchList(
                                     FoodListItemSkeleton(
                                         shimmer = shimmer,
                                         modifier =
-                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                            Modifier.animateItem().padding(horizontal = 16.dp),
                                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                         shape = shape,
                                     )
@@ -242,7 +242,7 @@ fun FoodSearchList(
                                         interactionSource = interactionSource,
                                         shape = shape,
                                         modifier =
-                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                            Modifier.animateItem().padding(horizontal = 16.dp),
                                     )
                             }
                         }
@@ -273,7 +273,7 @@ fun FoodSearchList(
                                     FoodListItemSkeleton(
                                         shimmer = shimmer,
                                         modifier =
-                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                            Modifier.animateItem().padding(horizontal = 16.dp),
                                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                         shape = shape,
                                     )
@@ -286,7 +286,7 @@ fun FoodSearchList(
                                         interactionSource = interactionSource,
                                         shape = shape,
                                         modifier =
-                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                            Modifier.animateItem().padding(horizontal = 16.dp),
                                     )
                             }
                         }
@@ -315,7 +315,7 @@ fun FoodSearchList(
                                     FoodListItemSkeleton(
                                         shimmer = shimmer,
                                         modifier =
-                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                            Modifier.animateItem().padding(horizontal = 16.dp),
                                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                         shape = shape,
                                     )
@@ -329,7 +329,7 @@ fun FoodSearchList(
                                         interactionSource = interactionSource,
                                         shape = shape,
                                         modifier =
-                                            Modifier.animateItem().padding(horizontal = 8.dp),
+                                            Modifier.animateItem().padding(horizontal = 16.dp),
                                     )
                             }
                         }
@@ -370,7 +370,7 @@ fun FoodSearchList(
                             null ->
                                 FoodListItemSkeleton(
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                     shape = shape,
                                 )
@@ -380,7 +380,7 @@ fun FoodSearchList(
                                     product = food,
                                     onClick = { onUserProduct(UserProductId(food.id), it) },
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                     shape = shape,
                                     interactionSource = interactionSource,
                                 )
@@ -392,7 +392,7 @@ fun FoodSearchList(
                                     shimmer = shimmer,
                                     interactionSource = interactionSource,
                                     shape = shape,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                 )
                         }
                     }
@@ -417,7 +417,7 @@ fun FoodSearchList(
                             null ->
                                 FoodListItemSkeleton(
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                     shape = shape,
                                 )
@@ -428,7 +428,7 @@ fun FoodSearchList(
                                     onClick = { onSwissFoodCompositionProduct(food.id, it) },
                                     interactionSource = interactionSource,
                                     shape = shape,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                 )
                         }
                     }
@@ -453,7 +453,7 @@ fun FoodSearchList(
                             null ->
                                 FoodListItemSkeleton(
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                     shape = shape,
                                 )
@@ -465,7 +465,7 @@ fun FoodSearchList(
                                     shimmer = shimmer,
                                     interactionSource = interactionSource,
                                     shape = shape,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                 )
                         }
                     }
@@ -490,7 +490,7 @@ fun FoodSearchList(
                             null ->
                                 FoodListItemSkeleton(
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                     shape = shape,
                                 )
@@ -501,7 +501,7 @@ fun FoodSearchList(
                                     onClick = { onFoodDataCentralProduct(food.id, it) },
                                     interactionSource = interactionSource,
                                     shape = shape,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                 )
                         }
                     }
@@ -523,7 +523,7 @@ fun FoodSearchList(
                             null ->
                                 FoodListItemSkeleton(
                                     shimmer = shimmer,
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                     shape = shape,
                                 )
@@ -614,12 +614,12 @@ fun FoodSearchList(
                                             is RemoteData.NotFound -> Unit
                                         }
                                     },
-                                    modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                                    modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                                     fallback = {
                                         FoodListItemSkeleton(
                                             shimmer = shimmer,
                                             modifier =
-                                                Modifier.animateItem().padding(horizontal = 8.dp),
+                                                Modifier.animateItem().padding(horizontal = 16.dp),
                                             containerColor =
                                                 MaterialTheme.colorScheme.surfaceContainer,
                                             shape = shape,
@@ -691,7 +691,7 @@ fun FoodSearchList(
 
                         FoodListItemSkeleton(
                             shimmer = shimmer,
-                            modifier = Modifier.animateItem().padding(horizontal = 8.dp),
+                            modifier = Modifier.animateItem().padding(horizontal = 16.dp),
                             containerColor = MaterialTheme.colorScheme.surfaceContainer,
                             shape = baseShape,
                         )

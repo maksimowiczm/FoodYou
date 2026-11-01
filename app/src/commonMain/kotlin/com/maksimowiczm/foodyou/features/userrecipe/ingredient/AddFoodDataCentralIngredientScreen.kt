@@ -200,7 +200,7 @@ private fun AddFoodDataCentralIngredientScreenContent(
             contentPadding = contentPadding.add(top = 26.dp, bottom = 128.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            item { FoodHeadline(headline, Modifier.padding(horizontal = 8.dp)) }
+            item { FoodHeadline(headline, Modifier.padding(horizontal = 16.dp)) }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (suggestions.isNotEmpty()) {
@@ -221,7 +221,7 @@ private fun AddFoodDataCentralIngredientScreenContent(
                         onSelectType = onSelectQuantityType,
                         onKeyboardAction = onAdd,
                         modifier =
-                            Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester),
+                            Modifier.padding(horizontal = 16.dp).focusRequester(focusRequester),
                     )
                 }
             }
@@ -232,7 +232,7 @@ private fun AddFoodDataCentralIngredientScreenContent(
                         expanded = if (!expandingEnabled) false else expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
                 }
             item {
@@ -250,7 +250,7 @@ private fun AddFoodDataCentralIngredientScreenContent(
                         )
                     },
                     headline = stringResource(Res.string.headline_fooddata_central),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 )
             }
         }

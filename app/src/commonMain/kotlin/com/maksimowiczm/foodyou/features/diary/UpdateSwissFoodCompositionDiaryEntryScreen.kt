@@ -230,7 +230,7 @@ private fun UpdateSwissFoodCompositionDiaryEntryScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                FoodHeadline(headline, Modifier.padding(horizontal = 8.dp))
+                FoodHeadline(headline, Modifier.padding(horizontal = 16.dp))
             }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -241,7 +241,7 @@ private fun UpdateSwissFoodCompositionDiaryEntryScreenContent(
                         onMealChange = onSelectMeal,
                         onDateChange = onSelectDate,
                         onTimeChange = onSelectTime,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
                     if (suggestions.isNotEmpty()) {
                         QuantitySuggestions(
@@ -271,7 +271,7 @@ private fun UpdateSwissFoodCompositionDiaryEntryScreenContent(
                         modifier =
                             Modifier.focusRequester(focusRequester)
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
+                                .padding(horizontal = 16.dp),
                     )
                 }
             }
@@ -282,7 +282,7 @@ private fun UpdateSwissFoodCompositionDiaryEntryScreenContent(
                         expanded = expandingEnabled && expanded,
                         onExpandedChange = { expanded = it },
                         expandingEnabled = expandingEnabled,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     )
                 }
             }
@@ -291,7 +291,7 @@ private fun UpdateSwissFoodCompositionDiaryEntryScreenContent(
                     sourceUrl = swissFoodCompositionDatabaseUrl,
                     headline = stringResource(Res.string.headline_swiss_food_composition),
                     logo = {},
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 )
             }
         }

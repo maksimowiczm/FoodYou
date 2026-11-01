@@ -38,7 +38,7 @@ fun FoodDetailsNutrientsWithSuggestions(
     onExpandedChange: (Boolean) -> Unit,
     expandingEnabled: Boolean,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 8.dp),
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
 ) {
     val nutritionFacts = scaledNutritionFacts ?: return
 

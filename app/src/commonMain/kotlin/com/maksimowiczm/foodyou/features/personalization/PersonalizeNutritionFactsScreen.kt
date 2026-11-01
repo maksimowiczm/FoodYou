@@ -270,7 +270,7 @@ private fun PersonalizeNutritionFactsScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
             state = lazyListState,
-            contentPadding = paddingValues.add(8.dp),
+            contentPadding = paddingValues.add(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             itemsIndexed(items = localOrder, key = { _, it -> it.name }) { index, item ->
